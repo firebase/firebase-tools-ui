@@ -1,0 +1,48 @@
+@import 'color';
+
+@mixin inlineEditCard($baseName) {
+  left: 0;
+  margin: 0 20px 0 36px;
+  position: absolute;
+  right: 0;
+  top: 0;
+
+  &.#{$baseName}__card {
+    z-index: 1000;
+  }
+
+  .#{$baseName}__form-fields {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    margin: 1rem;
+
+    .mdc-text-field {
+      flex: 1;
+      margin-right: 20px;
+
+      &:last-of-type {
+        margin-right: 0;
+      }
+    }
+  }
+
+  .#{$baseName}__actions {
+    justify-content: flex-end;
+  }
+}
+
+@mixin hoverKey($name) {
+  > .#{$name}__key {
+    background-color: white;
+    border-radius: 4px;
+    padding: 0 8px;
+    transition: background-color 100ms ease-in;
+  }
+
+  &:hover {
+    > .#{$name}__key {
+      background-color: $COLOR_BACKGROUND_KEY;
+    }
+  }
+}

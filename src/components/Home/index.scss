@@ -1,0 +1,21 @@
+.Home {
+  text-align: center;
+  background-color: #fff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.Home-logo {
+  height: 40vmin;
+}
+
+.Home-link {
+  color: #09d3ac;
+}
+
+.Home-error {
+  color: #ff0000;
+}

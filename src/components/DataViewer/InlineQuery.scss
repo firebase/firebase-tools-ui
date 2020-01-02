@@ -1,0 +1,11 @@
+@import 'common/mixins';
+
+$name: 'InlineQuery';
+
+.InlineQuery {
+  @include inlineEditCard($name);
+}
+
+.NodeActions__additional-ui > .InlineQuery {
+  top: 32px;
+}

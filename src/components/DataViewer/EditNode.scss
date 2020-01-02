@@ -1,0 +1,15 @@
+@import 'common/mixins';
+
+$name: 'EditNode';
+
+.EditNode {
+  @include inlineEditCard($name);
+
+  .#{$name}__key {
+    margin-right: 20px;
+  }
+}
+
+.NodeActions__additional-ui > .EditNode {
+  top: 32px;
+}

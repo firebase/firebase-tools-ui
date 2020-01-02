@@ -1,0 +1,8 @@
+.ValueDisplay {
+  cursor: pointer;
+
+  &.ValueDisplay__boolean,
+  &.ValueDisplay__number {
+    color: dodgerblue;
+  }
+}

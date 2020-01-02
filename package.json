@@ -1,0 +1,71 @@
+{
+  "name": "firebase-tools-ui",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@types/jest": "24.0.21",
+    "@types/node": "12.12.3",
+    "@types/react": "16.9.11",
+    "@types/react-dom": "16.9.3",
+    "@types/react-redux": "^7.1.5",
+    "@types/recompose": "^0.30.7",
+    "express": "^4.17.1",
+    "firebase": "^7.6.0",
+    "font-awesome": "^4.7.0",
+    "keycode": "^2.2.0",
+    "react": "^16.11.0",
+    "react-dom": "^16.11.0",
+    "react-redux": "^7.1.1",
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "^3.3.0",
+    "redux": "^4.0.4",
+    "redux-saga": "^1.1.1",
+    "rmwc": "^5.7.1",
+    "typesafe-actions": "^5.1.0",
+    "typescript": "3.6.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "test:coverage": "react-scripts test --coverage --watchAll=false",
+    "eject": "react-scripts eject",
+    "fmt": "prettier --write 'src/**'"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@firebase/auth-interop-types": "^0.1.1",
+    "@firebase/component": "^0.1.1",
+    "@testing-library/react": "^9.3.2",
+    "@types/react-router-dom": "^5.1.2",
+    "husky": "^3.0.9",
+    "lint-staged": "^9.4.2",
+    "node-sass": "^4.13.0",
+    "prettier": "^1.18.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx,json,css,md,scss}": [
+      "prettier --write",
+      "git add"
+    ]
+  }
+}
