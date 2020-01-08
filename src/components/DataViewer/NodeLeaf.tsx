@@ -22,6 +22,7 @@ import { IconButton } from '@rmwc/icon-button';
 import { Typography } from '@rmwc/typography';
 import { ValueDisplay } from './ValueDisplay';
 import { Tooltip } from '@rmwc/tooltip';
+import { getDbRootUrl } from './common/view_model';
 
 export interface Props {
   realtimeRef: firebase.database.Reference;
@@ -32,7 +33,7 @@ export const NodeLeaf = React.memo<Props>(function NodeLeaf$({
   value,
   realtimeRef,
 }) {
-  const key = realtimeRef.key || realtimeRef.toString();
+  const key = realtimeRef.key || getDbRootUrl(realtimeRef);
   const [isEditing, setIsEditing] = useState(false);
   const toggleEditing = () => {
     setIsEditing(!isEditing);
