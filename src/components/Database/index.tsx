@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import * as firebase from 'firebase/app';
+import 'firebase/database';
 import { ThemeProvider } from '@rmwc/theme';
 import { connect } from 'react-redux';
 import { NodeContainer } from '../DataViewer/NodeContainer';
@@ -48,10 +50,19 @@ export const Database: React.FC<Props> = ({ config, namespace }) => {
     return cleanup;
   }, [config, namespace, setRef]);
 
+  const doNavigate = useCallback(
+    (path: string) => setRef(ref && ref.root.child(path)),
+    [setRef, ref]
+  );
+
   return (
     <div className="Database">
       <ThemeProvider options={theme}>
-        {ref ? <NodeContainer realtimeRef={ref} /> : <p>Loading</p>}
+        {ref ? (
+          <NodeContainer realtimeRef={ref} isViewRoot onNavigate={doNavigate} />
+        ) : (
+          <p>Loading</p>
+        )}
       </ThemeProvider>
     </div>
   );

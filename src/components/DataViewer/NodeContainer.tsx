@@ -29,6 +29,12 @@ import { createViewModel, canDoRealtime } from './common/fetch';
 
 export interface Props {
   realtimeRef: firebase.database.Reference;
+  /**
+   * This node is the top most visible node in viewer (not the same as the real
+   * db root). It will show breadcrumbs of all hidden parent nodes to the root.
+   */
+  isViewRoot?: boolean;
+  onNavigate: (path: string) => void;
 }
 
 const initialState: ViewModel = {
@@ -38,6 +44,8 @@ const initialState: ViewModel = {
 
 export const NodeContainer = React.memo<Props>(function NodeContainer$({
   realtimeRef,
+  isViewRoot,
+  onNavigate,
 }) {
   const [viewModel, setViewModel] = useState<ViewModel>(initialState);
   const [querySubject, setQuerySubject] = useState<
@@ -67,9 +75,11 @@ export const NodeContainer = React.memo<Props>(function NodeContainer$({
   ) : (
     <NodeParent
       realtimeRef={realtimeRef}
+      onNavigate={onNavigate}
       children={children}
       queryParams={queryParams}
       updateQuery={updateQuery}
+      isViewRoot={isViewRoot}
     />
   );
 });
