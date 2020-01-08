@@ -17,6 +17,7 @@
 import * as React from 'react';
 import { Typography } from '@rmwc/typography';
 import { Icon } from '@rmwc/icon';
+import { getDbRootUrl } from './common/view_model';
 
 export interface Props {
   dbRef: firebase.database.Reference;
@@ -42,7 +43,7 @@ export const NodeParentKey = React.memo<Props>(function NodeParentKey$({
     return renderBreadcrumbs(dbRef, navigateToRef);
   }
 
-  const key = dbRef.parent === null ? dbRef.toString() : dbRef.key;
+  const key = dbRef.parent === null ? getDbRootUrl(dbRef) : dbRef.key;
   return (
     <Typography
       className="NodeParent__key"
@@ -75,7 +76,7 @@ function renderBreadcrumbs(
         aria-label="Key name"
         onClick={() => navigateToRef(ref)}
       >
-        {ref.key || ref.toString()}
+        {ref.key || getDbRootUrl(ref)}
       </Typography>
     );
   }, []);

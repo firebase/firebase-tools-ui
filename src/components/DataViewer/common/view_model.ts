@@ -52,3 +52,17 @@ export function jsonIshValue(value: string) {
     return value;
   }
 }
+
+/** Extra internal props on db Reference. */
+interface RefWithInternals extends firebase.database.Reference {
+  database: firebase.database.Database;
+}
+
+/** Use some internals to determine the full url with `?ns=x` param. */
+export function getDbRootUrl(ref: firebase.database.Reference) {
+  const options = (ref as RefWithInternals).database.app.options as Record<
+    string,
+    string
+  >;
+  return options['databaseURL'];
+}
