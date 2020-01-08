@@ -17,7 +17,6 @@
 import * as React from 'react';
 import { NodeContainer } from './NodeContainer';
 import { useState, useCallback } from 'react';
-import { Typography } from '@rmwc/typography';
 import { Button } from '@rmwc/button';
 import {
   QueryParams,
@@ -28,12 +27,19 @@ import { NodeTabularDisplay } from './NodeTabularDisplay';
 import { NodeActions } from './NodeActions';
 
 import './NodeParent.scss';
+import { NodeParentKey } from './NodeParentKey';
 
 export interface Props {
   realtimeRef: firebase.database.Reference;
   children: string[];
   isRealtime?: boolean;
   queryParams?: QueryParams;
+  /**
+   * This node is the top most visible node in viewer (not the same as the real
+   * db root). It will show breadcrumbs of all hidden parent nodes to the root.
+   */
+  isViewRoot?: boolean;
+  onNavigate: (path: string) => void;
   updateQuery?: (params: QueryParams) => void;
 }
 
@@ -42,9 +48,10 @@ export const NodeParent = React.memo<Props>(function NodeParent$({
   children,
   queryParams,
   updateQuery,
+  isViewRoot,
+  onNavigate,
 }) {
   const isRoot = realtimeRef.parent === null;
-  const key = realtimeRef.key || realtimeRef.toString();
   const hasChildren = !!children.length;
   const [isExpanded, setIsExpanded] = useState(isRoot ? true : false);
   const [displayType, setDisplayType] = useState(ChildrenDisplayType.TreeView);
@@ -91,14 +98,11 @@ export const NodeParent = React.memo<Props>(function NodeParent$({
             arrow_right
           </button>
         )}
-        <Typography
-          className="NodeParent__key"
-          use="body1"
-          aria-label="Key name"
-          onClick={toggleExpansion}
-        >
-          {key}
-        </Typography>
+        <NodeParentKey
+          isViewRoot={isViewRoot}
+          dbRef={realtimeRef}
+          onNavigate={onNavigate}
+        />
         <NodeActions
           realtimeRef={realtimeRef}
           displayType={displayType}
@@ -125,7 +129,10 @@ export const NodeParent = React.memo<Props>(function NodeParent$({
             <ul className="NodeParent__children">
               {children.map(key => (
                 <li key={key}>
-                  <NodeContainer realtimeRef={realtimeRef.child(key)} />
+                  <NodeContainer
+                    realtimeRef={realtimeRef.child(key)}
+                    onNavigate={onNavigate}
+                  />
                 </li>
               ))}
               {hasMore && (
