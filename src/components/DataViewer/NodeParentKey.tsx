@@ -60,7 +60,9 @@ function renderBreadcrumbs(
   navigateToRef: (ref: firebase.database.Reference) => void
 ) {
   const ancestors = getAncestorRefs(activeRef);
-  const crumbs = ancestors.reduce<JSX.Element[]>((crumbs, ref, i) => {
+
+  let crumbs: JSX.Element[] = [];
+  ancestors.forEach((ref, i) => {
     const reactKey = ref.toString();
     if (i !== 0) {
       crumbs.push(<Icon icon="chevron_right" key={`${reactKey}-chevron`} />);
@@ -76,7 +78,6 @@ function renderBreadcrumbs(
         {ref.key || ref.toString()}
       </Typography>
     );
-    return crumbs;
   }, []);
   return <>{crumbs}</>;
 }
