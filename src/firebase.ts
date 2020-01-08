@@ -14,12 +14,18 @@
  * limitations under the License.
  */
 
-import * as firebase from 'firebase/app';
 import 'firebase/database';
+
 import { _FirebaseApp } from '@firebase/app-types/private';
 import { FirebaseAuthInternal } from '@firebase/auth-interop-types';
 import { Component, ComponentType } from '@firebase/component';
+import * as firebase from 'firebase/app';
+
 import { DatabaseConfig } from './store/config';
+
+interface WindowWithDb extends Window {
+  db?: firebase.database.Database;
+}
 
 export function initDatabase(
   config: DatabaseConfig,
@@ -31,7 +37,12 @@ export function initDatabase(
     `Database Component: ${databaseURL} ${Math.random()}`
   );
   applyAdminAuth(app);
-  return [app.database(), { cleanup: () => app.delete() }];
+  const db = app.database();
+  (window as WindowWithDb).db = db;
+  console.log(`Database ${databaseURL} is available at window.db.
+
+  Try db.ref().once('value').then( snap => console.log(snap.val()) );`);
+  return [db, { cleanup: () => app.delete() }];
 }
 
 function applyAdminAuth(app: firebase.app.App): void {
@@ -43,7 +54,8 @@ function applyAdminAuth(app: firebase.app.App): void {
         getToken: async () => ({ accessToken: accessToken }),
         getUid: () => null,
         addAuthTokenListener: listener => {
-          // Call listener once immediately with predefined accessToken.
+          // Call listener once immediately with predefined
+          // accessToken.
           listener(accessToken);
         },
         removeAuthTokenListener: () => {},
