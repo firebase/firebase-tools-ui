@@ -59,14 +59,8 @@ function renderBreadcrumbs(
   activeRef: firebase.database.Reference,
   navigateToRef: (ref: firebase.database.Reference) => void
 ) {
-  let ref: firebase.database.Reference | null = activeRef;
-  const refs = [];
-  while (ref !== null) {
-    refs.push(ref);
-    ref = ref.parent;
-  }
-
-  const crumbs = refs.reverse().reduce<JSX.Element[]>((crumbs, ref, i) => {
+  const ancestors = getAncestorRefs(activeRef);
+  const crumbs = ancestors.reduce<JSX.Element[]>((crumbs, ref, i) => {
     const reactKey = ref.toString();
     if (i !== 0) {
       crumbs.push(<Icon icon="chevron_right" key={`${reactKey}-chevron`} />);
@@ -85,4 +79,25 @@ function renderBreadcrumbs(
     return crumbs;
   }, []);
   return <>{crumbs}</>;
+}
+
+/**
+ * Get the all parent refs, in order, from the root to the supplied ref.
+ *
+ * Example:
+ *
+ * ```
+ * const ref = new Database('http://example.firebaseio.com/a/b/c');
+ *
+ * getAncestorRefs(ref); // [refA, refB, refC]
+ * ```
+ */
+function getAncestorRefs(ref: firebase.database.Reference | null) {
+  const refs = [];
+  while (ref !== null) {
+    refs.push(ref);
+    ref = ref.parent;
+  }
+  refs.reverse();
+  return refs;
 }
