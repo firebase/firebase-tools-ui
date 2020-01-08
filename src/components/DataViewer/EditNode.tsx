@@ -27,7 +27,7 @@ import { useState, useRef, useEffect } from 'react';
 
 import './EditNode.scss';
 import keycode from 'keycode';
-import { jsonIshValue } from './common/view_model';
+import { jsonIshValue, getDbRootUrl } from './common/view_model';
 
 export interface Props {
   value?: string | boolean | number;
@@ -43,7 +43,7 @@ export const EditNode = React.memo<Props>(function EditNode$({
   onClose,
 }) {
   const pushId = realtimeRef.push().key!;
-  const keyName = realtimeRef.key || realtimeRef.toString();
+  const keyName = realtimeRef.key || getDbRootUrl(realtimeRef);
   const [form, setForm] = useState({
     value: isAdding ? '' : JSON.stringify(value) || '',
     keyName: isAdding ? pushId : keyName,
