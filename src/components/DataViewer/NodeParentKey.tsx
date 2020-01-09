@@ -63,7 +63,7 @@ function renderBreadcrumbs(
   const ancestors = getAncestorRefs(activeRef);
 
   let crumbs: JSX.Element[] = [];
-  ancestors.forEach((ref, i) => {
+  for (let [i, ref] of ancestors.entries()) {
     const reactKey = ref.toString();
     if (i !== 0) {
       crumbs.push(<Icon icon="chevron_right" key={`${reactKey}-chevron`} />);
@@ -79,7 +79,7 @@ function renderBreadcrumbs(
         {ref.key || getDbRootUrl(ref)}
       </Typography>
     );
-  }, []);
+  }
   return <>{crumbs}</>;
 }
 
