@@ -26,7 +26,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "npm run build:web && npm run build:server",
+    "build:web": "react-scripts build",
     "build:server": "webpack --target=node server.js -o server.bundle.js",
     "test": "react-scripts test",
     "test:coverage": "react-scripts test --coverage --watchAll=false",
