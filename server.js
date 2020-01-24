@@ -30,11 +30,12 @@ const path = require('path');
 exports.startServer = function() {
   const app = express();
   exports.registerApis(app);
-  app.use(express.static(path.join(__dirname, '..', 'build')));
+  const webDir = path.join(path.dirname(process.argv[1]), 'build')
+  app.use(express.static(webDir));
 
   // Required for the router to work properly.
   app.get('*', function(req, res) {
-    res.sendFile(path.join(__dirname, '..', 'build', 'index.html'));
+    res.sendFile(path.join(webDir, 'index.html'));
   });
 
   app.listen(process.env.PORT || 3000);
@@ -71,12 +72,6 @@ function getEmulatorsConfig(projectId, req, res) {
       ? { hostAndPort: process.env.FIRESTORE_EMULATOR_HOST }
       : undefined,
   });
-}
-
-function serveIndexHtml(req, res) {
-  const indexFile = path.join(__dirname, '..', 'build', 'index.html');
-  const indexTemplate = fs.readFileSync(indexFile, 'utf-8');
-  res.status(200).end(indexTemplate);
 }
 
 // When this file is ran directly like `node server.js`, just start the server.
