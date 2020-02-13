@@ -25,7 +25,12 @@ import {
   switchMap,
 } from 'rxjs/operators';
 
-import { DEFAULT_PAGE_SIZE, QueryParams, ViewModel } from './view_model';
+import {
+  DEFAULT_PAGE_SIZE,
+  QueryParams,
+  ViewModel,
+  getDbRootUrl,
+} from './view_model';
 
 /**
  * Timeout for silent call, which should determine if the data is
@@ -34,6 +39,9 @@ import { DEFAULT_PAGE_SIZE, QueryParams, ViewModel } from './view_model';
 const REST_TIMEOUT = `1s`;
 
 const NO_CHILDREN: string[] = [];
+
+// Accepted as admin by Realtime Database Emulator.
+const ADMIN_AUTH_HEADERS = { Authorization: 'Bearer owner' };
 
 /**
  * Creates an observable view model and query subject. The view model will
@@ -66,9 +74,11 @@ export function createViewModel(
 export function canDoRealtime(
   realtimeRef: firebase.database.Reference
 ): Observable<boolean> {
-  const base = `${realtimeRef.toString()}.json`;
-  const silent = `${base}?print=silent&timeout=${REST_TIMEOUT}`;
-  return defer(() => fetch(silent)).pipe(
+  const silent = restUrl(realtimeRef, {
+    print: 'silent',
+    timeout: REST_TIMEOUT,
+  });
+  return defer(() => fetch(silent, { headers: ADMIN_AUTH_HEADERS })).pipe(
     mapTo(true),
     catchError(() => of(false)),
     shareReplay({ bufferSize: 1, refCount: true })
@@ -142,12 +152,12 @@ function applyQuery(
 
 /** Use REST to fetch the children for a node */
 function fetchNonRealtime(
-  realtimeRef: firebase.database.Query,
+  realtimeRef: firebase.database.Reference,
   query: QueryParams
 ): Observable<string[]> {
   const params = getRestQueryParams(query);
-  const shallow = `${realtimeRef.toString()}.json?shallow=true&${params}`;
-  return defer(() => fetch(shallow)).pipe(
+  const shallow = restUrl(realtimeRef, { ...params, shallow: 'true' });
+  return defer(() => fetch(shallow, { headers: ADMIN_AUTH_HEADERS })).pipe(
     map(r => r.json()),
     map(data => Object.keys(data))
   );
@@ -161,7 +171,7 @@ interface RestQueryParams {
   startAt?: string;
 }
 
-function getRestQueryParams(query: QueryParams): string {
+function getRestQueryParams(query: QueryParams): RestQueryParams {
   const { key, operator, value, limit } = query;
 
   const params: RestQueryParams = {
@@ -182,7 +192,25 @@ function getRestQueryParams(query: QueryParams): string {
         break;
     }
   }
-  return Object.entries(params)
-    .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
+
+  return params;
+}
+
+function restUrl(
+  ref: firebase.database.Reference,
+  params: Record<string, string | undefined>
+): string {
+  const rootUrl = getDbRootUrl(ref);
+
+  // TODO(yuchenshi): Find some cross-browser and lightweight way to parse query.
+  if (rootUrl.indexOf('?ns=') >= 0) {
+    const ns = rootUrl.split('?ns=')[1];
+    params = { ...params, ns };
+  }
+
+  const query = Object.entries(params)
+    .filter(([key, value]) => !!value)
+    .map(([key, value]) => `${key}=${encodeURIComponent(value!)}`)
     .join('&');
+  return `${ref.toString()}.json?${query}`;
 }
