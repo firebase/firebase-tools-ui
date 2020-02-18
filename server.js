@@ -21,24 +21,28 @@
 */
 
 const express = require('express');
-const fs = require('fs');
+const fetch = require('node-fetch').default;
 const path = require('path');
 
 /**
   Start an express app that serves both static content and APIs.
 */
-exports.startServer = function() {
+exports.startServer = function () {
   const app = express();
   exports.registerApis(app);
   const webDir = path.join(path.dirname(process.argv[1]), 'build')
   app.use(express.static(webDir));
 
   // Required for the router to work properly.
-  app.get('*', function(req, res) {
+  app.get('*', function (req, res) {
     res.sendFile(path.join(webDir, 'index.html'));
   });
 
-  app.listen(process.env.PORT || 3000);
+  const host = process.env.HOST || 'localhost';
+  const port = process.env.PORT || 3000;
+  app.listen(port, host, () => {
+    console.log(`Web / API server started at http://${hostAndPort(host, port)}`);
+  });
   return app;
 };
 
@@ -48,29 +52,52 @@ exports.startServer = function() {
   These are also available through development server via ./setupProxy.js,
   however, hot-reloading DOES NOT WORK with this file. Restart instead.
 */
-exports.registerApis = function(app) {
-  const projectId = process.env.GCLOUD_PROJECT;
-  if (!projectId) {
+exports.registerApis = function (app) {
+  const projectEnv = 'GCLOUD_PROJECT';
+  const hubEnv = 'FIREBASE_EMULATOR_HUB'
+  const projectId = process.env[projectEnv];
+  const hubHost = process.env[hubEnv];
+  if (!projectId || !hubHost) {
     throw new Error(
-      'Please specify the GCLOUD_PROJECT environment variable.\n' +
-        '(Are you using firebase-tools@>=7.11.0 with `--project your-project`?)'
+      `Please specify these environment variables: ${projectEnv} ${hubEnv}\n` +
+      '(Are you using firebase-tools@>=x.y.z with `--project your-project`?)'
     );
   }
   // Exposes the host and port of various emulators to facilitate accessing
   // them using client SDKs. For features that involve multiple emulators or
   // hard to accomplish using client SDKs, consider adding an API below.
-  app.get('/api/config', getEmulatorsConfig.bind(null, projectId));
+  app.get('/api/config', jsonHandler(async (req) => {
+    const emulatorsRes = await fetch(`http://${hubHost}/emulators`);
+    const emulators = await emulatorsRes.json();
+
+    const json = { projectId };
+    Object.entries(emulators).forEach(([name, info]) => {
+      json[name] = {
+        hostAndPort: hostAndPort(info.host, info.port),
+        ...info,
+      }
+    });
+    return json;
+  }));
 };
 
-function getEmulatorsConfig(projectId, req, res) {
-  res.status(200).json({
-    projectId,
-    database: process.env.FIREBASE_DATABASE_EMULATOR_HOST
-      ? { hostAndPort: process.env.FIREBASE_DATABASE_EMULATOR_HOST }
-      : undefined,
-    firestore: process.env.FIRESTORE_EMULATOR_HOST
-      ? { hostAndPort: process.env.FIRESTORE_EMULATOR_HOST }
-      : undefined,
+function hostAndPort(host, port) {
+  // Correctly put IPv6 addresses in brackets.
+  return host.indexOf(':') >= 0 ? `[${host}]:${port}` : `${host}:${port}`;
+}
+
+function jsonHandler(handler) {
+  return ((req, res) => {
+    handler(req).then((body) => {
+      res.status(200).json(body);
+    }, (err) => {
+      console.error(err);
+      res.status(500).json({
+        message: err.message,
+        stack: err.stack,
+        raw: err,
+      });
+    })
   });
 }
 
