@@ -25,6 +25,7 @@ import { RMWCProvider } from '@rmwc/provider';
 
 import App from './App';
 import './index.scss';
+import '@rmwc/tooltip/tooltip.css';
 
 const store = configureStore();
 
