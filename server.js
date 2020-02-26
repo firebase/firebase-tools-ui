@@ -60,7 +60,7 @@ exports.registerApis = function (app) {
   if (!projectId || !hubHost) {
     throw new Error(
       `Please specify these environment variables: ${projectEnv} ${hubEnv}\n` +
-      '(Are you using firebase-tools@>=x.y.z with `--project your-project`?)'
+      '(Are you using firebase-tools@>=7.14.0 with `--project your-project`?)'
     );
   }
   // Exposes the host and port of various emulators to facilitate accessing
