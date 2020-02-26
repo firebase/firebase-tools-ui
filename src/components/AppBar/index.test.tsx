@@ -26,35 +26,23 @@ function isTabActive(labelEl) {
 }
 
 it('selects the matching nav-tab', () => {
-  const history = {
-    location: {
-      pathname: '/database/foo/bar',
-    },
-  };
-
   const { getByText } = render(
-    <MemoryRouter>
-      <AppBar history={history} />
+    <MemoryRouter initialEntries={['/bar']}>
+      <AppBar
+        routes={[
+          {
+            label: 'foo',
+            path: '/foo',
+          },
+          {
+            label: 'bar',
+            path: '/bar',
+          },
+        ]}
+      />
     </MemoryRouter>,
   );
 
-  expect(isTabActive(getByText('rtdb'))).toBe(true);
-  expect(isTabActive(getByText('overview'))).toBe(false);
-});
-
-it('selects the _overview_ tab if there is no route match', () => {
-  const history = {
-    location: {
-      pathname: '/unknown/location',
-    },
-  };
-
-  const { getByText } = render(
-    <MemoryRouter>
-      <AppBar history={history} />
-    </MemoryRouter>,
-  );
-
-  expect(isTabActive(getByText('overview'))).toBe(true);
-  expect(isTabActive(getByText('rtdb'))).toBe(false);
+  expect(isTabActive(getByText('foo'))).toBe(false);
+  expect(isTabActive(getByText('bar'))).toBe(true);
 });

@@ -41,7 +41,7 @@ const theme: Record<string, string> = {
 
 export const Database: React.FC<Props> = ({ config, namespace }) => {
   const [ref, setRef] = useState<firebase.database.Reference | undefined>(
-    undefined
+    undefined,
   );
   useEffect(() => {
     if (!config) return;
@@ -52,7 +52,7 @@ export const Database: React.FC<Props> = ({ config, namespace }) => {
 
   const doNavigate = useCallback(
     (path: string) => setRef(ref && ref.root.child(path)),
-    [setRef, ref]
+    [setRef, ref],
   );
 
   return (

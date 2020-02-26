@@ -14,55 +14,59 @@
  * limitations under the License.
  */
 
-import { withRouter } from 'react-router-dom';
+import { useLocation, matchPath, Link } from 'react-router-dom';
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { TabBar, Tab } from '@rmwc/tabs';
 import { TopAppBar, TopAppBarRow, TopAppBarSection } from '@rmwc/top-app-bar';
 import { Typography } from '@rmwc/typography';
 
 import Logo from '../Logo';
+import { Route } from '../../routes';
 
 import './index.scss';
 
-// TODO(tlavelle): consolidate this with the router in App.tsx
-const defaultLink = { to: '/', label: 'overview' };
-const links = [
-  { key: 'database', to: '/database', label: 'rtdb' },
-  { key: 'spam', to: '/spam', label: 'other' },
-];
+type Props = {
+  routes: ReadonlyArray<Route>;
+};
 
-export const AppBar: React.FC<any> = (props) => {
-  const tabs = [defaultLink, ...links].map(({ to, label }) => (
-    <Tab key={label} className="mdc-tab--min-width" {...{ tag: Link, to }}>
+export const AppBar: React.FC<Props> = ({ routes }) => {
+  let location = useLocation();
+
+  const tabs = routes.map(({ path, label }: Route) => (
+    <Tab
+      key={label}
+      className="mdc-tab--min-width"
+      {...{ tag: Link, to: path }}
+    >
       {label}
     </Tab>
   ));
 
-  const activeTab =
-    links.findIndex((l) => props.history.location.pathname.startsWith(l.to)) +
-      1 || 0;
+  const activeTabIndex = routes.findIndex((r) =>
+    matchPath(location.pathname, {
+      path: r.path,
+      exact: r.exact,
+    }),
+  );
 
   return (
-    <>
-      <TopAppBar fixed prominent className="AppBar">
-        <TopAppBarRow>
-          <TopAppBarSection>
-            <div className="title-grid">
-              <Logo />
-              <Typography use="headline5" className="title">
-                Firebase Emulator
-              </Typography>
-              <Typography use="subtitle1" className="subtitle">
-                This is a local enviornment and not the Firebase console
-              </Typography>
-            </div>
-          </TopAppBarSection>
-        </TopAppBarRow>
-        <TabBar activeTabIndex={activeTab}>{tabs}</TabBar>
-      </TopAppBar>
-    </>
+    <TopAppBar fixed prominent className="AppBar">
+      <TopAppBarRow>
+        <TopAppBarSection>
+          <div className="title-grid">
+            <Logo />
+            <Typography use="headline5" className="title">
+              Firebase Emulator
+            </Typography>
+            <Typography use="subtitle1" className="subtitle">
+              This is a local enviornment and not the Firebase console
+            </Typography>
+          </div>
+        </TopAppBarSection>
+      </TopAppBarRow>
+      <TabBar activeTabIndex={activeTabIndex}>{tabs}</TabBar>
+    </TopAppBar>
   );
 };
 
-export default withRouter(AppBar);
+export default AppBar;

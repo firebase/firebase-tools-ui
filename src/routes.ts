@@ -14,16 +14,27 @@
  * limitations under the License.
  */
 
-import React from 'react';
-import { render } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
-import Navigation from './index';
+import DatabaseDefaultRoute from './components/Database/DatabaseDefaultRoute';
+import Home from './components/Home';
 
-it('renders without crashing', () => {
-  const { container } = render(
-    <BrowserRouter>
-      <Navigation />
-    </BrowserRouter>
-  );
-  expect(container).not.toBeNull();
-});
+export interface Route {
+  path: string;
+  component: React.FC;
+  label: string;
+  exact: boolean;
+}
+
+export const routes: ReadonlyArray<Route> = [
+  {
+    path: '/',
+    component: Home,
+    label: 'overview',
+    exact: true,
+  },
+  {
+    path: '/database',
+    component: DatabaseDefaultRoute,
+    label: 'rtdb',
+    exact: false,
+  }
+];

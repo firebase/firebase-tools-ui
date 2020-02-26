@@ -15,25 +15,24 @@
  */
 
 import React from 'react';
-import { Route, match } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import './App.scss';
-import Home from './components/Home';
-import Database from './components/Database';
-import DatabaseDefaultRoute from './components/Database/DatabaseDefaultRoute';
 import AppBar from './components/AppBar';
-
-const DatabaseRoute: React.FC<{ match: match<{ namespace: string }> }> = ({
-  match,
-}) => <Database namespace={match.params.namespace} />;
+import { routes } from './routes';
 
 const App: React.FC = () => {
   return (
     <div className="App">
-      <AppBar />
+      <AppBar routes={routes} />
       <div className="App-main">
-        <Route exact path="/" component={Home} />
-        <Route exact path="/database" component={DatabaseDefaultRoute} />
-        <Route path="/database/:namespace/data" component={DatabaseRoute} />
+        {routes.map((r) => (
+          <Route
+            key={r.path}
+            path={r.path}
+            component={r.component}
+            exact={r.exact}
+          />
+        ))}
       </div>
     </div>
   );

@@ -16,11 +16,11 @@
 
 @import-normalize;
 
-@import '../node_modules/material-components-web/dist/material-components-web.css';
-
 * {
   box-sizing: border-box;
 }
+
+@import '../node_modules/material-components-web/dist/material-components-web.css';
 
 body {
   margin: 0;
