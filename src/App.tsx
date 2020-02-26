@@ -17,7 +17,6 @@
 import React from 'react';
 import { Route, match } from 'react-router-dom';
 import './App.scss';
-// import Navigation from './components/Navigation';
 import Home from './components/Home';
 import Database from './components/Database';
 import DatabaseDefaultRoute from './components/Database/DatabaseDefaultRoute';
