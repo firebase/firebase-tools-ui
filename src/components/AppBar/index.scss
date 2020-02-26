@@ -20,24 +20,24 @@
 .AppBar {
   padding: 0 24px;
 
-  .title-grid {
+  .title-wrapper {
     align-items: center;
     align-self: flex-end;
-    display: grid;
-    grid-gap: 4px;
-    grid-template-areas: 'logo title'
-                         '.    subtitle';
-
-    .title {
-      grid-area: title;
-    }
-
-    .subtitle {
-      grid-area: subtitle;
-    }
+    display: flex;
 
     svg {
-      grid-area: logo;
+      align-self: flex-start;
+      margin-top: 0.25rem;
+      margin-right: 0.5rem;
+    }
+
+    .title-text {
+      flex: 1;
+
+      h1,
+      h2 {
+        margin: 0;
+      }
     }
   }
 
@@ -48,9 +48,9 @@
   .mdc-tab {
     @include mdc-tab-active-text-label-color('secondary');
     @include mdc-tab-horizontal-padding(5px);
-    @include mdc-tab-text-label-color(white)
+    @include mdc-tab-text-label-color(white);
 
-    &:nth-of-type(n+1) {
+    &:nth-of-type(n + 1) {
       margin-left: 16px;
     }
   }

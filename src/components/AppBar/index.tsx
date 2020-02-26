@@ -32,7 +32,7 @@ const links = [
   { key: 'spam', to: '/spam', label: 'other' },
 ];
 
-export const AppBar: React.FC<any> = (props) => {
+export const AppBar: React.FC<any> = props => {
   const tabs = [defaultLink, ...links].map(({ to, label }) => (
     <Tab key={label} className="mdc-tab--min-width" {...{ tag: Link, to }}>
       {label}
@@ -40,7 +40,7 @@ export const AppBar: React.FC<any> = (props) => {
   ));
 
   const activeTab =
-    links.findIndex((l) => props.history.location.pathname.startsWith(l.to)) +
+    links.findIndex(l => props.history.location.pathname.startsWith(l.to)) +
       1 || 0;
 
   return (
@@ -48,14 +48,16 @@ export const AppBar: React.FC<any> = (props) => {
       <TopAppBar fixed prominent className="AppBar">
         <TopAppBarRow>
           <TopAppBarSection>
-            <div className="title-grid">
+            <div className="title-wrapper">
               <Logo />
-              <Typography use="headline5" className="title">
-                Firebase Emulator
-              </Typography>
-              <Typography use="subtitle1" className="subtitle">
-                This is a local enviornment and not the Firebase console
-              </Typography>
+              <div className="title-text">
+                <Typography use="headline5" tag="h1">
+                  Firebase Emulator
+                </Typography>
+                <Typography use="subtitle1" tag="h2">
+                  This is a local enviornment and not the Firebase console
+                </Typography>
+              </div>
             </div>
           </TopAppBarSection>
         </TopAppBarRow>
