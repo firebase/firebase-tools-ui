@@ -1,15 +1,8 @@
 .App {
-  display: flex;
   height: 100vh;
 }
 
-.App-header {
-  width: 30vw;
-  background-color: #282c34;
-  color: white;
-}
-
 .App-main {
-  flex: 1;
-  overflow-y: auto;
+  height: 100%;
+  padding-top: 176px;
 }

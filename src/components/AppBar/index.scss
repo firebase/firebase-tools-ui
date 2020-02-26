@@ -1,0 +1,48 @@
+@import '@material/tab/mixins';
+@import '@material/tab-indicator/mixins';
+
+.AppBar {
+  padding: 0 24px;
+
+  .title-grid {
+    align-items: center;
+    align-self: flex-end;
+    display: grid;
+    grid-gap: 4px;
+    grid-template-areas: 'logo title'
+                         '.    subtitle';
+
+    .title {
+      grid-area: title;
+    }
+
+    .subtitle {
+      grid-area: subtitle;
+    }
+
+    svg {
+      grid-area: logo;
+    }
+  }
+
+  .mdc-tab-bar {
+    padding-left: 24px;
+  }
+
+  .mdc-tab {
+    @include mdc-tab-active-text-label-color('secondary');
+    // @include mdc-tab-height(64px);
+    @include mdc-tab-horizontal-padding(5px);
+    @include mdc-tab-text-label-color(white)
+
+    &:nth-of-type(n+1) {
+      margin-left: 16px;
+    }
+  }
+
+  .mdc-tab-indicator {
+    @include mdc-tab-indicator-underline-color('secondary');
+    @include mdc-tab-indicator-underline-height(3px);
+    @include mdc-tab-indicator-underline-top-corner-radius(2px);
+  }
+}

@@ -17,10 +17,11 @@
 import React from 'react';
 import { Route, match } from 'react-router-dom';
 import './App.scss';
-import Navigation from './components/Navigation';
+// import Navigation from './components/Navigation';
 import Home from './components/Home';
 import Database from './components/Database';
 import DatabaseDefaultRoute from './components/Database/DatabaseDefaultRoute';
+import AppBar from './components/AppBar';
 
 const DatabaseRoute: React.FC<{ match: match<{ namespace: string }> }> = ({
   match,
@@ -29,10 +30,7 @@ const DatabaseRoute: React.FC<{ match: match<{ namespace: string }> }> = ({
 const App: React.FC = () => {
   return (
     <div className="App">
-      <header className="App-header">
-        <h1>Firebase Emulator Suite</h1>
-        <Navigation />
-      </header>
+      <AppBar />
       <div className="App-main">
         <Route exact path="/" component={Home} />
         <Route exact path="/database" component={DatabaseDefaultRoute} />
