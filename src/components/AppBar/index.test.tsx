@@ -16,14 +16,33 @@
 
 import React from 'react';
 import { render } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
-import Navigation from './index';
+import { MemoryRouter } from 'react-router-dom';
 
-it('renders without crashing', () => {
-  const { container } = render(
-    <BrowserRouter>
-      <Navigation />
-    </BrowserRouter>
+import { AppBar } from './index';
+
+function isTabActive(labelEl) {
+  const tabEl = labelEl.closest('.mdc-tab');
+  return tabEl.className.includes('mdc-tab--active');
+}
+
+it('selects the matching nav-tab', () => {
+  const { getByText } = render(
+    <MemoryRouter initialEntries={['/bar']}>
+      <AppBar
+        routes={[
+          {
+            label: 'foo',
+            path: '/foo',
+          },
+          {
+            label: 'bar',
+            path: '/bar',
+          },
+        ]}
+      />
+    </MemoryRouter>
   );
-  expect(container).not.toBeNull();
+
+  expect(isTabActive(getByText('foo'))).toBe(false);
+  expect(isTabActive(getByText('bar'))).toBe(true);
 });

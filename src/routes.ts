@@ -14,21 +14,27 @@
  * limitations under the License.
  */
 
-import React from 'react';
-import { Link } from 'react-router-dom';
-import './index.scss';
+import DatabaseDefaultRoute from './components/Database/DatabaseDefaultRoute';
+import Home from './components/Home';
 
-export const Nav: React.FC = () => (
-  <nav className="Navigation">
-    <ul>
-      <li>
-        <Link to="/">Overview</Link>
-      </li>
-      <li>
-        <Link to="/database">Realtime Database</Link>
-      </li>
-    </ul>
-  </nav>
-);
+export interface Route {
+  path: string;
+  component: React.FC;
+  label: string;
+  exact: boolean;
+}
 
-export default Nav;
+export const routes: ReadonlyArray<Route> = [
+  {
+    path: '/',
+    component: Home,
+    label: 'overview',
+    exact: true,
+  },
+  {
+    path: '/database',
+    component: DatabaseDefaultRoute,
+    label: 'rtdb',
+    exact: false,
+  },
+];

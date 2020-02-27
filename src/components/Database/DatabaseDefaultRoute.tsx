@@ -16,8 +16,10 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { Switch, Route, useRouteMatch, Redirect } from 'react-router-dom';
+
 import { AppState } from '../../store';
+import Database from './index';
 
 export interface PropsFromState {
   projectId?: string;
@@ -26,11 +28,25 @@ export interface PropsFromState {
 export type Props = PropsFromState;
 
 export const DatabaseDefaultRoute: React.FC<Props> = ({ projectId }) => {
+  let { path, url } = useRouteMatch()!;
+
   if (!projectId) {
-    return <div>Loading</div>;
+    return <div>Loading...</div>;
   }
-  // Default to the namespace named after the project id.
-  return <Redirect to={`/database/${projectId}/data`} />;
+
+  return (
+    <Switch>
+      <Route exact path={path}>
+        <Redirect to={`${url}/${projectId}/data`} />;
+      </Route>
+      <Route
+        path={`${path}/:namespace/data`}
+        component={({ match }: any) => (
+          <Database namespace={match.params.namespace} />
+        )}
+      ></Route>
+    </Switch>
+  );
 };
 
 export const mapStateToProps = ({ config }: AppState) => ({
