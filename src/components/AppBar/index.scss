@@ -51,7 +51,7 @@
     @include mdc-tab-horizontal-padding(5px);
     @include mdc-tab-text-label-color(white);
 
-    & :nth-of-type(n + 1) {
+    &:nth-of-type(n + 1) {
       margin-left: 16px;
     }
   }

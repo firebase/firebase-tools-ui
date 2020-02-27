@@ -16,13 +16,7 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import {
-  Switch,
-  Route,
-  useRouteMatch,
-  Redirect,
-  match,
-} from 'react-router-dom';
+import { Switch, Route, useRouteMatch, Redirect } from 'react-router-dom';
 
 import { AppState } from '../../store';
 import Database from './index';
@@ -47,7 +41,7 @@ export const DatabaseDefaultRoute: React.FC<Props> = ({ projectId }) => {
       </Route>
       <Route
         path={`${path}/:namespace/data`}
-        component={({ match }) => (
+        component={({ match }: any) => (
           <Database namespace={match.params.namespace} />
         )}
       ></Route>
