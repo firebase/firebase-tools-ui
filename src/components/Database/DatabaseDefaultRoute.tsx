@@ -49,7 +49,7 @@ export const DatabaseDefaultRoute: React.FC<Props> = ({ projectId }) => {
       <Route exact path={path}>
         <Redirect to={`${url}/${projectId}/data`} />;
       </Route>
-      <Route path={`${path}/:namespace/data`} component={DatabaseRoute}></Route>
+      <Route path={`${path}/:namespace/data`} component={({params}) => <Database namespace={params.namespace} />}></Route>
     </Switch>
   );
 };
