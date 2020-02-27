@@ -33,10 +33,6 @@ export interface PropsFromState {
 
 export type Props = PropsFromState;
 
-const DatabaseRoute: React.FC<{ match: match<{ namespace: string }> }> = ({
-  match,
-}) => <Database namespace={match.params.namespace} />;
-
 export const DatabaseDefaultRoute: React.FC<Props> = ({ projectId }) => {
   let { path, url } = useRouteMatch()!;
 
@@ -49,7 +45,10 @@ export const DatabaseDefaultRoute: React.FC<Props> = ({ projectId }) => {
       <Route exact path={path}>
         <Redirect to={`${url}/${projectId}/data`} />;
       </Route>
-      <Route path={`${path}/:namespace/data`} component={({params}) => <Database namespace={params.namespace} />}></Route>
+      <Route
+        path={`${path}/:namespace/data`}
+        component={({ params }) => <Database namespace={params.namespace} />}
+      ></Route>
     </Switch>
   );
 };
