@@ -1,3 +1,5 @@
+@import './components/AppBar/variables';
+
 .App-main {
-  padding-top: 176px;
+  padding-top: $app-bar-height;
 }
