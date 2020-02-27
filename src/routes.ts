@@ -36,5 +36,5 @@ export const routes: ReadonlyArray<Route> = [
     component: DatabaseDefaultRoute,
     label: 'rtdb',
     exact: false,
-  }
+  },
 ];

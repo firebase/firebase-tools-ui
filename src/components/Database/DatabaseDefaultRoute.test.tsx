@@ -25,7 +25,7 @@ it('renders loading when projectId is not ready', () => {
   const { getByText } = render(
     <MemoryRouter initialEntries={['']}>
       <DatabaseDefaultRoute projectId={undefined} />
-    </MemoryRouter>,
+    </MemoryRouter>
   );
   expect(getByText('Loading...')).not.toBeNull();
 });
@@ -41,7 +41,7 @@ it('redirects when projectId is ready', () => {
         </Route>
         <DatabaseDefaultRoute projectId={'sample'} />
       </Provider>
-    </MemoryRouter>,
+    </MemoryRouter>
   );
   expect(getByText('SUCCESS')).not.toBeNull();
 });

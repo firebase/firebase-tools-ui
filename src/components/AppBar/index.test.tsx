@@ -40,7 +40,7 @@ it('selects the matching nav-tab', () => {
           },
         ]}
       />
-    </MemoryRouter>,
+    </MemoryRouter>
   );
 
   expect(isTabActive(getByText('foo'))).toBe(false);

@@ -25,7 +25,7 @@ const App: React.FC = () => {
     <div className="App">
       <AppBar routes={routes} />
       <div className="App-main">
-        {routes.map((r) => (
+        {routes.map(r => (
           <Route
             key={r.path}
             path={r.path}

@@ -25,8 +25,9 @@
     align-self: flex-end;
     display: grid;
     grid-gap: 4px;
-    grid-template-areas: 'logo title'
-                         '.    subtitle';
+    grid-template-areas:
+      'logo title'
+      '.    subtitle';
 
     .title {
       grid-area: title;
@@ -48,9 +49,7 @@
   .mdc-tab {
     @include mdc-tab-active-text-label-color('secondary');
     @include mdc-tab-horizontal-padding(5px);
-    @include mdc-tab-text-label-color(white)
-
-    &:nth-of-type(n+1) {
+    @include mdc-tab-text-label-color(white) &: nth-of-type(n + 1) {
       margin-left: 16px;
     }
   }

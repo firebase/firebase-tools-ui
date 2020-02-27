@@ -58,5 +58,5 @@ ReactDOM.render(
       </Provider>
     </ThemeProvider>
   </RMWCProvider>,
-  document.getElementById('root'),
+  document.getElementById('root')
 );

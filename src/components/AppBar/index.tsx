@@ -42,11 +42,11 @@ export const AppBar: React.FC<Props> = ({ routes }) => {
     </Tab>
   ));
 
-  const activeTabIndex = routes.findIndex((r) =>
+  const activeTabIndex = routes.findIndex(r =>
     matchPath(location.pathname, {
       path: r.path,
       exact: r.exact,
-    }),
+    })
   );
 
   return (
