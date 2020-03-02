@@ -13,6 +13,7 @@
     "firebase": "^7.6.0",
     "font-awesome": "^4.7.0",
     "keycode": "^2.2.0",
+    "node-fetch": "^2.6.0",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
     "react-redux": "^7.1.1",
