@@ -41,7 +41,7 @@ export const DatabaseDefaultRoute: React.FC<Props> = ({ projectId }) => {
       </Route>
       <Route
         path={`${path}/:namespace/data`}
-        component={({ match }: any) => (
+        render={({ match }: any) => (
           <Database namespace={match.params.namespace} />
         )}
       ></Route>
