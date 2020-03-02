@@ -1,15 +1,5 @@
-.App {
-  display: flex;
-  height: 100vh;
-}
-
-.App-header {
-  width: 30vw;
-  background-color: #282c34;
-  color: white;
-}
+@import './components/AppBar/variables';
 
 .App-main {
-  flex: 1;
-  overflow-y: auto;
+  padding-top: $app-bar-height;
 }

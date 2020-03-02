@@ -19,7 +19,9 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import configureStore from './configureStore';
+import { ThemeProvider } from '@rmwc/theme';
 import { fetchRequest as fetchConfigRequest } from './store/config';
+import { RMWCProvider } from '@rmwc/provider';
 
 import App from './App';
 import './index.scss';
@@ -41,8 +43,20 @@ const RouterWithInit = () => {
 };
 
 ReactDOM.render(
-  <Provider store={store}>
-    <RouterWithInit />
-  </Provider>,
+  <RMWCProvider
+    // Globally disable ripples
+    ripple={false}
+  >
+    <ThemeProvider
+      options={{
+        primary: '#0C2D48',
+        secondary: '#008B8B',
+      }}
+    >
+      <Provider store={store}>
+        <RouterWithInit />
+      </Provider>
+    </ThemeProvider>
+  </RMWCProvider>,
   document.getElementById('root')
 );
