@@ -19,7 +19,7 @@ import { connect } from 'react-redux';
 import { Switch, Route, useRouteMatch, Redirect } from 'react-router-dom';
 
 import { AppState } from '../../store';
-import Database from './index';
+import Database from './Database';
 
 export interface PropsFromState {
   projectId?: string;

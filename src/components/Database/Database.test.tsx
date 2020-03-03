@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { render } from '@testing-library/react';
-import { Database } from './index';
+import { Database } from './Database';
 
 it('renders loading when config is not ready', () => {
   const { getByText } = render(
