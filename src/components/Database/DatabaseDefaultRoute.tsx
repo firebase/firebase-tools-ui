@@ -16,10 +16,17 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import { Switch, Route, useRouteMatch, Redirect } from 'react-router-dom';
+import {
+  Switch,
+  Route,
+  useRouteMatch,
+  Redirect,
+  NavLink,
+} from 'react-router-dom';
 
 import { AppState } from '../../store';
 import Database from './Database';
+import DatabasePicker from './DatabasePicker';
 
 export interface PropsFromState {
   projectId?: string;
@@ -33,17 +40,30 @@ export const DatabaseDefaultRoute: React.FC<Props> = ({ projectId }) => {
   if (!projectId) {
     return <div>Loading...</div>;
   }
+  const primary = projectId;
 
   return (
     <Switch>
       <Route exact path={path}>
-        <Redirect to={`${url}/${projectId}/data`} />;
+        <Redirect to={`${url}/${primary}/data`} />;
       </Route>
       <Route
         path={`${path}/:namespace/data`}
-        render={({ match }: any) => (
-          <Database namespace={match.params.namespace} />
-        )}
+        render={({ match }: any) => {
+          const current = match.params.namespace;
+          return (
+            <div className="Database">
+              <DatabasePicker
+                current={current}
+                primary={primary}
+                navigation={db => (
+                  <NavLink to={`${url}/${db}/data`}>{db}</NavLink>
+                )}
+              />
+              <Database namespace={current} />
+            </div>
+          );
+        }}
       ></Route>
     </Switch>
   );

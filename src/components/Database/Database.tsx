@@ -56,7 +56,7 @@ export const Database: React.FC<Props> = ({ config, namespace }) => {
   );
 
   return (
-    <div className="Database">
+    <div className="Database-Database">
       <ThemeProvider options={theme}>
         {ref ? (
           <NodeContainer realtimeRef={ref} isViewRoot onNavigate={doNavigate} />

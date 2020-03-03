@@ -1,0 +1,16 @@
+.Database-Picker {
+  background-color: #fafafa;
+  border: solid 1px #dcdcdc;
+
+  .mdc-list-divider {
+    margin: 16px;
+  }
+
+  .mdc-list-item--activated {
+    color: var(--mdc-theme-secondary, black);
+  }
+
+  .database-icon-fill {
+    fill: var(--mdc-theme-secondary, black);
+  }
+}
