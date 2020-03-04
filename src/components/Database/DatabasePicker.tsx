@@ -129,8 +129,10 @@ export const DatabasePicker: React.FC<Props> = ({
   );
 };
 
-export const mapStateToProps = ({ config }: AppState) => ({
-  databases: config.config ? [config.config.projectId] : undefined,
+export const mapStateToProps = ({ database }: AppState) => ({
+  databases:
+    database.databases.databases &&
+    database.databases.databases.map(({ name }) => name),
 });
 
 export default connect(mapStateToProps)(DatabasePicker);

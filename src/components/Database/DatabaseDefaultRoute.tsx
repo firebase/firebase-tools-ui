@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import React from 'react';
-import { connect } from 'react-redux';
+import React, { useEffect } from 'react';
+import { connect, MapDispatchToPropsFunction } from 'react-redux';
 import {
   Switch,
   Route,
@@ -27,15 +27,27 @@ import {
 import { AppState } from '../../store';
 import Database from './Database';
 import DatabasePicker from './DatabasePicker';
+import { databasesFetchRequest } from '../../store/database';
 
 export interface PropsFromState {
   projectId?: string;
 }
 
-export type Props = PropsFromState;
+export interface PropsFromDispatch {
+  fetchDatabases: () => void;
+}
 
-export const DatabaseDefaultRoute: React.FC<Props> = ({ projectId }) => {
+export type Props = PropsFromState & PropsFromDispatch;
+
+export const DatabaseDefaultRoute: React.FC<Props> = ({
+  projectId,
+  fetchDatabases,
+}) => {
   let { path, url } = useRouteMatch()!;
+  useEffect(() => {
+    if (!projectId) return;
+    fetchDatabases();
+  }, [fetchDatabases, projectId]);
 
   if (!projectId) {
     return <div>Loading...</div>;
@@ -73,4 +85,14 @@ export const mapStateToProps = ({ config }: AppState) => ({
   projectId: config.config ? config.config.projectId : undefined,
 });
 
-export default connect(mapStateToProps)(DatabaseDefaultRoute);
+export const mapDispatchToProps: MapDispatchToPropsFunction<
+  PropsFromDispatch,
+  {}
+> = dispatch => ({
+  fetchDatabases: () => dispatch(databasesFetchRequest()),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(DatabaseDefaultRoute);
