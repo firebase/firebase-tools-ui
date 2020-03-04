@@ -32,7 +32,9 @@ type Props = {
 export const AppBar: React.FC<Props> = ({ routes }) => {
   let location = useLocation();
 
-  const tabs = routes.map(({ path, label }: Route) => (
+  const navRoutes = routes.filter(r => r.showInNav);
+
+  const tabs = navRoutes.map(({ path, label }: Route) => (
     <Tab
       key={label}
       className="mdc-tab--min-width"
@@ -42,7 +44,7 @@ export const AppBar: React.FC<Props> = ({ routes }) => {
     </Tab>
   ));
 
-  const activeTabIndex = routes.findIndex(r =>
+  const activeTabIndex = navRoutes.findIndex(r =>
     matchPath(location.pathname, {
       path: r.path,
       exact: r.exact,

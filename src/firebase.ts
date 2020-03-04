@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
-import * as firebase from 'firebase/app';
 import 'firebase/database';
+import 'firebase/firestore';
+
 import { _FirebaseApp } from '@firebase/app-types/private';
 import { FirebaseAuthInternal } from '@firebase/auth-interop-types';
 import { Component, ComponentType } from '@firebase/component';
-import { DatabaseConfig } from './store/config';
+import * as firebase from 'firebase/app';
+
+import { DatabaseConfig, FirestoreConfig } from './store/config';
 
 export function initDatabase(
   config: DatabaseConfig,
@@ -34,6 +37,23 @@ export function initDatabase(
   return [app.database(), { cleanup: () => app.delete() }];
 }
 
+export function initFirestore(
+  projectId: string,
+  config: FirestoreConfig
+): [firebase.firestore.Firestore, { cleanup: () => Promise<void> }] {
+  const app = firebase.initializeApp(
+    { projectId },
+    `Firestore Component: ${Math.random()}`
+  );
+  applyAdminAuth(app);
+  const firestore = app.firestore();
+  firestore.settings({
+    host: config.hostAndPort,
+    ssl: false,
+  });
+  return [firestore, { cleanup: () => app.delete() }];
+}
+
 function applyAdminAuth(app: firebase.app.App): void {
   const accessToken = 'owner'; // Accepted as admin by emulators.
   const mockAuthComponent = new Component(
@@ -43,7 +63,8 @@ function applyAdminAuth(app: firebase.app.App): void {
         getToken: async () => ({ accessToken: accessToken }),
         getUid: () => null,
         addAuthTokenListener: listener => {
-          // Call listener once immediately with predefined accessToken.
+          // Call listener once immediately with predefined
+          // accessToken.
           listener(accessToken);
         },
         removeAuthTokenListener: () => {},

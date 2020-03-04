@@ -15,6 +15,7 @@
  */
 
 import DatabaseDefaultRoute from './components/Database/DatabaseDefaultRoute';
+import Firestore from './components/Firestore';
 import Home from './components/Home';
 
 export interface Route {
@@ -22,6 +23,7 @@ export interface Route {
   component: React.FC;
   label: string;
   exact: boolean;
+  showInNav: boolean;
 }
 
 export const routes: ReadonlyArray<Route> = [
@@ -30,11 +32,20 @@ export const routes: ReadonlyArray<Route> = [
     component: Home,
     label: 'overview',
     exact: true,
+    showInNav: true,
   },
   {
     path: '/database',
     component: DatabaseDefaultRoute,
     label: 'rtdb',
     exact: false,
+    showInNav: true,
+  },
+  {
+    path: '/firestore',
+    component: Firestore,
+    label: 'firestore',
+    exact: false,
+    showInNav: false,
   },
 ];
