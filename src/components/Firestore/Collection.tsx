@@ -74,7 +74,8 @@ export function useCollection(
       dispatch({ type: 'DOCUMENTS_UPDATED', documents });
     });
     return cancel;
-  }, [collection.path]); // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [collection.path]);
   return [state, dispatch];
 }
 
