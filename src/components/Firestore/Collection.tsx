@@ -19,13 +19,11 @@ import React, { useReducer, useEffect } from 'react';
 import './index.scss';
 import { firestore } from 'firebase';
 import Document from './Document';
-import DatabaseApi from './api';
 import { Typography } from '@rmwc/typography';
 import { Icon } from '@rmwc/icon';
 
 export interface Props {
   collection: firestore.CollectionReference;
-  api: DatabaseApi;
 }
 
 export interface CollectionState {
@@ -76,11 +74,12 @@ export function useCollection(
       dispatch({ type: 'DOCUMENTS_UPDATED', documents });
     });
     return cancel;
-  }, [collection.path]); // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [collection.path]);
   return [state, dispatch];
 }
 
-export const Collection: React.FC<Props> = ({ collection, api }) => {
+export const Collection: React.FC<Props> = ({ collection }) => {
   const [state] = useCollection(collection);
 
   let { url } = useRouteMatch()!;
@@ -120,9 +119,7 @@ export const Collection: React.FC<Props> = ({ collection, api }) => {
             return <p>Loading document...</p>;
           }
 
-          return (
-            <Document api={api} reference={doc.ref} snapshot={doc.snapshot} />
-          );
+          return <Document reference={doc.ref} snapshot={doc.snapshot} />;
         }}
       ></Route>
     </div>
