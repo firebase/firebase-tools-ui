@@ -19,6 +19,7 @@ import { wait, act, render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import DatabaseApi from './api';
 
+import { ApiProvider } from './ApiContext';
 import {
   fakeFirestoreApi,
   fakeCollectionReference,
@@ -38,7 +39,9 @@ it('shows the list of collections', async () => {
 
   const { getByText, queryByText } = render(
     <MemoryRouter>
-      <CollectionList api={fakeApi} />
+      <ApiProvider value={fakeApi}>
+        <CollectionList />
+      </ApiProvider>
     </MemoryRouter>
   );
 
@@ -56,7 +59,9 @@ it('requests root-collections with no docRef', async () => {
 
   const { getByText, queryByText } = render(
     <MemoryRouter>
-      <CollectionList api={fakeApi} />
+      <ApiProvider value={fakeApi}>
+        <CollectionList />
+      </ApiProvider>
     </MemoryRouter>
   );
 
@@ -71,7 +76,9 @@ it('requests sub-collections with docRef', async () => {
 
   const { getByText, queryByText } = render(
     <MemoryRouter>
-      <CollectionList api={fakeApi} reference={fakeDocRef} />
+      <ApiProvider value={fakeApi}>
+        <CollectionList reference={fakeDocRef} />
+      </ApiProvider>
     </MemoryRouter>
   );
 
@@ -83,7 +90,9 @@ it('requests sub-collections with docRef', async () => {
 it('shows the selected top-level collection', () => {
   const { getByText, queryAllByText } = render(
     <MemoryRouter initialEntries={['//cool-coll-1']}>
-      <CollectionList api={fakeFirestoreApi()} />
+      <ApiProvider value={fakeFirestoreApi()}>
+        <CollectionList />
+      </ApiProvider>
     </MemoryRouter>
   );
 
@@ -93,10 +102,9 @@ it('shows the selected top-level collection', () => {
 it('shows the selected document-owned collection', () => {
   const { getByText, queryAllByText } = render(
     <MemoryRouter initialEntries={['//cool-coll-1']}>
-      <CollectionList
-        api={fakeFirestoreApi()}
-        reference={fakeDocumentReference()}
-      />
+      <ApiProvider value={fakeFirestoreApi()}>
+        <CollectionList reference={fakeDocumentReference()} />
+      </ApiProvider>
     </MemoryRouter>
   );
 

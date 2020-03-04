@@ -22,6 +22,7 @@ import { AppState } from '../../store';
 import { FirestoreConfig } from '../../store/config';
 import DatabaseApi from './api';
 import { CollectionList } from './CollectionList';
+import { ApiProvider } from './ApiContext';
 
 export interface PropsFromState {
   config?: FirestoreConfig;
@@ -49,7 +50,11 @@ export const Firestore: React.FC<Props> = ({ config, projectId }) => {
     return <p>Connecting to Firestore...</p>;
   }
 
-  return <CollectionList api={api} />;
+  return (
+    <ApiProvider value={api}>
+      <CollectionList />
+    </ApiProvider>
+  );
 };
 
 export const mapStateToProps = ({ config }: AppState) => ({

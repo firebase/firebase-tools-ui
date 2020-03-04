@@ -25,12 +25,13 @@ import {
   fakeDocumentReference,
 } from './testing/models';
 import Collection from './Collection';
+import { ApiProvider } from './ApiContext';
 
 it('shows the list of documents in the collection', () => {
   const collectionReference = fakeCollectionReference({ id: 'my-stuff' });
   const { getByText, queryByText } = render(
     <MemoryRouter>
-      <Collection collection={collectionReference} api={fakeFirestoreApi()} />
+      <Collection collection={collectionReference} />
     </MemoryRouter>
   );
 
@@ -55,7 +56,9 @@ it('shows the selected sub-document', async () => {
   const collectionReference = fakeCollectionReference({ id: 'my-stuff' });
   const { getByText, queryAllByText } = render(
     <MemoryRouter initialEntries={['//cool-doc-1']}>
-      <Collection collection={collectionReference} api={fakeFirestoreApi()} />
+      <ApiProvider value={fakeFirestoreApi()}>
+        <Collection collection={collectionReference} api={fakeFirestoreApi()} />
+      </ApiProvider>
     </MemoryRouter>
   );
 

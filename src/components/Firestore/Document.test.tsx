@@ -24,16 +24,19 @@ import {
   fakeDocumentSnapshot,
 } from './testing/models';
 
+import { ApiProvider } from './ApiContext';
+
 import Document from './Document';
 
 it('shows the selected document-id', async () => {
   const { getByText } = render(
     <MemoryRouter>
-      <Document
-        reference={fakeDocumentReference({ id: 'my-stuff' })}
-        snapshot={fakeDocumentSnapshot()}
-        api={fakeFirestoreApi()}
-      />
+      <ApiProvider value={fakeFirestoreApi()}>
+        <Document
+          reference={fakeDocumentReference({ id: 'my-stuff' })}
+          snapshot={fakeDocumentSnapshot()}
+        />
+      </ApiProvider>
     </MemoryRouter>
   );
 
@@ -44,11 +47,12 @@ it('shows the selected document-id', async () => {
 it('shows the selected document fields', async () => {
   const { getByText } = render(
     <MemoryRouter>
-      <Document
-        reference={fakeDocumentReference()}
-        snapshot={fakeDocumentSnapshot({ data: { foo: 'bar' } })}
-        api={fakeFirestoreApi()}
-      />
+      <ApiProvider value={fakeFirestoreApi()}>
+        <Document
+          reference={fakeDocumentReference()}
+          snapshot={fakeDocumentSnapshot({ data: { foo: 'bar' } })}
+        />
+      </ApiProvider>
     </MemoryRouter>
   );
 
@@ -61,11 +65,12 @@ it('shows the selected document fields', async () => {
 it('renders a collection list', async () => {
   const { getByTestId } = render(
     <MemoryRouter>
-      <Document
-        reference={fakeDocumentReference()}
-        snapshot={fakeDocumentSnapshot()}
-        api={fakeFirestoreApi()}
-      />
+      <ApiProvider value={fakeFirestoreApi()}>
+        <Document
+          reference={fakeDocumentReference()}
+          snapshot={fakeDocumentSnapshot()}
+        />
+      </ApiProvider>
     </MemoryRouter>
   );
 

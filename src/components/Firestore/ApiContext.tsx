@@ -14,23 +14,16 @@
  * limitations under the License.
  */
 
-import React from 'react';
-import './index.scss';
-import 'firebase/firestore';
-import { CollectionList } from './CollectionList';
-import { Typography } from '@rmwc/typography';
+import { createContext, useContext } from 'react';
+import DatabaseApi from './api';
 
-export interface Props {
-  name: string;
-}
+const ApiContext = createContext<DatabaseApi | null>(null);
 
-export const Database: React.FC<Props> = ({ name }) => {
-  return (
-    <div className="Firestore-Database">
-      <Typography use="headline5">
-        Database: <code>{name}</code>
-      </Typography>
-      <CollectionList />
-    </div>
-  );
+export const ApiProvider = ApiContext.Provider;
+export const useApi = () => {
+  const api = useContext(ApiContext);
+  if (!api) {
+    throw new Error('You are missing a <ApiProvider>.');
+  }
+  return api;
 };

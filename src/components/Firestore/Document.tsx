@@ -17,7 +17,6 @@
 import React from 'react';
 import './index.scss';
 import { firestore } from 'firebase';
-import DatabaseApi from './api';
 import { Typography } from '@rmwc/typography';
 import { Icon } from '@rmwc/icon';
 
@@ -27,10 +26,9 @@ import DocumentPreview from './DocumentPreview';
 export interface Props {
   reference: firestore.DocumentReference;
   snapshot?: firestore.DocumentSnapshot;
-  api: DatabaseApi;
 }
 
-export const Document: React.FC<Props> = ({ reference, snapshot, api }) => {
+export const Document: React.FC<Props> = ({ reference, snapshot }) => {
   return (
     <div className="Document-Document">
       <div>
@@ -39,7 +37,7 @@ export const Document: React.FC<Props> = ({ reference, snapshot, api }) => {
         </Typography>
         <div>
           {snapshot && <DocumentPreview snapshot={snapshot} />}
-          <CollectionList api={api} reference={reference} />
+          <CollectionList reference={reference} />
         </div>
       </div>
     </div>

@@ -16,19 +16,20 @@
 
 import React, { useState, useEffect } from 'react';
 import { firestore } from 'firebase';
-import DatabaseApi from './api';
 import { Route, useRouteMatch, Link } from 'react-router-dom';
 
 import Collection from './Collection';
 import './index.scss';
+import { useApi } from './ApiContext';
+import DatabaseApi from './api';
 
 export interface Props {
-  api: DatabaseApi;
   reference?: firestore.DocumentReference;
 }
 
-export const CollectionList: React.FC<Props> = ({ api, reference }) => {
+export const CollectionList: React.FC<Props> = ({ reference }) => {
   const { url } = useRouteMatch()!;
+  const api = useApi();
   const collections = useCollections(api, reference);
 
   return (
@@ -51,7 +52,6 @@ export const CollectionList: React.FC<Props> = ({ api, reference }) => {
         path={`${url}/:id`}
         render={({ match }: any) => (
           <Collection
-            api={api}
             collection={
               reference
                 ? reference.collection(match.params.id)
