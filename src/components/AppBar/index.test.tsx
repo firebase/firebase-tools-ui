@@ -33,10 +33,12 @@ it('selects the matching nav-tab', () => {
           {
             label: 'foo',
             path: '/foo',
+            showInNav: true,
           },
           {
             label: 'bar',
             path: '/bar',
+            showInNav: true,
           },
         ]}
       />
