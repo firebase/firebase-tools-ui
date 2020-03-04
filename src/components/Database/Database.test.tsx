@@ -14,21 +14,13 @@
  * limitations under the License.
  */
 
-import { all, fork } from 'redux-saga/effects';
-import { combineReducers } from 'redux';
-import { ConfigState, configReducer, configSaga } from './config';
-import { DatabaseState, databaseSaga, databaseReducer } from './database';
+import React from 'react';
+import { render } from '@testing-library/react';
+import { Database } from './Database';
 
-export interface AppState {
-  config: ConfigState;
-  database: DatabaseState;
-}
-
-export function* rootSaga() {
-  yield all([fork(configSaga), fork(databaseSaga)]);
-}
-
-export const rootReducer = combineReducers<AppState>({
-  config: configReducer,
-  database: databaseReducer,
+it('renders loading when config is not ready', () => {
+  const { getByText } = render(
+    <Database namespace="example" config={undefined} />
+  );
+  expect(getByText('Loading')).not.toBeNull();
 });
