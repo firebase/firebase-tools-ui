@@ -16,9 +16,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { firestore } from 'firebase';
-import { Route, useRouteMatch, Link } from 'react-router-dom';
+import { useRouteMatch, Link } from 'react-router-dom';
 
-import Collection from './Collection';
 import './index.scss';
 import { useApi } from './ApiContext';
 import DatabaseApi from './api';
@@ -33,7 +32,7 @@ export const CollectionList: React.FC<Props> = ({ reference }) => {
   const collections = useCollections(api, reference);
 
   return (
-    <div className="CollectionList" data-testid="collection-list">
+    <div className="Firestore-CollectionList" data-testid="collection-list">
       <div>
         {!collections ? (
           <p>Loading collections...</p>
@@ -47,19 +46,6 @@ export const CollectionList: React.FC<Props> = ({ reference }) => {
           </ul>
         )}
       </div>
-
-      <Route
-        path={`${url}/:id`}
-        render={({ match }: any) => (
-          <Collection
-            collection={
-              reference
-                ? reference.collection(match.params.id)
-                : api.database.collection(match.params.id)
-            }
-          />
-        )}
-      ></Route>
     </div>
   );
 };

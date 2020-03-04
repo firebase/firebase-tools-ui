@@ -19,28 +19,47 @@ import './index.scss';
 import { firestore } from 'firebase';
 import { Typography } from '@rmwc/typography';
 import { Icon } from '@rmwc/icon';
+import { Route, useRouteMatch } from 'react-router-dom';
 
 import CollectionList from './CollectionList';
 import DocumentPreview from './DocumentPreview';
+import Collection from './Collection';
+import { useApi } from './ApiContext';
 
 export interface Props {
-  reference: firestore.DocumentReference;
+  reference?: firestore.DocumentReference;
   snapshot?: firestore.DocumentSnapshot;
 }
 
 export const Document: React.FC<Props> = ({ reference, snapshot }) => {
+  const { url } = useRouteMatch()!;
+  const api = useApi();
+
   return (
-    <div className="Document-Document">
-      <div>
-        <Typography use="body1">
-          <Icon icon="insert_drive_file" /> {reference.id}
-        </Typography>
-        <div>
-          {snapshot && <DocumentPreview snapshot={snapshot} />}
-          <CollectionList reference={reference} />
+    <>
+      <div className="Firestore-Document">
+        <div className="Firstore-Document-Preview">
+          <Typography use="body1">
+            <Icon icon="insert_drive_file" /> {reference && reference.id}
+          </Typography>
+          <div>{snapshot && <DocumentPreview snapshot={snapshot} />}</div>
         </div>
+        <CollectionList reference={reference} />
       </div>
-    </div>
+
+      <Route
+        path={`${url}/:id`}
+        render={({ match }: any) => (
+          <Collection
+            collection={
+              reference
+                ? reference.collection(match.params.id)
+                : api.database.collection(match.params.id)
+            }
+          />
+        )}
+      ></Route>
+    </>
   );
 };
 

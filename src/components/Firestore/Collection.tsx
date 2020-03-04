@@ -85,7 +85,7 @@ export const Collection: React.FC<Props> = ({ collection }) => {
   let { url } = useRouteMatch()!;
 
   return (
-    <div>
+    <>
       <div className="Firestore-Collection">
         <div>
           <Typography use="body1" aria-label="Key name">
@@ -122,7 +122,7 @@ export const Collection: React.FC<Props> = ({ collection }) => {
           return <Document reference={doc.ref} snapshot={doc.snapshot} />;
         }}
       ></Route>
-    </div>
+    </>
   );
 };
 

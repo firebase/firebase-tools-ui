@@ -78,3 +78,27 @@ it('renders a collection list', async () => {
 
   await wait();
 });
+
+it('shows the selected top-level collection', () => {
+  const { getByText, queryAllByText } = render(
+    <MemoryRouter initialEntries={['//cool-coll-1']}>
+      <ApiProvider value={fakeFirestoreApi()}>
+        <Document />
+      </ApiProvider>
+    </MemoryRouter>
+  );
+
+  expect(getByText(/cool-coll-1/)).not.toBeNull();
+});
+
+it('shows the selected document-owned collection', () => {
+  const { getByText, queryAllByText } = render(
+    <MemoryRouter initialEntries={['//cool-coll-1']}>
+      <ApiProvider value={fakeFirestoreApi()}>
+        <Document reference={fakeDocumentReference()} />
+      </ApiProvider>
+    </MemoryRouter>
+  );
+
+  expect(getByText(/cool-coll-1/)).not.toBeNull();
+});
