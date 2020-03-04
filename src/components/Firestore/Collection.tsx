@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-import { Route, useRouteMatch, Link } from 'react-router-dom';
+import { Route, useRouteMatch, NavLink } from 'react-router-dom';
 import React, { useReducer, useEffect } from 'react';
 import './index.scss';
 import { firestore } from 'firebase';
 import Document from './Document';
 import { Typography } from '@rmwc/typography';
 import { Icon } from '@rmwc/icon';
+import { List, ListItem } from '@rmwc/list';
 
 export interface Props {
   collection: firestore.CollectionReference;
@@ -97,15 +98,22 @@ export const Collection: React.FC<Props> = ({ collection }) => {
           {state.isLoading ? (
             <p>Loading documents...</p>
           ) : (
-            <div>
-              <ul>
-                {state.documents.map(doc => (
-                  <li key={doc.ref.id}>
-                    <Link to={`${url}/${doc.ref.id}`}>{doc.ref.id}</Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <List>
+              {state.documents.map(doc => (
+                <ListItem
+                  key={doc.ref.id}
+                  tag={props => (
+                    <NavLink
+                      to={`${url}/${doc.ref.id}`}
+                      activeClassName="mdc-list-item--activated"
+                      {...props}
+                    />
+                  )}
+                >
+                  {doc.ref.id}
+                </ListItem>
+              ))}
+            </List>
           )}
         </div>
       </div>

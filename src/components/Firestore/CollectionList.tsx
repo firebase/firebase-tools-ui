@@ -16,7 +16,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { firestore } from 'firebase';
-import { useRouteMatch, Link } from 'react-router-dom';
+import { useRouteMatch, NavLink } from 'react-router-dom';
+import { List, ListItem } from '@rmwc/list';
 
 import './index.scss';
 import { useApi } from './ApiContext';
@@ -37,13 +38,22 @@ export const CollectionList: React.FC<Props> = ({ reference }) => {
         {!collections ? (
           <p>Loading collections...</p>
         ) : (
-          <ul>
+          <List>
             {collections.map(coll => (
-              <li key={coll.id}>
-                <Link to={`${url}/${coll.id}`}>{coll.id}</Link>
-              </li>
+              <ListItem
+                key={coll.id}
+                tag={props => (
+                  <NavLink
+                    to={`${url}/${coll.id}`}
+                    activeClassName="mdc-list-item--activated"
+                    {...props}
+                  />
+                )}
+              >
+                {coll.id}
+              </ListItem>
             ))}
-          </ul>
+          </List>
         )}
       </div>
     </div>

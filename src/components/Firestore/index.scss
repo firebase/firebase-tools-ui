@@ -1,6 +1,7 @@
 .Firestore {
   display: flex;
-  padding: 28px;
+  flex-direction: row !important;
+  margin: 28px;
 }
 
 /** Only show at most 3 panels (Documents/Collections) */
@@ -8,9 +9,21 @@
   .Firestore-Document,
   .Firestore-Collection {
     display: none;
+    overflow: hidden;
+
+    /* Show a border _between_ rendered panels */
+    + .Firestore-Document,
+    + .Firestore-Collection {
+      border-left: 1px solid var(--mdc-theme-secondary);
+    }
 
     &:nth-last-child(-n + 3) {
       display: block;
+      flex: 1;
+    }
+
+    &:nth-last-child(1) {
+      flex: 2;
     }
   }
 }
