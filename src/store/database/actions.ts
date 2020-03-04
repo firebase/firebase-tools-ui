@@ -14,21 +14,17 @@
  * limitations under the License.
  */
 
-import { all, fork } from 'redux-saga/effects';
-import { combineReducers } from 'redux';
-import { ConfigState, configReducer, configSaga } from './config';
-import { DatabaseState, databaseSaga, databaseReducer } from './database';
+import { createAction } from 'typesafe-actions';
+import { DatabaseInfo } from './types';
 
-export interface AppState {
-  config: ConfigState;
-  database: DatabaseState;
-}
+export const databasesFetchRequest = createAction(
+  '@database/DATABASES_FETCH_REQUEST'
+)();
 
-export function* rootSaga() {
-  yield all([fork(configSaga), fork(databaseSaga)]);
-}
+export const databasesFetchSuccess = createAction(
+  '@database/DATABASES_FETCH_SUCCESS'
+)<DatabaseInfo[]>();
 
-export const rootReducer = combineReducers<AppState>({
-  config: configReducer,
-  database: databaseReducer,
-});
+export const databasesFetchError = createAction(
+  '@database/DATABASES_FETCH_ERROR'
+)<{ message: string }>();

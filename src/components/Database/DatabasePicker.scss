@@ -14,13 +14,19 @@
  * limitations under the License.
  */
 
-import React from 'react';
-import { render } from '@testing-library/react';
-import { Database } from './index';
+.Database-Picker {
+  background-color: #fafafa;
+  border: solid 1px #dcdcdc;
 
-it('renders loading when config is not ready', () => {
-  const { getByText } = render(
-    <Database namespace="example" config={undefined} />
-  );
-  expect(getByText('Loading')).not.toBeNull();
-});
+  .mdc-list-divider {
+    margin: 16px;
+  }
+
+  .mdc-list-item--activated {
+    color: var(--mdc-theme-secondary, black);
+  }
+
+  .database-icon-fill {
+    fill: var(--mdc-theme-secondary, black);
+  }
+}
