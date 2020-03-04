@@ -16,25 +16,28 @@
 
 import React from 'react';
 import { Route } from 'react-router-dom';
+import { Theme } from '@rmwc/theme';
 import './App.scss';
 import AppBar from './components/AppBar';
 import { routes } from './routes';
 
 const App: React.FC = () => {
   return (
-    <div className="App">
-      <AppBar routes={routes} />
-      <div className="App-main">
-        {routes.map(r => (
-          <Route
-            key={r.path}
-            path={r.path}
-            component={r.component}
-            exact={r.exact}
-          />
-        ))}
+    <Theme use="background" wrap>
+      <div className="App">
+        <AppBar routes={routes} />
+        <div className="App-main">
+          {routes.map(r => (
+            <Route
+              key={r.path}
+              path={r.path}
+              component={r.component}
+              exact={r.exact}
+            />
+          ))}
+        </div>
       </div>
-    </div>
+    </Theme>
   );
 };
 
