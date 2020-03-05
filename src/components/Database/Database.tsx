@@ -24,7 +24,7 @@ import { AppState } from '../../store';
 import { DatabaseConfig } from '../../store/config';
 import { initDatabase } from '../../firebase';
 
-import './index.scss';
+import './Database.scss';
 import '../DataViewer/index.scss';
 
 export interface PropsFromState {
@@ -56,7 +56,7 @@ export const Database: React.FC<Props> = ({ config, namespace }) => {
   );
 
   return (
-    <div className="Database">
+    <div className="Database-Database">
       <ThemeProvider options={theme}>
         {ref ? (
           <NodeContainer realtimeRef={ref} isViewRoot onNavigate={doNavigate} />

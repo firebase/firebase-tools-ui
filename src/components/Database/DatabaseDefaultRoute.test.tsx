@@ -24,7 +24,7 @@ import configureStore from '../../configureStore';
 it('renders loading when projectId is not ready', () => {
   const { getByText } = render(
     <MemoryRouter initialEntries={['']}>
-      <DatabaseDefaultRoute projectId={undefined} />
+      <DatabaseDefaultRoute fetchDatabases={() => {}} projectId={undefined} />
     </MemoryRouter>
   );
   expect(getByText('Loading...')).not.toBeNull();
@@ -39,7 +39,7 @@ it('redirects when projectId is ready', () => {
         <Route exact path="//sample/data">
           SUCCESS
         </Route>
-        <DatabaseDefaultRoute projectId={'sample'} />
+        <DatabaseDefaultRoute fetchDatabases={() => {}} projectId={'sample'} />
       </Provider>
     </MemoryRouter>
   );
