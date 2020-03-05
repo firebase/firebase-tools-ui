@@ -16,10 +16,15 @@
 
 .Database-Picker {
   background-color: #fafafa;
-  border: solid 1px #dcdcdc;
+  border-radius: 16px 0 0 16px;
+  border-right: solid 1px #dcdcdc;
+
+  .mdc-list-group__subheader {
+    margin: 0 16px;
+  }
 
   .mdc-list-divider {
-    margin: 16px;
+    margin: 16px 0;
   }
 
   .mdc-list-item--activated {
