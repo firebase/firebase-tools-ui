@@ -21,8 +21,8 @@ import { connect } from 'react-redux';
 import { AppState } from '../../store';
 import { FirestoreConfig } from '../../store/config';
 import DatabaseApi from './api';
-import { CollectionList } from './CollectionList';
 import { ApiProvider } from './ApiContext';
+import { Root } from './Document';
 
 export interface PropsFromState {
   config?: FirestoreConfig;
@@ -52,7 +52,9 @@ export const Firestore: React.FC<Props> = ({ config, projectId }) => {
 
   return (
     <ApiProvider value={api}>
-      <CollectionList />
+      <div className="Firestore">
+        <Root />
+      </div>
     </ApiProvider>
   );
 };

@@ -17,6 +17,7 @@
 import React from 'react';
 import { wait, act, render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
+import { useDocumentData } from 'react-firebase-hooks/firestore';
 
 import {
   fakeFirestoreApi,
@@ -26,6 +27,8 @@ import {
 } from './testing/models';
 import Collection from './Collection';
 import { ApiProvider } from './ApiContext';
+
+jest.mock('react-firebase-hooks/firestore');
 
 it('shows the list of documents in the collection', () => {
   const collectionReference = fakeCollectionReference({ id: 'my-stuff' });
@@ -53,6 +56,8 @@ it('shows the list of documents in the collection', () => {
 });
 
 it('shows the selected sub-document', async () => {
+  useDocumentData.mockReturnValueOnce([]);
+
   const collectionReference = fakeCollectionReference({ id: 'my-stuff' });
   const { getByText, queryAllByText } = render(
     <MemoryRouter initialEntries={['//cool-doc-1']}>

@@ -16,13 +16,18 @@
 
 import React from 'react';
 import { firestore } from 'firebase';
+import { useDocumentData } from 'react-firebase-hooks/firestore';
 
 export interface Props {
-  snapshot: firestore.DocumentSnapshot;
+  reference: firestore.DocumentReference;
 }
 
-export const DocumentPreview: React.FC<Props> = ({ snapshot }) => {
-  return <div>{snapshot && JSON.stringify(snapshot.data())}</div>;
+export const DocumentPreview: React.FC<Props> = ({ reference }) => {
+  const [data, loading, error] = useDocumentData(reference);
+
+  if (loading) return <div>Loading document...</div>;
+  if (error) return <div>Error retrieving document</div>;
+  return <div>test {JSON.stringify(data)}</div>;
 };
 
 export default DocumentPreview;
