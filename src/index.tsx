@@ -53,8 +53,7 @@ ReactDOM.render(
     <ThemeProvider
       options={{
         background: '#F6F7F9',
-        primary: '#0C2D48',
-        secondary: '#008B8B',
+        primary: '#681DA8',
       }}
     >
       <Provider store={store}>

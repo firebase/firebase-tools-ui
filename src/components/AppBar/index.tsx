@@ -19,6 +19,7 @@ import React from 'react';
 import { TabBar, Tab } from '@rmwc/tabs';
 import { TopAppBar, TopAppBarRow, TopAppBarSection } from '@rmwc/top-app-bar';
 import { Typography } from '@rmwc/typography';
+import { ThemeProvider } from '@rmwc/theme';
 
 import Logo from '../Logo';
 import { Route } from '../../routes';
@@ -52,22 +53,29 @@ export const AppBar: React.FC<Props> = ({ routes }) => {
   );
 
   return (
-    <TopAppBar fixed prominent className="AppBar">
-      <TopAppBarRow>
-        <TopAppBarSection>
-          <div className="title-grid">
-            <Logo />
-            <Typography use="headline5" className="title">
-              Firebase Emulator
-            </Typography>
-            <Typography use="subtitle1" className="subtitle">
-              This is a local enviornment and not the Firebase console
-            </Typography>
-          </div>
-        </TopAppBarSection>
-      </TopAppBarRow>
-      <TabBar activeTabIndex={activeTabIndex}>{tabs}</TabBar>
-    </TopAppBar>
+    <ThemeProvider
+      options={{
+        primary: '#D7AEFB',
+        onSurface: '#fff',
+      }}
+    >
+      <TopAppBar fixed prominent className="AppBar">
+        <TopAppBarRow>
+          <TopAppBarSection>
+            <div className="title-grid">
+              <Logo />
+              <Typography use="headline5" className="title">
+                Firebase Emulator
+              </Typography>
+              <Typography use="subtitle1" className="subtitle">
+                This is a local enviornment and not the Firebase console
+              </Typography>
+            </div>
+          </TopAppBarSection>
+        </TopAppBarRow>
+        <TabBar activeTabIndex={activeTabIndex}>{tabs}</TabBar>
+      </TopAppBar>
+    </ThemeProvider>
   );
 };
 
