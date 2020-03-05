@@ -16,11 +16,17 @@
 
 .Database {
   background-color: #fff;
+  border-radius: 8px;
   display: flex;
+  margin: 24px;
 }
 
 .Database-Picker {
   min-width: 30%;
+}
+
+.Database-Picker--primary-only {
+  display: none;
 }
 
 .Database-Database {

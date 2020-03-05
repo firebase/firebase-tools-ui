@@ -17,6 +17,8 @@
 import React from 'react';
 import { IconPropT } from '@rmwc/types';
 
+import '@rmwc/icon/icon.css';
+
 export const databaseIcon: IconPropT = {
   strategy: 'component',
   icon: (

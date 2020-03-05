@@ -23,6 +23,7 @@ import {
   Redirect,
   NavLink,
 } from 'react-router-dom';
+import { Elevation } from '@rmwc/elevation';
 
 import { AppState } from '../../store';
 import Database from './Database';
@@ -64,7 +65,7 @@ export const DatabaseDefaultRoute: React.FC<Props> = ({
         render={({ match }: any) => {
           const current = match.params.namespace;
           return (
-            <div className="Database">
+            <Elevation z={2} className="Database">
               <DatabasePicker
                 current={current}
                 primary={primary}
@@ -73,7 +74,7 @@ export const DatabaseDefaultRoute: React.FC<Props> = ({
                 )}
               />
               <Database namespace={current} />
-            </div>
+            </Elevation>
           );
         }}
       ></Route>
