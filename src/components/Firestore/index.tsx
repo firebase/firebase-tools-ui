@@ -17,6 +17,7 @@
 import React, { useState, useEffect } from 'react';
 import './index.scss';
 import 'firebase/firestore';
+import { Card } from '@rmwc/card';
 import { connect } from 'react-redux';
 import { AppState } from '../../store';
 import { FirestoreConfig } from '../../store/config';
@@ -52,9 +53,9 @@ export const Firestore: React.FC<Props> = ({ config, projectId }) => {
 
   return (
     <ApiProvider value={api}>
-      <div className="Firestore">
+      <Card className="Firestore">
         <Root />
-      </div>
+      </Card>
     </ApiProvider>
   );
 };
