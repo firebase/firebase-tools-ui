@@ -1,3 +1,16 @@
 .Firestore {
+  display: flex;
   padding: 28px;
+}
+
+/** Only show at most 3 panels (Documents/Collections) */
+.Firestore {
+  .Firestore-Document,
+  .Firestore-Collection {
+    display: none;
+
+    &:nth-last-child(-n + 3) {
+      display: block;
+    }
+  }
 }

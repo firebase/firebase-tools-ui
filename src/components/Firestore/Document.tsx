@@ -19,29 +19,66 @@ import './index.scss';
 import { firestore } from 'firebase';
 import { Typography } from '@rmwc/typography';
 import { Icon } from '@rmwc/icon';
+import { Route, useRouteMatch } from 'react-router-dom';
 
 import CollectionList from './CollectionList';
 import DocumentPreview from './DocumentPreview';
+import Collection from './Collection';
+import { useApi } from './ApiContext';
 
-export interface Props {
-  reference: firestore.DocumentReference;
-  snapshot?: firestore.DocumentSnapshot;
-}
+const Doc: React.FC<{
+  id: string;
+  collectionById: (id: string) => firestore.CollectionReference;
+  children: React.ReactNode;
+}> = ({ id, collectionById, children }) => {
+  const { url } = useRouteMatch()!;
 
-export const Document: React.FC<Props> = ({ reference, snapshot }) => {
   return (
-    <div className="Document-Document">
-      <div>
-        <Typography use="body1">
-          <Icon icon="insert_drive_file" /> {reference.id}
-        </Typography>
-        <div>
-          {snapshot && <DocumentPreview snapshot={snapshot} />}
-          <CollectionList reference={reference} />
+    <>
+      <div className="Firestore-Document">
+        <div className="Firstore-Document-Header">
+          <Typography use="body1">
+            <Icon icon="insert_drive_file" /> {id}
+          </Typography>
         </div>
+        {children}
       </div>
-    </div>
+
+      <Route
+        path={`${url}/:id`}
+        render={({ match }: any) => (
+          <Collection collection={collectionById(match.params.id)} />
+        )}
+      ></Route>
+    </>
   );
 };
 
-export default Document;
+/** Root node */
+export const Root: React.FC = () => {
+  const api = useApi();
+
+  return (
+    <Doc
+      id={'Root'}
+      collectionById={(id: string) => api.database.collection(id)}
+    >
+      <CollectionList />
+    </Doc>
+  );
+};
+
+/** Document node */
+export const Document: React.FC<{ reference: firestore.DocumentReference }> = ({
+  reference,
+}) => {
+  return (
+    <Doc
+      id={reference.id}
+      collectionById={(id: string) => reference.collection(id)}
+    >
+      <CollectionList reference={reference} />
+      <DocumentPreview reference={reference} />
+    </Doc>
+  );
+};

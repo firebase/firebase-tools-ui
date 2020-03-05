@@ -86,27 +86,3 @@ it('requests sub-collections with docRef', async () => {
 
   expect(fakeApi.getCollections).toHaveBeenCalledWith(fakeDocRef);
 });
-
-it('shows the selected top-level collection', () => {
-  const { getByText, queryAllByText } = render(
-    <MemoryRouter initialEntries={['//cool-coll-1']}>
-      <ApiProvider value={fakeFirestoreApi()}>
-        <CollectionList />
-      </ApiProvider>
-    </MemoryRouter>
-  );
-
-  expect(getByText(/cool-coll-1/)).not.toBeNull();
-});
-
-it('shows the selected document-owned collection', () => {
-  const { getByText, queryAllByText } = render(
-    <MemoryRouter initialEntries={['//cool-coll-1']}>
-      <ApiProvider value={fakeFirestoreApi()}>
-        <CollectionList reference={fakeDocumentReference()} />
-      </ApiProvider>
-    </MemoryRouter>
-  );
-
-  expect(getByText(/cool-coll-1/)).not.toBeNull();
-});
