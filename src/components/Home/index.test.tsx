@@ -17,16 +17,25 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import { Home } from './index';
+import { MemoryRouter } from 'react-router';
 
 it('renders fetching placeholder when fetching config', () => {
   const config = { fetching: true };
-  const { getByText } = render(<Home config={config} />);
+  const { getByText } = render(
+    <MemoryRouter>
+      <Home config={config} />
+    </MemoryRouter>
+  );
   expect(getByText(/Fetching/)).not.toBeNull();
 });
 
 it('renders an overview when config is loaded', () => {
   const config = { fetching: false, config: { projectId: 'example' } };
-  const { getByText } = render(<Home config={config} />);
+  const { getByText } = render(
+    <MemoryRouter>
+      <Home config={config} />
+    </MemoryRouter>
+  );
   expect(getByText(/Emulator Overview/)).not.toBeNull();
 });
 
@@ -42,7 +51,11 @@ it('shows port for emulator that are loaded', () => {
       },
     },
   };
-  const { getByText } = render(<Home config={config} />);
+  const { getByText } = render(
+    <MemoryRouter>
+      <Home config={config} />
+    </MemoryRouter>
+  );
   expect(getByText(/9000/)).not.toBeNull();
 });
 
@@ -51,6 +64,10 @@ it('renders error message when errored', () => {
     fetching: false,
     error: { message: '420 Enhance Your Calm' },
   };
-  const { getByText } = render(<Home config={config} />);
+  const { getByText } = render(
+    <MemoryRouter>
+      <Home config={config} />
+    </MemoryRouter>
+  );
   expect(getByText('420 Enhance Your Calm')).not.toBeNull();
 });
