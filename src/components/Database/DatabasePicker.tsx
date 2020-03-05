@@ -28,7 +28,6 @@ import {
 } from '@rmwc/list';
 import { databaseIcon } from './icons';
 import { Typography } from '@rmwc/typography';
-import '@rmwc/icon/icon.css';
 import './DatabasePicker.scss';
 
 export interface PropsFromState {
@@ -73,8 +72,13 @@ export const DatabasePicker: React.FC<Props> = ({
     secondaryDbs.push(current);
   }
 
+  let pickerClassName = 'Database-Picker';
+  if (secondaryDbs.length === 0) {
+    pickerClassName += ' Database-Picker--primary-only';
+  }
+
   return (
-    <div className="Database-Picker">
+    <div className={pickerClassName}>
       <List>
         <ListGroup>
           <ListGroupSubheader>
