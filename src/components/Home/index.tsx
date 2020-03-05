@@ -21,12 +21,7 @@ import { ConfigState } from '../../store/config';
 import './index.scss';
 import { Typography } from '@rmwc/typography';
 import { Grid, GridCell } from '@rmwc/grid';
-import {
-  Card,
-  CardActionButtons,
-  CardActionButton,
-  CardActionIcons,
-} from '@rmwc/card';
+import { Card, CardActionButton, CardActionIcons } from '@rmwc/card';
 import { ListDivider } from '@rmwc/list';
 
 export interface PropsFromState {
@@ -45,14 +40,13 @@ export const EmulatorCard: React.FC<{
         <Typography use="headline6" tag="h3">
           {name}
         </Typography>
-        <Typography use="subtitle2" tag="div">
+        <Typography use="subtitle2" tag="h4">
           Status
         </Typography>
         <Typography use="headline6" tag="div">
           On
         </Typography>
-        <br />
-        <Typography use="subtitle2" tag="div">
+        <Typography use="subtitle2" tag="h4">
           Port number
         </Typography>
         <Typography use="headline6" tag="div">
