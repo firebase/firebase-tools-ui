@@ -26,41 +26,59 @@ import DocumentPreview from './DocumentPreview';
 import Collection from './Collection';
 import { useApi } from './ApiContext';
 
-export interface Props {
-  reference?: firestore.DocumentReference;
-  snapshot?: firestore.DocumentSnapshot;
-}
-
-export const Document: React.FC<Props> = ({ reference, snapshot }) => {
+const Doc: React.FC<{
+  id: string;
+  selectionGetter: (id: string) => firestore.CollectionReference;
+  children: React.ReactNode;
+}> = ({ id, selectionGetter, children }) => {
   const { url } = useRouteMatch()!;
-  const api = useApi();
 
   return (
     <>
       <div className="Firestore-Document">
-        <div className="Firstore-Document-Preview">
+        <div className="Firstore-Document-Header">
           <Typography use="body1">
-            <Icon icon="insert_drive_file" /> {reference && reference.id}
+            <Icon icon="insert_drive_file" /> {id}
           </Typography>
-          <div>{snapshot && <DocumentPreview snapshot={snapshot} />}</div>
         </div>
-        <CollectionList reference={reference} />
+        {children}
       </div>
 
       <Route
         path={`${url}/:id`}
         render={({ match }: any) => (
-          <Collection
-            collection={
-              reference
-                ? reference.collection(match.params.id)
-                : api.database.collection(match.params.id)
-            }
-          />
+          <Collection collection={selectionGetter(match.params.id)} />
         )}
       ></Route>
     </>
   );
 };
 
-export default Document;
+/** Root node */
+export const Root: React.FC = () => {
+  const api = useApi();
+
+  return (
+    <Doc
+      id={'Root'}
+      selectionGetter={(id: string) => api.database.collection(id)}
+    >
+      <CollectionList />
+    </Doc>
+  );
+};
+
+/** Document node */
+export const Document: React.FC<{ reference: firestore.DocumentReference }> = ({
+  reference,
+}) => {
+  return (
+    <Doc
+      id={reference.id}
+      selectionGetter={(id: string) => reference.collection(id)}
+    >
+      <CollectionList reference={reference} />
+      <DocumentPreview reference={reference} />
+    </Doc>
+  );
+};

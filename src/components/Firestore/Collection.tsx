@@ -18,7 +18,7 @@ import { Route, useRouteMatch, Link } from 'react-router-dom';
 import React, { useReducer, useEffect } from 'react';
 import './index.scss';
 import { firestore } from 'firebase';
-import Document from './Document';
+import { Document } from './Document';
 import { Typography } from '@rmwc/typography';
 import { Icon } from '@rmwc/icon';
 
@@ -119,7 +119,7 @@ export const Collection: React.FC<Props> = ({ collection }) => {
             return <p>Loading document...</p>;
           }
 
-          return <Document reference={doc.ref} snapshot={doc.snapshot} />;
+          return <Document reference={doc.ref} />;
         }}
       ></Route>
     </>
