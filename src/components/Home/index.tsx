@@ -23,6 +23,7 @@ import { Typography } from '@rmwc/typography';
 import { Grid, GridCell } from '@rmwc/grid';
 import { Card, CardActionButton, CardActionIcons } from '@rmwc/card';
 import { ListDivider } from '@rmwc/list';
+import { Link } from 'react-router-dom';
 
 export interface PropsFromState {
   config: ConfigState;
@@ -33,7 +34,8 @@ export type Props = PropsFromState;
 export const EmulatorCard: React.FC<{
   name: string;
   port: number;
-}> = ({ name, port }) => (
+  linkTo: string;
+}> = ({ name, port, linkTo }) => (
   <GridCell span={4}>
     <Card className="Home-EmulatorCard">
       <div className="Home-EmulatorCard-Info">
@@ -55,7 +57,9 @@ export const EmulatorCard: React.FC<{
       </div>
       <ListDivider />
       <CardActionIcons className="Home-EmulatorCard-Action">
-        <CardActionButton>Go to Emulator</CardActionButton>
+        <CardActionButton tag={props => <Link to={linkTo} {...props} />}>
+          Go to Emulator
+        </CardActionButton>
       </CardActionIcons>
     </Card>
   </GridCell>
@@ -79,12 +83,14 @@ export const Home: React.FC<Props> = ({ config }) => {
                 <EmulatorCard
                   name="RTDB Emulator"
                   port={config.config.database.port}
+                  linkTo="/database"
                 />
               )}
               {config.config.firestore && (
                 <EmulatorCard
                   name="Firestore Emulator"
                   port={config.config.firestore.port}
+                  linkTo="/firestore"
                 />
               )}
             </Grid>
