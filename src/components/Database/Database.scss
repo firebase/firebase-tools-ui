@@ -14,21 +14,25 @@
  * limitations under the License.
  */
 
-import { all, fork } from 'redux-saga/effects';
-import { combineReducers } from 'redux';
-import { ConfigState, configReducer, configSaga } from './config';
-import { DatabaseState, databaseSaga, databaseReducer } from './database';
-
-export interface AppState {
-  config: ConfigState;
-  database: DatabaseState;
+.Database {
+  background-color: #fff;
+  border-radius: 8px;
+  display: flex;
+  margin: 24px;
 }
 
-export function* rootSaga() {
-  yield all([fork(configSaga), fork(databaseSaga)]);
+.Database-Picker {
+  min-width: 30%;
 }
 
-export const rootReducer = combineReducers<AppState>({
-  config: configReducer,
-  database: databaseReducer,
-});
+.Database-Picker--primary-only {
+  display: none;
+}
+
+.Database-Database {
+  flex: 1;
+  padding: 28px;
+
+  // A few things in the data viewer uses position: absolute.
+  position: relative;
+}

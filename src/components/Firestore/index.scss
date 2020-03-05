@@ -15,6 +15,10 @@
     + .Firestore-Document,
     + .Firestore-Collection {
       border-left: 1px solid var(--mdc-theme-secondary);
+
+      &:nth-last-child(3) {
+        border-left: none;
+      }
     }
 
     &:nth-last-child(-n + 3) {

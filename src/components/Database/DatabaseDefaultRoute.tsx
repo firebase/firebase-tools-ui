@@ -14,36 +14,69 @@
  * limitations under the License.
  */
 
-import React from 'react';
-import { connect } from 'react-redux';
-import { Switch, Route, useRouteMatch, Redirect } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { connect, MapDispatchToPropsFunction } from 'react-redux';
+import {
+  Switch,
+  Route,
+  useRouteMatch,
+  Redirect,
+  NavLink,
+} from 'react-router-dom';
+import { Elevation } from '@rmwc/elevation';
 
 import { AppState } from '../../store';
-import Database from './index';
+import Database from './Database';
+import DatabasePicker from './DatabasePicker';
+import { databasesFetchRequest } from '../../store/database';
 
 export interface PropsFromState {
   projectId?: string;
 }
 
-export type Props = PropsFromState;
+export interface PropsFromDispatch {
+  fetchDatabases: () => void;
+}
 
-export const DatabaseDefaultRoute: React.FC<Props> = ({ projectId }) => {
+export type Props = PropsFromState & PropsFromDispatch;
+
+export const DatabaseDefaultRoute: React.FC<Props> = ({
+  projectId,
+  fetchDatabases,
+}) => {
   let { path, url } = useRouteMatch()!;
+  useEffect(() => {
+    if (!projectId) return;
+    fetchDatabases();
+  }, [fetchDatabases, projectId]);
 
   if (!projectId) {
     return <div>Loading...</div>;
   }
+  const primary = projectId;
 
   return (
     <Switch>
       <Route exact path={path}>
-        <Redirect to={`${url}/${projectId}/data`} />;
+        <Redirect to={`${url}/${primary}/data`} />;
       </Route>
       <Route
         path={`${path}/:namespace/data`}
-        render={({ match }: any) => (
-          <Database namespace={match.params.namespace} />
-        )}
+        render={({ match }: any) => {
+          const current = match.params.namespace;
+          return (
+            <Elevation z={2} className="Database">
+              <DatabasePicker
+                current={current}
+                primary={primary}
+                navigation={db => (
+                  <NavLink to={`${url}/${db}/data`}>{db}</NavLink>
+                )}
+              />
+              <Database namespace={current} />
+            </Elevation>
+          );
+        }}
       ></Route>
     </Switch>
   );
@@ -53,4 +86,14 @@ export const mapStateToProps = ({ config }: AppState) => ({
   projectId: config.config ? config.config.projectId : undefined,
 });
 
-export default connect(mapStateToProps)(DatabaseDefaultRoute);
+export const mapDispatchToProps: MapDispatchToPropsFunction<
+  PropsFromDispatch,
+  {}
+> = dispatch => ({
+  fetchDatabases: () => dispatch(databasesFetchRequest()),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(DatabaseDefaultRoute);

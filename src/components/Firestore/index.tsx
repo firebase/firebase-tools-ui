@@ -23,7 +23,7 @@ import { AppState } from '../../store';
 import { FirestoreConfig } from '../../store/config';
 import DatabaseApi from './api';
 import { ApiProvider } from './ApiContext';
-import Document from './Document';
+import { Root } from './Document';
 
 export interface PropsFromState {
   config?: FirestoreConfig;
@@ -54,7 +54,7 @@ export const Firestore: React.FC<Props> = ({ config, projectId }) => {
   return (
     <ApiProvider value={api}>
       <Card className="Firestore">
-        <Document />
+        <Root />
       </Card>
     </ApiProvider>
   );

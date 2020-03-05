@@ -14,21 +14,24 @@
  * limitations under the License.
  */
 
-import { all, fork } from 'redux-saga/effects';
-import { combineReducers } from 'redux';
-import { ConfigState, configReducer, configSaga } from './config';
-import { DatabaseState, databaseSaga, databaseReducer } from './database';
+.Database-Picker {
+  background-color: #fafafa;
+  border-radius: 16px 0 0 16px;
+  border-right: solid 1px #dcdcdc;
 
-export interface AppState {
-  config: ConfigState;
-  database: DatabaseState;
+  .mdc-list-group__subheader {
+    margin: 0 16px;
+  }
+
+  .mdc-list-divider {
+    margin: 16px 0;
+  }
+
+  .mdc-list-item--activated {
+    color: var(--mdc-theme-secondary, black);
+  }
+
+  .database-icon-fill {
+    fill: var(--mdc-theme-secondary, black);
+  }
 }
-
-export function* rootSaga() {
-  yield all([fork(configSaga), fork(databaseSaga)]);
-}
-
-export const rootReducer = combineReducers<AppState>({
-  config: configReducer,
-  database: databaseReducer,
-});
