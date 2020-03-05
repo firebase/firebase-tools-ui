@@ -28,9 +28,9 @@ import { useApi } from './ApiContext';
 
 const Doc: React.FC<{
   id: string;
-  selectionGetter: (id: string) => firestore.CollectionReference;
+  collectionById: (id: string) => firestore.CollectionReference;
   children: React.ReactNode;
-}> = ({ id, selectionGetter, children }) => {
+}> = ({ id, collectionById, children }) => {
   const { url } = useRouteMatch()!;
 
   return (
@@ -47,7 +47,7 @@ const Doc: React.FC<{
       <Route
         path={`${url}/:id`}
         render={({ match }: any) => (
-          <Collection collection={selectionGetter(match.params.id)} />
+          <Collection collection={collectionById(match.params.id)} />
         )}
       ></Route>
     </>
@@ -61,7 +61,7 @@ export const Root: React.FC = () => {
   return (
     <Doc
       id={'Root'}
-      selectionGetter={(id: string) => api.database.collection(id)}
+      collectionById={(id: string) => api.database.collection(id)}
     >
       <CollectionList />
     </Doc>
@@ -75,7 +75,7 @@ export const Document: React.FC<{ reference: firestore.DocumentReference }> = ({
   return (
     <Doc
       id={reference.id}
-      selectionGetter={(id: string) => reference.collection(id)}
+      collectionById={(id: string) => reference.collection(id)}
     >
       <CollectionList reference={reference} />
       <DocumentPreview reference={reference} />
