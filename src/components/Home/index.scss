@@ -1,19 +1,10 @@
-.Home {
-  text-align: center;
-  background-color: #fff;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
+.Home-EmulatorCard {
 }
-
-.Home-logo {
-  height: 40vmin;
+.Home-EmulatorCard-Info {
+  margin: 16px;
 }
-
-.Home-link {
-  color: #09d3ac;
+.Home-EmulatorCard-Action {
+  padding: 16px;
 }
 
 .Home-error {

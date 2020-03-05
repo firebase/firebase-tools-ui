@@ -25,18 +25,25 @@ it('renders fetching placeholder when fetching config', () => {
 });
 
 it('renders an overview when config is loaded', () => {
-  const config = { fetching: false, config: {} };
+  const config = { fetching: false, config: { projectId: 'example' } };
   const { getByText } = render(<Home config={config} />);
-  expect(getByText(/Emulator Suite/)).not.toBeNull();
+  expect(getByText(/Emulator Overview/)).not.toBeNull();
 });
 
-it('shows config for emulator that are loaded', () => {
+it('shows port for emulator that are loaded', () => {
   const config = {
     fetching: false,
-    config: { database: { hostAndPort: 'localhost:9000' } },
+    config: {
+      projectId: 'example',
+      database: {
+        host: 'localhost',
+        port: 9000,
+        hostAndPort: 'localhost:9000',
+      },
+    },
   };
   const { getByText } = render(<Home config={config} />);
-  expect(getByText(/localhost:9000/)).not.toBeNull();
+  expect(getByText(/9000/)).not.toBeNull();
 });
 
 it('renders error message when errored', () => {
