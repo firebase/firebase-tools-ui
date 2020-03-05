@@ -22,7 +22,7 @@ import { ThemeProvider } from '@rmwc/theme';
 import { RMWCProvider } from '@rmwc/provider';
 
 // General + library styling. Should come before all local imports to allow
-// local styling from overriding them.
+// local styling to override them.
 import './index.scss';
 import '@rmwc/tooltip/tooltip.css';
 
