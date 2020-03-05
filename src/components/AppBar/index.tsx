@@ -25,6 +25,7 @@ import Logo from '../Logo';
 import { Route } from '../../routes';
 
 import './index.scss';
+import { navBarPrimary, navBarOnSurface } from '../../colors';
 
 type Props = {
   routes: ReadonlyArray<Route>;
@@ -55,8 +56,8 @@ export const AppBar: React.FC<Props> = ({ routes }) => {
   return (
     <ThemeProvider
       options={{
-        primary: '#D7AEFB',
-        onSurface: '#fff',
+        primary: navBarPrimary,
+        onSurface: navBarOnSurface,
       }}
     >
       <TopAppBar fixed prominent className="AppBar">
