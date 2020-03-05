@@ -29,6 +29,7 @@ import '@rmwc/tooltip/tooltip.css';
 import { fetchRequest as fetchConfigRequest } from './store/config';
 import configureStore from './configureStore';
 import App from './App';
+import { background, primary } from './colors';
 
 const store = configureStore();
 
@@ -50,13 +51,7 @@ ReactDOM.render(
     // Globally disable ripples
     ripple={false}
   >
-    <ThemeProvider
-      options={{
-        background: '#F6F7F9',
-        primary: '#0C2D48',
-        secondary: '#008B8B',
-      }}
-    >
+    <ThemeProvider options={{ background, primary }}>
       <Provider store={store}>
         <RouterWithInit />
       </Provider>

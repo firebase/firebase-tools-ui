@@ -14,6 +14,14 @@
  * limitations under the License.
  */
 
+// This is needed to properly theme active list items that are also anchors.
+// Likely an issue in @material/list caused by this line overriding active:
+// https://github.com/material-components/material-components-web/blob/3657f886327182c26f1d1555b2ac67c2128140b5/packages/mdc-list/_mixins.scss#L243
+// TODO: File this issue against upstream and get it fixed?
+a.mdc-list-item.mdc-list-item--activated {
+  color: var(--mdc-theme-primary, black);
+}
+
 .Database-Picker {
   background-color: #fafafa;
   border-radius: 16px 0 0 16px;
@@ -27,11 +35,7 @@
     margin: 16px 0;
   }
 
-  .mdc-list-item--activated {
-    color: var(--mdc-theme-secondary, black);
-  }
-
   .database-icon-fill {
-    fill: var(--mdc-theme-secondary, black);
+    fill: var(--mdc-theme-primary, black);
   }
 }
