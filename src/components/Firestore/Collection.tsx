@@ -19,7 +19,6 @@ import React, { useReducer, useEffect } from 'react';
 import './index.scss';
 import { firestore } from 'firebase';
 import { Document } from './Document';
-import { Typography } from '@rmwc/typography';
 import { Icon } from '@rmwc/icon';
 import { List, ListItem } from '@rmwc/list';
 import PanelHeader from './PanelHeader';
@@ -98,7 +97,7 @@ export const Collection: React.FC<Props> = ({ collection }) => {
           {state.isLoading ? (
             <p>Loading documents...</p>
           ) : (
-            <List>
+            <List className="mdc-list--dense">
               {state.documents.map(doc => (
                 <ListItem
                   key={doc.ref.id}

@@ -17,8 +17,15 @@
 @import '@material/tab/mixins';
 @import '@material/tab-indicator/mixins';
 
+// We're using an old version of @material/tab (from rmwc) that does not theme
+// non-active tab text label properly. Let's fill the gap here.
+.mdc-tab:not(.mdc-tab--active) .mdc-tab__text-label {
+  color: var(--mdc-theme-on-surface, rgba(0, 0, 0, 0.6));
+}
+
 .AppBar {
   padding: 0 24px;
+  background-color: #0c2d48;
 
   .title-grid {
     align-items: center;
@@ -47,9 +54,7 @@
   }
 
   .mdc-tab {
-    @include mdc-tab-active-text-label-color('secondary');
     @include mdc-tab-horizontal-padding(5px);
-    @include mdc-tab-text-label-color(white);
 
     &:nth-of-type(n + 1) {
       margin-left: 16px;
@@ -57,7 +62,6 @@
   }
 
   .mdc-tab-indicator {
-    @include mdc-tab-indicator-underline-color('secondary');
     @include mdc-tab-indicator-underline-height(3px);
     @include mdc-tab-indicator-underline-top-corner-radius(2px);
   }

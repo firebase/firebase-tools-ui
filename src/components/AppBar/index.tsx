@@ -19,11 +19,13 @@ import React from 'react';
 import { TabBar, Tab } from '@rmwc/tabs';
 import { TopAppBar, TopAppBarRow, TopAppBarSection } from '@rmwc/top-app-bar';
 import { Typography } from '@rmwc/typography';
+import { ThemeProvider } from '@rmwc/theme';
 
 import Logo from '../Logo';
 import { Route } from '../../routes';
 
 import './index.scss';
+import { navBarPrimary, navBarOnSurface } from '../../colors';
 
 type Props = {
   routes: ReadonlyArray<Route>;
@@ -52,22 +54,29 @@ export const AppBar: React.FC<Props> = ({ routes }) => {
   );
 
   return (
-    <TopAppBar fixed prominent className="AppBar">
-      <TopAppBarRow>
-        <TopAppBarSection>
-          <div className="title-grid">
-            <Logo />
-            <Typography use="headline5" className="title">
-              Firebase Emulator
-            </Typography>
-            <Typography use="subtitle1" className="subtitle">
-              This is a local enviornment and not the Firebase console
-            </Typography>
-          </div>
-        </TopAppBarSection>
-      </TopAppBarRow>
-      <TabBar activeTabIndex={activeTabIndex}>{tabs}</TabBar>
-    </TopAppBar>
+    <ThemeProvider
+      options={{
+        primary: navBarPrimary,
+        onSurface: navBarOnSurface,
+      }}
+    >
+      <TopAppBar fixed prominent className="AppBar">
+        <TopAppBarRow>
+          <TopAppBarSection>
+            <div className="title-grid">
+              <Logo />
+              <Typography use="headline5" className="title">
+                Firebase Emulator
+              </Typography>
+              <Typography use="subtitle1" className="subtitle">
+                This is a local enviornment and not the Firebase console
+              </Typography>
+            </div>
+          </TopAppBarSection>
+        </TopAppBarRow>
+        <TabBar activeTabIndex={activeTabIndex}>{tabs}</TabBar>
+      </TopAppBar>
+    </ThemeProvider>
   );
 };
 

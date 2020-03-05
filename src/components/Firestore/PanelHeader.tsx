@@ -24,10 +24,12 @@ export const PanelHeader: React.FC<{ id: string; icon: React.ReactNode }> = ({
   icon,
 }) => {
   return (
-    <Theme use={['secondaryBg', 'onPrimary']} wrap>
+    <Theme use={['secondaryBg', 'onSecondary']} wrap>
       <div className="Firestore-PanelHeader">
-        {icon}
-        <Typography use="body1">{id}</Typography>
+        <Theme use={['textSecondaryOnBackground']}>{icon}</Theme>
+        <Typography use="body1" className="Firestore-PanelHeader-title">
+          {id}
+        </Typography>
       </div>
     </Theme>
   );

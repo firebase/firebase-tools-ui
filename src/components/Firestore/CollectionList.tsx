@@ -38,7 +38,7 @@ export const CollectionList: React.FC<Props> = ({ reference }) => {
         {!collections ? (
           <p>Loading collections...</p>
         ) : (
-          <List>
+          <List className="mdc-list--dense">
             {collections.map(coll => (
               <ListItem
                 key={coll.id}

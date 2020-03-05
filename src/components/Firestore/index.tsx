@@ -42,18 +42,6 @@ export const Firestore: React.FC<Props> = ({ config, projectId }) => {
     const api = new DatabaseApi(projectId, databaseId, config);
     setApi(api);
 
-    api.database
-      .collection('people')
-      .doc('tj')
-      .set({ name: 'tj lavelle' });
-
-    api.database
-      .collection('people')
-      .doc('tj')
-      .collection('location')
-      .doc('home')
-      .set({ address: 'BK' });
-
     return function cleanup() {
       api.delete();
     };

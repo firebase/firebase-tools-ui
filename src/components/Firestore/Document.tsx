@@ -17,7 +17,6 @@
 import React from 'react';
 import './index.scss';
 import { firestore } from 'firebase';
-import { Typography } from '@rmwc/typography';
 import { Icon } from '@rmwc/icon';
 import { Route, useRouteMatch } from 'react-router-dom';
 
@@ -58,7 +57,7 @@ export const Root: React.FC = () => {
       id={'Root'}
       collectionById={(id: string) => api.database.collection(id)}
     >
-      <PanelHeader id="Root" icon={<FirestoreLogo fill="yellow" />} />
+      <PanelHeader id="Root" icon={<FirestoreLogo />} />
       <CollectionList />
     </Doc>
   );

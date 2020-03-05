@@ -17,7 +17,7 @@
 import React from 'react';
 import { Icon } from '@rmwc/icon';
 
-export const FirestoreLogo: React.FC<{ fill: string }> = ({ fill }) => {
+export const FirestoreLogo: React.FC = () => {
   return (
     <Icon
       icon={{
@@ -31,7 +31,7 @@ export const FirestoreLogo: React.FC<{ fill: string }> = ({ fill }) => {
           >
             <path
               d="M12 13l-9 4v-4l9-4 9 4v3.5-.75V17l-9-4zm0-11l9 4v4l-9-4-9 4V6l9-4zm3.375 14.5l4.5 2L12 22v-4l3.375-1.5z"
-              fill={fill}
+              fill="currentColor"
               fillRule="evenodd"
             />
           </svg>
