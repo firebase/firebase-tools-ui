@@ -69,7 +69,7 @@ export const AppBar: React.FC<Props> = ({ routes }) => {
                 Firebase Emulator
               </Typography>
               <Typography use="subtitle1" className="subtitle">
-                This is a local enviornment and not the Firebase console
+                This is a local environment and not the Firebase console
               </Typography>
             </div>
           </TopAppBarSection>
