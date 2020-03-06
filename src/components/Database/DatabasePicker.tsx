@@ -29,6 +29,7 @@ import {
 import { databaseIcon } from './icons';
 import { Typography } from '@rmwc/typography';
 import './DatabasePicker.scss';
+import { Theme } from '@rmwc/theme';
 
 export interface PropsFromState {
   databases?: string[];
@@ -54,7 +55,9 @@ const DatabaseListItem: React.FC<{
       return { ...element, props: { ...element.props, ...props } };
     }}
   >
-    <ListItemGraphic style={databaseIconSize} icon={databaseIcon} />
+    <Theme use="primary" wrap>
+      <ListItemGraphic style={databaseIconSize} icon={databaseIcon} />
+    </Theme>
     <ListItemText>{name}</ListItemText>
   </ListItem>
 );
