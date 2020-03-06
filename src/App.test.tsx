@@ -20,6 +20,8 @@ import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import App from './App';
 import configureStore from './configureStore';
+import { act, render, wait } from '@testing-library/react';
+import { alert } from './components/DialogQueue';
 
 it('renders without crashing', () => {
   const div = document.createElement('div');
@@ -33,4 +35,21 @@ it('renders without crashing', () => {
     div
   );
   ReactDOM.unmountComponentAtNode(div);
+});
+
+it('shows dialogs in the queue', async () => {
+  const store = configureStore();
+  const { getByText } = render(
+    <Provider store={store}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Provider>
+  );
+
+  alert({ title: 'wowah' });
+
+  await wait();
+
+  expect(getByText('wowah')).not.toBeNull();
 });
