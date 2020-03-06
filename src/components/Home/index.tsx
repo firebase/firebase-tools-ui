@@ -19,12 +19,51 @@ import { connect } from 'react-redux';
 import { AppState } from '../../store';
 import { ConfigState } from '../../store/config';
 import './index.scss';
+import { Typography } from '@rmwc/typography';
+import { Grid, GridCell } from '@rmwc/grid';
+import { Card, CardActionButton, CardActionIcons } from '@rmwc/card';
+import { ListDivider } from '@rmwc/list';
+import { Link } from 'react-router-dom';
 
 export interface PropsFromState {
   config: ConfigState;
 }
 
 export type Props = PropsFromState;
+
+export const EmulatorCard: React.FC<{
+  name: string;
+  port: number;
+  linkTo: string;
+}> = ({ name, port, linkTo }) => (
+  <GridCell span={4}>
+    <Card className="Home-EmulatorCard">
+      <div className="Home-EmulatorCard-Info">
+        <Typography use="headline6" tag="h3">
+          {name}
+        </Typography>
+        <Typography use="subtitle2" tag="h4">
+          Status
+        </Typography>
+        <Typography use="headline6" tag="div">
+          On
+        </Typography>
+        <Typography use="subtitle2" tag="h4">
+          Port number
+        </Typography>
+        <Typography use="headline6" tag="div">
+          {port}
+        </Typography>
+      </div>
+      <ListDivider />
+      <CardActionIcons className="Home-EmulatorCard-Action">
+        <CardActionButton tag={props => <Link to={linkTo} {...props} />}>
+          Go to Emulator
+        </CardActionButton>
+      </CardActionIcons>
+    </Card>
+  </GridCell>
+);
 
 export const Home: React.FC<Props> = ({ config }) => {
   return (
@@ -36,26 +75,25 @@ export const Home: React.FC<Props> = ({ config }) => {
       ) : (
         config.config && (
           <div>
-            <h1>Firebase Emulator Suite</h1>
-            {config.config && (
-              <h3>
-                Project ID: <code>{config.config.projectId}</code>
-              </h3>
-            )}
-            <ul>
-              {config.config!.database && (
-                <li>
-                  Database Emulator running at:{' '}
-                  <code>{config.config!.database.hostAndPort}</code>
-                </li>
+            <Grid>
+              <GridCell span={12}>
+                <Typography use="headline5">Emulator Overview</Typography>
+              </GridCell>
+              {config.config.database && (
+                <EmulatorCard
+                  name="RTDB Emulator"
+                  port={config.config.database.port}
+                  linkTo="/database"
+                />
               )}
-              {config.config!.firestore && (
-                <li>
-                  Firestore Emulator running at:{' '}
-                  <code>{config.config!.firestore.hostAndPort}</code>
-                </li>
+              {config.config.firestore && (
+                <EmulatorCard
+                  name="Firestore Emulator"
+                  port={config.config.firestore.port}
+                  linkTo="/firestore"
+                />
               )}
-            </ul>
+            </Grid>
           </div>
         )
       )}

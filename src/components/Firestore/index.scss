@@ -22,7 +22,7 @@
     /* Show a border _between_ rendered panels */
     + .Firestore-Document,
     + .Firestore-Collection {
-      border-left: 1px solid var(--mdc-theme-secondary);
+      border-left: 1px solid var(--mdc-theme-text-hint-on-background);
 
       &:nth-last-child(3) {
         border-left: none;

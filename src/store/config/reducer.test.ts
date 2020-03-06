@@ -24,7 +24,10 @@ it(`${fetchRequest} => sets fetching to true`, () => {
 });
 
 it(`${fetchSuccess} => sets config and unsets fetching`, () => {
-  const config = { database: { hostAndPort: 'localhost:8080' } };
+  const config = {
+    projectId: 'example',
+    database: { hostAndPort: 'localhost:8080', host: 'localhost', port: 8080 },
+  };
   expect(configReducer({ fetching: true }, fetchSuccess(config))).toEqual({
     fetching: false,
     config,
