@@ -19,6 +19,8 @@ import { FirestoreConfig } from '../../store/config';
 import { initFirestore } from '../../firebase';
 import { FirestoreApi } from './models';
 
+type RequestMethod = 'POST' | 'DELETE';
+
 export default class DatabaseApi implements FirestoreApi {
   private baseUrl: string;
   private baseEmulatorUrl: string;
@@ -44,11 +46,11 @@ export default class DatabaseApi implements FirestoreApi {
     return this.cleanup();
   }
 
-  private async restPost(
+  private async restRequest(
     path: string,
     jsonBody: {},
     baseUrl: string,
-    method = 'POST'
+    method: RequestMethod
   ) {
     const { accessToken } = await this.getToken();
     const res = await fetch(baseUrl + path, {
@@ -64,10 +66,11 @@ export default class DatabaseApi implements FirestoreApi {
   }
 
   private async getRootCollections(): Promise<firestore.CollectionReference[]> {
-    const { json } = await this.restPost(
+    const { json } = await this.restRequest(
       'documents:listCollectionIds',
       {},
-      this.baseUrl
+      this.baseUrl,
+      'POST'
     );
     const collectionIds = json.collectionIds || [];
     return collectionIds.map((id: string) => this.database.collection(id));
@@ -77,10 +80,11 @@ export default class DatabaseApi implements FirestoreApi {
     docRef: firestore.DocumentReference
   ): Promise<firestore.CollectionReference[]> {
     const encodedPath = docRef.path; // TODO: Encode each segment.
-    const { json } = await this.restPost(
+    const { json } = await this.restRequest(
       `documents/${encodedPath}:listCollectionIds`,
       {},
-      this.baseUrl
+      this.baseUrl,
+      'POST'
     );
     const collectionIds = json.collectionIds || [];
     return collectionIds.map((id: string) => docRef.collection(id));
@@ -95,7 +99,7 @@ export default class DatabaseApi implements FirestoreApi {
   }
 
   async nukeDocuments() {
-    await this.restPost(`documents`, {}, this.baseEmulatorUrl, 'DELETE');
+    await this.restRequest(`documents`, {}, this.baseEmulatorUrl, 'DELETE');
     return [];
   }
 }
