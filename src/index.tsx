@@ -51,7 +51,7 @@ ReactDOM.render(
     // Globally disable ripples
     ripple={false}
   >
-    <ThemeProvider options={{ background, primary, secondary: '#F5F5F5' }}>
+    <ThemeProvider options={{ background, primary }}>
       <Provider store={store}>
         <RouterWithInit />
       </Provider>

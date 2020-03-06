@@ -16,5 +16,7 @@
 export const background = '#F6F7F9';
 export const primary = '#681DA8';
 
+export const grey100 = '#F5F5F5';
+
 export const navBarPrimary = '#D7AEFB';
 export const navBarOnSurface = '#FFF';

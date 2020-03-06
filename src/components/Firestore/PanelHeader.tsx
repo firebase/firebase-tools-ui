@@ -15,8 +15,9 @@
  */
 
 import React from 'react';
-import { Theme } from '@rmwc/theme';
+import { ThemeProvider, Theme } from '@rmwc/theme';
 import { Typography } from '@rmwc/typography';
+import { grey100 } from '../../colors';
 import './PanelHeader.scss';
 
 export const PanelHeader: React.FC<{ id: string; icon: React.ReactNode }> = ({
@@ -24,14 +25,16 @@ export const PanelHeader: React.FC<{ id: string; icon: React.ReactNode }> = ({
   icon,
 }) => {
   return (
-    <Theme use={['secondaryBg', 'onSecondary']} wrap>
-      <div className="Firestore-PanelHeader">
-        <Theme use={['textSecondaryOnBackground']}>{icon}</Theme>
-        <Typography use="body1" className="Firestore-PanelHeader-title">
-          {id}
-        </Typography>
-      </div>
-    </Theme>
+    <ThemeProvider options={{ surface: grey100 }}>
+      <Theme use={['surface']} wrap>
+        <div className="Firestore-PanelHeader">
+          <Theme use={['textSecondaryOnBackground']}>{icon}</Theme>
+          <Typography use="body1" className="Firestore-PanelHeader-title">
+            {id}
+          </Typography>
+        </div>
+      </Theme>
+    </ThemeProvider>
   );
 };
 
