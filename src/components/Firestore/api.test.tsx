@@ -70,3 +70,16 @@ it('requests document-level collections', async () => {
   );
   expect(collectionIds).toEqual(['foo', 'bar']);
 });
+
+it('requests nuking everything', async () => {
+  const api = makeApi();
+
+  fetch.doMockIf(
+    new RegExp(
+      'emulator/v1/projects/project_id/databases/database_id/documents'
+    )
+  );
+  fetch.mockResponseOnce(JSON.stringify([]));
+
+  expect(await api.nukeDocuments()).toEqual([]);
+});

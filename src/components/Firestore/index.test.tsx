@@ -21,10 +21,12 @@ import { MemoryRouter } from 'react-router-dom';
 import { fakeCollectionReference } from './testing/models';
 import { Firestore } from './index';
 import DatabaseApi from './api';
+import { confirm } from '../DialogQueue';
 
 jest.mock('./api');
+jest.mock('../DialogQueue');
 
-it('shows the loading state when connecting to Firestore', async () => {
+it('shows the loading state when connecting to Firestore', () => {
   const { getByText, queryByText } = render(
     <MemoryRouter>
       <Firestore config={undefined} projectId={undefined} />
@@ -48,4 +50,50 @@ it('shows the top-level collections', async () => {
 
   expect(queryByText(/Connecting to Firestore/)).toBeNull();
   expect(getByText(/cool-coll/)).not.toBeNull();
+});
+
+it('triggers clearing all data', async () => {
+  confirm.mockResolvedValueOnce(true);
+  const nukeSpy = jest.fn();
+
+  DatabaseApi.mockImplementationOnce(() => ({
+    getCollections: jest.fn(),
+    delete: jest.fn(),
+    nukeDocuments: nukeSpy,
+  }));
+
+  const { getByText } = render(
+    <MemoryRouter>
+      <Firestore config={{}} projectId={'foo'} />
+    </MemoryRouter>
+  );
+
+  act(() => getByText('clear all data').click());
+
+  await wait();
+
+  expect(nukeSpy).toHaveBeenCalled();
+});
+
+it('does not trigger clearing all data', async () => {
+  confirm.mockResolvedValueOnce(false);
+  const nukeSpy = jest.fn();
+
+  DatabaseApi.mockImplementationOnce(() => ({
+    getCollections: jest.fn(),
+    delete: jest.fn(),
+    nukeDocuments: nukeSpy,
+  }));
+
+  const { getByText } = render(
+    <MemoryRouter>
+      <Firestore config={{}} projectId={'foo'} />
+    </MemoryRouter>
+  );
+
+  act(() => getByText('clear all data').click());
+
+  await wait();
+
+  expect(nukeSpy).not.toHaveBeenCalled();
 });
