@@ -17,7 +17,6 @@
 import React from 'react';
 import './index.scss';
 import { firestore } from 'firebase';
-import { Typography } from '@rmwc/typography';
 import { Icon } from '@rmwc/icon';
 import { Route, useRouteMatch } from 'react-router-dom';
 
@@ -25,6 +24,8 @@ import CollectionList from './CollectionList';
 import DocumentPreview from './DocumentPreview';
 import Collection from './Collection';
 import { useApi } from './ApiContext';
+import PanelHeader from './PanelHeader';
+import FirestoreLogo from './FirestoreLogo';
 
 const Doc: React.FC<{
   id: string;
@@ -35,14 +36,7 @@ const Doc: React.FC<{
 
   return (
     <>
-      <div className="Firestore-Document">
-        <div className="Firstore-Document-Header">
-          <Typography use="body1">
-            <Icon icon="insert_drive_file" /> {id}
-          </Typography>
-        </div>
-        {children}
-      </div>
+      <div className="Firestore-Document">{children}</div>
 
       <Route
         path={`${url}/:id`}
@@ -63,6 +57,7 @@ export const Root: React.FC = () => {
       id={'Root'}
       collectionById={(id: string) => api.database.collection(id)}
     >
+      <PanelHeader id="Root" icon={<FirestoreLogo />} />
       <CollectionList />
     </Doc>
   );
@@ -77,6 +72,7 @@ export const Document: React.FC<{ reference: firestore.DocumentReference }> = ({
       id={reference.id}
       collectionById={(id: string) => reference.collection(id)}
     >
+      <PanelHeader id={reference.id} icon={<Icon icon="insert_drive_file" />} />
       <CollectionList reference={reference} />
       <DocumentPreview reference={reference} />
     </Doc>

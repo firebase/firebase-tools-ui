@@ -19,9 +19,9 @@ import React, { useReducer, useEffect } from 'react';
 import './index.scss';
 import { firestore } from 'firebase';
 import { Document } from './Document';
-import { Typography } from '@rmwc/typography';
 import { Icon } from '@rmwc/icon';
 import { List, ListItem } from '@rmwc/list';
+import PanelHeader from './PanelHeader';
 
 export interface Props {
   collection: firestore.CollectionReference;
@@ -88,17 +88,16 @@ export const Collection: React.FC<Props> = ({ collection }) => {
   return (
     <>
       <div className="Firestore-Collection">
-        <div>
-          <Typography use="body1" aria-label="Key name">
-            <Icon icon="collections_bookmark" /> {collection.id}
-          </Typography>
-        </div>
+        <PanelHeader
+          id={collection.id}
+          icon={<Icon icon="collections_bookmark" />}
+        />
 
         <div>
           {state.isLoading ? (
             <p>Loading documents...</p>
           ) : (
-            <List>
+            <List dense>
               {state.documents.map(doc => (
                 <ListItem
                   key={doc.ref.id}
