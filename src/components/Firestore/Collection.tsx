@@ -97,7 +97,7 @@ export const Collection: React.FC<Props> = ({ collection }) => {
           {state.isLoading ? (
             <p>Loading documents...</p>
           ) : (
-            <List className="mdc-list--dense">
+            <List dense>
               {state.documents.map(doc => (
                 <ListItem
                   key={doc.ref.id}
