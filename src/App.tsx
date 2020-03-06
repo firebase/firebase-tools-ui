@@ -17,26 +17,31 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
 import { Theme } from '@rmwc/theme';
+import { DialogQueue } from '@rmwc/dialog';
 import './App.scss';
 import AppBar from './components/AppBar';
 import { routes } from './routes';
+import { dialogs } from './components/DialogQueue';
 
 const App: React.FC = () => {
   return (
     <Theme use="background" wrap>
-      <div className="App">
-        <AppBar routes={routes} />
-        <div className="App-main">
-          {routes.map(r => (
-            <Route
-              key={r.path}
-              path={r.path}
-              component={r.component}
-              exact={r.exact}
-            />
-          ))}
+      <>
+        <DialogQueue dialogs={dialogs} />
+        <div className="App">
+          <AppBar routes={routes} />
+          <div className="App-main">
+            {routes.map(r => (
+              <Route
+                key={r.path}
+                path={r.path}
+                component={r.component}
+                exact={r.exact}
+              />
+            ))}
+          </div>
         </div>
-      </div>
+      </>
     </Theme>
   );
 };

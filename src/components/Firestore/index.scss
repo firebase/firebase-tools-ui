@@ -1,11 +1,19 @@
 .Firestore {
-  display: flex;
-  flex-direction: row !important;
   margin: 28px;
 }
 
+.Firestore-actions {
+  text-align: end;
+  margin-bottom: 28px;
+}
+
+.Firestore-panels {
+  display: flex;
+  flex-direction: row !important;
+}
+
 /** Only show at most 3 panels (Documents/Collections) */
-.Firestore {
+.Firestore-panels {
   .Firestore-Document,
   .Firestore-Collection {
     display: none;

@@ -21,6 +21,7 @@ import { FirestoreApi } from './models';
 
 export default class DatabaseApi implements FirestoreApi {
   private baseUrl: string;
+  private baseEmulatorUrl: string;
   private getToken: () => Promise<{ accessToken: string }>;
   private cleanup: () => Promise<void>;
   readonly database: firestore.Firestore;
@@ -36,16 +37,22 @@ export default class DatabaseApi implements FirestoreApi {
     this.cleanup = cleanup;
 
     this.baseUrl = `http://${config.hostAndPort}/v1/projects/${projectId}/databases/${databaseId}/`;
+    this.baseEmulatorUrl = `http://${config.hostAndPort}/emulator/v1/projects/${projectId}/databases/${databaseId}/`;
   }
 
   delete(): Promise<void> {
     return this.cleanup();
   }
 
-  private async restPost(path: string, jsonBody: {}) {
+  private async restPost(
+    path: string,
+    jsonBody: {},
+    baseUrl: string,
+    method = 'POST'
+  ) {
     const { accessToken } = await this.getToken();
-    const res = await fetch(this.baseUrl + path, {
-      method: 'POST',
+    const res = await fetch(baseUrl + path, {
+      method,
       body: JSON.stringify(jsonBody),
       headers: {
         Authorization: 'Bearer ' + accessToken,
@@ -57,7 +64,11 @@ export default class DatabaseApi implements FirestoreApi {
   }
 
   private async getRootCollections(): Promise<firestore.CollectionReference[]> {
-    const { json } = await this.restPost('documents:listCollectionIds', {});
+    const { json } = await this.restPost(
+      'documents:listCollectionIds',
+      {},
+      this.baseUrl
+    );
     const collectionIds = json.collectionIds || [];
     return collectionIds.map((id: string) => this.database.collection(id));
   }
@@ -68,7 +79,8 @@ export default class DatabaseApi implements FirestoreApi {
     const encodedPath = docRef.path; // TODO: Encode each segment.
     const { json } = await this.restPost(
       `documents/${encodedPath}:listCollectionIds`,
-      {}
+      {},
+      this.baseUrl
     );
     const collectionIds = json.collectionIds || [];
     return collectionIds.map((id: string) => docRef.collection(id));
@@ -80,5 +92,10 @@ export default class DatabaseApi implements FirestoreApi {
     return docRef
       ? await this.getSubCollections(docRef)
       : await this.getRootCollections();
+  }
+
+  async nukeDocuments() {
+    await this.restPost(`documents`, {}, this.baseEmulatorUrl, 'DELETE');
+    return [];
   }
 }
