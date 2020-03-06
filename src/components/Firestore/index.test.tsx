@@ -75,7 +75,7 @@ it('triggers clearing all data', async () => {
   expect(nukeSpy).toHaveBeenCalled();
 });
 
-it('does not trigger clearing all data', async () => {
+it('does not trigger clearing all data if dialog is not confirmed', async () => {
   confirm.mockResolvedValueOnce(false);
   const nukeSpy = jest.fn();
 
