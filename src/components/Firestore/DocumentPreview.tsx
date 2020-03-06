@@ -16,7 +16,10 @@
 
 import React from 'react';
 import { firestore } from 'firebase';
+import { List, ListItem } from '@rmwc/list';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
+import { Field } from './Field';
+import { DocumentRefProvider } from './Field/DocumentRefContext';
 
 export interface Props {
   reference: firestore.DocumentReference;
@@ -27,7 +30,18 @@ export const DocumentPreview: React.FC<Props> = ({ reference }) => {
 
   if (loading) return <div>Loading document...</div>;
   if (error) return <div>Error retrieving document</div>;
-  return <div>test {JSON.stringify(data)}</div>;
+
+  return (
+    <DocumentRefProvider value={reference}>
+      <List dense>
+        <ListItem disabled>Add field +</ListItem>
+        {data &&
+          Object.entries(data).map(([key, value]) => (
+            <Field key={key} id={key} value={value} />
+          ))}
+      </List>
+    </DocumentRefProvider>
+  );
 };
 
 export default DocumentPreview;

@@ -1,0 +1,307 @@
+[1mdiff --git a/src/components/Firestore/Collection.test.tsx b/src/components/Firestore/Collection.test.tsx[m
+[1mindex 7640608..c916527 100644[m
+[1m--- a/src/components/Firestore/Collection.test.tsx[m
+[1m+++ b/src/components/Firestore/Collection.test.tsx[m
+[36m@@ -35,11 +35,9 @@[m [mit('shows the list of documents in the collection', () => {[m
+   const { getByText, queryByText } = render([m
+     <MemoryRouter>[m
+       <Collection collection={collectionReference} />[m
+[31m-    </MemoryRouter>[m
+[32m+[m[32m    </MemoryRouter>,[m
+   );[m
+ [m
+[31m-  expect(getByText(/Loading documents/)).not.toBeNull();[m
+[31m-[m
+   act(() =>[m
+     collectionReference.setSnapshot({[m
+       docs: [[m
+[36m@@ -47,7 +45,7 @@[m [mit('shows the list of documents in the collection', () => {[m
+           ref: fakeDocumentReference({ id: 'cool-doc-1' }),[m
+         }),[m
+       ],[m
+[31m-    })[m
+[32m+[m[32m    }),[m
+   );[m
+ [m
+   expect(getByText(/my-stuff/)).not.toBeNull();[m
+[36m@@ -56,7 +54,7 @@[m [mit('shows the list of documents in the collection', () => {[m
+ });[m
+ [m
+ it('shows the selected sub-document', async () => {[m
+[31m-  useDocumentData.mockReturnValueOnce([]);[m
+[32m+[m[32m  useDocumentData.mockReturnValue([]);[m
+ [m
+   const collectionReference = fakeCollectionReference({ id: 'my-stuff' });[m
+   const { getByText, queryAllByText } = render([m
+[36m@@ -64,7 +62,7 @@[m [mit('shows the selected sub-document', async () => {[m
+       <ApiProvider value={fakeFirestoreApi()}>[m
+         <Collection collection={collectionReference} api={fakeFirestoreApi()} />[m
+       </ApiProvider>[m
+[31m-    </MemoryRouter>[m
+[32m+[m[32m    </MemoryRouter>,[m
+   );[m
+ [m
+   act(() =>[m
+[36m@@ -74,7 +72,7 @@[m [mit('shows the selected sub-document', async () => {[m
+           ref: fakeDocumentReference({ id: 'cool-doc-1' }),[m
+         }),[m
+       ],[m
+[31m-    })[m
+[32m+[m[32m    }),[m
+   );[m
+ [m
+   expect(getByText(/my-stuff/)).not.toBeNull();[m
+[1mdiff --git a/src/components/Firestore/Collection.tsx b/src/components/Firestore/Collection.tsx[m
+[1mindex e30931e..4af5d47 100644[m
+[1m--- a/src/components/Firestore/Collection.tsx[m
+[1m+++ b/src/components/Firestore/Collection.tsx[m
+[36m@@ -45,7 +45,7 @@[m [mexport type CollectionAction =[m
+ [m
+ export function reducer([m
+   state: CollectionState,[m
+[31m-  action: CollectionAction[m
+[32m+[m[32m  action: CollectionAction,[m
+ ): CollectionState {[m
+   switch (action.type) {[m
+     case 'DOCUMENTS_UPDATED':[m
+[36m@@ -58,7 +58,7 @@[m [mexport function reducer([m
+ }[m
+ [m
+ export function useCollection([m
+[31m-  collection: firestore.CollectionReference[m
+[32m+[m[32m  collection: firestore.CollectionReference,[m
+ ): [CollectionState, (action: CollectionAction) => void] {[m
+   const [state, dispatch] = useReducer(reducer, {[m
+     isLoading: false,[m
+[36m@@ -67,8 +67,8 @@[m [mexport function useCollection([m
+   useEffect(() => {[m
+     dispatch({ type: 'DOCUMENTS_LOADING' });[m
+     // TODO: what happens with missing docs?[m
+[31m-    const cancel = collection.onSnapshot(snap => {[m
+[31m-      const documents = snap.docs.map(doc => ({[m
+[32m+[m[32m    const cancel = collection.onSnapshot((snap) => {[m
+[32m+[m[32m      const documents = snap.docs.map((doc) => ({[m
+         snapshot: doc,[m
+         ref: doc.ref,[m
+       }));[m
+[36m@@ -93,37 +93,32 @@[m [mexport const Collection: React.FC<Props> = ({ collection }) => {[m
+           icon={<Icon icon="collections_bookmark" />}[m
+         />[m
+ [m
+[31m-        <div>[m
+[31m-          {state.isLoading ? ([m
+[31m-            <p>Loading documents...</p>[m
+[31m-          ) : ([m
+[31m-            <List dense>[m
+[31m-              {state.documents.map(doc => ([m
+[31m-                <ListItem[m
+[31m-                  key={doc.ref.id}[m
+[31m-                  tag={props => ([m
+[31m-                    <NavLink[m
+[31m-                      to={`${url}/${doc.ref.id}`}[m
+[31m-                      activeClassName="mdc-list-item--activated"[m
+[31m-                      {...props}[m
+[31m-                    />[m
+[31m-                  )}[m
+[31m-                >[m
+[31m-                  {doc.ref.id}[m
+[31m-                </ListItem>[m
+[31m-              ))}[m
+[31m-            </List>[m
+[31m-          )}[m
+[31m-        </div>[m
+[32m+[m[32m        <List dense>[m
+[32m+[m[32m          <ListItem disabled>Add document +</ListItem>[m
+[32m+[m[32m          {state.documents.map((doc) => ([m
+[32m+[m[32m            <ListItem[m
+[32m+[m[32m              key={doc.ref.id}[m
+[32m+[m[32m              tag={(props) => ([m
+[32m+[m[32m                <NavLink[m
+[32m+[m[32m                  to={`${url}/${doc.ref.id}`}[m
+[32m+[m[32m                  activeClassName="mdc-list-item--activated"[m
+[32m+[m[32m                  {...props}[m
+[32m+[m[32m                />[m
+[32m+[m[32m              )}[m
+[32m+[m[32m            >[m
+[32m+[m[32m              {doc.ref.id}[m
+[32m+[m[32m            </ListItem>[m
+[32m+[m[32m          ))}[m
+[32m+[m[32m        </List>[m
+       </div>[m
+       <Route[m
+         path={`${url}/:id`}[m
+         render={({ match }: any) => {[m
+           // TODO: what happens with missing docs?[m
+[31m-          const doc = state.documents.find(d => d.ref.id === match.params.id);[m
+[32m+[m[32m          const doc = state.documents.find((d) => d.ref.id === match.params.id);[m
+ [m
+           if (!doc) {[m
+[31m-            return <p>Loading document...</p>;[m
+[32m+[m[32m            return <></>;[m
+           }[m
+ [m
+           return <Document reference={doc.ref} />;[m
+[1mdiff --git a/src/components/Firestore/CollectionList.test.tsx b/src/components/Firestore/CollectionList.test.tsx[m
+[1mindex cb0d850..0dee8f8 100644[m
+[1m--- a/src/components/Firestore/CollectionList.test.tsx[m
+[1m+++ b/src/components/Firestore/CollectionList.test.tsx[m
+[36m@@ -42,14 +42,11 @@[m [mit('shows the list of collections', async () => {[m
+       <ApiProvider value={fakeApi}>[m
+         <CollectionList />[m
+       </ApiProvider>[m
+[31m-    </MemoryRouter>[m
+[32m+[m[32m    </MemoryRouter>,[m
+   );[m
+ [m
+[31m-  expect(getByText(/Loading collections/)).not.toBeNull();[m
+[31m-[m
+   await wait();[m
+ [m
+[31m-  expect(queryByText(/Loading collections/)).toBeNull();[m
+   expect(getByText(/coll-1/)).not.toBeNull();[m
+   expect(getByText(/coll-2/)).not.toBeNull();[m
+ });[m
+[36m@@ -62,7 +59,7 @@[m [mit('requests root-collections with no docRef', async () => {[m
+       <ApiProvider value={fakeApi}>[m
+         <CollectionList />[m
+       </ApiProvider>[m
+[31m-    </MemoryRouter>[m
+[32m+[m[32m    </MemoryRouter>,[m
+   );[m
+ [m
+   await wait();[m
+[36m@@ -79,7 +76,7 @@[m [mit('requests sub-collections with docRef', async () => {[m
+       <ApiProvider value={fakeApi}>[m
+         <CollectionList reference={fakeDocRef} />[m
+       </ApiProvider>[m
+[31m-    </MemoryRouter>[m
+[32m+[m[32m    </MemoryRouter>,[m
+   );[m
+ [m
+   await wait();[m
+[1mdiff --git a/src/components/Firestore/CollectionList.tsx b/src/components/Firestore/CollectionList.tsx[m
+[1mindex b192d82..2db5daa 100644[m
+[1m--- a/src/components/Firestore/CollectionList.tsx[m
+[1m+++ b/src/components/Firestore/CollectionList.tsx[m
+[36m@@ -34,35 +34,31 @@[m [mexport const CollectionList: React.FC<Props> = ({ reference }) => {[m
+ [m
+   return ([m
+     <div className="Firestore-CollectionList" data-testid="collection-list">[m
+[31m-      <div>[m
+[31m-        {!collections ? ([m
+[31m-          <p>Loading collections...</p>[m
+[31m-        ) : ([m
+[31m-          <List dense>[m
+[31m-            {collections.map(coll => ([m
+[31m-              <ListItem[m
+[31m-                key={coll.id}[m
+[31m-                tag={props => ([m
+[31m-                  <NavLink[m
+[31m-                    to={`${url}/${coll.id}`}[m
+[31m-                    activeClassName="mdc-list-item--activated"[m
+[31m-                    {...props}[m
+[31m-                  />[m
+[31m-                )}[m
+[31m-              >[m
+[31m-                {coll.id}[m
+[31m-              </ListItem>[m
+[31m-            ))}[m
+[31m-          </List>[m
+[31m-        )}[m
+[31m-      </div>[m
+[32m+[m[32m      <List dense>[m
+[32m+[m[32m        <ListItem disabled>Add collection +</ListItem>[m
+[32m+[m[32m        {collections &&[m
+[32m+[m[32m          collections.map((coll) => ([m
+[32m+[m[32m            <ListItem[m
+[32m+[m[32m              key={coll.id}[m
+[32m+[m[32m              tag={(props) => ([m
+[32m+[m[32m                <NavLink[m
+[32m+[m[32m                  to={`${url}/${coll.id}`}[m
+[32m+[m[32m                  activeClassName="mdc-list-item--activated"[m
+[32m+[m[32m                  {...props}[m
+[32m+[m[32m                />[m
+[32m+[m[32m              )}[m
+[32m+[m[32m            >[m
+[32m+[m[32m              {coll.id}[m
+[32m+[m[32m            </ListItem>[m
+[32m+[m[32m          ))}[m
+[32m+[m[32m      </List>[m
+     </div>[m
+   );[m
+ };[m
+ [m
+ function useCollections([m
+   api: DatabaseApi,[m
+[31m-  documentRef?: firestore.DocumentReference[m
+[32m+[m[32m  documentRef?: firestore.DocumentReference,[m
+ ): firestore.CollectionReference[] | null {[m
+   const [collections, setCollections] = useState<[m
+     firestore.CollectionReference[] | null[m
+[1mdiff --git a/src/components/Firestore/Document.tsx b/src/components/Firestore/Document.tsx[m
+[1mindex a9c536c..6a982ed 100644[m
+[1m--- a/src/components/Firestore/Document.tsx[m
+[1m+++ b/src/components/Firestore/Document.tsx[m
+[36m@@ -18,6 +18,7 @@[m [mimport React from 'react';[m
+ import './index.scss';[m
+ import { firestore } from 'firebase';[m
+ import { Icon } from '@rmwc/icon';[m
+[32m+[m[32mimport { ListDivider } from '@rmwc/list';[m
+ import { Route, useRouteMatch } from 'react-router-dom';[m
+ [m
+ import CollectionList from './CollectionList';[m
+[36m@@ -74,6 +75,7 @@[m [mexport const Document: React.FC<{ reference: firestore.DocumentReference }> = ({[m
+     >[m
+       <PanelHeader id={reference.id} icon={<Icon icon="insert_drive_file" />} />[m
+       <CollectionList reference={reference} />[m
+[32m+[m[32m      <ListDivider />[m
+       <DocumentPreview reference={reference} />[m
+     </Doc>[m
+   );[m
+[1mdiff --git a/src/components/Firestore/DocumentPreview.tsx b/src/components/Firestore/DocumentPreview.tsx[m
+[1mindex 6ecbdb2..0c4d01d 100644[m
+[1m--- a/src/components/Firestore/DocumentPreview.tsx[m
+[1m+++ b/src/components/Firestore/DocumentPreview.tsx[m
+[36m@@ -16,7 +16,10 @@[m
+ [m
+ import React from 'react';[m
+ import { firestore } from 'firebase';[m
+[32m+[m[32mimport { List, ListItem } from '@rmwc/list';[m
+ import { useDocumentData } from 'react-firebase-hooks/firestore';[m
+[32m+[m[32mimport { Field } from './Field';[m
+[32m+[m[32mimport { DocumentRefProvider } from './Field/DocumentRefContext';[m
+ [m
+ export interface Props {[m
+   reference: firestore.DocumentReference;[m
+[36m@@ -27,7 +30,18 @@[m [mexport const DocumentPreview: React.FC<Props> = ({ reference }) => {[m
+ [m
+   if (loading) return <div>Loading document...</div>;[m
+   if (error) return <div>Error retrieving document</div>;[m
+[31m-  return <div>test {JSON.stringify(data)}</div>;[m
+[32m+[m
+[32m+[m[32m  return ([m
+[32m+[m[32m    <DocumentRefProvider value={reference}>[m
+[32m+[m[32m      <List dense>[m
+[32m+[m[32m        <ListItem disabled>Add field +</ListItem>[m
+[32m+[m[32m        {data &&[m
+[32m+[m[32m          Object.entries(data).map(([key, value]) => ([m
+[32m+[m[32m            <Field key={key} id={key} value={value} />[m
+[32m+[m[32m          ))}[m
+[32m+[m[32m      </List>[m
+[32m+[m[32m    </DocumentRefProvider>[m
+[32m+[m[32m  );[m
+ };[m
+ [m
+ export default DocumentPreview;[m
+[1mdiff --git a/src/components/Firestore/index.tsx b/src/components/Firestore/index.tsx[m
+[1mindex 21c3d91..7266cfa 100644[m
+[1m--- a/src/components/Firestore/index.tsx[m
+[1m+++ b/src/components/Firestore/index.tsx[m
+[36m@@ -16,7 +16,6 @@[m
+ [m
+ import React, { useState, useEffect } from 'react';[m
+ import './index.scss';[m
+[31m-import 'firebase/firestore';[m
+ import { Button } from '@rmwc/button';[m
+ import { Card } from '@rmwc/card';[m
+ import { DialogButton } from '@rmwc/dialog';[m
