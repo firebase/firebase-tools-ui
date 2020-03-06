@@ -17,26 +17,46 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import { Home } from './index';
+import { MemoryRouter } from 'react-router';
 
 it('renders fetching placeholder when fetching config', () => {
   const config = { fetching: true };
-  const { getByText } = render(<Home config={config} />);
+  const { getByText } = render(
+    <MemoryRouter>
+      <Home config={config} />
+    </MemoryRouter>
+  );
   expect(getByText(/Fetching/)).not.toBeNull();
 });
 
 it('renders an overview when config is loaded', () => {
-  const config = { fetching: false, config: {} };
-  const { getByText } = render(<Home config={config} />);
-  expect(getByText(/Emulator Suite/)).not.toBeNull();
+  const config = { fetching: false, config: { projectId: 'example' } };
+  const { getByText } = render(
+    <MemoryRouter>
+      <Home config={config} />
+    </MemoryRouter>
+  );
+  expect(getByText(/Emulator Overview/)).not.toBeNull();
 });
 
-it('shows config for emulator that are loaded', () => {
+it('shows port for emulator that are loaded', () => {
   const config = {
     fetching: false,
-    config: { database: { hostAndPort: 'localhost:9000' } },
+    config: {
+      projectId: 'example',
+      database: {
+        host: 'localhost',
+        port: 9000,
+        hostAndPort: 'localhost:9000',
+      },
+    },
   };
-  const { getByText } = render(<Home config={config} />);
-  expect(getByText(/localhost:9000/)).not.toBeNull();
+  const { getByText } = render(
+    <MemoryRouter>
+      <Home config={config} />
+    </MemoryRouter>
+  );
+  expect(getByText(/9000/)).not.toBeNull();
 });
 
 it('renders error message when errored', () => {
@@ -44,6 +64,10 @@ it('renders error message when errored', () => {
     fetching: false,
     error: { message: '420 Enhance Your Calm' },
   };
-  const { getByText } = render(<Home config={config} />);
+  const { getByText } = render(
+    <MemoryRouter>
+      <Home config={config} />
+    </MemoryRouter>
+  );
   expect(getByText('420 Enhance Your Calm')).not.toBeNull();
 });
