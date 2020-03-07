@@ -15,9 +15,9 @@
  */
 
 import React from 'react';
-import { wait, act, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import { useDocumentData } from 'react-firebase-hooks/firestore';
+import { useCollection, useDocumentData } from 'react-firebase-hooks/firestore';
 
 import {
   fakeFirestoreApi,
@@ -31,6 +31,12 @@ import { ApiProvider } from './ApiContext';
 jest.mock('react-firebase-hooks/firestore');
 
 it('shows the list of documents in the collection', () => {
+  useCollection.mockReturnValue([
+    {
+      docs: [{ ref: fakeDocumentSnapshot({ id: 'cool-doc-1' }) }],
+    },
+  ]);
+
   const collectionReference = fakeCollectionReference({ id: 'my-stuff' });
   const { getByText, queryByText } = render(
     <MemoryRouter>
@@ -38,23 +44,18 @@ it('shows the list of documents in the collection', () => {
     </MemoryRouter>
   );
 
-  act(() =>
-    collectionReference.setSnapshot({
-      docs: [
-        fakeDocumentSnapshot({
-          ref: fakeDocumentReference({ id: 'cool-doc-1' }),
-        }),
-      ],
-    })
-  );
-
   expect(getByText(/my-stuff/)).not.toBeNull();
   expect(queryByText(/Loading documents/)).toBeNull();
   expect(getByText(/cool-doc-1/)).not.toBeNull();
 });
 
-it('shows the selected sub-document', async () => {
+it('shows the selected sub-document', () => {
   useDocumentData.mockReturnValue([]);
+  useCollection.mockReturnValue([
+    {
+      docs: [{ ref: fakeDocumentReference({ id: 'cool-doc-1' }) }],
+    },
+  ]);
 
   const collectionReference = fakeCollectionReference({ id: 'my-stuff' });
   const { getByText, queryAllByText } = render(
@@ -65,18 +66,6 @@ it('shows the selected sub-document', async () => {
     </MemoryRouter>
   );
 
-  act(() =>
-    collectionReference.setSnapshot({
-      docs: [
-        fakeDocumentSnapshot({
-          ref: fakeDocumentReference({ id: 'cool-doc-1' }),
-        }),
-      ],
-    })
-  );
-
   expect(getByText(/my-stuff/)).not.toBeNull();
   expect(queryAllByText(/cool-doc-1/).length).toBe(2);
-
-  await wait();
 });
