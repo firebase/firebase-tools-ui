@@ -16,7 +16,6 @@
 
 import React, { useState, useEffect } from 'react';
 import './index.scss';
-import 'firebase/firestore';
 import { Button } from '@rmwc/button';
 import { Card } from '@rmwc/card';
 import { DialogButton } from '@rmwc/dialog';

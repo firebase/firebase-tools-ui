@@ -93,28 +93,23 @@ export const Collection: React.FC<Props> = ({ collection }) => {
           icon={<Icon icon="collections_bookmark" />}
         />
 
-        <div>
-          {state.isLoading ? (
-            <p>Loading documents...</p>
-          ) : (
-            <List dense>
-              {state.documents.map(doc => (
-                <ListItem
-                  key={doc.ref.id}
-                  tag={props => (
-                    <NavLink
-                      to={`${url}/${doc.ref.id}`}
-                      activeClassName="mdc-list-item--activated"
-                      {...props}
-                    />
-                  )}
-                >
-                  {doc.ref.id}
-                </ListItem>
-              ))}
-            </List>
-          )}
-        </div>
+        <List dense>
+          <ListItem disabled>Add document +</ListItem>
+          {state.documents.map(doc => (
+            <ListItem
+              key={doc.ref.id}
+              tag={props => (
+                <NavLink
+                  to={`${url}/${doc.ref.id}`}
+                  activeClassName="mdc-list-item--activated"
+                  {...props}
+                />
+              )}
+            >
+              {doc.ref.id}
+            </ListItem>
+          ))}
+        </List>
       </div>
       <Route
         path={`${url}/:id`}
@@ -123,7 +118,7 @@ export const Collection: React.FC<Props> = ({ collection }) => {
           const doc = state.documents.find(d => d.ref.id === match.params.id);
 
           if (!doc) {
-            return <p>Loading document...</p>;
+            return <></>;
           }
 
           return <Document reference={doc.ref} />;

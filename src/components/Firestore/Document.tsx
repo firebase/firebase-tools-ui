@@ -18,6 +18,7 @@ import React from 'react';
 import './index.scss';
 import { firestore } from 'firebase';
 import { Icon } from '@rmwc/icon';
+import { ListDivider } from '@rmwc/list';
 import { Route, useRouteMatch } from 'react-router-dom';
 
 import CollectionList from './CollectionList';
@@ -74,6 +75,7 @@ export const Document: React.FC<{ reference: firestore.DocumentReference }> = ({
     >
       <PanelHeader id={reference.id} icon={<Icon icon="insert_drive_file" />} />
       <CollectionList reference={reference} />
+      <ListDivider />
       <DocumentPreview reference={reference} />
     </Doc>
   );

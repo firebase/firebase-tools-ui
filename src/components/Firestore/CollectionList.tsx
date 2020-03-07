@@ -34,28 +34,24 @@ export const CollectionList: React.FC<Props> = ({ reference }) => {
 
   return (
     <div className="Firestore-CollectionList" data-testid="collection-list">
-      <div>
-        {!collections ? (
-          <p>Loading collections...</p>
-        ) : (
-          <List dense>
-            {collections.map(coll => (
-              <ListItem
-                key={coll.id}
-                tag={props => (
-                  <NavLink
-                    to={`${url}/${coll.id}`}
-                    activeClassName="mdc-list-item--activated"
-                    {...props}
-                  />
-                )}
-              >
-                {coll.id}
-              </ListItem>
-            ))}
-          </List>
-        )}
-      </div>
+      <List dense>
+        <ListItem disabled>Add collection +</ListItem>
+        {collections &&
+          collections.map(coll => (
+            <ListItem
+              key={coll.id}
+              tag={props => (
+                <NavLink
+                  to={`${url}/${coll.id}`}
+                  activeClassName="mdc-list-item--activated"
+                  {...props}
+                />
+              )}
+            >
+              {coll.id}
+            </ListItem>
+          ))}
+      </List>
     </div>
   );
 };

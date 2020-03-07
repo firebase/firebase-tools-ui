@@ -45,11 +45,8 @@ it('shows the list of collections', async () => {
     </MemoryRouter>
   );
 
-  expect(getByText(/Loading collections/)).not.toBeNull();
-
   await wait();
 
-  expect(queryByText(/Loading collections/)).toBeNull();
   expect(getByText(/coll-1/)).not.toBeNull();
   expect(getByText(/coll-2/)).not.toBeNull();
 });

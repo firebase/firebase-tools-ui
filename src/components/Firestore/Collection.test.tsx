@@ -38,8 +38,6 @@ it('shows the list of documents in the collection', () => {
     </MemoryRouter>
   );
 
-  expect(getByText(/Loading documents/)).not.toBeNull();
-
   act(() =>
     collectionReference.setSnapshot({
       docs: [
@@ -56,7 +54,7 @@ it('shows the list of documents in the collection', () => {
 });
 
 it('shows the selected sub-document', async () => {
-  useDocumentData.mockReturnValueOnce([]);
+  useDocumentData.mockReturnValue([]);
 
   const collectionReference = fakeCollectionReference({ id: 'my-stuff' });
   const { getByText, queryAllByText } = render(
