@@ -14,24 +14,12 @@
  * limitations under the License.
  */
 
-import { all, fork } from 'redux-saga/effects';
-import { combineReducers } from 'redux';
-import { ConfigState, configReducer, configSaga } from './config';
-import { DatabaseState, databaseSaga, databaseReducer } from './database';
-import { logReducer, LogState } from './logviewer';
+import { createReducer, Action } from 'typesafe-actions';
+import { LogState } from './types';
+import { logReceived } from './actions';
 
-export interface AppState {
-  config: ConfigState;
-  database: DatabaseState;
-  log: LogState;
-}
-
-export function* rootSaga() {
-  yield all([fork(configSaga), fork(databaseSaga)]);
-}
-
-export const rootReducer = combineReducers<AppState>({
-  config: configReducer,
-  database: databaseReducer,
-  log: logReducer
+export const logReducer = createReducer<LogState, Action>({
+  history: []
+}).handleAction(logReceived, (state: LogState, { payload }) => {
+  return {...state, history: [...state.history, payload]}
 });
