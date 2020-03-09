@@ -17,8 +17,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { AppState } from '../../store';
-import { LogEntry, LogState } from '../../store/config';
 import './index.scss';
+import { LogEntry, LogState } from '../../store/logviewer';
 
 enum WebSocketState {
   DISCONNECTED,
