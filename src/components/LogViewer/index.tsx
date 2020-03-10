@@ -242,6 +242,18 @@ const isQueryMatch = (
   return true;
 };
 
+enum HierarchyReferenceMode {
+  NONE,
+  DOT,
+  BRACKET,
+  INCREMENT
+}
+
+interface HierarchyReference {
+  mode: HierarchyReferenceMode,
+  key: number | string
+}
+
 const HighlightedJSON = ({
   data,
   appendToQuery,
@@ -252,139 +264,223 @@ const HighlightedJSON = ({
   const lines = JSON.stringify(data, null, 2).split('\n');
 
   let isObject = false;
-  let hierarchy = ['user'];
 
-  const toHierarchyStep = (key: string) =>
-    key.match(/^[A-Z|_]+$/i) ? `.${key}` : `["${key}"]`;
+  let hierarchy: HierarchyReference[] = [{
+    mode: HierarchyReferenceMode.NONE,
+    key: "user"
+  }];
 
-  const pluck = (obj: any, hierarchy: string[]) => {
-    const path = hierarchy.join('');
+  const toHierarchyStep = (key: string) => {
+    if (key.match(/^[A-Z|_]+$/i)) {
+      return {
+        mode: HierarchyReferenceMode.DOT,
+        key
+      }
+    } else {
+      return {
+        mode: HierarchyReferenceMode.BRACKET,
+        key
+      }
+    }
+  };
+
+  const pluck = (obj: any, path: string) => {
     return getterCache.get(path, { user: obj });
   };
 
-  return (
-    <div className="highlighted-json">
-      {lines.map((line, index) => {
-        const quote_count = line.split('"').length - 1;
+  const hierarchyToJavaScript = (hierarchy: HierarchyReference[]) => hierarchy.map((ref) => {
+    switch (ref.mode) {
+      case HierarchyReferenceMode.NONE:
+        return ref.key;
+      case HierarchyReferenceMode.BRACKET:
+        return `["${ref.key}"]`;
+      case HierarchyReferenceMode.DOT:
+        return `.${ref.key}`;
+      case HierarchyReferenceMode.INCREMENT:
+        return `[${JSON.stringify(ref.key)}]`;
+    }
 
-        const isStart = index === 0 && line.startsWith('{');
-        const isEnd = index === lines.length - 1 && line.endsWith('}');
-        const isObjStart = quote_count >= 2 && line.endsWith('{');
-        const isLiteral =
-          !line.endsWith('{') && !line.endsWith('}') && !line.endsWith('},');
-        const isObjEnd = line.endsWith('}') || line.endsWith('},');
+    return "";
+  }).join("");
+  const elements = lines.map((line, index) => {
+    const quote_count = line.split('"').length - 1;
 
-        if (isStart) {
-          isObject = true;
-          return (
-            <div key={index} className="line start" data-json-key="user">
-              {line}
-            </div>
-          );
-        }
+    const isStart = index === 0 && line.startsWith('{');
+    const isEnd = index === lines.length - 1 && line.endsWith('}');
+    const isKeylessArrayStart = line.trim().length ===1  && line.endsWith("[");
+    const isKeylessObjStart = line.trim().length === 1 && line.endsWith("{");
+    const isKeyedObjStart = quote_count >= 2 && line.endsWith('{');
+    const isLiteral =
+      !line.endsWith('[') && !line.endsWith('{') && !line.endsWith('}') && !line.endsWith('},');
+    const isObjEnd = line.endsWith('}') || line.endsWith('},');
+    const isArrayStart = quote_count >= 2 && line.endsWith('[');
+    const isArrayEnd = line.endsWith(']') || line.endsWith('],');
 
-        if (isEnd) {
-          return (
-            <div key={index} className="line end">
-              {line}
-            </div>
-          );
-        }
+    if (isStart) {
+      isObject = true;
+      return (
+        <div key={index} className="line start">
+          {line}
+        </div>
+      );
+    }
 
-        if (isObjStart) {
-          const [start, ...splat] = line.split(':');
-          const [indent, ...key_chunks] = start.split('"');
-          const key = key_chunks.filter((v: string) => v).join('"');
-          const value = splat.join(':');
-          hierarchy.push(toHierarchyStep(key));
+    if (isEnd) {
+      return (
+        <div key={index} className="line end">
+          {line}
+        </div>
+      );
+    }
 
-          const hierarchy_chain = hierarchy.join('');
+    if (isKeylessObjStart || isKeylessArrayStart || isLiteral) {
+      const ref = hierarchy[hierarchy.length - 1];
+      if (ref.mode === HierarchyReferenceMode.INCREMENT) {
+        (ref as any).key += 1;
+      }
+    }
 
-          return (
-            <div key={index} className="line object-start" data-json-key={key}>
-              {indent}
-              <a
-                href="#"
-                className="key"
-                onClick={() => appendToQuery(hierarchy_chain, '*')}
-              >
-                "{key}"
-              </a>
-              :{value}
-            </div>
-          );
-        }
+    if (isKeylessObjStart) {
+      hierarchy.push({mode: HierarchyReferenceMode.NONE, key: ""});
+    }
 
-        if (isObjEnd) {
-          hierarchy.pop();
-          return (
-            <div key={index} className="line object-end">
-              {line}
-            </div>
-          );
-        }
+    if (isKeylessArrayStart) {
+      hierarchy.push({mode: HierarchyReferenceMode.NONE, key: ""});
+      hierarchy.push({mode: HierarchyReferenceMode.INCREMENT, key: -1});
+    }
 
-        if (isLiteral) {
-          if (!isObject) {
-            return (
-              <div key={index} className="line literal">
-                <a href="#" className="value">
-                  {line}
-                </a>
-              </div>
-            );
-          }
-          const [start, ...splat] = line.split(':');
-          const [indent, ...key_chunks] = start.split('"');
-          const key = key_chunks.filter((v: string) => v).join('"');
-          const value = splat.join(':').trim();
-          const local_hierarchy = [...hierarchy, toHierarchyStep(key)];
-          const hierarchy_chain = local_hierarchy.join('');
+    if (isKeyedObjStart || isArrayStart) {
+      const [start, ...splat] = line.split(':');
+      const [indent, ...key_chunks] = start.split('"');
+      const key = key_chunks.filter((v: string) => v).join('"');
+      const value = splat.join(':');
 
-          return (
-            <div key={index} className="line literal" data-json-key={key}>
-              {indent}
-              <a
-                href="#"
-                className="key"
-                onClick={() => appendToQuery(hierarchy_chain, '*')}
-              >
-                "{key}"
-              </a>
-              :{' '}
-              <a
-                href="#"
-                className="value"
-                onClick={() =>
-                  appendToQuery(hierarchy_chain, pluck(data, local_hierarchy))
-                }
-              >
-                {value}
-              </a>
-            </div>
-          );
-        }
+      hierarchy.push(toHierarchyStep(key));
+      const hierarchy_chain = hierarchyToJavaScript(hierarchy);
 
+      if (isArrayStart) {
+        hierarchy.push({mode: HierarchyReferenceMode.INCREMENT, key: -1});
+      }
+
+      return (
+        <div key={index} className="line object-start">
+          {indent}
+          <a
+            href="#"
+            className="key"
+            onClick={() => appendToQuery(hierarchy_chain, '*')}
+          >
+            "{key}"
+          </a>
+          :{value}
+        </div>
+      );
+    }
+
+    if (isObjEnd) {
+      if (hierarchy[hierarchy.length - 1].mode !== HierarchyReferenceMode.INCREMENT) {
+        hierarchy.pop();
+      }
+      return (
+        <div key={index} className="line object-end">
+          {line}
+        </div>
+      );
+    }
+
+    if (isArrayEnd) {
+      hierarchy.pop(); // Remove reference with array name (i.e. "users")
+      hierarchy.pop(); // Remove reference with array index (i.e. 3)
+
+      return (
+        <div key={index} className="line array-end">
+          {line}
+        </div>
+      );
+    }
+
+    if (isLiteral) {
+      if (!isObject) {
         return (
-          <div key={index} className={`line generic`}>
-            {line}
+          <div key={index} className="line literal">
+            <a href="#" className="value">
+              {line}
+            </a>
           </div>
         );
-      })}
-    </div>
-  );
+      }
+
+      const [start, ...splat] = line.split(':');
+      const [_, ...key_chunks] = start.split('"');
+      const key = key_chunks.filter((v: string) => v).join('"');
+      const value = splat.join(':').trim();
+
+      const new_indent = new Array(line.length - line.trim().length + 1).join(" ");
+      if (key && value) {
+        const hierarchy_chain = hierarchyToJavaScript([...hierarchy, toHierarchyStep(key)]);
+        return (
+          <div key={index} className="line literal">
+            {new_indent}
+            <a
+              href="#"
+              className="key"
+              onClick={() => appendToQuery(hierarchy_chain, '*')}
+            >
+              "{key}"
+            </a>
+            :{' '}
+            <a
+              href="#"
+              className="value"
+              onClick={() =>
+                appendToQuery(hierarchy_chain, pluck(data, hierarchy_chain))
+              }
+            >
+              {value}
+            </a>
+          </div>
+        );
+      } else {
+        const hierarchy_chain = hierarchyToJavaScript(hierarchy);
+        return (
+          <div key={index} className="line literal">
+            {new_indent}
+            <a
+              href="#"
+              className="value"
+              onClick={() =>
+                appendToQuery(hierarchy_chain, pluck(data, hierarchy_chain))
+              }
+            >
+              {line.trim()}
+            </a>
+          </div>
+        );
+      }
+    }
+
+    return (
+      <div key={index} className={`line generic`}>
+        {line}
+      </div>
+    );
+  });
+
+  return <div className="highlighted-json">{elements}</div>;
 };
 
 const formatTimestamp = (timestamp: number) => {
   const date = new Date(timestamp);
-  const segments = [date.getHours(), date.getMinutes(),date.getSeconds()];
+  const segments = [date.getHours(), date.getMinutes(), date.getSeconds()];
 
-  return segments.map((segment) => {
-    const number = segment.toString();
+  return segments
+    .map(segment => {
+      const number = segment.toString();
 
-    if (number.length === 2) return number;
-    else return `0${number}`;
-  }).join(":")
+      if (number.length === 2) return number;
+      else return `0${number}`;
+    })
+    .join(':');
 };
 
 export const LogViewer: React.FC<Props> = ({ log, logReceived }) => {
@@ -393,7 +489,10 @@ export const LogViewer: React.FC<Props> = ({ log, logReceived }) => {
   useEffect(() => {
     rws.listener = (log: LogEntry) => {
       //todo: remove hack to cut off icon
-      log.message = log.message.split(" ").slice(1).join(" ");
+      log.message = log.message
+        .split(' ')
+        .slice(1)
+        .join(' ');
       logReceived(log);
     };
   }, []);
@@ -443,7 +542,9 @@ export const LogViewer: React.FC<Props> = ({ log, logReceived }) => {
         {history.length
           ? history.map((log, index) => (
               <div id={`log_${index}`} className="log-entry" key={index}>
-                <span className="log-timestamp">{formatTimestamp(log.timestamp)}</span>
+                <span className="log-timestamp">
+                  {formatTimestamp(log.timestamp)}
+                </span>
                 <span
                   className={`log-level ${log.level}`}
                   onClick={() => appendToQuery('level', log.level)}
@@ -467,14 +568,16 @@ export const LogViewer: React.FC<Props> = ({ log, logReceived }) => {
                       />
                     </div>
                   </>
-                ) : log.message.split('\n').length == 1 ? (
+                ) : log.message.split('\n').length === 1 ? (
                   <div className="log-message-single">{log.message}</div>
                 ) : (
                   <>
-                    <div className="log-message-single">{log.message.split("\n")[0]}</div>
-                  <div className="log-message-multi">
-                    <pre>{log.message}</pre>
-                  </div>
+                    <div className="log-message-single">
+                      {log.message.split('\n')[0]}
+                    </div>
+                    <div className="log-message-multi">
+                      <pre>{log.message}</pre>
+                    </div>
                   </>
                 )}
               </div>

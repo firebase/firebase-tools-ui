@@ -7,9 +7,8 @@
   overflow: hidden;
 
   display: grid;
-  grid-template-areas: "query" "history" "debug";
+  grid-template-areas: 'query' 'history' 'debug';
   grid-template-rows: fit-content(100%) 1fr fit-content(100%);
-
 
   #query {
     display: grid;
@@ -26,6 +25,8 @@
       font-size: 1em;
       font-family: monospace;
       padding: 15px;
+
+      line-height: 1em;
     }
 
     #input {
@@ -33,8 +34,7 @@
       resize: none;
       background-color: rgba(0, 0, 0, 0);
       caret-color: black;
-      color: rgba(0, 0, 0, .5);
-
+      color: rgba(0, 0, 0, 0.5);
 
       &:focus {
         outline: none;
@@ -93,9 +93,11 @@
 
   .log-entry {
     display: grid;
-    grid-template-columns: fit-content(100%) fit-content(100%) 1fr fit-content(100%);
+    grid-template-columns: fit-content(100%) fit-content(100%) 1fr fit-content(
+        100%
+      );
     grid-template-rows: fit-content(100%) fit-content(100%);
-    grid-template-areas: "timestamp level message expand";
+    grid-template-areas: 'timestamp level message expand';
     grid-column-gap: 10px;
     align-items: center;
 
@@ -135,8 +137,8 @@
     .log-message-single {
       grid-column: 3 / span 1;
       grid-row: 1;
-      overflow: hidden;
-      height: 14px;
+      line-height: 1.2em;
+      word-break: break-all;
     }
 
     .log-message-multi {
@@ -198,13 +200,13 @@
     padding: 5px 10px;
 
     pre {
-        margin: 10px 0px 0px 0px;
-        background-color: #fff;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        padding: 10px;
-        overflow: auto;
-        white-space: pre;
+      margin: 10px 0px 0px 0px;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 10px;
+      overflow: auto;
+      white-space: pre;
     }
   }
 
