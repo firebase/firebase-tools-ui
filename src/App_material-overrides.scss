@@ -14,25 +14,12 @@
  * limitations under the License.
  */
 
-@import-normalize;
-
-* {
-  box-sizing: border-box;
+.App .mdc-button {
+  text-transform: none;
 }
 
-@import '../node_modules/material-components-web/dist/material-components-web.css';
-@import './App_material-overrides';
-
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+// TODO: Use text-transform mixins once RMWC updates to @material/tabs v4.0+
+// https://github.com/material-components/material-components-web/commit/22d7ad2fb1796fbd71a3a5ee9c7ab2e77c60e34e
+.App .mdc-tab__text-label {
+  text-transform: none;
 }
