@@ -50,14 +50,21 @@ it('shows the list of documents in the collection', () => {
 });
 
 it('shows the selected sub-document', () => {
+  const subDocRef = fakeDocumentReference({ id: 'cool-doc-1' });
+
   useDocumentData.mockReturnValue([]);
   useCollection.mockReturnValue([
     {
-      docs: [{ ref: fakeDocumentReference({ id: 'cool-doc-1' }) }],
+      docs: [{ ref: subDocRef }],
     },
   ]);
 
-  const collectionReference = fakeCollectionReference({ id: 'my-stuff' });
+  const collectionReference = fakeCollectionReference({
+    id: 'my-stuff',
+    doc: jest.fn(),
+  });
+  collectionReference.doc.mockReturnValue(subDocRef);
+
   const { getByText, queryAllByText } = render(
     <MemoryRouter initialEntries={['//cool-doc-1']}>
       <ApiProvider value={fakeFirestoreApi()}>
@@ -67,5 +74,6 @@ it('shows the selected sub-document', () => {
   );
 
   expect(getByText(/my-stuff/)).not.toBeNull();
+  expect(collectionReference.doc).toHaveBeenCalledWith('cool-doc-1');
   expect(queryAllByText(/cool-doc-1/).length).toBe(2);
 });
