@@ -18,6 +18,7 @@ import React, { useState, useEffect } from 'react';
 import './index.scss';
 import { Button } from '@rmwc/button';
 import { Card } from '@rmwc/card';
+import { Elevation } from '@rmwc/elevation';
 import { DialogButton } from '@rmwc/dialog';
 import { Theme } from '@rmwc/theme';
 import { connect } from 'react-redux';
@@ -85,9 +86,11 @@ export const Firestore: React.FC<Props> = ({ config, projectId }) => {
             Clear all data
           </Button>
         </div>
-        <Card className="Firestore-panels">
-          <Root />
-        </Card>
+        <Elevation z="2" wrap>
+          <Card className="Firestore-panels">
+            <Root />
+          </Card>
+        </Elevation>
       </div>
     </ApiProvider>
   );
