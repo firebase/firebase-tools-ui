@@ -37,6 +37,7 @@ export const Collection: React.FC<Props> = ({ collection }) => {
   if (loading) return <></>;
   if (error) return <></>;
 
+  // TODO: what to do if there are docs referenced not in the snapshot
   const docs = collectionSnapshot ? collectionSnapshot.docs : [];
 
   return (
@@ -68,14 +69,14 @@ export const Collection: React.FC<Props> = ({ collection }) => {
       <Route
         path={`${url}/:id`}
         render={({ match }: any) => {
-          const doc = docs.find(d => d.ref.id === match.params.id);
+          const docRef = collection.doc(match.params.id);
 
-          if (!doc) {
+          if (!docRef) {
             // TODO what about a missing doc
             return <></>;
           }
 
-          return <Document reference={doc.ref} />;
+          return <Document reference={docRef} />;
         }}
       ></Route>
     </>
