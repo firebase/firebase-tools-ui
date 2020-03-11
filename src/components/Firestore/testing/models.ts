@@ -32,11 +32,13 @@ export type FakeCollectionReference = firestore.CollectionReference & {
 
 export function fakeCollectionReference({
   id = '',
+  doc = () => {},
 } = {}): FakeCollectionReference {
   let thisObserver = (snapshot: firestore.DocumentSnapshot) => {};
 
   return ({
     id,
+    doc,
     onSnapshot: (observer: any) => {
       thisObserver = observer;
       return () => {};

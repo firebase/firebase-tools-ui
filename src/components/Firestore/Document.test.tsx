@@ -17,7 +17,7 @@
 import React from 'react';
 import { act, render, wait } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import { useDocumentData } from 'react-firebase-hooks/firestore';
+import { useCollection, useDocumentData } from 'react-firebase-hooks/firestore';
 
 import {
   fakeFirestoreApi,
@@ -89,6 +89,7 @@ it('shows the document collection-list', () => {
 
 it('shows the selected root-collection', () => {
   useDocumentData.mockReturnValueOnce([]);
+  useCollection.mockReturnValueOnce([]);
 
   const { getByText, queryAllByText } = render(
     <MemoryRouter initialEntries={['//cool-coll-1']}>
@@ -103,6 +104,7 @@ it('shows the selected root-collection', () => {
 
 it('shows the selected document-collection', () => {
   useDocumentData.mockReturnValueOnce([]);
+  useCollection.mockReturnValueOnce([]);
 
   const { getByText, queryAllByText } = render(
     <MemoryRouter initialEntries={['//cool-coll-1']}>
