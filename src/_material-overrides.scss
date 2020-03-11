@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-// for more specificity over originals
 .App .mdc-button {
   text-transform: none;
 }
 
-.mdc-tab__text-label.mdc-tab__text-label {
+.App .mdc-tab__text-label {
   text-transform: none;
 }
