@@ -20,7 +20,7 @@ import { Route, useRouteMatch, NavLink } from 'react-router-dom';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import { Icon } from '@rmwc/icon';
 import { List, ListItem } from '@rmwc/list';
-
+import { Button } from '@rmwc/button';
 import { Document } from './Document';
 import PanelHeader from './PanelHeader';
 
@@ -48,11 +48,20 @@ export const Collection: React.FC<Props> = ({ collection }) => {
           icon={<Icon icon="collections_bookmark" />}
         />
 
-        <List dense>
-          <ListItem disabled>Add document +</ListItem>
+        {/* Actions */}
+        <List dense className="List-Actions">
+          <ListItem
+            tag={props => (
+              <Button dense label="Add document" icon="add" {...props} />
+            )}
+          ></ListItem>
+        </List>
+
+        <List dense className="Firestore-Document-List">
           {docs.map(doc => (
             <ListItem
               key={doc.ref.id}
+              className="Firestore-List-Item"
               tag={props => (
                 <NavLink
                   to={`${url}/${doc.ref.id}`}
