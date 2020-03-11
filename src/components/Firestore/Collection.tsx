@@ -37,7 +37,7 @@ export const Collection: React.FC<Props> = ({ collection }) => {
   if (loading) return <></>;
   if (error) return <></>;
 
-  // TODO: what to do if there are docs referenced not in the snapshot
+  // TODO: Fetch missing documents (i.e. nonexistent docs with subcollections).
   const docs = collectionSnapshot ? collectionSnapshot.docs : [];
 
   return (
