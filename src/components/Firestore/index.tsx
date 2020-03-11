@@ -82,7 +82,7 @@ export const Firestore: React.FC<Props> = ({ config, projectId }) => {
       <div className="Firestore">
         <div className="Firestore-actions">
           <Button danger unelevated onClick={() => handleClearData(api)}>
-            clear all data
+            Clear all data
           </Button>
         </div>
         <Card className="Firestore-panels">

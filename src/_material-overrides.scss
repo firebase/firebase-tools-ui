@@ -14,25 +14,11 @@
  * limitations under the License.
  */
 
-@import-normalize;
-
-* {
-  box-sizing: border-box;
+// for more specificity over originals
+.mdc-button.mdc-button {
+  text-transform: none;
 }
 
-@import '../node_modules/material-components-web/dist/material-components-web.css';
-@import './material-overrides';
-
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.mdc-tab__text-label.mdc-tab__text-label {
+  text-transform: none;
 }
