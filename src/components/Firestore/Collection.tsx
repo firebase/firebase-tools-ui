@@ -70,12 +70,6 @@ export const Collection: React.FC<Props> = ({ collection }) => {
         path={`${url}/:id`}
         render={({ match }: any) => {
           const docRef = collection.doc(match.params.id);
-
-          if (!docRef) {
-            // TODO what about a missing doc
-            return <></>;
-          }
-
           return <Document reference={docRef} />;
         }}
       ></Route>
