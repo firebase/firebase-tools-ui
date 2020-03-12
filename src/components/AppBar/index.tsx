@@ -66,7 +66,7 @@ export const AppBar: React.FC<Props> = ({ routes }) => {
             <div className="title-grid">
               <Logo />
               <Typography use="headline5" className="title">
-                Firebase Emulator
+                Firebase Emulator Suite
               </Typography>
               <Typography use="subtitle1" className="subtitle">
                 This is a local environment and not the Firebase console
