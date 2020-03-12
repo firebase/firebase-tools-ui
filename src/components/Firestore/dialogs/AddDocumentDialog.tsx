@@ -34,13 +34,13 @@ export interface AddDocumentDialogValue {
 }
 
 export interface AddDocumentStepProps {
-  reference: firestore.CollectionReference;
+  collectionRef: firestore.CollectionReference;
   onChange: (value: AddDocumentDialogValue) => void;
 }
 
 export const AddDocumentStep = memo<AddDocumentStepProps>(
-  ({ reference, onChange }) => {
-    const [id, setId] = useState(reference.doc().id);
+  ({ collectionRef, onChange }) => {
+    const [id, setId] = useState(collectionRef.doc().id);
     const [json, setJson] = useState('{"a": "b"}');
 
     const getValue = useCallback(() => ({ id, data: JSON.parse(json) }), [
@@ -72,12 +72,21 @@ export const AddDocumentStep = memo<AddDocumentStepProps>(
     return (
       <>
         <TextField
+          id="add-document-path"
+          fullwidth
+          disabled
+          label="Parent path"
+          value={collectionRef.path}
+        />
+        <TextField
+          id="add-document-id"
           fullwidth
           label="Document ID"
           value={id}
           onChange={updateId}
         />
         <TextField
+          id="add-document-data"
           fullwidth
           label="JSON data"
           textarea
@@ -114,7 +123,10 @@ export const AddDocumentDialog = memo<Props>(
         <DialogTitle>Add a document</DialogTitle>
 
         <DialogContent>
-          <AddDocumentStep reference={collectionRef} onChange={setDocument} />
+          <AddDocumentStep
+            collectionRef={collectionRef}
+            onChange={setDocument}
+          />
         </DialogContent>
 
         <DialogActions>

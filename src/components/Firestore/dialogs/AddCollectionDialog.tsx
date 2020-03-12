@@ -51,7 +51,7 @@ export const AddCollectionStep = memo<AddCollectionStepProps>(
         <TextField
           fullwidth
           label="Parent path"
-          value={documentRef ? documentRef.path.toString() : '/'}
+          value={documentRef ? documentRef.path : '/'}
           disabled
         />
         <TextField
@@ -123,7 +123,7 @@ export const AddCollectionDialog = memo<AddCollectionDialogProps>(
             />
           ) : (
             <AddDocumentStep
-              reference={
+              collectionRef={
                 documentRef
                   ? documentRef.collection(collectionId)
                   : api.database.collection(collectionId)
