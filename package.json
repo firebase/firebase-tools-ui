@@ -13,6 +13,7 @@
     "express": "^4.17.1",
     "firebase": "^7.6.0",
     "font-awesome": "^4.7.0",
+    "immer": "^6.0.1",
     "keycode": "^2.2.0",
     "node-fetch": "^2.6.0",
     "react": "^16.11.0",
