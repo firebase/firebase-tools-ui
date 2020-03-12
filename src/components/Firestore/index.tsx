@@ -19,15 +19,13 @@ import './index.scss';
 import { Button } from '@rmwc/button';
 import { Card } from '@rmwc/card';
 import { Elevation } from '@rmwc/elevation';
-import { DialogButton } from '@rmwc/dialog';
-import { Theme } from '@rmwc/theme';
 import { connect } from 'react-redux';
 import { AppState } from '../../store';
 import { FirestoreConfig } from '../../store/config';
 import DatabaseApi from './api';
 import { ApiProvider } from './ApiContext';
 import { Root } from './Document';
-import { confirm } from '../DialogQueue';
+import { promptClearAll } from './dialogs/clearAll';
 
 export interface PropsFromState {
   config?: FirestoreConfig;
@@ -56,24 +54,7 @@ export const Firestore: React.FC<Props> = ({ config, projectId }) => {
   }
 
   async function handleClearData(api: DatabaseApi) {
-    const shouldNuke = await confirm({
-      title: 'Delete all data?',
-      body: `Proceeding will delete all your collections, sub-collections and
-             documents within your database.`,
-      // hide standard buttons so as to use `danger` button
-      acceptLabel: null,
-      cancelLabel: null,
-      footer: (
-        <>
-          <Theme use={['textSecondaryOnBackground']} wrap>
-            <DialogButton action="close">Cancel</DialogButton>
-          </Theme>
-          <DialogButton action="accept" isDefaultAction danger>
-            Clear
-          </DialogButton>
-        </>
-      ),
-    });
+    const shouldNuke = await promptClearAll();
     if (!shouldNuke) return;
     api.nukeDocuments();
   }

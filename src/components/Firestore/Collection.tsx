@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import { firestore } from 'firebase';
 import { Route, useRouteMatch, NavLink } from 'react-router-dom';
 import { useCollection } from 'react-firebase-hooks/firestore';
@@ -25,6 +25,10 @@ import { Document } from './Document';
 import PanelHeader from './PanelHeader';
 
 import './index.scss';
+import {
+  AddDocumentDialogValue,
+  AddDocumentDialog,
+} from './dialogs/AddDocumentDialog';
 
 export interface Props {
   collection: firestore.CollectionReference;
@@ -33,6 +37,13 @@ export interface Props {
 export const Collection: React.FC<Props> = ({ collection }) => {
   const [collectionSnapshot, loading, error] = useCollection(collection);
   const { url } = useRouteMatch()!;
+
+  const [isDialogOpen, setDialogOpen] = useState(false);
+  const addDocument = async (value: AddDocumentDialogValue | null) => {
+    if (value && value.id) {
+      await collection.doc(value.id).set(value.data);
+    }
+  };
 
   if (loading) return <></>;
   if (error) return <></>;
@@ -49,10 +60,24 @@ export const Collection: React.FC<Props> = ({ collection }) => {
         />
 
         {/* Actions */}
+        {isDialogOpen && (
+          <AddDocumentDialog
+            collectionRef={collection}
+            open={isDialogOpen}
+            onValue={addDocument}
+            onClose={() => setDialogOpen(false)}
+          />
+        )}
         <List dense className="List-Actions">
           <ListItem
             tag={props => (
-              <Button dense label="Add document" icon="add" {...props} />
+              <Button
+                dense
+                label="Add document"
+                icon="add"
+                {...props}
+                onClick={() => setDialogOpen(true)}
+              />
             )}
           ></ListItem>
         </List>
