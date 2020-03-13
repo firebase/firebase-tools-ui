@@ -36,9 +36,10 @@ export interface Props {
 
 export const Collection: React.FC<Props> = ({ collection }) => {
   const [collectionSnapshot, loading, error] = useCollection(collection);
+  const [isAddDocumentDialogOpen, setAddDocumentDialogOpen] = useState(false);
+
   const { url } = useRouteMatch()!;
 
-  const [isAddDocumentDialogOpen, setAddDocumentDialogOpen] = useState(false);
   const addDocument = async (value: AddDocumentDialogValue | null) => {
     if (value && value.id) {
       await collection.doc(value.id).set(value.data);
