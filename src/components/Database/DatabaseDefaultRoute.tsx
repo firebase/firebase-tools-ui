@@ -22,6 +22,7 @@ import {
   useRouteMatch,
   Redirect,
   NavLink,
+  Link,
 } from 'react-router-dom';
 import { Elevation } from '@rmwc/elevation';
 
@@ -31,7 +32,8 @@ import DatabasePicker from './DatabasePicker';
 import { databasesFetchRequest } from '../../store/database';
 import { GridCell } from '@rmwc/grid';
 import { Card } from '@rmwc/card';
-import { Breadcrumb } from '../common/Breadcrumb';
+import { CardActionBar } from '../common/CardActionBar';
+import { IconButton } from '@rmwc/icon-button';
 
 export interface PropsFromState {
   projectId?: string;
@@ -70,8 +72,14 @@ export const DatabaseDefaultRoute: React.FC<Props> = ({
           return (
             <GridCell span={12} className="Database">
               <Elevation z={2} wrap>
-                <Card>
-                  <Breadcrumb root="/database" />
+                <Card className="canvas-card">
+                  <CardActionBar>
+                    <IconButton
+                      icon="home"
+                      ripple={false}
+                      tag={props => <Link to="/database" {...props} />}
+                    />
+                  </CardActionBar>
                   <DatabasePicker
                     current={current}
                     primary={primary}

@@ -16,10 +16,10 @@
 
 @import '../common/shadow';
 
-.Breadcrumb {
+.CardActionBar {
   display: block;
 
-  .Breadcrumb-container {
+  .CardActionBar-container {
     align-items: center;
     box-shadow: $GMP_SHADOW_DIVIDER_BOTTOM_INSET;
     display: flex;

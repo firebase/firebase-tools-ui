@@ -27,7 +27,9 @@ import { ApiProvider } from './ApiContext';
 import { Root } from './Document';
 import { promptClearAll } from './dialogs/clearAll';
 import { GridCell } from '@rmwc/grid';
-import { Breadcrumb } from '../common/Breadcrumb';
+import { CardActionBar } from '../common/CardActionBar';
+import { IconButton } from '@rmwc/icon-button';
+import { Link } from 'react-router-dom';
 
 export interface PropsFromState {
   config?: FirestoreConfig;
@@ -70,8 +72,14 @@ export const Firestore: React.FC<Props> = ({ config, projectId }) => {
           </Button>
         </div>
         <Elevation z="2" wrap>
-          <Card>
-            <Breadcrumb root="/firestore" />
+          <Card className="canvas-card">
+            <CardActionBar>
+              <IconButton
+                icon="home"
+                ripple={false}
+                tag={props => <Link to="/firestore" {...props} />}
+              />
+            </CardActionBar>
             <div className="Firestore-panels">
               <Root />
             </div>

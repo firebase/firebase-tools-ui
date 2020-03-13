@@ -18,23 +18,13 @@ import React from 'react';
 import { ThemeProvider, Theme } from '@rmwc/theme';
 import { grey100 } from '../../colors';
 
-import './Breadcrumb.scss';
-import { IconButton } from '@rmwc/icon-button';
-import { Link } from 'react-router-dom';
+import './CardActionBar.scss';
 
-interface Props {
-  root: string;
-}
-
-export const Breadcrumb: React.FC<Props> = ({ root }) => {
+export const CardActionBar: React.FC = ({ children }) => {
   return (
-    <ThemeProvider options={{ surface: grey100 }} className="Breadcrumb">
-      <Theme use={['surface']} className="Breadcrumb-container">
-        <IconButton
-          icon="home"
-          ripple={false}
-          tag={props => <Link to={root} {...props} />}
-        />
+    <ThemeProvider options={{ surface: grey100 }} className="CardActionBar">
+      <Theme use={['surface']} className="CardActionBar-container">
+        {children}
       </Theme>
     </ThemeProvider>
   );
