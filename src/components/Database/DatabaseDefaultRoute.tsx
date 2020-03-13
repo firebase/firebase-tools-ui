@@ -22,6 +22,7 @@ import {
   useRouteMatch,
   Redirect,
   NavLink,
+  Link,
 } from 'react-router-dom';
 import { Elevation } from '@rmwc/elevation';
 
@@ -29,6 +30,10 @@ import { AppState } from '../../store';
 import Database from './Database';
 import DatabasePicker from './DatabasePicker';
 import { databasesFetchRequest } from '../../store/database';
+import { GridCell } from '@rmwc/grid';
+import { Card } from '@rmwc/card';
+import { CardActionBar } from '../common/CardActionBar';
+import { IconButton } from '@rmwc/icon-button';
 
 export interface PropsFromState {
   projectId?: string;
@@ -65,16 +70,26 @@ export const DatabaseDefaultRoute: React.FC<Props> = ({
         render={({ match }: any) => {
           const current = match.params.namespace;
           return (
-            <Elevation z={2} className="Database">
-              <DatabasePicker
-                current={current}
-                primary={primary}
-                navigation={db => (
-                  <NavLink to={`${url}/${db}/data`}>{db}</NavLink>
-                )}
-              />
-              <Database namespace={current} />
-            </Elevation>
+            <GridCell span={12} className="Database">
+              <Elevation z={2} wrap>
+                <Card className="canvas-card">
+                  <CardActionBar>
+                    <IconButton
+                      icon="home"
+                      tag={props => <Link to="/database" {...props} />}
+                    />
+                  </CardActionBar>
+                  <DatabasePicker
+                    current={current}
+                    primary={primary}
+                    navigation={db => (
+                      <NavLink to={`${url}/${db}/data`}>{db}</NavLink>
+                    )}
+                  />
+                  <Database namespace={current} />
+                </Card>
+              </Elevation>
+            </GridCell>
           );
         }}
       ></Route>

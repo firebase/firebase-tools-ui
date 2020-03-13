@@ -20,7 +20,7 @@ import { AppState } from '../../store';
 import { ConfigState } from '../../store/config';
 import './index.scss';
 import { Typography } from '@rmwc/typography';
-import { Grid, GridCell } from '@rmwc/grid';
+import { GridCell, GridInner } from '@rmwc/grid';
 import { Card, CardActionButton, CardActionIcons } from '@rmwc/card';
 import { ListDivider } from '@rmwc/list';
 import { Link } from 'react-router-dom';
@@ -67,37 +67,35 @@ export const EmulatorCard: React.FC<{
 
 export const Home: React.FC<Props> = ({ config }) => {
   return (
-    <div className="Home">
+    <GridCell span={12} className="Home">
       {config.fetching ? (
         <p>Fetching Config...</p>
       ) : config.error ? (
         <p className="Home-error">{config.error.message}</p>
       ) : (
         config.config && (
-          <div>
-            <Grid>
-              <GridCell span={12}>
-                <Typography use="headline5">Emulator Overview</Typography>
-              </GridCell>
-              {config.config.database && (
-                <EmulatorCard
-                  name="RTDB Emulator"
-                  port={config.config.database.port}
-                  linkTo="/database"
-                />
-              )}
-              {config.config.firestore && (
-                <EmulatorCard
-                  name="Firestore Emulator"
-                  port={config.config.firestore.port}
-                  linkTo="/firestore"
-                />
-              )}
-            </Grid>
-          </div>
+          <GridInner>
+            <GridCell span={12}>
+              <Typography use="headline5">Emulator Overview</Typography>
+            </GridCell>
+            {config.config.database && (
+              <EmulatorCard
+                name="RTDB Emulator"
+                port={config.config.database.port}
+                linkTo="/database"
+              />
+            )}
+            {config.config.firestore && (
+              <EmulatorCard
+                name="Firestore Emulator"
+                port={config.config.firestore.port}
+                linkTo="/firestore"
+              />
+            )}
+          </GridInner>
         )
       )}
-    </div>
+    </GridCell>
   );
 };
 

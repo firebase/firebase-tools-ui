@@ -1,5 +1,5 @@
 /**
- * Copyright 2019 Google LLC
+ * Copyright 2020 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
-.Firestore-PanelHeader {
-  .CardActionBar-container {
-    padding: 8px 12px;
-    height: 44px;
-  }
-}
+@import '../common/shadow';
 
-.Firestore-PanelHeader-title {
-  padding-left: 4px;
+.CardActionBar {
+  display: block;
+
+  .CardActionBar-container {
+    align-items: center;
+    box-shadow: $GMP_SHADOW_DIVIDER_BOTTOM_INSET;
+    display: flex;
+    height: 56px;
+    padding: 16px 16px 16px 2px; // home icon alignment
+  }
 }

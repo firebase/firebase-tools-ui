@@ -1,5 +1,5 @@
 /**
- * Copyright 2019 Google LLC
+ * Copyright 2020 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,18 @@
  * limitations under the License.
  */
 
-.Firestore-PanelHeader {
-  .CardActionBar-container {
-    padding: 8px 12px;
-    height: 44px;
-  }
-}
+import React from 'react';
+import { ThemeProvider, Theme } from '@rmwc/theme';
+import { grey100 } from '../../colors';
 
-.Firestore-PanelHeader-title {
-  padding-left: 4px;
-}
+import './CardActionBar.scss';
+
+export const CardActionBar: React.FC = ({ children }) => {
+  return (
+    <ThemeProvider options={{ surface: grey100 }} className="CardActionBar">
+      <Theme use={['surface']} className="CardActionBar-container">
+        {children}
+      </Theme>
+    </ThemeProvider>
+  );
+};
