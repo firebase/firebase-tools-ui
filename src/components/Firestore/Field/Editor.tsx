@@ -46,24 +46,6 @@ export const Editor: React.FC<{
   );
 };
 
-// DocumentEditor?
-// RootEditor?
-// const DocumentEditor: React.FC = () => {
-//   const state = useDocumentState();
-//   return (
-//     <>
-//       {Object.keys(state).map((name) => (
-//         <NestedField key={name} path={[name]} />
-//       ))}
-//     </>
-//   );
-// };
-//
-// const RootEditor: React.FC = () => {
-//   const state = useDocumentState();
-//   return <NestedField path={[]} />;
-// };
-
 const RootField: React.FC<{
   onChange: (data: any) => void;
   rootKey?: string;

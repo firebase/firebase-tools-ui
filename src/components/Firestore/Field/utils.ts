@@ -15,7 +15,8 @@
  */
 
 import { firestore } from 'firebase';
-import { FieldType } from './models';
+
+import { FieldType, FirestoreAny } from './models';
 
 export function getParentPath(path: string[]) {
   return path.splice(0, path.length - 1);
@@ -25,7 +26,7 @@ export function getLeafPath(path: string[]) {
   return path[path.length - 1];
 }
 
-export function getFieldType(value: any): FieldType {
+export function getFieldType(value: FirestoreAny): FieldType {
   if (value === null) {
     return FieldType.NULL;
   }
@@ -55,4 +56,16 @@ export function getFieldType(value: any): FieldType {
   }
 
   return typeof value.valueOf() as FieldType;
+}
+
+export function isMap(value: FirestoreAny): value is {} {
+  return getFieldType(value) === FieldType.MAP;
+}
+
+export function isArray(value: FirestoreAny): value is FirestoreAny[] {
+  return getFieldType(value) === FieldType.ARRAY;
+}
+
+export function isPrimitive(value: FirestoreAny): boolean {
+  return !isMap(value) && !isArray(value);
 }

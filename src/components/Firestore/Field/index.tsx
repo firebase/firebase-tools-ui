@@ -23,7 +23,14 @@ import { Elevation } from '@rmwc/elevation';
 import { IconButton } from '@rmwc/icon-button';
 import { ListItem, ListItemMeta } from '@rmwc/list';
 
-import { getLeafPath, getParentPath, getFieldType } from './utils';
+import {
+  isMap,
+  isArray,
+  isPrimitive,
+  getLeafPath,
+  getParentPath,
+  getFieldType,
+} from './utils';
 
 import { FieldType } from './models';
 import { Editor } from './Editor';
@@ -100,51 +107,25 @@ const NestedField: React.FC<{
     setIsAddingField(false);
   }
 
-  let addPath: string[] | null = null;
-  if (fieldType === FieldType.MAP) {
-    addPath = [...path, ''];
-  } else if (fieldType === FieldType.ARRAY) {
-    addPath = [...path, `${state.length}`];
-  }
-
   function handleAddSave(data: any) {
     dispatch({ type: 'add', path: addPath, value: data });
     setIsAddingField(false);
   }
 
+  let addPath: string[] = [];
   let childFields = null;
-  if (fieldType === FieldType.MAP) {
+  if (isMap(state)) {
+    addPath = [...path, ''];
     childFields = Object.keys(state).map(childLeaf => {
       const childPath = [...path, childLeaf];
       return <NestedField key={childLeaf} path={childPath} />;
     });
-    if (isAddingField) {
-      childFields.push(
-        <InlineEditor
-          key={getLeafPath(addPath!)}
-          data={''}
-          path={addPath!}
-          onCancel={handleAddCancel}
-          onSave={handleAddSave}
-        />
-      );
-    }
-  } else if (fieldType === FieldType.ARRAY) {
-    childFields = state.map((value: any, index: number) => {
+  } else if (isArray(state)) {
+    addPath = [...path, `${state.length}`];
+    childFields = state.map((value, index) => {
       const childPath = [...path, `${index}`];
       return <NestedField key={index} path={childPath} />;
     });
-    if (isAddingField) {
-      childFields.push(
-        <InlineEditor
-          key={getLeafPath(addPath!)}
-          data={''}
-          path={addPath!}
-          onCancel={handleAddCancel}
-          onSave={handleAddSave}
-        />
-      );
-    }
   }
 
   return isEditing ? (
@@ -159,12 +140,15 @@ const NestedField: React.FC<{
       <ListItem onClick={handleExpandToggle}>
         {fieldName}:{JSON.stringify(state)}
         <ListItemMeta className="Firestore-Field-actions">
-          <IconButton
-            icon="edit"
-            label="Edit field"
-            onClick={handleEditField}
-          />
-          <IconButton icon="add" label="Add field" onClick={handleAddField} />
+          {isPrimitive(state) ? (
+            <IconButton
+              icon="edit"
+              label="Edit field"
+              onClick={handleEditField}
+            />
+          ) : (
+            <IconButton icon="add" label="Add field" onClick={handleAddField} />
+          )}
           <IconButton
             icon="delete"
             label="Remove field"
@@ -173,6 +157,15 @@ const NestedField: React.FC<{
         </ListItemMeta>
       </ListItem>
       {isExpanded && childFields}
+      {isAddingField && addPath && (
+        <InlineEditor
+          key={getLeafPath(addPath)}
+          data={''}
+          path={addPath}
+          onCancel={handleAddCancel}
+          onSave={handleAddSave}
+        />
+      )}
     </>
   );
 };
@@ -207,12 +200,6 @@ const InlineEditor: React.FC<{
             data={data}
             onChange={handleChange}
             rootKey={getLeafPath(path)}
-          />
-          <Editor
-            data={{
-              '': '',
-            }}
-            onChange={() => {}}
           />
         </div>
         <CardActionButtons>

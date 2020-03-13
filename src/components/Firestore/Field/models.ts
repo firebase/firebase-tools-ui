@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 
+export type FirestoreAny = any;
+
 /** Field types supported by Firestore  */
 export enum FieldType {
   ARRAY = 'array',
+  BLOB = 'blob',
   BOOLEAN = 'boolean',
+  GEOPOINT = 'geopoint',
+  MAP = 'map',
   NULL = 'null',
   NUMBER = 'number',
-  STRING = 'string',
-  MAP = 'map',
-  TIMESTAMP = 'timestamp',
   REFERENCE = 'reference',
-  GEOPOINT = 'geopoint',
-  BLOB = 'blob',
+  STRING = 'string',
+  TIMESTAMP = 'timestamp',
 }
