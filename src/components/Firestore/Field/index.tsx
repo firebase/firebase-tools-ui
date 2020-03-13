@@ -14,32 +14,20 @@
  * limitations under the License.
  */
 
-import React, { useEffect, useState, Provider } from 'react';
-import _ from 'lodash';
-import produce from 'immer';
-import { firestore } from 'firebase';
+import React, { useState } from 'react';
 import { Card, CardActionButtons, CardActionButton } from '@rmwc/card';
 import { Elevation } from '@rmwc/elevation';
 import { IconButton } from '@rmwc/icon-button';
 import { ListItem, ListItemMeta } from '@rmwc/list';
 
+import * as actions from './actions';
 import {
-  isMap,
-  isArray,
-  isPrimitive,
-  getLeafPath,
-  getParentPath,
-  getFieldType,
-} from './utils';
-
-import { FieldType } from './models';
-import { Editor } from './Editor';
-import {
-  useDocumentState,
   useFieldState,
   useDocumentDispatch,
   DocumentProvider,
 } from './DocumentStore';
+import { Editor } from './Editor';
+import { isMap, isArray, isPrimitive, getLeafPath } from './utils';
 
 import './index.scss';
 
@@ -73,11 +61,10 @@ const NestedField: React.FC<{
   const [isEditing, setIsEditing] = useState(edit);
 
   const fieldName = getLeafPath(path);
-  const fieldType = getFieldType(state);
 
   function handleDeleteField(e: React.MouseEvent<HTMLButtonElement>) {
     e.stopPropagation();
-    dispatch({ type: 'delete', path });
+    dispatch(actions.deleteField(path));
   }
 
   function handleEditField(e: React.MouseEvent<HTMLButtonElement>) {
@@ -89,8 +76,8 @@ const NestedField: React.FC<{
     setIsEditing(false);
   }
 
-  function handleEditSave(data: any) {
-    dispatch({ type: 'update', path, value: data });
+  function handleEditSave(value: any) {
+    dispatch(actions.updateField({ path, value }));
     setIsEditing(false);
   }
 
@@ -107,8 +94,8 @@ const NestedField: React.FC<{
     setIsAddingField(false);
   }
 
-  function handleAddSave(data: any) {
-    dispatch({ type: 'add', path: addPath, value: data });
+  function handleAddSave(value: any) {
+    dispatch(actions.addField({ path: addPath, value }));
     setIsAddingField(false);
   }
 

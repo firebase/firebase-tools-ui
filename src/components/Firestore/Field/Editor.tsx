@@ -14,25 +14,17 @@
  * limitations under the License.
  */
 
-import React, { useEffect, useState, Provider } from 'react';
-import _ from 'lodash';
-import produce from 'immer';
-import { firestore } from 'firebase';
-import { Card, CardActionButtons, CardActionButton } from '@rmwc/card';
-import { Elevation } from '@rmwc/elevation';
-import { IconButton } from '@rmwc/icon-button';
-import { ListItem, ListItemMeta } from '@rmwc/list';
+import React, { useEffect } from 'react';
 import { TextField } from '@rmwc/textfield';
 
-import { getLeafPath, getFieldType } from './utils';
-
-import { FieldType } from './models';
+import * as actions from './actions';
 import {
   useDocumentState,
   useDocumentDispatch,
   useFieldState,
   DocumentProvider,
 } from './DocumentStore';
+import { isMap, isArray, getLeafPath, getFieldType } from './utils';
 
 export const Editor: React.FC<{
   data: any;
@@ -54,7 +46,7 @@ const RootField: React.FC<{
 
   useEffect(() => {
     onChange(state);
-  }, [state]);
+  }, [onChange, state]);
 
   return <NestedEditor path={[]} rootKey={rootKey} />;
 };
@@ -63,37 +55,31 @@ const NestedEditor: React.FC<{ path: string[]; rootKey?: string }> = ({
   path,
   rootKey,
 }) => {
-  const documentState = useDocumentState();
   const state = useFieldState(path);
   const dispatch = useDocumentDispatch()!;
 
-  console.log(documentState);
-
-  const fieldType = getFieldType(state);
-
   let childFields = null;
-  if (fieldType === FieldType.MAP) {
+  if (isMap(state)) {
     childFields = Object.keys(state).map(childLeaf => {
       const childPath = [...path, childLeaf];
       return <NestedEditor key={childLeaf} path={childPath} />;
     });
-  } else if (fieldType === FieldType.ARRAY) {
-    childFields = state.map((value: any, index: number) => {
+  } else if (isArray(state)) {
+    childFields = state.map((value, index) => {
       const childPath = [...path, `${index}`];
       return <NestedEditor key={index} path={childPath} />;
     });
   }
 
   function handleEditValue(e: React.FormEvent<HTMLInputElement>) {
-    console.log('update', path, e.currentTarget.value);
-    dispatch({ type: 'update', path, value: e.currentTarget.value });
+    dispatch(actions.updateField({ path, value: e.currentTarget.value }));
   }
 
   return (
     <>
       <div style={{ display: 'flex' }}>
         <TextField readOnly value={getLeafPath(path) || rootKey} />
-        <TextField readOnly value={fieldType} />
+        <TextField readOnly value={getFieldType(state)} />
         <TextField value={state} onChange={handleEditValue} />
       </div>
       {childFields && <div>{childFields}</div>}

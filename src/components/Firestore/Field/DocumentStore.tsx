@@ -14,66 +14,64 @@
  * limitations under the License.
  */
 
-import React, { useEffect, useState, Provider } from 'react';
-import _ from 'lodash';
+import React, { useEffect } from 'react';
+import get from 'lodash.get';
 import produce from 'immer';
-import { firestore } from 'firebase';
-import { Card, CardActionButtons, CardActionButton } from '@rmwc/card';
-import { Elevation } from '@rmwc/elevation';
-import { IconButton } from '@rmwc/icon-button';
-import { ListItem, ListItemMeta } from '@rmwc/list';
+import { Action, createReducer } from 'typesafe-actions';
 
 import { getLeafPath, getParentPath, getFieldType } from './utils';
+import { FirestoreAny, FieldType } from './models';
+import * as actions from './actions';
 
-import { FieldType } from './models';
+const reducer = createReducer<FirestoreAny, Action>({})
+  .handleAction(actions.reset, (state, { payload }) => {
+    return payload;
+  })
+  .handleAction(
+    actions.addField,
+    produce((draft: FirestoreAny, { payload }) => {
+      const parent = get(draft, getParentPath(payload.path)) || draft;
+      const fieldType = getFieldType(parent);
+      if (fieldType === FieldType.MAP) {
+        parent[getLeafPath(payload.path)] = payload.value;
+      } else if (fieldType === FieldType.ARRAY) {
+        parent.push(payload.value);
+      }
+    })
+  )
+  .handleAction(
+    actions.updateField,
+    produce((draft: FirestoreAny, { payload }) => {
+      const parent = get(draft, getParentPath(payload.path)) || draft;
+      const fieldType = getFieldType(parent);
+      if (fieldType === FieldType.MAP || fieldType === FieldType.ARRAY) {
+        parent[getLeafPath(payload.path)] = payload.value;
+      } else {
+        return payload.value;
+      }
+    })
+  )
+  .handleAction(
+    actions.deleteField,
+    produce((draft: FirestoreAny, { payload }) => {
+      const parent = get(draft, getParentPath(payload)) || draft;
+      if (getFieldType(parent) === FieldType.MAP) {
+        delete parent[getLeafPath(payload)];
+      } else {
+        parent.splice(getLeafPath(payload), 1);
+      }
+    })
+  );
 
 const DocumentStateContext = React.createContext({});
 const DocumentDispatchContext = React.createContext<React.Dispatch<any> | null>(
   null
 );
 
-const documentReducer = produce((draft: any, action: any) => {
-  switch (action.type) {
-    case 'reset':
-      return action.data;
-      break;
-    case 'update':
-      const parent = _.get(draft, getParentPath(action.path)) || draft;
-      const fieldType = getFieldType(parent);
-      if (fieldType === FieldType.MAP || fieldType === FieldType.ARRAY) {
-        parent[getLeafPath(action.path)] = action.value;
-      } else {
-        return action.value;
-      }
-      break;
-    case 'add':
-      const parent2 = _.get(draft, getParentPath(action.path)) || draft;
-      const fieldType2 = getFieldType(parent2);
-      if (fieldType2 === FieldType.MAP) {
-        parent2[getLeafPath(action.path)] = action.value;
-      } else if (fieldType2 === FieldType.ARRAY) {
-        parent2.push(action.value);
-      }
-      break;
-    case 'delete': {
-      const parent = _.get(draft, getParentPath(action.path)) || draft;
-      if (getFieldType(parent) === FieldType.MAP) {
-        delete parent[getLeafPath(action.path)];
-      } else {
-        parent.splice(getLeafPath(action.path), 1);
-      }
-      break;
-    }
-    default: {
-      throw new Error(`Unhandled action type: ${action.type}`);
-    }
-  }
-});
-
 export function useDocumentState() {
   const context = React.useContext(DocumentStateContext);
   if (context === undefined) {
-    throw new Error('useCountState must be used within a CountProvider');
+    throw new Error('useDocumentState must be used within a DocumentProvider');
   }
   return context;
 }
@@ -81,7 +79,9 @@ export function useDocumentState() {
 export function useDocumentDispatch() {
   const context = React.useContext(DocumentDispatchContext);
   if (context === undefined) {
-    throw new Error('useCountState must be used within a CountProvider');
+    throw new Error(
+      'useDocumentDispatch must be used within a DocumentProvider'
+    );
   }
   return context;
 }
@@ -89,16 +89,16 @@ export function useDocumentDispatch() {
 export function useFieldState(path: string[]) {
   const documentState = useDocumentState();
   if (path.length === 0) return documentState;
-  return _.get(documentState, path) || '';
+  return get(documentState, path) || '';
 }
 
 export const DocumentProvider: React.FC<{ data: any }> = ({
   data,
   children,
 }) => {
-  const [state, dispatch] = React.useReducer(documentReducer, {});
+  const [state, dispatch] = React.useReducer(reducer, {});
 
-  useEffect(() => dispatch({ type: 'reset', data }), [data, dispatch]);
+  useEffect(() => dispatch(actions.reset(data)), [data, dispatch]);
 
   return (
     <DocumentStateContext.Provider value={state}>
