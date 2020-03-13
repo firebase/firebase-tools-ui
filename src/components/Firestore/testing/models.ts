@@ -10,7 +10,10 @@ export function fakeDocumentReference({
     id,
     path,
     collection: (collectionPath: string) =>
-      fakeCollectionReference({ id: collectionPath }),
+      fakeCollectionReference({
+        id: collectionPath,
+        path: `${path}/${collectionPath}`,
+      }),
   } as unknown) as firestore.DocumentReference;
 }
 

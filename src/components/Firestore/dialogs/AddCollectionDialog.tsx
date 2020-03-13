@@ -49,12 +49,14 @@ export const AddCollectionStep = memo<AddCollectionStepProps>(
     return (
       <>
         <TextField
+          id="add-col-path"
           fullwidth
           label="Parent path"
           value={documentRef ? documentRef.path : '/'}
           disabled
         />
         <TextField
+          id="add-col-id"
           fullwidth
           label="Collection ID"
           value={id}

@@ -16,118 +16,150 @@
 
 import 'mutationobserver-shim';
 import React from 'react';
-import { render, wait, fireEvent } from '@testing-library/react';
+import { render, wait, fireEvent, RenderResult } from '@testing-library/react';
 
 import {
   fakeCollectionReference,
   fakeDocumentReference,
 } from '../testing/models';
 import { AddCollectionDialog } from './AddCollectionDialog';
+
+import DatabaseApi from '../api';
 import { act } from 'react-dom/test-utils';
 
+jest.mock('../api');
+
+const rootRef = fakeDocumentReference({
+  id: undefined,
+  path: '',
+});
+
+const api = new DatabaseApi();
+api.database = rootRef;
+
 const docRef = fakeDocumentReference({
-  id: 'random-identifier',
+  id: 'my-doc',
+  path: 'docs/my-doc',
 });
 const collectionReference = fakeCollectionReference({
-  id: 'my-stuff',
-  path: 'users/bob/my-stuff',
+  id: 'my-col',
+  path: 'docs/my-doc/my-col',
   doc: jest.fn(),
 });
-collectionReference.doc.mockReturnValue(docRef);
+const autoGenDocRef = fakeDocumentReference({
+  id: 'random-id',
+});
+
+docRef.collection = jest.fn().mockReturnValue(collectionReference);
+collectionReference.doc.mockReturnValue(autoGenDocRef);
 
 it('shows correct title', () => {
   const { getByText } = render(
-    <AddCollectionDialog
-      open={true}
-      collectionRef={collectionReference}
-      onValue={() => {}}
-    />
+    <AddCollectionDialog open={true} api={api} onValue={() => {}} />
   );
 
-  expect(getByText(/Add a document/)).not.toBeNull();
+  expect(getByText(/Start a collection/)).not.toBeNull();
 });
 
-it('shows the (disabled) creation path', () => {
-  const { getByLabelText } = render(
-    <AddCollectionDialog
-      open={true}
-      collectionRef={collectionReference}
-      onValue={() => {}}
-    />
-  );
+describe('step 1', () => {
+  it('displays the parent document path', () => {
+    const { getByLabelText } = render(
+      <AddCollectionDialog
+        open={true}
+        api={api}
+        documentRef={docRef}
+        onValue={() => {}}
+      />
+    );
 
-  expect(getByLabelText('Parent path').value).toBe('users/bob/my-stuff');
-  expect(getByLabelText('Parent path').disabled).toBe(true);
-});
-
-it('auto generates an id', () => {
-  const { getByLabelText } = render(
-    <AddCollectionDialog
-      open={true}
-      collectionRef={collectionReference}
-      onValue={() => {}}
-    />
-  );
-
-  expect(getByLabelText('Document ID').value).toBe('random-identifier');
-});
-
-it('provides a JSON box', () => {
-  const { getByLabelText } = render(
-    <AddCollectionDialog
-      open={true}
-      collectionRef={collectionReference}
-      onValue={() => {}}
-    />
-  );
-
-  expect(getByLabelText('JSON data').value).toBe('{"a": "b"}');
-});
-
-it('emits id and JSON parsed data when [Save] is clicked', async () => {
-  const onValue = jest.fn();
-  const { getByText, getByLabelText } = render(
-    <AddCollectionDialog
-      open={true}
-      collectionRef={collectionReference}
-      onValue={onValue}
-    />
-  );
-
-  fireEvent.change(getByLabelText('Document ID'), {
-    target: { value: 'new-document-id' },
-  });
-  fireEvent.change(getByLabelText('JSON data'), {
-    target: { value: '{"b": "c"}' },
+    expect(getByLabelText(/Parent path/).value).toBe('docs/my-doc');
   });
 
-  act(() => getByText('Save').click());
+  it('contains a collection id input', () => {
+    const { getByLabelText } = render(
+      <AddCollectionDialog open={true} api={api} onValue={() => {}} />
+    );
 
-  await wait();
-
-  expect(onValue).toHaveBeenCalledWith({
-    id: 'new-document-id',
-    data: { b: 'c' },
+    expect(getByLabelText(/Collection ID/)).not.toBeNull();
   });
-});
+}); // step 1
 
-it('emits null when [Cancel] is clicked', async () => {
-  const onValue = jest.fn();
-  const { getByText, getByLabelText } = render(
-    <AddCollectionDialog
-      open={true}
-      collectionRef={collectionReference}
-      onValue={onValue}
-    />
-  );
+describe('step 2', () => {
+  let result: RenderResult;
+  let onValue: jest.Mock;
 
-  fireEvent.change(getByLabelText('Document ID'), {
-    target: { value: 'new-document-id' },
+  beforeEach(async () => {
+    onValue = jest.fn();
+    result = render(
+      <AddCollectionDialog
+        open={true}
+        api={api}
+        documentRef={docRef}
+        onValue={onValue}
+      />
+    );
+    const { getByText, getByLabelText } = result;
+
+    fireEvent.change(getByLabelText(/Collection ID/), {
+      target: { value: 'my-col' },
+    });
+
+    act(() => getByText('Next').click());
+
+    await wait();
   });
 
-  act(() => getByText('Cancel').click());
+  it('displays the parent collection path', () => {
+    const { getByLabelText } = result;
 
-  await wait();
+    expect(getByLabelText(/Parent path/).value).toBe('docs/my-doc/my-col');
+  });
 
-  expect(onValue).toHaveBeenCalledWith(null);
-});
+  it('contains a document id with random id', () => {
+    const { getByLabelText } = result;
+
+    expect(getByLabelText(/Document ID/).value).toBe('random-id');
+  });
+
+  it('contains a data input', () => {
+    const { getByLabelText } = result;
+
+    expect(getByLabelText(/JSON data/)).not.toBeNull();
+  });
+
+  it('emits doc data when clicking [Save]', async () => {
+    const { getByText } = result;
+
+    act(() => getByText('Save').click());
+
+    await wait();
+
+    expect(onValue).toHaveBeenCalledWith({
+      collectionId: 'my-col',
+      document: {
+        id: 'random-id',
+        data: { a: 'b' },
+      },
+    });
+  });
+
+  it('emits null when clicking [Cancel]', async () => {
+    const { getByText } = result;
+
+    act(() => getByText('Cancel').click());
+
+    await wait();
+
+    expect(onValue).toHaveBeenCalledWith(null);
+  });
+}); // step 2
+
+describe('at the root of the db', () => {
+  it('shows the correct parent path', () => {
+    const { getByLabelText } = render(
+      <AddCollectionDialog open={true} api={api} onValue={() => {}} />
+    );
+
+    expect(getByLabelText(/Parent path/).value).toBe('/');
+  });
+}); // at the root of the db
