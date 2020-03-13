@@ -15,9 +15,9 @@
  */
 
 import React from 'react';
-import { wait, act, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import { useDocumentData } from 'react-firebase-hooks/firestore';
+import { useCollection, useDocumentData } from 'react-firebase-hooks/firestore';
 
 import {
   fakeFirestoreApi,
@@ -31,6 +31,12 @@ import { ApiProvider } from './ApiContext';
 jest.mock('react-firebase-hooks/firestore');
 
 it('shows the list of documents in the collection', () => {
+  useCollection.mockReturnValue([
+    {
+      docs: [{ ref: fakeDocumentSnapshot({ id: 'cool-doc-1' }) }],
+    },
+  ]);
+
   const collectionReference = fakeCollectionReference({ id: 'my-stuff' });
   const { getByText, queryByText } = render(
     <MemoryRouter>
@@ -53,10 +59,22 @@ it('shows the list of documents in the collection', () => {
   expect(getByText(/cool-doc-1/)).not.toBeNull();
 });
 
-it('shows the selected sub-document', async () => {
-  useDocumentData.mockReturnValue([]);
+it('shows the selected sub-document', () => {
+  const subDocRef = fakeDocumentReference({ id: 'cool-doc-1' });
 
-  const collectionReference = fakeCollectionReference({ id: 'my-stuff' });
+  useDocumentData.mockReturnValue([]);
+  useCollection.mockReturnValue([
+    {
+      docs: [{ ref: subDocRef }],
+    },
+  ]);
+
+  const collectionReference = fakeCollectionReference({
+    id: 'my-stuff',
+    doc: jest.fn(),
+  });
+  collectionReference.doc.mockReturnValue(subDocRef);
+
   const { getByText, queryAllByText } = render(
     <MemoryRouter initialEntries={['//cool-doc-1']}>
       <ApiProvider value={fakeFirestoreApi()}>
@@ -65,18 +83,7 @@ it('shows the selected sub-document', async () => {
     </MemoryRouter>
   );
 
-  act(() =>
-    collectionReference.setSnapshot({
-      docs: [
-        fakeDocumentSnapshot({
-          ref: fakeDocumentReference({ id: 'cool-doc-1' }),
-        }),
-      ],
-    })
-  );
-
   expect(getByText(/my-stuff/)).not.toBeNull();
+  expect(collectionReference.doc).toHaveBeenCalledWith('cool-doc-1');
   expect(queryAllByText(/cool-doc-1/).length).toBe(2);
-
-  await wait();
 });

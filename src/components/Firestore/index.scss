@@ -38,4 +38,18 @@
       flex: 2;
     }
   }
+
+  .Firestore-List-Item {
+    padding-left: 42px; // align with action button labels
+    font-family: 'Roboto Mono', monospace;
+  }
+
+  .List-Actions {
+    padding: 0;
+
+    .mdc-button {
+      border-radius: 0;
+      width: 100%;
+    }
+  }
 }

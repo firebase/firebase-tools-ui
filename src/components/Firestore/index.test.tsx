@@ -68,7 +68,7 @@ it('triggers clearing all data', async () => {
     </MemoryRouter>
   );
 
-  act(() => getByText('clear all data').click());
+  act(() => getByText('Clear all data').click());
 
   await wait();
 
@@ -91,7 +91,7 @@ it('does not trigger clearing all data if dialog is not confirmed', async () => 
     </MemoryRouter>
   );
 
-  act(() => getByText('clear all data').click());
+  act(() => getByText('Clear all data').click());
 
   await wait();
 

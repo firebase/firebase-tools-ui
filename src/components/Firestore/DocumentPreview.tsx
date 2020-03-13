@@ -17,6 +17,7 @@
 import React from 'react';
 import { firestore } from 'firebase';
 import { List, ListItem } from '@rmwc/list';
+import { Button } from '@rmwc/button';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 import { Field } from './Field';
 import { DocumentRefProvider } from './Field/DocumentRefContext';
@@ -33,8 +34,16 @@ export const DocumentPreview: React.FC<Props> = ({ reference }) => {
 
   return (
     <DocumentRefProvider value={reference}>
+      {/* Actions */}
+      <List dense className="List-Actions">
+        <ListItem
+          tag={props => (
+            <Button dense label="Add field" icon="add" {...props} />
+          )}
+        ></ListItem>
+      </List>
+
       <List dense>
-        <ListItem disabled>Add field +</ListItem>
         <Field data={data} />
       </List>
     </DocumentRefProvider>
