@@ -46,6 +46,15 @@ const documentReducer = produce((draft: any, action: any) => {
         return action.value;
       }
       break;
+    case 'add':
+      const parent2 = _.get(draft, getParentPath(action.path)) || draft;
+      const fieldType2 = getFieldType(parent2);
+      if (fieldType2 === FieldType.MAP) {
+        parent2[getLeafPath(action.path)] = action.value;
+      } else if (fieldType2 === FieldType.ARRAY) {
+        parent2.push(action.value);
+      }
+      break;
     case 'delete': {
       const parent = _.get(draft, getParentPath(action.path)) || draft;
       if (getFieldType(parent) === FieldType.MAP) {
@@ -80,7 +89,7 @@ export function useDocumentDispatch() {
 export function useFieldState(path: string[]) {
   const documentState = useDocumentState();
   if (path.length === 0) return documentState;
-  return _.get(documentState, path);
+  return _.get(documentState, path) || '';
 }
 
 export const DocumentProvider: React.FC<{ data: any }> = ({

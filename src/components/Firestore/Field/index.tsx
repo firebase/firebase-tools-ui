@@ -57,11 +57,13 @@ const RootField: React.FC = () => {
 
 const NestedField: React.FC<{
   path: string[];
-}> = ({ path }) => {
-  const [isExpanded, setIsExpanded] = useState(true);
-  const [editState, setEditState] = useState<any>(null);
+  edit?: boolean;
+}> = ({ path, edit = false }) => {
   const state = useFieldState(path);
   const dispatch = useDocumentDispatch()!;
+  const [isExpanded, setIsExpanded] = useState(true);
+  const [isAddingField, setIsAddingField] = useState(false);
+  const [isEditing, setIsEditing] = useState(edit);
 
   const fieldName = getLeafPath(path);
   const fieldType = getFieldType(state);
@@ -73,26 +75,41 @@ const NestedField: React.FC<{
 
   function handleEditField(e: React.MouseEvent<HTMLButtonElement>) {
     e.stopPropagation();
-    setEditState(state);
+    setIsEditing(true);
   }
 
-  function handleEditCancel(e: React.MouseEvent<HTMLButtonElement>) {
-    e.stopPropagation();
-    setEditState(null);
+  function handleEditCancel() {
+    setIsEditing(false);
   }
 
-  function handleEditSave(e: React.MouseEvent<HTMLButtonElement>) {
-    e.stopPropagation();
-    dispatch({ type: 'update', path, value: editState });
-    setEditState(null);
-  }
-
-  function handleEditChange(data: any) {
-    setEditState(data);
+  function handleEditSave(data: any) {
+    dispatch({ type: 'update', path, value: data });
+    setIsEditing(false);
   }
 
   function handleExpandToggle() {
     setIsExpanded(!isExpanded);
+  }
+
+  function handleAddField(e: React.MouseEvent<HTMLButtonElement>) {
+    e.stopPropagation();
+    setIsAddingField(true);
+  }
+
+  function handleAddCancel() {
+    setIsAddingField(false);
+  }
+
+  let addPath: string[] | null = null;
+  if (fieldType === FieldType.MAP) {
+    addPath = [...path, ''];
+  } else if (fieldType === FieldType.ARRAY) {
+    addPath = [...path, `${state.length}`];
+  }
+
+  function handleAddSave(data: any) {
+    dispatch({ type: 'add', path: addPath, value: data });
+    setIsAddingField(false);
   }
 
   let childFields = null;
@@ -101,25 +118,42 @@ const NestedField: React.FC<{
       const childPath = [...path, childLeaf];
       return <NestedField key={childLeaf} path={childPath} />;
     });
+    if (isAddingField) {
+      childFields.push(
+        <InlineEditor
+          key={getLeafPath(addPath!)}
+          data={''}
+          path={addPath!}
+          onCancel={handleAddCancel}
+          onSave={handleAddSave}
+        />
+      );
+    }
   } else if (fieldType === FieldType.ARRAY) {
     childFields = state.map((value: any, index: number) => {
       const childPath = [...path, `${index}`];
       return <NestedField key={index} path={childPath} />;
     });
+    if (isAddingField) {
+      childFields.push(
+        <InlineEditor
+          key={getLeafPath(addPath!)}
+          data={''}
+          path={addPath!}
+          onCancel={handleAddCancel}
+          onSave={handleAddSave}
+        />
+      );
+    }
   }
 
-  return !!editState ? (
-    <Elevation z={8} wrap>
-      <Card className="Firestore-Field-inline-editor">
-        <div>
-          <Editor data={state} onChange={handleEditChange} />
-        </div>
-        <CardActionButtons>
-          <CardActionButton onClick={handleEditCancel}>Cancel</CardActionButton>
-          <CardActionButton onClick={handleEditSave}>Save</CardActionButton>
-        </CardActionButtons>
-      </Card>
-    </Elevation>
+  return isEditing ? (
+    <InlineEditor
+      data={state}
+      path={path}
+      onCancel={handleEditCancel}
+      onSave={handleEditSave}
+    />
   ) : (
     <>
       <ListItem onClick={handleExpandToggle}>
@@ -130,6 +164,7 @@ const NestedField: React.FC<{
             label="Edit field"
             onClick={handleEditField}
           />
+          <IconButton icon="add" label="Add field" onClick={handleAddField} />
           <IconButton
             icon="delete"
             label="Remove field"
@@ -139,5 +174,52 @@ const NestedField: React.FC<{
       </ListItem>
       {isExpanded && childFields}
     </>
+  );
+};
+
+const InlineEditor: React.FC<{
+  data: any;
+  path: string[];
+  onCancel: () => void;
+  onSave: (data: any) => void;
+}> = ({ data, path, onCancel, onSave }) => {
+  const [internalData, setInternalData] = useState(data);
+
+  function handleChange(data: any) {
+    setInternalData(data);
+  }
+
+  function handleCancel(e: React.MouseEvent<HTMLButtonElement>) {
+    e.stopPropagation();
+    onCancel();
+  }
+
+  function handleSave(e: React.MouseEvent<HTMLButtonElement>) {
+    e.stopPropagation();
+    onSave(internalData);
+  }
+
+  return (
+    <Elevation z={8} wrap>
+      <Card className="Firestore-Field-inline-editor">
+        <div>
+          <Editor
+            data={data}
+            onChange={handleChange}
+            rootKey={getLeafPath(path)}
+          />
+          <Editor
+            data={{
+              '': '',
+            }}
+            onChange={() => {}}
+          />
+        </div>
+        <CardActionButtons>
+          <CardActionButton onClick={handleCancel}>Cancel</CardActionButton>
+          <CardActionButton onClick={handleSave}>Save</CardActionButton>
+        </CardActionButtons>
+      </Card>
+    </Elevation>
   );
 };

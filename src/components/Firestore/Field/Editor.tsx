@@ -37,30 +37,55 @@ import {
 export const Editor: React.FC<{
   data: any;
   onChange: (data: any) => void;
-}> = ({ data, onChange }) => {
+  rootKey?: string;
+}> = ({ data, onChange, rootKey }) => {
   return (
     <DocumentProvider data={data}>
-      <RootField onChange={onChange} />
+      <RootField onChange={onChange} rootKey={rootKey} />
     </DocumentProvider>
   );
 };
 
-const RootField: React.FC<{ onChange: (data: any) => void }> = ({
-  onChange,
-}) => {
+// DocumentEditor?
+// RootEditor?
+// const DocumentEditor: React.FC = () => {
+//   const state = useDocumentState();
+//   return (
+//     <>
+//       {Object.keys(state).map((name) => (
+//         <NestedField key={name} path={[name]} />
+//       ))}
+//     </>
+//   );
+// };
+//
+// const RootEditor: React.FC = () => {
+//   const state = useDocumentState();
+//   return <NestedField path={[]} />;
+// };
+
+const RootField: React.FC<{
+  onChange: (data: any) => void;
+  rootKey?: string;
+}> = ({ onChange, rootKey }) => {
   const state = useDocumentState();
 
   useEffect(() => {
     onChange(state);
   }, [state]);
 
-  return <NestedEditor path={[]} />;
+  return <NestedEditor path={[]} rootKey={rootKey} />;
 };
 
-const NestedEditor: React.FC<{ path: string[] }> = ({ path }) => {
+const NestedEditor: React.FC<{ path: string[]; rootKey?: string }> = ({
+  path,
+  rootKey,
+}) => {
   const documentState = useDocumentState();
   const state = useFieldState(path);
   const dispatch = useDocumentDispatch()!;
+
+  console.log(documentState);
 
   const fieldType = getFieldType(state);
 
@@ -85,7 +110,7 @@ const NestedEditor: React.FC<{ path: string[] }> = ({ path }) => {
   return (
     <>
       <div style={{ display: 'flex' }}>
-        <TextField readOnly value={getLeafPath(path)} />
+        <TextField readOnly value={getLeafPath(path) || rootKey} />
         <TextField readOnly value={fieldType} />
         <TextField value={state} onChange={handleEditValue} />
       </div>
