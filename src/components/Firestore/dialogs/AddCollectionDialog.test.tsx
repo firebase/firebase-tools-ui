@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import 'mutationobserver-shim';
 import React from 'react';
 import { render, wait, fireEvent, RenderResult } from '@testing-library/react';
 
