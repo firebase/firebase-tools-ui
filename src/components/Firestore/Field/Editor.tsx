@@ -26,6 +26,7 @@ import {
 } from './DocumentStore';
 import { isMap, isArray, getLeafPath, getFieldType } from './utils';
 
+/** Entry point for a Document/Field editor */
 export const Editor: React.FC<{
   data: any;
   onChange: (data: any) => void;
@@ -38,6 +39,13 @@ export const Editor: React.FC<{
   );
 };
 
+/**
+ * Special representation of a Document Root, where we don't want to show
+ * the implicit top-level map.
+ *
+ * TODO: need to differentiate between root-field and root-document for
+ * Add-Document flow.
+ */
 const RootField: React.FC<{
   onChange: (data: any) => void;
   rootKey?: string;
@@ -51,6 +59,9 @@ const RootField: React.FC<{
   return <NestedEditor path={[]} rootKey={rootKey} />;
 };
 
+/**
+ * Field with CTAs for editing as well as rendering applicable child-nodes
+ */
 const NestedEditor: React.FC<{ path: string[]; rootKey?: string }> = ({
   path,
   rootKey,

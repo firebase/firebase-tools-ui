@@ -19,24 +19,17 @@ import { act, render, wait } from '@testing-library/react';
 import { firestore } from 'firebase';
 
 import { Field } from './index';
-import { DocumentRefProvider } from './DocumentRefContext';
 import { fakeDocumentReference } from '../testing/models';
 
 it('renders a string-field', () => {
-  const { getByText } = render(
-    <DocumentRefProvider value={fakeDocumentReference()}>
-      <Field id="hello" value="world" />
-    </DocumentRefProvider>
-  );
+  const { getByText } = render(<Field id="hello" value="world" />);
   expect(getByText('hello: "world"')).not.toBeNull();
   expect(getByText('(string)')).not.toBeNull();
 });
 
 it('renders a geopoint-field', () => {
   const { getByText } = render(
-    <DocumentRefProvider value={fakeDocumentReference()}>
-      <Field id="location" value={new firestore.GeoPoint(1, 2)} />
-    </DocumentRefProvider>
+    <Field id="location" value={new firestore.GeoPoint(1, 2)} />
   );
   expect(getByText('location: {"_lat":1,"_long":2}')).not.toBeNull();
   expect(getByText('(geopoint)')).not.toBeNull();
@@ -46,11 +39,7 @@ it('deletes a field', () => {
   const docRef = fakeDocumentReference();
   docRef.update = jest.fn();
 
-  const { getByText } = render(
-    <DocumentRefProvider value={docRef}>
-      <Field id="blah" value="0" />
-    </DocumentRefProvider>
-  );
+  const { getByText } = render(<Field id="blah" value="0" />);
 
   getByText('delete').click();
 

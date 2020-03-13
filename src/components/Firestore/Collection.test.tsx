@@ -15,7 +15,7 @@
  */
 
 import React from 'react';
-import { render } from '@testing-library/react';
+import { act, render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { useCollection, useDocumentData } from 'react-firebase-hooks/firestore';
 

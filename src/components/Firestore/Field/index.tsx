@@ -31,6 +31,7 @@ import { isMap, isArray, isPrimitive, getLeafPath } from './utils';
 
 import './index.scss';
 
+/** Entry point for a Document/Field preview */
 export const Field: React.FC<{ data: any }> = ({ data }) => {
   return (
     <DocumentProvider data={data}>
@@ -39,6 +40,10 @@ export const Field: React.FC<{ data: any }> = ({ data }) => {
   );
 };
 
+/**
+ * Special representation of a Document Root, where we don't want to show
+ * the implicit top-level map.
+ */
 const RootField: React.FC = () => {
   const state = useFieldState([]);
   return (
@@ -50,6 +55,9 @@ const RootField: React.FC = () => {
   );
 };
 
+/**
+ * Field with CTAs for editing as well as rendering applicable child-nodes
+ */
 const NestedField: React.FC<{
   path: string[];
   edit?: boolean;
@@ -157,6 +165,7 @@ const NestedField: React.FC<{
   );
 };
 
+/** Editor entry point for a selected field */
 const InlineEditor: React.FC<{
   data: any;
   path: string[];

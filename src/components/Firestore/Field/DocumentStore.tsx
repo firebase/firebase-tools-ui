@@ -63,7 +63,7 @@ const reducer = createReducer<FirestoreAny, Action>({})
     })
   );
 
-const DocumentStateContext = React.createContext({});
+const DocumentStateContext = React.createContext<FirestoreAny>({});
 const DocumentDispatchContext = React.createContext<React.Dispatch<any> | null>(
   null
 );
