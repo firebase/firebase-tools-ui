@@ -46,6 +46,9 @@ export const Firestore: React.FC<Props> = ({ config, projectId }) => {
     const api = new DatabaseApi(projectId, databaseId, config);
     setApi(api);
 
+    (window as any).db = api.database;
+    (window as any).firestore = firestore;
+
     api.database
       .collection('people')
       .doc('john_doe')

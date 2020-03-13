@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import React, { useState, Provider } from 'react';
+import React, { useEffect, useState, Provider } from 'react';
+import _ from 'lodash';
 import produce from 'immer';
 import { firestore } from 'firebase';
 import { IconButton } from '@rmwc/icon-button';
@@ -27,24 +28,28 @@ import { FieldType } from './models';
 
 import './index.scss';
 
-const INITIAL_STATE: FieldFoo[] = [];
-
-const DocumentStateContext = React.createContext(INITIAL_STATE);
+const DocumentStateContext = React.createContext({});
 const DocumentDispatchContext = React.createContext<React.Dispatch<any> | null>(
   null
 );
 
-const fieldReducer = produce((draft: FieldFoo[], action: any) => {
+function getParentPath(path: string[]) {
+  return path.splice(0, path.length - 1);
+}
+
+function getLeafPath(path: string[]) {
+  return path[path.length - 1];
+}
+
+const documentReducer = produce((draft: any, action: any) => {
   switch (action.type) {
-    case 'increment': {
+    case 'reset':
+      return action.data;
       break;
-    }
     case 'delete': {
-      const parentField = draft.find(f => f.childIds.includes(action.id))!;
-      parentField.childIds.splice(
-        parentField.childIds.findIndex(f => f === action.id),
-        1
-      );
+      delete (_.get(draft, getParentPath(action.path)) || draft)[
+        getLeafPath(action.path)
+      ];
       break;
     }
     default: {
@@ -52,30 +57,6 @@ const fieldReducer = produce((draft: FieldFoo[], action: any) => {
     }
   }
 });
-
-function countReducer(state: FieldFoo[], action: any): FieldFoo[] {
-  switch (action.type) {
-    case 'increment': {
-      return state;
-    }
-    case 'delete': {
-      return state;
-      // const newState = [...state];
-      // const parentField = newState.find((f) => f.childIds.includes(action.id))!;
-      // parentField.childIds = [];
-      // console.log(parentField);
-      // return newState.filter((f) => f.id != action.id);
-      // return produce(state, draftState => {
-      //   const parentField = newState.find((f) => f.childIds.includes(action.id))!;
-      //   return draftState.filter();
-      //
-      // })
-    }
-    default: {
-      throw new Error(`Unhandled action type: ${action.type}`);
-    }
-  }
-}
 
 function useDocumentState() {
   const context = React.useContext(DocumentStateContext);
@@ -93,116 +74,19 @@ function useDocumentDispatch() {
   return context;
 }
 
-function makeIdGenerator() {
-  let counter = 1;
-  return () => counter++;
-}
-
-/** Utility for generating unique ids for normalized state objects. */
-const getUniqueId: () => number = makeIdGenerator();
-
-interface FieldFoo {
-  id: number;
-  name?: string;
-  value?: any;
-  childIds: number[];
-  isRoot: boolean;
-}
-
-function makeField({
-  name,
-  value,
-  childIds = [],
-  isRoot = false,
-}: {
-  name?: string;
-  value?: any;
-  childIds?: number[];
-  isRoot?: boolean;
-}): FieldFoo {
-  return {
-    id: getUniqueId(),
-    name,
-    value,
-    childIds,
-    isRoot,
-  };
-}
-
-interface FieldFooBar extends FieldFoo {
-  parentId?: number;
-}
-
-function reduceToFields(
-  data: any,
-  parentId?: number,
-  name?: string,
-  isRoot = false
-): FieldFooBar[] {
-  const fieldType = getFieldType(data);
-
-  if (fieldType === FieldType.MAP) {
-    const field = makeField({ name, isRoot });
-    const childFields = Object.entries(data).reduce(
-      (acc, [foo, value]) => {
-        const childFields = reduceToFields(value, field.id, foo);
-        return [...acc, ...childFields];
-      },
-      [] as FieldFooBar[]
-    );
-
-    const childIds = childFields.map(f => f.id);
-    return [{ parentId, ...field }, ...childFields];
-  }
-
-  if (fieldType === FieldType.ARRAY) {
-    const field = makeField({ name, isRoot });
-    const childFields = data.reduce(
-      (acc: FieldFooBar[], value: any) => {
-        const childFields = reduceToFields(value, field.id);
-        return [...acc, ...childFields] as FieldFooBar[];
-      },
-      [] as FieldFoo[]
-    );
-
-    const childIds = childFields.map((f: FieldFooBar) => f.id);
-    return [{ parentId, ...field }, ...childFields];
-  }
-
-  return [
-    {
-      parentId,
-      ...makeField({
-        name,
-        value: data,
-        isRoot,
-      }),
-    },
-  ] as FieldFooBar[];
+function useFieldState(path: string[]) {
+  const documentState = useDocumentState();
+  return _.get(documentState, path);
 }
 
 export const RootField: React.FC<{ data: any }> = ({ data }) => {
-  const state = reduceToFields(data, undefined, undefined, true);
+  const [state, dispatch] = React.useReducer(documentReducer, {});
 
-  const realState = state.reduce(
-    (acc, value) => {
-      const { parentId, ...other } = value;
-      return [
-        ...acc,
-        {
-          ...other,
-          childIds: state.filter(f => f.parentId === other.id).map(f => f.id),
-        },
-      ];
-    },
-    [] as FieldFoo[]
-  );
-
-  const [foo, dispatch] = React.useReducer(fieldReducer, realState);
+  useEffect(() => dispatch({ type: 'reset', data }), [data, dispatch]);
 
   return (
-    <DocumentStateContext.Provider value={foo}>
-      <DocumentDispatchContext.Provider value={dispatch}>
+    <DocumentStateContext.Provider value={state}>
+      <DocumentDispatchContext.Provider value={state}>
         <RealRootField />
       </DocumentDispatchContext.Provider>
     </DocumentStateContext.Provider>
@@ -212,54 +96,65 @@ export const RootField: React.FC<{ data: any }> = ({ data }) => {
 export const RealRootField: React.FC = () => {
   const state = useDocumentState();
 
-  const root = getRoot(state);
-  const rootChildren = getFieldsByIds(state, root.childIds);
-
   return (
     <>
-      {rootChildren.map(foo => (
-        <Field key={foo.id} foo={foo} />
+      {Object.keys(state).map(name => (
+        <Field key={name} path={[name]} />
       ))}
     </>
   );
 };
 
-function getRoot(state: FieldFoo[]) {
-  return state.find(f => f.isRoot)!;
-}
+export const ArrayElement: React.FC<{ index: number; path: any }> = ({
+  index,
+  path,
+}) => {
+  const state = useFieldState(path);
+  const value = state[index];
 
-function getFieldsByIds(state: FieldFoo[], ids: number[]) {
-  return state.filter(f => ids.includes(f.id));
-}
+  return (
+    <div>
+      {index}:{JSON.stringify(value)}
+    </div>
+  );
+};
 
 export const Field: React.FC<{
-  foo: FieldFoo;
-}> = ({ foo }) => {
+  path: string[];
+}> = ({ path }) => {
   const [isExpanded, setIsExpanded] = useState(true);
-  // const reference = useDocumentRef();
-  const state = useDocumentState();
+
+  const state = useFieldState(path);
   const dispatch = useDocumentDispatch()!;
+
+  const fieldName = getLeafPath(path);
+  const fieldType = getFieldType(state);
 
   function handleDeleteField(e: React.MouseEvent<HTMLButtonElement>) {
     e.stopPropagation();
-    dispatch({ type: 'delete', id: foo.id });
-    // reference.update({ [id]: firestore.FieldValue.delete() });
+    dispatch({ type: 'delete', path });
   }
-
-  const childFields = getFieldsByIds(state, foo.childIds);
 
   function handleExpandToggle() {
     setIsExpanded(!isExpanded);
   }
 
+  let children = null;
+  if (fieldType === FieldType.MAP) {
+    children = Object.keys(state).map(childLeaf => {
+      const childPath = [...path, childLeaf];
+      return <Field key={childLeaf} path={childPath} />;
+    });
+  } else if (fieldType === FieldType.ARRAY) {
+    children = state.map((value: any, index: number) => {
+      return <ArrayElement key={index} index={index} path={path} />;
+    });
+  }
+
   return (
     <>
       <ListItem onClick={handleExpandToggle}>
-        {foo.name}:
-        {(foo.value && foo.value.toString()) ||
-          (!isExpanded &&
-            childFields &&
-            JSON.stringify(childFields.map(f => f.name)))}
+        {fieldName}:{JSON.stringify(state)}
         <ListItemMeta className="Firestore-Field-actions">
           <IconButton
             icon="delete"
@@ -268,7 +163,7 @@ export const Field: React.FC<{
           />
         </ListItemMeta>
       </ListItem>
-      {isExpanded && childFields.map(f => <Field key={f.id} foo={f} />)}
+      {isExpanded && children}
     </>
   );
 };

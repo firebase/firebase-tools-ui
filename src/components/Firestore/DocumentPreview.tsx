@@ -36,10 +36,6 @@ export const DocumentPreview: React.FC<Props> = ({ reference }) => {
       <List dense>
         <ListItem disabled>Add field +</ListItem>
         <RootField data={data} />
-        {/*data &&
-          Object.entries(data).map(([key, value]) => (
-            <Field key={key} id={key} value={value} />
-            ))*/}
       </List>
     </DocumentRefProvider>
   );
