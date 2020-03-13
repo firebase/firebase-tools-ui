@@ -40,7 +40,7 @@ export function initDatabase(
   applyAdminAuth(app);
   const db = app.database();
   (window as WindowWithDb).db = db;
-  console.log(`Database ${databaseURL} is available at window.db.
+  console.log(`🔥 Database ${databaseURL} is available at window.db.
 
   Try:
       db.ref().set({hello: 'world!'});
@@ -63,7 +63,7 @@ export function initFirestore(
     ssl: false,
   });
   (window as WindowWithDb).db = firestore;
-  console.log(`Firestore is available at window.db.
+  console.log(`🔥 Firestore is available at window.db.
 
   Try:
       db.doc('hello/world').set({hello: 'world!'});
