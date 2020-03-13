@@ -45,10 +45,15 @@ export const AddDocumentStep: React.FC<AddDocumentStepProps> = ({
   const [id, setId] = useState(collectionRef.doc().id);
   const [json, setJson] = useState('{"a": "b"}');
 
-  const getValue = useCallback(() => ({ id, data: JSON.parse(json) }), [
-    id,
-    json,
-  ]);
+  // TODO: Validation
+  const getValue = useCallback(() => {
+    try {
+      const data = JSON.parse(json);
+      return { id, data };
+    } catch (e) {
+      return { id, data: { invalidData: true } };
+    }
+  }, [id, json]);
 
   // emit initial value immediately (to capture auto generated doc id)
   useEffect(() => {
@@ -80,12 +85,12 @@ export const AddDocumentStep: React.FC<AddDocumentStepProps> = ({
         label="Document ID"
         value={id}
         onChange={updateId}
+        required
       />
       <TextField
         id="add-document-data"
         fullwidth
         label="JSON data"
-        textarea
         value={json}
         onChange={updateJson}
       />

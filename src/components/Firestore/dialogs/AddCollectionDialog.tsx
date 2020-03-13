@@ -58,6 +58,7 @@ export const AddCollectionStep = ({
         id="add-col-id"
         fullwidth
         label="Collection ID"
+        required
         value={id}
         onChange={updateId}
       />
