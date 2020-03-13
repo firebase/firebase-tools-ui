@@ -60,6 +60,7 @@
     "husky": "^3.0.9",
     "jest-fetch-mock": "^3.0.1",
     "lint-staged": "^9.4.2",
+    "mutationobserver-shim": "^0.3.3",
     "node-sass": "^4.13.0",
     "prettier": "^1.18.2",
     "webpack-cli": "^3.3.10"
