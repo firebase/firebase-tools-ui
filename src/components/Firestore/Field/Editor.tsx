@@ -29,8 +29,8 @@ import { isMap, isArray, getLeafPath, getFieldType } from './utils';
 
 /** Entry point for a Document/Field editor */
 export const Editor: React.FC<{
-  value: FirestoreAny;
-  onChange: (value: FirestoreAny) => void;
+  value: { [key: string]: FirestoreAny };
+  onChange?: (value: FirestoreAny) => void;
   rootKey?: string;
 }> = ({ value, onChange, rootKey }) => {
   return (
@@ -48,13 +48,13 @@ export const Editor: React.FC<{
  * Add-Document flow.
  */
 const RootField: React.FC<{
-  onChange: (value: FirestoreAny) => void;
+  onChange?: (value: FirestoreAny) => void;
   rootKey?: string;
 }> = ({ onChange, rootKey }) => {
   const state = useDocumentState();
 
   useEffect(() => {
-    onChange(state);
+    onChange && onChange(state);
   }, [onChange, state]);
 
   return <NestedEditor path={[]} rootKey={rootKey} />;

@@ -15,7 +15,7 @@
  */
 
 import React from 'react';
-import { act, fireEvent, render } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import { firestore } from 'firebase';
 
 import { Field } from './index';
@@ -59,10 +59,34 @@ it('edits a field', () => {
   const { getByText, getByPlaceholderText } = render(
     <Field value={{ target: 'old' }} />
   );
-  fireEvent.change(getByPlaceholderText('value'), {
+  getByText('edit').click();
+  fireEvent.change(getByPlaceholderText('Value'), {
     target: { value: 'new' },
   });
-  getByText('save').click();
-
+  getByText('Save').click();
   expect(getByText('target:"new"')).not.toBeNull();
+});
+
+it('adds a field to a map', () => {
+  const { getByText, getByPlaceholderText } = render(
+    <Field value={{ target: {} }} />
+  );
+  getByText('add').click();
+  fireEvent.change(getByPlaceholderText('Value'), {
+    target: { value: 'new' },
+  });
+  getByText('Save').click();
+  expect(getByText(':"new"')).not.toBeNull();
+});
+
+it('adds a field to an array', () => {
+  const { getByText, getByPlaceholderText } = render(
+    <Field value={{ target: [] }} />
+  );
+  getByText('add').click();
+  fireEvent.change(getByPlaceholderText('Value'), {
+    target: { value: 'new' },
+  });
+  getByText('Save').click();
+  expect(getByText('0:"new"')).not.toBeNull();
 });
