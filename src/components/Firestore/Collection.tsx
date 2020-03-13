@@ -38,7 +38,7 @@ export const Collection: React.FC<Props> = ({ collection }) => {
   const [collectionSnapshot, loading, error] = useCollection(collection);
   const { url } = useRouteMatch()!;
 
-  const [isDialogOpen, setDialogOpen] = useState(false);
+  const [isAddDocumentDialogOpen, setAddDocumentDialogOpen] = useState(false);
   const addDocument = async (value: AddDocumentDialogValue | null) => {
     if (value && value.id) {
       await collection.doc(value.id).set(value.data);
@@ -60,12 +60,12 @@ export const Collection: React.FC<Props> = ({ collection }) => {
         />
 
         {/* Actions */}
-        {isDialogOpen && (
+        {isAddDocumentDialogOpen && (
           <AddDocumentDialog
             collectionRef={collection}
-            open={isDialogOpen}
+            open={isAddDocumentDialogOpen}
             onValue={addDocument}
-            onClose={() => setDialogOpen(false)}
+            onClose={() => setAddDocumentDialogOpen(false)}
           />
         )}
         <List dense className="List-Actions">
@@ -76,7 +76,7 @@ export const Collection: React.FC<Props> = ({ collection }) => {
                 label="Add document"
                 icon="add"
                 {...props}
-                onClick={() => setDialogOpen(true)}
+                onClick={() => setAddDocumentDialogOpen(true)}
               />
             )}
           ></ListItem>

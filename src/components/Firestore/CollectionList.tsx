@@ -37,7 +37,9 @@ export const CollectionList: React.FC<Props> = ({ reference }) => {
   const api = useApi();
   const collections = useCollections(api, reference);
 
-  const [isDialogOpen, setDialogOpen] = useState(false);
+  const [isAddCollectionDialogOpen, setAddCollectionDialogOpen] = useState(
+    false
+  );
 
   const addCollection = async (value: AddCollectionDialogValue | null) => {
     if (value && value.collectionId && value.document.id) {
@@ -51,13 +53,13 @@ export const CollectionList: React.FC<Props> = ({ reference }) => {
 
   return (
     <div className="Firestore-CollectionList" data-testid="collection-list">
-      {isDialogOpen && (
+      {isAddCollectionDialogOpen && (
         <AddCollectionDialog
           documentRef={reference}
           api={api}
-          open={isDialogOpen}
+          open={isAddCollectionDialogOpen}
           onValue={addCollection}
-          onClose={() => setDialogOpen(false)}
+          onClose={() => setAddCollectionDialogOpen(false)}
         />
       )}
       {/* Actions */}
@@ -69,7 +71,7 @@ export const CollectionList: React.FC<Props> = ({ reference }) => {
               label="Start collection"
               icon="add"
               {...props}
-              onClick={() => setDialogOpen(true)}
+              onClick={() => setAddCollectionDialogOpen(true)}
             />
           )}
         ></ListItem>
