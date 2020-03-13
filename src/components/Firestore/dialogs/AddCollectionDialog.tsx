@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { memo, useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import {
   DialogButton,
   Dialog,
@@ -35,44 +35,42 @@ interface AddCollectionStepProps {
   onChange: (value: string) => void;
 }
 
-export const AddCollectionStep = memo<AddCollectionStepProps>(
-  ({ documentRef, onChange }) => {
-    const [id, setId] = useState('');
-    const updateId = useCallback(
-      (evt: React.ChangeEvent<HTMLInputElement>) => {
-        setId(evt.target.value);
-        onChange(evt.target.value);
-      },
-      [setId, onChange]
-    );
+export const AddCollectionStep = ({
+  documentRef,
+  onChange,
+}: AddCollectionStepProps) => {
+  const [id, setId] = useState('');
+  const updateId = (evt: React.ChangeEvent<HTMLInputElement>) => {
+    setId(evt.target.value);
+    onChange(evt.target.value);
+  };
 
-    return (
-      <>
-        <TextField
-          id="add-col-path"
-          fullwidth
-          label="Parent path"
-          value={documentRef ? documentRef.path : '/'}
-          disabled
-        />
-        <TextField
-          id="add-col-id"
-          fullwidth
-          label="Collection ID"
-          value={id}
-          onChange={updateId}
-        />
-      </>
-    );
-  }
-);
+  return (
+    <>
+      <TextField
+        id="add-col-path"
+        fullwidth
+        label="Parent path"
+        value={documentRef ? documentRef.path : '/'}
+        disabled
+      />
+      <TextField
+        id="add-col-id"
+        fullwidth
+        label="Collection ID"
+        value={id}
+        onChange={updateId}
+      />
+    </>
+  );
+};
 
 export interface AddCollectionDialogValue {
   collectionId: string;
   document: AddDocumentDialogValue;
 }
 
-export interface AddCollectionDialogProps extends DialogProps {
+interface Props extends DialogProps {
   documentRef?: firestore.DocumentReference;
   api: DatabaseApi;
   onValue: (v: AddCollectionDialogValue | null) => void;
@@ -83,71 +81,67 @@ enum Step {
   DOCUMENT,
 }
 
-export const AddCollectionDialog = memo<AddCollectionDialogProps>(
-  ({ documentRef, api, onValue, onClose, ...dialogProps }) => {
-    const [step, setStep] = useState(Step.COLLECTION);
-    const [collectionId, setCollectionId] = useState('');
-    const [document, setDocument] = useState<AddDocumentDialogValue>({
-      id: '',
-      data: undefined,
-    });
+export const AddCollectionDialog: React.FC<Props> = ({
+  documentRef,
+  api,
+  onValue,
+  onClose,
+  ...dialogProps
+}) => {
+  const [step, setStep] = useState(Step.COLLECTION);
+  const [collectionId, setCollectionId] = useState('');
+  const [document, setDocument] = useState<AddDocumentDialogValue>({
+    id: '',
+    data: undefined,
+  });
 
-    const next = useCallback(
-      () => step === Step.COLLECTION && collectionId && setStep(step + 1),
-      [setStep, step, collectionId]
-    );
+  const next = () =>
+    step === Step.COLLECTION && collectionId && setStep(step + 1);
 
-    const getValue = useCallback(
-      () => ({
-        collectionId,
-        document,
-      }),
-      [collectionId, document]
-    );
+  const getValue = () => ({
+    collectionId,
+    document,
+  });
 
-    const emitValueAndClose = useCallback(
-      (evt: DialogOnCloseEventT) => {
-        onValue(evt.detail.action === 'accept' ? getValue() : null);
-        onClose && onClose(evt);
-      },
-      [onValue, onClose, getValue]
-    );
+  const emitValueAndClose = (evt: DialogOnCloseEventT) => {
+    onValue(evt.detail.action === 'accept' ? getValue() : null);
+    onClose && onClose(evt);
+  };
 
-    return (
-      <Dialog {...dialogProps} onClose={emitValueAndClose}>
-        <DialogTitle>Start a collection</DialogTitle>
+  return (
+    <Dialog {...dialogProps} onClose={emitValueAndClose}>
+      <DialogTitle>Start a collection</DialogTitle>
 
-        <DialogContent>
-          {step === Step.COLLECTION ? (
-            <AddCollectionStep
-              documentRef={documentRef}
-              onChange={setCollectionId}
-            />
-          ) : (
-            <AddDocumentStep
-              collectionRef={
-                documentRef
-                  ? documentRef.collection(collectionId)
-                  : api.database.collection(collectionId)
-              }
-              onChange={setDocument}
-            />
-          )}
-        </DialogContent>
+      <DialogContent>
+        {step === Step.COLLECTION ? (
+          <AddCollectionStep
+            documentRef={documentRef}
+            onChange={setCollectionId}
+          />
+        ) : (
+          <AddDocumentStep
+            collectionRef={
+              documentRef
+                ? documentRef.collection(collectionId)
+                : api.database.collection(collectionId)
+            }
+            onChange={setDocument}
+          />
+        )}
+      </DialogContent>
 
-        <DialogActions>
-          <Theme use={['textSecondaryOnBackground']} wrap>
-            <DialogButton action="close">Cancel</DialogButton>
-          </Theme>
-          {step === Step.DOCUMENT ? (
-            <DialogButton action="accept" isDefaultAction>
-              Save
-            </DialogButton>
-          ) : (
-            <DialogButton onClick={next}>Next</DialogButton>
-          )}
-        </DialogActions>
-      </Dialog>
-    );
-  }
-);
+      <DialogActions>
+        <Theme use={['textSecondaryOnBackground']} wrap>
+          <DialogButton action="close">Cancel</DialogButton>
+        </Theme>
+        {step === Step.DOCUMENT ? (
+          <DialogButton action="accept" isDefaultAction>
+            Save
+          </DialogButton>
+        ) : (
+          <DialogButton onClick={next}>Next</DialogButton>
+        )}
+      </DialogActions>
+    </Dialog>
+  );
+};

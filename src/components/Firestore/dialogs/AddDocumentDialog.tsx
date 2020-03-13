@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { memo, useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import {
   DialogButton,
   DialogProps,
@@ -38,106 +38,98 @@ export interface AddDocumentStepProps {
   onChange: (value: AddDocumentDialogValue) => void;
 }
 
-export const AddDocumentStep = memo<AddDocumentStepProps>(
-  ({ collectionRef, onChange }) => {
-    const [id, setId] = useState(collectionRef.doc().id);
-    const [json, setJson] = useState('{"a": "b"}');
+export const AddDocumentStep: React.FC<AddDocumentStepProps> = ({
+  collectionRef,
+  onChange,
+}) => {
+  const [id, setId] = useState(collectionRef.doc().id);
+  const [json, setJson] = useState('{"a": "b"}');
 
-    const getValue = useCallback(() => ({ id, data: JSON.parse(json) }), [
-      id,
-      json,
-    ]);
+  const getValue = useCallback(() => ({ id, data: JSON.parse(json) }), [
+    id,
+    json,
+  ]);
 
-    // emit initial value immediately (to capture auto generated doc id)
-    useEffect(() => {
-      onChange(getValue());
-    }, [getValue, onChange]);
+  // emit initial value immediately (to capture auto generated doc id)
+  useEffect(() => {
+    onChange(getValue());
+  }, [getValue, onChange]);
 
-    const updateId = useCallback(
-      (evt: React.ChangeEvent<HTMLInputElement>) => {
-        setId(evt.target.value);
-        onChange(getValue());
-      },
-      [setId, onChange, getValue]
-    );
+  const updateId = (evt: React.ChangeEvent<HTMLInputElement>) => {
+    setId(evt.target.value);
+    onChange(getValue());
+  };
 
-    const updateJson = useCallback(
-      (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
-        setJson(evt.target.value);
-        onChange(getValue());
-      },
-      [setJson, onChange, getValue]
-    );
+  const updateJson = (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setJson(evt.target.value);
+    onChange(getValue());
+  };
 
-    return (
-      <>
-        <TextField
-          id="add-document-path"
-          fullwidth
-          disabled
-          label="Parent path"
-          value={collectionRef.path}
-        />
-        <TextField
-          id="add-document-id"
-          fullwidth
-          label="Document ID"
-          value={id}
-          onChange={updateId}
-        />
-        <TextField
-          id="add-document-data"
-          fullwidth
-          label="JSON data"
-          textarea
-          value={json}
-          onChange={updateJson}
-        />
-      </>
-    );
-  }
-);
+  return (
+    <>
+      <TextField
+        id="add-document-path"
+        fullwidth
+        disabled
+        label="Parent path"
+        value={collectionRef.path}
+      />
+      <TextField
+        id="add-document-id"
+        fullwidth
+        label="Document ID"
+        value={id}
+        onChange={updateId}
+      />
+      <TextField
+        id="add-document-data"
+        fullwidth
+        label="JSON data"
+        textarea
+        value={json}
+        onChange={updateJson}
+      />
+    </>
+  );
+};
 
-export interface Props extends DialogProps {
+interface Props extends DialogProps {
   collectionRef: firestore.CollectionReference;
   onValue: (v: AddDocumentDialogValue | null) => void;
 }
 
-export const AddDocumentDialog = memo<Props>(
-  ({ collectionRef, onClose, onValue, ...dialogProps }) => {
-    const [document, setDocument] = useState<AddDocumentDialogValue>({
-      id: '',
-      data: undefined,
-    });
+export const AddDocumentDialog: React.FC<Props> = ({
+  collectionRef,
+  onClose,
+  onValue,
+  ...dialogProps
+}) => {
+  const [document, setDocument] = useState<AddDocumentDialogValue>({
+    id: '',
+    data: undefined,
+  });
 
-    const emitValueAndClose = useCallback(
-      (evt: DialogOnCloseEventT) => {
-        onValue(evt.detail.action === 'accept' ? document : null);
-        onClose && onClose(evt);
-      },
-      [onValue, onClose, document]
-    );
+  const emitValueAndClose = (evt: DialogOnCloseEventT) => {
+    onValue(evt.detail.action === 'accept' ? document : null);
+    onClose && onClose(evt);
+  };
 
-    return (
-      <Dialog {...dialogProps} onClose={emitValueAndClose}>
-        <DialogTitle>Add a document</DialogTitle>
+  return (
+    <Dialog {...dialogProps} onClose={emitValueAndClose}>
+      <DialogTitle>Add a document</DialogTitle>
 
-        <DialogContent>
-          <AddDocumentStep
-            collectionRef={collectionRef}
-            onChange={setDocument}
-          />
-        </DialogContent>
+      <DialogContent>
+        <AddDocumentStep collectionRef={collectionRef} onChange={setDocument} />
+      </DialogContent>
 
-        <DialogActions>
-          <Theme use={['textSecondaryOnBackground']} wrap>
-            <DialogButton action="close">Cancel</DialogButton>
-          </Theme>
-          <DialogButton action="accept" isDefaultAction>
-            Save
-          </DialogButton>
-        </DialogActions>
-      </Dialog>
-    );
-  }
-);
+      <DialogActions>
+        <Theme use={['textSecondaryOnBackground']} wrap>
+          <DialogButton action="close">Cancel</DialogButton>
+        </Theme>
+        <DialogButton action="accept" isDefaultAction>
+          Save
+        </DialogButton>
+      </DialogActions>
+    </Dialog>
+  );
+};
