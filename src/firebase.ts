@@ -40,7 +40,7 @@ export function initDatabase(
   applyAdminAuth(app);
   const db = app.database();
   (window as WindowWithDb).db = db;
-  console.log(`🔥 Database ${databaseURL} is available at window.db.
+  console.log(`🔥 Realtime Database ${databaseURL} is available at window.db.
 
   Try:
       db.ref().set({hello: 'world!'});
