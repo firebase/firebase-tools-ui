@@ -18,84 +18,40 @@ import React, { useEffect, useState, Provider } from 'react';
 import _ from 'lodash';
 import produce from 'immer';
 import { firestore } from 'firebase';
+import { Card, CardActionButtons, CardActionButton } from '@rmwc/card';
+import { Elevation } from '@rmwc/elevation';
 import { IconButton } from '@rmwc/icon-button';
 import { ListItem, ListItemMeta } from '@rmwc/list';
 
-import { getFieldType } from './utils';
-import { useDocumentRef } from './DocumentRefContext';
+import { getLeafPath, getParentPath, getFieldType } from './utils';
 
 import { FieldType } from './models';
+import { Editor } from './Editor';
+import {
+  useDocumentState,
+  useFieldState,
+  useDocumentDispatch,
+  DocumentProvider,
+} from './DocumentStore';
 
 import './index.scss';
 
-const DocumentStateContext = React.createContext({});
-const DocumentDispatchContext = React.createContext<React.Dispatch<any> | null>(
-  null
-);
-
-function getParentPath(path: string[]) {
-  return path.splice(0, path.length - 1);
-}
-
-function getLeafPath(path: string[]) {
-  return path[path.length - 1];
-}
-
-const documentReducer = produce((draft: any, action: any) => {
-  switch (action.type) {
-    case 'reset':
-      return action.data;
-      break;
-    case 'delete': {
-      const parent = _.get(draft, getParentPath(action.path)) || draft;
-      if (getFieldType(parent) === FieldType.MAP) {
-        delete parent[getLeafPath(action.path)];
-      } else {
-        parent.splice(getLeafPath(action.path), 1);
-      }
-      break;
-    }
-    default: {
-      throw new Error(`Unhandled action type: ${action.type}`);
-    }
-  }
-});
-
-function useDocumentState() {
-  const context = React.useContext(DocumentStateContext);
-  if (context === undefined) {
-    throw new Error('useCountState must be used within a CountProvider');
-  }
-  return context;
-}
-
-function useDocumentDispatch() {
-  const context = React.useContext(DocumentDispatchContext);
-  if (context === undefined) {
-    throw new Error('useCountState must be used within a CountProvider');
-  }
-  return context;
-}
-
-function useFieldState(path: string[]) {
-  const documentState = useDocumentState();
-  if (path.length === 0) return documentState;
-  return _.get(documentState, path);
-}
-
 export const Field: React.FC<{ data: any }> = ({ data }) => {
-  const [state, dispatch] = React.useReducer(documentReducer, {});
-
-  useEffect(() => dispatch({ type: 'reset', data }), [data, dispatch]);
-
   return (
-    <DocumentStateContext.Provider value={state}>
-      <DocumentDispatchContext.Provider value={dispatch}>
-        {Object.keys(state).map(name => (
-          <NestedField key={name} path={[name]} />
-        ))}
-      </DocumentDispatchContext.Provider>
-    </DocumentStateContext.Provider>
+    <DocumentProvider data={data}>
+      <RootField />
+    </DocumentProvider>
+  );
+};
+
+const RootField: React.FC = () => {
+  const state = useFieldState([]);
+  return (
+    <>
+      {Object.keys(state).map(name => (
+        <NestedField key={name} path={[name]} />
+      ))}
+    </>
   );
 };
 
@@ -103,7 +59,7 @@ const NestedField: React.FC<{
   path: string[];
 }> = ({ path }) => {
   const [isExpanded, setIsExpanded] = useState(true);
-
+  const [editState, setEditState] = useState<any>(null);
   const state = useFieldState(path);
   const dispatch = useDocumentDispatch()!;
 
@@ -113,6 +69,26 @@ const NestedField: React.FC<{
   function handleDeleteField(e: React.MouseEvent<HTMLButtonElement>) {
     e.stopPropagation();
     dispatch({ type: 'delete', path });
+  }
+
+  function handleEditField(e: React.MouseEvent<HTMLButtonElement>) {
+    e.stopPropagation();
+    setEditState(state);
+  }
+
+  function handleEditCancel(e: React.MouseEvent<HTMLButtonElement>) {
+    e.stopPropagation();
+    setEditState(null);
+  }
+
+  function handleEditSave(e: React.MouseEvent<HTMLButtonElement>) {
+    e.stopPropagation();
+    dispatch({ type: 'update', path, value: editState });
+    setEditState(null);
+  }
+
+  function handleEditChange(data: any) {
+    setEditState(data);
   }
 
   function handleExpandToggle() {
@@ -132,11 +108,28 @@ const NestedField: React.FC<{
     });
   }
 
-  return (
+  return !!editState ? (
+    <Elevation z={8} wrap>
+      <Card className="Firestore-Field-inline-editor">
+        <div>
+          <Editor data={state} onChange={handleEditChange} />
+        </div>
+        <CardActionButtons>
+          <CardActionButton onClick={handleEditCancel}>Cancel</CardActionButton>
+          <CardActionButton onClick={handleEditSave}>Save</CardActionButton>
+        </CardActionButtons>
+      </Card>
+    </Elevation>
+  ) : (
     <>
       <ListItem onClick={handleExpandToggle}>
         {fieldName}:{JSON.stringify(state)}
         <ListItemMeta className="Firestore-Field-actions">
+          <IconButton
+            icon="edit"
+            label="Edit field"
+            onClick={handleEditField}
+          />
           <IconButton
             icon="delete"
             label="Remove field"

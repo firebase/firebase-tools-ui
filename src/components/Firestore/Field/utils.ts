@@ -17,6 +17,14 @@
 import { firestore } from 'firebase';
 import { FieldType } from './models';
 
+export function getParentPath(path: string[]) {
+  return path.splice(0, path.length - 1);
+}
+
+export function getLeafPath(path: string[]) {
+  return path[path.length - 1];
+}
+
 export function getFieldType(value: any): FieldType {
   if (value === null) {
     return FieldType.NULL;
