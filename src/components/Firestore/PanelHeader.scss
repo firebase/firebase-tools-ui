@@ -15,9 +15,10 @@
  */
 
 .Firestore-PanelHeader {
-  border-bottom: 1px solid var(--mdc-theme-text-hint-on-background);
-  display: flex;
-  padding: 8px 12px;
+  .CardActionBar-container {
+    padding: 8px 12px;
+    height: 44px;
+  }
 }
 
 .Firestore-PanelHeader-title {
