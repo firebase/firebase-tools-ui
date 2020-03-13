@@ -58,7 +58,9 @@ export function getFieldType(value: FirestoreAny): FieldType {
   return typeof value.valueOf() as FieldType;
 }
 
-export function isMap(value: FirestoreAny): value is {} {
+export function isMap(
+  value: FirestoreAny
+): value is { [key: string]: FirestoreAny } {
   return getFieldType(value) === FieldType.MAP;
 }
 

@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import get from 'lodash.get';
 import produce from 'immer';
 import { Action, createReducer } from 'typesafe-actions';
 
-import { getLeafPath, getParentPath, getFieldType } from './utils';
-import { FirestoreAny, FieldType } from './models';
+import { isMap, isArray, getLeafPath, getParentPath } from './utils';
+import { FirestoreAny } from './models';
 import * as actions from './actions';
 
 const reducer = createReducer<FirestoreAny, Action>({})
@@ -31,10 +31,9 @@ const reducer = createReducer<FirestoreAny, Action>({})
     actions.addField,
     produce((draft: FirestoreAny, { payload }) => {
       const parent = get(draft, getParentPath(payload.path)) || draft;
-      const fieldType = getFieldType(parent);
-      if (fieldType === FieldType.MAP) {
+      if (isMap(parent)) {
         parent[getLeafPath(payload.path)] = payload.value;
-      } else if (fieldType === FieldType.ARRAY) {
+      } else if (isArray(parent)) {
         parent.push(payload.value);
       }
     })
@@ -43,8 +42,7 @@ const reducer = createReducer<FirestoreAny, Action>({})
     actions.updateField,
     produce((draft: FirestoreAny, { payload }) => {
       const parent = get(draft, getParentPath(payload.path)) || draft;
-      const fieldType = getFieldType(parent);
-      if (fieldType === FieldType.MAP || fieldType === FieldType.ARRAY) {
+      if (isMap(parent) || isArray(parent)) {
         parent[getLeafPath(payload.path)] = payload.value;
       } else {
         return payload.value;
@@ -55,18 +53,18 @@ const reducer = createReducer<FirestoreAny, Action>({})
     actions.deleteField,
     produce((draft: FirestoreAny, { payload }) => {
       const parent = get(draft, getParentPath(payload)) || draft;
-      if (getFieldType(parent) === FieldType.MAP) {
+      if (isMap(parent)) {
         delete parent[getLeafPath(payload)];
-      } else {
-        parent.splice(getLeafPath(payload), 1);
+      } else if (isArray(parent)) {
+        parent.splice(parseInt(getLeafPath(payload)), 1);
       }
     })
   );
 
-const DocumentStateContext = React.createContext<FirestoreAny>({});
-const DocumentDispatchContext = React.createContext<React.Dispatch<any> | null>(
-  null
-);
+export const DocumentStateContext = React.createContext<FirestoreAny>({});
+const DocumentDispatchContext = React.createContext<React.Dispatch<
+  Action
+> | null>(null);
 
 export function useDocumentState() {
   const context = React.useContext(DocumentStateContext);
@@ -92,13 +90,11 @@ export function useFieldState(path: string[]) {
   return get(documentState, path) || '';
 }
 
-export const DocumentProvider: React.FC<{ data: any }> = ({
-  data,
+export const DocumentProvider: React.FC<{ value: FirestoreAny }> = ({
+  value = {},
   children,
 }) => {
-  const [state, dispatch] = React.useReducer(reducer, {});
-
-  useEffect(() => dispatch(actions.reset(data)), [data, dispatch]);
+  const [state, dispatch] = React.useReducer(reducer, value);
 
   return (
     <DocumentStateContext.Provider value={state}>

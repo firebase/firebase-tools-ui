@@ -43,7 +43,7 @@ export const DocumentPreview: React.FC<Props> = ({ reference }) => {
       </List>
 
       <List dense>
-        <Field data={data} />
+        <Field value={data} />
       </List>
     </>
   );

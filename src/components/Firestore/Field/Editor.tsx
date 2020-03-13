@@ -24,16 +24,17 @@ import {
   useFieldState,
   DocumentProvider,
 } from './DocumentStore';
+import { FirestoreAny } from './models';
 import { isMap, isArray, getLeafPath, getFieldType } from './utils';
 
 /** Entry point for a Document/Field editor */
 export const Editor: React.FC<{
-  data: any;
-  onChange: (data: any) => void;
+  value: FirestoreAny;
+  onChange: (value: FirestoreAny) => void;
   rootKey?: string;
-}> = ({ data, onChange, rootKey }) => {
+}> = ({ value, onChange, rootKey }) => {
   return (
-    <DocumentProvider data={data}>
+    <DocumentProvider value={value}>
       <RootField onChange={onChange} rootKey={rootKey} />
     </DocumentProvider>
   );
@@ -47,7 +48,7 @@ export const Editor: React.FC<{
  * Add-Document flow.
  */
 const RootField: React.FC<{
-  onChange: (data: any) => void;
+  onChange: (value: FirestoreAny) => void;
   rootKey?: string;
 }> = ({ onChange, rootKey }) => {
   const state = useDocumentState();
@@ -89,9 +90,17 @@ const NestedEditor: React.FC<{ path: string[]; rootKey?: string }> = ({
   return (
     <>
       <div style={{ display: 'flex' }}>
-        <TextField readOnly value={getLeafPath(path) || rootKey} />
-        <TextField readOnly value={getFieldType(state)} />
-        <TextField value={state} onChange={handleEditValue} />
+        <TextField
+          readOnly
+          value={getLeafPath(path) || rootKey}
+          placeholder="Field"
+        />
+        <TextField readOnly value={getFieldType(state)} placeholder="Type" />
+        <TextField
+          value={state}
+          onChange={handleEditValue}
+          placeholder="Value"
+        />
       </div>
       {childFields && <div>{childFields}</div>}
     </>

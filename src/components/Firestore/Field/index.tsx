@@ -21,20 +21,27 @@ import { IconButton } from '@rmwc/icon-button';
 import { ListItem, ListItemMeta } from '@rmwc/list';
 
 import * as actions from './actions';
+import { FirestoreAny } from './models';
 import {
   useFieldState,
   useDocumentDispatch,
   DocumentProvider,
 } from './DocumentStore';
 import { Editor } from './Editor';
-import { isMap, isArray, isPrimitive, getLeafPath } from './utils';
+import {
+  isMap,
+  isArray,
+  isPrimitive,
+  getFieldType,
+  getLeafPath,
+} from './utils';
 
 import './index.scss';
 
 /** Entry point for a Document/Field preview */
-export const Field: React.FC<{ data: any }> = ({ data }) => {
+export const Field: React.FC<{ value: FirestoreAny }> = ({ value }) => {
   return (
-    <DocumentProvider data={data}>
+    <DocumentProvider value={value}>
       <RootField />
     </DocumentProvider>
   );
@@ -48,9 +55,10 @@ const RootField: React.FC = () => {
   const state = useFieldState([]);
   return (
     <>
-      {Object.keys(state).map(name => (
-        <NestedField key={name} path={[name]} />
-      ))}
+      {isMap(state) &&
+        Object.keys(state).map(name => (
+          <NestedField key={name} path={[name]} />
+        ))}
     </>
   );
 };
@@ -84,7 +92,7 @@ const NestedField: React.FC<{
     setIsEditing(false);
   }
 
-  function handleEditSave(value: any) {
+  function handleEditSave(value: FirestoreAny) {
     dispatch(actions.updateField({ path, value }));
     setIsEditing(false);
   }
@@ -102,7 +110,7 @@ const NestedField: React.FC<{
     setIsAddingField(false);
   }
 
-  function handleAddSave(value: any) {
+  function handleAddSave(value: FirestoreAny) {
     dispatch(actions.addField({ path: addPath, value }));
     setIsAddingField(false);
   }
@@ -125,7 +133,7 @@ const NestedField: React.FC<{
 
   return isEditing ? (
     <InlineEditor
-      data={state}
+      value={state}
       path={path}
       onCancel={handleEditCancel}
       onSave={handleEditSave}
@@ -133,7 +141,10 @@ const NestedField: React.FC<{
   ) : (
     <>
       <ListItem onClick={handleExpandToggle}>
-        {fieldName}:{JSON.stringify(state)}
+        <span>
+          {fieldName}:{JSON.stringify(state)}
+        </span>
+        ({getFieldType(state)})
         <ListItemMeta className="Firestore-Field-actions">
           {isPrimitive(state) ? (
             <IconButton
@@ -155,7 +166,7 @@ const NestedField: React.FC<{
       {isAddingField && addPath && (
         <InlineEditor
           key={getLeafPath(addPath)}
-          data={''}
+          value={''}
           path={addPath}
           onCancel={handleAddCancel}
           onSave={handleAddSave}
@@ -167,15 +178,15 @@ const NestedField: React.FC<{
 
 /** Editor entry point for a selected field */
 const InlineEditor: React.FC<{
-  data: any;
+  value: FirestoreAny;
   path: string[];
   onCancel: () => void;
-  onSave: (data: any) => void;
-}> = ({ data, path, onCancel, onSave }) => {
-  const [internalData, setInternalData] = useState(data);
+  onSave: (value: FirestoreAny) => void;
+}> = ({ value, path, onCancel, onSave }) => {
+  const [internalValue, setInternalValue] = useState(value);
 
-  function handleChange(data: any) {
-    setInternalData(data);
+  function handleChange(value: FirestoreAny) {
+    setInternalValue(value);
   }
 
   function handleCancel(e: React.MouseEvent<HTMLButtonElement>) {
@@ -185,7 +196,7 @@ const InlineEditor: React.FC<{
 
   function handleSave(e: React.MouseEvent<HTMLButtonElement>) {
     e.stopPropagation();
-    onSave(internalData);
+    onSave(internalValue);
   }
 
   return (
@@ -193,7 +204,7 @@ const InlineEditor: React.FC<{
       <Card className="Firestore-Field-inline-editor">
         <div>
           <Editor
-            data={data}
+            value={value}
             onChange={handleChange}
             rootKey={getLeafPath(path)}
           />

@@ -29,6 +29,8 @@ import { ApiProvider } from './ApiContext';
 
 import { Document, Root } from './Document';
 
+import { DocumentStateContext } from './Field/DocumentStore';
+
 jest.mock('react-firebase-hooks/firestore');
 
 it('shows the root-id', () => {
