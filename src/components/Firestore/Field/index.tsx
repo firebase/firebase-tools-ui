@@ -47,9 +47,12 @@ const documentReducer = produce((draft: any, action: any) => {
       return action.data;
       break;
     case 'delete': {
-      delete (_.get(draft, getParentPath(action.path)) || draft)[
-        getLeafPath(action.path)
-      ];
+      const parent = _.get(draft, getParentPath(action.path)) || draft;
+      if (getFieldType(parent) === FieldType.MAP) {
+        delete parent[getLeafPath(action.path)];
+      } else {
+        parent.splice(getLeafPath(action.path), 1);
+      }
       break;
     }
     default: {
@@ -76,50 +79,27 @@ function useDocumentDispatch() {
 
 function useFieldState(path: string[]) {
   const documentState = useDocumentState();
+  if (path.length === 0) return documentState;
   return _.get(documentState, path);
 }
 
-export const RootField: React.FC<{ data: any }> = ({ data }) => {
+export const Field: React.FC<{ data: any }> = ({ data }) => {
   const [state, dispatch] = React.useReducer(documentReducer, {});
 
   useEffect(() => dispatch({ type: 'reset', data }), [data, dispatch]);
 
   return (
     <DocumentStateContext.Provider value={state}>
-      <DocumentDispatchContext.Provider value={state}>
-        <RealRootField />
+      <DocumentDispatchContext.Provider value={dispatch}>
+        {Object.keys(state).map(name => (
+          <NestedField key={name} path={[name]} />
+        ))}
       </DocumentDispatchContext.Provider>
     </DocumentStateContext.Provider>
   );
 };
 
-export const RealRootField: React.FC = () => {
-  const state = useDocumentState();
-
-  return (
-    <>
-      {Object.keys(state).map(name => (
-        <Field key={name} path={[name]} />
-      ))}
-    </>
-  );
-};
-
-export const ArrayElement: React.FC<{ index: number; path: any }> = ({
-  index,
-  path,
-}) => {
-  const state = useFieldState(path);
-  const value = state[index];
-
-  return (
-    <div>
-      {index}:{JSON.stringify(value)}
-    </div>
-  );
-};
-
-export const Field: React.FC<{
+const NestedField: React.FC<{
   path: string[];
 }> = ({ path }) => {
   const [isExpanded, setIsExpanded] = useState(true);
@@ -139,15 +119,16 @@ export const Field: React.FC<{
     setIsExpanded(!isExpanded);
   }
 
-  let children = null;
+  let childFields = null;
   if (fieldType === FieldType.MAP) {
-    children = Object.keys(state).map(childLeaf => {
+    childFields = Object.keys(state).map(childLeaf => {
       const childPath = [...path, childLeaf];
-      return <Field key={childLeaf} path={childPath} />;
+      return <NestedField key={childLeaf} path={childPath} />;
     });
   } else if (fieldType === FieldType.ARRAY) {
-    children = state.map((value: any, index: number) => {
-      return <ArrayElement key={index} index={index} path={path} />;
+    childFields = state.map((value: any, index: number) => {
+      const childPath = [...path, `${index}`];
+      return <NestedField key={index} path={childPath} />;
     });
   }
 
@@ -163,7 +144,7 @@ export const Field: React.FC<{
           />
         </ListItemMeta>
       </ListItem>
-      {isExpanded && children}
+      {isExpanded && childFields}
     </>
   );
 };
