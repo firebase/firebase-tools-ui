@@ -76,7 +76,6 @@ export const DatabaseDefaultRoute: React.FC<Props> = ({
                   <CardActionBar>
                     <IconButton
                       icon="home"
-                      ripple={false}
                       tag={props => <Link to="/database" {...props} />}
                     />
                   </CardActionBar>

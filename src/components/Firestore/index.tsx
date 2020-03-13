@@ -76,7 +76,6 @@ export const Firestore: React.FC<Props> = ({ config, projectId }) => {
             <CardActionBar>
               <IconButton
                 icon="home"
-                ripple={false}
                 tag={props => <Link to="/firestore" {...props} />}
               />
             </CardActionBar>
