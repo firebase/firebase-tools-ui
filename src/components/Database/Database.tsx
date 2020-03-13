@@ -19,13 +19,13 @@ import * as firebase from 'firebase/app';
 import 'firebase/database';
 import { ThemeProvider } from '@rmwc/theme';
 import { connect } from 'react-redux';
-import { NodeContainer } from '../DataViewer/NodeContainer';
+import { NodeContainer } from './DataViewer/NodeContainer';
 import { AppState } from '../../store';
 import { DatabaseConfig } from '../../store/config';
 import { initDatabase } from '../../firebase';
 
 import './Database.scss';
-import '../DataViewer/index.scss';
+import './DataViewer/index.scss';
 
 export interface PropsFromState {
   namespace: string;
