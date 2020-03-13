@@ -25,7 +25,7 @@ import * as firebase from 'firebase/app';
 import { DatabaseConfig, FirestoreConfig } from './store/config';
 
 interface WindowWithDb extends Window {
-  db?: firebase.database.Database;
+  db?: firebase.database.Database | firebase.firestore.Firestore;
 }
 
 export function initDatabase(
@@ -42,7 +42,9 @@ export function initDatabase(
   (window as WindowWithDb).db = db;
   console.log(`Database ${databaseURL} is available at window.db.
 
-  Try db.ref().once('value').then( snap => console.log(snap.val()) );`);
+  Try:
+      db.ref().set({hello: 'world!'});
+      db.ref().once('value').then( snap => console.log(snap.val()) );`);
   return [db, { cleanup: () => app.delete() }];
 }
 
@@ -60,6 +62,12 @@ export function initFirestore(
     host: config.hostAndPort,
     ssl: false,
   });
+  (window as WindowWithDb).db = firestore;
+  console.log(`Firestore is available at window.db.
+
+  Try:
+      db.doc('hello/world').set({hello: 'world!'});
+      db.doc('hello/world').get().then( snap => console.log(snap.data()) );`);
   return [firestore, { cleanup: () => app.delete() }];
 }
 
