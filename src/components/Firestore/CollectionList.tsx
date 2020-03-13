@@ -23,6 +23,10 @@ import { Button } from '@rmwc/button';
 import './index.scss';
 import { useApi } from './ApiContext';
 import DatabaseApi from './api';
+import {
+  AddCollectionDialog,
+  AddCollectionDialogValue,
+} from './dialogs/AddCollectionDialog';
 
 export interface Props {
   reference?: firestore.DocumentReference;
@@ -33,13 +37,42 @@ export const CollectionList: React.FC<Props> = ({ reference }) => {
   const api = useApi();
   const collections = useCollections(api, reference);
 
+  const [isAddCollectionDialogOpen, setAddCollectionDialogOpen] = useState(
+    false
+  );
+
+  const addCollection = async (value: AddCollectionDialogValue | null) => {
+    if (value && value.collectionId && value.document.id) {
+      const ref = reference || api.database;
+      await ref
+        .collection(value.collectionId)
+        .doc(value.document.id)
+        .set(value.document.data);
+    }
+  };
+
   return (
     <div className="Firestore-CollectionList" data-testid="collection-list">
+      {isAddCollectionDialogOpen && (
+        <AddCollectionDialog
+          documentRef={reference}
+          api={api}
+          open={isAddCollectionDialogOpen}
+          onValue={addCollection}
+          onClose={() => setAddCollectionDialogOpen(false)}
+        />
+      )}
       {/* Actions */}
       <List dense className="List-Actions">
         <ListItem
           tag={props => (
-            <Button dense label="Start collection" icon="add" {...props} />
+            <Button
+              dense
+              label="Start collection"
+              icon="add"
+              {...props}
+              onClick={() => setAddCollectionDialogOpen(true)}
+            />
           )}
         ></ListItem>
       </List>
