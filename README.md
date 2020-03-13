@@ -37,15 +37,19 @@ See the section about [running tests](https://facebook.github.io/create-react-ap
 
 #### `npm run build`
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Builds the app for production, both server and web.
 
+The web production build will be output to the `build` folder.<br />
+It correctly bundles React in production mode and optimizes the build for the best performance.
 The build is minified and the filenames include the hashes.<br />
+
+The server code will be packed into `server.bundle.js`, which is a standalone
+JS file including all dependencies, ready for execution with Node.js.
 
 To run the production build with emulators, use:
 
 ```bash
-firebase emulators:exec --project sample --only database,firestore 'PORT=3000 node ./src/server.js'
+firebase emulators:exec --project sample --only database,firestore 'PORT=3000 node server.bundle.js'
 ```
 
 This will start a server that serves both the static files and APIs at `http://localhost:3000/`.

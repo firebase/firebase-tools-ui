@@ -1,0 +1,55 @@
+.Firestore {
+  margin: 28px;
+}
+
+.Firestore-actions {
+  text-align: end;
+  margin-bottom: 28px;
+}
+
+.Firestore-panels {
+  display: flex;
+  flex-direction: row !important;
+}
+
+/** Only show at most 3 panels (Documents/Collections) */
+.Firestore-panels {
+  .Firestore-Document,
+  .Firestore-Collection {
+    display: none;
+    overflow: hidden;
+
+    /* Show a border _between_ rendered panels */
+    + .Firestore-Document,
+    + .Firestore-Collection {
+      border-left: 1px solid var(--mdc-theme-text-hint-on-background);
+
+      &:nth-last-child(3) {
+        border-left: none;
+      }
+    }
+
+    &:nth-last-child(-n + 3) {
+      display: block;
+      flex: 1;
+    }
+
+    &:nth-last-child(1) {
+      flex: 2;
+    }
+  }
+
+  .Firestore-List-Item {
+    padding-left: 42px; // align with action button labels
+    font-family: 'Roboto Mono', monospace;
+  }
+
+  .List-Actions {
+    padding: 0;
+
+    .mdc-button {
+      border-radius: 0;
+      width: 100%;
+    }
+  }
+}

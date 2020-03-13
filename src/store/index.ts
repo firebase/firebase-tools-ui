@@ -17,15 +17,18 @@
 import { all, fork } from 'redux-saga/effects';
 import { combineReducers } from 'redux';
 import { ConfigState, configReducer, configSaga } from './config';
+import { DatabaseState, databaseSaga, databaseReducer } from './database';
 
 export interface AppState {
   config: ConfigState;
+  database: DatabaseState;
 }
 
 export function* rootSaga() {
-  yield all([fork(configSaga)]);
+  yield all([fork(configSaga), fork(databaseSaga)]);
 }
 
 export const rootReducer = combineReducers<AppState>({
   config: configReducer,
+  database: databaseReducer,
 });

@@ -15,13 +15,14 @@
  */
 
 import 'firebase/database';
+import 'firebase/firestore';
 
 import { _FirebaseApp } from '@firebase/app-types/private';
 import { FirebaseAuthInternal } from '@firebase/auth-interop-types';
 import { Component, ComponentType } from '@firebase/component';
 import * as firebase from 'firebase/app';
 
-import { DatabaseConfig } from './store/config';
+import { DatabaseConfig, FirestoreConfig } from './store/config';
 
 interface WindowWithDb extends Window {
   db?: firebase.database.Database;
@@ -43,6 +44,23 @@ export function initDatabase(
 
   Try db.ref().once('value').then( snap => console.log(snap.val()) );`);
   return [db, { cleanup: () => app.delete() }];
+}
+
+export function initFirestore(
+  projectId: string,
+  config: FirestoreConfig
+): [firebase.firestore.Firestore, { cleanup: () => Promise<void> }] {
+  const app = firebase.initializeApp(
+    { projectId },
+    `Firestore Component: ${Math.random()}`
+  );
+  applyAdminAuth(app);
+  const firestore = app.firestore();
+  firestore.settings({
+    host: config.hostAndPort,
+    ssl: false,
+  });
+  return [firestore, { cleanup: () => app.delete() }];
 }
 
 function applyAdminAuth(app: firebase.app.App): void {

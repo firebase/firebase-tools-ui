@@ -18,12 +18,18 @@ import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import configureStore from './configureStore';
-import { fetchRequest as fetchConfigRequest } from './store/config';
+import { ThemeProvider } from '@rmwc/theme';
+import { RMWCProvider } from '@rmwc/provider';
 
-import App from './App';
+// General + library styling. Should come before all local imports to allow
+// local styling to override them.
 import './index.scss';
 import '@rmwc/tooltip/tooltip.css';
+
+import { fetchRequest as fetchConfigRequest } from './store/config';
+import configureStore from './configureStore';
+import App from './App';
+import { background, primary } from './colors';
 
 const store = configureStore();
 
@@ -41,8 +47,15 @@ const RouterWithInit = () => {
 };
 
 ReactDOM.render(
-  <Provider store={store}>
-    <RouterWithInit />
-  </Provider>,
+  <RMWCProvider
+    // Globally disable ripples
+    ripple={false}
+  >
+    <ThemeProvider options={{ background, primary }}>
+      <Provider store={store}>
+        <RouterWithInit />
+      </Provider>
+    </ThemeProvider>
+  </RMWCProvider>,
   document.getElementById('root')
 );

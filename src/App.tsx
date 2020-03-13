@@ -15,30 +15,34 @@
  */
 
 import React from 'react';
-import { Route, match } from 'react-router-dom';
+import { Route } from 'react-router-dom';
+import { Theme } from '@rmwc/theme';
+import { DialogQueue } from '@rmwc/dialog';
 import './App.scss';
-import Navigation from './components/Navigation';
-import Home from './components/Home';
-import Database from './components/Database';
-import DatabaseDefaultRoute from './components/Database/DatabaseDefaultRoute';
-
-const DatabaseRoute: React.FC<{ match: match<{ namespace: string }> }> = ({
-  match,
-}) => <Database namespace={match.params.namespace} />;
+import AppBar from './components/AppBar';
+import { routes } from './routes';
+import { dialogs } from './components/DialogQueue';
 
 const App: React.FC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>Firebase Emulator Suite</h1>
-        <Navigation />
-      </header>
-      <div className="App-main">
-        <Route exact path="/" component={Home} />
-        <Route exact path="/database" component={DatabaseDefaultRoute} />
-        <Route path="/database/:namespace/data" component={DatabaseRoute} />
-      </div>
-    </div>
+    <Theme use="background" wrap>
+      <>
+        <DialogQueue dialogs={dialogs} />
+        <div className="App">
+          <AppBar routes={routes} />
+          <div className="App-main">
+            {routes.map(r => (
+              <Route
+                key={r.path}
+                path={r.path}
+                component={r.component}
+                exact={r.exact}
+              />
+            ))}
+          </div>
+        </div>
+      </>
+    </Theme>
   );
 };
 

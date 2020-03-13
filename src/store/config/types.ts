@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
-export interface DatabaseConfig {
+export interface EmulatorConfig {
   hostAndPort: string;
+  host: string;
+  port: number;
 }
 
-export interface FirestoreConfig {
-  hostAndPort: string;
-}
+export interface DatabaseConfig extends EmulatorConfig {}
+
+export interface FirestoreConfig extends EmulatorConfig {}
 
 export interface Config {
   projectId: string;

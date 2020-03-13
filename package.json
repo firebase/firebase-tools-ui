@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@rmwc/grid": "^5.7.2",
     "@types/jest": "24.0.21",
     "@types/node": "12.12.3",
     "@types/react": "16.9.11",
@@ -13,8 +14,10 @@
     "firebase": "^7.6.0",
     "font-awesome": "^4.7.0",
     "keycode": "^2.2.0",
+    "node-fetch": "^2.6.0",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
+    "react-firebase-hooks": "^2.1.1",
     "react-redux": "^7.1.1",
     "react-router-dom": "^5.1.2",
     "react-scripts": "^3.3.0",
@@ -26,7 +29,9 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "npm run build:web && npm run build:server",
+    "build:web": "react-scripts build",
+    "build:server": "webpack --target=node server.js -o server.bundle.js",
     "test": "react-scripts test",
     "test:coverage": "react-scripts test --coverage --watchAll=false",
     "eject": "react-scripts eject",
@@ -53,9 +58,12 @@
     "@testing-library/react": "^9.3.2",
     "@types/react-router-dom": "^5.1.2",
     "husky": "^3.0.9",
+    "jest-fetch-mock": "^3.0.1",
     "lint-staged": "^9.4.2",
+    "mutationobserver-shim": "^0.3.3",
     "node-sass": "^4.13.0",
-    "prettier": "^1.18.2"
+    "prettier": "^1.18.2",
+    "webpack-cli": "^3.3.10"
   },
   "husky": {
     "hooks": {

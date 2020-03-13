@@ -24,7 +24,14 @@ describe('fetchConfig', () => {
     const gen = fetchConfig(fetchRequest());
     expect(gen.next()).toEqual({ done: false, value: call(fetchConfigApi) });
 
-    const config: Config = { database: { hostAndPort: 'localhost:8080' } };
+    const config: Config = {
+      projectId: 'example',
+      database: {
+        host: 'localhost',
+        port: 8080,
+        hostAndPort: 'localhost:8080',
+      },
+    };
     expect(gen.next(config)).toEqual({
       done: false,
       value: put(fetchSuccess(config)),

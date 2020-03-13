@@ -16,7 +16,7 @@
 
 /**
   This file tells `npm start` (or more precisely, `react-scripts start`) to load
-  middlewares and APIs defined in ./server.js into the Webpack Dev Server, so
+  middlewares and APIs defined in ../server.js into the Webpack Dev Server, so
   that those things work as expected during development.
 
   Note that setupProxy is probably the wrong name for this file -- it never
@@ -25,5 +25,5 @@
   https://create-react-app.dev/docs/proxying-api-requests-in-development/#configuring-the-proxy-manually
 */
 
-const registerApis = require('./server').registerApis;
+const registerApis = require('../server').registerApis;
 module.exports = registerApis;
