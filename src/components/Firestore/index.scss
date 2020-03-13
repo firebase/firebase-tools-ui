@@ -1,10 +1,6 @@
-.Firestore {
-  margin: 28px;
-}
-
 .Firestore-actions {
   text-align: end;
-  margin-bottom: 28px;
+  margin-bottom: 24px;
 }
 
 .Firestore-panels {
@@ -42,6 +38,10 @@
   .Firestore-List-Item {
     padding-left: 42px; // align with action button labels
     font-family: 'Roboto Mono', monospace;
+  }
+
+  .mdc-list--dense {
+    padding: 0;
   }
 
   .List-Actions {

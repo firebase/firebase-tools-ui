@@ -14,21 +14,16 @@
  * limitations under the License.
  */
 
-.Database {
-}
+@import '../common/shadow';
 
-.Database-Picker {
-  min-width: 30%;
-}
+.Breadcrumb {
+  display: block;
 
-.Database-Picker--primary-only {
-  display: none;
-}
-
-.Database-Database {
-  flex: 1;
-  padding: 28px;
-
-  // A few things in the data viewer uses position: absolute.
-  position: relative;
+  .Breadcrumb-container {
+    align-items: center;
+    box-shadow: $GMP_SHADOW_DIVIDER_BOTTOM_INSET;
+    display: flex;
+    height: 56px;
+    padding: 16px 16px 16px 2px; // home icon alignment
+  }
 }

@@ -26,6 +26,8 @@ import DatabaseApi from './api';
 import { ApiProvider } from './ApiContext';
 import { Root } from './Document';
 import { promptClearAll } from './dialogs/clearAll';
+import { GridCell } from '@rmwc/grid';
+import { Breadcrumb } from '../common/Breadcrumb';
 
 export interface PropsFromState {
   config?: FirestoreConfig;
@@ -61,18 +63,21 @@ export const Firestore: React.FC<Props> = ({ config, projectId }) => {
 
   return (
     <ApiProvider value={api}>
-      <div className="Firestore">
+      <GridCell span={12} className="Firestore">
         <div className="Firestore-actions">
           <Button danger unelevated onClick={() => handleClearData(api)}>
             Clear all data
           </Button>
         </div>
         <Elevation z="2" wrap>
-          <Card className="Firestore-panels">
-            <Root />
+          <Card>
+            <Breadcrumb root="/firestore" />
+            <div className="Firestore-panels">
+              <Root />
+            </div>
           </Card>
         </Elevation>
-      </div>
+      </GridCell>
     </ApiProvider>
   );
 };

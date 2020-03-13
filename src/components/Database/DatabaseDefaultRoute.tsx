@@ -29,6 +29,9 @@ import { AppState } from '../../store';
 import Database from './Database';
 import DatabasePicker from './DatabasePicker';
 import { databasesFetchRequest } from '../../store/database';
+import { GridCell } from '@rmwc/grid';
+import { Card } from '@rmwc/card';
+import { Breadcrumb } from '../common/Breadcrumb';
 
 export interface PropsFromState {
   projectId?: string;
@@ -65,16 +68,21 @@ export const DatabaseDefaultRoute: React.FC<Props> = ({
         render={({ match }: any) => {
           const current = match.params.namespace;
           return (
-            <Elevation z={2} className="Database">
-              <DatabasePicker
-                current={current}
-                primary={primary}
-                navigation={db => (
-                  <NavLink to={`${url}/${db}/data`}>{db}</NavLink>
-                )}
-              />
-              <Database namespace={current} />
-            </Elevation>
+            <GridCell span={12} className="Database">
+              <Elevation z={2} wrap>
+                <Card>
+                  <Breadcrumb root="/database" />
+                  <DatabasePicker
+                    current={current}
+                    primary={primary}
+                    navigation={db => (
+                      <NavLink to={`${url}/${db}/data`}>{db}</NavLink>
+                    )}
+                  />
+                  <Database namespace={current} />
+                </Card>
+              </Elevation>
+            </GridCell>
           );
         }}
       ></Route>

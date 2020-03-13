@@ -56,15 +56,13 @@ export const Database: React.FC<Props> = ({ config, namespace }) => {
   );
 
   return (
-    <div className="Database-Database">
-      <ThemeProvider options={theme}>
-        {ref ? (
-          <NodeContainer realtimeRef={ref} isViewRoot onNavigate={doNavigate} />
-        ) : (
-          <p>Loading</p>
-        )}
-      </ThemeProvider>
-    </div>
+    <ThemeProvider options={theme} className="Database-Database">
+      {ref ? (
+        <NodeContainer realtimeRef={ref} isViewRoot onNavigate={doNavigate} />
+      ) : (
+        <p>Loading</p>
+      )}
+    </ThemeProvider>
   );
 };
 
