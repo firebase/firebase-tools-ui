@@ -1,0 +1,7 @@
+@import './color';
+
+// Divider-style shadow values
+$__DIVIDER_COLOR: $COLOR_DIVIDER;
+$GMP_SHADOW_DIVIDER_INSET: 0 0 0 1px $__DIVIDER_COLOR inset;
+$GMP_SHADOW_DIVIDER_BOTTOM_INSET: 0 -1px 0 $__DIVIDER_COLOR inset;
+$GMP_SHADOW_DIVIDER_TOP_INSET: 0 1px 0 $__DIVIDER_COLOR inset;

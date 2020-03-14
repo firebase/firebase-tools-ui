@@ -58,7 +58,7 @@ export const Root: React.FC = () => {
       id={'Root'}
       collectionById={(id: string) => api.database.collection(id)}
     >
-      <PanelHeader id="Root" icon={<FirestoreLogo />} />
+      <PanelHeader id="Root" icon={<FirestoreLogo size="small" />} />
       <CollectionList />
     </Doc>
   );
@@ -73,7 +73,10 @@ export const Document: React.FC<{ reference: firestore.DocumentReference }> = ({
       id={reference.id}
       collectionById={(id: string) => reference.collection(id)}
     >
-      <PanelHeader id={reference.id} icon={<Icon icon="insert_drive_file" />} />
+      <PanelHeader
+        id={reference.id}
+        icon={<Icon icon={{ icon: 'insert_drive_file', size: 'small' }} />}
+      />
       <CollectionList reference={reference} />
       <ListDivider />
       <DocumentPreview reference={reference} />

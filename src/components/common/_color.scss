@@ -1,5 +1,5 @@
 /**
- * Copyright 2019 Google LLC
+ * Copyright 2020 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,10 @@
  * limitations under the License.
  */
 
-.Firestore-PanelHeader {
-  .CardActionBar-container {
-    padding: 8px 12px;
-    height: 44px;
-  }
-}
+$QUANTUM_BLACK_ALPHA_12: rgba(0, 0, 0, 0.12); // e.g. dividers
 
-.Firestore-PanelHeader-title {
-  padding-left: 4px;
-}
+$COLOR_TEXT_PRIMARY: rgba(0, 0, 0, 0.87);
+$COLOR_TEXT_SECONDARY: rgba(0, 0, 0, 0.54);
+$COLOR_BACKGROUND_KEY: rgba(0, 0, 0, 0.08);
+
+$COLOR_DIVIDER: $QUANTUM_BLACK_ALPHA_12;
