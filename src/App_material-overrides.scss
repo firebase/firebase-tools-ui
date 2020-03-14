@@ -20,6 +20,11 @@
     border-radius: 8px;
   }
 
+  // These sometimes exist outside .App (e.g. DialogQueue)
+  @at-root .mdc-dialog .mdc-dialog__surface {
+    border-radius: 16px;
+  }
+
   .mdc-button:hover {
     &::before,
     &::after,
