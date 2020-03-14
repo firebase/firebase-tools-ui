@@ -149,7 +149,7 @@ export const InlineQuery = React.memo<Props>(function InlineQuery$({
             label="Cancel"
             onClick={() => onCancel && onCancel()}
           />
-          <CardActionButton raised type="submit" label="Search" />
+          <CardActionButton unelevated type="submit" label="Search" />
         </CardActionButtons>
       </CardActions>
     </Card>

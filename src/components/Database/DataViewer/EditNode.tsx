@@ -122,7 +122,7 @@ export const EditNode = React.memo<Props>(function EditNode$({
             >
               Cancel
             </CardActionButton>
-            <CardActionButton raised type="submit">
+            <CardActionButton unelevated type="submit">
               Save
             </CardActionButton>
           </CardActionButtons>
