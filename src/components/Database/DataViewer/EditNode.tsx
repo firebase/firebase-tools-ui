@@ -28,6 +28,7 @@ import { useState, useRef, useEffect } from 'react';
 import './EditNode.scss';
 import keycode from 'keycode';
 import { jsonIshValue, getDbRootUrl } from './common/view_model';
+import { Theme } from '@rmwc/theme';
 
 export interface Props {
   value?: string | boolean | number;
@@ -116,12 +117,14 @@ export const EditNode = React.memo<Props>(function EditNode$({
         </div>
         <CardActions className="EditNode__actions">
           <CardActionButtons>
-            <CardActionButton
-              type="button"
-              onClick={() => onClose && onClose()}
-            >
-              Cancel
-            </CardActionButton>
+            <Theme use={['textSecondaryOnBackground']} wrap>
+              <CardActionButton
+                type="button"
+                onClick={() => onClose && onClose()}
+              >
+                Cancel
+              </CardActionButton>
+            </Theme>
             <CardActionButton unelevated type="submit">
               Save
             </CardActionButton>

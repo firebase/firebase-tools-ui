@@ -33,6 +33,7 @@ import {
 } from '@rmwc/card';
 
 import './InlineQuery.scss';
+import { Theme } from '@rmwc/theme';
 
 export interface Props {
   params?: QueryParams;
@@ -136,19 +137,21 @@ export const InlineQuery = React.memo<Props>(function InlineQuery$({
       </div>
       <CardActions className="InlineQuery__actions">
         <CardActionButtons>
-          {params !== DEFAULT_QUERY_PARAMS && (
+          <Theme use={['textSecondaryOnBackground']}>
+            {params !== DEFAULT_QUERY_PARAMS && (
+              <CardActionButton
+                type="button"
+                label="Reset"
+                danger
+                onClick={() => onSubmit(DEFAULT_QUERY_PARAMS)}
+              />
+            )}
             <CardActionButton
               type="button"
-              label="Reset"
-              danger
-              onClick={() => onSubmit(DEFAULT_QUERY_PARAMS)}
+              label="Cancel"
+              onClick={() => onCancel && onCancel()}
             />
-          )}
-          <CardActionButton
-            type="button"
-            label="Cancel"
-            onClick={() => onCancel && onCancel()}
-          />
+          </Theme>
           <CardActionButton unelevated type="submit" label="Search" />
         </CardActionButtons>
       </CardActions>
