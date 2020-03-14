@@ -25,7 +25,8 @@ import * as firebase from 'firebase/app';
 import { DatabaseConfig, FirestoreConfig } from './store/config';
 
 interface WindowWithDb extends Window {
-  db?: firebase.database.Database | firebase.firestore.Firestore;
+  database?: firebase.database.Database;
+  firestore?: firebase.firestore.Firestore;
 }
 
 export function initDatabase(
@@ -39,12 +40,15 @@ export function initDatabase(
   );
   applyAdminAuth(app);
   const db = app.database();
-  (window as WindowWithDb).db = db;
-  console.log(`🔥 Realtime Database ${databaseURL} is available at window.db.
+  // only log the first time
+  if (!(window as WindowWithDb).database) {
+    console.log(`🔥 Realtime Database is available at window.database.
 
-  Try:
-      db.ref().set({hello: 'world!'});
-      db.ref().once('value').then( snap => console.log(snap.val()) );`);
+    Try:
+    database.ref().set({hello: 'world!'});
+    database.ref().once('value').then( snap => console.log(snap.val()) );`);
+  }
+  (window as WindowWithDb).database = db;
   return [db, { cleanup: () => app.delete() }];
 }
 
@@ -62,12 +66,15 @@ export function initFirestore(
     host: config.hostAndPort,
     ssl: false,
   });
-  (window as WindowWithDb).db = firestore;
-  console.log(`🔥 Firestore is available at window.db.
+  // only log the first time
+  if (!(window as WindowWithDb).firestore) {
+    console.log(`🔥 Firestore is available at window.firestore.
 
-  Try:
-      db.doc('hello/world').set({hello: 'world!'});
-      db.doc('hello/world').get().then( snap => console.log(snap.data()) );`);
+    Try:
+    firestore.doc('hello/world').set({hello: 'world!'});
+    firestore.doc('hello/world').get().then( snap => console.log(snap.data()) );`);
+  }
+  (window as WindowWithDb).firestore = firestore;
   return [firestore, { cleanup: () => app.delete() }];
 }
 
