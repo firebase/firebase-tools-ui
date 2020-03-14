@@ -15,8 +15,29 @@
  */
 
 .App {
-  .mdc-card {
+  .mdc-card,
+  .mdc-button {
     border-radius: 8px;
+  }
+
+  .mdc-button:hover {
+    &::before,
+    &::after,
+    &.mdc-list-item::before,
+    &.mdc-list-item::after {
+      // darker hover for buttons
+      opacity: 0.08;
+    }
+  }
+
+  :not(.mdc-list--non-interactive) {
+    > .mdc-list-item:not(.mdc-list-item--disabled) {
+      &::before,
+      &::after {
+        // colored hover instead of gray
+        background-color: var(--mdc-theme-primary);
+      }
+    }
   }
 
   .mdc-button {
