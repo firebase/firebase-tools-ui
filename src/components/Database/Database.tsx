@@ -17,7 +17,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import * as firebase from 'firebase/app';
 import 'firebase/database';
-import { ThemeProvider } from '@rmwc/theme';
 import { connect } from 'react-redux';
 import { NodeContainer } from './DataViewer/NodeContainer';
 import { AppState } from '../../store';
@@ -33,11 +32,6 @@ export interface PropsFromState {
 }
 
 export type Props = PropsFromState;
-
-const theme: Record<string, string> = {
-  primary: '#039be5',
-  primaryBg: '#039be5',
-};
 
 export const Database: React.FC<Props> = ({ config, namespace }) => {
   const [ref, setRef] = useState<firebase.database.Reference | undefined>(
@@ -56,13 +50,13 @@ export const Database: React.FC<Props> = ({ config, namespace }) => {
   );
 
   return (
-    <ThemeProvider options={theme} className="Database-Database">
+    <div className="Database-Database">
       {ref ? (
         <NodeContainer realtimeRef={ref} isViewRoot onNavigate={doNavigate} />
       ) : (
         <p>Loading</p>
       )}
-    </ThemeProvider>
+    </div>
   );
 };
 
