@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
+@import '../common/radius';
 @import '../common/shadow';
 
 .CardActionBar {
   display: block;
 
   .CardActionBar-container {
+    border-radius: $BORDER_RADIUS_CARD_TOP;
     align-items: center;
     box-shadow: $GMP_SHADOW_DIVIDER_BOTTOM_INSET;
     display: flex;

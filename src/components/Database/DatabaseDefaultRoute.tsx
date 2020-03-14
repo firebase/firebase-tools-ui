@@ -72,7 +72,7 @@ export const DatabaseDefaultRoute: React.FC<Props> = ({
           return (
             <GridCell span={12} className="Database">
               <Elevation z={2} wrap>
-                <Card className="canvas-card">
+                <Card>
                   <CardActionBar>
                     <IconButton
                       icon="home"

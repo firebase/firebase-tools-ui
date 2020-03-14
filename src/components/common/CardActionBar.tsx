@@ -23,7 +23,7 @@ import './CardActionBar.scss';
 export const CardActionBar: React.FC = ({ children }) => {
   return (
     <ThemeProvider options={{ surface: grey100 }} className="CardActionBar">
-      <Theme use={['surface']} className="CardActionBar-container">
+      <Theme use={['surface']} className="CardActionBar-container" tag="div">
         {children}
       </Theme>
     </ThemeProvider>
