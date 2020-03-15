@@ -24,18 +24,17 @@ import {
   useFieldState,
   DocumentProvider,
 } from './DocumentStore';
-import { FirestoreAny } from './models';
+import { FirestoreMap } from './models';
 import { isMap, isArray, getLeafPath, getFieldType } from './utils';
 
 /** Entry point for a Document/Field editor */
 export const Editor: React.FC<{
-  value: { [key: string]: FirestoreAny };
-  onChange?: (value: FirestoreAny) => void;
-  rootKey?: string;
-}> = ({ value, onChange, rootKey }) => {
+  value: FirestoreMap;
+  onChange?: (value: FirestoreMap) => void;
+}> = ({ value, onChange }) => {
   return (
     <DocumentProvider value={value}>
-      <RootField onChange={onChange} rootKey={rootKey} />
+      <RootField onChange={onChange} />
     </DocumentProvider>
   );
 };
@@ -43,30 +42,29 @@ export const Editor: React.FC<{
 /**
  * Special representation of a Document Root, where we don't want to show
  * the implicit top-level map.
- *
- * TODO: need to differentiate between root-field and root-document for
- * Add-Document flow.
  */
 const RootField: React.FC<{
-  onChange?: (value: FirestoreAny) => void;
-  rootKey?: string;
-}> = ({ onChange, rootKey }) => {
+  onChange?: (value: FirestoreMap) => void;
+}> = ({ onChange }) => {
   const state = useDocumentState();
 
   useEffect(() => {
     onChange && onChange(state);
   }, [onChange, state]);
 
-  return <NestedEditor path={[]} rootKey={rootKey} />;
+  return (
+    <>
+      {Object.keys(state).map(field => (
+        <NestedEditor key={field} path={[field]} />
+      ))}
+    </>
+  );
 };
 
 /**
  * Field with CTAs for editing as well as rendering applicable child-nodes
  */
-const NestedEditor: React.FC<{ path: string[]; rootKey?: string }> = ({
-  path,
-  rootKey,
-}) => {
+const NestedEditor: React.FC<{ path: string[] }> = ({ path }) => {
   const state = useFieldState(path);
   const dispatch = useDocumentDispatch()!;
 
@@ -90,14 +88,10 @@ const NestedEditor: React.FC<{ path: string[]; rootKey?: string }> = ({
   return (
     <>
       <div style={{ display: 'flex' }}>
-        <TextField
-          readOnly
-          value={getLeafPath(path) || rootKey}
-          placeholder="Field"
-        />
+        <TextField readOnly value={getLeafPath(path)} placeholder="Field" />
         <TextField readOnly value={getFieldType(state)} placeholder="Type" />
         <TextField
-          value={state}
+          value={JSON.stringify(state)}
           onChange={handleEditValue}
           placeholder="Value"
         />

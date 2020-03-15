@@ -14,18 +14,20 @@
  * limitations under the License.
  */
 
-import React, { useState } from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
+import { firestore } from 'firebase';
 import { Card, CardActionButtons, CardActionButton } from '@rmwc/card';
 import { Elevation } from '@rmwc/elevation';
 import { IconButton } from '@rmwc/icon-button';
 import { ListItem, ListItemMeta } from '@rmwc/list';
 
 import * as actions from './actions';
-import { FirestoreAny } from './models';
+import { FirestoreMap } from './models';
 import {
   useFieldState,
+  useDocumentState,
   useDocumentDispatch,
-  DocumentProvider,
+  DocumentRefProvider,
 } from './DocumentStore';
 import { Editor } from './Editor';
 import {
@@ -39,11 +41,14 @@ import {
 import './index.scss';
 
 /** Entry point for a Document/Field preview */
-export const Field: React.FC<{ value: FirestoreAny }> = ({ value }) => {
+export const Field: React.FC<{
+  value: FirestoreMap;
+  documentRef: firestore.DocumentReference;
+}> = ({ value, documentRef }) => {
   return (
-    <DocumentProvider value={value}>
+    <DocumentRefProvider value={value} documentRef={documentRef}>
       <RootField />
-    </DocumentProvider>
+    </DocumentRefProvider>
   );
 };
 
@@ -52,13 +57,12 @@ export const Field: React.FC<{ value: FirestoreAny }> = ({ value }) => {
  * the implicit top-level map.
  */
 const RootField: React.FC = () => {
-  const state = useFieldState([]);
+  const state = useDocumentState();
   return (
     <>
-      {isMap(state) &&
-        Object.keys(state).map(name => (
-          <NestedField key={name} path={[name]} />
-        ))}
+      {Object.keys(state).map(name => (
+        <NestedField key={name} path={[name]} />
+      ))}
     </>
   );
 };
@@ -70,6 +74,7 @@ const NestedField: React.FC<{
   path: string[];
   edit?: boolean;
 }> = ({ path, edit = false }) => {
+  const doc = useDocumentState();
   const state = useFieldState(path);
   const dispatch = useDocumentDispatch()!;
   const [isExpanded, setIsExpanded] = useState(true);
@@ -78,10 +83,24 @@ const NestedField: React.FC<{
 
   const fieldName = getLeafPath(path);
 
-  function handleDeleteField(e: React.MouseEvent<HTMLButtonElement>) {
-    e.stopPropagation();
-    dispatch(actions.deleteField(path));
-  }
+  useEffect(() => {
+    // console.log(path);
+  }, []);
+
+  // function handleDeleteField(e: React.MouseEvent<HTMLButtonElement>) {
+  //   e.stopPropagation();
+  //   console.log(path, doc);
+  //   dispatch(actions.deleteField(path));
+  // }
+
+  const handleDeleteField = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      console.log('delete path', path);
+      e.stopPropagation();
+      dispatch(actions.deleteField(path));
+    },
+    [dispatch, path]
+  );
 
   function handleEditField(e: React.MouseEvent<HTMLButtonElement>) {
     e.stopPropagation();
@@ -92,8 +111,9 @@ const NestedField: React.FC<{
     setIsEditing(false);
   }
 
-  function handleEditSave(value: FirestoreAny) {
-    dispatch(actions.updateField({ path, value }));
+  function handleEditSave(value: FirestoreMap) {
+    const foo = getLeafPath(path);
+    dispatch(actions.updateField({ path, value: value[foo] }));
     setIsEditing(false);
   }
 
@@ -110,15 +130,16 @@ const NestedField: React.FC<{
     setIsAddingField(false);
   }
 
-  function handleAddSave(value: FirestoreAny) {
-    dispatch(actions.addField({ path: addPath, value }));
+  function handleAddSave(value: FirestoreMap) {
+    const foo = getLeafPath(addPath);
+    dispatch(actions.addField({ path: addPath, value: value[foo] }));
     setIsAddingField(false);
   }
 
   let addPath: string[] = [];
   let childFields = null;
   if (isMap(state)) {
-    addPath = [...path, ''];
+    addPath = [...path, 'foo'];
     childFields = Object.keys(state).map(childLeaf => {
       const childPath = [...path, childLeaf];
       return <NestedField key={childLeaf} path={childPath} />;
@@ -133,7 +154,7 @@ const NestedField: React.FC<{
 
   return isEditing ? (
     <InlineEditor
-      value={state}
+      value={{ [getLeafPath(path)]: state }}
       path={path}
       onCancel={handleEditCancel}
       onSave={handleEditSave}
@@ -166,7 +187,7 @@ const NestedField: React.FC<{
       {isAddingField && addPath && (
         <InlineEditor
           key={getLeafPath(addPath)}
-          value={''}
+          value={{ [getLeafPath(addPath)]: '' }}
           path={addPath}
           onCancel={handleAddCancel}
           onSave={handleAddSave}
@@ -178,14 +199,14 @@ const NestedField: React.FC<{
 
 /** Editor entry point for a selected field */
 const InlineEditor: React.FC<{
-  value: FirestoreAny;
+  value: FirestoreMap;
   path: string[];
   onCancel: () => void;
-  onSave: (value: FirestoreAny) => void;
+  onSave: (value: FirestoreMap) => void;
 }> = ({ value, path, onCancel, onSave }) => {
   const [internalValue, setInternalValue] = useState(value);
 
-  function handleChange(value: FirestoreAny) {
+  function handleChange(value: FirestoreMap) {
     setInternalValue(value);
   }
 
@@ -203,11 +224,7 @@ const InlineEditor: React.FC<{
     <Elevation z={8} wrap>
       <Card className="Firestore-Field-inline-editor">
         <div>
-          <Editor
-            value={value}
-            onChange={handleChange}
-            rootKey={getLeafPath(path)}
-          />
+          <Editor value={value} onChange={handleChange} />
         </div>
         <CardActionButtons>
           <CardActionButton onClick={handleCancel}>Cancel</CardActionButton>

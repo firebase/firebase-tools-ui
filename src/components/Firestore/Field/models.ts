@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-export type FirestoreAny = any;
+import { firestore } from 'firebase';
 
 /** Field types supported by Firestore  */
 export enum FieldType {
@@ -29,3 +29,23 @@ export enum FieldType {
   STRING = 'string',
   TIMESTAMP = 'timestamp',
 }
+
+export type FirestoreAny = FirestoreMap | FirestoreArray | FirestorePrimitive;
+
+export type FirestorePrimitive =
+  | string
+  | number
+  | boolean
+  | null
+  | Date
+  | firestore.DocumentReference
+  | firestore.GeoPoint
+  | firestore.Blob
+  | firestore.Timestamp
+  | firestore.FieldValue;
+
+export type FirestoreArray = Array<FirestorePrimitive | FirestoreMap>;
+
+export type FirestoreMap = {
+  [field: string]: FirestoreAny;
+};

@@ -20,6 +20,7 @@ import { List, ListItem } from '@rmwc/list';
 import { Button } from '@rmwc/button';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 import { Field } from './Field';
+import { FirestoreMap } from './Field/models';
 
 export interface Props {
   reference: firestore.DocumentReference;
@@ -30,6 +31,8 @@ export const DocumentPreview: React.FC<Props> = ({ reference }) => {
 
   if (loading) return <div>Loading document...</div>;
   if (error) return <div>Error retrieving document</div>;
+
+  console.log(data);
 
   return (
     <>
@@ -43,7 +46,7 @@ export const DocumentPreview: React.FC<Props> = ({ reference }) => {
       </List>
 
       <List dense>
-        <Field value={data} />
+        <Field value={data as FirestoreMap} documentRef={reference} />
       </List>
     </>
   );

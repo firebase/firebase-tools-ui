@@ -27,7 +27,7 @@
     "redux-saga": "^1.1.1",
     "rmwc": "^5.7.1",
     "typesafe-actions": "^5.1.0",
-    "typescript": "3.6.4"
+    "typescript": "^3.8.3"
   },
   "scripts": {
     "start": "react-scripts start",
