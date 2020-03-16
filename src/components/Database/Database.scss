@@ -19,7 +19,7 @@
 }
 
 .Database-Picker {
-  min-width: 30%;
+  min-width: 20%;
 }
 
 .Database-Picker--primary-only {
@@ -28,7 +28,6 @@
 
 .Database-Database {
   flex: 1;
-  padding: 28px;
 
   // A few things in the data viewer uses position: absolute.
   position: relative;
