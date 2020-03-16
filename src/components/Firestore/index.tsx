@@ -72,7 +72,7 @@ export const Firestore: React.FC<Props> = ({ config, projectId }) => {
           </Button>
         </div>
         <Elevation z="2" wrap>
-          <Card className="canvas-card">
+          <Card>
             <CardActionBar>
               <IconButton
                 icon="home"

@@ -17,7 +17,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import * as firebase from 'firebase/app';
 import 'firebase/database';
-import { ThemeProvider } from '@rmwc/theme';
 import { connect } from 'react-redux';
 import { NodeContainer } from './DataViewer/NodeContainer';
 import { AppState } from '../../store';
@@ -37,11 +36,6 @@ export interface PropsFromState {
 
 export type Props = PropsFromState;
 
-const theme: Record<string, string> = {
-  primary: '#039be5',
-  primaryBg: '#039be5',
-};
-
 export const Database: React.FC<Props> = ({ config, namespace }) => {
   const [ref, setRef] = useState<firebase.database.Reference | undefined>(
     undefined
@@ -59,7 +53,7 @@ export const Database: React.FC<Props> = ({ config, namespace }) => {
   );
 
   return (
-    <ThemeProvider options={theme}>
+    <div className="Database-Database">
       <CardActionBar>
         <IconButton
           icon="home"
@@ -67,13 +61,13 @@ export const Database: React.FC<Props> = ({ config, namespace }) => {
         />
       </CardActionBar>
       {ref ? (
-        <div className="Database-Database">
+        <>
           <NodeContainer realtimeRef={ref} isViewRoot onNavigate={doNavigate} />
-        </div>
+        </>
       ) : (
         <p>Loading</p>
       )}
-    </ThemeProvider>
+    </div>
   );
 };
 

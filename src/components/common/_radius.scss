@@ -14,18 +14,13 @@
  * limitations under the License.
  */
 
-.App {
-  .mdc-card {
-    border-radius: 8px;
-  }
+$BORDER_RADIUS_CARD: 8px;
+$BORDER_RADIUS_CARD_TOP: $BORDER_RADIUS_CARD $BORDER_RADIUS_CARD 0 0;
+$BORDER_RADIUS_CARD_BOTTOM: 0 0 $BORDER_RADIUS_CARD $BORDER_RADIUS_CARD;
+$BORDER_RADIUS_CARD_LEFT: $BORDER_RADIUS_CARD 0 0 $BORDER_RADIUS_CARD;
+$BORDER_RADIUS_CARD_RIGHT: 0 $BORDER_RADIUS_CARD $BORDER_RADIUS_CARD 0;
 
-  .mdc-button {
-    text-transform: none;
-  }
-
-  // TODO: Use text-transform mixins once RMWC updates to @material/tabs v4.0+
-  // https://github.com/material-components/material-components-web/commit/22d7ad2fb1796fbd71a3a5ee9c7ab2e77c60e34e
-  .mdc-tab__text-label {
-    text-transform: none;
-  }
-}
+$BORDER_RADIUS_BUTTON: 8px;
+$BORDER_RADIUS_POPUP: 8px;
+$BORDER_RADIUS_DIALOG: 16px;
+$BORDER_RADIUS_INPUT: 4px;
