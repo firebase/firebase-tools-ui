@@ -23,12 +23,12 @@ import {
   useDocumentDispatch,
   useFieldState,
   DocumentProvider,
-} from './DocumentStore';
-import { FirestoreMap } from './models';
-import { isMap, isArray, getLeafPath, getFieldType } from './utils';
+} from './store';
+import { FirestoreMap } from '../models';
+import { isMap, isArray, getLeafPath, getFieldType } from '../utils';
 
 /** Entry point for a Document/Field editor */
-export const Editor: React.FC<{
+const DocumentEditor: React.FC<{
   value: FirestoreMap;
   onChange?: (value: FirestoreMap) => void;
 }> = ({ value, onChange }) => {
@@ -100,3 +100,5 @@ const NestedEditor: React.FC<{ path: string[] }> = ({ path }) => {
     </>
   );
 };
+
+export default DocumentEditor;

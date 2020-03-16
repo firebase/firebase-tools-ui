@@ -15,7 +15,6 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { firestore } from 'firebase';
 import './index.scss';
 import { Button } from '@rmwc/button';
 import { Card } from '@rmwc/card';
@@ -46,33 +45,6 @@ export const Firestore: React.FC<Props> = ({ config, projectId }) => {
 
     const api = new DatabaseApi(projectId, databaseId, config);
     setApi(api);
-
-    (window as any).db = api.database;
-    (window as any).firestore = firestore;
-
-    api.database
-      .collection('people')
-      .doc('john_doe')
-      .set({
-        first_name: 'john',
-        last_name: 'doe',
-        age: 42,
-        isAlive: true,
-        address: {
-          street: {
-            number: 84,
-            name: 'westminster rd',
-          },
-          city: 'chatham',
-          geo: new firestore.GeoPoint(4, 2),
-        },
-        aliases: [
-          'tj',
-          'papy',
-          'lambchops',
-          { hmm: 'ok', subList: ['entry1'] },
-        ],
-      });
 
     return function cleanup() {
       api.delete();

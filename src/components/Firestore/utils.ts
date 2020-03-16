@@ -64,14 +64,14 @@ export function getFieldType(value: FirestoreAny): FieldType {
   return typeof value.valueOf() as FieldType;
 }
 
-export function isMap(value: FirestoreAny): value is FirestoreMap {
+export function isMap(value: any): value is FirestoreMap {
   return getFieldType(value) === FieldType.MAP;
 }
 
-export function isArray(value: FirestoreAny): value is FirestoreArray {
+export function isArray(value: any): value is FirestoreArray {
   return getFieldType(value) === FieldType.ARRAY;
 }
 
-export function isPrimitive(value: FirestoreAny): value is FirestorePrimitive {
+export function isPrimitive(value: any): value is FirestorePrimitive {
   return !isMap(value) && !isArray(value);
 }

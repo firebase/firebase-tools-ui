@@ -14,11 +14,17 @@
  * limitations under the License.
  */
 
-.Firestore-Field-actions {
-  align-items: center;
-  display: flex;
-}
+import { createAction } from 'typesafe-actions';
 
-.Firestore-Field-inline-editor {
-  margin: 0 -8px;
-}
+import { FirestoreAny, FirestoreMap } from '../models';
+
+export const reset = createAction('@document/reset')<FirestoreMap>();
+export const addField = createAction('@document/add')<{
+  path: string[];
+  value: FirestoreAny;
+}>();
+export const updateField = createAction('@document/update')<{
+  path: string[];
+  value: FirestoreAny;
+}>();
+export const deleteField = createAction('@document/delete')<string[]>();
