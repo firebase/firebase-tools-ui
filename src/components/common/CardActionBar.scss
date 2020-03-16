@@ -21,11 +21,17 @@
   display: block;
 
   .CardActionBar-container {
-    border-radius: $BORDER_RADIUS_CARD_TOP;
     align-items: center;
     box-shadow: $GMP_SHADOW_DIVIDER_BOTTOM_INSET;
     display: flex;
     height: 56px;
     padding: 16px 16px 16px 2px; // home icon alignment
+  }
+}
+
+// only first when inside a Card
+.mdc-card > .CardActionBar:first-of-type {
+  .CardActionBar-container {
+    border-radius: $BORDER_RADIUS_CARD_TOP;
   }
 }
