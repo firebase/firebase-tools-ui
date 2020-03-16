@@ -15,8 +15,6 @@
  */
 
 import React, { ReactElement } from 'react';
-import { connect } from 'react-redux';
-import { AppState } from '../../store';
 import {
   List,
   ListGroup,
@@ -32,7 +30,7 @@ import './DatabasePicker.scss';
 import { Theme } from '@rmwc/theme';
 
 export interface PropsFromState {
-  databases?: string[];
+  databases: string[] | undefined;
 }
 
 export type Props = PropsFromState & {
@@ -107,10 +105,4 @@ export const DatabasePicker: React.FC<Props> = ({
   );
 };
 
-export const mapStateToProps = ({ database }: AppState) => ({
-  databases:
-    database.databases.databases &&
-    database.databases.databases.map(({ name }) => name),
-});
-
-export default connect(mapStateToProps)(DatabasePicker);
+export default DatabasePicker;

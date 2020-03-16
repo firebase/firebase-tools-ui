@@ -26,6 +26,9 @@ import { initDatabase } from '../../firebase';
 
 import './Database.scss';
 import './DataViewer/index.scss';
+import { CardActionBar } from '../common/CardActionBar';
+import { IconButton } from '@rmwc/icon-button';
+import { Link } from 'react-router-dom';
 
 export interface PropsFromState {
   namespace: string;
@@ -56,9 +59,17 @@ export const Database: React.FC<Props> = ({ config, namespace }) => {
   );
 
   return (
-    <ThemeProvider options={theme} className="Database-Database">
+    <ThemeProvider options={theme}>
+      <CardActionBar>
+        <IconButton
+          icon="home"
+          tag={props => <Link to={`/database/${namespace}/data`} {...props} />}
+        />
+      </CardActionBar>
       {ref ? (
-        <NodeContainer realtimeRef={ref} isViewRoot onNavigate={doNavigate} />
+        <div className="Database-Database">
+          <NodeContainer realtimeRef={ref} isViewRoot onNavigate={doNavigate} />
+        </div>
       ) : (
         <p>Loading</p>
       )}
