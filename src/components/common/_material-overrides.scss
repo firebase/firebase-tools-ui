@@ -14,25 +14,32 @@
  * limitations under the License.
  */
 
+@import '@material/button/mixins';
+@import '@material/card/mixins';
+@import '@material/dialog/mixins';
+
 @import './components/common/radius';
 
-.mdc-card,
+.mdc-card {
+  @include mdc-card-shape-radius($BORDER_RADIUS_CARD);
+}
+
+.mdc-dialog {
+  @include mdc-dialog-shape-radius($BORDER_RADIUS_DIALOG);
+}
+
 .mdc-button {
-  border-radius: $BORDER_RADIUS_CARD;
-}
+  @include mdc-button-shape-radius($BORDER_RADIUS_CARD);
+  text-transform: none;
 
-// These sometimes exist outside .App (e.g. DialogQueue)
-.mdc-dialog .mdc-dialog__surface {
-  border-radius: $BORDER_RADIUS_DIALOG;
-}
-
-.mdc-button:hover {
-  &::before,
-  &::after,
-  &.mdc-list-item::before,
-  &.mdc-list-item::after {
-    // darker hover for buttons
-    opacity: 0.08;
+  &:hover {
+    &::before,
+    &::after,
+    &.mdc-list-item::before,
+    &.mdc-list-item::after {
+      // darker hover for buttons
+      opacity: 0.08;
+    }
   }
 }
 
@@ -46,12 +53,8 @@
   }
 }
 
-.mdc-button {
-  text-transform: none;
-}
-
 // TODO: Use text-transform mixins once RMWC updates to @material/tabs v4.0+
 // https://github.com/material-components/material-components-web/commit/22d7ad2fb1796fbd71a3a5ee9c7ab2e77c60e34e
-.mdc-tab__text-label {
+.mdc-tab {
   text-transform: none;
 }
