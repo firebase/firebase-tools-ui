@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import DatabaseDefaultRoute from './components/Database/DatabaseDefaultRoute';
+import Database from './components/Database';
 import Firestore from './components/Firestore';
 import Home from './components/Home';
 
@@ -36,7 +36,7 @@ export const routes: ReadonlyArray<Route> = [
   },
   {
     path: '/database',
-    component: DatabaseDefaultRoute,
+    component: Database,
     label: 'RTDB',
     exact: false,
     showInNav: true,
