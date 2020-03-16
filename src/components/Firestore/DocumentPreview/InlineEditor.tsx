@@ -21,7 +21,7 @@ import { Elevation } from '@rmwc/elevation';
 
 import DocumentEditor from '../DocumentEditor';
 import { FirestoreMap } from '../models';
-import { getLeafPath } from '../utils';
+import { getLeafKey } from '../utils';
 
 /** Editor entry point for a selected field */
 const InlineEditor: React.FC<{
@@ -44,7 +44,7 @@ const InlineEditor: React.FC<{
   function handleSave(e: React.MouseEvent<HTMLButtonElement>) {
     e.stopPropagation();
     // TODO key could change in the editor
-    onSave(getLeafPath(path), internalValue);
+    onSave(getLeafKey(path), internalValue);
   }
 
   return (

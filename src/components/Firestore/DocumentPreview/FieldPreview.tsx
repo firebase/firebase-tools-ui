@@ -25,7 +25,7 @@ import { useDocumentState, useFieldState } from './store';
 import {
   getFieldType,
   isPrimitive,
-  getLeafPath,
+  getLeafKey,
   isMap,
   isArray,
 } from '../utils';
@@ -43,6 +43,7 @@ const FieldPreview: React.FC<{
   let addPath: string[] = [];
   let childFields = null;
   if (isMap(state)) {
+    // Inline editor for new field will default to key: ''
     addPath = [...path, ''];
     childFields = Object.keys(state).map(childLeaf => {
       const childPath = [...path, childLeaf];
@@ -55,6 +56,7 @@ const FieldPreview: React.FC<{
       );
     });
   } else if (isArray(state)) {
+    // Inline editor for new field will default to key: '{index}'
     addPath = [...path, `${state.length}`];
     childFields = state.map((value, index) => {
       const childPath = [...path, `${index}`];
@@ -66,7 +68,7 @@ const FieldPreview: React.FC<{
 
   return isEditing ? (
     <InlineEditor
-      value={{ [getLeafPath(path)]: state }}
+      value={{ [getLeafKey(path)]: state }}
       path={path}
       onCancel={() => {
         setIsEditing(false);
@@ -80,7 +82,7 @@ const FieldPreview: React.FC<{
     <>
       <ListItem onClick={() => setIsExpanded(!isExpanded)}>
         <span>
-          {getLeafPath(path)}:{JSON.stringify(state)}
+          {getLeafKey(path)}:{JSON.stringify(state)}
         </span>
         ({getFieldType(state)})
         <ListItemMeta>
@@ -115,7 +117,7 @@ const FieldPreview: React.FC<{
       </ListItem>
       {addPath && isAddingField && (
         <InlineEditor
-          value={{ [getLeafPath(addPath)]: '' }}
+          value={{ [getLeafKey(addPath)]: '' }}
           path={addPath}
           onCancel={() => {
             setIsAddingField(false);

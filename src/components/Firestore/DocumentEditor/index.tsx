@@ -25,7 +25,7 @@ import {
   DocumentProvider,
 } from './store';
 import { FirestoreMap } from '../models';
-import { isMap, isArray, getLeafPath, getFieldType } from '../utils';
+import { isMap, isArray, getLeafKey, getFieldType } from '../utils';
 
 /** Entry point for a Document/Field editor */
 const DocumentEditor: React.FC<{
@@ -62,20 +62,20 @@ const RootField: React.FC<{
 };
 
 /**
- * Field with CTAs for editing as well as rendering applicable child-nodes
+ * Field with call-to-actions for editing as well as rendering applicable child-nodes
  */
 const NestedEditor: React.FC<{ path: string[] }> = ({ path }) => {
   const state = useFieldState(path);
   const dispatch = useDocumentDispatch()!;
 
-  let childFields = null;
+  let childEditors = null;
   if (isMap(state)) {
-    childFields = Object.keys(state).map(childLeaf => {
+    childEditors = Object.keys(state).map(childLeaf => {
       const childPath = [...path, childLeaf];
       return <NestedEditor key={childLeaf} path={childPath} />;
     });
   } else if (isArray(state)) {
-    childFields = state.map((value, index) => {
+    childEditors = state.map((value, index) => {
       const childPath = [...path, `${index}`];
       return <NestedEditor key={index} path={childPath} />;
     });
@@ -88,7 +88,7 @@ const NestedEditor: React.FC<{ path: string[] }> = ({ path }) => {
   return (
     <>
       <div style={{ display: 'flex' }}>
-        <TextField readOnly value={getLeafPath(path)} placeholder="Field" />
+        <TextField readOnly value={getLeafKey(path)} placeholder="Field" />
         <TextField readOnly value={getFieldType(state)} placeholder="Type" />
         <TextField
           value={JSON.stringify(state)}
@@ -96,7 +96,7 @@ const NestedEditor: React.FC<{ path: string[] }> = ({ path }) => {
           placeholder="Value"
         />
       </div>
-      {childFields && <div>{childFields}</div>}
+      {childEditors && <div>{childEditors}</div>}
     </>
   );
 };

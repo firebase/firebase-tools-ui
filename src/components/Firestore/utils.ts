@@ -28,7 +28,7 @@ export function getParentPath(path: string[]) {
   return path.slice(0, path.length - 1);
 }
 
-export function getLeafPath(path: string[]) {
+export function getLeafKey(path: string[]) {
   return path[path.length - 1];
 }
 

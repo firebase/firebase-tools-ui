@@ -20,7 +20,7 @@ import produce from 'immer';
 import { Action, createReducer } from 'typesafe-actions';
 
 import * as actions from './actions';
-import { isMap, isArray, getLeafPath, getParentPath } from '../utils';
+import { isMap, isArray, getLeafKey, getParentPath } from '../utils';
 import { FirestoreAny, FirestoreMap } from '../models';
 
 const reducer = createReducer<FirestoreMap, Action>({})
@@ -32,7 +32,7 @@ const reducer = createReducer<FirestoreMap, Action>({})
     produce((draft, { payload }) => {
       const parent = get(draft, getParentPath(payload.path)) || draft;
       if (isMap(parent)) {
-        parent[getLeafPath(payload.path)] = payload.value;
+        parent[getLeafKey(payload.path)] = payload.value;
       } else if (isArray(parent)) {
         parent.push(payload.value);
       }
@@ -43,9 +43,9 @@ const reducer = createReducer<FirestoreMap, Action>({})
     produce((draft, { payload }) => {
       const parent = get(draft, getParentPath(payload.path)) || draft;
       if (isMap(parent)) {
-        parent[getLeafPath(payload.path)] = payload.value;
+        parent[getLeafKey(payload.path)] = payload.value;
       } else if (isArray(parent)) {
-        parent[parseInt(getLeafPath(payload.path))] = payload.value;
+        parent[Number(getLeafKey(payload.path))] = payload.value;
       } else {
         return payload.value;
       }
@@ -56,9 +56,9 @@ const reducer = createReducer<FirestoreMap, Action>({})
     produce((draft, { payload }) => {
       const parent = get(draft, getParentPath(payload)) || draft;
       if (isMap(parent)) {
-        delete parent[getLeafPath(payload)];
+        delete parent[getLeafKey(payload)];
       } else if (isArray(parent)) {
-        parent.splice(parseInt(getLeafPath(payload)), 1);
+        parent.splice(Number(getLeafKey(payload)), 1);
       }
     })
   );
