@@ -11,7 +11,7 @@
     "@types/react-redux": "^7.1.5",
     "@types/recompose": "^0.30.7",
     "express": "^4.17.1",
-    "firebase": "^7.6.0",
+    "firebase": "^7.11.0",
     "font-awesome": "^4.7.0",
     "keycode": "^2.2.0",
     "node-fetch": "^2.6.0",
@@ -20,7 +20,7 @@
     "react-firebase-hooks": "^2.1.1",
     "react-redux": "^7.1.1",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "^3.3.0",
+    "react-scripts": "^3.4.0",
     "redux": "^4.0.4",
     "redux-saga": "^1.1.1",
     "rmwc": "^5.7.1",
@@ -61,9 +61,9 @@
     "jest-fetch-mock": "^3.0.1",
     "lint-staged": "^9.4.2",
     "mutationobserver-shim": "^0.3.3",
-    "node-sass": "^4.13.0",
+    "node-sass": "^4.13.1",
     "prettier": "^1.18.2",
-    "webpack-cli": "^3.3.10"
+    "webpack-cli": "^3.3.11"
   },
   "husky": {
     "hooks": {
