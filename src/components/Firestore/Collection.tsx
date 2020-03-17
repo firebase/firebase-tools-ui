@@ -57,7 +57,7 @@ export const Collection: React.FC<Props> = ({ collection }) => {
       <div className="Firestore-Collection">
         <PanelHeader
           id={collection.id}
-          icon={<Icon icon="collections_bookmark" />}
+          icon={<Icon icon={{ icon: 'collections_bookmark', size: 'small' }} />}
         />
 
         {/* Actions */}

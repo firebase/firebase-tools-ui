@@ -15,26 +15,24 @@
  */
 
 import React from 'react';
-import { ThemeProvider, Theme } from '@rmwc/theme';
 import { Typography } from '@rmwc/typography';
-import { grey100 } from '../../colors';
 import './PanelHeader.scss';
+import { CardActionBar } from '../common/CardActionBar';
+import { Theme } from '@rmwc/theme';
 
 export const PanelHeader: React.FC<{ id: string; icon: React.ReactNode }> = ({
   id,
   icon,
 }) => {
   return (
-    <ThemeProvider options={{ surface: grey100 }}>
-      <Theme use={['surface']} wrap>
-        <div className="Firestore-PanelHeader">
-          <Theme use={['textSecondaryOnBackground']}>{icon}</Theme>
-          <Typography use="body1" className="Firestore-PanelHeader-title">
-            {id}
-          </Typography>
-        </div>
-      </Theme>
-    </ThemeProvider>
+    <div className="Firestore-PanelHeader">
+      <CardActionBar>
+        <Theme use={['textSecondaryOnBackground']}>{icon}</Theme>
+        <Typography use="body2" className="Firestore-PanelHeader-title">
+          {id}
+        </Typography>
+      </CardActionBar>
+    </div>
   );
 };
 

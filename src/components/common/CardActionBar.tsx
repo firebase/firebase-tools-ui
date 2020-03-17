@@ -14,25 +14,18 @@
  * limitations under the License.
  */
 
-@import-normalize;
+import React from 'react';
+import { ThemeProvider, Theme } from '@rmwc/theme';
+import { grey100 } from '../../colors';
 
-* {
-  box-sizing: border-box;
-}
+import './CardActionBar.scss';
 
-@import '../node_modules/material-components-web/dist/material-components-web.css';
-@import './components/common/material-overrides';
-
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
+export const CardActionBar: React.FC = ({ children }) => {
+  return (
+    <ThemeProvider options={{ surface: grey100 }} className="CardActionBar">
+      <Theme use={['surface']} className="CardActionBar-container" tag="div">
+        {children}
+      </Theme>
+    </ThemeProvider>
+  );
+};

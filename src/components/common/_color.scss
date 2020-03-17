@@ -14,25 +14,10 @@
  * limitations under the License.
  */
 
-@import-normalize;
+$QUANTUM_BLACK_ALPHA_12: rgba(0, 0, 0, 0.12); // e.g. dividers
 
-* {
-  box-sizing: border-box;
-}
+$COLOR_TEXT_PRIMARY: rgba(0, 0, 0, 0.87);
+$COLOR_TEXT_SECONDARY: rgba(0, 0, 0, 0.54);
+$COLOR_BACKGROUND_KEY: rgba(0, 0, 0, 0.08);
 
-@import '../node_modules/material-components-web/dist/material-components-web.css';
-@import './components/common/material-overrides';
-
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
+$COLOR_DIVIDER: $QUANTUM_BLACK_ALPHA_12;

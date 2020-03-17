@@ -14,25 +14,24 @@
  * limitations under the License.
  */
 
-@import-normalize;
+@import '../common/radius';
+@import '../common/shadow';
 
-* {
-  box-sizing: border-box;
+.CardActionBar {
+  display: block;
+
+  .CardActionBar-container {
+    align-items: center;
+    box-shadow: $GMP_SHADOW_DIVIDER_BOTTOM_INSET;
+    display: flex;
+    height: 56px;
+    padding: 16px 16px 16px 2px; // home icon alignment
+  }
 }
 
-@import '../node_modules/material-components-web/dist/material-components-web.css';
-@import './components/common/material-overrides';
-
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+// only first when inside a Card
+.mdc-card > .CardActionBar:first-of-type {
+  .CardActionBar-container {
+    border-radius: $BORDER_RADIUS_CARD_TOP;
+  }
 }

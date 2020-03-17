@@ -24,11 +24,11 @@ a.mdc-list-item.mdc-list-item--activated {
 
 .Database-Picker {
   background-color: #fafafa;
-  border-radius: 16px 0 0 16px;
   border-right: solid 1px #dcdcdc;
 
   .mdc-list-group__subheader {
-    margin: 0 16px;
+    // Align horizontally with list icon and vertically with CardActionBar.
+    margin: 8px 16px 11px;
   }
 
   .mdc-list-divider {

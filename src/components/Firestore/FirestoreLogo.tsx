@@ -16,12 +16,14 @@
 
 import React from 'react';
 import { Icon } from '@rmwc/icon';
+import { IconSizeT } from '@rmwc/types';
 
-export const FirestoreLogo: React.FC = () => {
+export const FirestoreLogo: React.FC<{ size?: IconSizeT }> = ({ size }) => {
   return (
     <Icon
       icon={{
         strategy: 'component',
+        size,
         icon: (
           <svg
             width="24"

@@ -24,6 +24,11 @@ import * as firebase from 'firebase/app';
 
 import { DatabaseConfig, FirestoreConfig } from './store/config';
 
+interface WindowWithDb extends Window {
+  database?: firebase.database.Database;
+  firestore?: firebase.firestore.Firestore;
+}
+
 export function initDatabase(
   config: DatabaseConfig,
   namespace: string
@@ -34,7 +39,17 @@ export function initDatabase(
     `Database Component: ${databaseURL} ${Math.random()}`
   );
   applyAdminAuth(app);
-  return [app.database(), { cleanup: () => app.delete() }];
+  const db = app.database();
+  // only log the first time
+  if (!(window as WindowWithDb).database) {
+    console.log(`🔥 Realtime Database is available at window.database.
+
+    Try:
+    database.ref().set({hello: 'world!'});
+    database.ref().once('value').then( snap => console.log(snap.val()) );`);
+  }
+  (window as WindowWithDb).database = db;
+  return [db, { cleanup: () => app.delete() }];
 }
 
 export function initFirestore(
@@ -51,6 +66,15 @@ export function initFirestore(
     host: config.hostAndPort,
     ssl: false,
   });
+  // only log the first time
+  if (!(window as WindowWithDb).firestore) {
+    console.log(`🔥 Firestore is available at window.firestore.
+
+    Try:
+    firestore.doc('hello/world').set({hello: 'world!'});
+    firestore.doc('hello/world').get().then( snap => console.log(snap.data()) );`);
+  }
+  (window as WindowWithDb).firestore = firestore;
   return [firestore, { cleanup: () => app.delete() }];
 }
 

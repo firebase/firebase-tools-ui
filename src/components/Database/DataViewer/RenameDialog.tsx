@@ -24,6 +24,7 @@ import {
   DialogActions,
   DialogButton,
 } from '@rmwc/dialog';
+import { Theme } from '@rmwc/theme';
 
 export interface Props {
   realtimeRef: firebase.database.Reference;
@@ -79,10 +80,10 @@ export const RenameDialog = React.memo<Props>(function RenameDialog$({
           </div>
         </DialogContent>
         <DialogActions>
-          <DialogButton type="button" action="close">
-            Cancel
-          </DialogButton>
-          <DialogButton type="submit" raised>
+          <Theme use={['textSecondaryOnBackground']} wrap>
+            <DialogButton action="close">Cancel</DialogButton>
+          </Theme>
+          <DialogButton type="submit" unelevated>
             Rename
           </DialogButton>
         </DialogActions>

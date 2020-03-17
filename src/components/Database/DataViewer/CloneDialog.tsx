@@ -25,6 +25,7 @@ import {
   DialogButton,
 } from '@rmwc/dialog';
 import { Typography } from '@rmwc/typography';
+import { Theme } from '@rmwc/theme';
 
 export interface Props {
   realtimeRef: firebase.database.Reference;
@@ -107,10 +108,10 @@ export const CloneDialog = React.memo<Props>(function CloneDialog$({
               ))}
         </DialogContent>
         <DialogActions>
-          <DialogButton type="button" action="close">
-            Cancel
-          </DialogButton>
-          <DialogButton type="submit" raised>
+          <Theme use={['textSecondaryOnBackground']} wrap>
+            <DialogButton action="close">Cancel</DialogButton>
+          </Theme>
+          <DialogButton unelevated type="submit">
             Clone
           </DialogButton>
         </DialogActions>

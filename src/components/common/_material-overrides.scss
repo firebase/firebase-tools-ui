@@ -1,0 +1,60 @@
+/**
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@import '@material/button/mixins';
+@import '@material/card/mixins';
+@import '@material/dialog/mixins';
+
+@import './components/common/radius';
+
+.mdc-card {
+  @include mdc-card-shape-radius($BORDER_RADIUS_CARD);
+}
+
+.mdc-dialog {
+  @include mdc-dialog-shape-radius($BORDER_RADIUS_DIALOG);
+}
+
+.mdc-button {
+  @include mdc-button-shape-radius($BORDER_RADIUS_CARD);
+  text-transform: none;
+
+  &:hover {
+    &::before,
+    &::after,
+    &.mdc-list-item::before,
+    &.mdc-list-item::after {
+      // darker hover for buttons
+      opacity: 0.08;
+    }
+  }
+}
+
+:not(.mdc-list--non-interactive) {
+  > .mdc-list-item:not(.mdc-list-item--disabled) {
+    &::before,
+    &::after {
+      // colored hover instead of gray
+      background-color: var(--mdc-theme-primary);
+    }
+  }
+}
+
+// TODO: Use text-transform mixins once RMWC updates to @material/tabs v4.0+
+// https://github.com/material-components/material-components-web/commit/22d7ad2fb1796fbd71a3a5ee9c7ab2e77c60e34e
+.mdc-tab {
+  text-transform: none;
+}
