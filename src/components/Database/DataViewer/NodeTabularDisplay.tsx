@@ -15,19 +15,21 @@
  */
 
 import './NodeTabularDisplay.scss';
-import * as React from 'react';
-import { useEffect, useState } from 'react';
+
+import { Button } from '@rmwc/button';
 import {
   DataTable,
-  DataTableContent,
-  DataTableHead,
-  DataTableRow,
-  DataTableHeadCell,
   DataTableBody,
   DataTableCell,
+  DataTableContent,
+  DataTableHead,
+  DataTableHeadCell,
+  DataTableRow,
 } from '@rmwc/data-table';
-import { Button } from '@rmwc/button';
 import { Typography } from '@rmwc/typography';
+import * as React from 'react';
+import { useEffect, useState } from 'react';
+
 import { DEFAULT_PAGE_SIZE } from './common/view_model';
 import { ValueDisplay } from './ValueDisplay';
 

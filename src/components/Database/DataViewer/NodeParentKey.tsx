@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-import * as React from 'react';
-import { Typography } from '@rmwc/typography';
 import { Icon } from '@rmwc/icon';
+import { Typography } from '@rmwc/typography';
+import * as React from 'react';
+
 import { getDbRootUrl } from './common/view_model';
 
 export interface Props {

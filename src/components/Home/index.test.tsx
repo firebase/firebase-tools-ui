@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { render } from '@testing-library/react';
-import { Home } from './index';
+import React from 'react';
 import { MemoryRouter } from 'react-router';
+
+import { Home } from './index';
 
 it('renders fetching placeholder when fetching config', () => {
   const config = { fetching: true };

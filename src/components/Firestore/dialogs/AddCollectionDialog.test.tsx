@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
+import { RenderResult, fireEvent, render, wait } from '@testing-library/react';
 import React from 'react';
-import { render, wait, fireEvent, RenderResult } from '@testing-library/react';
+import { act } from 'react-dom/test-utils';
 
+import DatabaseApi from '../api';
 import {
   fakeCollectionReference,
   fakeDocumentReference,
 } from '../testing/models';
 import { AddCollectionDialog } from './AddCollectionDialog';
-
-import DatabaseApi from '../api';
-import { act } from 'react-dom/test-utils';
 
 jest.mock('../api');
 

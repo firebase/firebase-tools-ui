@@ -14,20 +14,22 @@
  * limitations under the License.
  */
 
-import React, { useState, useEffect, useCallback } from 'react';
-import * as firebase from 'firebase/app';
 import 'firebase/database';
-import { connect } from 'react-redux';
-import { NodeContainer } from './DataViewer/NodeContainer';
-import { AppState } from '../../store';
-import { DatabaseConfig } from '../../store/config';
-import { initDatabase } from '../../firebase';
 
 import './Database.scss';
 import './DataViewer/index.scss';
-import { CardActionBar } from '../common/CardActionBar';
+
 import { IconButton } from '@rmwc/icon-button';
+import * as firebase from 'firebase/app';
+import React, { useCallback, useEffect, useState } from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+
+import { initDatabase } from '../../firebase';
+import { AppState } from '../../store';
+import { DatabaseConfig } from '../../store/config';
+import { CardActionBar } from '../common/CardActionBar';
+import { NodeContainer } from './DataViewer/NodeContainer';
 
 export interface PropsFromState {
   namespace: string;

@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
+import './App.scss';
+
+import { DialogQueue } from '@rmwc/dialog';
+import { Grid } from '@rmwc/grid';
+import { Theme } from '@rmwc/theme';
 import React from 'react';
 import { Route } from 'react-router-dom';
-import { Theme } from '@rmwc/theme';
-import { DialogQueue } from '@rmwc/dialog';
-import './App.scss';
+
 import AppBar from './components/AppBar';
-import { routes } from './routes';
 import { dialogs } from './components/DialogQueue';
-import { Grid } from '@rmwc/grid';
+import { routes } from './routes';
 
 const App: React.FC = () => {
   return (

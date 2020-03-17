@@ -14,18 +14,19 @@
  * limitations under the License.
  */
 
-import * as React from 'react';
 import * as firebase from 'firebase/app';
+import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { Subject } from 'rxjs';
-import { NodeParent } from './NodeParent';
-import { NodeLeaf } from './NodeLeaf';
+
+import { canDoRealtime, createViewModel } from './common/fetch';
 import {
-  ViewModel,
   DEFAULT_QUERY_PARAMS,
   QueryParams,
+  ViewModel,
 } from './common/view_model';
-import { createViewModel, canDoRealtime } from './common/fetch';
+import { NodeLeaf } from './NodeLeaf';
+import { NodeParent } from './NodeParent';
 
 export interface Props {
   realtimeRef: firebase.database.Reference;

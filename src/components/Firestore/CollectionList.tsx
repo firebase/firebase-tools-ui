@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
-import React, { useState, useEffect } from 'react';
-import { firestore } from 'firebase';
-import { useRouteMatch, NavLink } from 'react-router-dom';
-import { List, ListItem } from '@rmwc/list';
-import { Button } from '@rmwc/button';
-
 import './index.scss';
-import { useApi } from './ApiContext';
+
+import { Button } from '@rmwc/button';
+import { List, ListItem } from '@rmwc/list';
+import { firestore } from 'firebase';
+import React, { useEffect, useState } from 'react';
+import { NavLink, useRouteMatch } from 'react-router-dom';
+
 import DatabaseApi from './api';
+import { useApi } from './ApiContext';
 import {
   AddCollectionDialog,
   AddCollectionDialogValue,

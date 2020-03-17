@@ -14,19 +14,20 @@
  * limitations under the License.
  */
 
-import { getType, ActionType } from 'typesafe-actions';
-import { call, put, takeLatest, select, take } from 'redux-saga/effects';
+import { call, put, select, take, takeLatest } from 'redux-saga/effects';
+import { ActionType, getType } from 'typesafe-actions';
+
 import {
-  databasesFetchRequest,
-  databasesFetchSuccess,
-  databasesFetchError,
-} from './actions';
-import { DatabaseInfo } from './types';
-import {
-  DatabaseConfig,
   Config,
+  DatabaseConfig,
   fetchSuccess as configFetchSuccess,
 } from '../config';
+import {
+  databasesFetchError,
+  databasesFetchRequest,
+  databasesFetchSuccess,
+} from './actions';
+import { DatabaseInfo } from './types';
 import { AppState } from '..';
 
 export async function fetchDatabasesApi(

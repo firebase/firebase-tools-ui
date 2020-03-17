@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-import React from 'react';
-import { Typography } from '@rmwc/typography';
 import './PanelHeader.scss';
-import { CardActionBar } from '../common/CardActionBar';
+
 import { Theme } from '@rmwc/theme';
+import { Typography } from '@rmwc/typography';
+import React from 'react';
+
+import { CardActionBar } from '../common/CardActionBar';
 
 export const PanelHeader: React.FC<{ id: string; icon: React.ReactNode }> = ({
   id,

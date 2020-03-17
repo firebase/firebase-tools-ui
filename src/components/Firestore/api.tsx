@@ -15,8 +15,9 @@
  */
 
 import { firestore } from 'firebase';
-import { FirestoreConfig } from '../../store/config';
+
 import { initFirestore } from '../../firebase';
+import { FirestoreConfig } from '../../store/config';
 import { FirestoreApi } from './models';
 
 type RequestMethod = 'POST' | 'DELETE';

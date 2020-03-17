@@ -14,21 +14,22 @@
  * limitations under the License.
  */
 
-import React, { useState } from 'react';
-import { firestore } from 'firebase';
-import { Route, useRouteMatch, NavLink } from 'react-router-dom';
-import { useCollection } from 'react-firebase-hooks/firestore';
+import './index.scss';
+
+import { Button } from '@rmwc/button';
 import { Icon } from '@rmwc/icon';
 import { List, ListItem } from '@rmwc/list';
-import { Button } from '@rmwc/button';
+import { firestore } from 'firebase';
+import React, { useState } from 'react';
+import { useCollection } from 'react-firebase-hooks/firestore';
+import { NavLink, Route, useRouteMatch } from 'react-router-dom';
+
+import {
+  AddDocumentDialog,
+  AddDocumentDialogValue,
+} from './dialogs/AddDocumentDialog';
 import { Document } from './Document';
 import PanelHeader from './PanelHeader';
-
-import './index.scss';
-import {
-  AddDocumentDialogValue,
-  AddDocumentDialog,
-} from './dialogs/AddDocumentDialog';
 
 export interface Props {
   collection: firestore.CollectionReference;

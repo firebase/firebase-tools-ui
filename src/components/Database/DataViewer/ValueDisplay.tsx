@@ -15,8 +15,9 @@
  */
 
 import './ValueDisplay.scss';
-import * as React from 'react';
+
 import { Typography, TypographyProps } from '@rmwc/typography';
+import * as React from 'react';
 import { DOMAttributes } from 'react';
 
 export interface Props extends DOMAttributes<HTMLSpanElement>, TypographyProps {

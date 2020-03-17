@@ -14,22 +14,23 @@
  * limitations under the License.
  */
 
-import React, { useEffect } from 'react';
-import ReactDOM from 'react-dom';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import { ThemeProvider } from '@rmwc/theme';
-import { RMWCProvider } from '@rmwc/provider';
+import '@rmwc/tooltip/tooltip.css';
 
 // General + library styling. Should come before all local imports to allow
 // local styling to override them.
 import './index.scss';
-import '@rmwc/tooltip/tooltip.css';
 
-import { fetchRequest as fetchConfigRequest } from './store/config';
-import configureStore from './configureStore';
+import { RMWCProvider } from '@rmwc/provider';
+import { ThemeProvider } from '@rmwc/theme';
+import React, { useEffect } from 'react';
+import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+
 import App from './App';
 import { background, primary } from './colors';
+import configureStore from './configureStore';
+import { fetchRequest as fetchConfigRequest } from './store/config';
 
 const store = configureStore();
 

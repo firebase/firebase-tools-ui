@@ -1,11 +1,12 @@
-import React, { ReactElement, useEffect } from 'react';
-import { Elevation } from '@rmwc/elevation';
-import DatabasePicker from './DatabasePicker';
-import { AppState } from '../../store';
-import { MapDispatchToPropsFunction, connect } from 'react-redux';
-import { databasesFetchRequest } from '../../store/database';
-import { GridCell } from '@rmwc/grid';
 import { Card } from '@rmwc/card';
+import { Elevation } from '@rmwc/elevation';
+import { GridCell } from '@rmwc/grid';
+import React, { ReactElement, useEffect } from 'react';
+import { MapDispatchToPropsFunction, connect } from 'react-redux';
+
+import { AppState } from '../../store';
+import { databasesFetchRequest } from '../../store/database';
+import DatabasePicker from './DatabasePicker';
 
 export interface PropsFromState {
   databases: string[] | undefined;
@@ -65,7 +66,4 @@ export const mapDispatchToProps: MapDispatchToPropsFunction<
   fetchDatabases: () => void dispatch(databasesFetchRequest()),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(DatabaseContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(DatabaseContainer);

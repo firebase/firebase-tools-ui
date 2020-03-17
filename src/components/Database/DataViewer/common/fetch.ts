@@ -15,7 +15,7 @@
  */
 
 import * as firebase from 'firebase/app';
-import { defer, from, Observable, of, ReplaySubject } from 'rxjs';
+import { Observable, ReplaySubject, defer, from, of } from 'rxjs';
 import {
   catchError,
   concatMap,

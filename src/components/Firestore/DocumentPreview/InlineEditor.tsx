@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import React, { useState } from 'react';
-import { Card, CardActionButtons, CardActionButton } from '@rmwc/card';
+import { Card, CardActionButton, CardActionButtons } from '@rmwc/card';
 import { Elevation } from '@rmwc/elevation';
+import React, { useState } from 'react';
 
 import DocumentEditor from '../DocumentEditor';
 import { FirestoreMap } from '../models';

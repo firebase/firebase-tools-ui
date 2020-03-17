@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-import React, { useEffect } from 'react';
 import { TextField } from '@rmwc/textfield';
+import React, { useEffect } from 'react';
 
+import { FirestoreMap } from '../models';
+import { getFieldType, isArray, isMap, lastFieldName } from '../utils';
 import * as actions from './actions';
 import {
-  useDocumentState,
-  useDocumentDispatch,
-  useFieldState,
   DocumentProvider,
+  useDocumentDispatch,
+  useDocumentState,
+  useFieldState,
 } from './store';
-import { FirestoreMap } from '../models';
-import { isMap, isArray, lastFieldName, getFieldType } from '../utils';
 
 /** Entry point for a Document/Field editor */
 const DocumentEditor: React.FC<{

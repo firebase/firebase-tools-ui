@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import { databaseReducer } from './reducer';
 import {
+  databasesFetchError,
   databasesFetchRequest,
   databasesFetchSuccess,
-  databasesFetchError,
 } from './actions';
+import { databaseReducer } from './reducer';
 
 it(`${databasesFetchRequest} => sets fetching to true`, () => {
   expect(
