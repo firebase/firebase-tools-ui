@@ -101,7 +101,6 @@ export function* pollDatabases(): Generator<any> {
 }
 
 export function* databaseSaga() {
-  // TODO: Consider fetching automatically every 5 seconds.
   yield all([
     takeLatest(getType(databasesFetchRequest), fetchDatabases),
     pollDatabases(),
