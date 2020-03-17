@@ -16,12 +16,11 @@
 
 import React from 'react';
 import get from 'lodash.get';
-import last from 'lodash.last';
 import produce from 'immer';
 import { Action, createReducer } from 'typesafe-actions';
 
 import * as actions from './actions';
-import { isMap, isArray, getParentPath } from '../utils';
+import { isMap, isArray, lastFieldName, getParentPath } from '../utils';
 import { FirestoreAny, FirestoreMap } from '../models';
 
 const reducer = createReducer<FirestoreMap, Action>({})
@@ -33,7 +32,7 @@ const reducer = createReducer<FirestoreMap, Action>({})
     produce((draft, { payload }) => {
       const parent = get(draft, getParentPath(payload.path)) || draft;
       if (isMap(parent)) {
-        parent[last(payload.path) as string] = payload.value;
+        parent[lastFieldName(payload.path)] = payload.value;
       } else if (isArray(parent)) {
         parent.push(payload.value);
       }
@@ -44,9 +43,9 @@ const reducer = createReducer<FirestoreMap, Action>({})
     produce((draft, { payload }) => {
       const parent = get(draft, getParentPath(payload.path)) || draft;
       if (isMap(parent)) {
-        parent[last(payload.path) as string] = payload.value;
+        parent[lastFieldName(payload.path)] = payload.value;
       } else if (isArray(parent)) {
-        parent[Number(last(payload.path))] = payload.value;
+        parent[Number(lastFieldName(payload.path))] = payload.value;
       } else {
         return payload.value;
       }
@@ -57,9 +56,9 @@ const reducer = createReducer<FirestoreMap, Action>({})
     produce((draft, { payload }) => {
       const parent = get(draft, getParentPath(payload)) || draft;
       if (isMap(parent)) {
-        delete parent[last(payload) as string];
+        delete parent[lastFieldName(payload)];
       } else if (isArray(parent)) {
-        parent.splice(Number(last(payload)), 1);
+        parent.splice(Number(lastFieldName(payload)), 1);
       }
     })
   );

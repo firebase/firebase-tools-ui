@@ -28,6 +28,12 @@ export function getParentPath(path: string[]) {
   return path.slice(0, path.length - 1);
 }
 
+export function lastFieldName(path: string[]): string {
+  if (!path.length)
+    throw new Error(`${path} is empty and has no _last_ field name`);
+  return path[path.length - 1];
+}
+
 export function getFieldType(value: FirestoreAny): FieldType {
   if (value === null) {
     return FieldType.NULL;
