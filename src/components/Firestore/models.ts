@@ -31,3 +31,37 @@ export type FirestoreApi = DocumentCollectionDatabaseApi<
   firestore.Firestore,
   firestore.DocumentReference
 >;
+
+/** Field types supported by Firestore  */
+export enum FieldType {
+  ARRAY = 'array',
+  BLOB = 'blob',
+  BOOLEAN = 'boolean',
+  GEOPOINT = 'geopoint',
+  MAP = 'map',
+  NULL = 'null',
+  NUMBER = 'number',
+  REFERENCE = 'reference',
+  STRING = 'string',
+  TIMESTAMP = 'timestamp',
+}
+
+export type FirestoreAny = FirestoreMap | FirestoreArray | FirestorePrimitive;
+
+export type FirestorePrimitive =
+  | string
+  | number
+  | boolean
+  | null
+  | Date
+  | firestore.DocumentReference
+  | firestore.GeoPoint
+  | firestore.Blob
+  | firestore.Timestamp
+  | firestore.FieldValue;
+
+export type FirestoreArray = Array<FirestorePrimitive | FirestoreMap>;
+
+export type FirestoreMap = {
+  [field: string]: FirestoreAny;
+};

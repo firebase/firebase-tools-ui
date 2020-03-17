@@ -15,7 +15,7 @@
  */
 
 import React from 'react';
-import { render } from '@testing-library/react';
+import { act, render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { useCollection, useDocumentData } from 'react-firebase-hooks/firestore';
 
@@ -42,6 +42,16 @@ it('shows the list of documents in the collection', () => {
     <MemoryRouter>
       <Collection collection={collectionReference} />
     </MemoryRouter>
+  );
+
+  act(() =>
+    collectionReference.setSnapshot({
+      docs: [
+        fakeDocumentSnapshot({
+          ref: fakeDocumentReference({ id: 'cool-doc-1' }),
+        }),
+      ],
+    })
   );
 
   expect(getByText(/my-stuff/)).not.toBeNull();

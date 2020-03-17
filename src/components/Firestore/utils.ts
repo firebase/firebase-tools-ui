@@ -15,9 +15,20 @@
  */
 
 import { firestore } from 'firebase';
-import { FieldType } from './models';
 
-export function getFieldType(value: any): FieldType {
+import {
+  FieldType,
+  FirestoreAny,
+  FirestoreArray,
+  FirestoreMap,
+  FirestorePrimitive,
+} from './models';
+
+export function getParentPath(path: string[]) {
+  return path.slice(0, path.length - 1);
+}
+
+export function getFieldType(value: FirestoreAny): FieldType {
   if (value === null) {
     return FieldType.NULL;
   }
@@ -47,4 +58,16 @@ export function getFieldType(value: any): FieldType {
   }
 
   return typeof value.valueOf() as FieldType;
+}
+
+export function isMap(value: any): value is FirestoreMap {
+  return getFieldType(value) === FieldType.MAP;
+}
+
+export function isArray(value: any): value is FirestoreArray {
+  return getFieldType(value) === FieldType.ARRAY;
+}
+
+export function isPrimitive(value: any): value is FirestorePrimitive {
+  return !isMap(value) && !isArray(value);
 }
