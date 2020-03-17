@@ -24,8 +24,25 @@ import {
   useFieldState,
   DocumentProvider,
 } from './store';
-import { FirestoreMap } from '../models';
-import { isMap, isArray, lastFieldName, getFieldType } from '../utils';
+import { FirestoreAny, FirestoreMap } from '../models';
+import {
+  isArray,
+  isBoolean,
+  isString,
+  isGeoPoint,
+  isNumber,
+  isMap,
+  isReference,
+  isTimestamp,
+  lastFieldName,
+  getFieldType,
+} from '../utils';
+import BooleanEditor from './BooleanEditor';
+import GeoPointEditor from './GeoPointEditor';
+import NumberEditor from './NumberEditor';
+import ReferenceEditor from './ReferenceEditor';
+import StringEditor from './StringEditor';
+import TimestampEditor from './TimestampEditor';
 
 /** Entry point for a Document/Field editor */
 const DocumentEditor: React.FC<{
@@ -81,20 +98,39 @@ const NestedEditor: React.FC<{ path: string[] }> = ({ path }) => {
     });
   }
 
-  function handleEditValue(e: React.FormEvent<HTMLInputElement>) {
-    dispatch(actions.updateField({ path, value: e.currentTarget.value }));
+  function handleEditValue(value: FirestoreAny) {
+    dispatch(actions.updateField({ path, value }));
   }
+
+  const fieldEditor = (
+    <>
+      {isString(state) && (
+        <StringEditor value={state} onChange={handleEditValue} />
+      )}
+      {isNumber(state) && (
+        <NumberEditor value={state} onChange={handleEditValue} />
+      )}
+      {isBoolean(state) && (
+        <BooleanEditor value={state} onChange={handleEditValue} />
+      )}
+      {isGeoPoint(state) && (
+        <GeoPointEditor value={state} onChange={handleEditValue} />
+      )}
+      {isTimestamp(state) && (
+        <TimestampEditor value={state} onChange={handleEditValue} />
+      )}
+      {isReference(state) && (
+        <ReferenceEditor value={state} onChange={handleEditValue} />
+      )}
+    </>
+  );
 
   return (
     <>
       <div style={{ display: 'flex' }}>
         <TextField readOnly value={lastFieldName(path)} placeholder="Field" />
         <TextField readOnly value={getFieldType(state)} placeholder="Type" />
-        <TextField
-          value={JSON.stringify(state)}
-          onChange={handleEditValue}
-          placeholder="Value"
-        />
+        {fieldEditor}
       </div>
       {childEditors && <div>{childEditors}</div>}
     </>

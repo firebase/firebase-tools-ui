@@ -68,10 +68,10 @@ describe('loaded document', () => {
   });
 
   it('updates a field', () => {
-    const { getByPlaceholderText, getByText } = result;
+    const { getByDisplayValue, getByText } = result;
 
     getByText('edit').click();
-    fireEvent.change(getByPlaceholderText('Value'), {
+    fireEvent.change(getByDisplayValue('bar'), {
       target: { value: 'new' },
     });
     getByText('Save').click();
@@ -144,10 +144,10 @@ describe('loaded array', () => {
   });
 
   it('updates a top-level array element', () => {
-    const { getByPlaceholderText, getByText, queryAllByText } = result;
+    const { getByDisplayValue, getByText, queryAllByText } = result;
     // update the bravo-element
     queryAllByText('edit')[1].click();
-    fireEvent.change(getByPlaceholderText('Value'), {
+    fireEvent.change(getByDisplayValue('bravo'), {
       target: { value: 'new' },
     });
     getByText('Save').click();
@@ -158,10 +158,10 @@ describe('loaded array', () => {
   });
 
   it('updates a nested array element', () => {
-    const { getByPlaceholderText, getByText, queryAllByText } = result;
+    const { getByDisplayValue, getByText, queryAllByText } = result;
     // update the wowah-element
     queryAllByText('edit')[3].click();
-    fireEvent.change(getByPlaceholderText('Value'), {
+    fireEvent.change(getByDisplayValue('wowah'), {
       target: { value: 'new' },
     });
     getByText('Save').click();
@@ -172,10 +172,10 @@ describe('loaded array', () => {
   });
 
   it('adds a top-level array element', () => {
-    const { getByPlaceholderText, getByText, queryAllByText } = result;
+    const { getByDisplayValue, getByText, queryAllByText } = result;
     // ignore top-level add
     queryAllByText('add')[1].click();
-    fireEvent.change(getByPlaceholderText('Value'), {
+    fireEvent.change(getByDisplayValue(''), {
       target: { value: 'new' },
     });
     getByText('Save').click();
@@ -186,10 +186,10 @@ describe('loaded array', () => {
   });
 
   it('adds a nested array element', () => {
-    const { getByPlaceholderText, getByText, queryAllByText } = result;
+    const { getByDisplayValue, getByText, queryAllByText } = result;
     // ignore top-level add
     queryAllByText('add')[2].click();
-    fireEvent.change(getByPlaceholderText('Value'), {
+    fireEvent.change(getByDisplayValue(''), {
       target: { value: 'new' },
     });
     getByText('Save').click();
@@ -237,10 +237,10 @@ describe('loaded map', () => {
   });
 
   it('updates a map element', () => {
-    const { getByPlaceholderText, getByText, queryAllByText } = result;
+    const { getByDisplayValue, getByText, queryAllByText } = result;
     // update the alpha-element
     queryAllByText('edit')[1].click();
-    fireEvent.change(getByPlaceholderText('Value'), {
+    fireEvent.change(getByDisplayValue('potter'), {
       target: { value: 'new' },
     });
     getByText('Save').click();
@@ -253,10 +253,10 @@ describe('loaded map', () => {
   // TODO: re-enable when editor-keys are editable, defaulting to '' results
   // in an invalid field path
   it.skip('adds a map element', () => {
-    const { getByPlaceholderText, getByText, queryAllByText } = result;
+    const { getByDisplayValue, getByText, queryAllByText } = result;
     // ignore top-level add
     queryAllByText('add')[1].click();
-    fireEvent.change(getByPlaceholderText('Value'), {
+    fireEvent.change(getByDisplayValue(''), {
       target: { value: 'new' },
     });
     getByText('Save').click();
