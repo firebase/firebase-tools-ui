@@ -29,13 +29,13 @@ import {
 } from './sagas';
 import { DatabaseInfo } from './types';
 
-describe('databasesFetchConfig', () => {
+describe('fetchDatabases', () => {
   it('calls RTDB api and dispatches databasesFetchSuccess on success', () => {
     const gen = fetchDatabases(databasesFetchRequest());
     expect(gen.next()).toEqual({ done: false, value: call(getDbConfig) });
 
     const config: GetDbConfigReturn = {
-      config: { hostAndPort: 'localhost:9000' },
+      config: { hostAndPort: 'localhost:9000', host: 'localhost', port: 9000 },
       projectId: 'foo',
     };
     expect(gen.next(config)).toEqual({
@@ -56,7 +56,7 @@ describe('databasesFetchConfig', () => {
     expect(gen.next()).toEqual({ done: false, value: call(getDbConfig) });
 
     const config: GetDbConfigReturn = {
-      config: { hostAndPort: 'localhost:9000' },
+      config: { hostAndPort: 'localhost:9000', host: 'localhost', port: 9000 },
       projectId: 'foo',
     };
     expect(gen.next(config)).toEqual({

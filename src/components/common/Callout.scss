@@ -1,0 +1,40 @@
+.Callout {
+  display: flex;
+  position: relative;
+
+  margin-bottom: 24px;
+  .mdc-layout-grid__cell > & {
+    margin-bottom: 0;
+  }
+
+  &::before {
+    background-color: var(--mdc-theme-secondary);
+    bottom: 0;
+    content: '';
+    left: 0;
+    opacity: 0.08;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+}
+
+.Callout-body {
+  padding: 12px 0 12px 8px;
+  margin-right: 24px;
+
+  .rmwc-icon {
+    vertical-align: middle;
+    margin-left: 18px;
+    margin-right: 8px;
+  }
+}
+
+.Callout-actions {
+  align-items: center;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: row;
+  justify-content: flex-end;
+  padding-right: 8px;
+}
