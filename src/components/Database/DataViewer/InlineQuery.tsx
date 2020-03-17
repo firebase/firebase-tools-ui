@@ -14,26 +14,27 @@
  * limitations under the License.
  */
 
-import * as React from 'react';
-import {
-  QueryParams,
-  DEFAULT_PAGE_SIZE,
-  DEFAULT_QUERY_PARAMS,
-  jsonIshValue,
-} from './common/view_model';
-import { Select } from '@rmwc/select';
-import { TextField } from '@rmwc/textfield';
-import { useState, useEffect, useRef } from 'react';
-import keycode from 'keycode';
+import './InlineQuery.scss';
+
 import {
   Card,
+  CardActionButton,
   CardActionButtons,
   CardActions,
-  CardActionButton,
 } from '@rmwc/card';
-
-import './InlineQuery.scss';
+import { Select } from '@rmwc/select';
+import { TextField } from '@rmwc/textfield';
 import { Theme } from '@rmwc/theme';
+import keycode from 'keycode';
+import * as React from 'react';
+import { useEffect, useRef, useState } from 'react';
+
+import {
+  DEFAULT_PAGE_SIZE,
+  DEFAULT_QUERY_PARAMS,
+  QueryParams,
+  jsonIshValue,
+} from './common/view_model';
 
 export interface Props {
   params?: QueryParams;

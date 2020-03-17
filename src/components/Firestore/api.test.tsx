@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import DatabaseApi from './api';
 import { initFirestore } from '../../firebase';
+import DatabaseApi from './api';
 import {
   fakeCollectionReference,
   fakeDocumentReference,

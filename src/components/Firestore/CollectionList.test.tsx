@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
+import { render, wait } from '@testing-library/react';
 import React from 'react';
-import { wait, act, render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import DatabaseApi from './api';
 
+import DatabaseApi from './api';
 import { ApiProvider } from './ApiContext';
-import {
-  fakeFirestoreApi,
-  fakeCollectionReference,
-  fakeDocumentSnapshot,
-  fakeDocumentReference,
-} from './testing/models';
 import CollectionList from './CollectionList';
+import {
+  fakeCollectionReference,
+  fakeDocumentReference,
+  fakeDocumentSnapshot,
+  fakeFirestoreApi,
+} from './testing/models';
 
 jest.mock('./api');
 

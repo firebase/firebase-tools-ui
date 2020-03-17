@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-import React from 'react';
-import { ThemeProvider, Theme } from '@rmwc/theme';
-import { grey100 } from '../../colors';
-
 import './CardActionBar.scss';
+
+import { Theme, ThemeProvider } from '@rmwc/theme';
+import React from 'react';
+
+import { grey100 } from '../../colors';
 
 export const CardActionBar: React.FC = ({ children }) => {
   return (

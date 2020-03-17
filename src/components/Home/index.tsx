@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 
+import './index.scss';
+
+import { Card, CardActionButton, CardActionIcons } from '@rmwc/card';
+import { GridCell, GridInner } from '@rmwc/grid';
+import { ListDivider } from '@rmwc/list';
+import { Typography } from '@rmwc/typography';
 import React from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+
 import { AppState } from '../../store';
 import { ConfigState } from '../../store/config';
-import './index.scss';
-import { Typography } from '@rmwc/typography';
-import { GridCell, GridInner } from '@rmwc/grid';
-import { Card, CardActionButton, CardActionIcons } from '@rmwc/card';
-import { ListDivider } from '@rmwc/list';
-import { Link } from 'react-router-dom';
 
 export interface PropsFromState {
   config: ConfigState;

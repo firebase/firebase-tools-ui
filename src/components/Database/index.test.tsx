@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-import * as React from 'react';
 import { render } from '@testing-library/react';
-import { MemoryRouter, Route } from 'react-router-dom';
-import { DatabaseDefaultRoute } from './index';
+import * as React from 'react';
 import { Provider } from 'react-redux';
+import { MemoryRouter, Route } from 'react-router-dom';
+
 import configureStore from '../../configureStore';
+import { DatabaseDefaultRoute } from './index';
 
 it('renders loading when projectId is not ready', () => {
   const { getByText } = render(

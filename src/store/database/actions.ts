@@ -15,6 +15,7 @@
  */
 
 import { createAction } from 'typesafe-actions';
+
 import { DatabaseInfo } from './types';
 
 export const databasesFetchRequest = createAction(

@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import React from 'react';
-import { IconPropT } from '@rmwc/types';
-
 import '@rmwc/icon/icon.css';
+
+import { IconPropT } from '@rmwc/types';
+import React from 'react';
 
 export const databaseIcon: IconPropT = {
   strategy: 'component',

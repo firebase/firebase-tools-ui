@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
+import { fetchError, fetchRequest, fetchSuccess } from './actions';
 import { configReducer } from './reducer';
-import { fetchRequest, fetchSuccess, fetchError } from './actions';
 
 it(`${fetchRequest} => sets fetching to true`, () => {
   expect(configReducer({ fetching: false }, fetchRequest())).toEqual({

@@ -16,8 +16,8 @@
 
 import { firestore } from 'firebase';
 
-import { FirestoreArray, FirestoreAny, FirestoreMap } from '../models';
-import { isMap, isArray, lastFieldName } from '../utils';
+import { FirestoreAny, FirestoreArray, FirestoreMap } from '../models';
+import { isArray, isMap, lastFieldName } from '../utils';
 
 export function deleteField(
   documentRef: firestore.DocumentReference,

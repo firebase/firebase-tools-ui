@@ -15,18 +15,19 @@
  */
 
 import { call, put } from 'redux-saga/effects';
-import { DatabaseInfo } from './types';
+
 import {
+  databasesFetchError,
+  databasesFetchRequest,
+  databasesFetchSuccess,
+} from './actions';
+import {
+  GetDbConfigReturn,
   fetchDatabases,
   fetchDatabasesApi,
   getDbConfig,
-  GetDbConfigReturn,
 } from './sagas';
-import {
-  databasesFetchRequest,
-  databasesFetchSuccess,
-  databasesFetchError,
-} from './actions';
+import { DatabaseInfo } from './types';
 
 describe('databasesFetchConfig', () => {
   it('calls RTDB api and dispatches databasesFetchSuccess on success', () => {

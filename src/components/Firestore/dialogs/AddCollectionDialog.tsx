@@ -14,21 +14,22 @@
  * limitations under the License.
  */
 
-import React, { useState } from 'react';
 import {
-  DialogButton,
   Dialog,
-  DialogTitle,
   DialogActions,
+  DialogButton,
   DialogContent,
-  DialogProps,
   DialogOnCloseEventT,
+  DialogProps,
+  DialogTitle,
 } from '@rmwc/dialog';
+import { TextField } from '@rmwc/textfield';
 import { Theme } from '@rmwc/theme';
 import { firestore } from 'firebase';
-import { TextField } from '@rmwc/textfield';
-import { AddDocumentStep, AddDocumentDialogValue } from './AddDocumentDialog';
+import React, { useState } from 'react';
+
 import DatabaseApi from '../api';
+import { AddDocumentDialogValue, AddDocumentStep } from './AddDocumentDialog';
 
 interface AddCollectionStepProps {
   documentRef?: firestore.DocumentReference;

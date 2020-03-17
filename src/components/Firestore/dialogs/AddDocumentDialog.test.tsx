@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
+import { fireEvent, render, wait } from '@testing-library/react';
 import React from 'react';
-import { render, wait, fireEvent } from '@testing-library/react';
+import { act } from 'react-dom/test-utils';
 
 import {
   fakeCollectionReference,
   fakeDocumentReference,
 } from '../testing/models';
 import { AddDocumentDialog } from './AddDocumentDialog';
-import { act } from 'react-dom/test-utils';
 
 const docRef = fakeDocumentReference({
   id: 'random-identifier',

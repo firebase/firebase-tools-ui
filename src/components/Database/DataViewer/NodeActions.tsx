@@ -14,20 +14,21 @@
  * limitations under the License.
  */
 
+import { Icon } from '@rmwc/icon';
+import { IconButton } from '@rmwc/icon-button';
+import { Menu, MenuItem, MenuSurfaceAnchor } from '@rmwc/menu';
+import { Tooltip } from '@rmwc/tooltip';
 import * as React from 'react';
 import { useState } from 'react';
-import { IconButton } from '@rmwc/icon-button';
-import { Tooltip } from '@rmwc/tooltip';
-import { Icon } from '@rmwc/icon';
-import { Menu, MenuItem, MenuSurfaceAnchor } from '@rmwc/menu';
+
+import { CloneDialog } from './CloneDialog';
 import {
   ChildrenDisplayType,
-  QueryParams,
   DEFAULT_QUERY_PARAMS,
+  QueryParams,
 } from './common/view_model';
 import { EditNode } from './EditNode';
 import { InlineQuery } from './InlineQuery';
-import { CloneDialog } from './CloneDialog';
 import { RenameDialog } from './RenameDialog';
 
 export interface Props {

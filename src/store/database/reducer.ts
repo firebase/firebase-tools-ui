@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-import { createReducer, Action } from 'typesafe-actions';
-import { DatabaseState } from './types';
+import { Action, createReducer } from 'typesafe-actions';
+
 import {
+  databasesFetchError,
   databasesFetchRequest,
   databasesFetchSuccess,
-  databasesFetchError,
 } from './actions';
+import { DatabaseState } from './types';
 
 export const databaseReducer = createReducer<DatabaseState, Action>({
   databases: { fetching: false },

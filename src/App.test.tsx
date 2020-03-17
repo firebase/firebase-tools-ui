@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
+import { act, render, wait } from '@testing-library/react';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
+
 import App from './App';
-import configureStore from './configureStore';
-import { act, render, wait } from '@testing-library/react';
 import { alert } from './components/DialogQueue';
+import configureStore from './configureStore';
 
 it('renders without crashing', () => {
   const div = document.createElement('div');

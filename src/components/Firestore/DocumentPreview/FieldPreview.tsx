@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-import React, { useState } from 'react';
-import { firestore } from 'firebase';
-import { ListItem, ListItemMeta } from '@rmwc/list';
 import { IconButton } from '@rmwc/icon-button';
+import { ListItem, ListItemMeta } from '@rmwc/list';
+import { firestore } from 'firebase';
+import React, { useState } from 'react';
 
-import { updateField, deleteField } from './api';
-import InlineEditor from './InlineEditor';
-import { useDocumentState, useFieldState } from './store';
 import {
   getFieldType,
-  isPrimitive,
-  isMap,
   isArray,
+  isMap,
+  isPrimitive,
   lastFieldName,
 } from '../utils';
+import { deleteField, updateField } from './api';
+import InlineEditor from './InlineEditor';
+import { useDocumentState, useFieldState } from './store';
 
 const FieldPreview: React.FC<{
   path: string[];

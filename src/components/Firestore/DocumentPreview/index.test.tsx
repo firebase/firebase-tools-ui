@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
 import { firestore } from 'firebase';
+import React from 'react';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 
-import DocumentPreview from './index';
 import { fakeDocumentReference } from '../testing/models';
+import DocumentPreview from './index';
 
 jest.mock('react-firebase-hooks/firestore');
 
@@ -137,10 +137,13 @@ describe('loaded array', () => {
     const { queryAllByText } = result;
     // delete the second bravo-element
     queryAllByText('delete')[3].click();
-    expect(documentReference.update).toHaveBeenCalledWith(
-      new firestore.FieldPath('foo'),
-      ['alpha', 'bravo', ['wowah']]
-    );
+    expect(
+      documentReference.update
+    ).toHaveBeenCalledWith(new firestore.FieldPath('foo'), [
+      'alpha',
+      'bravo',
+      ['wowah'],
+    ]);
   });
 
   it('updates a top-level array element', () => {
@@ -151,10 +154,14 @@ describe('loaded array', () => {
       target: { value: 'new' },
     });
     getByText('Save').click();
-    expect(documentReference.update).toHaveBeenCalledWith(
-      new firestore.FieldPath('foo'),
-      ['alpha', 'new', 'bravo', ['wowah']]
-    );
+    expect(
+      documentReference.update
+    ).toHaveBeenCalledWith(new firestore.FieldPath('foo'), [
+      'alpha',
+      'new',
+      'bravo',
+      ['wowah'],
+    ]);
   });
 
   it('updates a nested array element', () => {
@@ -165,10 +172,14 @@ describe('loaded array', () => {
       target: { value: 'new' },
     });
     getByText('Save').click();
-    expect(documentReference.update).toHaveBeenCalledWith(
-      new firestore.FieldPath('foo'),
-      ['alpha', 'bravo', 'bravo', ['new']]
-    );
+    expect(
+      documentReference.update
+    ).toHaveBeenCalledWith(new firestore.FieldPath('foo'), [
+      'alpha',
+      'bravo',
+      'bravo',
+      ['new'],
+    ]);
   });
 
   it('adds a top-level array element', () => {
@@ -193,10 +204,14 @@ describe('loaded array', () => {
       target: { value: 'new' },
     });
     getByText('Save').click();
-    expect(documentReference.update).toHaveBeenCalledWith(
-      new firestore.FieldPath('foo'),
-      ['alpha', 'bravo', 'bravo', ['wowah', 'new']]
-    );
+    expect(
+      documentReference.update
+    ).toHaveBeenCalledWith(new firestore.FieldPath('foo'), [
+      'alpha',
+      'bravo',
+      'bravo',
+      ['wowah', 'new'],
+    ]);
   });
 });
 

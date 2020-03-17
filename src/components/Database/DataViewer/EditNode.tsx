@@ -14,21 +14,22 @@
  * limitations under the License.
  */
 
-import * as React from 'react';
-import { TextField } from '@rmwc/textfield';
+import './EditNode.scss';
+
 import {
   Card,
-  CardActions,
-  CardActionButtons,
   CardActionButton,
+  CardActionButtons,
+  CardActions,
 } from '@rmwc/card';
-import { Typography } from '@rmwc/typography';
-import { useState, useRef, useEffect } from 'react';
-
-import './EditNode.scss';
-import keycode from 'keycode';
-import { jsonIshValue, getDbRootUrl } from './common/view_model';
+import { TextField } from '@rmwc/textfield';
 import { Theme } from '@rmwc/theme';
+import { Typography } from '@rmwc/typography';
+import keycode from 'keycode';
+import * as React from 'react';
+import { useEffect, useRef, useState } from 'react';
+
+import { getDbRootUrl, jsonIshValue } from './common/view_model';
 
 export interface Props {
   value?: string | boolean | number;
