@@ -17,7 +17,7 @@
 import { firestore } from 'firebase';
 
 import { FirestoreArray, FirestoreAny, FirestoreMap } from '../models';
-import { isMap, isArray } from '../utils';
+import { getLeafKey, isMap, isArray } from '../utils';
 
 export function deleteField(
   documentRef: firestore.DocumentReference,
@@ -67,7 +67,7 @@ function adjustPayloadForArray(
       nestedObjectToModify = nestedObjectToModify[pathSegment] as FirestoreMap;
     } else if (isArray(nestedObjectToModify)) {
       nestedObjectToModify = nestedObjectToModify[
-        parseInt(pathSegment)
+        Number(pathSegment)
       ] as FirestoreMap;
     }
     if (nestedObjectToModify instanceof Array && !topLevelArray) {
@@ -94,7 +94,11 @@ function adjustPayloadForArray(
     //   ]
     // }
 
-    if (topLevelArray === nestedObjectToModify) {
+    if (
+      topLevelArray === nestedObjectToModify &&
+      Number(getLeafKey(fieldPath)) >= (topLevelArray as {}[]).length
+    ) {
+      // Appending a new element to the top-level array
       return {
         [topLevelKey.join('.')]: firestore.FieldValue.arrayUnion(value),
       };

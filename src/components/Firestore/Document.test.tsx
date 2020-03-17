@@ -48,8 +48,6 @@ it('shows the root-id', () => {
 });
 
 it('shows the document-id', () => {
-  useDocumentData.mockReturnValueOnce([]);
-
   const { getByText } = render(
     <MemoryRouter>
       <ApiProvider value={fakeFirestoreApi()}>
@@ -62,8 +60,6 @@ it('shows the document-id', () => {
 });
 
 it('shows the root collection-list', () => {
-  useDocumentData.mockReturnValueOnce([]);
-
   const { getByTestId } = render(
     <MemoryRouter>
       <ApiProvider value={fakeFirestoreApi()}>

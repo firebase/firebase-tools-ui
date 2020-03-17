@@ -37,6 +37,7 @@ const DocumentPreview: React.FC<Props> = ({ reference }) => {
 
   if (loading) return <div>Loading document...</div>;
   if (error) return <div>Error retrieving document</div>;
+  if (!data) return <div>Error resolving document</div>;
 
   return (
     <>

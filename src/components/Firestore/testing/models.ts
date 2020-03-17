@@ -14,6 +14,7 @@ export function fakeDocumentReference({
         id: collectionPath,
         path: `${path}/${collectionPath}`,
       }),
+    update: jest.fn(),
   } as unknown) as firestore.DocumentReference;
 }
 

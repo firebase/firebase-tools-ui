@@ -1,0 +1,247 @@
+/**
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import React from 'react';
+import { fireEvent, render } from '@testing-library/react';
+import { firestore } from 'firebase';
+import { useDocumentData } from 'react-firebase-hooks/firestore';
+
+import DocumentPreview from './index';
+import { fakeDocumentReference } from '../testing/models';
+
+jest.mock('react-firebase-hooks/firestore');
+
+it('renders loading text', () => {
+  useDocumentData.mockReturnValueOnce([{}, true]);
+
+  const { getByText } = render(
+    <DocumentPreview reference={fakeDocumentReference()} />
+  );
+
+  expect(getByText('Loading document...')).not.toBe(null);
+});
+
+describe('loaded document', () => {
+  let result: RenderResult;
+  let documentReference: jest.Mock;
+
+  beforeEach(() => {
+    useDocumentData.mockReturnValueOnce([
+      {
+        foo: 'bar',
+      },
+    ]);
+    documentReference = fakeDocumentReference();
+
+    result = render(<DocumentPreview reference={documentReference} />);
+  });
+
+  it('renders a field', () => {
+    const { getByText } = result;
+
+    expect(getByText('foo:"bar"')).not.toBe(null);
+    expect(getByText('(string)')).not.toBe(null);
+  });
+
+  it('deletes a field', () => {
+    const { getByText } = result;
+
+    getByText('delete').click();
+
+    expect(documentReference.update).toHaveBeenCalledWith({
+      foo: firestore.FieldValue.delete(),
+    });
+  });
+
+  it('updates a field', () => {
+    const { getByPlaceholderText, getByText } = result;
+
+    getByText('edit').click();
+    fireEvent.change(getByPlaceholderText('Value'), {
+      target: { value: 'new' },
+    });
+    getByText('Save').click();
+
+    expect(documentReference.update).toHaveBeenCalledWith({
+      foo: 'new',
+    });
+  });
+
+  it('does not show `add` a field', () => {
+    const { getByText, queryAllByText } = result;
+
+    expect(queryAllByText('add').length).toBe(1);
+  });
+});
+
+describe('loaded array', () => {
+  let result: RenderResult;
+  let documentReference: jest.Mock;
+
+  beforeEach(() => {
+    useDocumentData.mockReturnValueOnce([
+      {
+        foo: ['alpha', 'bravo', ['wowah']],
+      },
+    ]);
+    documentReference = fakeDocumentReference();
+
+    result = render(<DocumentPreview reference={documentReference} />);
+  });
+
+  it('renders a field', () => {
+    const { getByText, findByText } = result;
+
+    expect(getByText('foo:["alpha","bravo",["wowah"]]')).not.toBe(null);
+    expect(findByText('(array)')).not.toBe(null);
+  });
+
+  it('shows child-elements when expanded', () => {
+    const { getByText, queryByText } = result;
+
+    expect(getByText('0:"alpha"')).not.toBe(null);
+    expect(getByText('1:"bravo"')).not.toBe(null);
+
+    getByText('foo:["alpha","bravo",["wowah"]]').click();
+
+    expect(queryByText('0:"alpha"')).toBe(null);
+    expect(queryByText('1:"bravo"')).toBe(null);
+  });
+
+  it('deletes a top-level array element', () => {
+    const { queryAllByText } = result;
+    // delete the alpha-element
+    queryAllByText('delete')[1].click();
+    expect(documentReference.update).toHaveBeenCalledWith({
+      foo: firestore.FieldValue.arrayRemove('alpha'),
+    });
+  });
+
+  it('updates a top-level array element', () => {
+    const { getByPlaceholderText, getByText, queryAllByText } = result;
+    // update the bravo-element
+    queryAllByText('edit')[1].click();
+    fireEvent.change(getByPlaceholderText('Value'), {
+      target: { value: 'new' },
+    });
+    getByText('Save').click();
+    expect(documentReference.update).toHaveBeenCalledWith({
+      foo: ['alpha', 'new', ['wowah']],
+    });
+  });
+
+  it('updates a nested array element', () => {
+    const { getByPlaceholderText, getByText, queryAllByText } = result;
+    // update the wowah-element
+    queryAllByText('edit')[2].click();
+    fireEvent.change(getByPlaceholderText('Value'), {
+      target: { value: 'new' },
+    });
+    getByText('Save').click();
+    expect(documentReference.update).toHaveBeenCalledWith({
+      foo: ['alpha', 'bravo', ['new']],
+    });
+  });
+
+  it('adds a top-level array element', () => {
+    const { getByPlaceholderText, getByText, queryAllByText } = result;
+    // ignore top-level add
+    queryAllByText('add')[1].click();
+    fireEvent.change(getByPlaceholderText('Value'), {
+      target: { value: 'new' },
+    });
+    getByText('Save').click();
+    expect(documentReference.update).toHaveBeenCalledWith({
+      foo: firestore.FieldValue.arrayUnion('new'),
+    });
+  });
+
+  it('adds a nested array element', () => {
+    const { getByPlaceholderText, getByText, queryAllByText } = result;
+    // ignore top-level add
+    queryAllByText('add')[2].click();
+    fireEvent.change(getByPlaceholderText('Value'), {
+      target: { value: 'new' },
+    });
+    getByText('Save').click();
+    expect(documentReference.update).toHaveBeenCalledWith({
+      foo: ['alpha', 'bravo', ['wowah', 'new']],
+    });
+  });
+});
+
+describe('loaded map', () => {
+  let result: RenderResult;
+  let documentReference: jest.Mock;
+
+  beforeEach(() => {
+    useDocumentData.mockReturnValueOnce([
+      {
+        foo: { first_name: 'harry', last_name: 'potter' },
+      },
+    ]);
+    documentReference = fakeDocumentReference();
+
+    result = render(<DocumentPreview reference={documentReference} />);
+  });
+
+  it('renders a field', () => {
+    const { getByText } = result;
+
+    expect(
+      getByText('foo:{"first_name":"harry","last_name":"potter"}')
+    ).not.toBe(null);
+    expect(getByText('(map)')).not.toBe(null);
+  });
+
+  it('shows child-elements when expanded', () => {
+    const { getByText, queryByText } = result;
+
+    expect(getByText('first_name:"harry"')).not.toBe(null);
+    expect(getByText('last_name:"potter"')).not.toBe(null);
+
+    getByText('foo:{"first_name":"harry","last_name":"potter"}').click();
+
+    expect(queryByText('first_name:"harry"')).toBe(null);
+    expect(queryByText('last_name:"potter"')).toBe(null);
+  });
+
+  it('updates a map element', () => {
+    const { getByPlaceholderText, getByText, queryAllByText } = result;
+    // update the alpha-element
+    queryAllByText('edit')[1].click();
+    fireEvent.change(getByPlaceholderText('Value'), {
+      target: { value: 'new' },
+    });
+    getByText('Save').click();
+    expect(documentReference.update).toHaveBeenCalledWith({
+      'foo.last_name': 'new',
+    });
+  });
+
+  it('adds a map element', () => {
+    const { getByPlaceholderText, getByText, queryAllByText } = result;
+    // ignore top-level add
+    queryAllByText('add')[1].click();
+    fireEvent.change(getByPlaceholderText('Value'), {
+      target: { value: 'new' },
+    });
+    getByText('Save').click();
+    expect(documentReference.update).toHaveBeenCalledWith({
+      'foo.': 'new',
+    });
+  });
+});

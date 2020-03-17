@@ -18,39 +18,40 @@ import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
 import { firestore } from 'firebase';
 
-import { Editor } from './Editor';
+import DocumentEditor from './index';
 
 it('renders an editable field', () => {
   const onChange = jest.fn();
   const { getByPlaceholderText } = render(
-    <Editor rootKey={'hello'} value={'world'} onChange={onChange} />
+    <DocumentEditor value={{ hello: 'world' }} onChange={onChange} />
   );
   expect(getByPlaceholderText('Field').value).toBe('hello');
   expect(getByPlaceholderText('Type').value).toBe('string');
-  expect(getByPlaceholderText('Value').value).toBe('world');
+  expect(getByPlaceholderText('Value').value).toBe('"world"');
 
   fireEvent.change(getByPlaceholderText('Value'), {
     target: { value: 'new' },
   });
 
-  expect(getByPlaceholderText('Value').value).toBe('new');
-  expect(onChange).toHaveBeenCalledWith('new');
+  expect(getByPlaceholderText('Value').value).toBe('"new"');
+  expect(onChange).toHaveBeenCalledWith({ hello: 'new' });
 });
 
 it('renders an editable field with children', () => {
   const onChange = jest.fn();
 
   const { getByDisplayValue } = render(
-    <Editor
-      rootKey={'hello'}
-      value={{ foo: ['bar', { spam: 'eggs' }] }}
+    <DocumentEditor
+      value={{ hello: { foo: ['bar', { spam: 'eggs' }] } }}
       onChange={onChange}
     />
   );
 
-  fireEvent.change(getByDisplayValue('eggs'), {
+  fireEvent.change(getByDisplayValue('"eggs"'), {
     target: { value: 'new' },
   });
 
-  expect(onChange).toHaveBeenCalledWith({ foo: ['bar', { spam: 'new' }] });
+  expect(onChange).toHaveBeenCalledWith({
+    hello: { foo: ['bar', { spam: 'new' }] },
+  });
 });
