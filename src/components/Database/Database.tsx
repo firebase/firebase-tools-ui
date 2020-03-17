@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import 'firebase/database';
-
 import './Database.scss';
 import './DataViewer/index.scss';
 
