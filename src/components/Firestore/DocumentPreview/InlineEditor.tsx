@@ -15,12 +15,12 @@
  */
 
 import React, { useState } from 'react';
-import last from 'lodash.last';
 import { Card, CardActionButtons, CardActionButton } from '@rmwc/card';
 import { Elevation } from '@rmwc/elevation';
 
 import DocumentEditor from '../DocumentEditor';
 import { FirestoreMap } from '../models';
+import { lastFieldName } from '../utils';
 
 /** Editor entry point for a selected field */
 const InlineEditor: React.FC<{
@@ -43,7 +43,7 @@ const InlineEditor: React.FC<{
   function handleSave(e: React.MouseEvent<HTMLButtonElement>) {
     e.stopPropagation();
     // TODO key could change in the editor
-    onSave(last(path)!, internalValue);
+    onSave(lastFieldName(path), internalValue);
   }
 
   return (
