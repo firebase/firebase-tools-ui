@@ -29,7 +29,7 @@ export function deleteField(
     path,
     firestore.FieldValue.delete()
   );
-  documentRef.update(payload);
+  documentRef.update(...payload);
 }
 
 export function updateField(
@@ -39,7 +39,7 @@ export function updateField(
   value: FirestoreAny
 ) {
   const payload = adjustPayloadForArray(documentData, path, value);
-  documentRef.update(payload);
+  documentRef.update(...payload);
 }
 
 /**
@@ -54,9 +54,9 @@ function adjustPayloadForArray(
   doc: FirestoreMap,
   fieldPath: string[],
   value: FirestoreAny | firestore.FieldValue
-): FirestoreMap {
+): [firestore.FieldPath, FirestoreAny] {
   if (fieldPath.length === 1) {
-    return { [fieldPath[0]]: value };
+    return [new firestore.FieldPath(...fieldPath), value];
   }
 
   let nestedObjectToModify: FirestoreMap | FirestoreArray = doc;
@@ -78,7 +78,7 @@ function adjustPayloadForArray(
 
   // If no array was found, carry on as usual
   if (!topLevelArray) {
-    return { [fieldPath.join('.')]: value };
+    return [new firestore.FieldPath(...fieldPath), value];
   }
 
   const nestedFieldId = fieldPath[fieldPath.length - 1];
@@ -99,17 +99,25 @@ function adjustPayloadForArray(
       Number(getLeafKey(fieldPath)) >= (topLevelArray as {}[]).length
     ) {
       // Appending a new element to the top-level array
-      return {
-        [topLevelKey.join('.')]: firestore.FieldValue.arrayUnion(value),
-      };
+      return [
+        new firestore.FieldPath(...topLevelKey),
+        firestore.FieldValue.arrayUnion(value),
+      ];
     }
     nestedObjectToModify[nestedFieldId] = value;
   } else {
     // Deal with deleting from an array
     if (nestedObjectToModify instanceof Array) {
-      if (nestedObjectToModify !== topLevelArray) {
+      const valueToDelete = nestedObjectToModify[Number(getLeafKey(fieldPath))];
+      if (
+        nestedObjectToModify !== topLevelArray ||
+        nestedObjectToModify.indexOf(valueToDelete) !==
+          nestedObjectToModify.lastIndexOf(valueToDelete)
+      ) {
+        // Deleting from a nested array, or deleting an element which occurs
+        // twice in the same array
         nestedObjectToModify.splice(Number(nestedFieldId), 1);
-        return { [topLevelKey.join('.')]: topLevelArray };
+        return [new firestore.FieldPath(...topLevelKey), topLevelArray];
       }
       // In this case we are modifying the array itself
       // Example:
@@ -121,12 +129,12 @@ function adjustPayloadForArray(
       //   ]
       // }
 
-      // nestedObjectToModify.splice(Number(nestedFieldId), 1);
-      return {
-        [topLevelKey.join('.')]: firestore.FieldValue.arrayRemove(
+      return [
+        new firestore.FieldPath(...topLevelKey),
+        firestore.FieldValue.arrayRemove(
           nestedObjectToModify[Number(nestedFieldId)]
         ),
-      };
+      ];
     } else {
       // Otherwise, we are modifying a descendant of the array
       // Example:
@@ -145,5 +153,5 @@ function adjustPayloadForArray(
     }
   }
 
-  return { [topLevelKey.join('.')]: topLevelArray };
+  return [new firestore.FieldPath(...topLevelKey), topLevelArray];
 }
