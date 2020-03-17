@@ -15,9 +15,10 @@
  */
 
 import { firestore } from 'firebase';
+import last from 'lodash.last';
 
 import { FirestoreArray, FirestoreAny, FirestoreMap } from '../models';
-import { getLeafKey, isMap, isArray } from '../utils';
+import { isMap, isArray } from '../utils';
 
 export function deleteField(
   documentRef: firestore.DocumentReference,
@@ -96,7 +97,7 @@ function adjustPayloadForArray(
 
     if (
       topLevelArray === nestedObjectToModify &&
-      Number(getLeafKey(fieldPath)) >= (topLevelArray as {}[]).length
+      Number(last(fieldPath)) >= (topLevelArray as {}[]).length
     ) {
       // Appending a new element to the top-level array
       return [
@@ -108,7 +109,7 @@ function adjustPayloadForArray(
   } else {
     // Deal with deleting from an array
     if (nestedObjectToModify instanceof Array) {
-      const valueToDelete = nestedObjectToModify[Number(getLeafKey(fieldPath))];
+      const valueToDelete = nestedObjectToModify[Number(last(fieldPath))];
       if (
         nestedObjectToModify !== topLevelArray ||
         nestedObjectToModify.indexOf(valueToDelete) !==

@@ -15,6 +15,7 @@
  */
 
 import React, { useEffect } from 'react';
+import last from 'lodash.last';
 import { TextField } from '@rmwc/textfield';
 
 import * as actions from './actions';
@@ -25,7 +26,7 @@ import {
   DocumentProvider,
 } from './store';
 import { FirestoreMap } from '../models';
-import { isMap, isArray, getLeafKey, getFieldType } from '../utils';
+import { isMap, isArray, getFieldType } from '../utils';
 
 /** Entry point for a Document/Field editor */
 const DocumentEditor: React.FC<{
@@ -88,7 +89,7 @@ const NestedEditor: React.FC<{ path: string[] }> = ({ path }) => {
   return (
     <>
       <div style={{ display: 'flex' }}>
-        <TextField readOnly value={getLeafKey(path)} placeholder="Field" />
+        <TextField readOnly value={last(path)} placeholder="Field" />
         <TextField readOnly value={getFieldType(state)} placeholder="Type" />
         <TextField
           value={JSON.stringify(state)}

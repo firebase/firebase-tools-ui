@@ -18,17 +18,12 @@ import React, { useState } from 'react';
 import { firestore } from 'firebase';
 import { ListItem, ListItemMeta } from '@rmwc/list';
 import { IconButton } from '@rmwc/icon-button';
+import last from 'lodash.last';
 
 import { updateField, deleteField } from './api';
 import InlineEditor from './InlineEditor';
 import { useDocumentState, useFieldState } from './store';
-import {
-  getFieldType,
-  isPrimitive,
-  getLeafKey,
-  isMap,
-  isArray,
-} from '../utils';
+import { getFieldType, isPrimitive, isMap, isArray } from '../utils';
 
 const FieldPreview: React.FC<{
   path: string[];
@@ -68,7 +63,7 @@ const FieldPreview: React.FC<{
 
   return isEditing ? (
     <InlineEditor
-      value={{ [getLeafKey(path)]: state }}
+      value={{ [last(path) as string]: state }}
       path={path}
       onCancel={() => {
         setIsEditing(false);
@@ -82,7 +77,7 @@ const FieldPreview: React.FC<{
     <>
       <ListItem onClick={() => setIsExpanded(!isExpanded)}>
         <span>
-          {getLeafKey(path)}:{JSON.stringify(state)}
+          {last(path)}:{JSON.stringify(state)}
         </span>
         ({getFieldType(state)})
         <ListItemMeta>
@@ -117,7 +112,7 @@ const FieldPreview: React.FC<{
       </ListItem>
       {addPath && isAddingField && (
         <InlineEditor
-          value={{ [getLeafKey(addPath)]: '' }}
+          value={{ [last(addPath) as string]: '' }}
           path={addPath}
           onCancel={() => {
             setIsAddingField(false);
