@@ -17,10 +17,13 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import { Database } from './Database';
+import { MemoryRouter } from 'react-router';
 
 it('renders loading when config is not ready', () => {
   const { getByText } = render(
-    <Database namespace="example" config={undefined} />
+    <MemoryRouter>
+      <Database namespace="example" config={undefined} />
+    </MemoryRouter>
   );
   expect(getByText('Loading')).not.toBeNull();
 });

@@ -33,7 +33,7 @@ export const promptClearAll = () =>
         <Theme use={['textSecondaryOnBackground']} wrap>
           <DialogButton action="close">Cancel</DialogButton>
         </Theme>
-        <DialogButton action="accept" isDefaultAction danger>
+        <DialogButton unelevated action="accept" isDefaultAction danger>
           Clear
         </DialogButton>
       </>

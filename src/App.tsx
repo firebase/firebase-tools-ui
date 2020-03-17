@@ -22,15 +22,16 @@ import './App.scss';
 import AppBar from './components/AppBar';
 import { routes } from './routes';
 import { dialogs } from './components/DialogQueue';
+import { Grid } from '@rmwc/grid';
 
 const App: React.FC = () => {
   return (
-    <Theme use="background" wrap>
-      <>
-        <DialogQueue dialogs={dialogs} />
+    <>
+      <DialogQueue dialogs={dialogs} />
+      <Theme use="background" wrap>
         <div className="App">
           <AppBar routes={routes} />
-          <div className="App-main">
+          <Grid className="App-main">
             {routes.map(r => (
               <Route
                 key={r.path}
@@ -39,10 +40,10 @@ const App: React.FC = () => {
                 exact={r.exact}
               />
             ))}
-          </div>
+          </Grid>
         </div>
-      </>
-    </Theme>
+      </Theme>
+    </>
   );
 };
 

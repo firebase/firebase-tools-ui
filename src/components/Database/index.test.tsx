@@ -17,14 +17,14 @@
 import * as React from 'react';
 import { render } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { DatabaseDefaultRoute } from './DatabaseDefaultRoute';
+import { DatabaseDefaultRoute } from './index';
 import { Provider } from 'react-redux';
 import configureStore from '../../configureStore';
 
 it('renders loading when projectId is not ready', () => {
   const { getByText } = render(
     <MemoryRouter initialEntries={['']}>
-      <DatabaseDefaultRoute fetchDatabases={() => {}} projectId={undefined} />
+      <DatabaseDefaultRoute projectId={undefined} />
     </MemoryRouter>
   );
   expect(getByText('Loading...')).not.toBeNull();
@@ -39,7 +39,7 @@ it('redirects when projectId is ready', () => {
         <Route exact path="//sample/data">
           SUCCESS
         </Route>
-        <DatabaseDefaultRoute fetchDatabases={() => {}} projectId={'sample'} />
+        <DatabaseDefaultRoute projectId={'sample'} />
       </Provider>
     </MemoryRouter>
   );

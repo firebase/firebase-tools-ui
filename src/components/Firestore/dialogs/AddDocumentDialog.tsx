@@ -131,7 +131,7 @@ export const AddDocumentDialog: React.FC<Props> = ({
         <Theme use={['textSecondaryOnBackground']} wrap>
           <DialogButton action="close">Cancel</DialogButton>
         </Theme>
-        <DialogButton action="accept" isDefaultAction>
+        <DialogButton unelevated action="accept" isDefaultAction>
           Save
         </DialogButton>
       </DialogActions>
