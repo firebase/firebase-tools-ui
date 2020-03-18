@@ -18,6 +18,7 @@ import { TextField } from '@rmwc/textfield';
 import { firestore } from 'firebase';
 import React, { useEffect, useState } from 'react';
 
+// TODO: update to a date-picker that potentially supports time-zones
 const TimestampEditor: React.FC<{
   value: firestore.Timestamp;
   onChange: (value: firestore.Timestamp) => void;
@@ -25,9 +26,9 @@ const TimestampEditor: React.FC<{
   const [timestamp, setTimestamp] = useState(value.toDate().toISOString());
 
   useEffect(() => {
-    const ts = Date.parse(timestamp);
+    const ts = Date.parse(timestamp.split('.')[0]);
     if (!isNaN(ts)) {
-      onChange(firestore.Timestamp.fromDate(new Date(ts)));
+      onChange(firestore.Timestamp.fromMillis(ts));
     }
   }, [timestamp, onChange]);
 
