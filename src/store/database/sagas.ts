@@ -86,14 +86,14 @@ export function* fetchDatabases(
   }
 }
 
-const POLL_DATABASE_COOLDOWN_MS = 5000;
+export const POLL_DATABASE_COOLDOWN_MS = 5000;
+export const getDatabasesSubscribed = (state: AppState) =>
+  state.database.databasesSubscribed;
 
 export function* pollDatabases(): Generator<any> {
   while (true) {
     yield take(getType(databasesSubscribe));
-    while (
-      yield select((state: AppState) => state.database.databasesSubscribed)
-    ) {
+    while (yield select(getDatabasesSubscribed)) {
       yield put(databasesFetchRequest());
       yield delay(POLL_DATABASE_COOLDOWN_MS);
     }
