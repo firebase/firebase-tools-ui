@@ -28,7 +28,7 @@ import { Provider } from 'react-redux';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import App from './App';
-import { background, primary } from './colors';
+import { background, primary, secondary } from './colors';
 import configureStore from './configureStore';
 import { fetchRequest as fetchConfigRequest } from './store/config';
 
@@ -52,7 +52,7 @@ ReactDOM.render(
     // Globally disable ripples
     ripple={false}
   >
-    <ThemeProvider options={{ background, primary }}>
+    <ThemeProvider options={{ background, primary, secondary }}>
       <Provider store={store}>
         <RouterWithInit />
       </Provider>

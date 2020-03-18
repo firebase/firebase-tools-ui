@@ -14,28 +14,33 @@
  * limitations under the License.
  */
 
-import { call, put } from 'redux-saga/effects';
+import { call, delay, put, select, take } from 'redux-saga/effects';
+import { getType } from 'typesafe-actions';
 
 import {
   databasesFetchError,
   databasesFetchRequest,
   databasesFetchSuccess,
+  databasesSubscribe,
 } from './actions';
 import {
   GetDbConfigReturn,
+  POLL_DATABASE_COOLDOWN_MS,
   fetchDatabases,
   fetchDatabasesApi,
+  getDatabasesSubscribed,
   getDbConfig,
+  pollDatabases,
 } from './sagas';
 import { DatabaseInfo } from './types';
 
-describe('databasesFetchConfig', () => {
+describe('fetchDatabases', () => {
   it('calls RTDB api and dispatches databasesFetchSuccess on success', () => {
     const gen = fetchDatabases(databasesFetchRequest());
     expect(gen.next()).toEqual({ done: false, value: call(getDbConfig) });
 
     const config: GetDbConfigReturn = {
-      config: { hostAndPort: 'localhost:9000' },
+      config: { hostAndPort: 'localhost:9000', host: 'localhost', port: 9000 },
       projectId: 'foo',
     };
     expect(gen.next(config)).toEqual({
@@ -56,7 +61,7 @@ describe('databasesFetchConfig', () => {
     expect(gen.next()).toEqual({ done: false, value: call(getDbConfig) });
 
     const config: GetDbConfigReturn = {
-      config: { hostAndPort: 'localhost:9000' },
+      config: { hostAndPort: 'localhost:9000', host: 'localhost', port: 9000 },
       projectId: 'foo',
     };
     expect(gen.next(config)).toEqual({
@@ -70,5 +75,42 @@ describe('databasesFetchConfig', () => {
       value: put(databasesFetchError(error)),
     });
     expect(gen.next()).toEqual({ done: true });
+  });
+});
+
+describe('pollDatabases', () => {
+  it('poll dbs every 5 second when subscribed', () => {
+    const gen = pollDatabases();
+    expect(gen.next()).toEqual({
+      done: false,
+      value: take(getType(databasesSubscribe)),
+    });
+
+    expect(gen.next(databasesSubscribe())).toEqual({
+      done: false,
+      value: select(getDatabasesSubscribed),
+    });
+
+    expect(gen.next(true)).toEqual({
+      done: false,
+      value: put(databasesFetchRequest()),
+    });
+
+    expect(gen.next()).toEqual({
+      done: false,
+      value: delay(POLL_DATABASE_COOLDOWN_MS),
+    });
+
+    // Check whether we're subscribed again after waiting.
+    expect(gen.next()).toEqual({
+      done: false,
+      value: select(getDatabasesSubscribed),
+    });
+
+    // If not subscribed, block until next databasesSubscribe action.
+    expect(gen.next(false)).toEqual({
+      done: false,
+      value: take(getType(databasesSubscribe)),
+    });
   });
 });
