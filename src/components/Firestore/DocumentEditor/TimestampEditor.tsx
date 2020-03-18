@@ -14,22 +14,31 @@
  * limitations under the License.
  */
 
-import React from 'react';
-import { firestore } from 'firebase';
 import { TextField } from '@rmwc/textfield';
+import { firestore } from 'firebase';
+import React, { useEffect, useState } from 'react';
 
 const TimestampEditor: React.FC<{
   value: firestore.Timestamp;
   onChange: (value: firestore.Timestamp) => void;
 }> = ({ value, onChange }) => {
+  const [timestamp, setTimestamp] = useState(value.toDate().toISOString());
+
+  useEffect(() => {
+    const ts = Date.parse(timestamp);
+    if (!isNaN(ts)) {
+      onChange(firestore.Timestamp.fromDate(new Date(ts)));
+    }
+  }, [timestamp, onChange]);
+
   return (
     <>
       <TextField
         label="Value"
         outlined
         type="datetime-local"
-        value={value.toDate().toISOString()}
-        onChange={e => onChange(e.currentTarget.value)}
+        value={timestamp.split('.')[0]}
+        onChange={e => setTimestamp(e.currentTarget.value)}
       />
     </>
   );

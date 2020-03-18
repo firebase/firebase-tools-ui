@@ -15,21 +15,32 @@
  */
 
 import { fireEvent, render } from '@testing-library/react';
+import { firestore } from 'firebase';
 import React from 'react';
 
-import StringEditor from './StringEditor';
+import TimestampEditor from './TimestampEditor';
 
-it('renders an editor for a string', () => {
+it('renders an editor for a timestamp', () => {
   const onChange = jest.fn();
+  const date = new Date(Date.UTC(2000, 0, 2, 14, 30));
   const { getByLabelText } = render(
-    <StringEditor value={'foo'} onChange={onChange} />
+    <TimestampEditor
+      value={firestore.Timestamp.fromDate(date)}
+      onChange={onChange}
+    />
   );
 
-  expect(getByLabelText('Value').value).toBe('foo');
+  expect(getByLabelText('Value').value).toBe('2000-01-02T14:30');
+
+  onChange.mockReset();
+  fireEvent.change(getByLabelText('Value'), {
+    target: { value: 'foo' },
+  });
+  expect(onChange).not.toHaveBeenCalled();
 
   fireEvent.change(getByLabelText('Value'), {
-    target: { value: 'new' },
+    target: { value: '2001-01-02T14:30' },
   });
 
-  expect(onChange).toHaveBeenCalledWith('new');
+  expect(onChange).toHaveBeenCalledWith(new firestore.Timestamp(978463800, 0));
 });

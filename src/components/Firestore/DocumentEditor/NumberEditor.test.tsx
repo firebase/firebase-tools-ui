@@ -17,19 +17,25 @@
 import { fireEvent, render } from '@testing-library/react';
 import React from 'react';
 
-import StringEditor from './StringEditor';
+import NumberEditor from './NumberEditor';
 
-it('renders an editor for a string', () => {
+it('renders an editor for a number', () => {
   const onChange = jest.fn();
   const { getByLabelText } = render(
-    <StringEditor value={'foo'} onChange={onChange} />
+    <NumberEditor value={1} onChange={onChange} />
   );
 
-  expect(getByLabelText('Value').value).toBe('foo');
+  expect(getByLabelText('Value').value).toBe('1');
+
+  onChange.mockReset();
+  fireEvent.change(getByLabelText('Value'), {
+    target: { value: 'foo' },
+  });
+  expect(onChange).not.toHaveBeenCalled();
 
   fireEvent.change(getByLabelText('Value'), {
-    target: { value: 'new' },
+    target: { value: 2 },
   });
 
-  expect(onChange).toHaveBeenCalledWith('new');
+  expect(onChange).toHaveBeenCalledWith(2);
 });

@@ -14,31 +14,22 @@
  * limitations under the License.
  */
 
-import { TextField } from '@rmwc/textfield';
-import React, { useEffect, useState } from 'react';
+import { fireEvent, render } from '@testing-library/react';
+import React from 'react';
 
-const NumberEditor: React.FC<{
-  value: number;
-  onChange: (value: number) => void;
-}> = ({ value, onChange }) => {
-  const [number, setNumber] = useState(String(value));
+import BooleanEditor from './BooleanEditor';
 
-  useEffect(() => {
-    const num = parseInt(number);
-    if (!isNaN(num)) {
-      onChange(num);
-    }
-  }, [number, onChange]);
-
-  return (
-    <TextField
-      label="Value"
-      outlined
-      type="number"
-      value={number}
-      onChange={e => setNumber(e.currentTarget.value)}
-    />
+it('renders an editor for a boolean', () => {
+  const onChange = jest.fn();
+  const { getByDisplayValue } = render(
+    <BooleanEditor value={true} onChange={onChange} />
   );
-};
 
-export default NumberEditor;
+  expect(getByDisplayValue('true')).not.toBe('null');
+
+  fireEvent.change(getByDisplayValue('true'), {
+    target: { value: 'false' },
+  });
+
+  expect(onChange).toHaveBeenCalledWith(false);
+});

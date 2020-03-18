@@ -68,10 +68,10 @@ describe('loaded document', () => {
   });
 
   it('updates a field', () => {
-    const { getByDisplayValue, getByText } = result;
+    const { getByLabelText, getByText } = result;
 
     getByText('edit').click();
-    fireEvent.change(getByDisplayValue('bar'), {
+    fireEvent.change(getByLabelText('Value'), {
       target: { value: 'new' },
     });
     getByText('Save').click();
@@ -137,45 +137,56 @@ describe('loaded array', () => {
     const { queryAllByText } = result;
     // delete the second bravo-element
     queryAllByText('delete')[3].click();
-    expect(documentReference.update).toHaveBeenCalledWith(
-      new firestore.FieldPath('foo'),
-      ['alpha', 'bravo', ['wowah']]
-    );
+    expect(
+      documentReference.update
+    ).toHaveBeenCalledWith(new firestore.FieldPath('foo'), [
+      'alpha',
+      'bravo',
+      ['wowah'],
+    ]);
   });
 
   it('updates a top-level array element', () => {
-    const { getByDisplayValue, getByText, queryAllByText } = result;
+    const { getByLabelText, getByText, queryAllByText } = result;
     // update the bravo-element
     queryAllByText('edit')[1].click();
-    fireEvent.change(getByDisplayValue('bravo'), {
+    fireEvent.change(getByLabelText('Value'), {
       target: { value: 'new' },
     });
     getByText('Save').click();
-    expect(documentReference.update).toHaveBeenCalledWith(
-      new firestore.FieldPath('foo'),
-      ['alpha', 'new', 'bravo', ['wowah']]
-    );
+    expect(
+      documentReference.update
+    ).toHaveBeenCalledWith(new firestore.FieldPath('foo'), [
+      'alpha',
+      'new',
+      'bravo',
+      ['wowah'],
+    ]);
   });
 
   it('updates a nested array element', () => {
-    const { getByDisplayValue, getByText, queryAllByText } = result;
+    const { getByLabelText, getByText, queryAllByText } = result;
     // update the wowah-element
     queryAllByText('edit')[3].click();
-    fireEvent.change(getByDisplayValue('wowah'), {
+    fireEvent.change(getByLabelText('Value'), {
       target: { value: 'new' },
     });
     getByText('Save').click();
-    expect(documentReference.update).toHaveBeenCalledWith(
-      new firestore.FieldPath('foo'),
-      ['alpha', 'bravo', 'bravo', ['new']]
-    );
+    expect(
+      documentReference.update
+    ).toHaveBeenCalledWith(new firestore.FieldPath('foo'), [
+      'alpha',
+      'bravo',
+      'bravo',
+      ['new'],
+    ]);
   });
 
   it('adds a top-level array element', () => {
-    const { getByDisplayValue, getByText, queryAllByText } = result;
+    const { getByLabelText, getByText, queryAllByText } = result;
     // ignore top-level add
     queryAllByText('add')[1].click();
-    fireEvent.change(getByDisplayValue(''), {
+    fireEvent.change(getByLabelText('Value'), {
       target: { value: 'new' },
     });
     getByText('Save').click();
@@ -186,17 +197,21 @@ describe('loaded array', () => {
   });
 
   it('adds a nested array element', () => {
-    const { getByDisplayValue, getByText, queryAllByText } = result;
+    const { getByLabelText, getByText, queryAllByText } = result;
     // ignore top-level add
     queryAllByText('add')[2].click();
-    fireEvent.change(getByDisplayValue(''), {
+    fireEvent.change(getByLabelText('Value'), {
       target: { value: 'new' },
     });
     getByText('Save').click();
-    expect(documentReference.update).toHaveBeenCalledWith(
-      new firestore.FieldPath('foo'),
-      ['alpha', 'bravo', 'bravo', ['wowah', 'new']]
-    );
+    expect(
+      documentReference.update
+    ).toHaveBeenCalledWith(new firestore.FieldPath('foo'), [
+      'alpha',
+      'bravo',
+      'bravo',
+      ['wowah', 'new'],
+    ]);
   });
 });
 
@@ -237,10 +252,9 @@ describe('loaded map', () => {
   });
 
   it('updates a map element', () => {
-    const { getByDisplayValue, getByText, queryAllByText } = result;
-    // update the alpha-element
+    const { getByLabelText, getByText, queryAllByText } = result;
     queryAllByText('edit')[1].click();
-    fireEvent.change(getByDisplayValue('potter'), {
+    fireEvent.change(getByLabelText('Value'), {
       target: { value: 'new' },
     });
     getByText('Save').click();
@@ -253,10 +267,10 @@ describe('loaded map', () => {
   // TODO: re-enable when editor-keys are editable, defaulting to '' results
   // in an invalid field path
   it.skip('adds a map element', () => {
-    const { getByDisplayValue, getByText, queryAllByText } = result;
+    const { getByLabelText, getByText, queryAllByText } = result;
     // ignore top-level add
     queryAllByText('add')[1].click();
-    fireEvent.change(getByDisplayValue(''), {
+    fireEvent.change(getByLabelText('Value'), {
       target: { value: 'new' },
     });
     getByText('Save').click();

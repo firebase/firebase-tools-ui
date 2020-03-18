@@ -67,7 +67,7 @@ export function getFieldType(value: FirestoreAny): FieldType {
 }
 
 export function isBoolean(value: FirestoreAny): value is boolean {
-  return !!value && typeof value.valueOf() === 'boolean';
+  return typeof value?.valueOf() === 'boolean';
 }
 
 export function isReference(
@@ -81,11 +81,11 @@ export function isTimestamp(value: FirestoreAny): value is firestore.Timestamp {
 }
 
 export function isString(value: FirestoreAny): value is string {
-  return !!value && typeof value.valueOf() === 'string';
+  return typeof value?.valueOf() === 'string';
 }
 
 export function isNumber(value: FirestoreAny): value is number {
-  return !!value && typeof value.valueOf() === 'number';
+  return typeof value?.valueOf() === 'number';
 }
 
 export function isGeoPoint(value: FirestoreAny): value is firestore.GeoPoint {

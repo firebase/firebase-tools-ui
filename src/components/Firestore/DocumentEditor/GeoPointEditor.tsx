@@ -14,27 +14,45 @@
  * limitations under the License.
  */
 
-import React from 'react';
-import { firestore } from 'firebase';
 import { TextField } from '@rmwc/textfield';
+import { firestore } from 'firebase';
+import React, { useEffect, useState } from 'react';
 
 const GeoPointEditor: React.FC<{
   value: firestore.GeoPoint;
   onChange: (value: firestore.GeoPoint) => void;
 }> = ({ value, onChange }) => {
+  const [latitude, setLatitude] = useState(String(value.latitude));
+  const [longitude, setLongitude] = useState(String(value.longitude));
+
+  // Update the parent when _both_ fields are valid
+  useEffect(() => {
+    const lat = parseInt(latitude);
+    const long = parseInt(longitude);
+    if (!isNaN(lat) && !isNaN(long)) {
+      onChange(new firestore.GeoPoint(lat, long));
+    }
+  }, [latitude, longitude, onChange]);
+
   return (
     <>
       <TextField
         outlined
         label="Latitude"
-        value={value.latitude}
-        onChange={e => onChange(e.currentTarget.value)}
+        value={latitude}
+        type="number"
+        onChange={e => {
+          setLatitude(e.currentTarget.value);
+        }}
       />
       <TextField
         outlined
         label="Longitude"
-        value={value.longitude}
-        onChange={e => onChange(e.currentTarget.value)}
+        value={longitude}
+        type="number"
+        onChange={e => {
+          setLongitude(e.currentTarget.value);
+        }}
       />
     </>
   );
