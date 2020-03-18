@@ -31,6 +31,7 @@ it('renders an editor for a timestamp', () => {
   );
 
   expect(getByLabelText('Value').value).toBe('2000-01-02T14:30');
+  expect(new Date().getTimezoneOffset()).toBe(0);
 
   onChange.mockReset();
   fireEvent.change(getByLabelText('Value'), {
@@ -42,5 +43,5 @@ it('renders an editor for a timestamp', () => {
     target: { value: '2001-01-02T14:30' },
   });
 
-  expect(onChange).toHaveBeenCalledWith(new firestore.Timestamp(978463800, 0));
+  expect(onChange).toHaveBeenCalledWith(new firestore.Timestamp(978445800, 0));
 });

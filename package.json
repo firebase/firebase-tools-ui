@@ -50,8 +50,8 @@
     "build": "npm run build:web && npm run build:server",
     "build:web": "react-scripts build",
     "build:server": "webpack --target=node server.js -o server.bundle.js",
-    "test": "react-scripts test",
-    "test:coverage": "react-scripts test --coverage --watchAll=false",
+    "test": "TZ=UTC react-scripts test",
+    "test:coverage": "TZ=UTC react-scripts test --coverage --watchAll=false",
     "eject": "react-scripts eject",
     "fmt": "prettier --write 'src/**'"
   },
