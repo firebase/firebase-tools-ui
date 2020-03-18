@@ -28,7 +28,7 @@ export const promptDeleteDocument = (reference: firestore.DocumentReference) =>
     title: 'Delete data',
     body: (
       <>
-        <Callout icon="warning">
+        <Callout aside type="warning">
           This will permanently delete all data at this location, including all
           nested data.
         </Callout>
