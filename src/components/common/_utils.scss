@@ -14,18 +14,6 @@
  * limitations under the License.
  */
 
-// Take in a sass color and return an RGB tuple e.g. '255, 255, 0'.
-// This allows CSS vars to be used with a dynamic alpha, e.g.:
-//
-//    $color: #f00;
-//    --color-rgb: #{colorToRgbTuple($color)};
-//    ...
-//    background-color: rgba(var(--color-rgb), .2);
-//
-@function colorToRgbTuple($color) {
-  @return red($color), green($color), blue($color);
-}
-
 // Helper for getting the nth element of a list with a specified default if
 // it doesn't exist.
 @function nth-default($list, $index, $default) {
