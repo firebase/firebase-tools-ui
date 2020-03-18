@@ -1,0 +1,36 @@
+/**
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// Take in a sass color and return an RGB tuple e.g. '255, 255, 0'.
+// This allows CSS vars to be used with a dynamic alpha, e.g.:
+//
+//    $color: #f00;
+//    --color-rgb: #{colorToRgbTuple($color)};
+//    ...
+//    background-color: rgba(var(--color-rgb), .2);
+//
+@function colorToRgbTuple($color) {
+  @return red($color), green($color), blue($color);
+}
+
+// Helper for getting the nth element of a list with a specified default if
+// it doesn't exist.
+@function nth-default($list, $index, $default) {
+  @if length($list) >= $index {
+    @return nth($list, $index);
+  }
+  @return $default;
+}
