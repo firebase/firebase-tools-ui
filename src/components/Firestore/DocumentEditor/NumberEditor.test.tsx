@@ -38,4 +38,10 @@ it('renders an editor for a number', () => {
   });
 
   expect(onChange).toHaveBeenCalledWith(2);
+
+  fireEvent.change(getByLabelText('Value'), {
+    target: { value: 2.5 },
+  });
+
+  expect(onChange).toHaveBeenCalledWith(2.5);
 });

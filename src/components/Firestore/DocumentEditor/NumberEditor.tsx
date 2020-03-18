@@ -24,7 +24,7 @@ const NumberEditor: React.FC<{
   const [number, setNumber] = useState(String(value));
 
   useEffect(() => {
-    const num = parseInt(number);
+    const num = parseFloat(number);
     if (!isNaN(num)) {
       onChange(num);
     }
