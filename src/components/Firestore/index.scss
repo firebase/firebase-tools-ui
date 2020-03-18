@@ -24,6 +24,7 @@
 .Firestore-panels {
   display: flex;
   flex-direction: row !important;
+  height: 400px;
 }
 
 /** Only show at most 3 panels (Documents/Collections) */

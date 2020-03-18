@@ -30,3 +30,12 @@ export const CardActionBar: React.FC = ({ children }) => {
     </ThemeProvider>
   );
 };
+
+export const CardActionBarActions: React.FC = ({ children }) => {
+  return (
+    <>
+      <span style={{ flex: '1 auto' }} />
+      <div className="CardActionBar-actions">{children}</div>
+    </>
+  );
+};
