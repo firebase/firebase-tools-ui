@@ -37,8 +37,10 @@ const TimestampEditor: React.FC<{
   const [date, setDate] = useState(value.toDate());
 
   useEffect(() => {
-    onChange(firestore.Timestamp.fromDate(date));
-  }, [date, onChange]);
+    if (value.toMillis() !== date.getTime()) {
+      onChange(firestore.Timestamp.fromDate(date));
+    }
+  }, [value, date, onChange]);
 
   return (
     <>
@@ -49,7 +51,7 @@ const TimestampEditor: React.FC<{
         value={dateToLocale(date)}
         onChange={e => {
           const timestamp = Date.parse(e.currentTarget.value);
-          if (!isNaN(timestamp)) {
+          if (!isNaN(timestamp) && timestamp !== date.getTime()) {
             setDate(new Date(timestamp));
           }
         }}

@@ -16,7 +16,7 @@
 
 import { createAction } from 'typesafe-actions';
 
-import { FirestoreAny, FirestoreMap } from '../models';
+import { FieldType, FirestoreAny, FirestoreMap } from '../models';
 
 export const reset = createAction('@document/reset')<FirestoreMap>();
 export const addField = createAction('@document/add')<{
@@ -26,5 +26,9 @@ export const addField = createAction('@document/add')<{
 export const updateField = createAction('@document/update')<{
   path: string[];
   value: FirestoreAny;
+}>();
+export const updateType = createAction('@document/updateType')<{
+  path: string[];
+  type: FieldType;
 }>();
 export const deleteField = createAction('@document/delete')<string[]>();
