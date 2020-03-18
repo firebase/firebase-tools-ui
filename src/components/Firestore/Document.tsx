@@ -75,6 +75,7 @@ export const Document: React.FC<{ reference: firestore.DocumentReference }> = ({
 }) => {
   const handleDeleteDocument = async () => {
     const shouldDelete = await promptDeleteDocument(reference);
+    // TODO: recursively delete sub documents
     shouldDelete && reference.delete();
   };
 

@@ -20,6 +20,7 @@ import { Theme } from '@rmwc/theme';
 import { firestore } from 'firebase';
 import React from 'react';
 
+import { Callout } from '../../common/Callout';
 import { confirm } from '../../DialogQueue';
 
 export const promptDeleteDocument = (reference: firestore.DocumentReference) =>
@@ -27,10 +28,10 @@ export const promptDeleteDocument = (reference: firestore.DocumentReference) =>
     title: 'Delete data',
     body: (
       <>
-        <div className="TODO: Callout">
+        <Callout icon="warning">
           This will permanently delete all data at this location, including all
           nested data.
-        </div>
+        </Callout>
         <TextField
           label="Document location"
           value={reference.path || '/'}

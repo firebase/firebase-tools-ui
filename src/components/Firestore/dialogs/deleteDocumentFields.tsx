@@ -20,6 +20,7 @@ import { Theme } from '@rmwc/theme';
 import { firestore } from 'firebase';
 import React from 'react';
 
+import { Callout } from '../../common/Callout';
 import { confirm } from '../../DialogQueue';
 
 export const promptDeleteDocumentFields = (
@@ -29,9 +30,9 @@ export const promptDeleteDocumentFields = (
     title: 'Delete data',
     body: (
       <>
-        <div className="TODO: Callout">
+        <Callout icon="warning">
           This will delete all fields of the document, excluding subcollections.
-        </div>
+        </Callout>
         <TextField
           label="Document location"
           value={reference.path || '/'}
