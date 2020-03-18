@@ -22,7 +22,7 @@ import TimestampEditor from './TimestampEditor';
 
 it('renders an editor for a timestamp', () => {
   const onChange = jest.fn();
-  const date = new Date(Date.UTC(2000, 0, 2, 14, 30));
+  const date = new Date(2000, 0, 2, 10, 30);
   const { getByLabelText } = render(
     <TimestampEditor
       value={firestore.Timestamp.fromDate(date)}
@@ -30,8 +30,9 @@ it('renders an editor for a timestamp', () => {
     />
   );
 
-  expect(getByLabelText('Value').value).toBe('2000-01-02T14:30');
-  expect(new Date().getTimezoneOffset()).toBe(0);
+  const [displayDate, displayTime] = getByLabelText('Value').value.split('T');
+  expect(displayDate).toBe('2000-01-02');
+  expect(displayTime).toBe('10:30');
 
   onChange.mockReset();
   fireEvent.change(getByLabelText('Value'), {
@@ -43,5 +44,7 @@ it('renders an editor for a timestamp', () => {
     target: { value: '2001-01-02T14:30' },
   });
 
-  expect(onChange).toHaveBeenCalledWith(new firestore.Timestamp(978445800, 0));
+  expect(onChange).toHaveBeenCalledWith(
+    firestore.Timestamp.fromDate(new Date(2001, 0, 2, 14, 30))
+  );
 });
