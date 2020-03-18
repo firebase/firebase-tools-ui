@@ -27,6 +27,11 @@
     height: 56px;
     padding: 16px 16px 16px 2px; // home icon alignment
   }
+
+  .CardActionBar-actions {
+    display: flex;
+    align-items: center;
+  }
 }
 
 // only first when inside a Card
