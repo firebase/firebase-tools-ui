@@ -26,4 +26,5 @@ export interface DatabaseInfoState {
 
 export interface DatabaseState {
   databases: DatabaseInfoState;
+  databasesSubscribed: boolean;
 }

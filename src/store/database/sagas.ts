@@ -14,7 +14,15 @@
  * limitations under the License.
  */
 
-import { call, put, select, take, takeLatest } from 'redux-saga/effects';
+import {
+  all,
+  call,
+  delay,
+  put,
+  select,
+  take,
+  takeLatest,
+} from 'redux-saga/effects';
 import { ActionType, getType } from 'typesafe-actions';
 
 import {
@@ -26,6 +34,7 @@ import {
   databasesFetchError,
   databasesFetchRequest,
   databasesFetchSuccess,
+  databasesSubscribe,
 } from './actions';
 import { DatabaseInfo } from './types';
 import { AppState } from '..';
@@ -77,7 +86,23 @@ export function* fetchDatabases(
   }
 }
 
+export const POLL_DATABASE_COOLDOWN_MS = 5000;
+export const getDatabasesSubscribed = (state: AppState) =>
+  state.database.databasesSubscribed;
+
+export function* pollDatabases(): Generator<any> {
+  while (true) {
+    yield take(getType(databasesSubscribe));
+    while (yield select(getDatabasesSubscribed)) {
+      yield put(databasesFetchRequest());
+      yield delay(POLL_DATABASE_COOLDOWN_MS);
+    }
+  }
+}
+
 export function* databaseSaga() {
-  // TODO: Consider fetching automatically every 5 seconds.
-  yield takeLatest(getType(databasesFetchRequest), fetchDatabases);
+  yield all([
+    takeLatest(getType(databasesFetchRequest), fetchDatabases),
+    pollDatabases(),
+  ]);
 }

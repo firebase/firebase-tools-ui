@@ -14,26 +14,21 @@
  * limitations under the License.
  */
 
-import { createAction } from 'typesafe-actions';
+import React from 'react';
+import { TextField } from '@rmwc/textfield';
 
-import { DatabaseInfo } from './types';
+const StringEditor: React.FC<{
+  value: string;
+  onChange: (value: string) => void;
+}> = ({ value, onChange }) => {
+  return (
+    <TextField
+      value={value}
+      outlined
+      label="Value"
+      onChange={e => onChange(e.currentTarget.value)}
+    />
+  );
+};
 
-export const databasesFetchRequest = createAction(
-  '@database/DATABASES_FETCH_REQUEST'
-)();
-
-export const databasesFetchSuccess = createAction(
-  '@database/DATABASES_FETCH_SUCCESS'
-)<DatabaseInfo[]>();
-
-export const databasesFetchError = createAction(
-  '@database/DATABASES_FETCH_ERROR'
-)<{ message: string }>();
-
-export const databasesSubscribe = createAction(
-  '@database/DATABASES_SUBSCRIBE'
-)();
-
-export const databasesUnsubscribe = createAction(
-  '@database/DATABASES_UNSUBSCRIBE'
-)();
+export default StringEditor;

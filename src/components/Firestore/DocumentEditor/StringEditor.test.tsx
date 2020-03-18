@@ -14,26 +14,22 @@
  * limitations under the License.
  */
 
-import { createAction } from 'typesafe-actions';
+import { fireEvent, render } from '@testing-library/react';
+import React from 'react';
 
-import { DatabaseInfo } from './types';
+import StringEditor from './StringEditor';
 
-export const databasesFetchRequest = createAction(
-  '@database/DATABASES_FETCH_REQUEST'
-)();
+it('renders an editor for a string', () => {
+  const onChange = jest.fn();
+  const { getByLabelText } = render(
+    <StringEditor value={'foo'} onChange={onChange} />
+  );
 
-export const databasesFetchSuccess = createAction(
-  '@database/DATABASES_FETCH_SUCCESS'
-)<DatabaseInfo[]>();
+  expect(getByLabelText('Value').value).toBe('foo');
 
-export const databasesFetchError = createAction(
-  '@database/DATABASES_FETCH_ERROR'
-)<{ message: string }>();
+  fireEvent.change(getByLabelText('Value'), {
+    target: { value: 'new' },
+  });
 
-export const databasesSubscribe = createAction(
-  '@database/DATABASES_SUBSCRIBE'
-)();
-
-export const databasesUnsubscribe = createAction(
-  '@database/DATABASES_UNSUBSCRIBE'
-)();
+  expect(onChange).toHaveBeenCalledWith('new');
+});

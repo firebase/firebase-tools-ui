@@ -14,26 +14,22 @@
  * limitations under the License.
  */
 
-import { createAction } from 'typesafe-actions';
+import React from 'react';
+import { firestore } from 'firebase';
+import { TextField } from '@rmwc/textfield';
 
-import { DatabaseInfo } from './types';
+const ReferenceEditor: React.FC<{
+  value: firestore.DocumentReference;
+  onChange: (value: firestore.DocumentReference) => void;
+}> = ({ value, onChange }) => {
+  return (
+    <TextField
+      value={value.path}
+      onChange={e => {
+        // TODO: parse the input and find the document in the global api
+      }}
+    />
+  );
+};
 
-export const databasesFetchRequest = createAction(
-  '@database/DATABASES_FETCH_REQUEST'
-)();
-
-export const databasesFetchSuccess = createAction(
-  '@database/DATABASES_FETCH_SUCCESS'
-)<DatabaseInfo[]>();
-
-export const databasesFetchError = createAction(
-  '@database/DATABASES_FETCH_ERROR'
-)<{ message: string }>();
-
-export const databasesSubscribe = createAction(
-  '@database/DATABASES_SUBSCRIBE'
-)();
-
-export const databasesUnsubscribe = createAction(
-  '@database/DATABASES_UNSUBSCRIBE'
-)();
+export default ReferenceEditor;

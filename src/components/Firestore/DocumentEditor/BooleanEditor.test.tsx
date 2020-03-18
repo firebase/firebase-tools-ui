@@ -14,26 +14,22 @@
  * limitations under the License.
  */
 
-import { createAction } from 'typesafe-actions';
+import { fireEvent, render } from '@testing-library/react';
+import React from 'react';
 
-import { DatabaseInfo } from './types';
+import BooleanEditor from './BooleanEditor';
 
-export const databasesFetchRequest = createAction(
-  '@database/DATABASES_FETCH_REQUEST'
-)();
+it('renders an editor for a boolean', () => {
+  const onChange = jest.fn();
+  const { getByDisplayValue } = render(
+    <BooleanEditor value={true} onChange={onChange} />
+  );
 
-export const databasesFetchSuccess = createAction(
-  '@database/DATABASES_FETCH_SUCCESS'
-)<DatabaseInfo[]>();
+  expect(getByDisplayValue('true')).not.toBe('null');
 
-export const databasesFetchError = createAction(
-  '@database/DATABASES_FETCH_ERROR'
-)<{ message: string }>();
+  fireEvent.change(getByDisplayValue('true'), {
+    target: { value: 'false' },
+  });
 
-export const databasesSubscribe = createAction(
-  '@database/DATABASES_SUBSCRIBE'
-)();
-
-export const databasesUnsubscribe = createAction(
-  '@database/DATABASES_UNSUBSCRIBE'
-)();
+  expect(onChange).toHaveBeenCalledWith(false);
+});

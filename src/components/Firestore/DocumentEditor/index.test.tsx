@@ -21,32 +21,32 @@ import DocumentEditor from './index';
 
 it('renders an editable field', () => {
   const onChange = jest.fn();
-  const { getByPlaceholderText } = render(
+  const { getByLabelText, getByPlaceholderText } = render(
     <DocumentEditor value={{ hello: 'world' }} onChange={onChange} />
   );
   expect(getByPlaceholderText('Field').value).toBe('hello');
   expect(getByPlaceholderText('Type').value).toBe('string');
-  expect(getByPlaceholderText('Value').value).toBe('"world"');
+  expect(getByLabelText('Value').value).toBe('world');
 
-  fireEvent.change(getByPlaceholderText('Value'), {
+  fireEvent.change(getByLabelText('Value'), {
     target: { value: 'new' },
   });
 
-  expect(getByPlaceholderText('Value').value).toBe('"new"');
+  expect(getByLabelText('Value').value).toBe('new');
   expect(onChange).toHaveBeenCalledWith({ hello: 'new' });
 });
 
 it('renders an editable field with children', () => {
   const onChange = jest.fn();
 
-  const { getByDisplayValue } = render(
+  const { getAllByLabelText } = render(
     <DocumentEditor
       value={{ hello: { foo: ['bar', { spam: 'eggs' }] } }}
       onChange={onChange}
     />
   );
 
-  fireEvent.change(getByDisplayValue('"eggs"'), {
+  fireEvent.change(getAllByLabelText('Value')[1], {
     target: { value: 'new' },
   });
 

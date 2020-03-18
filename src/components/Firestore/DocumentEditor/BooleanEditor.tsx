@@ -14,26 +14,24 @@
  * limitations under the License.
  */
 
-import { createAction } from 'typesafe-actions';
+import React from 'react';
+import { Select } from '@rmwc/select';
 
-import { DatabaseInfo } from './types';
+const BooleanEditor: React.FC<{
+  value: boolean;
+  onChange: (value: boolean) => void;
+}> = ({ value, onChange }) => {
+  return (
+    <Select
+      label="Value"
+      outlined
+      value={value.toString()}
+      options={['true', 'false']}
+      onChange={e => {
+        onChange(e.currentTarget.value === 'true');
+      }}
+    />
+  );
+};
 
-export const databasesFetchRequest = createAction(
-  '@database/DATABASES_FETCH_REQUEST'
-)();
-
-export const databasesFetchSuccess = createAction(
-  '@database/DATABASES_FETCH_SUCCESS'
-)<DatabaseInfo[]>();
-
-export const databasesFetchError = createAction(
-  '@database/DATABASES_FETCH_ERROR'
-)<{ message: string }>();
-
-export const databasesSubscribe = createAction(
-  '@database/DATABASES_SUBSCRIBE'
-)();
-
-export const databasesUnsubscribe = createAction(
-  '@database/DATABASES_UNSUBSCRIBE'
-)();
+export default BooleanEditor;
