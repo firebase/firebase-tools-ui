@@ -20,11 +20,12 @@ import { Theme } from '@rmwc/theme';
 import { Typography } from '@rmwc/typography';
 import React from 'react';
 
-import { CardActionBar } from '../common/CardActionBar';
+import { CardActionBar, CardActionBarActions } from '../common/CardActionBar';
 
 export const PanelHeader: React.FC<{ id: string; icon: React.ReactNode }> = ({
   id,
   icon,
+  children,
 }) => {
   return (
     <div className="Firestore-PanelHeader">
@@ -33,6 +34,7 @@ export const PanelHeader: React.FC<{ id: string; icon: React.ReactNode }> = ({
         <Typography use="body2" className="Firestore-PanelHeader-title">
           {id}
         </Typography>
+        <CardActionBarActions>{children}</CardActionBarActions>
       </CardActionBar>
     </div>
   );
