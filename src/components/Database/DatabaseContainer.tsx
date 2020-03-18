@@ -47,7 +47,7 @@ export const DatabaseContainer: React.FC<Props> = ({
     if (
       dbs === undefined ||
       databases === undefined ||
-      dbs.join('|') === databases.join('|')
+      dbs.join('|') === databases.join('|') // databases from state are sorted
     ) {
       // Don't show reload button for initial data or unchanged.
       setDbs(databases);

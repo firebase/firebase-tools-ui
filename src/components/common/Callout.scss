@@ -2,11 +2,6 @@
   display: flex;
   position: relative;
 
-  margin-bottom: 24px;
-  .mdc-layout-grid__cell > & {
-    margin-bottom: 0;
-  }
-
   &::before {
     background-color: var(--mdc-theme-secondary);
     bottom: 0;
