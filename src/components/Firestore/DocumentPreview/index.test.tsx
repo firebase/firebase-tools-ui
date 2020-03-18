@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
 import { firestore } from 'firebase';
+import React from 'react';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 
-import DocumentPreview from './index';
 import { fakeDocumentReference } from '../testing/models';
+import DocumentPreview from './index';
 
 jest.mock('react-firebase-hooks/firestore');
 

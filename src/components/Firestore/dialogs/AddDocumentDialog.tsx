@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-import React, { useState, useCallback, useEffect } from 'react';
 import {
-  DialogButton,
-  DialogProps,
   Dialog,
-  DialogTitle,
-  DialogContent,
   DialogActions,
+  DialogButton,
+  DialogContent,
   DialogOnCloseEventT,
+  DialogProps,
+  DialogTitle,
 } from '@rmwc/dialog';
-import { Theme } from '@rmwc/theme';
 import { TextField } from '@rmwc/textfield';
+import { Theme } from '@rmwc/theme';
 import { firestore } from 'firebase';
+import React, { useCallback, useEffect, useState } from 'react';
 
 export interface AddDocumentDialogValue {
   id: string;

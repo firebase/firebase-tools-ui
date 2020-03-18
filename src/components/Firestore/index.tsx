@@ -14,22 +14,24 @@
  * limitations under the License.
  */
 
-import React, { useState, useEffect } from 'react';
 import './index.scss';
+
 import { Button } from '@rmwc/button';
 import { Card } from '@rmwc/card';
 import { Elevation } from '@rmwc/elevation';
+import { GridCell } from '@rmwc/grid';
+import { IconButton } from '@rmwc/icon-button';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+
 import { AppState } from '../../store';
 import { FirestoreConfig } from '../../store/config';
+import { CardActionBar } from '../common/CardActionBar';
 import DatabaseApi from './api';
 import { ApiProvider } from './ApiContext';
-import { Root } from './Document';
 import { promptClearAll } from './dialogs/clearAll';
-import { GridCell } from '@rmwc/grid';
-import { CardActionBar } from '../common/CardActionBar';
-import { IconButton } from '@rmwc/icon-button';
-import { Link } from 'react-router-dom';
+import { Root } from './Document';
 
 export interface PropsFromState {
   config?: FirestoreConfig;

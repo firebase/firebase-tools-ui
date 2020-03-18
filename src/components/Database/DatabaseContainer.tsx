@@ -1,18 +1,22 @@
-import React, { ReactElement, useEffect } from 'react';
-import { Elevation } from '@rmwc/elevation';
-import DatabasePicker from './DatabasePicker';
-import { AppState } from '../../store';
-import { MapDispatchToPropsFunction, connect } from 'react-redux';
-import { databasesFetchRequest } from '../../store/database';
-import { GridCell } from '@rmwc/grid';
+import { Button } from '@rmwc/button';
 import { Card } from '@rmwc/card';
+import { Elevation } from '@rmwc/elevation';
+import { GridCell } from '@rmwc/grid';
+import React, { ReactElement, useEffect, useState } from 'react';
+import { MapDispatchToPropsFunction, connect } from 'react-redux';
+
+import { AppState } from '../../store';
+import { databasesSubscribe, databasesUnsubscribe } from '../../store/database';
+import { Callout } from '../common/Callout';
+import DatabasePicker from './DatabasePicker';
 
 export interface PropsFromState {
   databases: string[] | undefined;
 }
 
 export interface PropsFromDispatch {
-  fetchDatabases: () => void;
+  databasesSubscribe: () => void;
+  databasesUnsubscribe: () => void;
 }
 
 export type Props = PropsFromState &
@@ -29,26 +33,62 @@ export const DatabaseContainer: React.FC<Props> = ({
   navigation,
   databases,
   children,
-  fetchDatabases,
+  databasesSubscribe,
+  databasesUnsubscribe,
 }) => {
-  useEffect(() => fetchDatabases(), [fetchDatabases]);
+  useEffect(() => {
+    databasesSubscribe();
+    return databasesUnsubscribe; // Unsubscribe when unmounting.
+  }, [databasesSubscribe, databasesUnsubscribe]);
+  const [dbs, setDbs] = useState(databases);
+
+  let hasNewDbs = false;
+  if (databases !== dbs) {
+    if (
+      dbs === undefined ||
+      databases === undefined ||
+      dbs.join('|') === databases.join('|') // databases from state are sorted
+    ) {
+      // Don't show reload button for initial data or unchanged.
+      setDbs(databases);
+    } else {
+      hasNewDbs = true;
+    }
+  }
 
   return (
-    <GridCell span={12}>
-      <Elevation z={2} wrap>
-        <Card className="canvas-card">
-          <div className="Database">
-            <DatabasePicker
-              current={current}
-              primary={primary}
-              navigation={navigation}
-              databases={databases}
-            />
-            <div style={{ flex: 1 }}>{children}</div>
-          </div>
-        </Card>
-      </Elevation>
-    </GridCell>
+    <>
+      {hasNewDbs && (
+        <GridCell span={12}>
+          <Callout
+            icon="info"
+            actions={
+              <Button theme="secondary" onClick={() => setDbs(databases)}>
+                Reload
+              </Button>
+            }
+          >
+            There are new databases that have been created. Reload the page to
+            view them.
+          </Callout>
+        </GridCell>
+      )}
+      <GridCell span={12}>
+        <Elevation z={2} wrap>
+          <Card className="canvas-card">
+            <div className="Database">
+              <DatabasePicker
+                current={current}
+                primary={primary}
+                navigation={navigation}
+                databases={dbs}
+              />
+              <div style={{ flex: 1 }}>{children}</div>
+            </div>
+          </Card>
+        </Elevation>
+      </GridCell>
+    </>
   );
 };
 
@@ -62,7 +102,8 @@ export const mapDispatchToProps: MapDispatchToPropsFunction<
   PropsFromDispatch,
   {}
 > = dispatch => ({
-  fetchDatabases: () => void dispatch(databasesFetchRequest()),
+  databasesSubscribe: () => void dispatch(databasesSubscribe()),
+  databasesUnsubscribe: () => void dispatch(databasesUnsubscribe()),
 });
 
 export default connect(

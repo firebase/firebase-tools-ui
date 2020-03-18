@@ -15,6 +15,7 @@
  */
 
 import { createAction } from 'typesafe-actions';
+
 import { Config } from './types';
 
 export const fetchRequest = createAction('@config/FETCH_REQUEST')();

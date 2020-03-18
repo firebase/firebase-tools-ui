@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { DialogButton } from '@rmwc/dialog';
 import { Theme } from '@rmwc/theme';
+import React from 'react';
 
 import { confirm } from '../../DialogQueue';
 

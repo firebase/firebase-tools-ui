@@ -14,22 +14,14 @@
  * limitations under the License.
  */
 
+import { render } from '@testing-library/react';
 import React from 'react';
-import { act, render, wait } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
 import { useCollection, useDocumentData } from 'react-firebase-hooks/firestore';
-
-import {
-  fakeFirestoreApi,
-  fakeDocumentReference,
-  fakeDocumentSnapshot,
-} from './testing/models';
+import { MemoryRouter } from 'react-router-dom';
 
 import { ApiProvider } from './ApiContext';
-
 import { Document, Root } from './Document';
-
-import { DocumentStateContext } from './Field/DocumentStore';
+import { fakeDocumentReference, fakeFirestoreApi } from './testing/models';
 
 jest.mock('react-firebase-hooks/firestore');
 

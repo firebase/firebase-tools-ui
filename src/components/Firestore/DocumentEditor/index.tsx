@@ -14,16 +14,9 @@
  * limitations under the License.
  */
 
-import React, { useEffect } from 'react';
 import { TextField } from '@rmwc/textfield';
+import React, { useEffect } from 'react';
 
-import * as actions from './actions';
-import {
-  useDocumentState,
-  useDocumentDispatch,
-  useFieldState,
-  DocumentProvider,
-} from './store';
 import { FirestoreAny, FirestoreMap } from '../models';
 import {
   isArray,
@@ -37,6 +30,13 @@ import {
   lastFieldName,
   getFieldType,
 } from '../utils';
+import * as actions from './actions';
+import {
+  DocumentProvider,
+  useDocumentDispatch,
+  useDocumentState,
+  useFieldState,
+} from './store';
 import BooleanEditor from './BooleanEditor';
 import GeoPointEditor from './GeoPointEditor';
 import NumberEditor from './NumberEditor';

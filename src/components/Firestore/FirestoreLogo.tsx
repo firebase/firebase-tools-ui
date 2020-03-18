@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { Icon } from '@rmwc/icon';
 import { IconSizeT } from '@rmwc/types';
+import React from 'react';
 
 export const FirestoreLogo: React.FC<{ size?: IconSizeT }> = ({ size }) => {
   return (

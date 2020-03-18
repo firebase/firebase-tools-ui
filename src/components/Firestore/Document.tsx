@@ -14,19 +14,20 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import './index.scss';
-import { firestore } from 'firebase';
+
 import { Icon } from '@rmwc/icon';
 import { ListDivider } from '@rmwc/list';
+import { firestore } from 'firebase';
+import React from 'react';
 import { Route, useRouteMatch } from 'react-router-dom';
 
+import { useApi } from './ApiContext';
+import Collection from './Collection';
 import CollectionList from './CollectionList';
 import DocumentPreview from './DocumentPreview';
-import Collection from './Collection';
-import { useApi } from './ApiContext';
-import PanelHeader from './PanelHeader';
 import FirestoreLogo from './FirestoreLogo';
+import PanelHeader from './PanelHeader';
 
 const Doc: React.FC<{
   id: string;

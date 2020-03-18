@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import get from 'lodash.get';
+import React from 'react';
 
 import { FirestoreAny, FirestoreMap } from '../models';
 

@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { render } from '@testing-library/react';
-import { Database } from './Database';
+import React from 'react';
 import { MemoryRouter } from 'react-router';
+
+import { Database } from './Database';
 
 it('renders loading when config is not ready', () => {
   const { getByText } = render(

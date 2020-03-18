@@ -14,9 +14,12 @@
  * limitations under the License.
  */
 
+@import './material-components';
+
 @import '@material/button/mixins';
 @import '@material/card/mixins';
 @import '@material/dialog/mixins';
+@import '@material/ripple/mixins';
 
 @import './components/common/radius';
 
@@ -40,6 +43,11 @@
       // darker hover for buttons
       opacity: 0.08;
     }
+  }
+
+  &.mdc-theme--secondary {
+    // Use secondary hover color for secondary flat buttons.
+    @include mdc-states(secondary);
   }
 }
 

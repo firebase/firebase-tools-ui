@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+// import-sort-ignore
 import 'firebase/database';
 import 'firebase/firestore';
 

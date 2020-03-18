@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-import React from 'react';
-
 import { Icon } from '@rmwc/icon';
+import React from 'react';
 
 export const Logo: React.FC = () => (
   <Icon

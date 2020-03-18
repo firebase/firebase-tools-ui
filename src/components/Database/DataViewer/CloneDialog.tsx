@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-import * as React from 'react';
-import { useState } from 'react';
-import { TextField } from '@rmwc/textfield';
 import {
   Dialog,
-  DialogTitle,
-  DialogContent,
   DialogActions,
   DialogButton,
+  DialogContent,
+  DialogTitle,
 } from '@rmwc/dialog';
-import { Typography } from '@rmwc/typography';
+import { TextField } from '@rmwc/textfield';
 import { Theme } from '@rmwc/theme';
+import { Typography } from '@rmwc/typography';
+import * as React from 'react';
+import { useState } from 'react';
 
 export interface Props {
   realtimeRef: firebase.database.Reference;

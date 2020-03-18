@@ -17,16 +17,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import {
-  Switch,
-  Route,
-  useRouteMatch,
-  Redirect,
   NavLink,
+  Redirect,
+  Route,
+  Switch,
+  useRouteMatch,
 } from 'react-router-dom';
 
 import { AppState } from '../../store';
-import DatabaseContainer from './DatabaseContainer';
 import Database from './Database';
+import DatabaseContainer from './DatabaseContainer';
 
 export interface PropsFromState {
   projectId?: string;

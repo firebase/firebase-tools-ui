@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-import { all, fork } from 'redux-saga/effects';
 import { combineReducers } from 'redux';
+import { all, fork } from 'redux-saga/effects';
+
 import { ConfigState, configReducer, configSaga } from './config';
-import { DatabaseState, databaseSaga, databaseReducer } from './database';
+import { DatabaseState, databaseReducer, databaseSaga } from './database';
 
 export interface AppState {
   config: ConfigState;

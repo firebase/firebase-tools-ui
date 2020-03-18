@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import './index.scss';
-import 'firebase/firestore';
-import { CollectionList } from './CollectionList';
+
 import { Typography } from '@rmwc/typography';
+import React from 'react';
+
+import { CollectionList } from './CollectionList';
 
 export interface Props {
   name: string;

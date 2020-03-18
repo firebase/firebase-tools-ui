@@ -15,14 +15,16 @@
  */
 
 import './NodeLeaf.scss';
-import * as React from 'react';
-import { EditNode } from './EditNode';
-import { useState } from 'react';
+
 import { IconButton } from '@rmwc/icon-button';
-import { Typography } from '@rmwc/typography';
-import { ValueDisplay } from './ValueDisplay';
 import { Tooltip } from '@rmwc/tooltip';
+import { Typography } from '@rmwc/typography';
+import * as React from 'react';
+import { useState } from 'react';
+
 import { getDbRootUrl } from './common/view_model';
+import { EditNode } from './EditNode';
+import { ValueDisplay } from './ValueDisplay';
 
 export interface Props {
   realtimeRef: firebase.database.Reference;

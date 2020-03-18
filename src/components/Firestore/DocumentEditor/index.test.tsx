@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
-import { firestore } from 'firebase';
+import React from 'react';
 
 import DocumentEditor from './index';
 

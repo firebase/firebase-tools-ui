@@ -14,20 +14,21 @@
  * limitations under the License.
  */
 
-import * as React from 'react';
-import { NodeContainer } from './NodeContainer';
-import { useState, useCallback } from 'react';
-import { Button } from '@rmwc/button';
-import {
-  QueryParams,
-  DEFAULT_PAGE_SIZE,
-  ChildrenDisplayType,
-} from './common/view_model';
-import { NodeTabularDisplay } from './NodeTabularDisplay';
-import { NodeActions } from './NodeActions';
-
 import './NodeParent.scss';
+
+import { Button } from '@rmwc/button';
+import * as React from 'react';
+import { useCallback, useState } from 'react';
+
+import {
+  ChildrenDisplayType,
+  DEFAULT_PAGE_SIZE,
+  QueryParams,
+} from './common/view_model';
+import { NodeActions } from './NodeActions';
+import { NodeContainer } from './NodeContainer';
 import { NodeParentKey } from './NodeParentKey';
+import { NodeTabularDisplay } from './NodeTabularDisplay';
 
 export interface Props {
   realtimeRef: firebase.database.Reference;

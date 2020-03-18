@@ -1,9 +1,9 @@
+import { act, render } from '@testing-library/react';
 import React, { useState } from 'react';
-import { DatabaseContainer } from './DatabaseContainer';
-import { render, act } from '@testing-library/react';
 
-// TODO: Implement the interaction below.
-it.skip('renders prompt to refresh when new dbs are added', async () => {
+import { DatabaseContainer } from './DatabaseContainer';
+
+it('renders prompt to refresh when new dbs are added', async () => {
   let triggerAddDbs: () => void | undefined;
   const DatabasesPickerTest: React.FC = () => {
     const [databases, setDatabases] = useState(['foo', 'bar']);
@@ -13,7 +13,8 @@ it.skip('renders prompt to refresh when new dbs are added', async () => {
         primary="foo"
         current="bar"
         navigation={db => <div data-testid={`nav-${db}`} />}
-        fetchDatabases={() => {}}
+        databasesSubscribe={() => {}}
+        databasesUnsubscribe={() => {}}
         databases={databases}
       />
     );

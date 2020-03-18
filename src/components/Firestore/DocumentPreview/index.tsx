@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-import React, { useState } from 'react';
-import { firestore } from 'firebase';
-import { List, ListItem } from '@rmwc/list';
 import { Button } from '@rmwc/button';
+import { List, ListItem } from '@rmwc/list';
+import { firestore } from 'firebase';
+import React, { useState } from 'react';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 
+import { FirestoreMap } from '../models';
+import { isMap } from '../utils';
 import { updateField } from './api';
 import FieldPreview from './FieldPreview';
 import InlineEditor from './InlineEditor';
-import { FirestoreMap } from '../models';
 import { DocumentProvider } from './store';
-import { isMap } from '../utils';
 
 export interface Props {
   reference: firestore.DocumentReference;

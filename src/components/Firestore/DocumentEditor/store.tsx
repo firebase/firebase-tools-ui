@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-import React from 'react';
-import get from 'lodash.get';
 import produce from 'immer';
+import get from 'lodash.get';
+import React from 'react';
 import { Action, createReducer } from 'typesafe-actions';
 
-import * as actions from './actions';
-import { isMap, isArray, lastFieldName, getParentPath } from '../utils';
 import { FirestoreAny, FirestoreMap } from '../models';
+import { getParentPath, isArray, isMap, lastFieldName } from '../utils';
+import * as actions from './actions';
 
 const reducer = createReducer<FirestoreMap, Action>({})
   .handleAction(actions.reset, (state, { payload }) => {
