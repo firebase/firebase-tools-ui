@@ -29,10 +29,14 @@ const GeoPointEditor: React.FC<{
   useEffect(() => {
     const lat = parseInt(latitude);
     const long = parseInt(longitude);
-    if (!isNaN(lat) && !isNaN(long)) {
+    if (
+      !isNaN(lat) &&
+      !isNaN(long) &&
+      !(value.latitude === lat && value.longitude === long)
+    ) {
       onChange(new firestore.GeoPoint(lat, long));
     }
-  }, [latitude, longitude, onChange]);
+  }, [value, latitude, longitude, onChange]);
 
   return (
     <>
