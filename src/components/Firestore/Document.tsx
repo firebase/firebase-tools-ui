@@ -17,7 +17,9 @@
 import './index.scss';
 
 import { Icon } from '@rmwc/icon';
+import { IconButton } from '@rmwc/icon-button';
 import { ListDivider } from '@rmwc/list';
+import { MenuItem, SimpleMenu } from '@rmwc/menu';
 import { firestore } from 'firebase';
 import React from 'react';
 import { Route, useRouteMatch } from 'react-router-dom';
@@ -25,6 +27,8 @@ import { Route, useRouteMatch } from 'react-router-dom';
 import { useApi } from './ApiContext';
 import Collection from './Collection';
 import CollectionList from './CollectionList';
+import { promptDeleteDocument } from './dialogs/deleteDocument';
+import { promptDeleteDocumentFields } from './dialogs/deleteDocumentFields';
 import DocumentPreview from './DocumentPreview';
 import FirestoreLogo from './FirestoreLogo';
 import PanelHeader from './PanelHeader';
@@ -33,7 +37,7 @@ const Doc: React.FC<{
   id: string;
   collectionById: (id: string) => firestore.CollectionReference;
   children: React.ReactNode;
-}> = ({ id, collectionById, children }) => {
+}> = ({ collectionById, children }) => {
   const { url } = useRouteMatch()!;
 
   return (
@@ -69,6 +73,17 @@ export const Root: React.FC = () => {
 export const Document: React.FC<{ reference: firestore.DocumentReference }> = ({
   reference,
 }) => {
+  const handleDeleteDocument = async () => {
+    const shouldDelete = await promptDeleteDocument(reference);
+    // TODO: recursively delete sub documents
+    shouldDelete && reference.delete();
+  };
+
+  const handleDeleteFields = async () => {
+    const shouldDelete = await promptDeleteDocumentFields(reference);
+    shouldDelete && reference.set({});
+  };
+
   return (
     <Doc
       id={reference.id}
@@ -77,7 +92,13 @@ export const Document: React.FC<{ reference: firestore.DocumentReference }> = ({
       <PanelHeader
         id={reference.id}
         icon={<Icon icon={{ icon: 'insert_drive_file', size: 'small' }} />}
-      />
+      >
+        <SimpleMenu handle={<IconButton icon="more_vert" />}>
+          <MenuItem onClick={handleDeleteDocument}>Delete document</MenuItem>
+          <MenuItem onClick={handleDeleteFields}>Delete all fields</MenuItem>
+        </SimpleMenu>
+      </PanelHeader>
+
       <CollectionList reference={reference} />
       <ListDivider />
       <DocumentPreview reference={reference} />
