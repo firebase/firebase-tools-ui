@@ -115,11 +115,7 @@ $msg-types: (
       }
 
       .mdc-button:not(:disabled) {
-        @if $type == note {
-          color: var(--fire-color-primary-dark);
-        } @else {
-          color: $dark;
-        }
+        color: $dark;
 
         &::before,
         &::after {
