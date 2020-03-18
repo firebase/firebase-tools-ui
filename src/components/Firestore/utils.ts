@@ -66,6 +66,32 @@ export function getFieldType(value: FirestoreAny): FieldType {
   return typeof value.valueOf() as FieldType;
 }
 
+export function isBoolean(value: FirestoreAny): value is boolean {
+  return typeof value?.valueOf() === 'boolean';
+}
+
+export function isReference(
+  value: FirestoreAny
+): value is firestore.DocumentReference {
+  return value instanceof firestore.DocumentReference;
+}
+
+export function isTimestamp(value: FirestoreAny): value is firestore.Timestamp {
+  return value instanceof firestore.Timestamp;
+}
+
+export function isString(value: FirestoreAny): value is string {
+  return typeof value?.valueOf() === 'string';
+}
+
+export function isNumber(value: FirestoreAny): value is number {
+  return typeof value?.valueOf() === 'number';
+}
+
+export function isGeoPoint(value: FirestoreAny): value is firestore.GeoPoint {
+  return value instanceof firestore.GeoPoint;
+}
+
 export function isMap(value: any): value is FirestoreMap {
   return getFieldType(value) === FieldType.MAP;
 }

@@ -89,7 +89,7 @@ export function useDocumentDispatch() {
 export function useFieldState(path: string[]): FirestoreAny {
   const documentState = useDocumentState();
   if (path.length === 0) return documentState;
-  return get(documentState, path) || '';
+  return get(documentState, path);
 }
 
 export const DocumentProvider: React.FC<{ value: FirestoreMap }> = ({
