@@ -77,7 +77,7 @@ export const Firestore: React.FC<Props> = ({ config, projectId }) => {
           </Button>
         </div>
         <Elevation z="2" wrap>
-          <Card>
+          <Card className="Firestore-panels-wrapper">
             <CardActionBar>
               <BreadCrumbs base="/firestore" path={path} />
             </CardActionBar>

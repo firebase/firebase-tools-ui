@@ -122,11 +122,11 @@ describe('step 2', () => {
   it('contains a data input', () => {
     const { getByLabelText } = result;
 
-    expect(getByLabelText(/JSON data/)).not.toBeNull();
+    expect(getByLabelText('Field')).not.toBeNull();
   });
 
   it('emits doc data when clicking [Save]', async () => {
-    const { getByText } = result;
+    const { getByLabelText, getByText } = result;
 
     act(() => getByText('Save').click());
 
@@ -136,7 +136,7 @@ describe('step 2', () => {
       collectionId: 'my-col',
       document: {
         id: 'random-id',
-        data: { a: 'b' },
+        data: { '': '' },
       },
     });
   });
