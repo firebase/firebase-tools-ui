@@ -59,6 +59,7 @@ export const AppBar: React.FC<Props> = ({ routes }) => {
         primary: navBarPrimary,
         onSurface: navBarOnSurface,
       }}
+      wrap
     >
       <TopAppBar fixed prominent className="AppBar">
         <TopAppBarRow>
