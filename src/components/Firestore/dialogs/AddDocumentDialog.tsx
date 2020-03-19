@@ -28,6 +28,9 @@ import { Theme } from '@rmwc/theme';
 import { firestore } from 'firebase';
 import React, { useCallback, useEffect, useState } from 'react';
 
+import DocumentEditor from '../DocumentEditor';
+import { FirestoreMap } from '../models';
+
 export interface AddDocumentDialogValue {
   id: string;
   data: any;
@@ -43,17 +46,16 @@ export const AddDocumentStep: React.FC<AddDocumentStepProps> = ({
   onChange,
 }) => {
   const [id, setId] = useState(collectionRef.doc().id);
-  const [json, setJson] = useState('{"a": "b"}');
+  const [data, setData] = useState<FirestoreMap>({ '': '' });
 
   // TODO: Validation
   const getValue = useCallback(() => {
     try {
-      const data = JSON.parse(json);
       return { id, data };
     } catch (e) {
       return { id, data: { invalidData: true } };
     }
-  }, [id, json]);
+  }, [id, data]);
 
   // emit initial value immediately (to capture auto generated doc id)
   useEffect(() => {
@@ -62,11 +64,6 @@ export const AddDocumentStep: React.FC<AddDocumentStepProps> = ({
 
   const updateId = (evt: React.ChangeEvent<HTMLInputElement>) => {
     setId(evt.target.value);
-    onChange(getValue());
-  };
-
-  const updateJson = (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setJson(evt.target.value);
     onChange(getValue());
   };
 
@@ -87,13 +84,7 @@ export const AddDocumentStep: React.FC<AddDocumentStepProps> = ({
         onChange={updateId}
         required
       />
-      <TextField
-        id="add-document-data"
-        fullwidth
-        label="JSON data"
-        value={json}
-        onChange={updateJson}
-      />
+      <DocumentEditor value={data} onChange={data => setData(data)} />
     </>
   );
 };
