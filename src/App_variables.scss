@@ -1,0 +1,6 @@
+@import './components/AppBar/variables';
+$app-main-real-vert-padding: 24px;
+
+$app-remaining-viewport-height-for-content: calc(
+  100vh - #{$app-bar-height + $app-main-real-vert-padding * 2}
+);

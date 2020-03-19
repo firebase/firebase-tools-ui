@@ -46,7 +46,7 @@ const DocumentPreview: React.FC<Props> = ({
   return (
     <>
       <DocumentProvider value={data as FirestoreMap}>
-        <List dense className="List-Actions">
+        <List dense className="List-Actions Firestore-Document-Fields">
           {/* Actions */}
           <ListItem
             tag={props => (
@@ -69,15 +69,18 @@ const DocumentPreview: React.FC<Props> = ({
             />
           )}
 
-          {isMap(data) &&
-            Object.keys(data).map(name => (
-              <FieldPreview
-                key={name}
-                path={[name]}
-                documentRef={reference}
-                maxSummaryLen={maxSummaryLen}
-              />
-            ))}
+          {isMap(data) && (
+            <div className="Firestore-Field-List">
+              {Object.keys(data).map(name => (
+                <FieldPreview
+                  key={name}
+                  path={[name]}
+                  documentRef={reference}
+                  maxSummaryLen={maxSummaryLen}
+                />
+              ))}
+            </div>
+          )}
         </List>
       </DocumentProvider>
     </>

@@ -64,7 +64,9 @@ export const Root: React.FC = () => {
       collectionById={(id: string) => api.database.collection(id)}
     >
       <PanelHeader id="Root" icon={<FirestoreLogo size="small" />} />
-      <CollectionList />
+      <div className="Firestore-PanelContent">
+        <CollectionList />
+      </div>
     </Doc>
   );
 };

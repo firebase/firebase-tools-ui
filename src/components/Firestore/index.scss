@@ -15,17 +15,47 @@
  */
 
 @import '../common/color';
+@import '../App_variables';
+
+.Firestore {
+  display: flex;
+  flex-direction: column;
+
+  // Each panel is individually scrollable within the panel, so we want to avoid
+  // making the whole page scrollable by making stuff fit into viewport height.
+  height: $app-remaining-viewport-height-for-content;
+  // But keep a min-height to keep it usable (at the cost of page scrolling).
+  min-height: 400px;
+}
 
 .Firestore-actions {
   text-align: end;
   margin-bottom: 24px;
 }
 
+.Firestore-panels-wrapper {
+  flex: 1;
+  overflow: hidden;
+}
+
 .Firestore-panels {
   display: flex;
   flex-direction: row !important;
-  min-height: 300px;
-  height: 55vh;
+  overflow: hidden;
+}
+
+// TODO: Remove this wrapper and merge everything in document into a big list.
+.Firestore-Document-Fields {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+
+.Firestore-Document-List,
+.Firestore-Field-List {
+  flex: 1;
+  overflow: auto;
 }
 
 /** Only show at most 3 panels (Documents/Collections) */
@@ -33,6 +63,7 @@
   .Firestore-Document,
   .Firestore-Collection {
     display: none;
+    flex-direction: column;
 
     /* Show a border _between_ rendered panels */
     + .Firestore-Document,
@@ -45,7 +76,7 @@
     }
 
     &:nth-last-child(-n + 3) {
-      display: block;
+      display: flex;
       flex: 1;
     }
 
