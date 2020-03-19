@@ -38,8 +38,7 @@ import { useDocumentState, useFieldState } from './store';
 const FieldPreview: React.FC<{
   path: string[];
   documentRef: firestore.DocumentReference;
-  isKeyMutable?: boolean;
-}> = ({ path, documentRef, isKeyMutable = true }) => {
+}> = ({ path, documentRef }) => {
   const documentData = useDocumentState();
   const state = useFieldState(path);
   const [isEditing, setIsEditing] = useState(false);

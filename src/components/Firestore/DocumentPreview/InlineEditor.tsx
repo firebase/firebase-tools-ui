@@ -42,7 +42,12 @@ const InlineEditor: React.FC<{
 
   function handleSave(e: React.MouseEvent<HTMLButtonElement>) {
     e.stopPropagation();
+<<<<<<< HEAD
     onSave(Object.keys(internalValue)[0], internalValue);
+=======
+    // TODO key could change in the editor
+    onSave(lastFieldName(path), internalValue);
+>>>>>>> save preview for follow up
   }
 
   return (
