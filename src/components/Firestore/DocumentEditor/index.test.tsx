@@ -20,22 +20,49 @@ import React from 'react';
 import { FieldType } from '../models';
 import DocumentEditor from './index';
 
-it('renders an editable field', () => {
-  const onChange = jest.fn();
-  const { getByLabelText, getByPlaceholderText, getByDisplayValue } = render(
-    <DocumentEditor value={{ hello: 'world' }} onChange={onChange} />
-  );
-  expect(getByLabelText('Field').value).toBe('hello');
-  // Select does not properly wire up the label aria properly
-  expect(getByDisplayValue('string')).not.toBe(null);
-  expect(getByLabelText('Value').value).toBe('world');
-
-  fireEvent.change(getByLabelText('Value'), {
-    target: { value: 'new' },
+describe('with basic root fields', () => {
+  let onChange;
+  let result;
+  beforeEach(() => {
+    onChange = jest.fn();
+    result = render(
+      <DocumentEditor value={{ hello: 'world' }} onChange={onChange} />
+    );
   });
 
-  expect(getByLabelText('Value').value).toBe('new');
-  expect(onChange).toHaveBeenCalledWith({ hello: 'new' });
+  it('renders current field name, type, value', () => {
+    const { getByLabelText, getByDisplayValue } = result;
+
+    expect(getByLabelText('Field').value).toBe('hello');
+    // Select does not properly wire up the label aria properly
+    expect(getByDisplayValue('string')).not.toBe(null);
+    expect(getByLabelText('Value').value).toBe('world');
+  });
+
+  it('edits the value', () => {
+    const { getByLabelText } = result;
+
+    fireEvent.change(getByLabelText('Value'), {
+      target: { value: 'new' },
+    });
+
+    expect(getByLabelText('Value').value).toBe('new');
+    expect(onChange).toHaveBeenCalledWith({ hello: 'new' });
+  });
+
+  it('adds root-fields', () => {
+    const { getByText } = result;
+
+    getByText('add').click();
+    expect(onChange).toHaveBeenCalledWith({ hello: 'world', '': '' });
+  });
+
+  it('removes root-fields', () => {
+    const { getByText } = result;
+
+    getByText('delete').click();
+    expect(onChange).toHaveBeenCalledWith({});
+  });
 });
 
 it('renders an editable field with children', () => {
@@ -86,9 +113,9 @@ describe('changing types', () => {
   });
 
   it('switches to an array', () => {
-    const { getByText } = result;
+    const { getAllByText } = result;
     setType(FieldType.ARRAY);
-    expect(getByText('add')).not.toBe(null);
+    expect(getAllByText('add').length).toBe(2);
   });
 
   it('switches to a boolean', () => {
@@ -104,9 +131,9 @@ describe('changing types', () => {
   });
 
   it('switches to a map', () => {
-    const { getByText } = result;
+    const { getAllByText } = result;
     setType(FieldType.MAP);
-    expect(getByText('add')).not.toBe(null);
+    expect(getAllByText('add').length).toBe(2);
   });
 
   it('switches to null', () => {

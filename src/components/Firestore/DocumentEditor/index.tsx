@@ -65,15 +65,31 @@ export function supportsEditing(value: FirestoreAny): boolean {
   return supportedFieldTypeSet.has(getFieldType(value));
 }
 
-/** Entry point for a Document/Field editor */
+/**
+ * Entry point for a Document/Field editor
+ *
+ * areRootKeysMutable: can a root key be changed, this is generally not the case
+ *     once a field has been persisted via the SDK.
+ * areRootFielsMutable: can a root field be added/removed.
+ */
 const DocumentEditor: React.FC<{
   value: FirestoreMap;
   onChange?: (value: FirestoreMap) => void;
   areRootKeysMutable?: boolean;
-}> = ({ value, onChange, areRootKeysMutable = true }) => {
+  areRootFieldsMutable?: boolean;
+}> = ({
+  value,
+  onChange,
+  areRootKeysMutable = true,
+  areRootFieldsMutable = true,
+}) => {
   return (
     <DocumentProvider value={value}>
-      <RootField onChange={onChange} areRootKeysMutable={areRootKeysMutable} />
+      <RootField
+        onChange={onChange}
+        areRootKeysMutable={areRootKeysMutable}
+        areRootFieldsMutable={areRootFieldsMutable}
+      />
     </DocumentProvider>
   );
 };
@@ -85,8 +101,10 @@ const DocumentEditor: React.FC<{
 const RootField: React.FC<{
   onChange?: (value: FirestoreMap) => void;
   areRootKeysMutable: boolean;
-}> = ({ onChange, areRootKeysMutable }) => {
+  areRootFieldsMutable: boolean;
+}> = ({ onChange, areRootKeysMutable, areRootFieldsMutable }) => {
   const state = useDocumentState();
+  const dispatch = useDocumentDispatch()!;
 
   useEffect(() => {
     onChange && onChange(state);
@@ -95,12 +113,24 @@ const RootField: React.FC<{
   return (
     <>
       {Object.keys(state).map(field => (
-        <NestedEditor
-          key={field}
-          path={[field]}
-          isKeyMutable={areRootKeysMutable}
-        />
+        <React.Fragment key={field}>
+          <NestedEditor path={[field]} isKeyMutable={areRootKeysMutable} />
+          {areRootFieldsMutable && (
+            <IconButton
+              icon="delete"
+              label="Remove field"
+              onClick={e => dispatch(actions.deleteField([field]))}
+            />
+          )}
+        </React.Fragment>
       ))}
+      {areRootFieldsMutable && (
+        <IconButton
+          icon="add"
+          label="Add field"
+          onClick={e => dispatch(actions.addField({ path: [''], value: '' }))}
+        />
+      )}
     </>
   );
 };
