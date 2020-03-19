@@ -65,6 +65,17 @@ const reducer = createReducer<FirestoreMap, Action>({})
     })
   )
   .handleAction(
+    actions.updateKey,
+    produce((draft, { payload }) => {
+      const parent = get(draft, getParentPath(payload.path)) || draft;
+      const oldFieldName = lastFieldName(payload.path);
+      if (isMap(parent)) {
+        parent[payload.key] = parent[oldFieldName];
+        delete parent[oldFieldName];
+      }
+    })
+  )
+  .handleAction(
     actions.deleteField,
     produce((draft, { payload }) => {
       const parent = get(draft, getParentPath(payload)) || draft;

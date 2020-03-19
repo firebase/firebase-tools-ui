@@ -31,4 +31,8 @@ export const updateType = createAction('@document/updateType')<{
   path: string[];
   type: FieldType;
 }>();
+export const updateKey = createAction('@document/updateKey')<{
+  path: string[];
+  key: string;
+}>();
 export const deleteField = createAction('@document/delete')<string[]>();
