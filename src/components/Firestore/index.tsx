@@ -22,6 +22,7 @@ import { Elevation } from '@rmwc/elevation';
 import { GridCell } from '@rmwc/grid';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 
 import { AppState } from '../../store';
 import { FirestoreConfig } from '../../store/config';
@@ -42,6 +43,9 @@ export type Props = PropsFromState;
 export const Firestore: React.FC<Props> = ({ config, projectId }) => {
   const [api, setApi] = useState<DatabaseApi | undefined>(undefined);
   const databaseId = '(default)';
+  const location = useLocation();
+  // TODO: do something better here!
+  const path = location.pathname.replace(/^\/firestore/, '');
 
   useEffect(() => {
     if (!config || !projectId) return;
@@ -75,7 +79,7 @@ export const Firestore: React.FC<Props> = ({ config, projectId }) => {
         <Elevation z="2" wrap>
           <Card>
             <CardActionBar>
-              <BreadCrumbs base="/firestore" path={'/a/b/c'} />
+              <BreadCrumbs base="/firestore" path={path} />
             </CardActionBar>
             <div className="Firestore-panels">
               <Root />

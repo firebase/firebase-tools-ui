@@ -43,7 +43,7 @@ export const BreadCrumbs: React.FC<Props> = ({ base, path }) => {
       </li>
 
       {keys.map((key, i) => (
-        <li className="BreadCrumbs-crumb">
+        <li key={hrefs[i]} className="BreadCrumbs-crumb">
           <Link to={hrefs[i]}>{key}</Link>
         </li>
       ))}
