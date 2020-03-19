@@ -24,6 +24,7 @@ import classnames from 'classnames';
 import { firestore } from 'firebase';
 import React, { useState } from 'react';
 
+import { FieldType, FirestoreAny } from '../models';
 import {
   getFieldType,
   isArray,
@@ -32,7 +33,7 @@ import {
   lastFieldName,
 } from '../utils';
 import { deleteField, updateField } from './api';
-import InlineEditor from './InlineEditor';
+import InlineEditor, { supportsEditing } from './InlineEditor';
 import { useDocumentState, useFieldState } from './store';
 
 const FieldPreview: React.FC<{
@@ -106,10 +107,10 @@ const FieldPreview: React.FC<{
         >
           {lastFieldName(path)}
         </Theme>
-        <span className="FieldPreview-summary">{JSON.stringify(state)}</span>
+        <span className="FieldPreview-summary">{summarize(state, 20)}</span>
         <ListItemMeta className="FieldPreview-actions">
           <span className="FieldPreview-type">({getFieldType(state)})</span>
-          {isPrimitive(state) ? (
+          {isPrimitive(state) && supportsEditing(state) && (
             <IconButton
               icon="edit"
               label="Edit field"
@@ -118,7 +119,8 @@ const FieldPreview: React.FC<{
                 setIsEditing(true);
               }}
             />
-          ) : (
+          )}{' '}
+          {(isArray(state) || isMap(state)) && (
             <IconButton
               icon="add"
               label="Add field"
@@ -157,5 +159,76 @@ const FieldPreview: React.FC<{
     </>
   );
 };
+
+// Give a brief text summary of the data.
+// Note: maxLen is soft (at least for now). End result may still be longer.
+function summarize(data: FirestoreAny, maxLen: number): string {
+  switch (getFieldType(data)) {
+    case FieldType.ARRAY:
+      return summarizeArray(data as FirestoreAny[], maxLen);
+    case FieldType.MAP:
+      return summarizeMap(data as Record<string, FirestoreAny>, maxLen);
+    case FieldType.BLOB:
+      const base64 = (data as firestore.Blob).toBase64();
+      if (base64.length < 20) return base64;
+      else return base64.substr(0, 20) + '...';
+    case FieldType.BOOLEAN:
+      return (data as boolean).toString();
+    case FieldType.GEOPOINT:
+      const value = data as firestore.GeoPoint;
+      return `[${latStr(value.latitude)}, ${longStr(value.longitude)}]`;
+    case FieldType.NULL:
+      return 'null';
+    case FieldType.NUMBER:
+      return (data as number).toString();
+    case FieldType.REFERENCE:
+      return (data as firestore.DocumentReference).path;
+    case FieldType.STRING:
+      return `"${data as string}"`;
+    case FieldType.TIMESTAMP:
+      // TODO: Better date time formatting.
+      // Note: Not using toLocaleString() since it does not stringify timezone.
+      return (data as firestore.Timestamp).toDate().toString();
+  }
+}
+
+function summarizeArray(array: FirestoreAny[], maxLen: number): string {
+  let output = '[';
+  for (const element of array) {
+    if (output.length > 1) output += ', ';
+    if (output.length > maxLen) {
+      output += '...';
+      break;
+    }
+    output += summarize(element, maxLen - output.length);
+  }
+  output += ']';
+  return output;
+}
+
+function summarizeMap(
+  map: Record<string, FirestoreAny>,
+  maxLen: number
+): string {
+  let output = '{';
+  for (const [key, value] of Object.entries(map)) {
+    if (output.length > 1) output += ', ';
+    if (output.length > maxLen) {
+      output += '...';
+      break;
+    }
+    output += `${key}: ${summarize(value, maxLen - output.length)}`;
+  }
+  output += '}';
+  return output;
+}
+
+function latStr(lat: number): string {
+  return `${Math.abs(lat)}° ${lat >= 0 ? 'N' : 'S'}`;
+}
+
+function longStr(long: number): string {
+  return `${Math.abs(long)}° ${long >= 0 ? 'E' : 'W'}`;
+}
 
 export default FieldPreview;
