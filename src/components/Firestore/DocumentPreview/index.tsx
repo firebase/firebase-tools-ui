@@ -29,10 +29,13 @@ import { DocumentProvider } from './store';
 
 export interface Props {
   reference: firestore.DocumentReference;
-  maxSummaryLen: number;
+  maxSummaryLen?: number;
 }
 
-const DocumentPreview: React.FC<Props> = ({ reference, maxSummaryLen }) => {
+const DocumentPreview: React.FC<Props> = ({
+  reference,
+  maxSummaryLen = 20,
+}) => {
   const [data, loading, error] = useDocumentData(reference);
   const [isAddingField, setIsAddingField] = useState(false);
 

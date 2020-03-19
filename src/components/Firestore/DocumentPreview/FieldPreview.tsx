@@ -39,8 +39,8 @@ import { useDocumentState, useFieldState } from './store';
 const FieldPreview: React.FC<{
   path: string[];
   documentRef: firestore.DocumentReference;
-  maxSummaryLen?: number;
-}> = ({ path, documentRef, maxSummaryLen = 20 }) => {
+  maxSummaryLen: number;
+}> = ({ path, documentRef, maxSummaryLen }) => {
   const documentData = useDocumentState();
   const state = useFieldState(path);
   const [isEditing, setIsEditing] = useState(false);
