@@ -17,7 +17,7 @@
 import { IconButton } from '@rmwc/icon-button';
 import { Select } from '@rmwc/select';
 import { TextField } from '@rmwc/textfield';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { FieldType, FirestoreAny, FirestoreMap } from '../models';
 import {
@@ -76,9 +76,9 @@ const RootField: React.FC<{
 
   return (
     <>
-      {Object.keys(state).map((field, i) => (
+      {Object.keys(state).map(field => (
         <NestedEditor
-          key={i}
+          key={field}
           path={[field]}
           isKeyMutable={areRootKeysMutable}
         />
@@ -96,12 +96,15 @@ const NestedEditor: React.FC<{
 }> = ({ path, isKeyMutable }) => {
   const state = useFieldState(path);
   const dispatch = useDocumentDispatch()!;
+  const [key, setKey] = useState(lastFieldName(path));
 
   let childEditors = null;
   if (isMap(state)) {
-    childEditors = Object.keys(state).map((childLeaf, i) => {
+    childEditors = Object.keys(state).map(childLeaf => {
       const childPath = [...path, childLeaf];
-      return <NestedEditor key={i} path={childPath} isKeyMutable={true} />;
+      return (
+        <NestedEditor key={childLeaf} path={childPath} isKeyMutable={true} />
+      );
     });
   } else if (isArray(state)) {
     childEditors = state.map((value, index) => {
@@ -138,7 +141,11 @@ const NestedEditor: React.FC<{
   );
 
   function handleKeyChange(e: React.FormEvent<HTMLInputElement>) {
-    dispatch(actions.updateKey({ path, key: e.currentTarget.value }));
+    setKey(e.currentTarget.value);
+  }
+
+  function handleKeyBlur(e: React.FormEvent<HTMLInputElement>) {
+    dispatch(actions.updateKey({ path, key }));
   }
 
   return (
@@ -146,9 +153,12 @@ const NestedEditor: React.FC<{
       <div style={{ display: 'flex' }}>
         <TextField
           {...(isKeyMutable
-            ? { onChange: handleKeyChange }
+            ? {
+                onChange: handleKeyChange,
+                onBlur: handleKeyBlur,
+              }
             : { readOnly: true, disabled: true })}
-          value={lastFieldName(path)}
+          value={key}
           outlined
           label="Field"
         />
@@ -167,7 +177,7 @@ const NestedEditor: React.FC<{
             FieldType.REFERENCE,
           ]}
           value={getFieldType(state)}
-          onChange={(e) => {
+          onChange={e => {
             dispatch(actions.updateType({ path, type: e.currentTarget.value }));
           }}
         />
@@ -176,7 +186,7 @@ const NestedEditor: React.FC<{
           <IconButton
             icon="add"
             label="Add field"
-            onClick={(e) =>
+            onClick={e =>
               dispatch(actions.addField({ path: [...path, ''], value: '' }))
             }
           />
@@ -185,12 +195,12 @@ const NestedEditor: React.FC<{
           <IconButton
             icon="add"
             label="Add field"
-            onClick={(e) =>
+            onClick={e =>
               dispatch(
                 actions.addField({
                   path: [...path, `${path.length}`],
                   value: '',
-                }),
+                })
               )
             }
           />
