@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import React from 'react';
-import { firestore } from 'firebase';
 import { TextField } from '@rmwc/textfield';
+import { firestore } from 'firebase';
+import React from 'react';
 
 const ReferenceEditor: React.FC<{
   value: firestore.DocumentReference;

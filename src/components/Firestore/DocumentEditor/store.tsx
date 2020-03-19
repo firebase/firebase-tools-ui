@@ -65,6 +65,40 @@ const reducer = createReducer<FirestoreMap, Action>({})
     })
   )
   .handleAction(
+    actions.updateKey,
+    produce((draft, { payload }) => {
+      const parent = get(draft, getParentPath(payload.path)) || draft;
+      const oldFieldName = lastFieldName(payload.path);
+      if (isMap(parent)) {
+        parent[payload.key] = parent[oldFieldName];
+        delete parent[oldFieldName];
+      }
+    })
+  )
+  .handleAction(
+    actions.updateType,
+    produce((draft, { payload }) => {
+      const parent = get(draft, getParentPath(payload.path)) || draft;
+      const defaultValue = defaultValueForType(payload.type);
+      if (isMap(parent)) {
+        parent[lastFieldName(payload.path)] = defaultValue;
+      } else if (isArray(parent) && !isArray(defaultValue)) {
+        parent[Number(lastFieldName(payload.path))] = defaultValue;
+      }
+    })
+  )
+  .handleAction(
+    actions.updateKey,
+    produce((draft, { payload }) => {
+      const parent = get(draft, getParentPath(payload.path)) || draft;
+      const oldFieldName = lastFieldName(payload.path);
+      if (isMap(parent)) {
+        parent[payload.key] = parent[oldFieldName];
+        delete parent[oldFieldName];
+      }
+    })
+  )
+  .handleAction(
     actions.deleteField,
     produce((draft, { payload }) => {
       const parent = get(draft, getParentPath(payload)) || draft;

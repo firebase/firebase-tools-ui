@@ -19,16 +19,15 @@ import { Elevation } from '@rmwc/elevation';
 import React, { useState } from 'react';
 
 import DocumentEditor from '../DocumentEditor';
-import { FirestoreMap } from '../models';
-import { lastFieldName } from '../utils';
+import { FirestoreAny, FirestoreMap } from '../models';
 
 /** Editor entry point for a selected field */
 const InlineEditor: React.FC<{
   value: FirestoreMap;
-  path: string[];
   onCancel: () => void;
-  onSave: (key: string, value: FirestoreMap) => void;
-}> = ({ value, path, onCancel, onSave }) => {
+  onSave: (key: string, value: FirestoreAny) => void;
+  areRootKeysMutable: boolean;
+}> = ({ value, onCancel, onSave, areRootKeysMutable }) => {
   const [internalValue, setInternalValue] = useState(value);
 
   function handleChange(value: FirestoreMap) {
@@ -42,15 +41,18 @@ const InlineEditor: React.FC<{
 
   function handleSave(e: React.MouseEvent<HTMLButtonElement>) {
     e.stopPropagation();
-    // TODO key could change in the editor
-    onSave(lastFieldName(path), internalValue);
+    onSave(Object.keys(internalValue)[0], Object.values(internalValue)[0]);
   }
 
   return (
     <Elevation z={8} wrap>
       <Card className="Firestore-Field-inline-editor">
         <div>
-          <DocumentEditor value={value} onChange={handleChange} />
+          <DocumentEditor
+            value={value}
+            onChange={handleChange}
+            areRootKeysMutable={areRootKeysMutable}
+          />
         </div>
         <CardActionButtons>
           <CardActionButton onClick={handleCancel}>Cancel</CardActionButton>

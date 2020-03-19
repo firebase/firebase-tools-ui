@@ -26,6 +26,7 @@ import React, { useState } from 'react';
 
 import {
   getFieldType,
+  getParentPath,
   isArray,
   isMap,
   isPrimitive,
@@ -74,14 +75,20 @@ const FieldPreview: React.FC<{
   return isEditing ? (
     <InlineEditor
       value={{ [lastFieldName(path)]: state }}
-      path={path}
       onCancel={() => {
         setIsEditing(false);
       }}
       onSave={(key, value) => {
-        updateField(documentRef, documentData, path, value[key]);
+        updateField(
+          documentRef,
+          documentData,
+          isArray(state) ? [...path, key] : [...getParentPath(path), key],
+          // [...getParentPath(path), key],
+          value
+        );
         setIsEditing(false);
       }}
+      areRootKeysMutable={false}
     />
   ) : (
     <>
@@ -141,14 +148,15 @@ const FieldPreview: React.FC<{
       {addPath && isAddingField && (
         <InlineEditor
           value={{ [lastFieldName(addPath)]: '' }}
-          path={addPath}
           onCancel={() => {
             setIsAddingField(false);
           }}
           onSave={(key, value) => {
-            updateField(documentRef, documentData, addPath, value[key]);
+            const newPath = isArray(state) ? addPath : [...path, key];
+            updateField(documentRef, documentData, newPath, value);
             setIsAddingField(false);
           }}
+          areRootKeysMutable={!isArray(state)}
         />
       )}
       {!isPrimitive(state) && isExpanded && (

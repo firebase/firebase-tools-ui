@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { TextField } from '@rmwc/textfield';
+import React from 'react';
 
 const StringEditor: React.FC<{
   value: string;
