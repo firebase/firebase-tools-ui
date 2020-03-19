@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
+import { IconButton } from '@rmwc/icon-button';
 import { Select } from '@rmwc/select';
 import { TextField } from '@rmwc/textfield';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { FieldType, FirestoreAny, FirestoreMap } from '../models';
 import {
@@ -26,6 +27,7 @@ import {
   isGeoPoint,
   isMap,
   isNumber,
+  isPrimitive,
   isReference,
   isString,
   isTimestamp,
@@ -45,14 +47,33 @@ import {
 import StringEditor from './StringEditor';
 import TimestampEditor from './TimestampEditor';
 
+const supportedFieldTypes = [
+  FieldType.STRING,
+  FieldType.NUMBER,
+  FieldType.BOOLEAN,
+  FieldType.MAP,
+  FieldType.ARRAY,
+  FieldType.NULL,
+  FieldType.TIMESTAMP,
+  FieldType.GEOPOINT,
+  FieldType.REFERENCE,
+];
+
+const supportedFieldTypeSet = new Set(supportedFieldTypes);
+
+export function supportsEditing(value: FirestoreAny): boolean {
+  return supportedFieldTypeSet.has(getFieldType(value));
+}
+
 /** Entry point for a Document/Field editor */
 const DocumentEditor: React.FC<{
   value: FirestoreMap;
   onChange?: (value: FirestoreMap) => void;
-}> = ({ value, onChange }) => {
+  areRootKeysMutable?: boolean;
+}> = ({ value, onChange, areRootKeysMutable = true }) => {
   return (
     <DocumentProvider value={value}>
-      <RootField onChange={onChange} />
+      <RootField onChange={onChange} areRootKeysMutable={areRootKeysMutable} />
     </DocumentProvider>
   );
 };
@@ -63,7 +84,8 @@ const DocumentEditor: React.FC<{
  */
 const RootField: React.FC<{
   onChange?: (value: FirestoreMap) => void;
-}> = ({ onChange }) => {
+  areRootKeysMutable: boolean;
+}> = ({ onChange, areRootKeysMutable }) => {
   const state = useDocumentState();
 
   useEffect(() => {
@@ -73,7 +95,11 @@ const RootField: React.FC<{
   return (
     <>
       {Object.keys(state).map(field => (
-        <NestedEditor key={field} path={[field]} />
+        <NestedEditor
+          key={field}
+          path={[field]}
+          isKeyMutable={areRootKeysMutable}
+        />
       ))}
     </>
   );
@@ -82,20 +108,26 @@ const RootField: React.FC<{
 /**
  * Field with call-to-actions for editing as well as rendering applicable child-nodes
  */
-const NestedEditor: React.FC<{ path: string[] }> = ({ path }) => {
+const NestedEditor: React.FC<{
+  path: string[];
+  isKeyMutable: boolean;
+}> = ({ path, isKeyMutable }) => {
   const state = useFieldState(path);
   const dispatch = useDocumentDispatch()!;
+  const [key, setKey] = useState(lastFieldName(path));
 
   let childEditors = null;
   if (isMap(state)) {
     childEditors = Object.keys(state).map(childLeaf => {
       const childPath = [...path, childLeaf];
-      return <NestedEditor key={childLeaf} path={childPath} />;
+      return (
+        <NestedEditor key={childLeaf} path={childPath} isKeyMutable={true} />
+      );
     });
   } else if (isArray(state)) {
     childEditors = state.map((value, index) => {
       const childPath = [...path, `${index}`];
-      return <NestedEditor key={index} path={childPath} />;
+      return <NestedEditor key={index} path={childPath} isKeyMutable={false} />;
     });
   }
 
@@ -126,30 +158,68 @@ const NestedEditor: React.FC<{ path: string[] }> = ({ path }) => {
     </>
   );
 
+  function handleKeyChange(e: React.FormEvent<HTMLInputElement>) {
+    setKey(e.currentTarget.value);
+  }
+
+  function handleKeyBlur(e: React.FormEvent<HTMLInputElement>) {
+    dispatch(actions.updateKey({ path, key }));
+  }
+
   return (
     <>
       <div style={{ display: 'flex' }}>
-        <TextField readOnly value={lastFieldName(path)} placeholder="Field" />
+        <TextField
+          {...(isKeyMutable
+            ? {
+                onChange: handleKeyChange,
+                onBlur: handleKeyBlur,
+              }
+            : { readOnly: true, disabled: true })}
+          value={key}
+          outlined
+          label="Field"
+        />
         <Select
           label="Type"
           outlined
-          options={[
-            FieldType.STRING,
-            FieldType.NUMBER,
-            FieldType.BOOLEAN,
-            FieldType.MAP,
-            FieldType.ARRAY,
-            FieldType.NULL,
-            FieldType.TIMESTAMP,
-            FieldType.GEOPOINT,
-            FieldType.REFERENCE,
-          ]}
+          options={supportedFieldTypes}
           value={getFieldType(state)}
           onChange={e => {
             dispatch(actions.updateType({ path, type: e.currentTarget.value }));
           }}
         />
         {fieldEditor}
+        {isMap(state) && (
+          <IconButton
+            icon="add"
+            label="Add field"
+            onClick={e =>
+              dispatch(actions.addField({ path: [...path, ''], value: '' }))
+            }
+          />
+        )}
+        {isArray(state) && (
+          <IconButton
+            icon="add"
+            label="Add field"
+            onClick={e =>
+              dispatch(
+                actions.addField({
+                  path: [...path, `${path.length}`],
+                  value: '',
+                })
+              )
+            }
+          />
+        )}
+        {path.length > 1 && isPrimitive(state) && (
+          <IconButton
+            icon="delete"
+            label="Remove field"
+            onClick={() => dispatch(actions.deleteField(path))}
+          />
+        )}
       </div>
       {childEditors && <div>{childEditors}</div>}
     </>
