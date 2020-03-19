@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
+import { act, render, wait } from '@testing-library/react';
 import React from 'react';
-import { wait, act, render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
-import { fakeCollectionReference } from './testing/models';
-import { Firestore } from './index';
-import DatabaseApi from './api';
 import { confirm } from '../DialogQueue';
+import DatabaseApi from './api';
+import { Firestore } from './index';
+import { fakeCollectionReference } from './testing/models';
 
 jest.mock('./api');
 jest.mock('../DialogQueue');
@@ -68,7 +68,7 @@ it('triggers clearing all data', async () => {
     </MemoryRouter>
   );
 
-  act(() => getByText('clear all data').click());
+  act(() => getByText('Clear all data').click());
 
   await wait();
 
@@ -91,7 +91,7 @@ it('does not trigger clearing all data if dialog is not confirmed', async () => 
     </MemoryRouter>
   );
 
-  act(() => getByText('clear all data').click());
+  act(() => getByText('Clear all data').click());
 
   await wait();
 

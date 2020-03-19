@@ -14,20 +14,14 @@
  * limitations under the License.
  */
 
+import { render } from '@testing-library/react';
 import React from 'react';
-import { act, render, wait } from '@testing-library/react';
+import { useCollection, useDocumentData } from 'react-firebase-hooks/firestore';
 import { MemoryRouter } from 'react-router-dom';
-import { useDocumentData } from 'react-firebase-hooks/firestore';
-
-import {
-  fakeFirestoreApi,
-  fakeDocumentReference,
-  fakeDocumentSnapshot,
-} from './testing/models';
 
 import { ApiProvider } from './ApiContext';
-
 import { Document, Root } from './Document';
+import { fakeDocumentReference, fakeFirestoreApi } from './testing/models';
 
 jest.mock('react-firebase-hooks/firestore');
 
@@ -46,8 +40,6 @@ it('shows the root-id', () => {
 });
 
 it('shows the document-id', () => {
-  useDocumentData.mockReturnValueOnce([]);
-
   const { getByText } = render(
     <MemoryRouter>
       <ApiProvider value={fakeFirestoreApi()}>
@@ -60,8 +52,6 @@ it('shows the document-id', () => {
 });
 
 it('shows the root collection-list', () => {
-  useDocumentData.mockReturnValueOnce([]);
-
   const { getByTestId } = render(
     <MemoryRouter>
       <ApiProvider value={fakeFirestoreApi()}>
@@ -89,6 +79,7 @@ it('shows the document collection-list', () => {
 
 it('shows the selected root-collection', () => {
   useDocumentData.mockReturnValueOnce([]);
+  useCollection.mockReturnValueOnce([]);
 
   const { getByText, queryAllByText } = render(
     <MemoryRouter initialEntries={['//cool-coll-1']}>
@@ -103,6 +94,7 @@ it('shows the selected root-collection', () => {
 
 it('shows the selected document-collection', () => {
   useDocumentData.mockReturnValueOnce([]);
+  useCollection.mockReturnValueOnce([]);
 
   const { getByText, queryAllByText } = render(
     <MemoryRouter initialEntries={['//cool-coll-1']}>

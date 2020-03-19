@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import DatabaseDefaultRoute from './components/Database/DatabaseDefaultRoute';
+import Database from './components/Database';
 import Firestore from './components/Firestore';
 import Home from './components/Home';
 import LogsViewer from './components/LogViewer';
@@ -31,23 +31,23 @@ export const routes: ReadonlyArray<Route> = [
   {
     path: '/',
     component: Home,
-    label: 'overview',
+    label: 'Overview',
     exact: true,
     showInNav: true,
   },
   {
     path: '/database',
-    component: DatabaseDefaultRoute,
-    label: 'rtdb',
+    component: Database,
+    label: 'RTDB',
     exact: false,
     showInNav: true,
   },
   {
     path: '/firestore',
     component: Firestore,
-    label: 'firestore',
+    label: 'Firestore',
     exact: false,
-    showInNav: false,
+    showInNav: true,
   },
   {
     path: '/logs',

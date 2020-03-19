@@ -3,7 +3,24 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@rmwc/button": "^5.7.2",
+    "@rmwc/card": "^5.7.2",
+    "@rmwc/data-table": "^5.7.2",
+    "@rmwc/dialog": "^5.7.2",
+    "@rmwc/elevation": "^5.7.2",
     "@rmwc/grid": "^5.7.2",
+    "@rmwc/icon": "^5.7.2",
+    "@rmwc/icon-button": "^5.7.2",
+    "@rmwc/list": "^5.7.2",
+    "@rmwc/menu": "^5.7.2",
+    "@rmwc/select": "^5.7.2",
+    "@rmwc/tabs": "^5.7.2",
+    "@rmwc/textfield": "^5.7.2",
+    "@rmwc/theme": "^5.7.2",
+    "@rmwc/tooltip": "^5.7.2",
+    "@rmwc/top-app-bar": "^5.7.2",
+    "@rmwc/types": "^5.6.0",
+    "@rmwc/typography": "^5.7.2",
     "@types/jest": "24.0.21",
     "@types/node": "12.12.3",
     "@types/react": "16.9.11",
@@ -13,7 +30,9 @@
     "express": "^4.17.1",
     "firebase": "^7.6.0",
     "font-awesome": "^4.7.0",
+    "immer": "^6.0.1",
     "keycode": "^2.2.0",
+    "lodash.get": "^4.4.2",
     "node-fetch": "^2.6.0",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
@@ -23,9 +42,8 @@
     "react-scripts": "^3.3.0",
     "redux": "^4.0.4",
     "redux-saga": "^1.1.1",
-    "rmwc": "^5.7.1",
     "typesafe-actions": "^5.1.0",
-    "typescript": "3.6.4"
+    "typescript": "^3.8.3"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -56,12 +74,19 @@
     "@firebase/auth-interop-types": "^0.1.1",
     "@firebase/component": "^0.1.1",
     "@testing-library/react": "^9.3.2",
+    "@types/classnames": "^2.2.10",
+    "@types/lodash.get": "^4.4.6",
     "@types/react-router-dom": "^5.1.2",
     "husky": "^3.0.9",
+    "import-sort-config": "^6.0.0",
+    "import-sort-parser-typescript": "^6.0.0",
+    "import-sort-style-module": "^6.0.0",
     "jest-fetch-mock": "^3.0.1",
     "lint-staged": "^9.4.2",
+    "mutationobserver-shim": "^0.3.3",
     "node-sass": "^4.13.0",
-    "prettier": "^1.18.2",
+    "prettier": "^1.19.1",
+    "prettier-plugin-import-sort": "0.0.3",
     "webpack-cli": "^3.3.10"
   },
   "husky": {
@@ -74,5 +99,11 @@
       "prettier --write",
       "git add"
     ]
+  },
+  "importSort": {
+    ".js, .jsx, .es6, .es, .mjs, .ts, .tsx": {
+      "parser": "typescript",
+      "style": "module"
+    }
   }
 }

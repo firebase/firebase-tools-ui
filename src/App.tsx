@@ -14,23 +14,26 @@
  * limitations under the License.
  */
 
+import './App.scss';
+
+import { DialogQueue } from '@rmwc/dialog';
+import { Grid } from '@rmwc/grid';
+import { Theme } from '@rmwc/theme';
 import React from 'react';
 import { Route } from 'react-router-dom';
-import { Theme } from '@rmwc/theme';
-import { DialogQueue } from '@rmwc/dialog';
-import './App.scss';
+
 import AppBar from './components/AppBar';
-import { routes } from './routes';
 import { dialogs } from './components/DialogQueue';
+import { routes } from './routes';
 
 const App: React.FC = () => {
   return (
-    <Theme use="background" wrap>
-      <>
-        <DialogQueue dialogs={dialogs} />
+    <>
+      <DialogQueue dialogs={dialogs} />
+      <Theme use="background" wrap>
         <div className="App">
           <AppBar routes={routes} />
-          <div className="App-main">
+          <Grid className="App-main">
             {routes.map(r => (
               <Route
                 key={r.path}
@@ -39,10 +42,10 @@ const App: React.FC = () => {
                 exact={r.exact}
               />
             ))}
-          </div>
+          </Grid>
         </div>
-      </>
-    </Theme>
+      </Theme>
+    </>
   );
 };
 

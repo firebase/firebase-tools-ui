@@ -15,6 +15,7 @@
  */
 
 import { createContext, useContext } from 'react';
+
 import DatabaseApi from './api';
 
 const ApiContext = createContext<DatabaseApi | null>(null);

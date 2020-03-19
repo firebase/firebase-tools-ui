@@ -14,14 +14,20 @@
  * limitations under the License.
  */
 
-import React, { useState, useEffect } from 'react';
-import { firestore } from 'firebase';
-import { useRouteMatch, NavLink } from 'react-router-dom';
-import { List, ListItem } from '@rmwc/list';
-
 import './index.scss';
-import { useApi } from './ApiContext';
+
+import { Button } from '@rmwc/button';
+import { List, ListItem } from '@rmwc/list';
+import { firestore } from 'firebase';
+import React, { useEffect, useState } from 'react';
+import { NavLink, useRouteMatch } from 'react-router-dom';
+
 import DatabaseApi from './api';
+import { useApi } from './ApiContext';
+import {
+  AddCollectionDialog,
+  AddCollectionDialogValue,
+} from './dialogs/AddCollectionDialog';
 
 export interface Props {
   reference?: firestore.DocumentReference;
@@ -32,14 +38,52 @@ export const CollectionList: React.FC<Props> = ({ reference }) => {
   const api = useApi();
   const collections = useCollections(api, reference);
 
+  const [isAddCollectionDialogOpen, setAddCollectionDialogOpen] = useState(
+    false
+  );
+
+  const addCollection = async (value: AddCollectionDialogValue | null) => {
+    if (value && value.collectionId && value.document.id) {
+      const ref = reference || api.database;
+      await ref
+        .collection(value.collectionId)
+        .doc(value.document.id)
+        .set(value.document.data);
+    }
+  };
+
   return (
     <div className="Firestore-CollectionList" data-testid="collection-list">
+      {isAddCollectionDialogOpen && (
+        <AddCollectionDialog
+          documentRef={reference}
+          api={api}
+          open={isAddCollectionDialogOpen}
+          onValue={addCollection}
+          onClose={() => setAddCollectionDialogOpen(false)}
+        />
+      )}
+      {/* Actions */}
+      <List dense className="List-Actions">
+        <ListItem
+          tag={props => (
+            <Button
+              dense
+              label="Start collection"
+              icon="add"
+              {...props}
+              onClick={() => setAddCollectionDialogOpen(true)}
+            />
+          )}
+        ></ListItem>
+      </List>
+
       <List dense>
-        <ListItem disabled>Add collection +</ListItem>
         {collections &&
           collections.map(coll => (
             <ListItem
               key={coll.id}
+              className="Firestore-List-Item"
               tag={props => (
                 <NavLink
                   to={`${url}/${coll.id}`}

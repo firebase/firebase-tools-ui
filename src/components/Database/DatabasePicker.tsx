@@ -14,25 +14,25 @@
  * limitations under the License.
  */
 
-import React, { ReactElement } from 'react';
-import { connect } from 'react-redux';
-import { AppState } from '../../store';
+import './DatabasePicker.scss';
+
 import {
   List,
+  ListDivider,
   ListGroup,
   ListGroupSubheader,
   ListItem,
   ListItemGraphic,
   ListItemText,
-  ListDivider,
 } from '@rmwc/list';
-import { databaseIcon } from './icons';
-import { Typography } from '@rmwc/typography';
-import './DatabasePicker.scss';
 import { Theme } from '@rmwc/theme';
+import { Typography } from '@rmwc/typography';
+import React, { ReactElement } from 'react';
+
+import { databaseIcon } from './icons';
 
 export interface PropsFromState {
-  databases?: string[];
+  databases: string[] | undefined;
 }
 
 export type Props = PropsFromState & {
@@ -107,10 +107,4 @@ export const DatabasePicker: React.FC<Props> = ({
   );
 };
 
-export const mapStateToProps = ({ database }: AppState) => ({
-  databases:
-    database.databases.databases &&
-    database.databases.databases.map(({ name }) => name),
-});
-
-export default connect(mapStateToProps)(DatabasePicker);
+export default DatabasePicker;

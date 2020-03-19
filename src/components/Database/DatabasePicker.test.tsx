@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { render } from '@testing-library/react';
+import React from 'react';
+
 import { DatabasePicker } from './DatabasePicker';
 
 it('renders primary database name and link', () => {

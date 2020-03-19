@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Store, createStore, applyMiddleware, compose } from 'redux';
+import { Store, applyMiddleware, compose, createStore } from 'redux';
 import createSagaMiddleware from 'redux-saga';
 
 import { AppState, rootReducer, rootSaga } from './store';

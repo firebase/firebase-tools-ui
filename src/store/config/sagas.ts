@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-import { getType, ActionType } from 'typesafe-actions';
 import { call, put, takeLatest } from 'redux-saga/effects';
-import { fetchRequest, fetchSuccess, fetchError } from './actions';
+import { ActionType, getType } from 'typesafe-actions';
+
+import { fetchError, fetchRequest, fetchSuccess } from './actions';
 import { Config } from './types';
 
 export async function fetchConfigApi(): Promise<Config> {

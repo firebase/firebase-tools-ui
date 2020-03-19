@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-import { all, fork } from 'redux-saga/effects';
 import { combineReducers } from 'redux';
+import { all, fork } from 'redux-saga/effects';
+
 import { ConfigState, configReducer, configSaga } from './config';
-import { DatabaseState, databaseSaga, databaseReducer } from './database';
-import { logReducer, LogState } from './logviewer';
+import { DatabaseState, databaseReducer, databaseSaga } from './database';
+import { LogState, logReducer } from './logviewer';
 
 export interface AppState {
   config: ConfigState;
@@ -33,5 +34,5 @@ export function* rootSaga() {
 export const rootReducer = combineReducers<AppState>({
   config: configReducer,
   database: databaseReducer,
-  log: logReducer
+  log: logReducer,
 });

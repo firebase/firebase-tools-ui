@@ -15,9 +15,10 @@
  */
 
 import { call, put } from 'redux-saga/effects';
-import { Config } from './types';
+
+import { fetchError, fetchRequest, fetchSuccess } from './actions';
 import { fetchConfig, fetchConfigApi } from './sagas';
-import { fetchRequest, fetchSuccess, fetchError } from './actions';
+import { Config } from './types';
 
 describe('fetchConfig', () => {
   it('calls config api and dispatches fetchSuccess on success', () => {

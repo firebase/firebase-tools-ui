@@ -20,7 +20,7 @@
   box-sizing: border-box;
 }
 
-@import '../node_modules/material-components-web/dist/material-components-web.css';
+@import './components/common/material-overrides';
 
 body {
   margin: 0;

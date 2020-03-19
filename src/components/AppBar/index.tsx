@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-import { useLocation, matchPath, Link } from 'react-router-dom';
-import React from 'react';
-import { TabBar, Tab } from '@rmwc/tabs';
+import './index.scss';
+
+import { Tab, TabBar } from '@rmwc/tabs';
+import { ThemeProvider } from '@rmwc/theme';
 import { TopAppBar, TopAppBarRow, TopAppBarSection } from '@rmwc/top-app-bar';
 import { Typography } from '@rmwc/typography';
-import { ThemeProvider } from '@rmwc/theme';
+import React from 'react';
+import { Link, matchPath, useLocation } from 'react-router-dom';
 
-import Logo from '../Logo';
+import { navBarOnSurface, navBarPrimary } from '../../colors';
 import { Route } from '../../routes';
-
-import './index.scss';
-import { navBarPrimary, navBarOnSurface } from '../../colors';
+import Logo from '../Logo';
 
 type Props = {
   routes: ReadonlyArray<Route>;
@@ -66,7 +66,7 @@ export const AppBar: React.FC<Props> = ({ routes }) => {
             <div className="title-grid">
               <Logo />
               <Typography use="headline5" className="title">
-                Firebase Emulator
+                Firebase Emulator Suite
               </Typography>
               <Typography use="subtitle1" className="subtitle">
                 This is a local environment and not the Firebase console

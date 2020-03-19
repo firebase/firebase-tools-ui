@@ -14,25 +14,30 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import './index.scss';
-import { firestore } from 'firebase';
+
 import { Icon } from '@rmwc/icon';
+import { IconButton } from '@rmwc/icon-button';
 import { ListDivider } from '@rmwc/list';
+import { MenuItem, SimpleMenu } from '@rmwc/menu';
+import { firestore } from 'firebase';
+import React from 'react';
 import { Route, useRouteMatch } from 'react-router-dom';
 
-import CollectionList from './CollectionList';
-import DocumentPreview from './DocumentPreview';
-import Collection from './Collection';
 import { useApi } from './ApiContext';
-import PanelHeader from './PanelHeader';
+import Collection from './Collection';
+import CollectionList from './CollectionList';
+import { promptDeleteDocument } from './dialogs/deleteDocument';
+import { promptDeleteDocumentFields } from './dialogs/deleteDocumentFields';
+import DocumentPreview from './DocumentPreview';
 import FirestoreLogo from './FirestoreLogo';
+import PanelHeader from './PanelHeader';
 
 const Doc: React.FC<{
   id: string;
   collectionById: (id: string) => firestore.CollectionReference;
   children: React.ReactNode;
-}> = ({ id, collectionById, children }) => {
+}> = ({ collectionById, children }) => {
   const { url } = useRouteMatch()!;
 
   return (
@@ -58,7 +63,7 @@ export const Root: React.FC = () => {
       id={'Root'}
       collectionById={(id: string) => api.database.collection(id)}
     >
-      <PanelHeader id="Root" icon={<FirestoreLogo />} />
+      <PanelHeader id="Root" icon={<FirestoreLogo size="small" />} />
       <CollectionList />
     </Doc>
   );
@@ -68,12 +73,32 @@ export const Root: React.FC = () => {
 export const Document: React.FC<{ reference: firestore.DocumentReference }> = ({
   reference,
 }) => {
+  const handleDeleteDocument = async () => {
+    const shouldDelete = await promptDeleteDocument(reference);
+    // TODO: recursively delete sub documents
+    shouldDelete && reference.delete();
+  };
+
+  const handleDeleteFields = async () => {
+    const shouldDelete = await promptDeleteDocumentFields(reference);
+    shouldDelete && reference.set({});
+  };
+
   return (
     <Doc
       id={reference.id}
       collectionById={(id: string) => reference.collection(id)}
     >
-      <PanelHeader id={reference.id} icon={<Icon icon="insert_drive_file" />} />
+      <PanelHeader
+        id={reference.id}
+        icon={<Icon icon={{ icon: 'insert_drive_file', size: 'small' }} />}
+      >
+        <SimpleMenu handle={<IconButton icon="more_vert" />}>
+          <MenuItem onClick={handleDeleteDocument}>Delete document</MenuItem>
+          <MenuItem onClick={handleDeleteFields}>Delete all fields</MenuItem>
+        </SimpleMenu>
+      </PanelHeader>
+
       <CollectionList reference={reference} />
       <ListDivider />
       <DocumentPreview reference={reference} />

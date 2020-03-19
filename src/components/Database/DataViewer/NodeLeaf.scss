@@ -1,0 +1,34 @@
+@import '../../common/color';
+@import 'common/mixins';
+
+$name: 'NodeLeaf';
+
+.NodeLeaf {
+  @include hoverKey($name);
+
+  align-items: center;
+  color: $COLOR_TEXT_SECONDARY;
+  display: flex;
+  height: 32px;
+  padding-left: 38px; // alignment with expand/collapse icons
+  position: relative;
+
+  .#{$name}__key,
+  .#{$name}__value {
+    font-family: 'Roboto Mono', monospace;
+  }
+
+  .#{$name}__value {
+    color: $COLOR_TEXT_PRIMARY;
+    margin-left: 8px;
+    cursor: pointer;
+  }
+
+  .#{$name}__actions {
+    display: none;
+  }
+
+  &:hover > .#{$name}__actions {
+    display: inline-block;
+  }
+}

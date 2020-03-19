@@ -15,6 +15,7 @@
  */
 
 import { createAction } from 'typesafe-actions';
+
 import { DatabaseInfo } from './types';
 
 export const databasesFetchRequest = createAction(
@@ -28,3 +29,11 @@ export const databasesFetchSuccess = createAction(
 export const databasesFetchError = createAction(
   '@database/DATABASES_FETCH_ERROR'
 )<{ message: string }>();
+
+export const databasesSubscribe = createAction(
+  '@database/DATABASES_SUBSCRIBE'
+)();
+
+export const databasesUnsubscribe = createAction(
+  '@database/DATABASES_UNSUBSCRIBE'
+)();

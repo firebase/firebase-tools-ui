@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-import { createReducer, Action } from 'typesafe-actions';
+import { Action, createReducer } from 'typesafe-actions';
+
+import { fetchError, fetchRequest, fetchSuccess } from './actions';
 import { ConfigState } from './types';
-import { fetchRequest, fetchSuccess, fetchError } from './actions';
 
 export const configReducer = createReducer<ConfigState, Action>({
   fetching: false,

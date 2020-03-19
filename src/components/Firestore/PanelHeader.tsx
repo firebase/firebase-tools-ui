@@ -14,27 +14,29 @@
  * limitations under the License.
  */
 
-import React from 'react';
-import { ThemeProvider, Theme } from '@rmwc/theme';
-import { Typography } from '@rmwc/typography';
-import { grey100 } from '../../colors';
 import './PanelHeader.scss';
+
+import { Theme } from '@rmwc/theme';
+import { Typography } from '@rmwc/typography';
+import React from 'react';
+
+import { CardActionBar, CardActionBarActions } from '../common/CardActionBar';
 
 export const PanelHeader: React.FC<{ id: string; icon: React.ReactNode }> = ({
   id,
   icon,
+  children,
 }) => {
   return (
-    <ThemeProvider options={{ surface: grey100 }}>
-      <Theme use={['surface']} wrap>
-        <div className="Firestore-PanelHeader">
-          <Theme use={['textSecondaryOnBackground']}>{icon}</Theme>
-          <Typography use="body1" className="Firestore-PanelHeader-title">
-            {id}
-          </Typography>
-        </div>
-      </Theme>
-    </ThemeProvider>
+    <div className="Firestore-PanelHeader">
+      <CardActionBar>
+        <Theme use={['textSecondaryOnBackground']}>{icon}</Theme>
+        <Typography use="body2" className="Firestore-PanelHeader-title">
+          {id}
+        </Typography>
+        <CardActionBarActions>{children}</CardActionBarActions>
+      </CardActionBar>
+    </div>
   );
 };
 
