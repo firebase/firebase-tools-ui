@@ -2,9 +2,9 @@
 
 A local web UI for Firebase Emulator Suite. Features include:
 
-* Overview of Emulators running
-* Firebase Realtime Database Data Viewer/Editor
-* More to come...
+- Overview of Emulators running
+- Firebase Realtime Database Data Viewer/Editor
+- More to come...
 
 ## Development
 
@@ -15,7 +15,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 To run the development server with emulators:
 
 ```bash
-firebase emulators:exec --project sample --only database,firestore 'npm start'
+firebase emulators:exec --project sample --only database,firestore --import test-data 'npm start'
 ```
 
 This will run the web app in the development mode.<br />
@@ -49,7 +49,7 @@ JS file including all dependencies, ready for execution with Node.js.
 To run the production build with emulators, use:
 
 ```bash
-firebase emulators:exec --project sample --only database,firestore 'PORT=3000 node server.bundle.js'
+firebase emulators:exec --project sample --only database,firestore --import test-data 'PORT=3000 node server.bundle.js'
 ```
 
 This will start a server that serves both the static files and APIs at `http://localhost:3000/`.
