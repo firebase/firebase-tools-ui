@@ -14,33 +14,34 @@
  * limitations under the License.
  */
 
+import { Select } from '@rmwc/select';
 import { TextField } from '@rmwc/textfield';
 import React, { useEffect } from 'react';
 
-import { FirestoreAny, FirestoreMap } from '../models';
+import { FieldType, FirestoreAny, FirestoreMap } from '../models';
 import {
+  getFieldType,
   isArray,
   isBoolean,
-  isString,
   isGeoPoint,
-  isNumber,
   isMap,
+  isNumber,
   isReference,
+  isString,
   isTimestamp,
   lastFieldName,
-  getFieldType,
 } from '../utils';
 import * as actions from './actions';
+import BooleanEditor from './BooleanEditor';
+import GeoPointEditor from './GeoPointEditor';
+import NumberEditor from './NumberEditor';
+import ReferenceEditor from './ReferenceEditor';
 import {
   DocumentProvider,
   useDocumentDispatch,
   useDocumentState,
   useFieldState,
 } from './store';
-import BooleanEditor from './BooleanEditor';
-import GeoPointEditor from './GeoPointEditor';
-import NumberEditor from './NumberEditor';
-import ReferenceEditor from './ReferenceEditor';
 import StringEditor from './StringEditor';
 import TimestampEditor from './TimestampEditor';
 
@@ -129,7 +130,25 @@ const NestedEditor: React.FC<{ path: string[] }> = ({ path }) => {
     <>
       <div style={{ display: 'flex' }}>
         <TextField readOnly value={lastFieldName(path)} placeholder="Field" />
-        <TextField readOnly value={getFieldType(state)} placeholder="Type" />
+        <Select
+          label="Type"
+          outlined
+          options={[
+            FieldType.STRING,
+            FieldType.NUMBER,
+            FieldType.BOOLEAN,
+            FieldType.MAP,
+            FieldType.ARRAY,
+            FieldType.NULL,
+            FieldType.TIMESTAMP,
+            FieldType.GEOPOINT,
+            FieldType.REFERENCE,
+          ]}
+          value={getFieldType(state)}
+          onChange={e => {
+            dispatch(actions.updateType({ path, type: e.currentTarget.value }));
+          }}
+        />
         {fieldEditor}
       </div>
       {childEditors && <div>{childEditors}</div>}
