@@ -26,7 +26,6 @@ import * as actions from './actions';
 
 const reducer = createReducer<FirestoreMap, Action>({})
   .handleAction(actions.reset, (state, { payload }) => {
-    console.log('reset', payload);
     return payload;
   })
   .handleAction(

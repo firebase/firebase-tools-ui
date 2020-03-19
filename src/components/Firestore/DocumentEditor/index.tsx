@@ -65,24 +65,30 @@ export function supportsEditing(value: FirestoreAny): boolean {
   return supportedFieldTypeSet.has(getFieldType(value));
 }
 
-/** Entry point for a Document/Field editor */
+/**
+ * Entry point for a Document/Field editor
+ *
+ * areRootKeysMutable: can a root key be changed, this is generally not the case
+ *     once a field has been persisted via the SDK.
+ * areRootFielsMutable: can a root field be added/removed.
+ */
 const DocumentEditor: React.FC<{
   value: FirestoreMap;
   onChange?: (value: FirestoreMap) => void;
   areRootKeysMutable?: boolean;
-  limitToOneField?: boolean;
+  areRootFieldsMutable?: boolean;
 }> = ({
   value,
   onChange,
   areRootKeysMutable = true,
-  limitToOneField = false,
+  areRootFieldsMutable = true,
 }) => {
   return (
     <DocumentProvider value={value}>
       <RootField
         onChange={onChange}
         areRootKeysMutable={areRootKeysMutable}
-        limitToOneField={limitToOneField}
+        areRootFieldsMutable={areRootFieldsMutable}
       />
     </DocumentProvider>
   );
@@ -95,8 +101,8 @@ const DocumentEditor: React.FC<{
 const RootField: React.FC<{
   onChange?: (value: FirestoreMap) => void;
   areRootKeysMutable: boolean;
-  limitToOneField: boolean;
-}> = ({ onChange, areRootKeysMutable, limitToOneField }) => {
+  areRootFieldsMutable: boolean;
+}> = ({ onChange, areRootKeysMutable, areRootFieldsMutable }) => {
   const state = useDocumentState();
   const dispatch = useDocumentDispatch()!;
 
@@ -109,7 +115,7 @@ const RootField: React.FC<{
       {Object.keys(state).map(field => (
         <React.Fragment key={field}>
           <NestedEditor path={[field]} isKeyMutable={areRootKeysMutable} />
-          {!limitToOneField && (
+          {areRootFieldsMutable && (
             <IconButton
               icon="delete"
               label="Remove field"
@@ -118,7 +124,7 @@ const RootField: React.FC<{
           )}
         </React.Fragment>
       ))}
-      {!limitToOneField && (
+      {areRootFieldsMutable && (
         <IconButton
           icon="add"
           label="Add field"

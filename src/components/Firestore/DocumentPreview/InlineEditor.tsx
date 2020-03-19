@@ -52,7 +52,7 @@ const InlineEditor: React.FC<{
             value={value}
             onChange={handleChange}
             areRootKeysMutable={areRootKeysMutable}
-            limitToOneField={true}
+            areRootFieldsMutable={false}
           />
         </div>
         <CardActionButtons>
