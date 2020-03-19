@@ -102,13 +102,15 @@ describe('loaded array', () => {
     ]);
     documentReference = fakeDocumentReference();
 
-    result = render(<DocumentPreview reference={documentReference} />);
+    result = render(
+      <DocumentPreview reference={documentReference} maxSummaryLen={1000} />
+    );
   });
 
   it('renders a field', () => {
     const { getByText, findByText } = result;
 
-    expect(getByText('["alpha","bravo","bravo",["wowah"]]')).not.toBe(null);
+    expect(getByText('["alpha", "bravo", "bravo", ["wowah"]]')).not.toBe(null);
     expect(findByText('(array)')).not.toBe(null);
   });
 
@@ -118,7 +120,7 @@ describe('loaded array', () => {
     expect(getByText('"alpha"')).not.toBe(null);
     expect(getByText('1')).not.toBe(null);
 
-    getByText('["alpha","bravo","bravo",["wowah"]]').click();
+    getByText('["alpha", "bravo", "bravo", ["wowah"]]').click();
 
     expect(queryByText('"alpha"')).toBe(null);
     expect(queryByText('"bravo"')).toBe(null);
@@ -228,13 +230,15 @@ describe('loaded map', () => {
     ]);
     documentReference = fakeDocumentReference();
 
-    result = render(<DocumentPreview reference={documentReference} />);
+    result = render(
+      <DocumentPreview reference={documentReference} maxSummaryLen={1000} />
+    );
   });
 
   it('renders a field', () => {
     const { getByText } = result;
 
-    expect(getByText('{"first_name":"harry","last_name":"potter"}')).not.toBe(
+    expect(getByText('{first_name: "harry", last_name: "potter"}')).not.toBe(
       null
     );
     expect(getByText('(map)')).not.toBe(null);
@@ -246,7 +250,7 @@ describe('loaded map', () => {
     expect(getByText('first_name')).not.toBe(null);
     expect(getByText('last_name')).not.toBe(null);
 
-    getByText('{"first_name":"harry","last_name":"potter"}').click();
+    getByText('{first_name: "harry", last_name: "potter"}').click();
 
     expect(queryByText('first_name')).toBe(null);
     expect(queryByText('last_name')).toBe(null);

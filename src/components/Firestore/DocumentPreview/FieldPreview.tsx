@@ -39,7 +39,8 @@ import { useDocumentState, useFieldState } from './store';
 const FieldPreview: React.FC<{
   path: string[];
   documentRef: firestore.DocumentReference;
-}> = ({ path, documentRef }) => {
+  maxSummaryLen?: number;
+}> = ({ path, documentRef, maxSummaryLen = 20 }) => {
   const documentData = useDocumentState();
   const state = useFieldState(path);
   const [isEditing, setIsEditing] = useState(false);
@@ -58,6 +59,7 @@ const FieldPreview: React.FC<{
           key={childLeaf}
           path={childPath}
           documentRef={documentRef}
+          maxSummaryLen={maxSummaryLen}
         />
       );
     });
@@ -67,7 +69,12 @@ const FieldPreview: React.FC<{
     childFields = state.map((value, index) => {
       const childPath = [...path, `${index}`];
       return (
-        <FieldPreview key={index} path={childPath} documentRef={documentRef} />
+        <FieldPreview
+          key={index}
+          path={childPath}
+          documentRef={documentRef}
+          maxSummaryLen={maxSummaryLen}
+        />
       );
     });
   }
@@ -107,7 +114,9 @@ const FieldPreview: React.FC<{
         >
           {lastFieldName(path)}
         </Theme>
-        <span className="FieldPreview-summary">{summarize(state, 20)}</span>
+        <span className="FieldPreview-summary">
+          {summarize(state, maxSummaryLen)}
+        </span>
         <ListItemMeta className="FieldPreview-actions">
           <span className="FieldPreview-type">({getFieldType(state)})</span>
           {isPrimitive(state) && supportsEditing(state) && (
@@ -170,8 +179,8 @@ function summarize(data: FirestoreAny, maxLen: number): string {
       return summarizeMap(data as Record<string, FirestoreAny>, maxLen);
     case FieldType.BLOB:
       const base64 = (data as firestore.Blob).toBase64();
-      if (base64.length < 20) return base64;
-      else return base64.substr(0, 20) + '...';
+      if (base64.length < maxLen) return base64;
+      else return base64.substr(0, maxLen) + '...';
     case FieldType.BOOLEAN:
       return (data as boolean).toString();
     case FieldType.GEOPOINT:
