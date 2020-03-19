@@ -71,7 +71,7 @@ it('auto generates an id', () => {
   expect(getByLabelText('Document ID').value).toBe('random-identifier');
 });
 
-it('provides a JSON box', () => {
+it('provides a document-editor', () => {
   const { getByLabelText } = render(
     <AddDocumentDialog
       open={true}
@@ -80,10 +80,10 @@ it('provides a JSON box', () => {
     />
   );
 
-  expect(getByLabelText('JSON data').value).toBe('{"a": "b"}');
+  expect(getByLabelText('Field')).not.toBe(null);
 });
 
-it('emits id and JSON parsed data when [Save] is clicked', async () => {
+it('emits id and parsed data when [Save] is clicked', async () => {
   const onValue = jest.fn();
   const { getByText, getByLabelText } = render(
     <AddDocumentDialog
@@ -96,8 +96,12 @@ it('emits id and JSON parsed data when [Save] is clicked', async () => {
   fireEvent.change(getByLabelText('Document ID'), {
     target: { value: 'new-document-id' },
   });
-  fireEvent.change(getByLabelText('JSON data'), {
-    target: { value: '{"b": "c"}' },
+  fireEvent.change(getByLabelText('Field'), {
+    target: { value: 'foo' },
+  });
+  fireEvent.blur(getByLabelText('Field'));
+  fireEvent.change(getByLabelText('Value'), {
+    target: { value: 'bar' },
   });
 
   act(() => getByText('Save').click());
@@ -106,7 +110,7 @@ it('emits id and JSON parsed data when [Save] is clicked', async () => {
 
   expect(onValue).toHaveBeenCalledWith({
     id: 'new-document-id',
-    data: { b: 'c' },
+    data: { foo: 'bar' },
   });
 });
 

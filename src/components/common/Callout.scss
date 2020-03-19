@@ -1,35 +1,127 @@
+/**
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@import './color';
+@import './radius';
+@import './utils';
+
 .Callout {
   display: flex;
-  position: relative;
-
-  &::before {
-    background-color: var(--mdc-theme-secondary);
-    bottom: 0;
-    content: '';
-    left: 0;
-    opacity: 0.08;
-    position: absolute;
-    right: 0;
-    top: 0;
-  }
 }
 
 .Callout-body {
-  padding: 12px 0 12px 8px;
-  margin-right: 24px;
+  padding: 12px 24px;
+}
 
-  .rmwc-icon {
-    vertical-align: middle;
-    margin-left: 18px;
-    margin-right: 8px;
-  }
+.Callout-message {
+  display: flex;
+  align-items: stretch;
+}
+
+.Callout-icon {
+  margin-right: 12px;
 }
 
 .Callout-actions {
   align-items: center;
   display: flex;
-  flex: 1 1 auto;
   flex-direction: row;
+  flex: 1 1 auto;
   justify-content: flex-end;
-  padding-right: 8px;
+  padding-right: 16px;
+}
+
+// situational overrides
+.mdc-card > .Callout:first-child {
+  border-top-left-radius: $BORDER_RADIUS_CARD;
+  border-top-right-radius: $BORDER_RADIUS_CARD;
+}
+
+.mdc-card > .Callout:last-child {
+  border-bottom-left-radius: $BORDER_RADIUS_CARD;
+  border-bottom-right-radius: $BORDER_RADIUS_CARD;
+}
+
+// THEMES
+$msg-types: (
+    'note' var(--fire-color-note-light) var(--fire-color-note-text)
+      var(--fire-color-note)
+  )
+  (
+    'success' var(--fire-color-success-light) var(--fire-color-success-text)
+      var(--fire-color-success)
+  )
+  // (
+  //   'tip' var(--fire-color-tip-light) var(--fire-color-tip-text)
+  //     var(--fire-color-tip)
+  // )
+  (
+    'warning' var(--fire-color-error-light) var(--fire-color-error-text)
+      var(--fire-color-error)
+  )
+  (
+    'caution' var(--fire-color-caution-light) var(--fire-color-caution-text)
+      var(--fire-color-caution)
+  );
+
+@each $msg-type in $msg-types {
+  $type: nth($msg-type, 1);
+  $light: nth($msg-type, 2);
+  $dark: nth($msg-type, 3);
+  $primary: nth($msg-type, 4);
+  $primary_text_color: nth-default($msg-type, 5, $COLOR_WHITE_PRIMARY);
+
+  // CALLOUTS
+  .Callout-#{$type} {
+    background-color: $primary;
+    color: $primary_text_color;
+
+    .Callout-actions .mdc-button {
+      color: var(--mdc-theme-on-primary);
+
+      &::before,
+      &::after {
+        background-color: var(--mdc-theme-on-primary);
+      }
+    }
+
+    // ASIDES
+    &.Callout-aside {
+      background-color: $light;
+      color: $dark;
+
+      a,
+      a:hover,
+      .rmwc-icon,
+      .material-icons {
+        color: $dark;
+      }
+
+      .Callout-icon {
+        color: $primary;
+      }
+
+      .mdc-button:not(:disabled) {
+        color: $dark;
+
+        &::before,
+        &::after {
+          background-color: $primary;
+        }
+      }
+    }
+  }
 }
