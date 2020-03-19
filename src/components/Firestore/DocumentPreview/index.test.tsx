@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { fireEvent, render } from '@testing-library/react';
+import { RenderResult, fireEvent, render } from '@testing-library/react';
 import { firestore } from 'firebase';
 import React from 'react';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
@@ -36,7 +36,7 @@ it('renders loading text', () => {
 
 describe('loaded document', () => {
   let result: RenderResult;
-  let documentReference: jest.Mock;
+  let documentReference: firestore.DocumentReference;
 
   beforeEach(() => {
     useDocumentData.mockReturnValueOnce([
@@ -52,7 +52,8 @@ describe('loaded document', () => {
   it('renders a field', () => {
     const { getByText } = result;
 
-    expect(getByText('foo:"bar"')).not.toBe(null);
+    expect(getByText('foo')).not.toBe(null);
+    expect(getByText('"bar"')).not.toBe(null);
     expect(getByText('(string)')).not.toBe(null);
   });
 
@@ -91,7 +92,7 @@ describe('loaded document', () => {
 
 describe('loaded array', () => {
   let result: RenderResult;
-  let documentReference: jest.Mock;
+  let documentReference: firestore.DocumentReference;
 
   beforeEach(() => {
     useDocumentData.mockReturnValueOnce([
@@ -107,20 +108,20 @@ describe('loaded array', () => {
   it('renders a field', () => {
     const { getByText, findByText } = result;
 
-    expect(getByText('foo:["alpha","bravo","bravo",["wowah"]]')).not.toBe(null);
+    expect(getByText('["alpha","bravo","bravo",["wowah"]]')).not.toBe(null);
     expect(findByText('(array)')).not.toBe(null);
   });
 
   it('shows child-elements when expanded', () => {
     const { getByText, queryByText } = result;
 
-    expect(getByText('0:"alpha"')).not.toBe(null);
-    expect(getByText('1:"bravo"')).not.toBe(null);
+    expect(getByText('"alpha"')).not.toBe(null);
+    expect(getByText('1')).not.toBe(null);
 
-    getByText('foo:["alpha","bravo","bravo",["wowah"]]').click();
+    getByText('["alpha","bravo","bravo",["wowah"]]').click();
 
-    expect(queryByText('0:"alpha"')).toBe(null);
-    expect(queryByText('1:"bravo"')).toBe(null);
+    expect(queryByText('"alpha"')).toBe(null);
+    expect(queryByText('"bravo"')).toBe(null);
   });
 
   it('deletes a top-level array element', () => {
@@ -217,7 +218,7 @@ describe('loaded array', () => {
 
 describe('loaded map', () => {
   let result: RenderResult;
-  let documentReference: jest.Mock;
+  let documentReference: firestore.DocumentReference;
 
   beforeEach(() => {
     useDocumentData.mockReturnValueOnce([
@@ -233,22 +234,22 @@ describe('loaded map', () => {
   it('renders a field', () => {
     const { getByText } = result;
 
-    expect(
-      getByText('foo:{"first_name":"harry","last_name":"potter"}')
-    ).not.toBe(null);
+    expect(getByText('{"first_name":"harry","last_name":"potter"}')).not.toBe(
+      null
+    );
     expect(getByText('(map)')).not.toBe(null);
   });
 
   it('shows child-elements when expanded', () => {
     const { getByText, queryByText } = result;
 
-    expect(getByText('first_name:"harry"')).not.toBe(null);
-    expect(getByText('last_name:"potter"')).not.toBe(null);
+    expect(getByText('first_name')).not.toBe(null);
+    expect(getByText('last_name')).not.toBe(null);
 
-    getByText('foo:{"first_name":"harry","last_name":"potter"}').click();
+    getByText('{"first_name":"harry","last_name":"potter"}').click();
 
-    expect(queryByText('first_name:"harry"')).toBe(null);
-    expect(queryByText('last_name:"potter"')).toBe(null);
+    expect(queryByText('first_name')).toBe(null);
+    expect(queryByText('last_name')).toBe(null);
   });
 
   it('updates a map element', () => {
