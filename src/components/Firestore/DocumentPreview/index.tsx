@@ -29,9 +29,13 @@ import { DocumentProvider } from './store';
 
 export interface Props {
   reference: firestore.DocumentReference;
+  maxSummaryLen?: number;
 }
 
-const DocumentPreview: React.FC<Props> = ({ reference }) => {
+const DocumentPreview: React.FC<Props> = ({
+  reference,
+  maxSummaryLen = 20,
+}) => {
   const [data, loading, error] = useDocumentData(reference);
   const [isAddingField, setIsAddingField] = useState(false);
 
@@ -67,7 +71,12 @@ const DocumentPreview: React.FC<Props> = ({ reference }) => {
 
           {isMap(data) &&
             Object.keys(data).map(name => (
-              <FieldPreview key={name} path={[name]} documentRef={reference} />
+              <FieldPreview
+                key={name}
+                path={[name]}
+                documentRef={reference}
+                maxSummaryLen={maxSummaryLen}
+              />
             ))}
         </List>
       </DocumentProvider>
