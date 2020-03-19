@@ -70,10 +70,20 @@ const DocumentEditor: React.FC<{
   value: FirestoreMap;
   onChange?: (value: FirestoreMap) => void;
   areRootKeysMutable?: boolean;
-}> = ({ value, onChange, areRootKeysMutable = true }) => {
+  limitToOneField?: boolean;
+}> = ({
+  value,
+  onChange,
+  areRootKeysMutable = true,
+  limitToOneField = false,
+}) => {
   return (
     <DocumentProvider value={value}>
-      <RootField onChange={onChange} areRootKeysMutable={areRootKeysMutable} />
+      <RootField
+        onChange={onChange}
+        areRootKeysMutable={areRootKeysMutable}
+        limitToOneField={limitToOneField}
+      />
     </DocumentProvider>
   );
 };
@@ -85,8 +95,10 @@ const DocumentEditor: React.FC<{
 const RootField: React.FC<{
   onChange?: (value: FirestoreMap) => void;
   areRootKeysMutable: boolean;
-}> = ({ onChange, areRootKeysMutable }) => {
+  limitToOneField: boolean;
+}> = ({ onChange, areRootKeysMutable, limitToOneField }) => {
   const state = useDocumentState();
+  const dispatch = useDocumentDispatch()!;
 
   useEffect(() => {
     onChange && onChange(state);
@@ -95,12 +107,24 @@ const RootField: React.FC<{
   return (
     <>
       {Object.keys(state).map(field => (
-        <NestedEditor
-          key={field}
-          path={[field]}
-          isKeyMutable={areRootKeysMutable}
-        />
+        <React.Fragment key={field}>
+          <NestedEditor path={[field]} isKeyMutable={areRootKeysMutable} />
+          {!limitToOneField && (
+            <IconButton
+              icon="delete"
+              label="Remove field"
+              onClick={e => dispatch(actions.deleteField([field]))}
+            />
+          )}
+        </React.Fragment>
       ))}
+      {!limitToOneField && (
+        <IconButton
+          icon="add"
+          label="Add field"
+          onClick={e => dispatch(actions.addField({ path: [''], value: '' }))}
+        />
+      )}
     </>
   );
 };
