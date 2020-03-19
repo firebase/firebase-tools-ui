@@ -24,11 +24,10 @@ import { FirestoreMap } from '../models';
 /** Editor entry point for a selected field */
 const InlineEditor: React.FC<{
   value: FirestoreMap;
-  path: string[];
   onCancel: () => void;
   onSave: (key: string, value: FirestoreMap) => void;
   areRootKeysMutable: boolean;
-}> = ({ value, path, onCancel, onSave, areRootKeysMutable }) => {
+}> = ({ value, onCancel, onSave, areRootKeysMutable }) => {
   const [internalValue, setInternalValue] = useState(value);
 
   function handleChange(value: FirestoreMap) {
@@ -42,12 +41,8 @@ const InlineEditor: React.FC<{
 
   function handleSave(e: React.MouseEvent<HTMLButtonElement>) {
     e.stopPropagation();
-<<<<<<< HEAD
+    console.log(internalValue);
     onSave(Object.keys(internalValue)[0], internalValue);
-=======
-    // TODO key could change in the editor
-    onSave(lastFieldName(path), internalValue);
->>>>>>> save preview for follow up
   }
 
   return (

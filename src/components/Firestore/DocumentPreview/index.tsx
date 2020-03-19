@@ -54,7 +54,6 @@ const DocumentPreview: React.FC<Props> = ({ reference }) => {
           {isAddingField && (
             <InlineEditor
               value={{ '': '' }}
-              path={[]}
               onCancel={() => {
                 setIsAddingField(false);
               }}

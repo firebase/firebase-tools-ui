@@ -74,12 +74,11 @@ const FieldPreview: React.FC<{
   return isEditing ? (
     <InlineEditor
       value={{ [lastFieldName(path)]: state }}
-      path={path}
       onCancel={() => {
         setIsEditing(false);
       }}
       onSave={(key, value) => {
-        updateField(documentRef, documentData, path, value[key]);
+        updateField(documentRef, documentData, [...path, key], value[key]);
         setIsEditing(false);
       }}
       areRootKeysMutable={false}
@@ -142,12 +141,11 @@ const FieldPreview: React.FC<{
       {addPath && isAddingField && (
         <InlineEditor
           value={{ [lastFieldName(addPath)]: '' }}
-          path={addPath}
           onCancel={() => {
             setIsAddingField(false);
           }}
           onSave={(key, value) => {
-            updateField(documentRef, documentData, addPath, value[key]);
+            updateField(documentRef, documentData, [...path, key], value[key]);
             setIsAddingField(false);
           }}
           areRootKeysMutable={!isArray(state)}
