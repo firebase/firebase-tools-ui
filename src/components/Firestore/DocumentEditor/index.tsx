@@ -167,7 +167,7 @@ const NestedEditor: React.FC<{
             FieldType.REFERENCE,
           ]}
           value={getFieldType(state)}
-          onChange={e => {
+          onChange={(e) => {
             dispatch(actions.updateType({ path, type: e.currentTarget.value }));
           }}
         />
@@ -176,7 +176,7 @@ const NestedEditor: React.FC<{
           <IconButton
             icon="add"
             label="Add field"
-            onClick={e =>
+            onClick={(e) =>
               dispatch(actions.addField({ path: [...path, ''], value: '' }))
             }
           />
@@ -185,12 +185,12 @@ const NestedEditor: React.FC<{
           <IconButton
             icon="add"
             label="Add field"
-            onClick={e =>
+            onClick={(e) =>
               dispatch(
                 actions.addField({
                   path: [...path, `${path.length}`],
                   value: '',
-                })
+                }),
               )
             }
           />
