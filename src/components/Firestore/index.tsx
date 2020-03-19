@@ -75,10 +75,7 @@ export const Firestore: React.FC<Props> = ({ config, projectId }) => {
         <Elevation z="2" wrap>
           <Card>
             <CardActionBar>
-              <BreadCrumbs
-                base="/firestore"
-                reference={api.database.collection('/a/b/c')}
-              />
+              <BreadCrumbs base="/firestore" path={'/a/b/c'} />
             </CardActionBar>
             <div className="Firestore-panels">
               <Root />

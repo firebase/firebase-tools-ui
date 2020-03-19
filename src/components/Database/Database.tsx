@@ -55,7 +55,10 @@ export const Database: React.FC<Props> = ({ config, namespace }) => {
     <div className="Database-Database">
       <CardActionBar>
         {ref && (
-          <BreadCrumbs base={`/database/${namespace}/data`} rtdbRef={ref} />
+          <BreadCrumbs
+            base={`/database/${namespace}/data`}
+            path={new URL(ref.toString()).pathname}
+          />
         )}
       </CardActionBar>
       {ref ? (

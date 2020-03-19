@@ -16,8 +16,6 @@
 
 import './BreadCrumbs.scss';
 
-import { ok } from 'assert';
-
 import { IconButton } from '@rmwc/icon-button';
 import React from 'react';
 import { Link } from 'react-router-dom';
@@ -25,21 +23,12 @@ import { Link } from 'react-router-dom';
 interface Props {
   /** The base url to prepend when creating Router links */
   base: string;
-  reference?:
-    | firebase.firestore.CollectionReference
-    | firebase.firestore.DocumentReference;
-  rtdbRef?: firebase.database.Reference;
+  path: string;
 }
 
-export const BreadCrumbs: React.FC<Props> = ({ base, rtdbRef, reference }) => {
-  ok(
-    rtdbRef || reference,
-    'BreadCrumbs: rtdbRef or reference must be supplied'
-  );
-
-  const path = rtdbRef ? new URL(rtdbRef.toString()).pathname : reference!.path;
-
-  const keys = path.split('/');
+export const BreadCrumbs: React.FC<Props> = ({ base, path }) => {
+  const normalizedPath = path.startsWith('/') ? path.substr(1) : path;
+  const keys = normalizedPath.split('/');
 
   const hrefs = keys.reduce<string[]>((acc, key) => {
     const prevLink = acc.length ? acc[acc.length - 1] : base;
