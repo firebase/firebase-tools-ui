@@ -19,13 +19,13 @@ import { Elevation } from '@rmwc/elevation';
 import React, { useState } from 'react';
 
 import DocumentEditor from '../DocumentEditor';
-import { FirestoreMap } from '../models';
+import { FirestoreAny, FirestoreMap } from '../models';
 
 /** Editor entry point for a selected field */
 const InlineEditor: React.FC<{
   value: FirestoreMap;
   onCancel: () => void;
-  onSave: (key: string, value: FirestoreMap) => void;
+  onSave: (key: string, value: FirestoreAny) => void;
   areRootKeysMutable: boolean;
 }> = ({ value, onCancel, onSave, areRootKeysMutable }) => {
   const [internalValue, setInternalValue] = useState(value);
@@ -41,8 +41,7 @@ const InlineEditor: React.FC<{
 
   function handleSave(e: React.MouseEvent<HTMLButtonElement>) {
     e.stopPropagation();
-    // Inline editors can only ever edit one root-node
-    onSave(Object.keys(internalValue)[0], internalValue);
+    onSave(Object.keys(internalValue)[0], Object.values(internalValue)[0]);
   }
 
   return (

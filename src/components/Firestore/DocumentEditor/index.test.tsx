@@ -85,8 +85,7 @@ describe('changing types', () => {
       });
   });
 
-  // TODO: wire up array editor with add child-field functionality
-  it.skip('switches to an array', () => {
+  it('switches to an array', () => {
     const { getByText } = result;
     setType(FieldType.ARRAY);
     expect(getByText('add')).not.toBe(null);
@@ -104,8 +103,7 @@ describe('changing types', () => {
     expect(getByLabelText('Latitude')).not.toBe(null);
   });
 
-  // TODO: wire up map editor with add child-field functionality
-  it.skip('switches to a map', () => {
+  it('switches to a map', () => {
     const { getByText } = result;
     setType(FieldType.MAP);
     expect(getByText('add')).not.toBe(null);

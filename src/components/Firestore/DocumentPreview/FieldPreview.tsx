@@ -82,8 +82,9 @@ const FieldPreview: React.FC<{
         updateField(
           documentRef,
           documentData,
-          [...getParentPath(path), key],
-          value[key]
+          isArray(state) ? [...path, key] : [...getParentPath(path), key],
+          // [...getParentPath(path), key],
+          value
         );
         setIsEditing(false);
       }}
@@ -151,7 +152,8 @@ const FieldPreview: React.FC<{
             setIsAddingField(false);
           }}
           onSave={(key, value) => {
-            updateField(documentRef, documentData, [...path, key], value[key]);
+            const newPath = isArray(state) ? addPath : [...path, key];
+            updateField(documentRef, documentData, newPath, value);
             setIsAddingField(false);
           }}
           areRootKeysMutable={!isArray(state)}
