@@ -14,8 +14,13 @@
  * limitations under the License.
  */
 
+import './FieldPreview.scss';
+
+import { Icon } from '@rmwc/icon';
 import { IconButton } from '@rmwc/icon-button';
 import { ListItem, ListItemMeta } from '@rmwc/list';
+import { Theme } from '@rmwc/theme';
+import classnames from 'classnames';
 import { firestore } from 'firebase';
 import React, { useState } from 'react';
 
@@ -80,12 +85,30 @@ const FieldPreview: React.FC<{
     />
   ) : (
     <>
-      <ListItem onClick={() => setIsExpanded(!isExpanded)}>
-        <span>
-          {lastFieldName(path)}:{JSON.stringify(state)}
-        </span>
-        ({getFieldType(state)})
-        <ListItemMeta>
+      <ListItem
+        onClick={() => setIsExpanded(!isExpanded)}
+        className={classnames('FieldPreview', {
+          'FieldPreview--primitive': isPrimitive(state),
+          'FieldPreview--expanded': !isPrimitive(state) && isExpanded,
+        })}
+      >
+        <Icon
+          className="FieldPreview-expand-icon"
+          icon={{
+            size: 'xsmall',
+            icon: isExpanded ? 'arrow_drop_down' : 'arrow_right',
+          }}
+        />
+        <Theme
+          use="textSecondaryOnBackground"
+          tag="span"
+          className="FieldPreview-key"
+        >
+          {lastFieldName(path)}
+        </Theme>
+        <span className="FieldPreview-summary">{JSON.stringify(state)}</span>
+        <ListItemMeta className="FieldPreview-actions">
+          <span className="FieldPreview-type">({getFieldType(state)})</span>
           {isPrimitive(state) ? (
             <IconButton
               icon="edit"
@@ -128,7 +151,9 @@ const FieldPreview: React.FC<{
           }}
         />
       )}
-      {isExpanded && childFields}
+      {!isPrimitive(state) && isExpanded && (
+        <div className="FieldPreview-children">{childFields}</div>
+      )}
     </>
   );
 };
