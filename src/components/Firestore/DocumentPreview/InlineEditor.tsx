@@ -41,7 +41,6 @@ const InlineEditor: React.FC<{
 
   function handleSave(e: React.MouseEvent<HTMLButtonElement>) {
     e.stopPropagation();
-    console.log(internalValue);
     onSave(Object.keys(internalValue)[0], internalValue);
   }
 
