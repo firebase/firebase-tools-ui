@@ -14,17 +14,25 @@
  * limitations under the License.
  */
 
-import {createAction} from 'typesafe-actions';
+import { createAction } from 'typesafe-actions';
 
-import {FieldType, FirestoreAny, FirestoreMap} from '../models';
+import { FieldType, FirestoreAny, FirestoreMap } from '../models';
 
 export const reset = createAction('@document/reset')<FirestoreMap>();
-export const addField =
-    createAction('@document/add')<{path: string[]; value: FirestoreAny;}>();
-export const updateField =
-    createAction('@document/update')<{path: string[]; value: FirestoreAny;}>();
-export const updateType =
-    createAction('@document/updateType')<{path: string[]; type: FieldType;}>();
-export const updateKey =
-    createAction('@document/updateKey')<{path: string[]; key: string;}>();
+export const addField = createAction('@document/add')<{
+  path: string[];
+  value: FirestoreAny;
+}>();
+export const updateField = createAction('@document/update')<{
+  path: string[];
+  value: FirestoreAny;
+}>();
+export const updateType = createAction('@document/updateType')<{
+  path: string[];
+  type: FieldType;
+}>();
+export const updateKey = createAction('@document/updateKey')<{
+  path: string[];
+  key: string;
+}>();
 export const deleteField = createAction('@document/delete')<string[]>();

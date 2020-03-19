@@ -1,10 +1,10 @@
-import React, { ReactNode } from 'react';
-import { Theme } from '@rmwc/theme';
-import { Typography } from '@rmwc/typography';
-
 import './Callout.scss';
-import { IconPropT } from '@rmwc/types';
+
 import { Icon } from '@rmwc/icon';
+import { Theme } from '@rmwc/theme';
+import { IconPropT } from '@rmwc/types';
+import { Typography } from '@rmwc/typography';
+import React, { ReactNode } from 'react';
 
 export interface CalloutProps {
   actions?: ReactNode;
