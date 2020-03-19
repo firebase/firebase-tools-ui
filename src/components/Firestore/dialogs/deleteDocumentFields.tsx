@@ -30,7 +30,7 @@ export const promptDeleteDocumentFields = (
     title: 'Delete data',
     body: (
       <>
-        <Callout icon="warning">
+        <Callout aside type="warning">
           This will delete all fields of the document, excluding subcollections.
         </Callout>
         <TextField
