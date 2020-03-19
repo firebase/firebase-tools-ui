@@ -20,6 +20,7 @@
   box-sizing: border-box;
 }
 
+@import './components/common/color';
 @import './components/common/material-overrides';
 
 body {
@@ -34,4 +35,27 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+:root {
+  // Status colors (success/error/etc)
+  --fire-color-note: #{$COLOR_NAVY_300};
+  --fire-color-note-on-dark: #{$COLOR_NAVY_100};
+  --fire-color-note-text: #{$COLOR_NAVY_600};
+  --fire-color-note-light: #{$COLOR_NAVY_20};
+
+  --fire-color-success: #{$QUANTUM_TEAL_700};
+  --fire-color-success-on-dark: #{$QUANTUM_TEAL_ACCENT_700};
+  --fire-color-success-text: #{$QUANTUM_TEAL_800};
+  --fire-color-success-light: #{$QUANTUM_TEAL_50};
+
+  --fire-color-error: #{$QUANTUM_RED_700};
+  --fire-color-error-on-dark: #{$QUANTUM_RED_ACCENT_200};
+  --fire-color-error-text: #{$QUANTUM_RED_800};
+  --fire-color-error-light: #{$QUANTUM_DEEP_ORANGE_50};
+
+  --fire-color-caution: #{$QUANTUM_AMBER_800};
+  --fire-color-caution-on-dark: #{$QUANTUM_AMBER_600};
+  --fire-color-caution-text: #{$QUANTUM_DEEP_ORANGE_900};
+  --fire-color-caution-light: #{$QUANTUM_ORANGE_50};
 }
