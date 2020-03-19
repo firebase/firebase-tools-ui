@@ -17,15 +17,17 @@
 import { fireEvent, render } from '@testing-library/react';
 import React from 'react';
 
+import { FieldType } from '../models';
 import DocumentEditor from './index';
 
 it('renders an editable field', () => {
   const onChange = jest.fn();
-  const { getByLabelText, getByPlaceholderText } = render(
+  const { getByLabelText, getByPlaceholderText, getByDisplayValue } = render(
     <DocumentEditor value={{ hello: 'world' }} onChange={onChange} />
   );
   expect(getByPlaceholderText('Field').value).toBe('hello');
-  expect(getByPlaceholderText('Type').value).toBe('string');
+  // Select does not properly wire up the label aria properly
+  expect(getByDisplayValue('string')).not.toBe(null);
   expect(getByLabelText('Value').value).toBe('world');
 
   fireEvent.change(getByLabelText('Value'), {
@@ -52,5 +54,79 @@ it('renders an editable field with children', () => {
 
   expect(onChange).toHaveBeenCalledWith({
     hello: { foo: ['bar', { spam: 'new' }] },
+  });
+});
+
+describe('changing types', () => {
+  let result;
+  let setType;
+
+  beforeEach(() => {
+    result = render(<DocumentEditor value={{ hello: 'world' }} />);
+    const { getByDisplayValue } = result;
+    setType = (fieldType: FieldType, displayValue = 'string') =>
+      fireEvent.change(getByDisplayValue(displayValue), {
+        target: { value: fieldType },
+      });
+  });
+
+  // TODO: wire up array editor with add child-field functionality
+  it.skip('switches to an array', () => {
+    const { getByText } = result;
+    setType(FieldType.ARRAY);
+    expect(getByText('add')).not.toBe(null);
+  });
+
+  it('switches to a boolean', () => {
+    const { getByDisplayValue } = result;
+    setType(FieldType.BOOLEAN);
+    expect(getByDisplayValue('true')).not.toBe(null);
+  });
+
+  it('switches to a geopoint', () => {
+    const { getByLabelText } = result;
+    setType(FieldType.GEOPOINT);
+    expect(getByLabelText('Latitude')).not.toBe(null);
+  });
+
+  // TODO: wire up map editor with add child-field functionality
+  it.skip('switches to a map', () => {
+    const { getByText } = result;
+    setType(FieldType.MAP);
+    expect(getByText('add')).not.toBe(null);
+  });
+
+  it('switches to null', () => {
+    const { queryByLabelText } = result;
+    setType(FieldType.NULL);
+    expect(queryByLabelText('Value')).toBe(null);
+  });
+
+  it('switches to a number', () => {
+    const { getByLabelText } = result;
+    setType(FieldType.NUMBER);
+    expect(getByLabelText('Value').value).toBe('0');
+  });
+
+  // TODO: wire up reference editor
+  it.skip('switches to a reference', () => {
+    const { getByLabelText } = result;
+    setType(FieldType.MAP);
+    expect(getByLabelText('Value').value).toBe('');
+  });
+
+  it('switches to a string', () => {
+    const { getByLabelText } = result;
+    // set to Number first to get the default String
+    setType(FieldType.NUMBER);
+    setType(FieldType.STRING, FieldType.NUMBER);
+    expect(getByLabelText('Value').value).toBe('');
+  });
+
+  it('switches to a timestamp', () => {
+    const { getByLabelText } = result;
+    setType(FieldType.TIMESTAMP);
+    const [date, time] = getByLabelText('Value').value.split('T');
+    expect(date).toEqual(expect.stringMatching(/\d{4}-\d{2}-\d{2}/));
   });
 });

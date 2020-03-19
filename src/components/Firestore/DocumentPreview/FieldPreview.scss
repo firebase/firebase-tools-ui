@@ -1,0 +1,49 @@
+$list-item-padding: 16px;
+$icon-size: 18px;
+$inline-spacing: 8px;
+
+.FieldPreview {
+  > .FieldPreview-expand-icon {
+    color: #757575;
+    vertical-align: middle;
+    margin-right: $inline-spacing;
+  }
+
+  &--primitive {
+    .FieldPreview-expand-icon {
+      visibility: hidden; // Hide it but keep it in layout to align with objs.
+    }
+  }
+
+  &--expanded > .FieldPreview-summary {
+    display: none;
+  }
+}
+
+.FieldPreview-children > .FieldPreview {
+  padding-left: ($list-item-padding + $icon-size + $inline-spacing);
+
+  .FieldPreview-children & {
+    padding-left: ($list-item-padding + ($icon-size + $inline-spacing) * 2);
+    .FieldPreview-children & {
+      padding-left: ($list-item-padding + ($icon-size + $inline-spacing) * 3);
+    }
+  }
+}
+
+.FieldPreview-key {
+  margin-right: $inline-spacing;
+  font-family: 'Roboto Mono', monospace;
+
+  &::after {
+    content: ':';
+  }
+  .FieldPreview--expanded > &::after {
+    content: '';
+  }
+}
+
+.FieldPreview-actions {
+  display: flex;
+  align-items: center;
+}
