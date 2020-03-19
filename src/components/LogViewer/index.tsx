@@ -246,12 +246,12 @@ enum HierarchyReferenceMode {
   NONE,
   DOT,
   BRACKET,
-  INCREMENT
+  INCREMENT,
 }
 
 interface HierarchyReference {
-  mode: HierarchyReferenceMode,
-  key: number | string
+  mode: HierarchyReferenceMode;
+  key: number | string;
 }
 
 const HighlightedJSON = ({
@@ -265,22 +265,24 @@ const HighlightedJSON = ({
 
   let isObject = false;
 
-  let hierarchy: HierarchyReference[] = [{
-    mode: HierarchyReferenceMode.NONE,
-    key: "user"
-  }];
+  let hierarchy: HierarchyReference[] = [
+    {
+      mode: HierarchyReferenceMode.NONE,
+      key: 'user',
+    },
+  ];
 
   const toHierarchyStep = (key: string) => {
     if (key.match(/^[A-Z|_]+$/i)) {
       return {
         mode: HierarchyReferenceMode.DOT,
-        key
-      }
+        key,
+      };
     } else {
       return {
         mode: HierarchyReferenceMode.BRACKET,
-        key
-      }
+        key,
+      };
     }
   };
 
@@ -288,30 +290,36 @@ const HighlightedJSON = ({
     return getterCache.get(path, { user: obj });
   };
 
-  const hierarchyToJavaScript = (hierarchy: HierarchyReference[]) => hierarchy.map((ref) => {
-    switch (ref.mode) {
-      case HierarchyReferenceMode.NONE:
-        return ref.key;
-      case HierarchyReferenceMode.BRACKET:
-        return `["${ref.key}"]`;
-      case HierarchyReferenceMode.DOT:
-        return `.${ref.key}`;
-      case HierarchyReferenceMode.INCREMENT:
-        return `[${JSON.stringify(ref.key)}]`;
-    }
+  const hierarchyToJavaScript = (hierarchy: HierarchyReference[]) =>
+    hierarchy
+      .map(ref => {
+        switch (ref.mode) {
+          case HierarchyReferenceMode.NONE:
+            return ref.key;
+          case HierarchyReferenceMode.BRACKET:
+            return `["${ref.key}"]`;
+          case HierarchyReferenceMode.DOT:
+            return `.${ref.key}`;
+          case HierarchyReferenceMode.INCREMENT:
+            return `[${JSON.stringify(ref.key)}]`;
+        }
 
-    return "";
-  }).join("");
+        return '';
+      })
+      .join('');
   const elements = lines.map((line, index) => {
     const quote_count = line.split('"').length - 1;
 
     const isStart = index === 0 && line.startsWith('{');
     const isEnd = index === lines.length - 1 && line.endsWith('}');
-    const isKeylessArrayStart = line.trim().length ===1  && line.endsWith("[");
-    const isKeylessObjStart = line.trim().length === 1 && line.endsWith("{");
+    const isKeylessArrayStart = line.trim().length === 1 && line.endsWith('[');
+    const isKeylessObjStart = line.trim().length === 1 && line.endsWith('{');
     const isKeyedObjStart = quote_count >= 2 && line.endsWith('{');
     const isLiteral =
-      !line.endsWith('[') && !line.endsWith('{') && !line.endsWith('}') && !line.endsWith('},');
+      !line.endsWith('[') &&
+      !line.endsWith('{') &&
+      !line.endsWith('}') &&
+      !line.endsWith('},');
     const isObjEnd = line.endsWith('}') || line.endsWith('},');
     const isArrayStart = quote_count >= 2 && line.endsWith('[');
     const isArrayEnd = line.endsWith(']') || line.endsWith('],');
@@ -341,12 +349,12 @@ const HighlightedJSON = ({
     }
 
     if (isKeylessObjStart) {
-      hierarchy.push({mode: HierarchyReferenceMode.NONE, key: ""});
+      hierarchy.push({ mode: HierarchyReferenceMode.NONE, key: '' });
     }
 
     if (isKeylessArrayStart) {
-      hierarchy.push({mode: HierarchyReferenceMode.NONE, key: ""});
-      hierarchy.push({mode: HierarchyReferenceMode.INCREMENT, key: -1});
+      hierarchy.push({ mode: HierarchyReferenceMode.NONE, key: '' });
+      hierarchy.push({ mode: HierarchyReferenceMode.INCREMENT, key: -1 });
     }
 
     if (isKeyedObjStart || isArrayStart) {
@@ -359,7 +367,7 @@ const HighlightedJSON = ({
       const hierarchy_chain = hierarchyToJavaScript(hierarchy);
 
       if (isArrayStart) {
-        hierarchy.push({mode: HierarchyReferenceMode.INCREMENT, key: -1});
+        hierarchy.push({ mode: HierarchyReferenceMode.INCREMENT, key: -1 });
       }
 
       return (
@@ -378,7 +386,10 @@ const HighlightedJSON = ({
     }
 
     if (isObjEnd) {
-      if (hierarchy[hierarchy.length - 1].mode !== HierarchyReferenceMode.INCREMENT) {
+      if (
+        hierarchy[hierarchy.length - 1].mode !==
+        HierarchyReferenceMode.INCREMENT
+      ) {
         hierarchy.pop();
       }
       return (
@@ -415,9 +426,14 @@ const HighlightedJSON = ({
       const key = key_chunks.filter((v: string) => v).join('"');
       const value = splat.join(':').trim();
 
-      const new_indent = new Array(line.length - line.trim().length + 1).join(" ");
+      const new_indent = new Array(line.length - line.trim().length + 1).join(
+        ' '
+      );
       if (key && value) {
-        const hierarchy_chain = hierarchyToJavaScript([...hierarchy, toHierarchyStep(key)]);
+        const hierarchy_chain = hierarchyToJavaScript([
+          ...hierarchy,
+          toHierarchyStep(key),
+        ]);
         return (
           <div key={index} className="line literal">
             {new_indent}
@@ -516,77 +532,79 @@ export const LogViewer: React.FC<Props> = ({ log, logReceived }) => {
 
   return (
     <div id="log">
-      <div id="query">
-        <div id="render">{parsed_query.elements}</div>
-        <textarea
-          rows={1}
-          id="input"
-          spellCheck={false}
-          value={query}
-          onChange={e => setQuery((e.target as any).value)}
-          placeholder="Filter or search logs..."
-        ></textarea>
-        {query.length ? (
-          <div id="actions">
-            <button onClick={() => setQuery(formatQuery(parsed_query.filters))}>
-              format
-            </button>
-            <button onClick={() => setQuery('')}>clear query</button>
-          </div>
-        ) : (
-          ''
-        )}
-      </div>
+      <div id="log-content" className="mdc-elevation--z2">
+        <div id="log-query">
+          <div id="log-query-render">{parsed_query.elements}</div>
+          <textarea
+            rows={1}
+            id="log-query-input"
+            spellCheck={false}
+            value={query}
+            onChange={e => setQuery((e.target as any).value)}
+            placeholder="Filter or search logs..."
+          ></textarea>
+          {query.length ? (
+            <div id="log-query-actions">
+              {/*<button onClick={() => setQuery(formatQuery(parsed_query.filters))}>*/}
+              {/*  format*/}
+              {/*</button>*/}
+              <button onClick={() => setQuery('')}>clear query</button>
+            </div>
+          ) : (
+            ''
+          )}
+        </div>
 
-      <div id="history">
-        {history.length
-          ? history.map((log, index) => (
-              <div id={`log_${index}`} className="log-entry" key={index}>
-                <span className="log-timestamp">
-                  {formatTimestamp(log.timestamp)}
-                </span>
-                <span
-                  className={`log-level ${log.level}`}
-                  onClick={() => appendToQuery('level', log.level)}
-                >
-                  {log.level[0].toUpperCase()}
-                </span>
+        <div id="log-history">
+          {history.length
+            ? history.map((log, index) => (
+                <div id={`log_${index}`} className="log-entry" key={index}>
+                  <span className="log-timestamp">
+                    {formatTimestamp(log.timestamp)}
+                  </span>
+                  <span
+                    className={`log-level ${log.level}`}
+                    onClick={() => appendToQuery('level', log.level)}
+                  >
+                    {log.level[0].toUpperCase()}
+                  </span>
 
-                {Object.keys(log.data && log.data.user ? log.data.user : {})
-                  .length || log.data.user ? (
-                  <>
-                    <div className="log-message-single">{log.message}</div>
-                    <input
-                      className="log-toggle"
-                      type="checkbox"
-                      defaultChecked={true}
-                    />
-                    <div className="log-data-rich">
-                      <HighlightedJSON
-                        data={log.data.user}
-                        appendToQuery={appendToQuery}
+                  {Object.keys(log.data && log.data.user ? log.data.user : {})
+                    .length || log.data.user ? (
+                    <>
+                      <div className="log-message-single">{log.message}</div>
+                      <input
+                        className="log-toggle"
+                        type="checkbox"
+                        defaultChecked={true}
                       />
-                    </div>
-                  </>
-                ) : log.message.split('\n').length === 1 ? (
-                  <div className="log-message-single">{log.message}</div>
-                ) : (
-                  <>
-                    <div className="log-message-single">
-                      {log.message.split('\n')[0]}
-                    </div>
-                    <div className="log-message-multi">
-                      <pre>{log.message}</pre>
-                    </div>
-                  </>
-                )}
-              </div>
-            ))
-          : 'No logs found...'}
-        <div ref={messagesEndRef} />
-      </div>
+                      <div className="log-data-rich">
+                        <HighlightedJSON
+                          data={log.data.user}
+                          appendToQuery={appendToQuery}
+                        />
+                      </div>
+                    </>
+                  ) : log.message.split('\n').length === 1 ? (
+                    <div className="log-message-single">{log.message}</div>
+                  ) : (
+                    <>
+                      <div className="log-message-single">
+                        {log.message.split('\n')[0]}
+                      </div>
+                      <div className="log-message-multi">
+                        <pre>{log.message}</pre>
+                      </div>
+                    </>
+                  )}
+                </div>
+              ))
+            : 'No logs found...'}
+          <div ref={messagesEndRef} />
+        </div>
 
-      {/*<pre id="debug">{JSON.stringify(parsed_query.filters, undefined, 2)}</pre>*/}
+        {/*<pre id="debug">{JSON.stringify(parsed_query.filters, undefined, 2)}</pre>*/}
+      </div>
     </div>
   );
 };

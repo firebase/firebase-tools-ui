@@ -1,16 +1,22 @@
 #log {
-  max-width: 800px;
+  height: 100%;
   border: 1px solid #ccc;
   border-radius: 5px;
-  margin: 40px auto 0px auto;
-  height: 800px;
   overflow: hidden;
 
   display: grid;
-  grid-template-areas: 'query' 'history' 'debug';
-  grid-template-rows: fit-content(100%) 1fr fit-content(100%);
 
-  #query {
+  #log-content {
+    display: grid;
+    margin: 24px;
+    overflow: hidden;
+
+    grid-template-areas: 'query' 'history' 'debug';
+    grid-template-rows: fit-content(100%) 1fr fit-content(100%);
+  }
+
+  #log-query {
+    grid-area: query;
     display: grid;
 
     .consistent_text {
@@ -18,7 +24,10 @@
       grid-column: 1;
       grid-row: 1;
 
-      border-width: 0px;
+      border: 1px solid #ddd;
+      border-width: 1px 0px 1px 0px;
+      border-radius: 4px 4px 0px 0px;
+
       margin: 0px;
       display: block;
 
@@ -27,9 +36,13 @@
       padding: 15px;
 
       line-height: 1em;
+
+      &::placeholder {
+        color: #333;
+      }
     }
 
-    #input {
+    #log-query-input {
       @extend .consistent_text;
       resize: none;
       background-color: rgba(0, 0, 0, 0);
@@ -38,10 +51,11 @@
 
       &:focus {
         outline: none;
+        //box-shadow: 4px 4px red;
       }
     }
 
-    #render {
+    #log-query-render {
       @extend .consistent_text;
       width: 100%;
       height: 100%;
@@ -69,20 +83,19 @@
       }
     }
 
-    #actions {
+    #log-query-actions {
       grid-column: 1;
       grid-row: 1;
       justify-self: end;
     }
   }
 
-  #history {
+  #log-history {
     overflow: auto;
     padding: 10px 0px;
     font-family: monospace;
     font-size: 0.9em;
     background-color: #f9f9f9;
-    border-top: 1px solid #ccc;
   }
 
   #debug {
@@ -114,10 +127,12 @@
       grid-area: level;
 
       background-color: rgba(0, 0, 0, 0.1);
-      border-radius: 3px;
+      border-radius: 100%;
+      width: 20px;
+      height: 20px;
       color: rgba(0, 0, 0, 1);
       text-align: center;
-      padding: 5px;
+      padding: 4px;
       font-weight: bold;
       cursor: pointer;
 
@@ -207,6 +222,7 @@
       padding: 10px;
       overflow: auto;
       white-space: pre;
+      font-size: 0.9em;
     }
   }
 
