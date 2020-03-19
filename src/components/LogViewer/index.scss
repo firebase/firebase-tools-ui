@@ -1,19 +1,20 @@
+// TODO: Figure out if this can be moved up without breaking anyone
+.App-main {
+  height: 100vh;
+
+  .mdc-layout-grid__inner {
+    height: 100%;
+  }
+}
 #log {
   height: 100%;
-  border: 1px solid #ccc;
   border-radius: 5px;
   overflow: hidden;
 
   display: grid;
 
-  #log-content {
-    display: grid;
-    margin: 24px;
-    overflow: hidden;
-
-    grid-template-areas: 'query' 'history' 'debug';
-    grid-template-rows: fit-content(100%) 1fr fit-content(100%);
-  }
+  grid-template-areas: 'query' 'history' 'debug';
+  grid-template-rows: fit-content(100%) 1fr fit-content(100%);
 
   #log-query {
     grid-area: query;
@@ -96,6 +97,10 @@
     font-family: monospace;
     font-size: 0.9em;
     background-color: #f9f9f9;
+
+    #log-history-empty {
+      padding: 0px 10px;
+    }
   }
 
   #debug {

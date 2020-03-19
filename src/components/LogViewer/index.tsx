@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
+import './index.scss';
+
 import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
+
 import { AppState } from '../../store';
-import './index.scss';
 import { LogEntry, LogState } from '../../store/logviewer';
 
 enum WebSocketState {
@@ -110,16 +112,15 @@ function parseQuery(query: string) {
     .map((t, i) => (i % 2 ? t.replace(/ /g, 'ˍ') : t))
     .join('"');
 
-  const sections: string[] = quoted_query.split('\n').reduce(
-    (sections, line) => {
+  const sections: string[] = quoted_query
+    .split('\n')
+    .reduce((sections, line) => {
       return [
         ...sections,
         ...line.split(/((?:[^\s]+)\s?=\s?(?:[^\s]+))/),
         '\n',
       ];
-    },
-    [] as string[]
-  );
+    }, [] as string[]);
 
   const filters: { [key: string]: string } = {};
   const query_chunks: string[] = [];
@@ -531,80 +532,85 @@ export const LogViewer: React.FC<Props> = ({ log, logReceived }) => {
   };
 
   return (
-    <div id="log">
-      <div id="log-content" className="mdc-elevation--z2">
-        <div id="log-query">
-          <div id="log-query-render">{parsed_query.elements}</div>
-          <textarea
-            rows={1}
-            id="log-query-input"
-            spellCheck={false}
-            value={query}
-            onChange={e => setQuery((e.target as any).value)}
-            placeholder="Filter or search logs..."
-          ></textarea>
-          {query.length ? (
-            <div id="log-query-actions">
-              {/*<button onClick={() => setQuery(formatQuery(parsed_query.filters))}>*/}
-              {/*  format*/}
-              {/*</button>*/}
-              <button onClick={() => setQuery('')}>clear query</button>
-            </div>
-          ) : (
-            ''
-          )}
-        </div>
-
-        <div id="log-history">
-          {history.length
-            ? history.map((log, index) => (
-                <div id={`log_${index}`} className="log-entry" key={index}>
-                  <span className="log-timestamp">
-                    {formatTimestamp(log.timestamp)}
-                  </span>
-                  <span
-                    className={`log-level ${log.level}`}
-                    onClick={() => appendToQuery('level', log.level)}
-                  >
-                    {log.level[0].toUpperCase()}
-                  </span>
-
-                  {Object.keys(log.data && log.data.user ? log.data.user : {})
-                    .length || log.data.user ? (
-                    <>
-                      <div className="log-message-single">{log.message}</div>
-                      <input
-                        className="log-toggle"
-                        type="checkbox"
-                        defaultChecked={true}
-                      />
-                      <div className="log-data-rich">
-                        <HighlightedJSON
-                          data={log.data.user}
-                          appendToQuery={appendToQuery}
-                        />
-                      </div>
-                    </>
-                  ) : log.message.split('\n').length === 1 ? (
-                    <div className="log-message-single">{log.message}</div>
-                  ) : (
-                    <>
-                      <div className="log-message-single">
-                        {log.message.split('\n')[0]}
-                      </div>
-                      <div className="log-message-multi">
-                        <pre>{log.message}</pre>
-                      </div>
-                    </>
-                  )}
-                </div>
-              ))
-            : 'No logs found...'}
-          <div ref={messagesEndRef} />
-        </div>
-
-        {/*<pre id="debug">{JSON.stringify(parsed_query.filters, undefined, 2)}</pre>*/}
+    <div
+      id="log"
+      className="mdc-layout-grid__cell mdc-layout-grid__cell--span-12 mdc-elevation--z2"
+    >
+      <div id="log-query">
+        <div id="log-query-render">{parsed_query.elements}</div>
+        <textarea
+          rows={1}
+          id="log-query-input"
+          spellCheck={false}
+          value={query}
+          onChange={e => setQuery((e.target as any).value)}
+          placeholder="Filter or search logs..."
+        ></textarea>
+        {query.length ? (
+          <div id="log-query-actions">
+            {/*<button onClick={() => setQuery(formatQuery(parsed_query.filters))}>*/}
+            {/*  format*/}
+            {/*</button>*/}
+            <button onClick={() => setQuery('')}>clear query</button>
+          </div>
+        ) : (
+          ''
+        )}
       </div>
+
+      <div id="log-history">
+        {history.length ? (
+          history.map((log, index) => (
+            <div id={`log_${index}`} className="log-entry" key={index}>
+              <span className="log-timestamp">
+                {formatTimestamp(log.timestamp)}
+              </span>
+              <span
+                className={`log-level ${log.level}`}
+                onClick={() => appendToQuery('level', log.level)}
+              >
+                {log.level[0].toUpperCase()}
+              </span>
+
+              {Object.keys(log.data && log.data.user ? log.data.user : {})
+                .length || log.data.user ? (
+                <>
+                  <div className="log-message-single">{log.message}</div>
+                  <input
+                    className="log-toggle"
+                    type="checkbox"
+                    defaultChecked={true}
+                  />
+                  <div className="log-data-rich">
+                    <HighlightedJSON
+                      data={log.data.user}
+                      appendToQuery={appendToQuery}
+                    />
+                  </div>
+                </>
+              ) : log.message.split('\n').length === 1 ? (
+                <div className="log-message-single">{log.message}</div>
+              ) : (
+                <>
+                  <div className="log-message-single">
+                    {log.message.split('\n')[0]}
+                  </div>
+                  <div className="log-message-multi">
+                    <pre>{log.message}</pre>
+                  </div>
+                </>
+              )}
+            </div>
+          ))
+        ) : (
+          <div id="log-history-empty">
+            No logs are found which match your filters.
+          </div>
+        )}
+        <div ref={messagesEndRef} />
+      </div>
+
+      {/*<pre id="debug">{JSON.stringify(parsed_query.filters, undefined, 2)}</pre>*/}
     </div>
   );
 };
@@ -616,7 +622,4 @@ export const mapDispatchToProps = {
   },
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(LogViewer);
+export default connect(mapStateToProps, mapDispatchToProps)(LogViewer);
