@@ -37,7 +37,7 @@ const reducer = createReducer<FirestoreMap, Action>({})
       } else if (isArray(parent)) {
         parent.push(payload.value);
       }
-    }),
+    })
   )
   .handleAction(
     actions.updateField,
@@ -50,7 +50,7 @@ const reducer = createReducer<FirestoreMap, Action>({})
       } else {
         return payload.value;
       }
-    }),
+    })
   )
   .handleAction(
     actions.updateType,
@@ -62,7 +62,7 @@ const reducer = createReducer<FirestoreMap, Action>({})
       } else if (isArray(parent) && !isArray(defaultValue)) {
         parent[Number(lastFieldName(payload.path))] = defaultValue;
       }
-    }),
+    })
   )
   .handleAction(
     actions.updateKey,
@@ -73,7 +73,30 @@ const reducer = createReducer<FirestoreMap, Action>({})
         parent[payload.key] = parent[oldFieldName];
         delete parent[oldFieldName];
       }
-    }),
+    })
+  )
+  .handleAction(
+    actions.updateType,
+    produce((draft, { payload }) => {
+      const parent = get(draft, getParentPath(payload.path)) || draft;
+      const defaultValue = defaultValueForType(payload.type);
+      if (isMap(parent)) {
+        parent[lastFieldName(payload.path)] = defaultValue;
+      } else if (isArray(parent) && !isArray(defaultValue)) {
+        parent[Number(lastFieldName(payload.path))] = defaultValue;
+      }
+    })
+  )
+  .handleAction(
+    actions.updateKey,
+    produce((draft, { payload }) => {
+      const parent = get(draft, getParentPath(payload.path)) || draft;
+      const oldFieldName = lastFieldName(payload.path);
+      if (isMap(parent)) {
+        parent[payload.key] = parent[oldFieldName];
+        delete parent[oldFieldName];
+      }
+    })
   )
   .handleAction(
     actions.deleteField,
@@ -84,7 +107,7 @@ const reducer = createReducer<FirestoreMap, Action>({})
       } else if (isArray(parent)) {
         parent.splice(Number(lastFieldName(payload)), 1);
       }
-    }),
+    })
   );
 
 function exhaustiveCheck(param: never): never {
@@ -136,7 +159,7 @@ export function useDocumentDispatch() {
   const context = React.useContext(DocumentDispatchContext);
   if (context === undefined) {
     throw new Error(
-      'useDocumentDispatch must be used within a DocumentProvider',
+      'useDocumentDispatch must be used within a DocumentProvider'
     );
   }
   return context;
