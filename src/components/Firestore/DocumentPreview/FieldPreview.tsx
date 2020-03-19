@@ -38,7 +38,8 @@ import { useDocumentState, useFieldState } from './store';
 const FieldPreview: React.FC<{
   path: string[];
   documentRef: firestore.DocumentReference;
-}> = ({ path, documentRef }) => {
+  isKeyMutable?: boolean;
+}> = ({ path, documentRef, isKeyMutable = true }) => {
   const documentData = useDocumentState();
   const state = useFieldState(path);
   const [isEditing, setIsEditing] = useState(false);
@@ -82,6 +83,7 @@ const FieldPreview: React.FC<{
         updateField(documentRef, documentData, path, value[key]);
         setIsEditing(false);
       }}
+      areRootKeysMutable={false}
     />
   ) : (
     <>
@@ -149,6 +151,7 @@ const FieldPreview: React.FC<{
             updateField(documentRef, documentData, addPath, value[key]);
             setIsAddingField(false);
           }}
+          areRootKeysMutable={!isArray(state)}
         />
       )}
       {!isPrimitive(state) && isExpanded && (

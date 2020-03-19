@@ -62,6 +62,7 @@ const DocumentPreview: React.FC<Props> = ({ reference }) => {
                 updateField(reference, data as FirestoreMap, [key], value[key]);
                 setIsAddingField(false);
               }}
+              areRootKeysMutable={true}
             />
           )}
 

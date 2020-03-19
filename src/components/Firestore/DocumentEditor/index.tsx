@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { IconButton } from '@rmwc/icon-button';
 import { Select } from '@rmwc/select';
 import { TextField } from '@rmwc/textfield';
 import React, { useEffect } from 'react';
@@ -26,6 +27,7 @@ import {
   isGeoPoint,
   isMap,
   isNumber,
+  isPrimitive,
   isReference,
   isString,
   isTimestamp,
@@ -49,10 +51,11 @@ import TimestampEditor from './TimestampEditor';
 const DocumentEditor: React.FC<{
   value: FirestoreMap;
   onChange?: (value: FirestoreMap) => void;
-}> = ({ value, onChange }) => {
+  areRootKeysMutable?: boolean;
+}> = ({ value, onChange, areRootKeysMutable = true }) => {
   return (
     <DocumentProvider value={value}>
-      <RootField onChange={onChange} />
+      <RootField onChange={onChange} areRootKeysMutable={areRootKeysMutable} />
     </DocumentProvider>
   );
 };
@@ -63,7 +66,8 @@ const DocumentEditor: React.FC<{
  */
 const RootField: React.FC<{
   onChange?: (value: FirestoreMap) => void;
-}> = ({ onChange }) => {
+  areRootKeysMutable: boolean;
+}> = ({ onChange, areRootKeysMutable }) => {
   const state = useDocumentState();
 
   useEffect(() => {
@@ -72,8 +76,12 @@ const RootField: React.FC<{
 
   return (
     <>
-      {Object.keys(state).map(field => (
-        <NestedEditor key={field} path={[field]} />
+      {Object.keys(state).map((field, i) => (
+        <NestedEditor
+          key={i}
+          path={[field]}
+          isKeyMutable={areRootKeysMutable}
+        />
       ))}
     </>
   );
@@ -82,20 +90,23 @@ const RootField: React.FC<{
 /**
  * Field with call-to-actions for editing as well as rendering applicable child-nodes
  */
-const NestedEditor: React.FC<{ path: string[] }> = ({ path }) => {
+const NestedEditor: React.FC<{
+  path: string[];
+  isKeyMutable: boolean;
+}> = ({ path, isKeyMutable }) => {
   const state = useFieldState(path);
   const dispatch = useDocumentDispatch()!;
 
   let childEditors = null;
   if (isMap(state)) {
-    childEditors = Object.keys(state).map(childLeaf => {
+    childEditors = Object.keys(state).map((childLeaf, i) => {
       const childPath = [...path, childLeaf];
-      return <NestedEditor key={childLeaf} path={childPath} />;
+      return <NestedEditor key={i} path={childPath} isKeyMutable={true} />;
     });
   } else if (isArray(state)) {
     childEditors = state.map((value, index) => {
       const childPath = [...path, `${index}`];
-      return <NestedEditor key={index} path={childPath} />;
+      return <NestedEditor key={index} path={childPath} isKeyMutable={false} />;
     });
   }
 
@@ -126,10 +137,21 @@ const NestedEditor: React.FC<{ path: string[] }> = ({ path }) => {
     </>
   );
 
+  function handleKeyChange(e: React.FormEvent<HTMLInputElement>) {
+    dispatch(actions.updateKey({ path, key: e.currentTarget.value }));
+  }
+
   return (
     <>
       <div style={{ display: 'flex' }}>
-        <TextField readOnly value={lastFieldName(path)} placeholder="Field" />
+        <TextField
+          {...(isKeyMutable
+            ? { onChange: handleKeyChange }
+            : { readOnly: true, disabled: true })}
+          value={lastFieldName(path)}
+          outlined
+          label="Field"
+        />
         <Select
           label="Type"
           outlined
@@ -150,6 +172,36 @@ const NestedEditor: React.FC<{ path: string[] }> = ({ path }) => {
           }}
         />
         {fieldEditor}
+        {isMap(state) && (
+          <IconButton
+            icon="add"
+            label="Add field"
+            onClick={e =>
+              dispatch(actions.addField({ path: [...path, ''], value: '' }))
+            }
+          />
+        )}
+        {isArray(state) && (
+          <IconButton
+            icon="add"
+            label="Add field"
+            onClick={e =>
+              dispatch(
+                actions.addField({
+                  path: [...path, `${path.length}`],
+                  value: '',
+                })
+              )
+            }
+          />
+        )}
+        {path.length > 1 && isPrimitive(state) && (
+          <IconButton
+            icon="delete"
+            label="Remove field"
+            onClick={() => dispatch(actions.deleteField(path))}
+          />
+        )}
       </div>
       {childEditors && <div>{childEditors}</div>}
     </>
