@@ -17,15 +17,14 @@
 import './Database.scss';
 import './DataViewer/index.scss';
 
-import { IconButton } from '@rmwc/icon-button';
 import * as firebase from 'firebase/app';
 import React, { useCallback, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 
 import { initDatabase } from '../../firebase';
 import { AppState } from '../../store';
 import { DatabaseConfig } from '../../store/config';
+import { BreadCrumbs } from '../common/BreadCrumbs';
 import { CardActionBar } from '../common/CardActionBar';
 import { NodeContainer } from './DataViewer/NodeContainer';
 
@@ -55,10 +54,9 @@ export const Database: React.FC<Props> = ({ config, namespace }) => {
   return (
     <div className="Database-Database">
       <CardActionBar>
-        <IconButton
-          icon="home"
-          tag={props => <Link to={`/database/${namespace}/data`} {...props} />}
-        />
+        {ref && (
+          <BreadCrumbs base={`/database/${namespace}/data`} rtdbRef={ref} />
+        )}
       </CardActionBar>
       {ref ? (
         <>

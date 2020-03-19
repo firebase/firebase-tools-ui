@@ -1,0 +1,85 @@
+/**
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.BreadCrumbs {
+  align-items: center;
+  display: flex;
+  font-size: 14px;
+  font-weight: 400;
+  height: 24px;
+  margin: 0 6px;
+  padding: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  list-style: none;
+}
+
+.BreadCrumbs-crumb {
+  color: var(--mdc-theme-text-secondary-on-background);
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px;
+  position: relative;
+
+  a:link {
+    color: rgba(0, 0, 0, 0.54);
+    line-height: 24px;
+    text-decoration: none;
+  }
+
+  &:not(:first-of-type) {
+    padding-left: 20px;
+
+    a:link {
+      padding: 0 8px;
+    }
+
+    &::before {
+      // TODO: @mixin material-icons('chevron_right');
+      -webkit-font-feature-settings: 'liga';
+      -webkit-font-smoothing: antialiased;
+      color: inherit;
+      content: 'chevron_right';
+      direction: ltr;
+      display: inline-block;
+      font-family: 'Material Icons';
+      font-size: 20px;
+      font-style: normal;
+      font-weight: normal;
+      left: 0;
+      letter-spacing: normal;
+      line-height: 20px;
+      position: absolute;
+      text-transform: none;
+      white-space: nowrap;
+      word-wrap: normal;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .mdc-icon-button {
+    &:hover {
+      color: rgba(0, 0, 0, 0.87);
+    }
+  }
+}

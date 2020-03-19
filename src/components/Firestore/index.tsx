@@ -20,13 +20,12 @@ import { Button } from '@rmwc/button';
 import { Card } from '@rmwc/card';
 import { Elevation } from '@rmwc/elevation';
 import { GridCell } from '@rmwc/grid';
-import { IconButton } from '@rmwc/icon-button';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 
 import { AppState } from '../../store';
 import { FirestoreConfig } from '../../store/config';
+import { BreadCrumbs } from '../common/BreadCrumbs';
 import { CardActionBar } from '../common/CardActionBar';
 import DatabaseApi from './api';
 import { ApiProvider } from './ApiContext';
@@ -76,9 +75,9 @@ export const Firestore: React.FC<Props> = ({ config, projectId }) => {
         <Elevation z="2" wrap>
           <Card>
             <CardActionBar>
-              <IconButton
-                icon="home"
-                tag={props => <Link to="/firestore" {...props} />}
+              <BreadCrumbs
+                base="/firestore"
+                reference={api.database.collection('/a/b/c')}
               />
             </CardActionBar>
             <div className="Firestore-panels">
