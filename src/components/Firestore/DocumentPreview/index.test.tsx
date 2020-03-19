@@ -39,7 +39,7 @@ describe('loaded document', () => {
   let documentReference: firestore.DocumentReference;
 
   beforeEach(() => {
-    useDocumentData.mockReturnValueOnce([
+    useDocumentData.mockReturnValue([
       {
         foo: 'bar',
       },
@@ -47,6 +47,25 @@ describe('loaded document', () => {
     documentReference = fakeDocumentReference();
 
     result = render(<DocumentPreview reference={documentReference} />);
+  });
+
+  it('adds a new field', () => {
+    const { getByText, getByLabelText } = result;
+
+    getByText('Add field').click();
+    fireEvent.change(getByLabelText('Field'), {
+      target: { value: 'new' },
+    });
+    fireEvent.blur(getByLabelText('Field'));
+    fireEvent.change(getByLabelText('Value'), {
+      target: { value: '42' },
+    });
+    getByText('Save').click();
+
+    expect(documentReference.update).toHaveBeenCalledWith(
+      new firestore.FieldPath('new'),
+      '42'
+    );
   });
 
   it('renders a field', () => {
@@ -68,7 +87,7 @@ describe('loaded document', () => {
     );
   });
 
-  it('updates a field', () => {
+  it('updates a field-value', () => {
     const { getByLabelText, getByText } = result;
 
     getByText('edit').click();
@@ -81,6 +100,18 @@ describe('loaded document', () => {
       new firestore.FieldPath('foo'),
       'new'
     );
+  });
+
+  it('field-names are immutable', () => {
+    const { getByLabelText, getByText } = result;
+
+    getByText('edit').click();
+
+    fireEvent.change(getByLabelText('Field'), {
+      target: { value: 'new' },
+    });
+
+    expect(getByLabelText('Field').value).toBe('foo');
   });
 
   it('does not show `add` a field', () => {
@@ -147,6 +178,13 @@ describe('loaded array', () => {
       'bravo',
       ['wowah'],
     ]);
+  });
+
+  it('array elements keys are immutable', () => {
+    const { getByLabelText, getByText, queryAllByText } = result;
+    // update the bravo-element
+    queryAllByText('edit')[1].click();
+    expect(getByLabelText('Field').readOnly).toBe(true);
   });
 
   it('updates a top-level array element', () => {
@@ -256,6 +294,12 @@ describe('loaded map', () => {
     expect(queryByText('last_name')).toBe(null);
   });
 
+  it('map elements keys are immutable', () => {
+    const { getByLabelText, getByText, queryAllByText } = result;
+    queryAllByText('edit')[1].click();
+    expect(getByLabelText('Field').readOnly).toBe(true);
+  });
+
   it('updates a map element', () => {
     const { getByLabelText, getByText, queryAllByText } = result;
     queryAllByText('edit')[1].click();
@@ -269,18 +313,20 @@ describe('loaded map', () => {
     );
   });
 
-  // TODO: re-enable when editor-keys are editable, defaulting to '' results
-  // in an invalid field path
-  it.skip('adds a map element', () => {
+  it('adds a map element', () => {
     const { getByLabelText, getByText, queryAllByText } = result;
     // ignore top-level add
     queryAllByText('add')[1].click();
+    fireEvent.change(getByLabelText('Field'), {
+      target: { value: 'wow' },
+    });
+    fireEvent.blur(getByLabelText('Field'));
     fireEvent.change(getByLabelText('Value'), {
       target: { value: 'new' },
     });
     getByText('Save').click();
     expect(documentReference.update).toHaveBeenCalledWith(
-      new firestore.FieldPath('foo'),
+      new firestore.FieldPath('foo', 'wow'),
       'new'
     );
   });

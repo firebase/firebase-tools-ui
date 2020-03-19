@@ -25,7 +25,7 @@ it('renders an editable field', () => {
   const { getByLabelText, getByPlaceholderText, getByDisplayValue } = render(
     <DocumentEditor value={{ hello: 'world' }} onChange={onChange} />
   );
-  expect(getByPlaceholderText('Field').value).toBe('hello');
+  expect(getByLabelText('Field').value).toBe('hello');
   // Select does not properly wire up the label aria properly
   expect(getByDisplayValue('string')).not.toBe(null);
   expect(getByLabelText('Value').value).toBe('world');
@@ -57,6 +57,21 @@ it('renders an editable field with children', () => {
   });
 });
 
+it('renders an editable key-field', () => {
+  const onChange = jest.fn();
+  const { getByLabelText, getByPlaceholderText, getByDisplayValue } = render(
+    <DocumentEditor value={{ hello: 'world' }} onChange={onChange} />
+  );
+
+  fireEvent.change(getByLabelText('Field'), {
+    target: { value: 'new' },
+  });
+  fireEvent.blur(getByLabelText('Field'));
+
+  expect(getByLabelText('Field').value).toBe('new');
+  expect(onChange).toHaveBeenCalledWith({ new: 'world' });
+});
+
 describe('changing types', () => {
   let result;
   let setType;
@@ -70,8 +85,7 @@ describe('changing types', () => {
       });
   });
 
-  // TODO: wire up array editor with add child-field functionality
-  it.skip('switches to an array', () => {
+  it('switches to an array', () => {
     const { getByText } = result;
     setType(FieldType.ARRAY);
     expect(getByText('add')).not.toBe(null);
@@ -89,8 +103,7 @@ describe('changing types', () => {
     expect(getByLabelText('Latitude')).not.toBe(null);
   });
 
-  // TODO: wire up map editor with add child-field functionality
-  it.skip('switches to a map', () => {
+  it('switches to a map', () => {
     const { getByText } = result;
     setType(FieldType.MAP);
     expect(getByText('add')).not.toBe(null);

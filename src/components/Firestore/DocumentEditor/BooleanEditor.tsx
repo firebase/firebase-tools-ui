@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { Select } from '@rmwc/select';
+import React from 'react';
 
 const BooleanEditor: React.FC<{
   value: boolean;

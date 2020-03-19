@@ -58,14 +58,14 @@ const DocumentPreview: React.FC<Props> = ({
           {isAddingField && (
             <InlineEditor
               value={{ '': '' }}
-              path={[]}
               onCancel={() => {
                 setIsAddingField(false);
               }}
               onSave={(key, value) => {
-                updateField(reference, data as FirestoreMap, [key], value[key]);
+                updateField(reference, data as FirestoreMap, [key], value);
                 setIsAddingField(false);
               }}
+              areRootKeysMutable={true}
             />
           )}
 

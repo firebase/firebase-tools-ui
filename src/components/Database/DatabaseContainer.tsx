@@ -106,7 +106,4 @@ export const mapDispatchToProps: MapDispatchToPropsFunction<
   databasesUnsubscribe: () => void dispatch(databasesUnsubscribe()),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(DatabaseContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(DatabaseContainer);
