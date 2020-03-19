@@ -25,7 +25,7 @@ it('renders an editable field', () => {
   const { getByLabelText, getByPlaceholderText, getByDisplayValue } = render(
     <DocumentEditor value={{ hello: 'world' }} onChange={onChange} />
   );
-  expect(getByPlaceholderText('Field').value).toBe('hello');
+  expect(getByLabelText('Field').value).toBe('hello');
   // Select does not properly wire up the label aria properly
   expect(getByDisplayValue('string')).not.toBe(null);
   expect(getByLabelText('Value').value).toBe('world');
@@ -55,6 +55,21 @@ it('renders an editable field with children', () => {
   expect(onChange).toHaveBeenCalledWith({
     hello: { foo: ['bar', { spam: 'new' }] },
   });
+});
+
+it('renders an editable key-field', () => {
+  const onChange = jest.fn();
+  const { getByLabelText, getByPlaceholderText, getByDisplayValue } = render(
+    <DocumentEditor value={{ hello: 'world' }} onChange={onChange} />
+  );
+
+  fireEvent.change(getByLabelText('Field'), {
+    target: { value: 'new' },
+  });
+  fireEvent.blur(getByLabelText('Field'));
+
+  expect(getByLabelText('Field').value).toBe('new');
+  expect(onChange).toHaveBeenCalledWith({ new: 'world' });
 });
 
 describe('changing types', () => {

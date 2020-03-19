@@ -26,6 +26,7 @@ import React, { useState } from 'react';
 
 import {
   getFieldType,
+  getParentPath,
   isArray,
   isMap,
   isPrimitive,
@@ -78,7 +79,12 @@ const FieldPreview: React.FC<{
         setIsEditing(false);
       }}
       onSave={(key, value) => {
-        updateField(documentRef, documentData, [...path, key], value[key]);
+        updateField(
+          documentRef,
+          documentData,
+          [...getParentPath(path), key],
+          value[key]
+        );
         setIsEditing(false);
       }}
       areRootKeysMutable={false}

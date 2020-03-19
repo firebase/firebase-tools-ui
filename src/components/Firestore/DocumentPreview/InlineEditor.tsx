@@ -41,6 +41,7 @@ const InlineEditor: React.FC<{
 
   function handleSave(e: React.MouseEvent<HTMLButtonElement>) {
     e.stopPropagation();
+    // Inline editors can only ever edit one root-node
     onSave(Object.keys(internalValue)[0], internalValue);
   }
 
