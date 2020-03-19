@@ -24,6 +24,7 @@ import classnames from 'classnames';
 import { firestore } from 'firebase';
 import React, { useState } from 'react';
 
+import { supportsEditing } from '../DocumentEditor';
 import { FieldType, FirestoreAny } from '../models';
 import {
   getFieldType,
@@ -33,7 +34,7 @@ import {
   lastFieldName,
 } from '../utils';
 import { deleteField, updateField } from './api';
-import InlineEditor, { supportsEditing } from './InlineEditor';
+import InlineEditor from './InlineEditor';
 import { useDocumentState, useFieldState } from './store';
 
 const FieldPreview: React.FC<{

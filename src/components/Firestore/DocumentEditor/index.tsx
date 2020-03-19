@@ -45,6 +45,24 @@ import {
 import StringEditor from './StringEditor';
 import TimestampEditor from './TimestampEditor';
 
+const supportedFieldTypes = [
+  FieldType.STRING,
+  FieldType.NUMBER,
+  FieldType.BOOLEAN,
+  FieldType.MAP,
+  FieldType.ARRAY,
+  FieldType.NULL,
+  FieldType.TIMESTAMP,
+  FieldType.GEOPOINT,
+  FieldType.REFERENCE,
+];
+
+const supportedFieldTypeSet = new Set(supportedFieldTypes);
+
+export function supportsEditing(value: FirestoreAny): boolean {
+  return supportedFieldTypeSet.has(getFieldType(value));
+}
+
 /** Entry point for a Document/Field editor */
 const DocumentEditor: React.FC<{
   value: FirestoreMap;
@@ -133,17 +151,7 @@ const NestedEditor: React.FC<{ path: string[] }> = ({ path }) => {
         <Select
           label="Type"
           outlined
-          options={[
-            FieldType.STRING,
-            FieldType.NUMBER,
-            FieldType.BOOLEAN,
-            FieldType.MAP,
-            FieldType.ARRAY,
-            FieldType.NULL,
-            FieldType.TIMESTAMP,
-            FieldType.GEOPOINT,
-            FieldType.REFERENCE,
-          ]}
+          options={supportedFieldTypes}
           value={getFieldType(state)}
           onChange={e => {
             dispatch(actions.updateType({ path, type: e.currentTarget.value }));

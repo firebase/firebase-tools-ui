@@ -19,24 +19,8 @@ import { Elevation } from '@rmwc/elevation';
 import React, { useState } from 'react';
 
 import DocumentEditor from '../DocumentEditor';
-import { FieldType, FirestoreAny, FirestoreMap } from '../models';
-import { getFieldType, lastFieldName } from '../utils';
-
-export const supportedFieldTypes = new Set([
-  FieldType.ARRAY,
-  FieldType.BOOLEAN,
-  FieldType.MAP,
-  FieldType.NULL,
-  FieldType.NUMBER,
-  FieldType.STRING,
-  FieldType.TIMESTAMP,
-  // TODO: FieldType.GEOPOINT,
-  // TODO: FieldType.REFERENCE,
-]);
-
-export function supportsEditing(value: FirestoreAny): boolean {
-  return supportedFieldTypes.has(getFieldType(value));
-}
+import { FirestoreMap } from '../models';
+import { lastFieldName } from '../utils';
 
 /** Editor entry point for a selected field */
 const InlineEditor: React.FC<{
