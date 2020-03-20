@@ -15,24 +15,8 @@
  */
 
 @import './utils';
-@import './material-colors';
 
-// New Firebase Navy palette
-$COLOR_NAVY_10: #f6f7f9;
-$COLOR_NAVY_20: #e5eaf0;
-$COLOR_NAVY_30: #d4dce7;
-$COLOR_NAVY_40: #c3cfdd;
-$COLOR_NAVY_50: #b2c1d4;
-$COLOR_NAVY_100: #8ea1b9;
-$COLOR_NAVY_200: #6b829d;
-$COLOR_NAVY_300: #476282;
-$COLOR_NAVY_400: #385574;
-$COLOR_NAVY_500: #2a4865;
-$COLOR_NAVY_600: #1b3a57;
-$COLOR_NAVY_700: #0c2d48;
-$COLOR_NAVY_800: #051e34;
-$COLOR_NAVY_900: #031525;
-$COLOR_NAVY: $COLOR_NAVY_600;
+$QUANTUM_BLACK_ALPHA_12: rgba(0, 0, 0, 0.12); // e.g. dividers
 
 $COLOR_WHITE_PRIMARY: #fff;
 
