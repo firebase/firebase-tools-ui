@@ -23,6 +23,7 @@ import { MenuItem, SimpleMenu } from '@rmwc/menu';
 import * as firebase from 'firebase/app';
 import React, { useCallback, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 
 import { initDatabase } from '../../firebase';
 import { AppState } from '../../store';
@@ -46,6 +47,8 @@ export const Database: React.FC<Props> = ({ config, namespace }) => {
   const [ref, setRef] = useState<firebase.database.Reference | undefined>(
     undefined
   );
+  const history = useHistory();
+
   useEffect(() => {
     if (!config) return;
     const [db, { cleanup }] = initDatabase(config, namespace);
@@ -53,20 +56,26 @@ export const Database: React.FC<Props> = ({ config, namespace }) => {
     return cleanup;
   }, [config, namespace, setRef]);
 
+  // TODO: remove once route path is wired up (in another PR)
   const doNavigate = useCallback(
     (path: string) => setRef(ref && ref.root.child(path)),
     [setRef, ref]
   );
+
+  const urlBase = `/database/${namespace}/data`;
+  const handleNavigate = (path: string) => {
+    history.push(`${urlBase}/${path}`);
+  };
 
   return (
     <div className="Database-Database">
       {ref ? (
         <>
           <InteractiveBreadCrumbBar
-            base={`/database/${namespace}/data`}
+            base={urlBase}
             path={new URL(ref.toString()).pathname}
             inputPrefix={getPrefix(ref)}
-            onNavigate={console.log.bind(null, 'onNavigate')}
+            onNavigate={handleNavigate}
           >
             <SimpleMenu handle={<IconButton icon="more_vert" />}>
               <MenuItem disabled>Export JSON</MenuItem>
