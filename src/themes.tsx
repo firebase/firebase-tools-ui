@@ -76,35 +76,37 @@ export const errorTheme = {
   textSecondaryOnBackground: `rgba(${red800}, 0.7)`,
 };
 
-export const SuccessTheme: React.FC<{ wrap?: boolean }> = ({
-  wrap,
-  children,
-}) => (
-  <ThemeProvider options={successTheme} wrap={wrap}>
-    {children}
-  </ThemeProvider>
-);
+/** Possible theme types */
+export enum Type {
+  CAUTION = 'caution',
+  NOTE = 'note',
+  SUCCESS = 'success',
+  TIP = 'tip',
+  WARNING = 'warning',
+}
 
-export const NoteTheme: React.FC<{ wrap?: boolean }> = ({ wrap, children }) => (
-  <ThemeProvider options={noteTheme} wrap={wrap}>
-    {children}
-  </ThemeProvider>
-);
+const THEME_MAP: Record<string, Record<string, string>> = {
+  [Type.CAUTION]: cautionTheme,
+  [Type.NOTE]: noteTheme,
+  [Type.SUCCESS]: successTheme,
+  [Type.TIP]: tipTheme,
+  [Type.WARNING]: errorTheme,
+};
 
-export const CautionTheme: React.FC<{ wrap?: boolean }> = ({
-  wrap,
-  children,
-}) => (
-  <ThemeProvider options={cautionTheme} wrap={wrap}>
-    {children}
-  </ThemeProvider>
-);
+export type CustomThemeType =
+  | 'caution'
+  | 'note'
+  | 'success'
+  | 'tip'
+  | 'warning';
 
-export const ErrorTheme: React.FC<{ wrap?: boolean }> = ({
-  wrap,
-  children,
-}) => (
-  <ThemeProvider options={errorTheme} wrap={wrap}>
+interface Props {
+  use: CustomThemeType;
+  wrap?: boolean;
+}
+
+export const CustomTheme: React.FC<Props> = ({ use, wrap, children }) => (
+  <ThemeProvider options={THEME_MAP[use]} wrap={wrap}>
     {children}
   </ThemeProvider>
 );
