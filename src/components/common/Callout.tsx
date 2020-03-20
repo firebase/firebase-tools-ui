@@ -5,7 +5,7 @@ import { Theme, ThemeProvider } from '@rmwc/theme';
 import { Typography } from '@rmwc/typography';
 import React, { ReactNode } from 'react';
 
-import { CustomTheme, CustomThemeType, Type } from '../../themes';
+import { CustomThemeProvider, CustomThemeType, Type } from '../../themes';
 
 export interface CalloutProps {
   /** Custom icon to override the default */
@@ -39,7 +39,7 @@ export const Callout: React.FC<CalloutProps> = ({
   const classes = `Callout Callout-${type}${asideClass}`;
 
   return (
-    <CustomTheme use={type} wrap>
+    <CustomThemeProvider use={type} wrap>
       <Theme
         className={classes}
         use={aside ? [] : ['onPrimary', 'primaryBg']}
@@ -62,6 +62,6 @@ export const Callout: React.FC<CalloutProps> = ({
           <div className="Callout-actions">{actions}</div>
         </ThemeProvider>
       </Theme>
-    </CustomTheme>
+    </CustomThemeProvider>
   );
 };
