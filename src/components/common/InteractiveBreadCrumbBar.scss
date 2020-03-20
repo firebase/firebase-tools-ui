@@ -23,6 +23,15 @@
 
     .value {
       flex: 1 auto;
+
+      .mdc-text-field__input {
+        border-bottom: none;
+        padding-left: 16px;
+      }
+
+      .mdc-line-ripple {
+        display: none;
+      }
     }
   }
 

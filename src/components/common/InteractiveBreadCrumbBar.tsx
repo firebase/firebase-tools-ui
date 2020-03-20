@@ -18,8 +18,10 @@ import './InteractiveBreadCrumbBar.scss';
 
 import { Button } from '@rmwc/button';
 import { Elevation } from '@rmwc/elevation';
+import { IconButton } from '@rmwc/icon-button';
 import { TextField } from '@rmwc/textfield';
-import React, { useState } from 'react';
+import useKey from '@rooks/use-key';
+import React, { useLayoutEffect, useRef, useState } from 'react';
 
 import { Props as BreadCrumbProps, BreadCrumbs } from './BreadCrumbs';
 import { CardActionBar } from './CardActionBar';
@@ -42,15 +44,32 @@ export const InteractiveBreadCrumbBar: React.FC<Props> = ({
     setIsEditing(false);
   };
 
+  const handleEdit = () => {
+    setIsEditing(true);
+  };
+
   const handleCancel = () => {
     setIsEditing(false);
     setValue(breadCrumbProps.path);
   };
 
+  const inputRef = useRef<HTMLInputElement>(null);
+  useKey(['Escape'], handleCancel, {
+    eventTypes: ['keypress', 'keydown', 'keyup'],
+    target: inputRef,
+    when: true,
+  });
+
+  useLayoutEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.select();
+    }
+  }, [isEditing, inputRef]);
+
   return (
     <div className="InteractiveBreadCrumbBar">
       {isEditing ? (
-        <Elevation z={2} wrap>
+        <Elevation z={1} wrap>
           <form
             className="InteractiveBreadCrumbBar-form"
             onSubmit={() => handleSubmit()}
@@ -62,20 +81,22 @@ export const InteractiveBreadCrumbBar: React.FC<Props> = ({
               type="text"
               value={value}
               onChange={e => setValue(e.currentTarget.value)}
+              inputRef={inputRef}
             />
-            <Button
+            <IconButton
               type="button"
+              icon="close"
               onClick={handleCancel}
               theme="textSecondaryOnLight"
             >
               Cancel
-            </Button>
+            </IconButton>
             <Button type="submit">Go</Button>
           </form>
         </Elevation>
       ) : (
         <CardActionBar>
-          <BreadCrumbs {...breadCrumbProps} onEdit={() => setIsEditing(true)}>
+          <BreadCrumbs {...breadCrumbProps} onEdit={handleEdit}>
             {children}
           </BreadCrumbs>
         </CardActionBar>
