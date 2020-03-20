@@ -32,6 +32,54 @@
     display: flex;
     align-items: center;
   }
+
+  &.top {
+    .CardActionBar-container {
+      border-radius: $BORDER_RADIUS_CARD_TOP;
+    }
+  }
+
+  &.top-left {
+    .CardActionBar-container {
+      border-top-left-radius: $BORDER_RADIUS_CARD;
+    }
+  }
+
+  &.top-right {
+    .CardActionBar-container {
+      border-top-right-radius: $BORDER_RADIUS_CARD;
+    }
+  }
+
+  &.bottom {
+    .CardActionBar-container {
+      border-radius: $BORDER_RADIUS_CARD_BOTTOM;
+    }
+  }
+
+  &.left {
+    .CardActionBar-container {
+      border-radius: $BORDER_RADIUS_CARD_LEFT;
+    }
+  }
+
+  &.bottom-left {
+    .CardActionBar-container {
+      border-bottom-left-radius: $BORDER_RADIUS_CARD;
+    }
+  }
+
+  &.bottom-right {
+    .CardActionBar-container {
+      border-bottom-right-radius: $BORDER_RADIUS_CARD;
+    }
+  }
+
+  &.right {
+    .CardActionBar-container {
+      border-radius: $BORDER_RADIUS_CARD_RIGHT;
+    }
+  }
 }
 
 // only first when inside a Card

@@ -53,7 +53,7 @@ export const Database: React.FC<Props> = ({ config, namespace }) => {
 
   return (
     <div className="Database-Database">
-      <CardActionBar>
+      <CardActionBar className="top-right">
         {ref && (
           <BreadCrumbs
             base={`/database/${namespace}/data`}
