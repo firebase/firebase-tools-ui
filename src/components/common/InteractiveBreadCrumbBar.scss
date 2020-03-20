@@ -22,6 +22,16 @@
     display: flex;
     padding-right: 8px;
 
+    .InteractiveBreadCrumbBar-prefix {
+      padding-left: 20px;
+      // TODO: fix this somehow globally?
+      font-family: 'Roboto Mono', monospace;
+
+      + .value .mdc-text-field__input {
+        padding-left: 0;
+      }
+    }
+
     .value {
       flex: 1 auto;
 

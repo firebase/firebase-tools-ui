@@ -37,6 +37,11 @@ export interface PropsFromState {
 
 export type Props = PropsFromState;
 
+const getPrefix = (ref: firebase.database.Reference) => {
+  const base = ref.root.toString();
+  return base.substring(0, base.length - 1);
+};
+
 export const Database: React.FC<Props> = ({ config, namespace }) => {
   const [ref, setRef] = useState<firebase.database.Reference | undefined>(
     undefined
@@ -60,6 +65,7 @@ export const Database: React.FC<Props> = ({ config, namespace }) => {
           <InteractiveBreadCrumbBar
             base={`/database/${namespace}/data`}
             path={new URL(ref.toString()).pathname}
+            inputPrefix={getPrefix(ref)}
             onNavigate={console.log.bind(null, 'onNavigate')}
           >
             <SimpleMenu handle={<IconButton icon="more_vert" />}>

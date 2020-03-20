@@ -19,6 +19,7 @@ import './InteractiveBreadCrumbBar.scss';
 import { Elevation } from '@rmwc/elevation';
 import { IconButton } from '@rmwc/icon-button';
 import { TextField } from '@rmwc/textfield';
+import { Typography } from '@rmwc/typography';
 import useKey from '@rooks/use-key';
 import React, { useLayoutEffect, useRef, useState } from 'react';
 
@@ -26,12 +27,15 @@ import { Props as BreadCrumbProps, BreadCrumbs } from './BreadCrumbs';
 import { CardActionBar } from './CardActionBar';
 
 interface Props extends BreadCrumbProps {
+  /** The input prefix to show before the editable input */
+  inputPrefix?: string;
   onNavigate: (path: string) => void;
 }
 
 export const InteractiveBreadCrumbBar: React.FC<Props> = ({
   onNavigate,
   children,
+  inputPrefix,
   ...breadCrumbProps
 }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -73,9 +77,18 @@ export const InteractiveBreadCrumbBar: React.FC<Props> = ({
             className="InteractiveBreadCrumbBar-form"
             onSubmit={() => handleSubmit()}
           >
+            {inputPrefix && (
+              <Typography
+                use="body2"
+                className="InteractiveBreadCrumbBar-prefix"
+                tag="code"
+                theme="textSecondaryOnBackground"
+              >
+                {inputPrefix}
+              </Typography>
+            )}
             <TextField
               aria-label="Document path"
-              placeholder="Document path e.g. /users/alice"
               fullwidth
               className="value"
               type="text"
