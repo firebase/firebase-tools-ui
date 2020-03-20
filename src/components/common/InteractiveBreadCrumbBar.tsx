@@ -16,7 +16,6 @@
 
 import './InteractiveBreadCrumbBar.scss';
 
-import { Button } from '@rmwc/button';
 import { Elevation } from '@rmwc/elevation';
 import { IconButton } from '@rmwc/icon-button';
 import { TextField } from '@rmwc/textfield';
@@ -75,7 +74,8 @@ export const InteractiveBreadCrumbBar: React.FC<Props> = ({
             onSubmit={() => handleSubmit()}
           >
             <TextField
-              placeholder="Path"
+              aria-label="Document path"
+              placeholder="Document path e.g. /users/alice"
               fullwidth
               className="value"
               type="text"
@@ -84,14 +84,12 @@ export const InteractiveBreadCrumbBar: React.FC<Props> = ({
               inputRef={inputRef}
             />
             <IconButton
+              label="Cancel"
               type="button"
               icon="close"
               onClick={handleCancel}
               theme="textSecondaryOnLight"
-            >
-              Cancel
-            </IconButton>
-            <Button type="submit">Go</Button>
+            />
           </form>
         </Elevation>
       ) : (
