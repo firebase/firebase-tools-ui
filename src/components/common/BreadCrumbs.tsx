@@ -20,13 +20,19 @@ import { IconButton } from '@rmwc/icon-button';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-interface Props {
+export interface Props {
   /** The base url to prepend when creating Router links */
   base: string;
   path: string;
+  onEdit?: () => void;
 }
 
-export const BreadCrumbs: React.FC<Props> = ({ base, path }) => {
+export const BreadCrumbs: React.FC<Props> = ({
+  base,
+  path,
+  onEdit,
+  children,
+}) => {
   const normalizedPath = path.startsWith('/') ? path.substr(1) : path;
   const keys = normalizedPath.split('/');
 
@@ -43,10 +49,19 @@ export const BreadCrumbs: React.FC<Props> = ({ base, path }) => {
       </li>
 
       {keys.map((key, i) => (
-        <li key={hrefs[i]} className="BreadCrumbs-crumb">
+        <li key={hrefs[i]} className="BreadCrumbs-crumb BreadCrumbs-link">
           <Link to={hrefs[i]}>{key}</Link>
         </li>
       ))}
+
+      <li
+        className="BreadCrumbs-edit"
+        aria-label="Edit URL"
+        onClick={() => onEdit && onEdit()}
+      >
+        <IconButton icon="edit" />
+      </li>
+      <li>{children}</li>
     </ul>
   );
 };

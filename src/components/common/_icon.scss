@@ -14,28 +14,21 @@
  * limitations under the License.
  */
 
-@import '../common/radius';
-@import '../common/shadow';
-
-.CardActionBar {
-  display: block;
-
-  .CardActionBar-container {
-    align-items: center;
-    box-shadow: $GMP_SHADOW_DIVIDER_BOTTOM_INSET;
-    display: flex;
-    height: 56px;
-  }
-
-  .CardActionBar-actions {
-    display: flex;
-    align-items: center;
-  }
-}
-
-// only first when inside a Card
-.mdc-card > .CardActionBar:first-of-type {
-  .CardActionBar-container {
-    border-radius: $BORDER_RADIUS_CARD_TOP;
-  }
+@mixin icon($content, $size: 24px) {
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+  content: $content;
+  direction: ltr;
+  display: inline-block;
+  font-family: 'Material Icons';
+  font-size: $size;
+  font-style: normal;
+  font-weight: normal;
+  left: 0;
+  letter-spacing: normal;
+  line-height: $size;
+  position: absolute;
+  text-transform: none;
+  white-space: nowrap;
+  word-wrap: normal;
 }

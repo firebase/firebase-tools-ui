@@ -17,6 +17,9 @@
 import './Database.scss';
 import './DataViewer/index.scss';
 
+import { IconButton } from '@rmwc/icon-button';
+import { ListDivider } from '@rmwc/list';
+import { MenuItem, SimpleMenu } from '@rmwc/menu';
 import * as firebase from 'firebase/app';
 import React, { useCallback, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
@@ -24,8 +27,7 @@ import { connect } from 'react-redux';
 import { initDatabase } from '../../firebase';
 import { AppState } from '../../store';
 import { DatabaseConfig } from '../../store/config';
-import { BreadCrumbs } from '../common/BreadCrumbs';
-import { CardActionBar } from '../common/CardActionBar';
+import { InteractiveBreadCrumbBar } from '../common/InteractiveBreadCrumbBar';
 import { NodeContainer } from './DataViewer/NodeContainer';
 
 export interface PropsFromState {
@@ -53,16 +55,20 @@ export const Database: React.FC<Props> = ({ config, namespace }) => {
 
   return (
     <div className="Database-Database">
-      <CardActionBar>
-        {ref && (
-          <BreadCrumbs
-            base={`/database/${namespace}/data`}
-            path={new URL(ref.toString()).pathname}
-          />
-        )}
-      </CardActionBar>
       {ref ? (
         <>
+          <InteractiveBreadCrumbBar
+            base={`/database/${namespace}/data`}
+            path={new URL(ref.toString()).pathname}
+            onNavigate={console.log.bind(null, 'onNavigate')}
+          >
+            <SimpleMenu handle={<IconButton icon="more_vert" />}>
+              <MenuItem disabled>Export JSON</MenuItem>
+              <MenuItem disabled>Import JSON</MenuItem>
+              <ListDivider />
+              <MenuItem disabled>Create new database</MenuItem>
+            </SimpleMenu>
+          </InteractiveBreadCrumbBar>
           <NodeContainer realtimeRef={ref} isViewRoot onNavigate={doNavigate} />
         </>
       ) : (

@@ -14,28 +14,19 @@
  * limitations under the License.
  */
 
-@import '../common/radius';
-@import '../common/shadow';
+.InteractiveBreadCrumbBar {
+  z-index: 1; // show elevation shadow
 
-.CardActionBar {
-  display: block;
-
-  .CardActionBar-container {
+  .InteractiveBreadCrumbBar-form {
     align-items: center;
-    box-shadow: $GMP_SHADOW_DIVIDER_BOTTOM_INSET;
     display: flex;
-    height: 56px;
+
+    .value {
+      flex: 1 auto;
+    }
   }
 
-  .CardActionBar-actions {
-    display: flex;
-    align-items: center;
-  }
-}
-
-// only first when inside a Card
-.mdc-card > .CardActionBar:first-of-type {
-  .CardActionBar-container {
-    border-radius: $BORDER_RADIUS_CARD_TOP;
+  .BreadCrumbs {
+    flex: 1 auto;
   }
 }

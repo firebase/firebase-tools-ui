@@ -26,8 +26,7 @@ import { useLocation } from 'react-router-dom';
 
 import { AppState } from '../../store';
 import { FirestoreConfig } from '../../store/config';
-import { BreadCrumbs } from '../common/BreadCrumbs';
-import { CardActionBar } from '../common/CardActionBar';
+import { InteractiveBreadCrumbBar } from '../common/InteractiveBreadCrumbBar';
 import DatabaseApi from './api';
 import { ApiProvider } from './ApiContext';
 import { promptClearAll } from './dialogs/clearAll';
@@ -68,6 +67,11 @@ export const Firestore: React.FC<Props> = ({ config, projectId }) => {
     api.nukeDocuments();
   }
 
+  function handleNavigate(path: string) {
+    // TODO: needs a better impl
+    window.location.href = `/firestore/${path}`;
+  }
+
   return (
     <ApiProvider value={api}>
       <GridCell span={12} className="Firestore">
@@ -78,9 +82,11 @@ export const Firestore: React.FC<Props> = ({ config, projectId }) => {
         </div>
         <Elevation z="2" wrap>
           <Card className="Firestore-panels-wrapper">
-            <CardActionBar>
-              <BreadCrumbs base="/firestore" path={path} />
-            </CardActionBar>
+            <InteractiveBreadCrumbBar
+              base="/firestore"
+              path={path}
+              onNavigate={handleNavigate}
+            />
             <div className="Firestore-panels">
               <Root />
             </div>
