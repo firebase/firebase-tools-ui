@@ -83,7 +83,7 @@ export const DatabaseContainer: React.FC<Props> = ({
                 navigation={navigation}
                 databases={dbs}
               />
-              <div style={{ flex: 1 }}>{children}</div>
+              {children}
             </div>
           </Card>
         </Elevation>

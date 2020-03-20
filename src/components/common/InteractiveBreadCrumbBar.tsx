@@ -106,7 +106,7 @@ export const InteractiveBreadCrumbBar: React.FC<Props> = ({
           </form>
         </Elevation>
       ) : (
-        <CardActionBar>
+        <CardActionBar className="top">
           <BreadCrumbs {...breadCrumbProps} onEdit={handleEdit}>
             {children}
           </BreadCrumbs>
