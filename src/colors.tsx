@@ -13,14 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 export const background = '#F6F7F9';
 export const primary = '#681DA8'; // Google Purple 900.
 export const secondary = '#1B3A57'; // Firebase Navy 600.
-
-export const caution = '#ff8f00'; // Amber 800
-export const error = '#d32f2f'; // Red 700
-export const note = '#1b3a57'; // Navy 600
-export const success = '#00796b'; // Teal 700
 
 export const grey100 = '#f5f5f5'; // Grey 100
 

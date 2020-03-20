@@ -57,37 +57,10 @@
 }
 
 .Callout-aside {
-  position: relative;
+  background-color: var(--mdc-theme-background);
+  color: var(--mdc-theme-text-primary-on-background);
 
-  &::before {
-    background-color: var(--mdc-theme-primary);
-    bottom: 0;
-    content: '';
-    display: block;
-    left: 0;
-    opacity: 0.1;
-    position: absolute;
-    right: 0;
-    top: 0;
+  .Callout-icon {
+    color: var(--mdc-theme-primary);
   }
-
-  > * {
-    z-index: 1; // allow text selection
-  }
-}
-
-.Callout-warning {
-  --mdc-theme-primary: var(--mdc-theme-error);
-}
-
-.Callout-success {
-  --mdc-theme-primary: var(--mdc-theme-success);
-}
-
-.Callout-note {
-  --mdc-theme-primary: var(--mdc-theme-note);
-}
-
-.Callout-caution {
-  --mdc-theme-primary: var(--mdc-theme-caution);
 }

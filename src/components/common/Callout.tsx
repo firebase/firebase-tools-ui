@@ -5,6 +5,14 @@ import { Theme, ThemeProvider } from '@rmwc/theme';
 import { Typography } from '@rmwc/typography';
 import React, { ReactNode } from 'react';
 
+import {
+  cautionTheme,
+  errorTheme,
+  noteTheme,
+  successTheme,
+  tipTheme,
+} from '../../themes';
+
 export interface CalloutProps {
   /** Custom icon to override the default */
   icon?: string;
@@ -19,19 +27,27 @@ export interface CalloutProps {
 
 // TODO: Fill in tip (based on)
 export enum Type {
+  CAUTION = 'caution',
   NOTE = 'note',
   SUCCESS = 'success',
   TIP = 'tip',
   WARNING = 'warning',
-  CAUTION = 'caution',
 }
 
 const DEFAULT_ICON_MAP: Record<string, string> = {
+  [Type.CAUTION]: 'error',
   [Type.NOTE]: 'info',
   [Type.SUCCESS]: 'check_circle',
   [Type.TIP]: 'star',
   [Type.WARNING]: 'warning',
-  [Type.CAUTION]: 'error',
+};
+
+const THEME_MAP: Record<string, Record<string, string>> = {
+  [Type.CAUTION]: cautionTheme,
+  [Type.NOTE]: noteTheme,
+  [Type.SUCCESS]: successTheme,
+  [Type.TIP]: tipTheme,
+  [Type.WARNING]: errorTheme,
 };
 
 export const Callout: React.FC<CalloutProps> = ({
@@ -46,23 +62,29 @@ export const Callout: React.FC<CalloutProps> = ({
   const classes = `Callout Callout-${type}${asideClass}`;
 
   return (
-    <Theme
-      className={classes}
-      use={aside ? ['primary'] : ['onPrimary', 'primaryBg']}
-      tag="div"
-    >
-      <div className="Callout-body">
-        <div className="Callout-message">
-          {iconName && (
-            <Icon icon={iconName} aria-hidden="true" className="Callout-icon" />
-          )}
-          <Typography use="subtitle2">{children}</Typography>
+    <ThemeProvider options={THEME_MAP[type]} wrap>
+      <Theme
+        className={classes}
+        use={aside ? [] : ['onPrimary', 'primaryBg']}
+        tag="div"
+      >
+        <div className="Callout-body">
+          <div className="Callout-message">
+            {iconName && (
+              <Icon
+                icon={iconName}
+                aria-hidden="true"
+                className="Callout-icon"
+              />
+            )}
+            <Typography use="subtitle2">{children}</Typography>
+          </div>
         </div>
-      </div>
-      {/* Make "white" the new primary, just to invert buttons from props */}
-      <ThemeProvider wrap options={aside ? {} : { primary: '#fff' }}>
-        <div className="Callout-actions">{actions}</div>
-      </ThemeProvider>
-    </Theme>
+        {/* Make "white" the new primary, just to invert buttons from props */}
+        <ThemeProvider wrap options={aside ? {} : { primary: '#fff' }}>
+          <div className="Callout-actions">{actions}</div>
+        </ThemeProvider>
+      </Theme>
+    </ThemeProvider>
   );
 };

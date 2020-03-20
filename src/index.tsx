@@ -28,17 +28,10 @@ import { Provider } from 'react-redux';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import App from './App';
-import {
-  background,
-  caution,
-  error,
-  note,
-  primary,
-  secondary,
-  success,
-} from './colors';
+import { background, primary, secondary } from './colors';
 import configureStore from './configureStore';
 import { fetchRequest as fetchConfigRequest } from './store/config';
+import { error } from './themes';
 
 const store = configureStore();
 
@@ -66,9 +59,6 @@ ReactDOM.render(
         primary,
         secondary,
         error,
-        success,
-        note,
-        caution,
       }}
     >
       <Provider store={store}>
