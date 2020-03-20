@@ -16,8 +16,8 @@
 
 import { firestore } from 'firebase';
 
-import { FirestoreAny, FirestoreArray, FirestoreMap } from '../models';
-import { isArray, isMap, lastFieldName } from '../utils';
+import { FirestoreAny, FirestoreMap } from '../models';
+import { isArray, isMap, withFieldRemoved, withFieldSet } from '../utils';
 
 export function deleteField(
   documentRef: firestore.DocumentReference,
@@ -55,104 +55,32 @@ function adjustPayloadForArray(
   fieldPath: string[],
   value: FirestoreAny | firestore.FieldValue
 ): [firestore.FieldPath, FirestoreAny] {
-  if (fieldPath.length === 1) {
-    return [new firestore.FieldPath(...fieldPath), value];
-  }
-
-  let nestedObjectToModify: FirestoreMap | FirestoreArray = doc;
-  let topLevelArray: FirestoreArray | undefined = undefined;
-  let topLevelKey: string[] = [];
-  fieldPath.slice(0, -1).forEach((pathSegment, index) => {
-    if (isMap(nestedObjectToModify)) {
-      nestedObjectToModify = nestedObjectToModify[pathSegment] as FirestoreMap;
-    } else if (isArray(nestedObjectToModify)) {
-      nestedObjectToModify = nestedObjectToModify[
-        Number(pathSegment)
-      ] as FirestoreMap;
+  let cur: FirestoreAny | undefined = doc;
+  let parentPath: string[] = [];
+  for (const key of fieldPath) {
+    if (cur === undefined || !isMap(cur)) {
+      throw new Error(`Tried to set field ${key} on non-map value.`);
     }
-    if (nestedObjectToModify instanceof Array && !topLevelArray) {
-      topLevelArray = nestedObjectToModify;
-      topLevelKey = fieldPath.slice(0, index + 1);
-    }
-  });
-
-  // If no array was found, carry on as usual
-  if (!topLevelArray) {
-    return [new firestore.FieldPath(...fieldPath), value];
-  }
-
-  const nestedFieldId = fieldPath[fieldPath.length - 1];
-  if (value !== firestore.FieldValue.delete()) {
-    // Example:
-    // {
-    //   foo: [             <-- foo == topLevelArray
-    //     {
-    //       bar: {         <-- bar == nestedObjectToModify
-    //         baz: 'test'  <-- 'baz' == nestedFieldId
-    //       }
-    //     }
-    //   ]
-    // }
-
-    if (
-      topLevelArray === nestedObjectToModify &&
-      Number(lastFieldName(fieldPath)) >= (topLevelArray as {}[]).length
-    ) {
-      // Appending a new element to the top-level array
-      return [
-        new firestore.FieldPath(...topLevelKey),
-        firestore.FieldValue.arrayUnion(value),
-      ];
-    }
-    nestedObjectToModify[nestedFieldId] = value;
-  } else {
-    // Deal with deleting from an array
-    if (nestedObjectToModify instanceof Array) {
-      const valueToDelete =
-        nestedObjectToModify[Number(lastFieldName(fieldPath))];
+    cur = cur[key];
+    parentPath.push(key);
+    if (parentPath.length < fieldPath.length && isArray(cur)) {
+      // Note: We're avoiding arrayUnion, arrayRemove, etc. since they may
+      // skip adding or / remove all "equal" elements. Checking the edge cases
+      // will require implementing Firestore deep equals locally, which is way
+      // beyond the scope of this function and hard to keep in sync.
+      // Instead, just overwrite the whole array, which may touch more data
+      // than needed, but is always correct.
+      const pathToUpdate = new firestore.FieldPath(...parentPath);
+      const childPath = fieldPath.slice(parentPath.length);
       if (
-        nestedObjectToModify !== topLevelArray ||
-        nestedObjectToModify.indexOf(valueToDelete) !==
-          nestedObjectToModify.lastIndexOf(valueToDelete)
+        value instanceof firestore.FieldValue &&
+        value.isEqual(firestore.FieldValue.delete())
       ) {
-        // Deleting from a nested array, or deleting an element which occurs
-        // twice in the same array
-        nestedObjectToModify.splice(Number(nestedFieldId), 1);
-        return [new firestore.FieldPath(...topLevelKey), topLevelArray];
+        return [pathToUpdate, withFieldRemoved(cur, childPath)];
+      } else {
+        return [pathToUpdate, withFieldSet(cur, childPath, value)];
       }
-      // In this case we are modifying the array itself
-      // Example:
-      // {
-      //   foo: [  <-- foo == topLevelArray, nestedObjectToModify
-      //     'a',
-      //     'b',  <-- 1 == nestedFieldId (index, to be deleted)
-      //     'c',
-      //   ]
-      // }
-
-      return [
-        new firestore.FieldPath(...topLevelKey),
-        firestore.FieldValue.arrayRemove(
-          nestedObjectToModify[Number(nestedFieldId)]
-        ),
-      ];
-    } else {
-      // Otherwise, we are modifying a descendant of the array
-      // Example:
-      // {
-      //   foo: [            <-- foo == topLevelArray
-      //     'a',
-      //     'b',
-      //     {
-      //       bar: {        <-- bar == nestedObjectToModify
-      //         baz: 'qux'  <-- 'baz' == nestedFieldId (to be deleted)
-      //       }
-      //     }
-      //   ]
-      // }
-      delete nestedObjectToModify[nestedFieldId];
     }
   }
-
-  return [new firestore.FieldPath(...topLevelKey), topLevelArray];
+  return [new firestore.FieldPath(...fieldPath), value];
 }

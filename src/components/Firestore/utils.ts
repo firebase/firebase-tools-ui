@@ -15,6 +15,8 @@
  */
 
 import { firestore } from 'firebase';
+import produce from 'immer';
+import get from 'lodash.get';
 
 import {
   FieldType,
@@ -103,3 +105,31 @@ export function isArray(value: any): value is FirestoreArray {
 export function isPrimitive(value: any): value is FirestorePrimitive {
   return !isMap(value) && !isArray(value);
 }
+
+/*
+  Return a copy of base with the field (specified by path) updated to value.
+  This function also works with array elements. base is never modified.
+*/
+export const withFieldSet = produce((draft, path: string[], value: any) => {
+  const parent = get(draft, getParentPath(path)) || draft;
+  if (isMap(parent)) {
+    parent[lastFieldName(path)] = value;
+  } else if (isArray(parent)) {
+    parent[Number(lastFieldName(path))] = value;
+  } else {
+    return value;
+  }
+});
+
+/*
+  Return a copy of base with the field (specified by path) deleted.
+  This function also works with removing array elements. base is never modified.
+*/
+export const withFieldRemoved = produce((draft, path: string[]) => {
+  const parent = get(draft, getParentPath(path)) || draft;
+  if (isMap(parent)) {
+    delete parent[lastFieldName(path)];
+  } else if (isArray(parent)) {
+    parent.splice(Number(lastFieldName(path)), 1);
+  }
+});
