@@ -33,6 +33,7 @@
 
 .Callout-icon {
   margin-right: 12px;
+  pointer-events: none;
 }
 
 .Callout-actions {
@@ -55,73 +56,38 @@
   border-bottom-right-radius: $BORDER_RADIUS_CARD;
 }
 
-// THEMES
-$msg-types: (
-    'note' var(--fire-color-note-light) var(--fire-color-note-text)
-      var(--fire-color-note)
-  )
-  (
-    'success' var(--fire-color-success-light) var(--fire-color-success-text)
-      var(--fire-color-success)
-  )
-  // (
-  //   'tip' var(--fire-color-tip-light) var(--fire-color-tip-text)
-  //     var(--fire-color-tip)
-  // )
-  (
-    'warning' var(--fire-color-error-light) var(--fire-color-error-text)
-      var(--fire-color-error)
-  )
-  (
-    'caution' var(--fire-color-caution-light) var(--fire-color-caution-text)
-      var(--fire-color-caution)
-  );
+.Callout-aside {
+  position: relative;
 
-@each $msg-type in $msg-types {
-  $type: nth($msg-type, 1);
-  $light: nth($msg-type, 2);
-  $dark: nth($msg-type, 3);
-  $primary: nth($msg-type, 4);
-  $primary_text_color: nth-default($msg-type, 5, $COLOR_WHITE_PRIMARY);
-
-  // CALLOUTS
-  .Callout-#{$type} {
-    background-color: $primary;
-    color: $primary_text_color;
-
-    .Callout-actions .mdc-button {
-      color: var(--mdc-theme-on-primary);
-
-      &::before,
-      &::after {
-        background-color: var(--mdc-theme-on-primary);
-      }
-    }
-
-    // ASIDES
-    &.Callout-aside {
-      background-color: $light;
-      color: $dark;
-
-      a,
-      a:hover,
-      .rmwc-icon,
-      .material-icons {
-        color: $dark;
-      }
-
-      .Callout-icon {
-        color: $primary;
-      }
-
-      .mdc-button:not(:disabled) {
-        color: $dark;
-
-        &::before,
-        &::after {
-          background-color: $primary;
-        }
-      }
-    }
+  &::before {
+    background-color: var(--mdc-theme-primary);
+    bottom: 0;
+    content: '';
+    display: block;
+    left: 0;
+    opacity: 0.1;
+    position: absolute;
+    right: 0;
+    top: 0;
   }
+
+  > * {
+    z-index: 1; // allow text selection
+  }
+}
+
+.Callout-warning {
+  --mdc-theme-primary: var(--mdc-theme-error);
+}
+
+.Callout-success {
+  --mdc-theme-primary: var(--mdc-theme-success);
+}
+
+.Callout-note {
+  --mdc-theme-primary: var(--mdc-theme-note);
+}
+
+.Callout-caution {
+  --mdc-theme-primary: var(--mdc-theme-caution);
 }
