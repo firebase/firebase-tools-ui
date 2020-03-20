@@ -19,11 +19,11 @@ import './CardActionBar.scss';
 import { Theme, ThemeProvider } from '@rmwc/theme';
 import React from 'react';
 
-import { surface } from '../../colors';
+import { grey100 } from '../../colors';
 
 export const CardActionBar: React.FC = ({ children }) => {
   return (
-    <ThemeProvider options={{ surface }} className="CardActionBar">
+    <ThemeProvider options={{ surface: grey100 }} className="CardActionBar">
       <Theme use={['surface']} className="CardActionBar-container" tag="div">
         {children}
       </Theme>

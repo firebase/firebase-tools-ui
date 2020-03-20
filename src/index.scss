@@ -36,12 +36,3 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
-
-:root {
-  --quantum-grey-100: #{$QUANTUM_GREY_100};
-  // Status colors (success/error/etc)
-  --fire-color-navy-300: #{$COLOR_NAVY_300}; // primary
-  --quantum-teal-700: #{$QUANTUM_TEAL_700}; // success
-  --quantum-red-700: #{$QUANTUM_RED_700}; // error
-  --quantum-amber-800: #{$QUANTUM_AMBER_800}; // caution
-}
