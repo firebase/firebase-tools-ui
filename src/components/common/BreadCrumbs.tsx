@@ -27,6 +27,8 @@ export interface Props {
   onEdit?: () => void;
 }
 
+const EMPTY_KEYS: string[] = [];
+
 export const BreadCrumbs: React.FC<Props> = ({
   base,
   path,
@@ -34,7 +36,7 @@ export const BreadCrumbs: React.FC<Props> = ({
   children,
 }) => {
   const normalizedPath = path.startsWith('/') ? path.substr(1) : path;
-  const keys = normalizedPath.split('/');
+  const keys = normalizedPath ? normalizedPath.split('/') : EMPTY_KEYS;
 
   const hrefs = keys.reduce<string[]>((acc, key) => {
     const prevLink = acc.length ? acc[acc.length - 1] : base;
