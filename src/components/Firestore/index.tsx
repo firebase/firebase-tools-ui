@@ -22,7 +22,7 @@ import { Elevation } from '@rmwc/elevation';
 import { GridCell } from '@rmwc/grid';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { useLocation } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import { AppState } from '../../store';
 import { FirestoreConfig } from '../../store/config';
@@ -43,6 +43,8 @@ export const Firestore: React.FC<Props> = ({ config, projectId }) => {
   const [api, setApi] = useState<DatabaseApi | undefined>(undefined);
   const databaseId = '(default)';
   const location = useLocation();
+  const history = useHistory();
+
   // TODO: do something better here!
   const path = location.pathname.replace(/^\/firestore/, '');
 
@@ -68,8 +70,7 @@ export const Firestore: React.FC<Props> = ({ config, projectId }) => {
   }
 
   function handleNavigate(path: string) {
-    // TODO: needs a better impl
-    window.location.href = `/firestore/${path}`;
+    history.push(`/firestore/${path}`);
   }
 
   return (
