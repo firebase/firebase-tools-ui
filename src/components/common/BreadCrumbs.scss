@@ -14,21 +14,42 @@
  * limitations under the License.
  */
 
+@import '../common/icon';
+
 .BreadCrumbs {
   align-items: center;
+  color: var(--mdc-theme-text-secondary-on-background);
+  cursor: pointer;
   display: flex;
   font-size: 14px;
   font-weight: 400;
   height: 24px;
+  height: 56px;
+  list-style: none;
   margin: 0 6px;
   padding: 0;
-  overflow-x: auto;
-  overflow-y: hidden;
-  list-style: none;
+
+  .mdc-icon-button {
+    &::before,
+    &::after {
+      display: none; // remove the hover/ripple
+    }
+
+    &:hover {
+      color: var(--mdc-theme-text-primary-on-background);
+    }
+  }
+
+  &:hover {
+    .BreadCrumbs-edit {
+      .mdc-icon-button {
+        display: block;
+      }
+    }
+  }
 }
 
 .BreadCrumbs-crumb {
-  color: var(--mdc-theme-text-secondary-on-background);
   padding: 0;
   display: inline-flex;
   align-items: center;
@@ -37,49 +58,34 @@
   text-overflow: ellipsis;
   max-width: 120px;
   position: relative;
+}
 
-  a:link {
-    color: rgba(0, 0, 0, 0.54);
-    line-height: 24px;
+.BreadCrumbs-link {
+  padding-left: 20px;
+
+  :link,
+  :visited {
+    color: var(--mdc-theme-text-secondary-on-background);
+    padding: 0 8px;
     text-decoration: none;
   }
 
-  &:not(:first-of-type) {
-    padding-left: 20px;
-
-    a:link {
-      padding: 0 8px;
-    }
-
-    &::before {
-      // TODO: @mixin material-icons('chevron_right');
-      -webkit-font-feature-settings: 'liga';
-      -webkit-font-smoothing: antialiased;
-      color: inherit;
-      content: 'chevron_right';
-      direction: ltr;
-      display: inline-block;
-      font-family: 'Material Icons';
-      font-size: 20px;
-      font-style: normal;
-      font-weight: normal;
-      left: 0;
-      letter-spacing: normal;
-      line-height: 20px;
-      position: absolute;
-      text-transform: none;
-      white-space: nowrap;
-      word-wrap: normal;
-    }
-
-    a:hover {
-      text-decoration: underline;
-    }
+  :hover {
+    color: var(--mdc-theme-primary);
+    text-decoration: underline;
   }
 
+  &::before {
+    @include icon('chevron_right', 20px);
+  }
+}
+
+.BreadCrumbs-edit {
+  flex: 1 auto;
+
   .mdc-icon-button {
-    &:hover {
-      color: rgba(0, 0, 0, 0.87);
-    }
+    color: var(--mdc-theme-text-primary-on-background);
+    display: none;
+    font-size: 16px;
   }
 }

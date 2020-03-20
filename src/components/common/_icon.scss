@@ -14,31 +14,21 @@
  * limitations under the License.
  */
 
-@import '../common/radius';
-
-.Database {
-  display: flex;
-}
-
-.Database-Picker {
-  border-bottom-left-radius: $BORDER_RADIUS_CARD;
-  border-top-left-radius: $BORDER_RADIUS_CARD;
-  min-width: 20%;
-
-  &:not(.Database-Picker--primary-only) + .Database-Database {
-    .CardActionBar-container {
-      border-top-left-radius: 0;
-    }
-  }
-}
-
-.Database-Picker--primary-only {
-  display: none;
-}
-
-.Database-Database {
-  flex: 1;
-
-  // A few things in the data viewer uses position: absolute.
-  position: relative;
+@mixin icon($content, $size: 24px) {
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+  content: $content;
+  direction: ltr;
+  display: inline-block;
+  font-family: 'Material Icons';
+  font-size: $size;
+  font-style: normal;
+  font-weight: normal;
+  left: 0;
+  letter-spacing: normal;
+  line-height: $size;
+  position: absolute;
+  text-transform: none;
+  white-space: nowrap;
+  word-wrap: normal;
 }
