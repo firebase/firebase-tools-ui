@@ -41,4 +41,8 @@
 
   // A few things in the data viewer uses position: absolute.
   position: relative;
+
+  > .NodeParent {
+    padding: 16px 16px 16px 10px;
+  }
 }
