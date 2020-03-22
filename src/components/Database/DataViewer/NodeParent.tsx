@@ -101,11 +101,7 @@ export const NodeParent = React.memo<Props>(function NodeParent$({
             arrow_right
           </button>
         )}
-        <NodeParentKey
-          isViewRoot={isViewRoot}
-          dbRef={realtimeRef}
-          baseUrl={baseUrl}
-        />
+        <NodeParentKey dbRef={realtimeRef} baseUrl={baseUrl} />
         <NodeActions
           realtimeRef={realtimeRef}
           displayType={displayType}
