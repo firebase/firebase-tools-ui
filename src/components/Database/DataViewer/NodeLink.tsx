@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import './NodeKeyLink.scss';
+import './NodeLink.scss';
 
 import { Typography } from '@rmwc/typography';
 import * as React from 'react';
