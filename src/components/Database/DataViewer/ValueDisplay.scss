@@ -3,6 +3,6 @@
 
   &.ValueDisplay__boolean,
   &.ValueDisplay__number {
-    color: dodgerblue;
+    color: var(--mdc-theme-primary);
   }
 }
