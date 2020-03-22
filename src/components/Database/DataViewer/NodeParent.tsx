@@ -27,7 +27,7 @@ import {
 } from './common/view_model';
 import { NodeActions } from './NodeActions';
 import { NodeContainer } from './NodeContainer';
-import { NodeParentKey } from './NodeParentKey';
+import { NodeLink } from './NodeLink';
 import { NodeTabularDisplay } from './NodeTabularDisplay';
 
 export interface Props {
@@ -101,7 +101,7 @@ export const NodeParent = React.memo<Props>(function NodeParent$({
             arrow_right
           </button>
         )}
-        <NodeParentKey dbRef={realtimeRef} baseUrl={baseUrl} />
+        <NodeLink dbRef={realtimeRef} baseUrl={baseUrl} />
         <NodeActions
           realtimeRef={realtimeRef}
           displayType={displayType}

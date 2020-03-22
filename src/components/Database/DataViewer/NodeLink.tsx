@@ -27,7 +27,7 @@ export interface Props {
   baseUrl: string;
 }
 
-export const NodeParentKey = React.memo<Props>(function NodeParentKey$({
+export const NodeLink = React.memo<Props>(function NodeLink$({
   dbRef,
   baseUrl,
 }) {
@@ -36,7 +36,7 @@ export const NodeParentKey = React.memo<Props>(function NodeParentKey$({
   const href = `${baseUrl}${path}`;
   return (
     <Typography
-      className="NodeKeyLink"
+      className="NodeLink"
       use="body1"
       aria-label="Key name"
       tag={props => <Link to={href} {...props} />}
