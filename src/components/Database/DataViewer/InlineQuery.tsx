@@ -24,7 +24,6 @@ import {
 } from '@rmwc/card';
 import { Select } from '@rmwc/select';
 import { TextField } from '@rmwc/textfield';
-import { Theme } from '@rmwc/theme';
 import keycode from 'keycode';
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
@@ -138,21 +137,20 @@ export const InlineQuery = React.memo<Props>(function InlineQuery$({
       </div>
       <CardActions className="InlineQuery__actions">
         <CardActionButtons>
-          <Theme use={['textSecondaryOnBackground']}>
-            {params !== DEFAULT_QUERY_PARAMS && (
-              <CardActionButton
-                type="button"
-                label="Reset"
-                danger
-                onClick={() => onSubmit(DEFAULT_QUERY_PARAMS)}
-              />
-            )}
+          {params !== DEFAULT_QUERY_PARAMS && (
             <CardActionButton
               type="button"
-              label="Cancel"
-              onClick={() => onCancel && onCancel()}
+              label="Reset"
+              danger
+              onClick={() => onSubmit(DEFAULT_QUERY_PARAMS)}
             />
-          </Theme>
+          )}
+          <CardActionButton
+            type="button"
+            label="Cancel"
+            onClick={() => onCancel && onCancel()}
+            theme="textSecondaryOnBackground"
+          />
           <CardActionButton unelevated type="submit" label="Search" />
         </CardActionButtons>
       </CardActions>

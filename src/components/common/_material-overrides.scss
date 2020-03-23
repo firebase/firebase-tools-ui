@@ -51,6 +51,12 @@
   }
 }
 
+.mdc-icon-button {
+  &:hover {
+    color: var(--mdc-theme-text-primary-on-background);
+  }
+}
+
 :not(.mdc-list--non-interactive) {
   > .mdc-list-item:not(.mdc-list-item--disabled) {
     &::before,
