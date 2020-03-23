@@ -15,7 +15,6 @@
  */
 
 import './Database.scss';
-import './DataViewer/index.scss';
 
 import { IconButton } from '@rmwc/icon-button';
 import { ListDivider } from '@rmwc/list';
