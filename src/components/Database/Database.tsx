@@ -20,7 +20,7 @@ import { IconButton } from '@rmwc/icon-button';
 import { ListDivider } from '@rmwc/list';
 import { MenuItem, SimpleMenu } from '@rmwc/menu';
 import * as firebase from 'firebase/app';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
@@ -32,6 +32,7 @@ import { NodeContainer } from './DataViewer/NodeContainer';
 
 export interface PropsFromState {
   namespace: string;
+  path?: string;
   config?: DatabaseConfig;
 }
 
@@ -42,7 +43,7 @@ const getPrefix = (ref: firebase.database.Reference) => {
   return base.substring(0, base.length - 1);
 };
 
-export const Database: React.FC<Props> = ({ config, namespace }) => {
+export const Database: React.FC<Props> = ({ config, namespace, path }) => {
   const [ref, setRef] = useState<firebase.database.Reference | undefined>(
     undefined
   );
@@ -51,19 +52,16 @@ export const Database: React.FC<Props> = ({ config, namespace }) => {
   useEffect(() => {
     if (!config) return;
     const [db, { cleanup }] = initDatabase(config, namespace);
-    setRef(db.ref());
+    setRef(path ? db.ref(path) : db.ref());
     return cleanup;
-  }, [config, namespace, setRef]);
-
-  // TODO: remove once route path is wired up (in another PR)
-  const doNavigate = useCallback(
-    (path: string) => setRef(ref && ref.root.child(path)),
-    [setRef, ref]
-  );
+  }, [config, namespace, path]);
 
   const urlBase = `/database/${namespace}/data`;
-  const handleNavigate = (path: string) => {
-    history.push(`${urlBase}/${path}`);
+  const handleNavigate = (newPath: string) => {
+    if (newPath.startsWith('/')) {
+      newPath = newPath.substr(1);
+    }
+    history.push(`${urlBase}/${newPath}`);
   };
 
   return (
@@ -72,7 +70,7 @@ export const Database: React.FC<Props> = ({ config, namespace }) => {
         <>
           <InteractiveBreadCrumbBar
             base={urlBase}
-            path={new URL(ref.toString()).pathname}
+            path={path || '/'}
             inputPrefix={getPrefix(ref)}
             onNavigate={handleNavigate}
           >
@@ -83,7 +81,7 @@ export const Database: React.FC<Props> = ({ config, namespace }) => {
               <MenuItem disabled>Create new database</MenuItem>
             </SimpleMenu>
           </InteractiveBreadCrumbBar>
-          <NodeContainer realtimeRef={ref} isViewRoot onNavigate={doNavigate} />
+          <NodeContainer realtimeRef={ref} isViewRoot baseUrl={urlBase} />
         </>
       ) : (
         <p>Loading</p>

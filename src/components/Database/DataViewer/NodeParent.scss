@@ -37,7 +37,8 @@ $name: 'NodeParent';
     font-family: 'Roboto Mono', monospace;
     cursor: pointer;
 
-    a {
+    &:link,
+    &:visited {
       color: inherit;
       text-decoration: none;
 
