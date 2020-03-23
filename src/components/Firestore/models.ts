@@ -53,7 +53,6 @@ export type FirestorePrimitive =
   | number
   | boolean
   | null
-  | Date
   | firestore.DocumentReference
   | firestore.GeoPoint
   | firestore.Blob
