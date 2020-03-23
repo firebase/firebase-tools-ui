@@ -17,6 +17,7 @@
 import './BreadCrumbs.scss';
 
 import { IconButton } from '@rmwc/icon-button';
+import classnames from 'classnames';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -51,7 +52,12 @@ export const BreadCrumbs: React.FC<Props> = ({
       </li>
 
       {keys.map((key, i) => (
-        <li key={hrefs[i]} className="BreadCrumbs-crumb BreadCrumbs-link">
+        <li
+          key={hrefs[i]}
+          className={classnames('BreadCrumbs-crumb', 'BreadCrumbs-link', {
+            'BreadCrumbs-active': i === keys.length - 1,
+          })}
+        >
           <Link to={hrefs[i]}>{key}</Link>
         </li>
       ))}

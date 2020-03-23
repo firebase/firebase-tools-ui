@@ -21,7 +21,7 @@ import { IconButton } from '@rmwc/icon-button';
 import { TextField } from '@rmwc/textfield';
 import { Typography } from '@rmwc/typography';
 import useKey from '@rooks/use-key';
-import React, { useLayoutEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 import { Props as BreadCrumbProps, BreadCrumbs } from './BreadCrumbs';
 import { CardActionBar } from './CardActionBar';
@@ -36,10 +36,14 @@ export const InteractiveBreadCrumbBar: React.FC<Props> = ({
   onNavigate,
   children,
   inputPrefix,
+  path,
   ...breadCrumbProps
 }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [value, setValue] = useState(breadCrumbProps.path);
+  const [value, setValue] = useState(path);
+
+  // Update input's path value if path prop changes
+  useEffect(() => setValue(path), [path]);
 
   const handleSubmit = () => {
     const normalizedPath = value.startsWith('/') ? value.substr(1) : value;
@@ -53,7 +57,7 @@ export const InteractiveBreadCrumbBar: React.FC<Props> = ({
 
   const handleCancel = () => {
     setIsEditing(false);
-    setValue(breadCrumbProps.path);
+    setValue(path);
   };
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -107,7 +111,7 @@ export const InteractiveBreadCrumbBar: React.FC<Props> = ({
         </Elevation>
       ) : (
         <CardActionBar className="top">
-          <BreadCrumbs {...breadCrumbProps} onEdit={handleEdit}>
+          <BreadCrumbs path={path} {...breadCrumbProps} onEdit={handleEdit}>
             {children}
           </BreadCrumbs>
         </CardActionBar>

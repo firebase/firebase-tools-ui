@@ -37,8 +37,14 @@
 }
 
 .Database-Database {
-  flex: 1;
-
+  align-items: stretch;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-width: 0;
   // A few things in the data viewer uses position: absolute.
   position: relative;
+
+  .Database-Content {
+    padding: 16px;
+  }
 }
