@@ -72,7 +72,11 @@ export const NodeContainer = React.memo<Props>(function NodeContainer$({
   const hasChildren = !!children.length;
   const isFiltered = queryParams !== DEFAULT_QUERY_PARAMS;
   return !hasChildren && !isFiltered ? (
-    <NodeLeaf realtimeRef={realtimeRef} value={viewModel.value!} />
+    <NodeLeaf
+      realtimeRef={realtimeRef}
+      baseUrl={baseUrl}
+      value={viewModel.value!}
+    />
   ) : (
     <NodeParent
       realtimeRef={realtimeRef}

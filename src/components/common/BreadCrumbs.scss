@@ -15,6 +15,7 @@
  */
 
 @import '../common/icon';
+@import '../common/utils';
 
 .BreadCrumbs {
   align-items: center;
@@ -23,10 +24,10 @@
   display: flex;
   font-size: 14px;
   font-weight: 400;
-  height: 24px;
   height: 56px;
   list-style: none;
   margin: 0 6px;
+  min-width: 0;
   padding: 0;
 
   .mdc-icon-button {
@@ -43,30 +44,32 @@
   &:hover {
     .BreadCrumbs-edit {
       .mdc-icon-button {
-        display: block;
+        visibility: visible;
       }
     }
   }
 }
 
 .BreadCrumbs-crumb {
-  padding: 0;
-  display: inline-flex;
   align-items: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 120px;
+  display: inline-flex;
+  flex-shrink: 20;
+  min-width: 0;
+  padding: 0;
   position: relative;
 }
 
 .BreadCrumbs-link {
   padding-left: 20px;
 
+  > * {
+    @include ellipsis;
+  }
+
   :link,
   :visited {
     color: var(--mdc-theme-text-secondary-on-background);
-    padding: 0 8px;
+    min-width: 12px; // fix cut off single chars
     text-decoration: none;
   }
 
@@ -78,6 +81,10 @@
   &::before {
     @include icon('chevron_right', 20px);
   }
+
+  &.BreadCrumbs-active {
+    flex-shrink: 1;
+  }
 }
 
 .BreadCrumbs-edit {
@@ -85,7 +92,10 @@
 
   .mdc-icon-button {
     color: var(--mdc-theme-text-primary-on-background);
-    display: none;
     font-size: 16px;
+    height: 24px;
+    padding: 0;
+    visibility: hidden;
+    width: 24px;
   }
 }
