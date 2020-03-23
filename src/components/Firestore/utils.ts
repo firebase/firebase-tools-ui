@@ -59,15 +59,15 @@ export function getFieldType(value: FirestoreAny): FieldType {
     return FieldType.BLOB;
   }
 
-  if (typeof value.valueOf() === 'object') {
+  if (typeof value === 'object') {
     return FieldType.MAP;
   }
 
-  return typeof value.valueOf() as FieldType;
+  return typeof value as FieldType;
 }
 
 export function isBoolean(value: FirestoreAny): value is boolean {
-  return typeof value?.valueOf() === 'boolean';
+  return typeof value === 'boolean';
 }
 
 export function isReference(
