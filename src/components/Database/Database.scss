@@ -14,12 +14,22 @@
  * limitations under the License.
  */
 
+@import '../common/radius';
+
 .Database {
   display: flex;
 }
 
 .Database-Picker {
+  border-bottom-left-radius: $BORDER_RADIUS_CARD;
+  border-top-left-radius: $BORDER_RADIUS_CARD;
   min-width: 20%;
+
+  &:not(.Database-Picker--primary-only) + .Database-Database {
+    .CardActionBar-container {
+      border-top-left-radius: 0;
+    }
+  }
 }
 
 .Database-Picker--primary-only {

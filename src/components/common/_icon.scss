@@ -14,14 +14,21 @@
  * limitations under the License.
  */
 
-@import './utils';
-
-$QUANTUM_BLACK_ALPHA_12: rgba(0, 0, 0, 0.12); // e.g. dividers
-
-$COLOR_WHITE_PRIMARY: #fff;
-
-$COLOR_TEXT_PRIMARY: rgba(0, 0, 0, 0.87);
-$COLOR_TEXT_SECONDARY: rgba(0, 0, 0, 0.54);
-$COLOR_BACKGROUND_KEY: rgba(0, 0, 0, 0.08);
-
-$COLOR_DIVIDER: $QUANTUM_BLACK_ALPHA_12;
+@mixin icon($content, $size: 24px) {
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+  content: $content;
+  direction: ltr;
+  display: inline-block;
+  font-family: 'Material Icons';
+  font-size: $size;
+  font-style: normal;
+  font-weight: normal;
+  left: 0;
+  letter-spacing: normal;
+  line-height: $size;
+  position: absolute;
+  text-transform: none;
+  white-space: nowrap;
+  word-wrap: normal;
+}
