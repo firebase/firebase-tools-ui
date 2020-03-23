@@ -27,7 +27,7 @@ import {
 } from './common/view_model';
 import { NodeActions } from './NodeActions';
 import { NodeContainer } from './NodeContainer';
-import { NodeParentKey } from './NodeParentKey';
+import { NodeLink } from './NodeLink';
 import { NodeTabularDisplay } from './NodeTabularDisplay';
 
 export interface Props {
@@ -40,7 +40,7 @@ export interface Props {
    * db root). It will show breadcrumbs of all hidden parent nodes to the root.
    */
   isViewRoot?: boolean;
-  onNavigate: (path: string) => void;
+  baseUrl: string;
   updateQuery?: (params: QueryParams) => void;
 }
 
@@ -50,11 +50,13 @@ export const NodeParent = React.memo<Props>(function NodeParent$({
   queryParams,
   updateQuery,
   isViewRoot,
-  onNavigate,
+  baseUrl,
 }) {
   const isRoot = realtimeRef.parent === null;
   const hasChildren = !!children.length;
-  const [isExpanded, setIsExpanded] = useState(isRoot ? true : false);
+  const [isExpanded, setIsExpanded] = useState(
+    isRoot || isViewRoot ? true : false
+  );
   const [displayType, setDisplayType] = useState(ChildrenDisplayType.TreeView);
 
   const hasMore =
@@ -99,11 +101,7 @@ export const NodeParent = React.memo<Props>(function NodeParent$({
             arrow_right
           </button>
         )}
-        <NodeParentKey
-          isViewRoot={isViewRoot}
-          dbRef={realtimeRef}
-          onNavigate={onNavigate}
-        />
+        <NodeLink dbRef={realtimeRef} baseUrl={baseUrl} />
         <NodeActions
           realtimeRef={realtimeRef}
           displayType={displayType}
@@ -132,7 +130,7 @@ export const NodeParent = React.memo<Props>(function NodeParent$({
                 <li key={key}>
                   <NodeContainer
                     realtimeRef={realtimeRef.child(key)}
-                    onNavigate={onNavigate}
+                    baseUrl={baseUrl}
                   />
                 </li>
               ))}
