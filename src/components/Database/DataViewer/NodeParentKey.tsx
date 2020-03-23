@@ -17,6 +17,7 @@
 import { Icon } from '@rmwc/icon';
 import { Typography } from '@rmwc/typography';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 
 import { getDbRootUrl } from './common/view_model';
 
@@ -27,30 +28,27 @@ export interface Props {
    * db root). It will show breadcrumbs of all hidden parent nodes to the root.
    */
   isViewRoot?: boolean;
-  onNavigate: (path: string) => void;
+  baseUrl: string;
 }
 
 export const NodeParentKey = React.memo<Props>(function NodeParentKey$({
   dbRef,
   isViewRoot,
-  onNavigate,
+  baseUrl,
 }) {
-  const navigateToRef = (ref: firebase.database.Reference) => {
-    const path = new URL(ref.toString()).pathname;
-    onNavigate(path);
-  };
-
   if (isViewRoot) {
-    return renderBreadcrumbs(dbRef, navigateToRef);
+    return renderBreadcrumbs(baseUrl, dbRef);
   }
 
   const key = dbRef.parent === null ? getDbRootUrl(dbRef) : dbRef.key;
+  const path = new URL(dbRef.toString()).pathname;
+  const href = `${baseUrl}${path}`;
   return (
     <Typography
       className="NodeParent__key"
       use="body1"
       aria-label="Key name"
-      onClick={() => navigateToRef(dbRef)}
+      tag={props => <Link to={href} {...props} />}
     >
       {key}
     </Typography>
@@ -58,8 +56,8 @@ export const NodeParentKey = React.memo<Props>(function NodeParentKey$({
 });
 
 function renderBreadcrumbs(
-  activeRef: firebase.database.Reference,
-  navigateToRef: (ref: firebase.database.Reference) => void
+  baseUrl: string,
+  activeRef: firebase.database.Reference
 ) {
   const ancestors = getAncestorRefs(activeRef);
 
@@ -69,13 +67,15 @@ function renderBreadcrumbs(
     if (i !== 0) {
       crumbs.push(<Icon icon="chevron_right" key={`${reactKey}-chevron`} />);
     }
+    const path = new URL(ref.toString()).pathname;
+    const href = `${baseUrl}${path}`;
     crumbs.push(
       <Typography
         key={reactKey}
         className="NodeParent__key"
         use="body1"
         aria-label="Key name"
-        onClick={() => navigateToRef(ref)}
+        tag={props => <Link to={href} {...props} />}
       >
         {ref.key || getDbRootUrl(ref)}
       </Typography>

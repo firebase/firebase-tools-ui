@@ -48,9 +48,10 @@ export const DatabaseDefaultRoute: React.FC<Props> = ({ projectId }) => {
         <Redirect to={`${url}/${primary}/data`} />;
       </Route>
       <Route
-        path={`${path}/:namespace/data`}
+        path={`${path}/:namespace/data/:path*`}
         render={({ match }: any) => {
           const current = match.params.namespace;
+          const dbPath = `/${match.params.path || ''}`;
           return (
             <DatabaseContainer
               primary={primary}
@@ -59,7 +60,7 @@ export const DatabaseDefaultRoute: React.FC<Props> = ({ projectId }) => {
                 <NavLink to={`${url}/${db}/data`}>{db}</NavLink>
               )}
             >
-              <Database namespace={current} />
+              <Database namespace={current} path={dbPath} />
             </DatabaseContainer>
           );
         }}
