@@ -81,11 +81,11 @@ export function isTimestamp(value: FirestoreAny): value is firestore.Timestamp {
 }
 
 export function isString(value: FirestoreAny): value is string {
-  return typeof value?.valueOf() === 'string';
+  return typeof value === 'string';
 }
 
 export function isNumber(value: FirestoreAny): value is number {
-  return typeof value?.valueOf() === 'number';
+  return typeof value === 'number';
 }
 
 export function isGeoPoint(value: FirestoreAny): value is firestore.GeoPoint {
