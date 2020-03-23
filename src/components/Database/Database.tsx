@@ -81,7 +81,9 @@ export const Database: React.FC<Props> = ({ config, namespace, path }) => {
               <MenuItem disabled>Create new database</MenuItem>
             </SimpleMenu>
           </InteractiveBreadCrumbBar>
-          <NodeContainer realtimeRef={ref} isViewRoot baseUrl={urlBase} />
+          <div className="Database-Content">
+            <NodeContainer realtimeRef={ref} isViewRoot baseUrl={urlBase} />
+          </div>
         </>
       ) : (
         <p>Loading</p>
