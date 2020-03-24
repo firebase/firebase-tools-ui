@@ -54,6 +54,7 @@ export const Components: React.FC = () => {
                       <td>
                         <Button unelevated={unelevated} label="Default" />
                         <br />
+                        <br />
                         <Button
                           unelevated={unelevated}
                           disabled
@@ -67,6 +68,7 @@ export const Components: React.FC = () => {
                           label="Default"
                         />
                         <br />
+                        <br />
                         <Button
                           theme="secondary"
                           unelevated={unelevated}
@@ -77,6 +79,7 @@ export const Components: React.FC = () => {
                       <CustomThemeProvider use="warning" wrap>
                         <td>
                           <Button unelevated={unelevated} label="Default" />
+                          <br />
                           <br />
                           <Button
                             unelevated={unelevated}
@@ -105,7 +108,7 @@ export const Components: React.FC = () => {
                     <tr>
                       <th>Primary</th>
                       <th>Secondary</th>
-                      <th>Note</th>
+                      <th>Warning</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -114,6 +117,7 @@ export const Components: React.FC = () => {
                       <tr>
                         <td>
                           <Button unelevated={unelevated} label="Default" />
+                          <br />
                           <br />
                           <Button
                             unelevated={unelevated}
@@ -128,6 +132,7 @@ export const Components: React.FC = () => {
                             label="Default"
                           />
                           <br />
+                          <br />
                           <Button
                             theme="secondary"
                             unelevated={unelevated}
@@ -135,9 +140,10 @@ export const Components: React.FC = () => {
                             label="Disabled"
                           />
                         </td>
-                        <CustomThemeProvider use="note" wrap>
+                        <CustomThemeProvider use="warning" wrap>
                           <td>
                             <Button unelevated={unelevated} label="Default" />
+                            <br />
                             <br />
                             <Button
                               unelevated={unelevated}

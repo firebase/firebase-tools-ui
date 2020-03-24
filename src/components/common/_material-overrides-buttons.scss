@@ -23,32 +23,7 @@ $FOCUS_OUTLINE_THICKNESS: 2px;
 .mdc-button {
   @include mdc-button-shape-radius($BORDER_RADIUS_CARD);
   text-transform: none;
-  padding: 0 16px; // no default to dense buttons
-
-  &:hover {
-    &::before,
-    &::after,
-    &.mdc-list-item::before,
-    &.mdc-list-item::after {
-      // darker hover for buttons
-      opacity: 0.08;
-    }
-  }
-
-  &.mdc-theme--secondary {
-    // Use secondary hover color for secondary flat buttons.
-    @include mdc-states(secondary);
-  }
-}
-
-// button focus tweaks from console
-.mdc-button,
-.mdc-icon-button {
-  &:focus {
-    outline: 0 !important;
-    box-shadow: 0 0 0 $FOCUS_OUTLINE_THICKNESS var(--fire-focus-outline-color)
-      inset !important;
-  }
+  padding: 0 16px; // default buttons should not be "dense"
 }
 
 // This is a helper mixin that selects a given button variation and applies the
