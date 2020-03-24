@@ -51,7 +51,7 @@ export const routes: ReadonlyArray<Route> = [
   },
   {
     path: '/logs',
-    component: LogsViewer,
+    component: LogsViewer as any,
     label: 'Logs',
     exact: true,
     showInNav: true,

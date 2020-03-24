@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { EmulatorConfig } from '../../store/config';
+
 export enum WebSocketState {
   DISCONNECTED,
   CONNECTED,
@@ -24,15 +26,15 @@ export class ReconnectingWebSocket {
   state: WebSocketState = WebSocketState.DISCONNECTED;
   listener: Function | undefined = undefined;
 
-  constructor() {
-    this.connect();
+  constructor(config: EmulatorConfig) {
+    this.connect(config);
     setInterval(this.connect.bind(this), 1000);
   }
 
-  private connect() {
+  private connect(config: EmulatorConfig) {
     if (this.state !== WebSocketState.DISCONNECTED) return;
 
-    const ws = new WebSocket('ws://localhost:9999');
+    const ws = new WebSocket(`ws://${config.hostAndPort}`);
     this.state = WebSocketState.PENDING;
 
     ws.onopen = () => {

@@ -20,6 +20,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 
 import { AppState } from '../../store';
+import { LoggingConfig } from '../../store/config';
 import { LogEntry, LogState } from '../../store/logviewer';
 import { CompiledGetterCache } from './CompiledGetterCache';
 import History from './History';
@@ -28,6 +29,7 @@ import { ReconnectingWebSocket } from './ReconnectingWebSocket';
 
 interface PropsFromState {
   log: LogState;
+  config?: LoggingConfig;
 }
 
 interface PropsFromDispatch {
@@ -36,13 +38,16 @@ interface PropsFromDispatch {
 
 export type Props = PropsFromState & PropsFromDispatch;
 
-const webSocket = new ReconnectingWebSocket();
 const compiledGetters = new CompiledGetterCache();
 
-export const LogViewer: React.FC<Props> = ({ logReceived }) => {
+export const LogViewer: React.FC<Props> = ({ logReceived, config }) => {
   const [query, setQuery] = useState('');
 
   useEffect(() => {
+    if (!config) return;
+
+    console.log(config);
+    const webSocket = new ReconnectingWebSocket(config);
     webSocket.listener = (log: LogEntry) => {
       //todo: remove hack to cut off icon
       log.message = log.message
@@ -51,7 +56,7 @@ export const LogViewer: React.FC<Props> = ({ logReceived }) => {
         .join(' ');
       logReceived(log);
     };
-  }, []);
+  }, [config]);
 
   const parsedQuery = parseQuery(query);
 
@@ -75,7 +80,12 @@ export const LogViewer: React.FC<Props> = ({ logReceived }) => {
   );
 };
 
-export const mapStateToProps = ({}: AppState) => ({});
+export const mapStateToProps = ({ config }: AppState) => {
+  console.log(config);
+  return {
+    config: config.config ? config.config.logging : undefined,
+  };
+};
 export const mapDispatchToProps = {
   logReceived(log: LogEntry) {
     return { type: '@log/RECEIVED', payload: log };

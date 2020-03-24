@@ -24,10 +24,13 @@ export interface DatabaseConfig extends EmulatorConfig {}
 
 export interface FirestoreConfig extends EmulatorConfig {}
 
+export interface LoggingConfig extends EmulatorConfig {}
+
 export interface Config {
   projectId: string;
   database?: DatabaseConfig;
   firestore?: FirestoreConfig;
+  logging?: LoggingConfig;
   // TODO: More config for more emulators.
 }
 
