@@ -42,9 +42,12 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
-    - run: npm test
+    - run: npm test:coverage
       env:
         CI: true
+    - uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
 
   check-package-lock:
 
