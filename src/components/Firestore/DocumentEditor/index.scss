@@ -1,0 +1,66 @@
+.RootEditor {
+  overflow: scroll;
+}
+
+.FieldEditor {
+  position: relative;
+  display: grid;
+  grid-auto-flow: column;
+  grid-gap: 16px;
+  padding: 12px 0;
+  grid-auto-columns: max-content;
+
+  &:before {
+    content: '';
+    display: block;
+    position: absolute;
+    border-top: 1px dashed #b4b4b4;
+    top: 50%;
+    width: 16px;
+    height: 0;
+    left: -23px;
+  }
+
+  &:after {
+    border-left: 1px dashed #b4b5b5;
+    height: 100%;
+    width: 0px;
+    top: -2px;
+    position: absolute;
+    content: '';
+    left: -23px;
+  }
+
+  &:last-of-type:after {
+    height: 40px;
+  }
+}
+
+.FieldEditor-add-child {
+  position: relative;
+
+  &:before {
+    content: '';
+    display: block;
+    position: absolute;
+    border-top: 1px dashed #b4b4b4;
+    top: 50%;
+    width: 16px;
+    height: 0;
+    left: -23px;
+  }
+
+  &:after {
+    border-left: 1px dashed #b4b5b5;
+    height: 50%;
+    width: 0px;
+    top: 0;
+    position: absolute;
+    content: '';
+    left: -23px;
+  }
+}
+
+.FieldEditor-children {
+  padding-left: 32px;
+}

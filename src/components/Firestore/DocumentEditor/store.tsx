@@ -21,69 +21,158 @@ import React from 'react';
 import { Action, createReducer } from 'typesafe-actions';
 
 import { FieldType, FirestoreAny, FirestoreMap } from '../models';
-import { getParentPath, isArray, isMap, lastFieldName } from '../utils';
+import {
+  getFieldType,
+  getParentPath,
+  isArray,
+  isBoolean,
+  isGeoPoint,
+  isMap,
+  isNumber,
+  isPrimitive,
+  isReference,
+  isString,
+  isTimestamp,
+  lastFieldName,
+} from '../utils';
 import * as actions from './actions';
 
-const reducer = createReducer<FirestoreMap, Action>({})
-  .handleAction(actions.reset, (state, { payload }) => {
-    return payload;
-  })
+function makeIdGenerator() {
+  let counter = 1;
+  return () => counter++;
+}
+
+/** Utility for generating unique ids for normalized state objects. */
+export const getUniqueId: () => number = makeIdGenerator();
+
+interface FieldBase<T extends FieldType> {
+  name: string;
+  type: T;
+}
+
+interface PrimitiveField<T extends FieldType, V> extends FieldBase<T> {
+  value: V;
+}
+
+type StringField = PrimitiveField<FieldType.STRING, string>;
+type NumberField = PrimitiveField<FieldType.NUMBER, number>;
+type BooleanField = PrimitiveField<FieldType.BOOLEAN, boolean>;
+type NullField = PrimitiveField<FieldType.NULL, null>;
+type GeoPointField = PrimitiveField<FieldType.GEOPOINT, firestore.GeoPoint>;
+type TimestampField = PrimitiveField<FieldType.TIMESTAMP, firestore.Timestamp>;
+type ReferenceField = PrimitiveField<
+  FieldType.REFERENCE,
+  firestore.DocumentReference
+>;
+
+type PrimitiveFields =
+  | StringField
+  | NumberField
+  | BooleanField
+  | NullField
+  | GeoPointField
+  | TimestampField
+  | ReferenceField;
+
+interface ContainerField<T extends FieldType> extends FieldBase<T> {
+  childrenIds: number[];
+}
+
+type MapField = ContainerField<FieldType.MAP>;
+type ArrayField = ContainerField<FieldType.ARRAY>;
+
+type ContainerFields = MapField | ArrayField;
+
+export type NewField = PrimitiveFields | ContainerFields;
+type Field = NewField & { id: number };
+
+interface State {
+  fields: { [id: number]: Field };
+  rootFieldIds: number[];
+}
+
+function getDescendantIds(
+  fieldStateMap: {
+    [id: number]: Field;
+  },
+  ids: number[]
+): number[] {
+  return ids.reduce((acc, id) => {
+    acc.push(id);
+    const field = fieldStateMap[id];
+    if (field.type === FieldType.MAP || field.type === FieldType.ARRAY) {
+      acc.push(...getDescendantIds(fieldStateMap, field.childrenIds));
+    }
+    return acc;
+  }, [] as number[]);
+}
+
+const reducer = createReducer<State, Action>({ fields: {}, rootFieldIds: [] })
+  //  .handleAction(actions.reset, (state, { payload }) => {
+  //    return [];
+  //  })
   .handleAction(
     actions.addField,
     produce((draft, { payload }) => {
-      const parent = get(draft, getParentPath(payload.path)) || draft;
-      if (isMap(parent)) {
-        parent[lastFieldName(payload.path)] = payload.value;
-      } else if (isArray(parent)) {
-        parent.push(payload.value);
-      }
-    })
-  )
-  .handleAction(
-    actions.updateField,
-    produce((draft, { payload }) => {
-      const parent = get(draft, getParentPath(payload.path)) || draft;
-      if (isMap(parent)) {
-        parent[lastFieldName(payload.path)] = payload.value;
-      } else if (isArray(parent)) {
-        parent[Number(lastFieldName(payload.path))] = payload.value;
+      const id = getUniqueId();
+      draft.fields[id] = { ...payload.state, id };
+      if (payload.parentId) {
+        draft.fields[payload.parentId].childrenIds.push(id);
       } else {
-        return payload.value;
+        draft.rootFieldIds.push(id);
       }
     })
   )
   .handleAction(
-    actions.updateKey,
+    actions.updateName,
     produce((draft, { payload }) => {
-      const parent = get(draft, getParentPath(payload.path)) || draft;
-      const oldFieldName = lastFieldName(payload.path);
-      if (isMap(parent)) {
-        const value = parent[oldFieldName];
-        delete parent[oldFieldName];
-        parent[payload.key] = value;
-      }
+      draft.fields[payload.id].name = payload.name;
     })
   )
   .handleAction(
     actions.updateType,
     produce((draft, { payload }) => {
-      const parent = get(draft, getParentPath(payload.path)) || draft;
-      const defaultValue = defaultValueForType(payload.type);
-      if (isMap(parent)) {
-        parent[lastFieldName(payload.path)] = defaultValue;
-      } else if (isArray(parent) && !isArray(defaultValue)) {
-        parent[Number(lastFieldName(payload.path))] = defaultValue;
+      draft.fields[payload.id].type = payload.type;
+      if (payload.type === FieldType.MAP || payload.type === FieldType.ARRAY) {
+        delete draft.fields[payload.id]['value'];
+        draft.fields[payload.id].childrenIds = [];
+      } else {
+        delete draft.fields[payload.id]['childrenIds'];
+        draft.fields[payload.id].value = defaultValueForType(payload.type);
       }
+    })
+  )
+  .handleAction(
+    actions.updateValue,
+    produce((draft, { payload }) => {
+      draft.fields[payload.id].value = payload.value;
     })
   )
   .handleAction(
     actions.deleteField,
     produce((draft, { payload }) => {
-      const parent = get(draft, getParentPath(payload)) || draft;
-      if (isMap(parent)) {
-        delete parent[lastFieldName(payload)];
-      } else if (isArray(parent)) {
-        parent.splice(Number(lastFieldName(payload)), 1);
+      // Remove the referenced-field and any getDescendantIds
+      for (const id of getDescendantIds(draft.fields, [payload.id])) {
+        delete draft.fields[id];
+      }
+      // Remove reference from parent
+      for (const field of Object.values(draft.fields) as Field[]) {
+        if (
+          (field.type === FieldType.MAP || field.type === FieldType.ARRAY) &&
+          field.childrenIds.includes(payload.id)
+        ) {
+          field.childrenIds.splice(
+            field.childrenIds.findIndex(id => id === payload.id),
+            1
+          );
+        }
+      }
+      // Remove reference from root
+      if (draft.rootFieldIds.includes(payload.id)) {
+        draft.rootFieldIds.splice(
+          draft.rootFieldIds.findIndex((id: number) => id === payload.id),
+          1
+        );
       }
     })
   );
@@ -120,17 +209,23 @@ function defaultValueForType(type: FieldType): FirestoreAny {
   exhaustiveCheck(type);
 }
 
-export const DocumentStateContext = React.createContext<FirestoreMap>({});
+export const DocumentStateContext = React.createContext<State>({
+  fields: {},
+  rootFieldIds: [] as number[],
+});
 const DocumentDispatchContext = React.createContext<React.Dispatch<
   Action
 > | null>(null);
 
-export function useDocumentState(): FirestoreMap {
+export function useDocumentState(): Field[] {
   const context = React.useContext(DocumentStateContext);
   if (context === undefined) {
     throw new Error('useDocumentState must be used within a DocumentProvider');
   }
-  return context;
+  return context.rootFieldIds.reduce(
+    (acc, id) => [...acc, context.fields[id]],
+    [] as Field[]
+  );
 }
 
 export function useDocumentDispatch() {
@@ -143,17 +238,19 @@ export function useDocumentDispatch() {
   return context;
 }
 
-export function useFieldState(path: string[]): FirestoreAny {
-  const documentState = useDocumentState();
-  if (path.length === 0) return documentState;
-  return get(documentState, path);
+export function useFieldState(id: number): Field {
+  const context = React.useContext(DocumentStateContext);
+  if (context === undefined) {
+    throw new Error('useFieldState must be used within a DocumentProvider');
+  }
+  return context.fields[id];
 }
 
 export const DocumentProvider: React.FC<{ value: FirestoreMap }> = ({
   value = {},
   children,
 }) => {
-  const [state, dispatch] = React.useReducer(reducer, value);
+  const [state, dispatch] = React.useReducer(reducer, sdkToFields(value));
 
   return (
     <DocumentStateContext.Provider value={state}>
@@ -163,3 +260,93 @@ export const DocumentProvider: React.FC<{ value: FirestoreMap }> = ({
     </DocumentStateContext.Provider>
   );
 };
+
+function sdkToFields(sdk: FirestoreMap): State {
+  console.log({ sdk });
+  const fields: { [id: number]: Field } = {};
+  const rootFieldIds = [];
+  for (const [key, value] of Object.entries(sdk)) {
+    const fieldType = getFieldType(value);
+
+    if (isString(value)) {
+      const field: Field = {
+        id: getUniqueId(),
+        name: key,
+        type: FieldType.STRING,
+        value: value,
+      };
+      fields[field.id] = field;
+      rootFieldIds.push(field.id);
+    }
+
+    if (isNumber(value)) {
+      const field: Field = {
+        id: getUniqueId(),
+        name: key,
+        type: FieldType.NUMBER,
+        value: value,
+      };
+      fields[field.id] = field;
+      rootFieldIds.push(field.id);
+    }
+
+    if (isBoolean(value)) {
+      const field: Field = {
+        id: getUniqueId(),
+        name: key,
+        type: FieldType.BOOLEAN,
+        value: value,
+      };
+      fields[field.id] = field;
+      rootFieldIds.push(field.id);
+    }
+
+    if (isGeoPoint(value)) {
+      const field: Field = {
+        id: getUniqueId(),
+        name: key,
+        type: FieldType.GEOPOINT,
+        value: value,
+      };
+      fields[field.id] = field;
+      rootFieldIds.push(field.id);
+    }
+
+    if (isReference(value)) {
+      const field: Field = {
+        id: getUniqueId(),
+        name: key,
+        type: FieldType.REFERENCE,
+        value: value,
+      };
+      fields[field.id] = field;
+      rootFieldIds.push(field.id);
+    }
+
+    if (isTimestamp(value)) {
+      const field: Field = {
+        id: getUniqueId(),
+        name: key,
+        type: FieldType.TIMESTAMP,
+        value: value,
+      };
+      fields[field.id] = field;
+      rootFieldIds.push(field.id);
+    }
+
+    if (value === null) {
+      const field: Field = {
+        id: getUniqueId(),
+        name: key,
+        type: FieldType.NULL,
+        value: value,
+      };
+      fields[field.id] = field;
+      rootFieldIds.push(field.id);
+    }
+  }
+  return {
+    fields,
+    rootFieldIds,
+  };
+}

@@ -14,12 +14,19 @@
  * limitations under the License.
  */
 
+import './index.scss';
+
 import { IconButton } from '@rmwc/icon-button';
 import { Select } from '@rmwc/select';
 import { TextField } from '@rmwc/textfield';
 import React, { useEffect, useState } from 'react';
 
-import { FieldType, FirestoreAny, FirestoreMap } from '../models';
+import {
+  FieldType,
+  FirestoreAny,
+  FirestoreMap,
+  FirestorePrimitive,
+} from '../models';
 import {
   getFieldType,
   isArray,
@@ -85,7 +92,7 @@ const DocumentEditor: React.FC<{
 }) => {
   return (
     <DocumentProvider value={value}>
-      <RootField
+      <RootEditor
         onChange={onChange}
         areRootKeysMutable={areRootKeysMutable}
         areRootFieldsMutable={areRootFieldsMutable}
@@ -98,160 +105,136 @@ const DocumentEditor: React.FC<{
  * Special representation of a Document Root, where we don't want to show
  * the implicit top-level map.
  */
-const RootField: React.FC<{
+const RootEditor: React.FC<{
   onChange?: (value: FirestoreMap) => void;
   areRootKeysMutable: boolean;
   areRootFieldsMutable: boolean;
 }> = ({ onChange, areRootKeysMutable, areRootFieldsMutable }) => {
-  const state = useDocumentState();
+  const rootFields = useDocumentState();
   const dispatch = useDocumentDispatch()!;
 
-  useEffect(() => {
-    onChange && onChange(state);
-  }, [onChange, state]);
+  //  useEffect(() => {
+  //    // onChange && onChange(state);
+  //  }, [onChange, rootFieldIds]);
 
   return (
-    <>
-      {Object.keys(state).map(field => (
-        <React.Fragment key={field}>
-          <NestedEditor path={[field]} isKeyMutable={areRootKeysMutable} />
-          {areRootFieldsMutable && (
-            <IconButton
-              icon="delete"
-              label="Remove field"
-              onClick={e => dispatch(actions.deleteField([field]))}
-            />
-          )}
-        </React.Fragment>
+    <div className="RootEditor">
+      {rootFields.map((field, index) => (
+        <FieldEditor key={field.id} id={field.id} />
       ))}
-      {areRootFieldsMutable && (
-        <IconButton
-          icon="add"
-          label="Add field"
-          onClick={e => dispatch(actions.addField({ path: [''], value: '' }))}
-        />
-      )}
-    </>
+      <IconButton
+        icon="add"
+        onClick={() =>
+          dispatch(
+            actions.addField({
+              state: {
+                name: '',
+                type: FieldType.STRING,
+                value: '',
+              },
+            })
+          )
+        }
+      />
+    </div>
   );
 };
 
 /**
  * Field with call-to-actions for editing as well as rendering applicable child-nodes
  */
-const NestedEditor: React.FC<{
-  path: string[];
-  isKeyMutable: boolean;
-}> = ({ path, isKeyMutable }) => {
-  const state = useFieldState(path);
+const FieldEditor: React.FC<{
+  id: number;
+  // isKeyMutable: boolean;
+}> = ({ id }) => {
+  const state = useFieldState(id);
   const dispatch = useDocumentDispatch()!;
-  const [key, setKey] = useState(lastFieldName(path));
 
-  let childEditors = null;
-  if (isMap(state)) {
-    childEditors = Object.keys(state).map(childLeaf => {
-      const childPath = [...path, childLeaf];
-      return (
-        <NestedEditor key={childLeaf} path={childPath} isKeyMutable={true} />
-      );
-    });
-  } else if (isArray(state)) {
-    childEditors = state.map((value, index) => {
-      const childPath = [...path, `${index}`];
-      return <NestedEditor key={index} path={childPath} isKeyMutable={false} />;
-    });
-  }
-
-  function handleEditValue(value: FirestoreAny) {
-    dispatch(actions.updateField({ path, value }));
-  }
-
-  const fieldEditor = (
-    <>
-      {isString(state) && (
-        <StringEditor value={state} onChange={handleEditValue} />
-      )}
-      {isNumber(state) && (
-        <NumberEditor value={state} onChange={handleEditValue} />
-      )}
-      {isBoolean(state) && (
-        <BooleanEditor value={state} onChange={handleEditValue} />
-      )}
-      {isGeoPoint(state) && (
-        <GeoPointEditor value={state} onChange={handleEditValue} />
-      )}
-      {isTimestamp(state) && (
-        <TimestampEditor value={state} onChange={handleEditValue} />
-      )}
-      {isReference(state) && (
-        <ReferenceEditor value={state} onChange={handleEditValue} />
-      )}
-    </>
-  );
-
-  function handleKeyChange(e: React.FormEvent<HTMLInputElement>) {
-    setKey(e.currentTarget.value);
-  }
-
-  function handleKeyBlur(e: React.FormEvent<HTMLInputElement>) {
-    dispatch(actions.updateKey({ path, key }));
+  function handleEditValue(value: FirestorePrimitive) {
+    dispatch(actions.updateValue({ id, value }));
   }
 
   return (
     <>
-      <div style={{ display: 'flex' }}>
+      <div className="FieldEditor">
+        {/* Name editor */}
         <TextField
-          {...(isKeyMutable
-            ? {
-                onChange: handleKeyChange,
-                onBlur: handleKeyBlur,
-              }
-            : { readOnly: true, disabled: true })}
-          value={key}
+          onChange={e =>
+            dispatch(actions.updateName({ id, name: e.currentTarget.value }))
+          }
+          value={state.name}
           outlined
           label="Field"
         />
+
+        {/* Type editor */}
         <Select
           label="Type"
           outlined
           options={supportedFieldTypes}
-          value={getFieldType(state)}
+          value={state.type}
           onChange={e => {
-            dispatch(actions.updateType({ path, type: e.currentTarget.value }));
+            dispatch(actions.updateType({ id, type: e.currentTarget.value }));
           }}
         />
-        {fieldEditor}
-        {isMap(state) && (
-          <IconButton
-            icon="add"
-            label="Add field"
-            onClick={e =>
-              dispatch(actions.addField({ path: [...path, ''], value: '' }))
-            }
-          />
+
+        {/* Value editor */}
+        {state.type === FieldType.STRING && (
+          <StringEditor value={state.value} onChange={handleEditValue} />
         )}
-        {isArray(state) && (
-          <IconButton
-            icon="add"
-            label="Add field"
-            onClick={e =>
-              dispatch(
-                actions.addField({
-                  path: [...path, `${path.length}`],
-                  value: '',
-                })
-              )
-            }
-          />
+        {state.type === FieldType.NUMBER && (
+          <NumberEditor value={state.value} onChange={handleEditValue} />
         )}
-        {path.length > 1 && isPrimitive(state) && (
+        {state.type === FieldType.BOOLEAN && (
+          <BooleanEditor value={state.value} onChange={handleEditValue} />
+        )}
+        {state.type === FieldType.GEOPOINT && (
+          <GeoPointEditor value={state.value} onChange={handleEditValue} />
+        )}
+        {state.type === FieldType.TIMESTAMP && (
+          <TimestampEditor value={state.value} onChange={handleEditValue} />
+        )}
+        {state.type === FieldType.REFERENCE && (
+          <ReferenceEditor value={state.value} onChange={handleEditValue} />
+        )}
+
+        {/* Field actions*/}
+        <div className="FieldEditor-actions">
           <IconButton
             icon="delete"
             label="Remove field"
-            onClick={() => dispatch(actions.deleteField(path))}
+            onClick={() => dispatch(actions.deleteField({ id }))}
           />
-        )}
+        </div>
       </div>
-      {childEditors && <div>{childEditors}</div>}
+      {(state.type === FieldType.MAP || state.type === FieldType.ARRAY) && (
+        <div className="FieldEditor-children">
+          {/* Nested fields */}
+          {state.childrenIds.map(id => (
+            <FieldEditor key={id} id={id} />
+          ))}
+
+          {/* Add child */}
+          <div className="FieldEditor-add-child">
+            <IconButton
+              icon="add"
+              label="Add field"
+              onClick={e =>
+                dispatch(
+                  actions.addField({
+                    parentId: id,
+                    state: {
+                      name: '',
+                      type: FieldType.STRING,
+                      value: '',
+                    },
+                  })
+                )
+              }
+            />
+          </div>
+        </div>
+      )}
     </>
   );
 };
