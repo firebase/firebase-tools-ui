@@ -52,6 +52,9 @@ $FOCUS_OUTLINE_THICKNESS: 2px;
     // $query: $query + ':not(.mdc-theme--secondary)';
   } @else if $colorLevel == secondary {
     $query: $query + '.mdc-theme--secondary';
+    // colored = primary on primary, (e.g. red buttons instead of white)
+  } @else if $colorLevel == colored {
+    $query: $query + '.mdc-theme--primary';
   } @else {
     @error 'Unknown button color/level "#{$colorLevel}"';
   }
@@ -243,6 +246,18 @@ $FOCUS_OUTLINE_THICKNESS: 2px;
       $disabledBgColor: rgba($COLOR_WHITE_PRIMARY, 0.12),
       $disabledForeColor: $COLOR_WHITE_DISABLED,
       $insetFocusOutlineColor: rgba(var(--mdc-theme-primary-rgb), 0.5)
+    );
+  }
+
+  // Raised colored buttons (when setting theme="primary" inside "onPrimary")
+  @include __for-text-buttons-of-type(raised, colored) {
+    @include __raised-text-button-styling(
+      $foreColor: $COLOR_WHITE_PRIMARY,
+      $bgColorDefault: var(--mdc-theme-primary),
+      $bgColorHoverFocus: $COLOR_PURE_BLACK,
+      $disabledBgColor: rgba($COLOR_WHITE_PRIMARY, 0.12),
+      $disabledForeColor: $COLOR_WHITE_DISABLED,
+      $insetFocusOutlineColor: rgba($COLOR_WHITE_PRIMARY, 0.6)
     );
   }
 

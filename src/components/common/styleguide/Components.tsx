@@ -142,7 +142,11 @@ export const Components: React.FC = () => {
                         </td>
                         <CustomThemeProvider use="warning" wrap>
                           <td>
-                            <Button unelevated={unelevated} label="Default" />
+                            <Button
+                              theme="primary"
+                              unelevated={unelevated}
+                              label="Default"
+                            />
                             <br />
                             <br />
                             <Button
