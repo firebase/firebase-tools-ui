@@ -177,11 +177,6 @@ $FOCUS_OUTLINE_THICKNESS: 2px;
   &:not(:disabled) {
     color: $foreColor;
 
-    // .mdc-button__label {
-    //   color: $foreColor;
-    //   z-index: 2; // white text does not get darkened by ::after overlay
-    // }
-
     &:before,
     &:after {
       background-color: $bgColorHoverFocus;
