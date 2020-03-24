@@ -161,10 +161,13 @@ describe('loaded array', () => {
     const { queryAllByText } = result;
     // delete the alpha-element
     queryAllByText('delete')[1].click();
-    expect(documentReference.update).toHaveBeenCalledWith(
-      new firestore.FieldPath('foo'),
-      firestore.FieldValue.arrayRemove('alpha')
-    );
+    expect(
+      documentReference.update
+    ).toHaveBeenCalledWith(new firestore.FieldPath('foo'), [
+      'bravo',
+      'bravo',
+      ['wowah'],
+    ]);
   });
 
   it('deletes a top-level duplicate array element', () => {
@@ -231,10 +234,15 @@ describe('loaded array', () => {
       target: { value: 'new' },
     });
     getByText('Save').click();
-    expect(documentReference.update).toHaveBeenCalledWith(
-      new firestore.FieldPath('foo'),
-      firestore.FieldValue.arrayUnion('new')
-    );
+    expect(
+      documentReference.update
+    ).toHaveBeenCalledWith(new firestore.FieldPath('foo'), [
+      'alpha',
+      'bravo',
+      'bravo',
+      ['wowah'],
+      'new',
+    ]);
   });
 
   it('adds a nested array element', () => {
