@@ -57,6 +57,7 @@ ReactDOM.render(
       options={{
         background,
         primary,
+        primaryRgb: '104, 29, 168',
         secondary,
         error,
       }}

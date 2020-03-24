@@ -1,0 +1,318 @@
+/**
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@import '@material/button/mixins';
+
+@import './components/common/radius';
+
+$FOCUS_OUTLINE_THICKNESS: 2px;
+
+.mdc-button {
+  @include mdc-button-shape-radius($BORDER_RADIUS_CARD);
+  text-transform: none;
+  padding: 0 16px; // no default to dense buttons
+
+  &:hover {
+    &::before,
+    &::after,
+    &.mdc-list-item::before,
+    &.mdc-list-item::after {
+      // darker hover for buttons
+      opacity: 0.08;
+    }
+  }
+
+  &.mdc-theme--secondary {
+    // Use secondary hover color for secondary flat buttons.
+    @include mdc-states(secondary);
+  }
+}
+
+// button focus tweaks from console
+.mdc-button,
+.mdc-icon-button {
+  &:focus {
+    outline: 0 !important;
+    box-shadow: 0 0 0 $FOCUS_OUTLINE_THICKNESS var(--fire-focus-outline-color)
+      inset !important;
+  }
+}
+
+// This is a helper mixin that selects a given button variation and applies the
+// mixin's content to that variant. For example, to set the background color to
+// red for flat secondary buttons:
+//
+//     @include __for-text-buttons-of-type(flat, primary) {
+//       background: red;
+//     }
+@mixin __for-text-buttons-of-type($type: raised, $colorLevel: secondary) {
+  $query: '.mdc-button';
+
+  // Narrow down the selector by button type (raised or flat)
+  @if $type == raised {
+    $query: $query + '.mdc-button--unelevated';
+  } @else if $type == stroked {
+    $query: $query + '.mdc-button--outlined';
+  } @else if $type == flat {
+    $query: $query + '';
+  } @else {
+    @error 'Unknown button type "#{$type}"';
+  }
+
+  // Narrow down the selector by color / level (primary, secondary)
+  @if $colorLevel == primary {
+    // $query: $query + ':not(.mdc-theme--secondary)';
+  } @else if $colorLevel == secondary {
+    $query: $query + '.mdc-theme--secondary';
+  } @else {
+    @error 'Unknown button color/level "#{$colorLevel}"';
+  }
+
+  // Generate the selector and project/transclude the mixin's content
+  #{$query} {
+    @content;
+  }
+}
+
+// This is a helper mixin that generates button styling for raised text buttons.
+@mixin __raised-text-button-styling(
+  $foreColor,
+  $bgColorDefault,
+  $bgColorHoverFocus,
+  $hairlineShadowActive: none,
+  $hairlineShadowDefault: none,
+  $hairlineShadowHoverFocus: none,
+  $hairlineShadowDisabled: none,
+  $disabledForeColor: $COLOR_BLACK_DISABLED,
+  $disabledBgColor: $COLOR_BLACK_ALPHA_06,
+  $insetFocusOutlineColor: null
+) {
+  &:not(:disabled) {
+    background-color: $bgColorDefault;
+    box-shadow: $hairlineShadowDefault;
+    color: $foreColor;
+
+    .mdc-button__label {
+      color: $foreColor;
+      z-index: 2; // white text does not get darkened by ::after overlay
+    }
+
+    &:before,
+    &:after {
+      background-color: $bgColorHoverFocus;
+    }
+
+    &:hover {
+      &:before,
+      &:after {
+        opacity: 0.12;
+      }
+      box-shadow: $hairlineShadowHoverFocus;
+    }
+
+    &:focus:not(:hover):not(:active) {
+      background-color: $bgColorDefault;
+    }
+
+    &:active {
+      &:before,
+      &:after {
+        opacity: 0.24;
+      }
+      box-shadow: $hairlineShadowActive;
+    }
+  }
+
+  &:disabled {
+    background-color: $disabledBgColor;
+    box-shadow: $hairlineShadowDisabled;
+    color: $disabledForeColor;
+  }
+
+  // Icons inside raised buttons
+  .mdc-icon {
+    background-color: transparent;
+    color: currentColor;
+    fill: currentColor;
+  }
+
+  @if $insetFocusOutlineColor {
+    --fire-focus-outline-color: #{$insetFocusOutlineColor};
+
+    &:focus {
+      box-shadow: 0 0 0 $FOCUS_OUTLINE_THICKNESS $bgColorDefault inset,
+        0
+          0
+          0
+          (2 * $FOCUS_OUTLINE_THICKNESS)
+          var(--fire-focus-outline-color)
+          inset !important;
+    }
+  }
+}
+
+// Raised themed buttons
+@include __for-text-buttons-of-type(raised, primary) {
+  @include __raised-text-button-styling(
+    $foreColor: $COLOR_WHITE_PRIMARY,
+    $bgColorDefault: var(--mdc-theme-primary),
+    $bgColorHoverFocus: $COLOR_PURE_BLACK,
+    $insetFocusOutlineColor: rgba($COLOR_WHITE_PRIMARY, 0.6)
+  );
+}
+
+// Raised secondary (non-primary, non-warn) buttons (aka hairline buttons)
+@include __for-text-buttons-of-type(raised, secondary) {
+  @include __raised-text-button-styling(
+    $foreColor: var(--mdc-theme-primary),
+    $bgColorDefault: transparent,
+    $bgColorHoverFocus: var(--mdc-theme-primary),
+    $hairlineShadowDefault: 0 0 0 1px $COLOR_BLACK_ALPHA_12 inset,
+    $hairlineShadowHoverFocus: 0 0 0 1px rgba(var(--mdc-theme-primary-rgb), 0.5)
+      inset,
+    $hairlineShadowActive: 0 0 0 1px rgba(var(--mdc-theme-primary-rgb), 0.5)
+      inset,
+    $hairlineShadowDisabled: 0 0 0 1px $COLOR_BLACK_ALPHA_08 inset,
+    $disabledBgColor: transparent
+  );
+}
+
+// This is a helper mixin that generates button styling for flat text buttons
+@mixin __flat-text-button-styling(
+  $foreColor,
+  $bgColorHoverFocus,
+  $disabledForeColor: $COLOR_BLACK_DISABLED
+) {
+  &:not(:disabled) {
+    color: $foreColor;
+
+    // .mdc-button__label {
+    //   color: $foreColor;
+    //   z-index: 2; // white text does not get darkened by ::after overlay
+    // }
+
+    &:before,
+    &:after {
+      background-color: $bgColorHoverFocus;
+    }
+
+    &:hover {
+      &:before,
+      &:after {
+        opacity: 0.12;
+      }
+    }
+
+    &:focus:not(:hover):not(:active) {
+      background-color: transparent;
+    }
+
+    &:active {
+      &:before,
+      &:after {
+        opacity: 0.24;
+      }
+    }
+  }
+
+  &:disabled {
+    color: $disabledForeColor !important; // needed to override mdc built in
+  }
+
+  // Icons inside flat buttons
+  md-icon,
+  .fb-icon-animation-container,
+  .fire-icon-animation-container {
+    background-color: transparent;
+    color: currentColor;
+    fill: currentColor;
+  }
+}
+
+// Flat primary
+@include __for-text-buttons-of-type(flat, primary) {
+  @include __flat-text-button-styling(
+    $foreColor: var(--mdc-theme-primary),
+    $bgColorHoverFocus: var(--mdc-theme-primary)
+  );
+}
+
+// Flat secondary (non-primary)
+@include __for-text-buttons-of-type(flat, secondary) {
+  @include __flat-text-button-styling(
+    $foreColor: $COLOR_BLACK_SECONDARY,
+    $bgColorHoverFocus: $COLOR_PURE_BLACK
+  );
+}
+
+.mdc-theme--on-primary {
+  // Dark raised primary buttons
+  @include __for-text-buttons-of-type(raised, primary) {
+    @include __raised-text-button-styling(
+      $foreColor: var(--mdc-theme-primary),
+      $bgColorDefault: $COLOR_WHITE_PRIMARY,
+      $bgColorHoverFocus: $COLOR_PURE_BLACK,
+      $disabledBgColor: rgba($COLOR_WHITE_PRIMARY, 0.12),
+      $disabledForeColor: $COLOR_WHITE_DISABLED,
+      $insetFocusOutlineColor: rgba(var(--mdc-theme-primary-rgb), 0.5)
+    );
+  }
+
+  // Dark raised secondary + all hairline buttons
+  %all-dark-hairline-buttons {
+    @include __raised-text-button-styling(
+      $foreColor: $COLOR_WHITE_PRIMARY,
+      $bgColorDefault: transparent,
+      $bgColorHoverFocus: $COLOR_WHITE_PRIMARY,
+      $hairlineShadowDefault: 0 0 0 1px rgba($COLOR_WHITE_PRIMARY, 0.5) inset,
+      $hairlineShadowHoverFocus: 0 0 0 1px rgba($COLOR_WHITE_PRIMARY, 0.8) inset,
+      $hairlineShadowActive: 0 0 0 1px $COLOR_WHITE_PRIMARY inset,
+      $hairlineShadowDisabled: 0 0 0 1px rgba($COLOR_WHITE_PRIMARY, 0.2) inset,
+      $disabledBgColor: transparent,
+      $disabledForeColor: $COLOR_WHITE_DISABLED
+    );
+  }
+
+  @include __for-text-buttons-of-type(raised, secondary) {
+    @extend %all-dark-hairline-buttons;
+  }
+
+  @include __for-text-buttons-of-type(stroked, primary) {
+    @extend %all-dark-hairline-buttons;
+  }
+
+  @include __for-text-buttons-of-type(stroked, secondary) {
+    @extend %all-dark-hairline-buttons;
+  }
+
+  // Dark flat primary, secondary, and warn (all the same)
+  %all-dark-flat-buttons {
+    @include __flat-text-button-styling(
+      // sorry about important, overrides mdc important
+        $foreColor: $COLOR_WHITE_PRIMARY !important,
+      $bgColorHoverFocus: $COLOR_WHITE_PRIMARY,
+      $disabledForeColor: $COLOR_WHITE_DISABLED
+    );
+  }
+
+  @include __for-text-buttons-of-type(flat, primary) {
+    @extend %all-dark-flat-buttons;
+  }
+
+  @include __for-text-buttons-of-type(flat, secondary) {
+    @extend %all-dark-flat-buttons;
+  }
+}
