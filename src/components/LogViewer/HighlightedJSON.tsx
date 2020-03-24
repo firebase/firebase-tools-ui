@@ -154,13 +154,12 @@ export const HighlightedJSON: React.FC<Props> = ({
       return (
         <div key={index} className="line object-start">
           {indent}
-          <a
-            href="#"
-            className="key"
+          <div
+            className="clickable key"
             onClick={() => appendToQuery(hierarchy_chain, '*')}
           >
             "{key}"
-          </a>
+          </div>
           :{value}
         </div>
       );
@@ -195,15 +194,13 @@ export const HighlightedJSON: React.FC<Props> = ({
       if (!isObject) {
         return (
           <div key={index} className="line literal">
-            <a href="#" className="value">
-              {line}
-            </a>
+            <div className="value clickable">{line}</div>
           </div>
         );
       }
 
       const [start, ...splat] = line.split(':');
-      const [_, ...key_chunks] = start.split('"');
+      const key_chunks = start.split('"').slice(1);
       const key = key_chunks.filter((v: string) => v).join('"');
       const value = splat.join(':').trim();
 
@@ -218,23 +215,21 @@ export const HighlightedJSON: React.FC<Props> = ({
         return (
           <div key={index} className="line literal">
             {new_indent}
-            <a
-              href="#"
-              className="key"
+            <div
+              className="key clickable"
               onClick={() => appendToQuery(hierarchy_chain, '*')}
             >
               "{key}"
-            </a>
+            </div>
             :{' '}
-            <a
-              href="#"
-              className="value"
+            <div
+              className="clickable value"
               onClick={() =>
                 appendToQuery(hierarchy_chain, pluck(data, hierarchy_chain))
               }
             >
               {value}
-            </a>
+            </div>
           </div>
         );
       } else {
@@ -242,15 +237,14 @@ export const HighlightedJSON: React.FC<Props> = ({
         return (
           <div key={index} className="line literal">
             {new_indent}
-            <a
-              href="#"
-              className="value"
+            <div
+              className="clickable value"
               onClick={() =>
                 appendToQuery(hierarchy_chain, pluck(data, hierarchy_chain))
               }
             >
               {line.trim()}
-            </a>
+            </div>
           </div>
         );
       }

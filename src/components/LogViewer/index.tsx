@@ -16,7 +16,7 @@
 
 import './index.scss';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
 import { AppState } from '../../store';
@@ -46,7 +46,6 @@ export const LogViewer: React.FC<Props> = ({ logReceived, config }) => {
   useEffect(() => {
     if (!config) return;
 
-    console.log(config);
     const webSocket = new ReconnectingWebSocket(config);
     webSocket.listener = (log: LogEntry) => {
       //todo: remove hack to cut off icon
@@ -56,7 +55,7 @@ export const LogViewer: React.FC<Props> = ({ logReceived, config }) => {
         .join(' ');
       logReceived(log);
     };
-  }, [config]);
+  }, [config, logReceived]);
 
   const parsedQuery = parseQuery(query);
 

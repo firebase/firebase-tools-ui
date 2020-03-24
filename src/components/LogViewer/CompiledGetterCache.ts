@@ -20,6 +20,7 @@ export class CompiledGetterCache {
   getOrCompile(path: string, obj: any) {
     if (!this.getters[path]) {
       try {
+        // eslint-disable-next-line no-new-func
         this.getters[path] = new Function('obj', 'return obj.' + path + ';');
       } catch (err) {
         console.warn(err);
