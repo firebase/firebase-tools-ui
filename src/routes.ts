@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { Components } from './components/common/styleguide/Components';
 import Database from './components/Database';
 import Firestore from './components/Firestore';
 import Home from './components/Home';
@@ -48,12 +47,5 @@ export const routes: ReadonlyArray<Route> = [
     label: 'Firestore',
     exact: false,
     showInNav: true,
-  },
-  {
-    path: '/components',
-    component: Components,
-    label: 'Components',
-    exact: false,
-    showInNav: false,
   },
 ];
