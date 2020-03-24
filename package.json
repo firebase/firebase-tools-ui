@@ -2,6 +2,9 @@
   "name": "firebase-tools-ui",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">= 8.0.0"
+  },
   "dependencies": {
     "@rmwc/button": "^5.7.2",
     "@rmwc/card": "^5.7.2",
