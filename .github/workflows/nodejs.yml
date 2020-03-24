@@ -45,10 +45,6 @@ jobs:
     - run: npm run test:coverage
       env:
         CI: true
-    - name: Report Coverage to Coveralls
-      uses: coverallsapp/github-action@master
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
 
   check-package-lock:
 
