@@ -22,7 +22,6 @@ import {
   DialogTitle,
 } from '@rmwc/dialog';
 import { TextField } from '@rmwc/textfield';
-import { Theme } from '@rmwc/theme';
 import { Typography } from '@rmwc/typography';
 import * as React from 'react';
 import { useState } from 'react';
@@ -108,10 +107,10 @@ export const CloneDialog = React.memo<Props>(function CloneDialog$({
               ))}
         </DialogContent>
         <DialogActions>
-          <Theme use={['textSecondaryOnBackground']} wrap>
-            <DialogButton action="close">Cancel</DialogButton>
-          </Theme>
-          <DialogButton unelevated type="submit">
+          <DialogButton type="button" action="close" theme="secondary">
+            Cancel
+          </DialogButton>
+          <DialogButton unelevated action="accept" type="submit">
             Clone
           </DialogButton>
         </DialogActions>
