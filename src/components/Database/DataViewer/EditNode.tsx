@@ -23,7 +23,6 @@ import {
   CardActions,
 } from '@rmwc/card';
 import { TextField } from '@rmwc/textfield';
-import { Theme } from '@rmwc/theme';
 import { Typography } from '@rmwc/typography';
 import keycode from 'keycode';
 import * as React from 'react';
@@ -118,14 +117,13 @@ export const EditNode = React.memo<Props>(function EditNode$({
         </div>
         <CardActions className="EditNode__actions">
           <CardActionButtons>
-            <Theme use={['textSecondaryOnBackground']} wrap>
-              <CardActionButton
-                type="button"
-                onClick={() => onClose && onClose()}
-              >
-                Cancel
-              </CardActionButton>
-            </Theme>
+            <CardActionButton
+              theme="secondary"
+              type="button"
+              onClick={() => onClose && onClose()}
+            >
+              Cancel
+            </CardActionButton>
             <CardActionButton unelevated type="submit">
               Save
             </CardActionButton>
