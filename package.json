@@ -90,7 +90,7 @@
     "mutationobserver-shim": "^0.3.3",
     "node-sass": "^4.13.1",
     "prettier": "^1.19.1",
-    "prettier-plugin-import-sort": "0.0.3",
+    "prettier-plugin-import-sort": "0.0.4",
     "webpack-cli": "^3.3.11"
   },
   "husky": {
