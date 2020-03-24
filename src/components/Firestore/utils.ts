@@ -59,15 +59,15 @@ export function getFieldType(value: FirestoreAny): FieldType {
     return FieldType.BLOB;
   }
 
-  if (typeof value.valueOf() === 'object') {
+  if (typeof value === 'object') {
     return FieldType.MAP;
   }
 
-  return typeof value.valueOf() as FieldType;
+  return typeof value as FieldType;
 }
 
 export function isBoolean(value: FirestoreAny): value is boolean {
-  return typeof value?.valueOf() === 'boolean';
+  return typeof value === 'boolean';
 }
 
 export function isReference(
@@ -81,11 +81,11 @@ export function isTimestamp(value: FirestoreAny): value is firestore.Timestamp {
 }
 
 export function isString(value: FirestoreAny): value is string {
-  return typeof value?.valueOf() === 'string';
+  return typeof value === 'string';
 }
 
 export function isNumber(value: FirestoreAny): value is number {
-  return typeof value?.valueOf() === 'number';
+  return typeof value === 'number';
 }
 
 export function isGeoPoint(value: FirestoreAny): value is firestore.GeoPoint {

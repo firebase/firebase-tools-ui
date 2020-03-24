@@ -31,6 +31,32 @@
   @include mdc-dialog-shape-radius($BORDER_RADIUS_DIALOG);
 }
 
+.mdc-button {
+  @include mdc-button-shape-radius($BORDER_RADIUS_CARD);
+  text-transform: none;
+
+  &:hover {
+    &::before,
+    &::after,
+    &.mdc-list-item::before,
+    &.mdc-list-item::after {
+      // darker hover for buttons
+      opacity: 0.08;
+    }
+  }
+
+  &.mdc-theme--secondary {
+    // Use secondary hover color for secondary flat buttons.
+    @include mdc-states(secondary);
+  }
+}
+
+.mdc-icon-button {
+  &:hover {
+    color: var(--mdc-theme-text-primary-on-background);
+  }
+}
+
 :not(.mdc-list--non-interactive) {
   > .mdc-list-item:not(.mdc-list-item--disabled) {
     &::before,
