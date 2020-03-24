@@ -1,0 +1,37 @@
+// This file configures the Renovate bot on GitHub. See:
+// https://docs.renovatebot.com/configuration-options/
+// This is a JSON5 (json5.org) file which supports comments and unquoted keys.
+{
+  extends: [
+    "config:base",
+    ":preserveSemverRanges",
+  ],
+  packageRules: [
+    {
+      // Do not upgrade Node.js versions ("engine" field in package.json).
+      packageNames: ["node"],
+      enabled: false,
+    },
+    
+    // BEGIN version constraints for Node.js 8 support.
+    // TODO: Remove these once Renovate learns to ignore incompatible versions.
+    // https://github.com/renovatebot/renovate/issues/4826
+    {
+      packageNames: ["@testing-library/react"],
+      allowedVersions: '<10',
+    },
+    {
+      packageNames: ["husky"],
+      allowedVersions: '<4',
+    },
+    {
+      packageNames: ["lint-staged"],
+      allowedVersions: '<10',
+    },
+    {
+      packageNames: ["prettier"],
+      allowedVersions: '<2',
+    },
+    // END version constraints for Node.js 8 support.
+  ],
+}
