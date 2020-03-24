@@ -26,6 +26,7 @@ const purple50 = '#f3e5f5';
 export const tipTheme = {
   background: purple50,
   primary,
+  primaryRgb: '104, 29, 168',
   textIconOnBackground: primary,
   textPrimaryOnBackground: primary,
   textSecondaryOnBackground: `rgba(${primary}, 0.7)`,
@@ -37,6 +38,7 @@ const teal800 = '#00695c';
 export const successTheme = {
   background: teal50,
   primary: teal700,
+  primaryRgb: '0, 121, 107',
   textIconOnBackground: teal700,
   textPrimaryOnBackground: teal800,
   textSecondaryOnBackground: `rgba(${teal800}, 0.7)`,
@@ -48,6 +50,7 @@ const navy600 = '#1b3a57';
 export const noteTheme = {
   background: navy20,
   primary: navy300,
+  primaryRgb: '71, 98, 130',
   textIconOnBackground: navy300,
   textPrimaryOnBackground: navy600,
   textSecondaryOnBackground: `rgba(${navy600}, 0.7)`,
@@ -59,6 +62,7 @@ const deepOrange900 = '#bf360c';
 export const cautionTheme = {
   background: orange50,
   primary: amber800,
+  primaryRgb: '255, 143, 0',
   onPrimary: 'white',
   textIconOnBackground: amber800,
   textPrimaryOnBackground: deepOrange900,
@@ -71,6 +75,7 @@ const red800 = '#c62828';
 export const errorTheme = {
   background: deepOrange50,
   primary: red700,
+  primaryRgb: '211, 47, 47',
   textIconOnBackground: red700,
   textPrimaryOnBackground: red800,
   textSecondaryOnBackground: `rgba(${red800}, 0.7)`,

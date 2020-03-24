@@ -26,6 +26,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 
 import { AppState } from '../../store';
 import { FirestoreConfig } from '../../store/config';
+import { CustomThemeProvider } from '../../themes';
 import { InteractiveBreadCrumbBar } from '../common/InteractiveBreadCrumbBar';
 import DatabaseApi from './api';
 import { ApiProvider } from './ApiContext';
@@ -77,9 +78,11 @@ export const Firestore: React.FC<Props> = ({ config, projectId }) => {
     <ApiProvider value={api}>
       <GridCell span={12} className="Firestore">
         <div className="Firestore-actions">
-          <Button danger unelevated onClick={() => handleClearData(api)}>
-            Clear all data
-          </Button>
+          <CustomThemeProvider use="warning" wrap>
+            <Button unelevated onClick={() => handleClearData(api)}>
+              Clear all data
+            </Button>
+          </CustomThemeProvider>
         </div>
         <Elevation z="2" wrap>
           <Card className="Firestore-panels-wrapper">

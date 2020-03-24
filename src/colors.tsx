@@ -15,7 +15,7 @@
  */
 export const background = '#F6F7F9';
 export const primary = '#681DA8'; // Google Purple 900.
-export const secondary = '#1B3A57'; // Firebase Navy 600.
+export const secondary = 'rgba(0, 0, 0, .54)';
 
 export const grey100 = '#F5F5F5';
 
