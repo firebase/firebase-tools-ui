@@ -21,7 +21,14 @@ import React from 'react';
 import { Action, createReducer } from 'typesafe-actions';
 
 import { FieldType, FirestoreAny, FirestoreMap } from '../models';
-import { getParentPath, isArray, isMap, lastFieldName } from '../utils';
+import {
+  getParentPath,
+  isArray,
+  isMap,
+  lastFieldName,
+  withFieldRemoved,
+  withFieldSet,
+} from '../utils';
 import * as actions from './actions';
 
 const reducer = createReducer<FirestoreMap, Action>({})
@@ -39,19 +46,9 @@ const reducer = createReducer<FirestoreMap, Action>({})
       }
     })
   )
-  .handleAction(
-    actions.updateField,
-    produce((draft, { payload }) => {
-      const parent = get(draft, getParentPath(payload.path)) || draft;
-      if (isMap(parent)) {
-        parent[lastFieldName(payload.path)] = payload.value;
-      } else if (isArray(parent)) {
-        parent[Number(lastFieldName(payload.path))] = payload.value;
-      } else {
-        return payload.value;
-      }
-    })
-  )
+  .handleAction(actions.updateField, (state, { payload }) => {
+    return withFieldSet(state, payload.path, payload.value);
+  })
   .handleAction(
     actions.updateKey,
     produce((draft, { payload }) => {
@@ -76,17 +73,9 @@ const reducer = createReducer<FirestoreMap, Action>({})
       }
     })
   )
-  .handleAction(
-    actions.deleteField,
-    produce((draft, { payload }) => {
-      const parent = get(draft, getParentPath(payload)) || draft;
-      if (isMap(parent)) {
-        delete parent[lastFieldName(payload)];
-      } else if (isArray(parent)) {
-        parent.splice(Number(lastFieldName(payload)), 1);
-      }
-    })
-  );
+  .handleAction(actions.deleteField, (state, { payload }) => {
+    return withFieldRemoved(state, payload);
+  });
 
 function exhaustiveCheck(param: never): never {
   throw new Error(`Unknown FieldType: ${param}`);
