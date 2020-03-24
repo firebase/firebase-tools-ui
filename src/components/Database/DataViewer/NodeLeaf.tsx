@@ -18,24 +18,24 @@ import './NodeLeaf.scss';
 
 import { IconButton } from '@rmwc/icon-button';
 import { Tooltip } from '@rmwc/tooltip';
-import { Typography } from '@rmwc/typography';
 import * as React from 'react';
 import { useState } from 'react';
 
-import { getDbRootUrl } from './common/view_model';
 import { EditNode } from './EditNode';
+import { NodeLink } from './NodeLink';
 import { ValueDisplay } from './ValueDisplay';
 
 export interface Props {
   realtimeRef: firebase.database.Reference;
   value: string | boolean | number;
+  baseUrl: string;
 }
 
 export const NodeLeaf = React.memo<Props>(function NodeLeaf$({
   value,
   realtimeRef,
+  baseUrl,
 }) {
-  const key = realtimeRef.key || getDbRootUrl(realtimeRef);
   const [isEditing, setIsEditing] = useState(false);
   const toggleEditing = () => {
     setIsEditing(!isEditing);
@@ -59,7 +59,8 @@ export const NodeLeaf = React.memo<Props>(function NodeLeaf$({
         />
       )}
       <div className="NodeLeaf__key">
-        <Typography use="body1">{key}:</Typography>{' '}
+        <NodeLink dbRef={realtimeRef} baseUrl={baseUrl} />
+        {': '}
         <ValueDisplay use="body1" value={value} onClick={toggleEditing} />
       </div>
       <span className="NodeLeaf__actions">

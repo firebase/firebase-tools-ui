@@ -15,6 +15,8 @@
  */
 
 import { firestore } from 'firebase';
+import produce from 'immer';
+import get from 'lodash.get';
 
 import {
   FieldType,
@@ -59,15 +61,15 @@ export function getFieldType(value: FirestoreAny): FieldType {
     return FieldType.BLOB;
   }
 
-  if (typeof value.valueOf() === 'object') {
+  if (typeof value === 'object') {
     return FieldType.MAP;
   }
 
-  return typeof value.valueOf() as FieldType;
+  return typeof value as FieldType;
 }
 
 export function isBoolean(value: FirestoreAny): value is boolean {
-  return typeof value?.valueOf() === 'boolean';
+  return typeof value === 'boolean';
 }
 
 export function isReference(
@@ -81,11 +83,11 @@ export function isTimestamp(value: FirestoreAny): value is firestore.Timestamp {
 }
 
 export function isString(value: FirestoreAny): value is string {
-  return typeof value?.valueOf() === 'string';
+  return typeof value === 'string';
 }
 
 export function isNumber(value: FirestoreAny): value is number {
-  return typeof value?.valueOf() === 'number';
+  return typeof value === 'number';
 }
 
 export function isGeoPoint(value: FirestoreAny): value is firestore.GeoPoint {
@@ -103,3 +105,31 @@ export function isArray(value: any): value is FirestoreArray {
 export function isPrimitive(value: any): value is FirestorePrimitive {
   return !isMap(value) && !isArray(value);
 }
+
+/*
+  Return a copy of base with the field (specified by path) updated to value.
+  This function also works with array elements. base is never modified.
+*/
+export const withFieldSet = produce((draft, path: string[], value: any) => {
+  const parent = get(draft, getParentPath(path)) || draft;
+  if (isMap(parent)) {
+    parent[lastFieldName(path)] = value;
+  } else if (isArray(parent)) {
+    parent[Number(lastFieldName(path))] = value;
+  } else {
+    return value;
+  }
+});
+
+/*
+  Return a copy of base with the field (specified by path) deleted.
+  This function also works with removing array elements. base is never modified.
+*/
+export const withFieldRemoved = produce((draft, path: string[]) => {
+  const parent = get(draft, getParentPath(path)) || draft;
+  if (isMap(parent)) {
+    delete parent[lastFieldName(path)];
+  } else if (isArray(parent)) {
+    parent.splice(Number(lastFieldName(path)), 1);
+  }
+});

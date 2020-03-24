@@ -14,22 +14,21 @@
  * limitations under the License.
  */
 
-@import-normalize;
-
-* {
-  box-sizing: border-box;
-}
-
-@import './components/common/color';
-@import './components/common/material-overrides';
-
-body {
-  margin: 0;
-  font-family: Roboto, 'Helvetica Neue', sans-serif;
+@mixin icon($content, $size: 24px) {
+  -webkit-font-feature-settings: 'liga';
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-code {
-  font-family: 'Roboto Mono', monospace;
+  content: $content;
+  direction: ltr;
+  display: inline-block;
+  font-family: 'Material Icons';
+  font-size: $size;
+  font-style: normal;
+  font-weight: normal;
+  left: 0;
+  letter-spacing: normal;
+  line-height: $size;
+  position: absolute;
+  text-transform: none;
+  white-space: nowrap;
+  word-wrap: normal;
 }
