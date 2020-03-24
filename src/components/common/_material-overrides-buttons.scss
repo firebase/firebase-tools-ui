@@ -91,6 +91,7 @@ $FOCUS_OUTLINE_THICKNESS: 2px;
     &:before,
     &:after {
       background-color: $bgColorHoverFocus;
+      opacity: 0;
     }
 
     &:hover {
