@@ -21,21 +21,21 @@ export function fakeReference({
   path = '',
   data = null as any,
 } = {}): database.Reference {
-  const ref = ({
+  return ({
     key,
     path,
     parent: jest.fn(),
-    child: (path: string) =>
+    child: jest.fn((path: string) =>
       fakeReference({
         key: path,
         path: `${path}/${path}`,
-      }),
+      })
+    ),
     update: jest.fn(),
     set: jest.fn(),
     remove: jest.fn(),
     once: jest.fn(),
   } as unknown) as database.Reference;
-  return ref;
 }
 
 export function fakeSnapshot({
