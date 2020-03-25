@@ -14,27 +14,107 @@
  * limitations under the License.
  */
 
-import { act, render } from '@testing-library/react';
+import { act, fireEvent, render, wait } from '@testing-library/react';
 import React from 'react';
 
 import { fakeReference, fakeSnapshot } from '../testing/models';
 import { CloneDialog } from './CloneDialog';
 
-it('shows a title with the key to clone', () => {
-  let onComplete = jest.fn();
-  const ref = fakeReference({ key: 'to_clone', path: 'a/b/c' });
+const setup = () => {
+  const onComplete = jest.fn();
+  const parent = fakeReference({ key: 'parent', path: 'parent' });
+  const ref = fakeReference({ key: 'to_clone', path: 'parent/to_clone' });
+  ref.parent = parent;
+  ref.child.mockReturnValue(ref);
+
+  parent.child.mockReturnValue(ref);
+
   const snapshot = fakeSnapshot({
     key: 'to_clone',
     ref,
-    data: { a: true, b: 'true' },
+    data: { bool: true, number: 1234, string: 'a string', json: { a: 'b' } },
   });
   ref.once.mockResolvedValue(snapshot);
-
-  const { getByText, queryByText } = render(
+  const { getByText, getByLabelText, getByTestId } = render(
     <CloneDialog isOpen={true} onComplete={onComplete} realtimeRef={ref} />
   );
+  return { ref, parent, onComplete, getByLabelText, getByText, getByTestId };
+};
+
+it('shows a title with the key to clone', async () => {
+  const { getByText } = setup();
+  await wait();
 
   expect(getByText(/Clone "to_clone"/)).not.toBeNull();
-  // expect(queryByText(/Loading documents/)).toBeNull();
-  // expect(getByText(/cool-doc-1/)).not.toBeNull();
+});
+
+it('defaults the new key field to <key>_copy', async () => {
+  const { getByLabelText } = setup();
+
+  await wait();
+
+  expect(getByLabelText(/New key:/).value).toBe('to_clone_copy');
+});
+
+it('contains an input and json value for each field', async () => {
+  const { getByLabelText } = setup();
+
+  await wait();
+
+  expect(getByLabelText(/bool:/).value).toBe('true');
+  expect(getByLabelText(/number:/).value).toBe('1234');
+  expect(getByLabelText(/string:/).value).toBe('"a string"');
+  expect(getByLabelText(/json:/).value).toBe('{"a":"b"}');
+});
+
+it('sets the data when the dialog is accepted', async () => {
+  const { ref, parent, getByText } = setup();
+
+  await wait();
+
+  act(() => {
+    fireEvent.submit(getByText('Clone'));
+  });
+
+  expect(parent.child).toHaveBeenCalledWith('to_clone_copy');
+  expect(ref.set).toHaveBeenCalledWith({
+    bool: true,
+    number: 1234,
+    string: 'a string',
+    json: { a: 'b' },
+  });
+});
+
+it('calls onComplete with new key value when accepted', async () => {
+  const { getByText, onComplete } = setup();
+
+  await wait();
+
+  act(() => {
+    fireEvent.submit(getByText('Clone'));
+  });
+
+  expect(onComplete).toHaveBeenCalledWith('to_clone_copy');
+});
+
+it('does not set data when the dialog is cancelled', async () => {
+  const { ref, getByText } = setup();
+
+  await wait();
+
+  act(() => {
+    getByText('Cancel').click();
+  });
+
+  expect(ref.set).not.toHaveBeenCalled();
+});
+
+it('calls onComplete with undefined when cancelled', async () => {
+  const { getByText, onComplete } = setup();
+
+  await wait();
+
+  act(() => getByText('Cancel').click());
+
+  expect(onComplete).toHaveBeenCalledWith();
 });
