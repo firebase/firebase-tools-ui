@@ -17,7 +17,7 @@
 import { act, fireEvent, render, wait } from '@testing-library/react';
 import React from 'react';
 
-import { fakeReference, fakeSnapshot } from '../testing/models';
+import { fakeReference } from '../testing/models';
 import { CloneDialog } from './CloneDialog';
 
 const setup = () => {
@@ -33,7 +33,7 @@ const setup = () => {
   parent.child.mockReturnValue(ref);
 
   const { getByText, getByLabelText, getByTestId } = render(
-    <CloneDialog isOpen={true} onComplete={onComplete} realtimeRef={ref} />
+    <CloneDialog onComplete={onComplete} realtimeRef={ref} />
   );
   return { ref, parent, onComplete, getByLabelText, getByText, getByTestId };
 };
