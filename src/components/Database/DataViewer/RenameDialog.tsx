@@ -22,7 +22,6 @@ import {
   DialogTitle,
 } from '@rmwc/dialog';
 import { TextField } from '@rmwc/textfield';
-import { Theme } from '@rmwc/theme';
 import * as React from 'react';
 import { useState } from 'react';
 
@@ -80,9 +79,9 @@ export const RenameDialog = React.memo<Props>(function RenameDialog$({
           </div>
         </DialogContent>
         <DialogActions>
-          <Theme use={['textSecondaryOnBackground']} wrap>
-            <DialogButton action="close">Cancel</DialogButton>
-          </Theme>
+          <DialogButton action="close" type="button" theme="secondary">
+            Cancel
+          </DialogButton>
           <DialogButton type="submit" unelevated>
             Rename
           </DialogButton>

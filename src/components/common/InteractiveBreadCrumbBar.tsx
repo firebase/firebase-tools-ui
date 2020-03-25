@@ -86,7 +86,7 @@ export const InteractiveBreadCrumbBar: React.FC<Props> = ({
                 use="body2"
                 className="InteractiveBreadCrumbBar-prefix"
                 tag="code"
-                theme="textSecondaryOnBackground"
+                theme="secondary"
               >
                 {inputPrefix}
               </Typography>
@@ -105,7 +105,7 @@ export const InteractiveBreadCrumbBar: React.FC<Props> = ({
               type="button"
               icon="close"
               onClick={handleCancel}
-              theme="textSecondaryOnLight"
+              theme="secondary"
             />
           </form>
         </Elevation>
