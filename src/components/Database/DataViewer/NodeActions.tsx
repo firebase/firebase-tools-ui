@@ -162,7 +162,7 @@ export const NodeActions = React.memo<Props>(function NodeActions$({
             onCancel={() => setShowQueryUi(false)}
           />
         )}
-        {!isRoot && cloneDialogIsOpen && (
+        {cloneDialogIsOpen && (
           <CloneDialog
             realtimeRef={realtimeRef}
             onComplete={() => setCloneDialogIsOpen(false)}
