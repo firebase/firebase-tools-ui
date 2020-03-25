@@ -67,10 +67,28 @@ it('contains an input and json value for each field', async () => {
   expect(getByLabelText(/json:/).value).toBe('{"a":"b"}');
 });
 
-it('sets the data when the dialog is accepted', async () => {
-  const { ref, parent, getByText } = setup();
+it('clones dialog data when the dialog is accepted', async () => {
+  const { ref, parent, getByText, getByLabelText } = setup();
 
   await wait();
+
+  act(() => {
+    fireEvent.change(getByLabelText('string:'), {
+      target: { value: '"new string"' },
+    });
+  });
+
+  act(() => {
+    fireEvent.change(getByLabelText('number:'), {
+      target: { value: '12' },
+    });
+  });
+
+  act(() => {
+    fireEvent.change(getByLabelText('json:'), {
+      target: { value: '{"x": "y"}' },
+    });
+  });
 
   act(() => {
     fireEvent.submit(getByText('Clone'));
@@ -79,9 +97,9 @@ it('sets the data when the dialog is accepted', async () => {
   expect(parent.child).toHaveBeenCalledWith('to_clone_copy');
   expect(ref.set).toHaveBeenCalledWith({
     bool: true,
-    number: 1234,
-    string: 'a string',
-    json: { a: 'b' },
+    number: 12,
+    string: 'new string',
+    json: { x: 'y' },
   });
 });
 
