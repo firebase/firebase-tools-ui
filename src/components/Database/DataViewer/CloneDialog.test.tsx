@@ -23,18 +23,15 @@ import { CloneDialog } from './CloneDialog';
 const setup = () => {
   const onComplete = jest.fn();
   const parent = fakeReference({ key: 'parent', path: 'parent' });
-  const ref = fakeReference({ key: 'to_clone', path: 'parent/to_clone' });
-  ref.parent = parent;
-  ref.child.mockReturnValue(ref);
-
-  parent.child.mockReturnValue(ref);
-
-  const snapshot = fakeSnapshot({
+  const ref = fakeReference({
+    parent,
     key: 'to_clone',
-    ref,
+    path: 'parent/to_clone',
     data: { bool: true, number: 1234, string: 'a string', json: { a: 'b' } },
   });
-  ref.once.mockResolvedValue(snapshot);
+  ref.child.mockReturnValue(ref);
+  parent.child.mockReturnValue(ref);
+
   const { getByText, getByLabelText, getByTestId } = render(
     <CloneDialog isOpen={true} onComplete={onComplete} realtimeRef={ref} />
   );

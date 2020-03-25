@@ -20,21 +20,21 @@ export function fakeReference({
   key = null as string | null,
   path = '',
   data = null as any,
+  parent = null as firebase.database.Reference | null,
 } = {}): database.Reference {
   return ({
     key,
     path,
-    parent: jest.fn(),
-    child: jest.fn((path: string) =>
-      fakeReference({
-        key: path,
-        path: `${path}/${path}`,
-      })
-    ),
+    parent,
+    child: jest.fn((path: string) => {
+      const paths = path.split('/');
+      const key = paths[paths.length - 1];
+      return fakeReference({ key, path: `${path}/${path}` });
+    }),
     update: jest.fn(),
     set: jest.fn(),
     remove: jest.fn(),
-    once: jest.fn(),
+    once: jest.fn((event: string) => fakeSnapshot({ key, data })),
   } as unknown) as database.Reference;
 }
 
