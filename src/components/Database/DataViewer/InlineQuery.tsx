@@ -146,10 +146,10 @@ export const InlineQuery = React.memo<Props>(function InlineQuery$({
             />
           )}
           <CardActionButton
+            theme="secondary"
             type="button"
             label="Cancel"
             onClick={() => onCancel && onCancel()}
-            theme="textSecondaryOnBackground"
           />
           <CardActionButton unelevated type="submit" label="Search" />
         </CardActionButtons>

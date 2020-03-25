@@ -24,7 +24,6 @@ import {
   DialogTitle,
 } from '@rmwc/dialog';
 import { TextField } from '@rmwc/textfield';
-import { Theme } from '@rmwc/theme';
 import { firestore } from 'firebase';
 import React, { useState } from 'react';
 
@@ -133,9 +132,9 @@ export const AddCollectionDialog: React.FC<Props> = ({
       </DialogContent>
 
       <DialogActions>
-        <Theme use={['textSecondaryOnBackground']} wrap>
-          <DialogButton action="close">Cancel</DialogButton>
-        </Theme>
+        <DialogButton action="close" type="button" theme="secondary">
+          Cancel
+        </DialogButton>
         {step === Step.DOCUMENT ? (
           <DialogButton unelevated action="accept" isDefaultAction>
             Save

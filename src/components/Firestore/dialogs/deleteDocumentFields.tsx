@@ -16,7 +16,6 @@
 
 import { DialogButton } from '@rmwc/dialog';
 import { TextField } from '@rmwc/textfield';
-import { Theme } from '@rmwc/theme';
 import { firestore } from 'firebase';
 import React from 'react';
 
@@ -46,9 +45,9 @@ export const promptDeleteDocumentFields = (
     cancelLabel: null,
     footer: (
       <>
-        <Theme use={['textSecondaryOnBackground']} wrap>
-          <DialogButton action="close">Cancel</DialogButton>
-        </Theme>
+        <DialogButton action="close" type="button" theme="secondary">
+          Cancel
+        </DialogButton>
         <DialogButton unelevated action="accept" isDefaultAction danger>
           Delete
         </DialogButton>
