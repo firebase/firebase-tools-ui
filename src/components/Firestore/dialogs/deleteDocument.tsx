@@ -15,11 +15,11 @@
  */
 
 import { DialogButton } from '@rmwc/dialog';
-import { TextField } from '@rmwc/textfield';
 import { firestore } from 'firebase';
 import React from 'react';
 
 import { Callout } from '../../common/Callout';
+import { Field } from '../../common/Field';
 import { confirm } from '../../DialogQueue';
 
 export const promptDeleteDocument = (reference: firestore.DocumentReference) =>
@@ -31,10 +31,9 @@ export const promptDeleteDocument = (reference: firestore.DocumentReference) =>
           This will permanently delete all data at this location, including all
           nested data.
         </Callout>
-        <TextField
+        <Field
           label="Document location"
           value={reference.path || '/'}
-          fullwidth
           disabled
         />
       </>

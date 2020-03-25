@@ -14,26 +14,16 @@
  * limitations under the License.
  */
 
-@import-normalize;
+.Field {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 4px;
 
-* {
-  box-sizing: border-box;
-}
+  .Field-label {
+    padding-bottom: 8px;
+  }
 
-@import './components/common/color';
-@import './components/common/material-overrides';
-
-body {
-  margin: 0;
-  font-family: Roboto, 'Helvetica Neue', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-code {
-  font-family: 'Roboto Mono', monospace;
-}
-
-:root {
-  --fire-color-input-borders: #e0e0e0; // grey 300
+  .Field-tip {
+    height: 16px;
+  }
 }
