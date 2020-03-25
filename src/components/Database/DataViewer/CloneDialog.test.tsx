@@ -38,6 +38,21 @@ const setup = () => {
   return { ref, parent, onComplete, getByLabelText, getByText, getByTestId };
 };
 
+it('fails when trying to clone the root', () => {
+  spyOn(console, 'error'); // hide expected errors
+
+  const rootRef = fakeReference({
+    parent: null,
+    key: null,
+    path: '/',
+    data: {},
+  });
+
+  expect(() =>
+    render(<CloneDialog onComplete={jest.fn()} realtimeRef={rootRef} />)
+  ).toThrow();
+});
+
 it('shows a title with the key to clone', async () => {
   const { getByText } = setup();
   await wait();

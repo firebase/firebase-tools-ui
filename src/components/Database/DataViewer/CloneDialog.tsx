@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { ok } from 'assert';
+
 import {
   Dialog,
   DialogActions,
@@ -45,6 +47,8 @@ export const CloneDialog = React.memo<Props>(function CloneDialog$({
   realtimeRef,
   onComplete,
 }) {
+  ok(realtimeRef.parent, 'Cannot clone the root node!');
+
   const originalKey = realtimeRef.key!;
   const [newKey, setNewKey] = useState('');
 
