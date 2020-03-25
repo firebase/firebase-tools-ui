@@ -41,6 +41,7 @@ export const Field: React.FC<Props> = ({
       <Typography className="Field-tip" use="body2" theme="secondary">
         {tip}
       </Typography>
+      {/* TODO: Error text */}
     </label>
   );
 };
@@ -63,6 +64,7 @@ export const SelectField: React.FC<SelectFieldProps> = ({
       <Typography className="Field-tip" use="body2" theme="secondary">
         {tip}
       </Typography>
+      {/* TODO: Error text */}
     </label>
   );
 };
