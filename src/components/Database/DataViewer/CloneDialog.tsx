@@ -26,6 +26,8 @@ import { Typography } from '@rmwc/typography';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 
+import { Field } from '../../common/Field';
+
 export interface Props {
   realtimeRef: firebase.database.Reference;
   isOpen: boolean;
@@ -88,16 +90,12 @@ export const CloneDialog = React.memo<Props>(function CloneDialog$({
       <form onSubmit={handleSubmit}>
         <DialogTitle>Clone "{originalKey}"</DialogTitle>
         <DialogContent>
-          <div>
-            <label>
-              New key:
-              <TextField
-                value={newKey}
-                onChange={e => setNewKey((e.target as HTMLInputElement).value)}
-                type="text"
-              />
-            </label>
-          </div>
+          <Field
+            label="New key:"
+            value={newKey}
+            onChange={e => setNewKey((e.target as HTMLInputElement).value)}
+            type="text"
+          />
 
           <Typography use="headline6">Data</Typography>
           {isLoading
