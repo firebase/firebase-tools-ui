@@ -21,9 +21,10 @@ import {
   DialogContent,
   DialogTitle,
 } from '@rmwc/dialog';
-import { TextField } from '@rmwc/textfield';
 import * as React from 'react';
 import { useState } from 'react';
+
+import { Field } from '../../common/Field';
 
 export interface Props {
   realtimeRef: firebase.database.Reference;
@@ -68,15 +69,13 @@ export const RenameDialog = React.memo<Props>(function RenameDialog$({
       <form onSubmit={onSubmit}>
         <DialogTitle>Rename "{originalKey}"</DialogTitle>
         <DialogContent onSubmit={onSubmit}>
-          <div>
-            <label>New key:</label>
-            <TextField
-              name="newKey"
-              value={form.newKey}
-              onChange={updateField}
-              type="text"
-            />
-          </div>
+          <Field
+            name="newKey"
+            label="New key:"
+            value={form.newKey}
+            onChange={updateField}
+            type="text"
+          />
         </DialogContent>
         <DialogActions>
           <DialogButton action="close" type="button" theme="secondary">
