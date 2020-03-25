@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@import './color';
+
 $input-default-padding: 8px;
 $input-height: 36px;
 
@@ -59,5 +61,11 @@ $mdc-text-field-outlined-hover-border: var(--fire-color-input-borders);
     .mdc-floating-label {
       top: $input-default-padding + 1px; // no var to config
     }
+  }
+}
+.mdc-select--outlined:not(.mdc-select--disabled),
+.mdc-text-field--outlined:not(.mdc-text-field--disabled) {
+  .mdc-notched-outline {
+    background-color: $COLOR_WHITE_PRIMARY;
   }
 }
