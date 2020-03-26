@@ -46,7 +46,7 @@ export const promptDeleteDocument = (reference: firestore.DocumentReference) =>
           Cancel
         </DialogButton>
         <DialogButton unelevated action="accept" isDefaultAction danger>
-          Start delete
+          Delete
         </DialogButton>
       </>
     ),
