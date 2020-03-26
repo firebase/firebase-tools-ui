@@ -33,7 +33,7 @@ const WITH_CHILDREN = [{ id: 'first' }, { id: 'last' }];
 const EMPTY: Array<{ id: string }> = [];
 
 describe('useAutoSelect', () => {
-  describe('at the root', () => {
+  describe('at /firestore', () => {
     it('does not redirect if the list is null', () => {
       const history = createMemoryHistory({ initialEntries: ['/firestore'] });
       render(
@@ -84,9 +84,9 @@ describe('useAutoSelect', () => {
       await wait();
       expect(history.location.pathname).toBe('/firestore/first');
     });
-  }); // at the root
+  }); // at /firestore
 
-  describe('at the first collection level', () => {
+  describe('at /firestore/:collectionId', () => {
     it('does not redirect if the list is null', () => {
       const history = createMemoryHistory({
         initialEntries: ['/firestore/users'],
@@ -143,9 +143,9 @@ describe('useAutoSelect', () => {
       await wait();
       expect(history.location.pathname).toBe('/firestore/users/first');
     });
-  }); // at the first collection level
+  }); // at /firestore/:collectionId
 
-  describe('elsewhere', () => {
+  describe('elsewhere below /firestore/a/b/x', () => {
     it('does not redirect if the list is null', () => {
       const history = createMemoryHistory({
         initialEntries: ['/firestore/users/alice/friends'],
@@ -204,5 +204,60 @@ describe('useAutoSelect', () => {
       await wait();
       expect(history.location.pathname).toBe('/firestore/users/alice/friends');
     });
-  }); // elsewhere
+  }); // elsewhere below /firestore/a/b/x
+
+  describe('other routes', () => {
+    it('does not redirect at /', () => {
+      const history = createMemoryHistory({
+        initialEntries: ['/'],
+      });
+      render(
+        <Router history={history}>
+          <Route path="/">
+            <Test list={EMPTY} />
+          </Route>
+        </Router>
+      );
+      expect(history.location.pathname).toBe('/');
+    });
+    it('does not redirect at /x', () => {
+      const history = createMemoryHistory({
+        initialEntries: ['/x'],
+      });
+      render(
+        <Router history={history}>
+          <Route path="/x">
+            <Test list={EMPTY} />
+          </Route>
+        </Router>
+      );
+      expect(history.location.pathname).toBe('/x');
+    });
+    it('does not redirect at /x/y', () => {
+      const history = createMemoryHistory({
+        initialEntries: ['/x/y'],
+      });
+      render(
+        <Router history={history}>
+          <Route path="/x/y">
+            <Test list={EMPTY} />
+          </Route>
+        </Router>
+      );
+      expect(history.location.pathname).toBe('/x/y');
+    });
+    it('does not redirect at /x/y/z', () => {
+      const history = createMemoryHistory({
+        initialEntries: ['/x/y/z'],
+      });
+      render(
+        <Router history={history}>
+          <Route path="/x/y/z">
+            <Test list={EMPTY} />
+          </Route>
+        </Router>
+      );
+      expect(history.location.pathname).toBe('/x/y/z');
+    });
+  }); // other routes
 });
