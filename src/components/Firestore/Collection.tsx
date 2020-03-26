@@ -22,7 +22,7 @@ import { List, ListItem } from '@rmwc/list';
 import { firestore } from 'firebase';
 import React, { useState } from 'react';
 import { useCollection } from 'react-firebase-hooks/firestore';
-import { NavLink, Redirect, Route, useRouteMatch } from 'react-router-dom';
+import { NavLink, Route, useRouteMatch } from 'react-router-dom';
 
 import {
   AddDocumentDialog,
@@ -30,7 +30,7 @@ import {
 } from './dialogs/AddDocumentDialog';
 import { Document } from './Document';
 import PanelHeader from './PanelHeader';
-import { useAutoSelect } from './utils';
+import { useAutoSelect } from './useAutoSelect';
 
 const NO_DOCS: firestore.QueryDocumentSnapshot<firestore.DocumentData>[] = [];
 
@@ -45,7 +45,7 @@ export const Collection: React.FC<Props> = ({ collection }) => {
   const { url } = useRouteMatch()!;
   // TODO: Fetch missing documents (i.e. nonexistent docs with subcollections).
   const docs = collectionSnapshot ? collectionSnapshot.docs : NO_DOCS;
-  const autoSelectPath = useAutoSelect(docs);
+  const redirectIfAutoSelectable = useAutoSelect(docs);
 
   const addDocument = async (value: AddDocumentDialogValue | null) => {
     if (value && value.id) {
@@ -58,11 +58,7 @@ export const Collection: React.FC<Props> = ({ collection }) => {
 
   return (
     <>
-      {autoSelectPath && (
-        <Route exact path={url}>
-          <Redirect to={autoSelectPath} />
-        </Route>
-      )}
+      {redirectIfAutoSelectable}
       <div className="Firestore-Collection">
         <PanelHeader
           id={collection.id}

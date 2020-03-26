@@ -20,7 +20,7 @@ import { Button } from '@rmwc/button';
 import { List, ListItem } from '@rmwc/list';
 import { firestore } from 'firebase';
 import React, { useEffect, useState } from 'react';
-import { NavLink, Redirect, Route, useRouteMatch } from 'react-router-dom';
+import { NavLink, useRouteMatch } from 'react-router-dom';
 
 import DatabaseApi from './api';
 import { useApi } from './ApiContext';
@@ -28,7 +28,7 @@ import {
   AddCollectionDialog,
   AddCollectionDialogValue,
 } from './dialogs/AddCollectionDialog';
-import { useAutoSelect } from './utils';
+import { useAutoSelect } from './useAutoSelect';
 
 export interface Props {
   reference?: firestore.DocumentReference;
@@ -38,7 +38,7 @@ export const CollectionList: React.FC<Props> = ({ reference }) => {
   const { url } = useRouteMatch()!;
   const api = useApi();
   const collections = useCollections(api, reference);
-  const autoSelectPath = useAutoSelect(collections);
+  const redirectIfAutoSelectable = useAutoSelect(collections);
 
   const [isAddCollectionDialogOpen, setAddCollectionDialogOpen] = useState(
     false
@@ -56,11 +56,7 @@ export const CollectionList: React.FC<Props> = ({ reference }) => {
 
   return (
     <div className="Firestore-CollectionList" data-testid="collection-list">
-      {autoSelectPath && (
-        <Route exact path={url}>
-          <Redirect to={autoSelectPath} />
-        </Route>
-      )}
+      {redirectIfAutoSelectable}
 
       {isAddCollectionDialogOpen && (
         <AddCollectionDialog
