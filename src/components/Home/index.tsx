@@ -91,7 +91,7 @@ export const Home: React.FC<Props> = ({ config }) => {
               <EmulatorCard
                 name="Firestore Emulator"
                 port={config.config.firestore.port}
-                linkTo="/firestore"
+                linkTo="/firestore/data"
               />
             )}
           </GridInner>

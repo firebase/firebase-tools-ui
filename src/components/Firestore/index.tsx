@@ -47,7 +47,7 @@ export const Firestore: React.FC<Props> = ({ config, projectId }) => {
   const history = useHistory();
 
   // TODO: do something better here!
-  const path = location.pathname.replace(/^\/firestore/, '');
+  const path = location.pathname.replace(/^\/firestore\/data/, '');
 
   useEffect(() => {
     if (!config || !projectId) return;
@@ -71,7 +71,7 @@ export const Firestore: React.FC<Props> = ({ config, projectId }) => {
   }
 
   function handleNavigate(path: string) {
-    history.push(`/firestore/${path}`);
+    history.push(`/firestore/data/${path}`);
   }
 
   return (
@@ -87,7 +87,7 @@ export const Firestore: React.FC<Props> = ({ config, projectId }) => {
         <Elevation z="2" wrap>
           <Card className="Firestore-panels-wrapper">
             <InteractiveBreadCrumbBar
-              base="/firestore"
+              base="/firestore/data"
               path={path}
               onNavigate={handleNavigate}
             />
