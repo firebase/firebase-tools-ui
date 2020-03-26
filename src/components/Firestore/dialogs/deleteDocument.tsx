@@ -24,19 +24,18 @@ import { confirm } from '../../DialogQueue';
 
 export const promptDeleteDocument = (reference: firestore.DocumentReference) =>
   confirm({
-    title: 'Delete data',
+    title: 'Delete document',
     body: (
-      <>
+      <div className="Firestore--dialog-body">
         <Callout aside type="warning">
-          This will permanently delete all data at this location, including all
-          nested data.
+          This will permanently delete the document
         </Callout>
         <Field
           label="Document location"
           value={reference.path || '/'}
           disabled
         />
-      </>
+      </div>
     ),
     // hide standard buttons so as to use `danger` button
     acceptLabel: null,

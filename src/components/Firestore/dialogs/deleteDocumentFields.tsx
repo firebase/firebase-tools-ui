@@ -28,7 +28,7 @@ export const promptDeleteDocumentFields = (
   confirm({
     title: 'Delete data',
     body: (
-      <>
+      <div className="Firestore--dialog-body">
         <Callout aside type="warning">
           This will delete all fields of the document, excluding subcollections.
         </Callout>
@@ -38,7 +38,7 @@ export const promptDeleteDocumentFields = (
           fullwidth
           disabled
         />
-      </>
+      </div>
     ),
     // hide standard buttons so as to use `danger` button
     acceptLabel: null,
