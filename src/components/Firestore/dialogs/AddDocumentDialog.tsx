@@ -23,11 +23,10 @@ import {
   DialogProps,
   DialogTitle,
 } from '@rmwc/dialog';
-import { TextField } from '@rmwc/textfield';
-import { Theme } from '@rmwc/theme';
 import { firestore } from 'firebase';
 import React, { useCallback, useEffect, useState } from 'react';
 
+import { Field } from '../../common/Field';
 import DocumentEditor from '../DocumentEditor';
 import { FirestoreMap } from '../models';
 
@@ -69,14 +68,14 @@ export const AddDocumentStep: React.FC<AddDocumentStepProps> = ({
 
   return (
     <>
-      <TextField
+      <Field
         id="add-document-path"
         fullwidth
         disabled
         label="Parent path"
         value={collectionRef.path}
       />
-      <TextField
+      <Field
         id="add-document-id"
         fullwidth
         label="Document ID"
@@ -119,9 +118,9 @@ export const AddDocumentDialog: React.FC<Props> = ({
       </DialogContent>
 
       <DialogActions>
-        <Theme use={['textSecondaryOnBackground']} wrap>
-          <DialogButton action="close">Cancel</DialogButton>
-        </Theme>
+        <DialogButton action="close" type="button" theme="secondary">
+          Cancel
+        </DialogButton>
         <DialogButton unelevated action="accept" isDefaultAction>
           Save
         </DialogButton>

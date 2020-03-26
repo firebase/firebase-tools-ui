@@ -15,12 +15,11 @@
  */
 
 import { DialogButton } from '@rmwc/dialog';
-import { TextField } from '@rmwc/textfield';
-import { Theme } from '@rmwc/theme';
 import { firestore } from 'firebase';
 import React from 'react';
 
 import { Callout } from '../../common/Callout';
+import { Field } from '../../common/Field';
 import { confirm } from '../../DialogQueue';
 
 export const promptDeleteDocumentFields = (
@@ -33,7 +32,7 @@ export const promptDeleteDocumentFields = (
         <Callout aside type="warning">
           This will delete all fields of the document, excluding subcollections.
         </Callout>
-        <TextField
+        <Field
           label="Document location"
           value={reference.path || '/'}
           fullwidth
@@ -46,9 +45,9 @@ export const promptDeleteDocumentFields = (
     cancelLabel: null,
     footer: (
       <>
-        <Theme use={['textSecondaryOnBackground']} wrap>
-          <DialogButton action="close">Cancel</DialogButton>
-        </Theme>
+        <DialogButton action="close" type="button" theme="secondary">
+          Cancel
+        </DialogButton>
         <DialogButton unelevated action="accept" isDefaultAction danger>
           Delete
         </DialogButton>

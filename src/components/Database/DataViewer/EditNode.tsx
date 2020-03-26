@@ -22,13 +22,11 @@ import {
   CardActionButtons,
   CardActions,
 } from '@rmwc/card';
-import { TextField } from '@rmwc/textfield';
-import { Theme } from '@rmwc/theme';
-import { Typography } from '@rmwc/typography';
 import keycode from 'keycode';
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
 
+import { Field } from '../../common/Field';
 import { getDbRootUrl, jsonIshValue } from './common/view_model';
 
 export interface Props {
@@ -90,23 +88,17 @@ export const EditNode = React.memo<Props>(function EditNode$({
         onKeyDown={closeOnEsc}
       >
         <div className="EditNode__form-fields">
-          {isAdding ? (
-            <TextField
-              outlined
-              name="keyName"
-              value={form.keyName}
-              onChange={updateFormField}
-              label="key"
-              type="text"
-              inputRef={keyInputRef}
-            />
-          ) : (
-            <Typography use="body1" className="EditNode__key">
-              {keyName}:{' '}
-            </Typography>
-          )}
-          <TextField
-            outlined
+          <Field
+            name="keyName"
+            value={form.keyName}
+            onChange={updateFormField}
+            label="Key"
+            type="text"
+            disabled={!isAdding}
+            inputRef={keyInputRef}
+          />
+          {' = '}
+          <Field
             name="value"
             value={form.value}
             onChange={updateFormField}
@@ -118,14 +110,13 @@ export const EditNode = React.memo<Props>(function EditNode$({
         </div>
         <CardActions className="EditNode__actions">
           <CardActionButtons>
-            <Theme use={['textSecondaryOnBackground']} wrap>
-              <CardActionButton
-                type="button"
-                onClick={() => onClose && onClose()}
-              >
-                Cancel
-              </CardActionButton>
-            </Theme>
+            <CardActionButton
+              theme="secondary"
+              type="button"
+              onClick={() => onClose && onClose()}
+            >
+              Cancel
+            </CardActionButton>
             <CardActionButton unelevated type="submit">
               Save
             </CardActionButton>

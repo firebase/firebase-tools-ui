@@ -30,7 +30,7 @@ export const PanelHeader: React.FC<{ id: string; icon: React.ReactNode }> = ({
   return (
     <div className="Firestore-PanelHeader">
       <CardActionBar>
-        <Theme use={['textSecondaryOnBackground']}>{icon}</Theme>
+        <Theme use="secondary">{icon}</Theme>
         <Typography use="body2" className="Firestore-PanelHeader-title">
           {id}
         </Typography>

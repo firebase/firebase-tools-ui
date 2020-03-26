@@ -15,55 +15,75 @@
  */
 
 import './Database.scss';
-import './DataViewer/index.scss';
 
+import { IconButton } from '@rmwc/icon-button';
+import { ListDivider } from '@rmwc/list';
+import { MenuItem, SimpleMenu } from '@rmwc/menu';
 import * as firebase from 'firebase/app';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 
 import { initDatabase } from '../../firebase';
 import { AppState } from '../../store';
 import { DatabaseConfig } from '../../store/config';
-import { BreadCrumbs } from '../common/BreadCrumbs';
-import { CardActionBar } from '../common/CardActionBar';
+import { InteractiveBreadCrumbBar } from '../common/InteractiveBreadCrumbBar';
 import { NodeContainer } from './DataViewer/NodeContainer';
 
 export interface PropsFromState {
   namespace: string;
+  path?: string;
   config?: DatabaseConfig;
 }
 
 export type Props = PropsFromState;
 
-export const Database: React.FC<Props> = ({ config, namespace }) => {
+const getPrefix = (ref: firebase.database.Reference) => {
+  const base = ref.root.toString();
+  return base.substring(0, base.length - 1);
+};
+
+export const Database: React.FC<Props> = ({ config, namespace, path }) => {
   const [ref, setRef] = useState<firebase.database.Reference | undefined>(
     undefined
   );
+  const history = useHistory();
+
   useEffect(() => {
     if (!config) return;
     const [db, { cleanup }] = initDatabase(config, namespace);
-    setRef(db.ref());
+    setRef(path ? db.ref(path) : db.ref());
     return cleanup;
-  }, [config, namespace, setRef]);
+  }, [config, namespace, path]);
 
-  const doNavigate = useCallback(
-    (path: string) => setRef(ref && ref.root.child(path)),
-    [setRef, ref]
-  );
+  const urlBase = `/database/${namespace}/data`;
+  const handleNavigate = (newPath: string) => {
+    if (newPath.startsWith('/')) {
+      newPath = newPath.substr(1);
+    }
+    history.push(`${urlBase}/${newPath}`);
+  };
 
   return (
     <div className="Database-Database">
-      <CardActionBar>
-        {ref && (
-          <BreadCrumbs
-            base={`/database/${namespace}/data`}
-            path={new URL(ref.toString()).pathname}
-          />
-        )}
-      </CardActionBar>
       {ref ? (
         <>
-          <NodeContainer realtimeRef={ref} isViewRoot onNavigate={doNavigate} />
+          <InteractiveBreadCrumbBar
+            base={urlBase}
+            path={path || '/'}
+            inputPrefix={getPrefix(ref)}
+            onNavigate={handleNavigate}
+          >
+            <SimpleMenu handle={<IconButton icon="more_vert" />}>
+              <MenuItem disabled>Export JSON</MenuItem>
+              <MenuItem disabled>Import JSON</MenuItem>
+              <ListDivider />
+              <MenuItem disabled>Create new database</MenuItem>
+            </SimpleMenu>
+          </InteractiveBreadCrumbBar>
+          <div className="Database-Content">
+            <NodeContainer realtimeRef={ref} isViewRoot baseUrl={urlBase} />
+          </div>
         </>
       ) : (
         <p>Loading</p>

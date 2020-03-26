@@ -31,6 +31,7 @@ import App from './App';
 import { background, primary, secondary } from './colors';
 import configureStore from './configureStore';
 import { fetchRequest as fetchConfigRequest } from './store/config';
+import { error } from './themes';
 
 const store = configureStore();
 
@@ -52,7 +53,15 @@ ReactDOM.render(
     // Globally disable ripples
     ripple={false}
   >
-    <ThemeProvider options={{ background, primary, secondary }}>
+    <ThemeProvider
+      options={{
+        background,
+        primary,
+        primaryRgb: '104, 29, 168',
+        secondary,
+        error,
+      }}
+    >
       <Provider store={store}>
         <RouterWithInit />
       </Provider>

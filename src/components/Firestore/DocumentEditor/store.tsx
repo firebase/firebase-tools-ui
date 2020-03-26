@@ -153,34 +153,9 @@ const reducer = createReducer<State, Action>({ fields: {}, rootFieldIds: [] })
       draft.fields[payload.id].value = payload.value;
     })
   )
-  .handleAction(
-    actions.deleteField,
-    produce((draft, { payload }) => {
-      // Remove the referenced-field and any getDescendantIds
-      for (const id of getDescendantIds(draft.fields, [payload.id])) {
-        delete draft.fields[id];
-      }
-      // Remove reference from parent
-      for (const field of Object.values(draft.fields) as Field[]) {
-        if (
-          (field.type === FieldType.MAP || field.type === FieldType.ARRAY) &&
-          field.childrenIds.includes(payload.id)
-        ) {
-          field.childrenIds.splice(
-            field.childrenIds.findIndex(id => id === payload.id),
-            1
-          );
-        }
-      }
-      // Remove reference from root
-      if (draft.rootFieldIds.includes(payload.id)) {
-        draft.rootFieldIds.splice(
-          draft.rootFieldIds.findIndex((id: number) => id === payload.id),
-          1
-        );
-      }
-    })
-  );
+  .handleAction(actions.deleteField, (state, { payload }) => {
+    return withFieldRemoved(state, payload);
+  });
 
 function exhaustiveCheck(param: never): never {
   throw new Error(`Unknown FieldType: ${param}`);

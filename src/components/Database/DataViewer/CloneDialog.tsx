@@ -22,15 +22,20 @@ import {
   DialogTitle,
 } from '@rmwc/dialog';
 import { TextField } from '@rmwc/textfield';
-import { Theme } from '@rmwc/theme';
 import { Typography } from '@rmwc/typography';
 import * as React from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+
+import { Field } from '../../common/Field';
 
 export interface Props {
   realtimeRef: firebase.database.Reference;
   isOpen: boolean;
-  onComplete: () => void;
+  /**
+   * Called when complete, if the data was cloned the key is returned, else
+   * undefined.
+   */
+  onComplete: (string?: string) => void;
 }
 
 const cloneKey = (key: string, ref: firebase.database.Reference) => {
@@ -46,19 +51,21 @@ export const CloneDialog = React.memo<Props>(function CloneDialog$({
   const [newKey, setNewKey] = useState('');
 
   const [form, setForm] = useState<Record<string, string>>({});
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const loadData = async () => {
-    setIsLoading(true);
-    const snapshot = await realtimeRef.once('value');
-    const data: Record<string, string> = {};
-    Object.entries(snapshot.val()).forEach(([key, val]) => {
-      data[key] = JSON.stringify(val);
-    });
-    setForm(data);
-    setNewKey(cloneKey(originalKey, realtimeRef));
-    setIsLoading(false);
-  };
+  useEffect(() => {
+    const loadData = async () => {
+      const snapshot = await realtimeRef.once('value');
+      const data: Record<string, string> = {};
+      Object.entries(snapshot.val()).forEach(([key, val]) => {
+        data[key] = JSON.stringify(val);
+      });
+      setForm(data);
+      setNewKey(cloneKey(originalKey, realtimeRef));
+      setIsLoading(false);
+    };
+    loadData();
+  }, [setIsLoading, setForm, setNewKey, originalKey, realtimeRef]);
 
   const updateField = (e: React.FormEvent<HTMLInputElement>) => {
     const target = e.target as HTMLInputElement;
@@ -67,51 +74,57 @@ export const CloneDialog = React.memo<Props>(function CloneDialog$({
       [target.name]: target.value,
     });
   };
-  const onSubmit = (e: React.FormEvent<HTMLElement>) => {
+
+  const handleSubmit = (e: React.FormEvent<HTMLElement>) => {
     e.preventDefault();
     const data: Record<string, any> = {};
     Object.entries(form).forEach(([key, value]) => {
       data[key] = JSON.parse(value);
     });
     realtimeRef.parent!.child(newKey).set(data);
-    onComplete();
+    onComplete(newKey);
   };
 
   return (
-    <Dialog open={isOpen} onClose={() => onComplete()} onOpen={loadData}>
-      <form onSubmit={onSubmit}>
+    <Dialog open={isOpen}>
+      <form onSubmit={handleSubmit}>
         <DialogTitle>Clone "{originalKey}"</DialogTitle>
-        <DialogContent onSubmit={onSubmit}>
-          <div>
-            <label>New key:</label>
-            <TextField
-              value={newKey}
-              onChange={e => setNewKey((e.target as HTMLInputElement).value)}
-              type="text"
-            />
-          </div>
+        <DialogContent>
+          <Field
+            label="New key:"
+            value={newKey}
+            onChange={e => setNewKey((e.target as HTMLInputElement).value)}
+            type="text"
+          />
 
           <Typography use="headline6">Data</Typography>
           {isLoading
             ? 'Loading...'
             : Object.entries(form).map(([key, val]) => (
                 <div key={key}>
-                  <label>{key}:</label>
-                  <TextField
-                    name={key}
-                    type="text"
-                    value={val}
-                    onChange={updateField}
-                    placeholder="JSON or simple text"
-                  />
+                  <label>
+                    {key}:
+                    <TextField
+                      name={key}
+                      type="text"
+                      value={val}
+                      onChange={updateField}
+                      placeholder="JSON or simple text"
+                    />
+                  </label>
                 </div>
               ))}
         </DialogContent>
         <DialogActions>
-          <Theme use={['textSecondaryOnBackground']} wrap>
-            <DialogButton action="close">Cancel</DialogButton>
-          </Theme>
-          <DialogButton unelevated type="submit">
+          <DialogButton
+            type="button"
+            action="close"
+            theme="secondary"
+            onClick={() => onComplete()}
+          >
+            Cancel
+          </DialogButton>
+          <DialogButton unelevated action="accept">
             Clone
           </DialogButton>
         </DialogActions>

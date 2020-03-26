@@ -15,8 +15,9 @@
  */
 
 @import './material-components';
+@import './material-overrides-buttons';
+@import './material-overrides-inputs';
 
-@import '@material/button/mixins';
 @import '@material/card/mixins';
 @import '@material/dialog/mixins';
 @import '@material/ripple/mixins';
@@ -29,26 +30,6 @@
 
 .mdc-dialog {
   @include mdc-dialog-shape-radius($BORDER_RADIUS_DIALOG);
-}
-
-.mdc-button {
-  @include mdc-button-shape-radius($BORDER_RADIUS_CARD);
-  text-transform: none;
-
-  &:hover {
-    &::before,
-    &::after,
-    &.mdc-list-item::before,
-    &.mdc-list-item::after {
-      // darker hover for buttons
-      opacity: 0.08;
-    }
-  }
-
-  &.mdc-theme--secondary {
-    // Use secondary hover color for secondary flat buttons.
-    @include mdc-states(secondary);
-  }
 }
 
 :not(.mdc-list--non-interactive) {
@@ -65,4 +46,12 @@
 // https://github.com/material-components/material-components-web/commit/22d7ad2fb1796fbd71a3a5ee9c7ab2e77c60e34e
 .mdc-tab {
   text-transform: none;
+}
+
+.mdc-dialog {
+  @include mdc-dialog-container-fill-color(#fafafa);
+
+  .mdc-dialog__surface {
+    @include mdc-elevation(9);
+  }
 }
