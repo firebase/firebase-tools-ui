@@ -28,7 +28,7 @@ export const promptDeleteDocument = (reference: firestore.DocumentReference) =>
     body: (
       <div className="Firestore--dialog-body">
         <Callout aside type="warning">
-          This will permanently delete the document
+          This will permanently delete the document.
         </Callout>
         <Field
           label="Document location"
