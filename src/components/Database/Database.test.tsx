@@ -18,12 +18,20 @@ import { render } from '@testing-library/react';
 import React from 'react';
 import { MemoryRouter } from 'react-router';
 
+import { DatabaseConfig } from '../../store/config';
 import { Database } from './Database';
 
-it('renders loading when config is not ready', () => {
+const sampleConfig: DatabaseConfig = {
+  host: 'localhost',
+  port: 9000,
+  hostAndPort: 'localhost:9000',
+};
+
+it.skip('renders database content', () => {
+  // TODO: Mock database connection and test data rendering.
   const { getByText } = render(
     <MemoryRouter>
-      <Database namespace="example" config={undefined} />
+      <Database namespace="example" config={sampleConfig} />
     </MemoryRouter>
   );
   expect(getByText('Loading')).not.toBeNull();

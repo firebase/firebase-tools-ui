@@ -16,6 +16,7 @@
 
 import { combineReducers } from 'redux';
 import { all, fork } from 'redux-saga/effects';
+import * as reselect from 'reselect';
 
 import { ConfigState, configReducer, configSaga } from './config';
 import { DatabaseState, databaseReducer, databaseSaga } from './database';
@@ -33,3 +34,9 @@ export const rootReducer = combineReducers<AppState>({
   config: configReducer,
   database: databaseReducer,
 });
+
+export function createStructuredSelector<T>(
+  selectors: { [K in keyof T]: reselect.Selector<AppState, T[K]> }
+) {
+  return reselect.createStructuredSelector<AppState, T>(selectors);
+}

@@ -24,8 +24,10 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 
-import { AppState } from '../../store';
+import { createStructuredSelector } from '../../store';
 import { FirestoreConfig } from '../../store/config';
+import { getFirestoreConfig, getProjectId } from '../../store/config/selectors';
+import { combineData, squash } from '../../store/utils';
 import { CustomThemeProvider } from '../../themes';
 import { InteractiveBreadCrumbBar } from '../common/InteractiveBreadCrumbBar';
 import DatabaseApi from './api';
@@ -33,14 +35,37 @@ import { ApiProvider } from './ApiContext';
 import { promptClearAll } from './dialogs/clearAll';
 import { Root } from './Document';
 
-export interface PropsFromState {
-  config?: FirestoreConfig;
-  projectId?: string;
+export const mapStateToProps = createStructuredSelector({
+  projectIdRemote: getProjectId,
+  configRemote: getFirestoreConfig,
+});
+
+export type PropsFromState = ReturnType<typeof mapStateToProps>;
+
+export const FirestoreRoute: React.FC<PropsFromState> = ({
+  projectIdRemote,
+  configRemote,
+}) => {
+  return squash(combineData([projectIdRemote, configRemote]), {
+    onNone: () => <FirestoreRouteLoading />,
+    onError: () => <FirestoreRouteDisabled />,
+    onData: ([projectId, config]) =>
+      config === undefined ? (
+        <FirestoreRouteDisabled />
+      ) : (
+        <Firestore projectId={projectId} config={config} />
+      ),
+  });
+};
+
+export default connect(mapStateToProps)(FirestoreRoute);
+
+export interface FirestoreProps {
+  config: FirestoreConfig;
+  projectId: string;
 }
 
-export type Props = PropsFromState;
-
-export const Firestore: React.FC<Props> = ({ config, projectId }) => {
+export const Firestore: React.FC<FirestoreProps> = ({ config, projectId }) => {
   const [api, setApi] = useState<DatabaseApi | undefined>(undefined);
   const databaseId = '(default)';
   const location = useLocation();
@@ -50,8 +75,6 @@ export const Firestore: React.FC<Props> = ({ config, projectId }) => {
   const path = location.pathname.replace(/^\/firestore/, '');
 
   useEffect(() => {
-    if (!config || !projectId) return;
-
     const api = new DatabaseApi(projectId, databaseId, config);
     setApi(api);
 
@@ -61,7 +84,7 @@ export const Firestore: React.FC<Props> = ({ config, projectId }) => {
   }, [projectId, config, setApi]);
 
   if (!api) {
-    return <p>Connecting to Firestore...</p>;
+    return <></>;
   }
 
   async function handleClearData(api: DatabaseApi) {
@@ -101,9 +124,12 @@ export const Firestore: React.FC<Props> = ({ config, projectId }) => {
   );
 };
 
-export const mapStateToProps = ({ config }: AppState) => ({
-  config: config.config && config.config.firestore,
-  projectId: config.config && config.config.projectId,
-});
+export const FirestoreRouteLoading: React.FC = () => (
+  // TODO
+  <div>Loading...</div>
+);
 
-export default connect(mapStateToProps)(Firestore);
+export const FirestoreRouteDisabled: React.FC = () => (
+  // TODO
+  <div>The Firestore Emulator is currently off.</div>
+);

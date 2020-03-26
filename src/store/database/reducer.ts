@@ -26,20 +26,26 @@ import {
 import { DatabaseState } from './types';
 
 export const databaseReducer = createReducer<DatabaseState, Action>({
-  databases: { fetching: false },
+  databases: { loading: false },
   databasesSubscribed: false,
 })
   .handleAction(databasesFetchRequest, (props, _) => ({
     ...props,
-    databases: { fetching: true, databases: props.databases.databases },
+    databases: { loading: true, result: props.databases.result },
   }))
   .handleAction(databasesFetchSuccess, (props, { payload }) => {
     const databases = [...payload];
     databases.sort((db1, db2) => db1.name.localeCompare(db2.name));
-    return { ...props, databases: { fetching: false, databases } };
+    return {
+      ...props,
+      databases: { loading: false, result: { data: databases } },
+    };
   })
   .handleAction(databasesFetchError, (props, { payload }) => {
-    return { ...props, databases: { fetching: false, error: payload } };
+    return {
+      ...props,
+      databases: { loading: false, result: { error: payload } },
+    };
   })
   .handleAction(databasesSubscribe, (props, _) => {
     return { ...props, databasesSubscribed: true };
