@@ -16,12 +16,19 @@
 
 import { TextField } from '@rmwc/textfield';
 import React, { useEffect, useState } from 'react';
+import { Controller, ErrorMessage, useFormContext } from 'react-hook-form';
 
 const NumberEditor: React.FC<{
   value: number;
   onChange: (value: number) => void;
-}> = ({ value, onChange }) => {
+  name: string;
+}> = ({ value, onChange, name }) => {
   const [number, setNumber] = useState(String(value));
+  const {
+    errors,
+    formState: { touched },
+    getValues,
+  } = useFormContext();
 
   useEffect(() => {
     const num = parseFloat(number);
@@ -30,14 +37,39 @@ const NumberEditor: React.FC<{
     }
   }, [number, onChange]);
 
+  console.log({ errors, touched, values: getValues() });
+  console.log(errors[name]);
+
   return (
-    <TextField
-      label="Value"
-      outlined
-      type="number"
-      value={number}
-      onChange={e => setNumber(e.currentTarget.value)}
-    />
+    //<TextField
+    //  label="Value"
+    //  outlined
+    //  type="string"
+    //  value={number}
+    //  onChange={(e) => setNumber(e.currentTarget.value)}
+    ///>
+    <>
+      <Controller
+        as={TextField}
+        name={name}
+        defaultValue={number}
+        onChange={([e]) => {
+          // console.log(e);
+          // Continue validation while updating the document-store
+          // setNumber(e.currentTarget.value);
+          // dispatch(actions.updateName({ id, name: e.currentTarget.value }));
+          return e;
+        }}
+        rules={{
+          required: 'This is really required',
+          // validate: (value) => value === '1',
+        }}
+        outlined
+        label="Value"
+        invalid={touched[name] && errors[name]}
+      />
+      <ErrorMessage errors={errors} name={name} />
+    </>
   );
 };
 

@@ -17,10 +17,15 @@
 import { firestore } from 'firebase';
 import produce from 'immer';
 import get from 'lodash.get';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Action, createReducer } from 'typesafe-actions';
 
-import { FieldType, FirestoreAny, FirestoreMap } from '../models';
+import {
+  FieldType,
+  FirestoreAny,
+  FirestoreArray,
+  FirestoreMap,
+} from '../models';
 import {
   getFieldType,
   getParentPath,
@@ -217,10 +222,30 @@ const DocumentDispatchContext = React.createContext<React.Dispatch<
   Action
 > | null>(null);
 
-export function useDocumentState(): Field[] {
+export function useSdkMap(): FirestoreMap {
   const context = React.useContext(DocumentStateContext);
   if (context === undefined) {
-    throw new Error('useDocumentState must be used within a DocumentProvider');
+    throw new Error('useSdkMap must be used within a DocumentProvider');
+  }
+
+  const rootFields = useRootFields();
+
+  const sdkMap = useMemo(
+    () =>
+      rootFields.reduce((acc, field) => {
+        acc[field.name] = denormalizeField(field, context)[field.name];
+        return acc;
+      }, {} as { [name: string]: FirestoreAny }),
+    [context]
+  );
+
+  return sdkMap;
+}
+
+export function useRootFields(): Field[] {
+  const context = React.useContext(DocumentStateContext);
+  if (context === undefined) {
+    throw new Error('useRootFields must be used within a DocumentProvider');
   }
   return context.rootFieldIds.reduce(
     (acc, id) => [...acc, context.fields[id]],
@@ -250,7 +275,7 @@ export const DocumentProvider: React.FC<{ value: FirestoreMap }> = ({
   value = {},
   children,
 }) => {
-  const [state, dispatch] = React.useReducer(reducer, sdkToFields(value));
+  const [state, dispatch] = React.useReducer(reducer, sdkToState(value));
 
   return (
     <DocumentStateContext.Provider value={state}>
@@ -261,8 +286,33 @@ export const DocumentProvider: React.FC<{ value: FirestoreMap }> = ({
   );
 };
 
-function sdkToFields(sdk: FirestoreMap): State {
-  console.log({ sdk });
+function denormalizeField(field: Field, state: State): FirestoreMap {
+  if (field.type === FieldType.MAP) {
+    return {
+      [field.name]: field.childrenIds.reduce((acc, id) => {
+        const childField = state.fields[id];
+        acc[childField.name] = denormalizeField(childField, state)[
+          childField.name
+        ];
+        return acc;
+      }, {} as FirestoreMap),
+    };
+  }
+  if (field.type === FieldType.ARRAY) {
+    return {
+      [field.name]: field.childrenIds.reduce((acc, id) => {
+        const childField = state.fields[id];
+        if (childField.type !== FieldType.ARRAY) {
+          acc.push(denormalizeField(childField, state)[childField.name] as any);
+        }
+        return acc;
+      }, [] as FirestoreArray),
+    };
+  }
+  return { [field.name]: field.value };
+}
+
+function sdkToState(sdk: FirestoreMap): State {
   const fields: { [id: number]: Field } = {};
   const rootFieldIds = [];
   for (const [key, value] of Object.entries(sdk)) {

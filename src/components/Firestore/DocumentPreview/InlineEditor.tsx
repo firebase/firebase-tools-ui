@@ -28,9 +28,11 @@ const InlineEditor: React.FC<{
   onSave: (key: string, value: FirestoreAny) => void;
   areRootKeysMutable: boolean;
 }> = ({ value, onCancel, onSave, areRootKeysMutable }) => {
-  const [internalValue, setInternalValue] = useState(value);
+  const [internalValue, setInternalValue] = useState<
+    FirestoreMap | undefined
+  >();
 
-  function handleChange(value: FirestoreMap) {
+  function handleChange(value: FirestoreMap | undefined) {
     setInternalValue(value);
   }
 
@@ -41,7 +43,9 @@ const InlineEditor: React.FC<{
 
   function handleSave(e: React.MouseEvent<HTMLButtonElement>) {
     e.stopPropagation();
-    onSave(Object.keys(internalValue)[0], Object.values(internalValue)[0]);
+    if (internalValue) {
+      onSave(Object.keys(internalValue)[0], Object.values(internalValue)[0]);
+    }
   }
 
   return (

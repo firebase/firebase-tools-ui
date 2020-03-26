@@ -19,7 +19,14 @@ import './index.scss';
 import { IconButton } from '@rmwc/icon-button';
 import { Select } from '@rmwc/select';
 import { TextField } from '@rmwc/textfield';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import {
+  Controller,
+  ErrorMessage,
+  FormContext,
+  useForm,
+  useFormContext,
+} from 'react-hook-form';
 
 import {
   FieldType,
@@ -48,8 +55,9 @@ import ReferenceEditor from './ReferenceEditor';
 import {
   DocumentProvider,
   useDocumentDispatch,
-  useDocumentState,
   useFieldState,
+  useRootFields,
+  useSdkMap,
 } from './store';
 import StringEditor from './StringEditor';
 import TimestampEditor from './TimestampEditor';
@@ -81,7 +89,7 @@ export function supportsEditing(value: FirestoreAny): boolean {
  */
 const DocumentEditor: React.FC<{
   value: FirestoreMap;
-  onChange?: (value: FirestoreMap) => void;
+  onChange?: (value?: FirestoreMap) => void;
   areRootKeysMutable?: boolean;
   areRootFieldsMutable?: boolean;
 }> = ({
@@ -90,14 +98,18 @@ const DocumentEditor: React.FC<{
   areRootKeysMutable = true,
   areRootFieldsMutable = true,
 }) => {
+  const methods = useForm({ mode: 'onChange' });
+
   return (
-    <DocumentProvider value={value}>
-      <RootEditor
-        onChange={onChange}
-        areRootKeysMutable={areRootKeysMutable}
-        areRootFieldsMutable={areRootFieldsMutable}
-      />
-    </DocumentProvider>
+    <FormContext {...methods}>
+      <DocumentProvider value={value}>
+        <RootEditor
+          onChange={onChange}
+          areRootKeysMutable={areRootKeysMutable}
+          areRootFieldsMutable={areRootFieldsMutable}
+        />
+      </DocumentProvider>
+    </FormContext>
   );
 };
 
@@ -106,16 +118,29 @@ const DocumentEditor: React.FC<{
  * the implicit top-level map.
  */
 const RootEditor: React.FC<{
-  onChange?: (value: FirestoreMap) => void;
+  onChange?: (value?: FirestoreMap) => void;
   areRootKeysMutable: boolean;
   areRootFieldsMutable: boolean;
 }> = ({ onChange, areRootKeysMutable, areRootFieldsMutable }) => {
-  const rootFields = useDocumentState();
+  const rootFields = useRootFields();
   const dispatch = useDocumentDispatch()!;
+  const sdkMap = useSdkMap();
+  const { watch, triggerValidation } = useFormContext();
 
-  //  useEffect(() => {
-  //    // onChange && onChange(state);
-  //  }, [onChange, rootFieldIds]);
+  useEffect(() => {
+    async function validate() {
+      if (onChange) {
+        const valid = await triggerValidation();
+        if (valid) {
+          onChange(sdkMap);
+        } else {
+          onChange();
+        }
+      }
+    }
+
+    validate();
+  }, [onChange, sdkMap]);
 
   return (
     <div className="RootEditor">
@@ -149,22 +174,44 @@ const FieldEditor: React.FC<{
 }> = ({ id }) => {
   const state = useFieldState(id);
   const dispatch = useDocumentDispatch()!;
+  const {
+    errors,
+    setValue,
+    register,
+    unregister,
+    triggerValidation,
+    formState: { dirty, touched },
+    reset,
+    getValues,
+    control,
+  } = useFormContext();
 
   function handleEditValue(value: FirestorePrimitive) {
     dispatch(actions.updateValue({ id, value }));
   }
 
+  const nameInputName = `${id}-name`;
+  const valueInputName = `${id}-value`;
+
+  console.log({ errors });
+
   return (
     <>
       <div className="FieldEditor">
         {/* Name editor */}
-        <TextField
-          onChange={e =>
-            dispatch(actions.updateName({ id, name: e.currentTarget.value }))
-          }
-          value={state.name}
+        <Controller
+          as={TextField}
+          name={nameInputName}
+          defaultValue={state.name}
+          onChange={([e]) => {
+            // Continue validation while updating the document-store
+            dispatch(actions.updateName({ id, name: e.currentTarget.value }));
+            return e;
+          }}
+          rules={{ required: 'Field name is required' }}
           outlined
           label="Field"
+          invalid={touched[nameInputName] && errors[nameInputName]}
         />
 
         {/* Type editor */}
@@ -182,9 +229,36 @@ const FieldEditor: React.FC<{
         {state.type === FieldType.STRING && (
           <StringEditor value={state.value} onChange={handleEditValue} />
         )}
+
         {state.type === FieldType.NUMBER && (
-          <NumberEditor value={state.value} onChange={handleEditValue} />
+          <Controller
+            as={TextField}
+            name={valueInputName}
+            defaultValue={state.value}
+            onChange={([e]) => {
+              // console.log(e);
+              // Continue validation while updating the document-store
+              // setNumber(e.currentTarget.value);
+              // dispatch(
+              //   actions.updateValue({
+              //     id,
+              //     value: e.currentTarget.value as number,
+              //   }),
+              // );
+              return e;
+            }}
+            onBlur={() => triggerValidation(valueInputName)}
+            rules={{ required: 'This is really' }}
+            outlined
+            label="Value"
+            invalid={touched[valueInputName] && errors[valueInputName]}
+          />
         )}
+        {/*<NumberEditor
+            value={state.value}
+            onChange={handleEditValue}
+            name={valueInputName}
+          />*/}
         {state.type === FieldType.BOOLEAN && (
           <BooleanEditor value={state.value} onChange={handleEditValue} />
         )}
@@ -207,6 +281,9 @@ const FieldEditor: React.FC<{
           />
         </div>
       </div>
+
+      <ErrorMessage errors={errors} name={nameInputName} />
+
       {(state.type === FieldType.MAP || state.type === FieldType.ARRAY) && (
         <div className="FieldEditor-children">
           {/* Nested fields */}
