@@ -22,7 +22,7 @@ import { ListDivider } from '@rmwc/list';
 import { MenuItem, SimpleMenu } from '@rmwc/menu';
 import { firestore } from 'firebase';
 import React from 'react';
-import { Route, useRouteMatch } from 'react-router-dom';
+import { Redirect, Route, useRouteMatch } from 'react-router-dom';
 
 import { useApi } from './ApiContext';
 import Collection from './Collection';
@@ -63,6 +63,9 @@ export const Root: React.FC = () => {
       id={'Root'}
       collectionById={(id: string) => api.database.collection(id)}
     >
+      <Route url="/firestore" exact>
+        <Redirect to="/firestore/data" />
+      </Route>
       <PanelHeader id="Root" icon={<FirestoreLogo size="small" />} />
       <CollectionList />
     </Doc>
