@@ -36,7 +36,7 @@ export function useAutoSelect<T extends { id: string }>(list?: T[] | null) {
       // /firestore/users
       (url.startsWith(FIRESTORE_ROUTE) && url.split('/').length === 3);
     const hasNothingSelected = url === pathname;
-    const firstChild = list?.length ? list[0] : undefined;
+    const firstChild = list?.[0];
     const shouldAutoSelect = isRootOrRootCollection && hasNothingSelected;
 
     setAutoSelect(
