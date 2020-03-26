@@ -20,9 +20,15 @@ import { Button } from '@rmwc/button';
 import { Icon } from '@rmwc/icon';
 import { List, ListItem } from '@rmwc/list';
 import { firestore } from 'firebase';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useCollection } from 'react-firebase-hooks/firestore';
-import { NavLink, Route, useRouteMatch } from 'react-router-dom';
+import {
+  NavLink,
+  Redirect,
+  Route,
+  useLocation,
+  useRouteMatch,
+} from 'react-router-dom';
 
 import {
   AddDocumentDialog,
@@ -38,8 +44,22 @@ export interface Props {
 export const Collection: React.FC<Props> = ({ collection }) => {
   const [collectionSnapshot, loading, error] = useCollection(collection);
   const [isAddDocumentDialogOpen, setAddDocumentDialogOpen] = useState(false);
+  const [autoSelect, setRedirectDoc] = useState<string | undefined>(undefined);
 
   const { url } = useRouteMatch()!;
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    const docs = collectionSnapshot?.docs;
+    const firstChild = docs?.length ? docs[0] : undefined;
+    const isRootCollection = url.split('/').length === 3;
+    const hasNothingSelected = url === pathname;
+    const shouldSelectFirstDoc =
+      isRootCollection && hasNothingSelected && !!firstChild;
+    shouldSelectFirstDoc && console.log('select doc', firstChild?.id);
+
+    setRedirectDoc(shouldSelectFirstDoc ? firstChild?.id : undefined);
+  }, [collectionSnapshot, url, pathname]);
 
   const addDocument = async (value: AddDocumentDialogValue | null) => {
     if (value && value.id) {
@@ -55,6 +75,11 @@ export const Collection: React.FC<Props> = ({ collection }) => {
 
   return (
     <>
+      {autoSelect && (
+        <Route exact path={url}>
+          <Redirect to={`${url}/${autoSelect}`} />
+        </Route>
+      )}
       <div className="Firestore-Collection">
         <PanelHeader
           id={collection.id}
