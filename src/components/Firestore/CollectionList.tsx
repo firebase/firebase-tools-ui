@@ -35,6 +35,32 @@ import {
   AddCollectionDialogValue,
 } from './dialogs/AddCollectionDialog';
 
+function useAutoSelect<T extends { id: string }>(
+  pathname: string,
+  url: string,
+  list: T[] | null
+) {
+  const [autoSelect, setAutoSelect] = useState<string | undefined>(undefined);
+
+  useEffect(() => {
+    const keys = url.split('/');
+    const isRootOrRootCollection =
+      keys.length === 2 ||
+      // /firestore
+      keys.length === 3; // /firestore/users
+    const hasNothingSelected = url === pathname;
+    const firstChild = list?.length ? list[0] : undefined;
+    const shouldAutoSelect =
+      isRootOrRootCollection && hasNothingSelected && !!firstChild;
+
+    shouldAutoSelect && console.log('auto select', `${url}/${firstChild?.id}`);
+
+    setAutoSelect(shouldAutoSelect ? firstChild?.id : undefined);
+  }, [pathname, url, list, setAutoSelect]);
+
+  return autoSelect;
+}
+
 export interface Props {
   reference?: firestore.DocumentReference;
 }
@@ -49,18 +75,7 @@ export const CollectionList: React.FC<Props> = ({ reference }) => {
     false
   );
 
-  const [autoSelect, setAutoSelect] = useState<string | undefined>(undefined);
-
-  useEffect(() => {
-    const firstChild = collections?.length ? collections[0] : undefined;
-    const isRoot = url === '/firestore';
-    const hasNothingSelected = url === pathname;
-    const shouldAutoSelect = isRoot && hasNothingSelected && !!firstChild;
-
-    shouldAutoSelect && console.log('select col', firstChild?.id);
-
-    setAutoSelect(shouldAutoSelect ? firstChild?.id : undefined);
-  }, [collections, pathname, url, setAutoSelect]);
+  const autoSelect = useAutoSelect(url, pathname, collections);
 
   const addCollection = async (value: AddCollectionDialogValue | null) => {
     if (value && value.collectionId && value.document.id) {
