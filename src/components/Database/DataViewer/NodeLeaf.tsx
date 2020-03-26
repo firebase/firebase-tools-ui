@@ -37,11 +37,15 @@ export const NodeLeaf = React.memo<Props>(function NodeLeaf$({
   baseUrl,
 }) {
   const [isEditing, setIsEditing] = useState(false);
-  const toggleEditing = () => {
+  const [isAdding, setIsAdding] = useState(false);
+  const handleEdit = () => {
     setIsEditing(!isEditing);
   };
+  const handleAdd = () => {
+    setIsAdding(!isAdding);
+  };
 
-  const removeNode = async () => {
+  const handleDelete = async () => {
     try {
       await realtimeRef.remove();
     } catch (e) {
@@ -49,6 +53,7 @@ export const NodeLeaf = React.memo<Props>(function NodeLeaf$({
     }
   };
 
+  const showAddButton = !realtimeRef.parent && value === null;
   return (
     <div className="NodeLeaf">
       {isEditing && (
@@ -61,16 +66,28 @@ export const NodeLeaf = React.memo<Props>(function NodeLeaf$({
       <div className="NodeLeaf__key">
         <NodeLink dbRef={realtimeRef} baseUrl={baseUrl} />
         {': '}
-        <ValueDisplay use="body1" value={value} onClick={toggleEditing} />
+        <ValueDisplay use="body1" value={value} onClick={handleEdit} />
       </div>
       <span className="NodeLeaf__actions">
         <Tooltip content="Edit value">
-          <IconButton icon="edit" onClick={toggleEditing} />
+          <IconButton icon="edit" onClick={handleEdit} />
         </Tooltip>
+        {showAddButton && (
+          <Tooltip content="Add child">
+            <IconButton icon="add" onClick={handleAdd} />
+          </Tooltip>
+        )}
         <Tooltip content="Delete value">
-          <IconButton icon="delete" onClick={removeNode} />
+          <IconButton icon="delete" onClick={handleDelete} />
         </Tooltip>
       </span>
+      {isAdding && (
+        <EditNode
+          isAdding
+          realtimeRef={realtimeRef}
+          onClose={() => setIsAdding(false)}
+        />
+      )}
     </div>
   );
 });

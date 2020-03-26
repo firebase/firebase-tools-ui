@@ -37,7 +37,7 @@ export const ValueDisplay = React.memo<Props>(function ValueDisplay$({
     `ValueDisplay ValueDisplay__${typeof value}`;
   return (
     <Typography use="body1" className={getClass(value)} {...otherProps}>
-      {JSON.stringify(trimmedValue)}
+      {value === null ? '{}' : JSON.stringify(trimmedValue)}
     </Typography>
   );
 });
