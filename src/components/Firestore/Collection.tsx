@@ -20,15 +20,9 @@ import { Button } from '@rmwc/button';
 import { Icon } from '@rmwc/icon';
 import { List, ListItem } from '@rmwc/list';
 import { firestore } from 'firebase';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useCollection } from 'react-firebase-hooks/firestore';
-import {
-  NavLink,
-  Redirect,
-  Route,
-  useLocation,
-  useRouteMatch,
-} from 'react-router-dom';
+import { NavLink, Redirect, Route, useRouteMatch } from 'react-router-dom';
 
 import {
   AddDocumentDialog,
@@ -36,6 +30,9 @@ import {
 } from './dialogs/AddDocumentDialog';
 import { Document } from './Document';
 import PanelHeader from './PanelHeader';
+import { useAutoSelect } from './utils';
+
+const NO_DOCS: firestore.QueryDocumentSnapshot<firestore.DocumentData>[] = [];
 
 export interface Props {
   collection: firestore.CollectionReference;
@@ -44,22 +41,11 @@ export interface Props {
 export const Collection: React.FC<Props> = ({ collection }) => {
   const [collectionSnapshot, loading, error] = useCollection(collection);
   const [isAddDocumentDialogOpen, setAddDocumentDialogOpen] = useState(false);
-  const [autoSelect, setRedirectDoc] = useState<string | undefined>(undefined);
 
   const { url } = useRouteMatch()!;
-  const { pathname } = useLocation();
-
-  useEffect(() => {
-    const docs = collectionSnapshot?.docs;
-    const firstChild = docs?.length ? docs[0] : undefined;
-    const isRootCollection = url.split('/').length === 3;
-    const hasNothingSelected = url === pathname;
-    const shouldSelectFirstDoc =
-      isRootCollection && hasNothingSelected && !!firstChild;
-    shouldSelectFirstDoc && console.log('select doc', firstChild?.id);
-
-    setRedirectDoc(shouldSelectFirstDoc ? firstChild?.id : undefined);
-  }, [collectionSnapshot, url, pathname]);
+  // TODO: Fetch missing documents (i.e. nonexistent docs with subcollections).
+  const docs = collectionSnapshot ? collectionSnapshot.docs : NO_DOCS;
+  const autoSelectPath = useAutoSelect(docs);
 
   const addDocument = async (value: AddDocumentDialogValue | null) => {
     if (value && value.id) {
@@ -70,14 +56,11 @@ export const Collection: React.FC<Props> = ({ collection }) => {
   if (loading) return <></>;
   if (error) return <></>;
 
-  // TODO: Fetch missing documents (i.e. nonexistent docs with subcollections).
-  const docs = collectionSnapshot ? collectionSnapshot.docs : [];
-
   return (
     <>
-      {autoSelect && (
+      {autoSelectPath && (
         <Route exact path={url}>
-          <Redirect to={`${url}/${autoSelect}`} />
+          <Redirect to={autoSelectPath} />
         </Route>
       )}
       <div className="Firestore-Collection">

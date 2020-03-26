@@ -20,13 +20,7 @@ import { Button } from '@rmwc/button';
 import { List, ListItem } from '@rmwc/list';
 import { firestore } from 'firebase';
 import React, { useEffect, useState } from 'react';
-import {
-  NavLink,
-  Redirect,
-  Route,
-  useLocation,
-  useRouteMatch,
-} from 'react-router-dom';
+import { NavLink, Redirect, Route, useRouteMatch } from 'react-router-dom';
 
 import DatabaseApi from './api';
 import { useApi } from './ApiContext';
@@ -34,32 +28,7 @@ import {
   AddCollectionDialog,
   AddCollectionDialogValue,
 } from './dialogs/AddCollectionDialog';
-
-function useAutoSelect<T extends { id: string }>(
-  pathname: string,
-  url: string,
-  list: T[] | null
-) {
-  const [autoSelect, setAutoSelect] = useState<string | undefined>(undefined);
-
-  useEffect(() => {
-    const keys = url.split('/');
-    const isRootOrRootCollection =
-      keys.length === 2 ||
-      // /firestore
-      keys.length === 3; // /firestore/users
-    const hasNothingSelected = url === pathname;
-    const firstChild = list?.length ? list[0] : undefined;
-    const shouldAutoSelect =
-      isRootOrRootCollection && hasNothingSelected && !!firstChild;
-
-    shouldAutoSelect && console.log('auto select', `${url}/${firstChild?.id}`);
-
-    setAutoSelect(shouldAutoSelect ? firstChild?.id : undefined);
-  }, [pathname, url, list, setAutoSelect]);
-
-  return autoSelect;
-}
+import { useAutoSelect } from './utils';
 
 export interface Props {
   reference?: firestore.DocumentReference;
@@ -67,15 +36,13 @@ export interface Props {
 
 export const CollectionList: React.FC<Props> = ({ reference }) => {
   const { url } = useRouteMatch()!;
-  const { pathname } = useLocation();
   const api = useApi();
   const collections = useCollections(api, reference);
+  const autoSelectPath = useAutoSelect(collections);
 
   const [isAddCollectionDialogOpen, setAddCollectionDialogOpen] = useState(
     false
   );
-
-  const autoSelect = useAutoSelect(url, pathname, collections);
 
   const addCollection = async (value: AddCollectionDialogValue | null) => {
     if (value && value.collectionId && value.document.id) {
@@ -89,9 +56,9 @@ export const CollectionList: React.FC<Props> = ({ reference }) => {
 
   return (
     <div className="Firestore-CollectionList" data-testid="collection-list">
-      {autoSelect && (
+      {autoSelectPath && (
         <Route exact path={url}>
-          <Redirect to={`${url}/${autoSelect}`} />
+          <Redirect to={autoSelectPath} />
         </Route>
       )}
 

@@ -17,6 +17,8 @@
 import { firestore } from 'firebase';
 import produce from 'immer';
 import get from 'lodash.get';
+import { useEffect, useState } from 'react';
+import { useLocation, useRouteMatch } from 'react-router-dom';
 
 import {
   FieldType,
@@ -133,3 +135,31 @@ export const withFieldRemoved = produce((draft, path: string[]) => {
     parent.splice(Number(lastFieldName(path)), 1);
   }
 });
+
+/**
+ * Given a list of collections or documents, auto select the first item. Only
+ * works on root (`/firestore`) or top level collections (`/firestore/users`)
+ * to prevent deep auto selection.
+ */
+export function useAutoSelect<T extends { id: string }>(list?: T[] | null) {
+  const { url } = useRouteMatch()!;
+  const { pathname } = useLocation();
+  const [autoSelect, setAutoSelect] = useState<string | undefined>(undefined);
+
+  useEffect(() => {
+    const keys = url.split('/');
+    const isRootOrRootCollection =
+      keys.length === 2 ||
+      // /firestore
+      keys.length === 3; // /firestore/users
+    const hasNothingSelected = url === pathname;
+    const firstChild = list?.length ? list[0] : undefined;
+    const shouldAutoSelect =
+      isRootOrRootCollection && hasNothingSelected && !!firstChild;
+
+    setAutoSelect(shouldAutoSelect ? `${url}/${firstChild?.id}` : undefined);
+    shouldAutoSelect && console.log('auto select', `${url}/${firstChild?.id}`);
+  }, [pathname, url, list, setAutoSelect]);
+
+  return autoSelect;
+}
