@@ -69,8 +69,8 @@ export const NodeActions = React.memo<Props>(function NodeActions$({
   queryParams,
 }) {
   const [isMenuOpen, setMenuOpen] = useState(false);
-  const [showQueryUi, setShowQueryUi] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
+  const [showQueryUi, setShowQueryUi] = useState(false);
   const [cloneDialogIsOpen, setCloneDialogIsOpen] = useState(false);
   const [renameDialogIsOpen, setRenameDialogIsOpen] = useState(false);
 
