@@ -21,7 +21,8 @@ import { Tooltip } from '@rmwc/tooltip';
 import * as React from 'react';
 import { useState } from 'react';
 
-import { EditNode } from './EditNode';
+import InlineEditor from '../../Firestore/DocumentPreview/InlineEditor';
+import { FirestoreAny } from '../../Firestore/models';
 import { NodeLink } from './NodeLink';
 import { ValueDisplay } from './ValueDisplay';
 
@@ -41,8 +42,19 @@ export const NodeLeaf = React.memo<Props>(function NodeLeaf$({
   const handleEdit = () => {
     setIsEditing(!isEditing);
   };
+
+  const handleEditSuccess = async (key: string, value: FirestoreAny) => {
+    await realtimeRef.set(value);
+    setIsEditing(false);
+  };
+
   const handleAdd = () => {
     setIsAdding(!isAdding);
+  };
+
+  const handleAddSuccess = async (key: string, value: FirestoreAny) => {
+    await realtimeRef.child(key).set(value);
+    setIsAdding(false);
   };
 
   const handleDelete = async () => {
@@ -57,10 +69,12 @@ export const NodeLeaf = React.memo<Props>(function NodeLeaf$({
   return (
     <div className="NodeLeaf">
       {isEditing && (
-        <EditNode
-          value={value}
-          realtimeRef={realtimeRef}
-          onClose={() => setIsEditing(false)}
+        <InlineEditor
+          rtdb
+          value={{ [realtimeRef.key || realtimeRef.toString()]: value }}
+          onCancel={() => setIsEditing(false)}
+          onSave={handleEditSuccess}
+          areRootKeysMutable={false}
         />
       )}
       <div className="NodeLeaf__key">
@@ -82,10 +96,12 @@ export const NodeLeaf = React.memo<Props>(function NodeLeaf$({
         </Tooltip>
       </span>
       {isAdding && (
-        <EditNode
-          isAdding
-          realtimeRef={realtimeRef}
-          onClose={() => setIsAdding(false)}
+        <InlineEditor
+          rtdb
+          value={{ key: value }}
+          onCancel={() => setIsAdding(false)}
+          onSave={handleAddSuccess}
+          areRootKeysMutable={true}
         />
       )}
     </div>

@@ -21,13 +21,14 @@ import { Tooltip } from '@rmwc/tooltip';
 import * as React from 'react';
 import { useState } from 'react';
 
+import InlineEditor from '../../Firestore/DocumentPreview/InlineEditor';
+import { FirestoreAny } from '../../Firestore/models';
 import { CloneDialog } from './CloneDialog';
 import {
   ChildrenDisplayType,
   DEFAULT_QUERY_PARAMS,
   QueryParams,
 } from './common/view_model';
-import { EditNode } from './EditNode';
 import { InlineQuery } from './InlineQuery';
 import { RenameDialog } from './RenameDialog';
 
@@ -82,6 +83,11 @@ export const NodeActions = React.memo<Props>(function NodeActions$({
     queryParams !== DEFAULT_QUERY_PARAMS;
   const isRoot = realtimeRef.parent === null;
 
+  const pushId = realtimeRef.push().key!;
+  const handleAddSuccess = async (key: string, value: FirestoreAny) => {
+    await realtimeRef.child(key).set(value);
+    setIsAdding(false);
+  };
   const addChild = () => {
     onExpandRequested();
     setIsAdding(!isAdding);
@@ -146,10 +152,12 @@ export const NodeActions = React.memo<Props>(function NodeActions$({
       {/* Extra UI that shows when actions are triggered */}
       <div className="NodeActions__additional-ui">
         {isAdding && (
-          <EditNode
-            realtimeRef={realtimeRef}
-            isAdding={isAdding}
-            onClose={() => setIsAdding(false)}
+          <InlineEditor
+            rtdb
+            value={{ [pushId]: '' }}
+            onCancel={() => setIsAdding(false)}
+            onSave={handleAddSuccess}
+            areRootKeysMutable={true}
           />
         )}
         {showQueryUi && (
