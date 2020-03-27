@@ -16,7 +16,7 @@
 
 import { Icon } from '@rmwc/icon';
 import { IconButton } from '@rmwc/icon-button';
-import { Menu, MenuItem, MenuSurfaceAnchor } from '@rmwc/menu';
+import { MenuItem, SimpleMenu } from '@rmwc/menu';
 import { Tooltip } from '@rmwc/tooltip';
 import * as React from 'react';
 import { useState } from 'react';
@@ -68,7 +68,7 @@ export const NodeActions = React.memo<Props>(function NodeActions$({
   onExpandRequested,
   queryParams,
 }) {
-  const [isMenuOpen, setMenuOpen] = useState(false);
+  const [isMenuOpen] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   const [showQueryUi, setShowQueryUi] = useState(false);
   const [cloneDialogIsOpen, setCloneDialogIsOpen] = useState(false);
@@ -131,24 +131,22 @@ export const NodeActions = React.memo<Props>(function NodeActions$({
           />
         </Tooltip>
       ) : null}
-      <MenuSurfaceAnchor>
-        <Menu open={isMenuOpen} onClose={() => setMenuOpen(false)}>
-          <MenuItem onClick={removeNode}>
-            <Icon icon="delete" /> Remove
+      <SimpleMenu handle={<IconButton icon="more_vert" />}>
+        <MenuItem onClick={removeNode}>
+          <Icon icon="delete" /> Remove
+        </MenuItem>
+        {!isRoot && (
+          <MenuItem onClick={() => setCloneDialogIsOpen(true)}>
+            <Icon icon="file_copy" /> Clone
           </MenuItem>
-          {!isRoot && (
-            <MenuItem onClick={() => setCloneDialogIsOpen(true)}>
-              <Icon icon="file_copy" /> Clone
-            </MenuItem>
-          )}
-          {!isRoot && (
-            <MenuItem onClick={() => setRenameDialogIsOpen(true)}>
-              <Icon icon="edit" /> Rename
-            </MenuItem>
-          )}
-        </Menu>
-        <IconButton icon="more_vert" onClick={() => setMenuOpen(!isMenuOpen)} />
-      </MenuSurfaceAnchor>
+        )}
+        {!isRoot && (
+          <MenuItem onClick={() => setRenameDialogIsOpen(true)}>
+            <Icon icon="edit" /> Rename
+          </MenuItem>
+        )}
+      </SimpleMenu>
+
       {/* Extra UI that shows when actions are triggered */}
       <div className="NodeActions__additional-ui">
         {isAdding && (

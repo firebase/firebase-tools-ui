@@ -71,7 +71,7 @@ export const Database: React.FC<Props> = ({ config, namespace, path }) => {
             inputPrefix={getPrefix(ref)}
             onNavigate={handleNavigate}
           >
-            <SimpleMenu handle={<IconButton icon="more_vert" />}>
+            <SimpleMenu handle={<IconButton icon="more_vert" />} hoistToBody>
               <MenuItem disabled>Export JSON</MenuItem>
               <MenuItem disabled>Import JSON</MenuItem>
               <ListDivider />
