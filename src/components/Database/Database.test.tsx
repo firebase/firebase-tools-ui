@@ -27,8 +27,9 @@ const sampleConfig: DatabaseConfig = {
   hostAndPort: 'localhost:9000',
 };
 
+// Skipping because we don't actually have good tests for RTDB.
+// TODO: Add some testing with mock database connection and real test cases.
 it.skip('renders database content', () => {
-  // TODO: Mock database connection and test data rendering.
   const { getByText } = render(
     <MemoryRouter>
       <Database namespace="example" config={sampleConfig} />

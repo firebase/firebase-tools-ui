@@ -16,17 +16,25 @@ export type ErrorResult<E> = { error: E };
 
 export type RemoteResult<T, E = ErrorInfo> = Remote<Result<T, E>>;
 
-const ownProp = Object.prototype.hasOwnProperty;
+// Type helper to extract the type of T.result.data.
+export type DataTypeOf<
+  T extends RemoteResult<any, any>
+> = T extends RemoteResult<infer D, any> ? D : any;
+
+// Type helper to extract the type of T.result.error.
+export type ErrorTypeOf<
+  T extends RemoteResult<any, any>
+> = T extends RemoteResult<any, infer E> ? E : any;
 
 export function hasData<T, E>(
   result: Result<T, E> | undefined
 ): result is DataResult<T> {
-  return result !== undefined && ownProp.call(result, 'data');
+  return result !== undefined && 'data' in result;
 }
 export function hasError<T, E>(
   result: Result<T, E> | undefined
 ): result is ErrorResult<E> {
-  return result !== undefined && ownProp.call(result, 'error');
+  return result !== undefined && 'error' in result;
 }
 
 // Transform data if present or return error unchanged.
@@ -51,26 +59,37 @@ export function mapResult<T, E, R>(
   };
 }
 
+export type DataTypeOfEach<T extends ReadonlyArray<RemoteResult<any, any>>> = {
+  [P in keyof T]: T[P] extends RemoteResult<any, any> ? DataTypeOf<T[P]> : T[P];
+};
+
 /**
- * Combine result.data of two remote results, or return first error encountered.
+ * Combine result.data of the remote results, or return first error encountered.
  *
- * No data is returned if either result is undefined.
- * TODO: Overloads with more elements, if needed.
+ * If there are no errors but any result is undefined, return undefined result.
  */
-export function combineData<T1, T2, E>([remoteResult1, remoteResult2]: [
-  RemoteResult<T1, E>,
-  RemoteResult<T2, E>
-]): RemoteResult<[T1, T2], E> {
+export function combineData<Arr extends ReadonlyArray<RemoteResult<any, any>>>(
+  ...remoteResults: Arr
+): RemoteResult<DataTypeOfEach<Arr>, ErrorTypeOf<Arr[number]>> {
+  const loading = remoteResults.some(rr => rr.loading);
+  for (const remoteResult of remoteResults) {
+    if (hasError(remoteResult.result)) {
+      return { loading, result: remoteResult.result };
+    }
+  }
+  for (const remoteResult of remoteResults) {
+    if (remoteResult.result === undefined) {
+      return { loading, result: undefined };
+    }
+  }
+
   return {
-    loading: remoteResult1.loading || remoteResult2.loading,
-    result:
-      remoteResult1.result === undefined || remoteResult2.result === undefined
-        ? undefined
-        : hasError(remoteResult1.result)
-        ? remoteResult1.result
-        : hasError(remoteResult2.result)
-        ? remoteResult2.result
-        : { data: [remoteResult1.result.data, remoteResult2.result.data] },
+    loading,
+    result: {
+      data: (remoteResults.map(
+        rr => (rr.result as DataResult<unknown>).data
+      ) as unknown) as DataTypeOfEach<Arr>,
+    },
   };
 }
 

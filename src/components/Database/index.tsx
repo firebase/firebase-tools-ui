@@ -42,7 +42,7 @@ export const DatabaseRoute: React.FC<PropsFromState> = ({
   projectIdRemote,
   configRemote,
 }) => {
-  return squash(combineData([projectIdRemote, configRemote]), {
+  return squash(combineData(projectIdRemote, configRemote), {
     onNone: () => <DatabaseRouteLoading />,
     onError: () => <DatabaseRouteDisabled />,
     onData: ([projectId, config]) =>

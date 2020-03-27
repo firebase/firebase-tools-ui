@@ -46,7 +46,7 @@ export const FirestoreRoute: React.FC<PropsFromState> = ({
   projectIdRemote,
   configRemote,
 }) => {
-  return squash(combineData([projectIdRemote, configRemote]), {
+  return squash(combineData(projectIdRemote, configRemote), {
     onNone: () => <FirestoreRouteLoading />,
     onError: () => <FirestoreRouteDisabled />,
     onData: ([projectId, config]) =>
@@ -84,7 +84,7 @@ export const Firestore: React.FC<FirestoreProps> = ({ config, projectId }) => {
   }, [projectId, config, setApi]);
 
   if (!api) {
-    return <></>;
+    return null;
   }
 
   async function handleClearData(api: DatabaseApi) {

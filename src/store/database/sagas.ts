@@ -56,8 +56,7 @@ export interface GetDbConfigReturn {
 const getProjectIdAndDbConfig = createSelector(
   getProjectId,
   getDatabaseConfig,
-  (projectIdRemote, configRemote) =>
-    combineData([projectIdRemote, configRemote])
+  combineData
 );
 
 type ProjectIdAndDbConfigRemote = ReturnType<typeof getProjectIdAndDbConfig>;
