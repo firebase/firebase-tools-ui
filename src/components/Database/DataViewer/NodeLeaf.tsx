@@ -42,9 +42,6 @@ export const NodeLeaf = React.memo<Props>(function NodeLeaf$({
   const handleEdit = () => {
     setIsEditing(!isEditing);
   };
-  const handleAdd = () => {
-    setIsAdding(!isAdding);
-  };
 
   const handleEditSuccess = async (key: string, value: FirestoreAny) => {
     await realtimeRef.set(value);
