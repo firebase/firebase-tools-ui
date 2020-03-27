@@ -15,29 +15,27 @@
  */
 
 import { DialogButton } from '@rmwc/dialog';
-import { TextField } from '@rmwc/textfield';
 import { firestore } from 'firebase';
 import React from 'react';
 
 import { Callout } from '../../common/Callout';
+import { Field } from '../../common/Field';
 import { confirm } from '../../DialogQueue';
 
 export const promptDeleteDocument = (reference: firestore.DocumentReference) =>
   confirm({
-    title: 'Delete data',
+    title: 'Delete document',
     body: (
-      <>
+      <div className="Firestore--dialog-body">
         <Callout aside type="warning">
-          This will permanently delete all data at this location, including all
-          nested data.
+          This will permanently delete the document.
         </Callout>
-        <TextField
+        <Field
           label="Document location"
           value={reference.path || '/'}
-          fullwidth
           disabled
         />
-      </>
+      </div>
     ),
     // hide standard buttons so as to use `danger` button
     acceptLabel: null,
@@ -48,7 +46,7 @@ export const promptDeleteDocument = (reference: firestore.DocumentReference) =>
           Cancel
         </DialogButton>
         <DialogButton unelevated action="accept" isDefaultAction danger>
-          Start delete
+          Delete
         </DialogButton>
       </>
     ),

@@ -23,10 +23,10 @@ import {
   DialogProps,
   DialogTitle,
 } from '@rmwc/dialog';
-import { TextField } from '@rmwc/textfield';
 import { firestore } from 'firebase';
 import React, { useCallback, useEffect, useState } from 'react';
 
+import { Field } from '../../common/Field';
 import DocumentEditor from '../DocumentEditor';
 import { FirestoreMap } from '../models';
 
@@ -68,14 +68,14 @@ export const AddDocumentStep: React.FC<AddDocumentStepProps> = ({
 
   return (
     <>
-      <TextField
+      <Field
         id="add-document-path"
         fullwidth
         disabled
         label="Parent path"
         value={collectionRef.path}
       />
-      <TextField
+      <Field
         id="add-document-id"
         fullwidth
         label="Document ID"

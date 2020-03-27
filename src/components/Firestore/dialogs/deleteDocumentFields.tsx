@@ -15,11 +15,11 @@
  */
 
 import { DialogButton } from '@rmwc/dialog';
-import { TextField } from '@rmwc/textfield';
 import { firestore } from 'firebase';
 import React from 'react';
 
 import { Callout } from '../../common/Callout';
+import { Field } from '../../common/Field';
 import { confirm } from '../../DialogQueue';
 
 export const promptDeleteDocumentFields = (
@@ -28,17 +28,17 @@ export const promptDeleteDocumentFields = (
   confirm({
     title: 'Delete data',
     body: (
-      <>
+      <div className="Firestore--dialog-body">
         <Callout aside type="warning">
           This will delete all fields of the document, excluding subcollections.
         </Callout>
-        <TextField
+        <Field
           label="Document location"
           value={reference.path || '/'}
           fullwidth
           disabled
         />
-      </>
+      </div>
     ),
     // hide standard buttons so as to use `danger` button
     acceptLabel: null,

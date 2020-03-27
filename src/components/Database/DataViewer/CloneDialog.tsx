@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { ok } from 'assert';
+
 import {
   Dialog,
   DialogActions,
@@ -26,9 +28,10 @@ import { Typography } from '@rmwc/typography';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 
+import { Field } from '../../common/Field';
+
 export interface Props {
   realtimeRef: firebase.database.Reference;
-  isOpen: boolean;
   /**
    * Called when complete, if the data was cloned the key is returned, else
    * undefined.
@@ -42,9 +45,10 @@ const cloneKey = (key: string, ref: firebase.database.Reference) => {
 
 export const CloneDialog = React.memo<Props>(function CloneDialog$({
   realtimeRef,
-  isOpen,
   onComplete,
 }) {
+  ok(realtimeRef.parent, 'Cannot clone the root node!');
+
   const originalKey = realtimeRef.key!;
   const [newKey, setNewKey] = useState('');
 
@@ -55,7 +59,7 @@ export const CloneDialog = React.memo<Props>(function CloneDialog$({
     const loadData = async () => {
       const snapshot = await realtimeRef.once('value');
       const data: Record<string, string> = {};
-      Object.entries(snapshot.val()).forEach(([key, val]) => {
+      Object.entries(snapshot.val() || {}).forEach(([key, val]) => {
         data[key] = JSON.stringify(val);
       });
       setForm(data);
@@ -84,20 +88,16 @@ export const CloneDialog = React.memo<Props>(function CloneDialog$({
   };
 
   return (
-    <Dialog open={isOpen}>
+    <Dialog open>
       <form onSubmit={handleSubmit}>
         <DialogTitle>Clone "{originalKey}"</DialogTitle>
         <DialogContent>
-          <div>
-            <label>
-              New key:
-              <TextField
-                value={newKey}
-                onChange={e => setNewKey((e.target as HTMLInputElement).value)}
-                type="text"
-              />
-            </label>
-          </div>
+          <Field
+            label="New key:"
+            value={newKey}
+            onChange={e => setNewKey((e.target as HTMLInputElement).value)}
+            type="text"
+          />
 
           <Typography use="headline6">Data</Typography>
           {isLoading

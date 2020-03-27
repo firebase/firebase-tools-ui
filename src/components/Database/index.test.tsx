@@ -16,33 +16,74 @@
 
 import { render } from '@testing-library/react';
 import * as React from 'react';
-import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 
-import configureStore from '../../configureStore';
-import { DatabaseDefaultRoute } from './index';
+import { DatabaseConfig } from '../../store/config';
+import { DatabaseRoute, DatabaseRouteContent } from './index';
 
-it('renders loading when projectId is not ready', () => {
-  const { getByText } = render(
-    <MemoryRouter initialEntries={['']}>
-      <DatabaseDefaultRoute projectId={undefined} />
-    </MemoryRouter>
-  );
-  expect(getByText('Loading...')).not.toBeNull();
+jest.mock('./DatabaseContainer'); // Don't actually connect to db or store.
+
+const sampleConfig: DatabaseConfig = {
+  host: 'localhost',
+  port: 9000,
+  hostAndPort: 'localhost:9000',
+};
+
+describe('DatabaseRoute', () => {
+  it('renders loading when projectId is not ready', () => {
+    const { getByText } = render(
+      <DatabaseRoute
+        projectIdRemote={{ loading: true }}
+        configRemote={{ loading: false, result: { data: sampleConfig } }}
+      />
+    );
+    expect(getByText('Loading...')).not.toBeNull();
+  });
+  it('renders loading when config is not ready', () => {
+    const { getByText } = render(
+      <DatabaseRoute
+        projectIdRemote={{ loading: false, result: { data: 'foo' } }}
+        configRemote={{ loading: true }}
+      />
+    );
+    expect(getByText('Loading...')).not.toBeNull();
+  });
+  it('renders error when loading config fails', () => {
+    const { getByText } = render(
+      <DatabaseRoute
+        projectIdRemote={{ loading: false, result: { data: 'foo' } }}
+        configRemote={{
+          loading: false,
+          result: { error: { message: 'Oh, snap!' } },
+        }}
+      />
+    );
+    expect(getByText(/currently off/)).not.toBeNull();
+  });
+  it('renders "emulator is off" when config is not present', () => {
+    const { getByText } = render(
+      <DatabaseRoute
+        projectIdRemote={{ loading: false, result: { data: 'foo' } }}
+        configRemote={{
+          loading: false,
+          result: { data: undefined /* emulator absent */ },
+        }}
+      />
+    );
+    expect(getByText(/currently off/)).not.toBeNull();
+  });
 });
 
-it('redirects when projectId is ready', () => {
-  const store = configureStore();
-
-  const { getByText } = render(
-    <MemoryRouter initialEntries={['/']}>
-      <Provider store={store}>
+describe('DatabaseRouteContent', () => {
+  it('redirects to primary db (the one named after projectId)', () => {
+    const { getByText } = render(
+      <MemoryRouter initialEntries={['/']}>
         <Route exact path="//sample/data">
           SUCCESS
         </Route>
-        <DatabaseDefaultRoute projectId={'sample'} />
-      </Provider>
-    </MemoryRouter>
-  );
-  expect(getByText('SUCCESS')).not.toBeNull();
+        <DatabaseRouteContent projectId={'sample'} config={sampleConfig} />
+      </MemoryRouter>
+    );
+    expect(getByText('SUCCESS')).not.toBeNull();
+  });
 });

@@ -14,17 +14,13 @@
  * limitations under the License.
  */
 
+import { RemoteResult } from '../utils';
+
 export interface DatabaseInfo {
   name: string;
 }
 
-export interface DatabaseInfoState {
-  fetching: boolean;
-  databases?: DatabaseInfo[];
-  error?: { message: string };
-}
-
 export interface DatabaseState {
-  databases: DatabaseInfoState;
+  databases: RemoteResult<DatabaseInfo[]>;
   databasesSubscribed: boolean;
 }

@@ -14,18 +14,16 @@
  * limitations under the License.
  */
 
-import { Action, createReducer } from 'typesafe-actions';
+.Field {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 4px;
 
-import { fetchError, fetchRequest, fetchSuccess } from './actions';
-import { ConfigState } from './types';
+  .Field-label {
+    padding-bottom: 8px;
+  }
 
-export const configReducer = createReducer<ConfigState, Action>({
-  loading: false,
-})
-  .handleAction(fetchRequest, (state, __) => ({ ...state, loading: true }))
-  .handleAction(fetchSuccess, (_, { payload }) => {
-    return { loading: false, result: { data: payload } };
-  })
-  .handleAction(fetchError, (_, { payload }) => {
-    return { loading: false, result: { error: payload } };
-  });
+  .Field-tip {
+    height: 16px;
+  }
+}
