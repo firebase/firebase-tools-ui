@@ -70,6 +70,7 @@ export const NodeLeaf = React.memo<Props>(function NodeLeaf$({
     <div className="NodeLeaf">
       {isEditing && (
         <InlineEditor
+          rtdb
           value={{ [realtimeRef.key || realtimeRef.toString()]: value }}
           onCancel={() => setIsEditing(false)}
           onSave={handleEditSuccess}
@@ -96,6 +97,7 @@ export const NodeLeaf = React.memo<Props>(function NodeLeaf$({
       </span>
       {isAdding && (
         <InlineEditor
+          rtdb
           value={{ key: value }}
           onCancel={() => setIsAdding(false)}
           onSave={handleAddSuccess}

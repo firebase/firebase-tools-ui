@@ -47,7 +47,7 @@ import {
 import StringEditor from './StringEditor';
 import TimestampEditor from './TimestampEditor';
 
-const supportedFieldTypes = [
+const FIRESTORE_FIELD_TYPES = [
   FieldType.STRING,
   FieldType.NUMBER,
   FieldType.BOOLEAN,
@@ -59,9 +59,17 @@ const supportedFieldTypes = [
   FieldType.REFERENCE,
 ];
 
-const supportedFieldTypeSet = new Set(supportedFieldTypes);
+const RTDB_FIELD_TYPES = [
+  FieldType.STRING,
+  FieldType.NUMBER,
+  FieldType.BOOLEAN,
+  FieldType.MAP,
+  FieldType.ARRAY,
+];
 
-export function supportsEditing(value: FirestoreAny): boolean {
+const supportedFieldTypeSet = new Set(FIRESTORE_FIELD_TYPES);
+
+export function firestoreSupportsEditing(value: FirestoreAny): boolean {
   return supportedFieldTypeSet.has(getFieldType(value));
 }
 
@@ -77,11 +85,13 @@ const DocumentEditor: React.FC<{
   onChange?: (value: FirestoreMap) => void;
   areRootKeysMutable?: boolean;
   areRootFieldsMutable?: boolean;
+  rtdb?: boolean;
 }> = ({
   value,
   onChange,
   areRootKeysMutable = true,
   areRootFieldsMutable = true,
+  rtdb: isRtdb,
 }) => {
   return (
     <DocumentProvider value={value}>
@@ -89,6 +99,7 @@ const DocumentEditor: React.FC<{
         onChange={onChange}
         areRootKeysMutable={areRootKeysMutable}
         areRootFieldsMutable={areRootFieldsMutable}
+        isRtdb={isRtdb}
       />
     </DocumentProvider>
   );
@@ -102,7 +113,8 @@ const RootField: React.FC<{
   onChange?: (value: FirestoreMap) => void;
   areRootKeysMutable: boolean;
   areRootFieldsMutable: boolean;
-}> = ({ onChange, areRootKeysMutable, areRootFieldsMutable }) => {
+  isRtdb?: boolean;
+}> = ({ onChange, areRootKeysMutable, areRootFieldsMutable, isRtdb }) => {
   const state = useDocumentState();
   const dispatch = useDocumentDispatch()!;
 
@@ -114,7 +126,11 @@ const RootField: React.FC<{
     <>
       {Object.keys(state).map(field => (
         <React.Fragment key={field}>
-          <NestedEditor path={[field]} isKeyMutable={areRootKeysMutable} />
+          <NestedEditor
+            path={[field]}
+            isKeyMutable={areRootKeysMutable}
+            isRtdb={isRtdb}
+          />
           {areRootFieldsMutable && (
             <IconButton
               icon="delete"
@@ -143,7 +159,8 @@ const RootField: React.FC<{
 const NestedEditor: React.FC<{
   path: string[];
   isKeyMutable: boolean;
-}> = ({ path, isKeyMutable }) => {
+  isRtdb?: boolean;
+}> = ({ path, isKeyMutable, isRtdb }) => {
   const state = useFieldState(path);
   const dispatch = useDocumentDispatch()!;
   const [key, setKey] = useState(lastFieldName(path));
@@ -215,7 +232,7 @@ const NestedEditor: React.FC<{
         <Select
           label="Type"
           outlined
-          options={supportedFieldTypes}
+          options={isRtdb ? RTDB_FIELD_TYPES : FIRESTORE_FIELD_TYPES}
           value={getFieldType(state)}
           onChange={e => {
             dispatch(actions.updateType({ path, type: e.currentTarget.value }));

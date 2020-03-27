@@ -153,6 +153,7 @@ export const NodeActions = React.memo<Props>(function NodeActions$({
       <div className="NodeActions__additional-ui">
         {isAdding && (
           <InlineEditor
+            rtdb
             value={{ [pushId]: '' }}
             onCancel={() => setIsAdding(false)}
             onSave={handleAddSuccess}
