@@ -30,6 +30,9 @@ import {
 } from './dialogs/AddDocumentDialog';
 import { Document } from './Document';
 import PanelHeader from './PanelHeader';
+import { useAutoSelect } from './useAutoSelect';
+
+const NO_DOCS: firestore.QueryDocumentSnapshot<firestore.DocumentData>[] = [];
 
 export interface Props {
   collection: firestore.CollectionReference;
@@ -40,6 +43,9 @@ export const Collection: React.FC<Props> = ({ collection }) => {
   const [isAddDocumentDialogOpen, setAddDocumentDialogOpen] = useState(false);
 
   const { url } = useRouteMatch()!;
+  // TODO: Fetch missing documents (i.e. nonexistent docs with subcollections).
+  const docs = collectionSnapshot ? collectionSnapshot.docs : NO_DOCS;
+  const redirectIfAutoSelectable = useAutoSelect(docs);
 
   const addDocument = async (value: AddDocumentDialogValue | null) => {
     if (value && value.id) {
@@ -50,11 +56,9 @@ export const Collection: React.FC<Props> = ({ collection }) => {
   if (loading) return <></>;
   if (error) return <></>;
 
-  // TODO: Fetch missing documents (i.e. nonexistent docs with subcollections).
-  const docs = collectionSnapshot ? collectionSnapshot.docs : [];
-
   return (
     <>
+      {redirectIfAutoSelectable}
       <div className="Firestore-Collection">
         <PanelHeader
           id={collection.id}
