@@ -119,6 +119,7 @@ const RootField: React.FC<{
             <IconButton
               icon="delete"
               label="Remove field"
+              type="button"
               onClick={e => dispatch(actions.deleteField([field]))}
             />
           )}
@@ -128,6 +129,7 @@ const RootField: React.FC<{
         <IconButton
           icon="add"
           label="Add field"
+          type="button"
           onClick={e => dispatch(actions.addField({ path: [''], value: '' }))}
         />
       )}
@@ -222,6 +224,7 @@ const NestedEditor: React.FC<{
         {fieldEditor}
         {isMap(state) && (
           <IconButton
+            type="button"
             icon="add"
             label="Add field"
             onClick={e =>
@@ -231,6 +234,7 @@ const NestedEditor: React.FC<{
         )}
         {isArray(state) && (
           <IconButton
+            type="button"
             icon="add"
             label="Add field"
             onClick={e =>
@@ -245,6 +249,7 @@ const NestedEditor: React.FC<{
         )}
         {path.length > 1 && isPrimitive(state) && (
           <IconButton
+            type="button"
             icon="delete"
             label="Remove field"
             onClick={() => dispatch(actions.deleteField(path))}
