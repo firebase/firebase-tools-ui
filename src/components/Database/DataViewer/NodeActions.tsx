@@ -132,6 +132,13 @@ export const NodeActions = React.memo<Props>(function NodeActions$({
         </Tooltip>
       ) : null}
       <SimpleMenu
+        hoistToBody={
+          /*
+           * Actions show on hover, so hoisting has some weird effects, popping
+           * in and out of the top left corner
+           */
+          false
+        }
         handle={<IconButton icon="more_vert" />}
         onOpen={() => setMenuOpen(true)}
         onClose={() => setMenuOpen(false)}
