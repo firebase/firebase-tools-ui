@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { RemoteResult } from '../utils';
+
 export interface EmulatorConfig {
   hostAndPort: string;
   host: string;
@@ -31,8 +33,4 @@ export interface Config {
   // TODO: More config for more emulators.
 }
 
-export interface ConfigState {
-  fetching: boolean;
-  config?: Config;
-  error?: { message: string };
-}
+export type ConfigState = RemoteResult<Config>;

@@ -21,53 +21,60 @@ import { MemoryRouter } from 'react-router';
 import { Home } from './index';
 
 it('renders fetching placeholder when fetching config', () => {
-  const config = { fetching: true };
   const { getByText } = render(
     <MemoryRouter>
-      <Home config={config} />
+      <Home configRemote={{ loading: true }} />
     </MemoryRouter>
   );
   expect(getByText(/Fetching/)).not.toBeNull();
 });
 
 it('renders an overview when config is loaded', () => {
-  const config = { fetching: false, config: { projectId: 'example' } };
   const { getByText } = render(
     <MemoryRouter>
-      <Home config={config} />
+      <Home
+        configRemote={{
+          loading: false,
+          result: { data: { projectId: 'example' } },
+        }}
+      />
     </MemoryRouter>
   );
   expect(getByText(/Emulator Overview/)).not.toBeNull();
 });
 
 it('shows port for emulator that are loaded', () => {
-  const config = {
-    fetching: false,
-    config: {
-      projectId: 'example',
-      database: {
-        host: 'localhost',
-        port: 9000,
-        hostAndPort: 'localhost:9000',
-      },
-    },
-  };
   const { getByText } = render(
     <MemoryRouter>
-      <Home config={config} />
+      <Home
+        configRemote={{
+          loading: false,
+          result: {
+            data: {
+              projectId: 'example',
+              database: {
+                host: 'localhost',
+                port: 9000,
+                hostAndPort: 'localhost:9000',
+              },
+            },
+          },
+        }}
+      />
     </MemoryRouter>
   );
   expect(getByText(/9000/)).not.toBeNull();
 });
 
 it('renders error message when errored', () => {
-  const config = {
-    fetching: false,
-    error: { message: '420 Enhance Your Calm' },
-  };
   const { getByText } = render(
     <MemoryRouter>
-      <Home config={config} />
+      <Home
+        configRemote={{
+          loading: false,
+          result: { error: { message: '420 Enhance Your Calm' } },
+        }}
+      />
     </MemoryRouter>
   );
   expect(getByText('420 Enhance Your Calm')).not.toBeNull();

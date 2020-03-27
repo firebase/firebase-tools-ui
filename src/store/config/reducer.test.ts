@@ -17,27 +17,27 @@
 import { fetchError, fetchRequest, fetchSuccess } from './actions';
 import { configReducer } from './reducer';
 
-it(`${fetchRequest} => sets fetching to true`, () => {
-  expect(configReducer({ fetching: false }, fetchRequest())).toEqual({
-    fetching: true,
+it(`${fetchRequest} => sets loading to true`, () => {
+  expect(configReducer({ loading: false }, fetchRequest())).toEqual({
+    loading: true,
   });
 });
 
-it(`${fetchSuccess} => sets config and unsets fetching`, () => {
+it(`${fetchSuccess} => sets config and unsets loading`, () => {
   const config = {
     projectId: 'example',
     database: { hostAndPort: 'localhost:8080', host: 'localhost', port: 8080 },
   };
-  expect(configReducer({ fetching: true }, fetchSuccess(config))).toEqual({
-    fetching: false,
-    config,
+  expect(configReducer({ loading: true }, fetchSuccess(config))).toEqual({
+    loading: false,
+    result: { data: config },
   });
 });
 
-it(`${fetchError} => sets error and unsets fetching`, () => {
+it(`${fetchError} => sets error and unsets loading`, () => {
   const error = { message: '420 Enhance Your Calm' };
-  expect(configReducer({ fetching: true }, fetchError(error))).toEqual({
-    fetching: false,
-    error,
+  expect(configReducer({ loading: true }, fetchError(error))).toEqual({
+    loading: false,
+    result: { error },
   });
 });
