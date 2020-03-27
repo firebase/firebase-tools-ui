@@ -68,7 +68,7 @@ export const NodeActions = React.memo<Props>(function NodeActions$({
   onExpandRequested,
   queryParams,
 }) {
-  const [isMenuOpen] = useState(false);
+  const [isMenuOpen, setMenuOpen] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   const [showQueryUi, setShowQueryUi] = useState(false);
   const [cloneDialogIsOpen, setCloneDialogIsOpen] = useState(false);
@@ -131,7 +131,11 @@ export const NodeActions = React.memo<Props>(function NodeActions$({
           />
         </Tooltip>
       ) : null}
-      <SimpleMenu handle={<IconButton icon="more_vert" />}>
+      <SimpleMenu
+        handle={<IconButton icon="more_vert" />}
+        onOpen={() => setMenuOpen(true)}
+        onClose={() => setMenuOpen(false)}
+      >
         <MenuItem onClick={removeNode}>
           <Icon icon="delete" /> Remove
         </MenuItem>
