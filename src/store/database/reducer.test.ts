@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { RemoteResult } from '../utils';
 import {
   databasesFetchError,
   databasesFetchRequest,
@@ -22,60 +23,60 @@ import {
   databasesUnsubscribe,
 } from './actions';
 import { databaseReducer } from './reducer';
-import { DatabaseInfoState } from './types';
+import { DatabaseInfo } from './types';
 
 describe('fetching databases', () => {
-  const state = (databases: DatabaseInfoState) => ({
+  const state = (databases: RemoteResult<DatabaseInfo[]>) => ({
     databases,
     databasesSubscribed: false,
   });
 
-  it(`${databasesFetchRequest} => sets fetching to true`, () => {
+  it(`${databasesFetchRequest} => sets loading to true`, () => {
     expect(
-      databaseReducer(state({ fetching: false }), databasesFetchRequest())
-    ).toEqual(state({ fetching: true }));
+      databaseReducer(state({ loading: false }), databasesFetchRequest())
+    ).toEqual(state({ loading: true }));
   });
 
-  it(`${databasesFetchRequest} => preserves existing databases`, () => {
-    const databases = [{ name: 'foo' }];
+  it(`${databasesFetchRequest} => preserves existing result`, () => {
+    const result = { data: [{ name: 'foo' }] };
     expect(
       databaseReducer(
-        state({ fetching: false, databases }),
+        state({ loading: false, result }),
         databasesFetchRequest()
       )
-    ).toEqual(state({ fetching: true, databases }));
+    ).toEqual(state({ loading: true, result }));
   });
 
-  it(`${databasesFetchSuccess} => sets databases and unsets fetching`, () => {
+  it(`${databasesFetchSuccess} => sets databases and unsets loading`, () => {
     const databases: never[] = [];
     expect(
       databaseReducer(
-        state({ fetching: true }),
+        state({ loading: true }),
         databasesFetchSuccess(databases)
       )
-    ).toEqual(state({ fetching: false, databases }));
+    ).toEqual(state({ loading: false, result: { data: [] } }));
   });
 
   it(`${databasesFetchSuccess} => sets databases ordered by name`, () => {
     expect(
       databaseReducer(
-        state({ fetching: true, databases: [] }),
+        state({ loading: true, result: { data: [] } }),
         databasesFetchSuccess([{ name: 'bbb' }, { name: 'aaa' }])
-      ).databases.databases
-    ).toEqual([{ name: 'aaa' }, { name: 'bbb' }]);
+      ).databases.result
+    ).toEqual({ data: [{ name: 'aaa' }, { name: 'bbb' }] });
   });
 
-  it(`${databasesFetchError} => sets error and unsets fetching`, () => {
+  it(`${databasesFetchError} => sets error and unsets loading`, () => {
     const error = { message: '420 Enhance Your Calm' };
     expect(
-      databaseReducer(state({ fetching: true }), databasesFetchError(error))
-    ).toEqual(state({ fetching: false, error }));
+      databaseReducer(state({ loading: true }), databasesFetchError(error))
+    ).toEqual(state({ loading: false, result: { error } }));
   });
 });
 
 describe('subscribing to databases', () => {
   const stateWithSubscribed = (subscribed: boolean) => ({
-    databases: { fetching: true },
+    databases: { loading: true },
     databasesSubscribed: subscribed,
   });
 
