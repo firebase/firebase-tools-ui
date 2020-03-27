@@ -69,7 +69,7 @@ const RTDB_FIELD_TYPES = [
 
 const supportedFieldTypeSet = new Set(FIRESTORE_FIELD_TYPES);
 
-export function firestoreSupportsEditing(value: FirestoreAny): boolean {
+export function supportsEditing(value: FirestoreAny): boolean {
   return supportedFieldTypeSet.has(getFieldType(value));
 }
 

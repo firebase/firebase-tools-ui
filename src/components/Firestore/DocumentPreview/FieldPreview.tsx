@@ -24,7 +24,7 @@ import classnames from 'classnames';
 import { firestore } from 'firebase';
 import React, { useState } from 'react';
 
-import { firestoreSupportsEditing } from '../DocumentEditor';
+import { supportsEditing } from '../DocumentEditor';
 import { FieldType, FirestoreAny } from '../models';
 import {
   getFieldType,
@@ -123,7 +123,7 @@ const FieldPreview: React.FC<{
         </span>
         <ListItemMeta className="FieldPreview-actions">
           <span className="FieldPreview-type">({getFieldType(state)})</span>
-          {isPrimitive(state) && firestoreSupportsEditing(state) && (
+          {isPrimitive(state) && supportsEditing(state) && (
             <IconButton
               icon="edit"
               label="Edit field"
