@@ -31,6 +31,7 @@
     "@types/react-dom": "^16.9.5",
     "@types/react-redux": "^7.1.7",
     "@types/recompose": "^0.30.7",
+    "classnames": "^2.2.6",
     "express": "^4.17.1",
     "firebase": "^7.12.0",
     "font-awesome": "^4.7.0",
