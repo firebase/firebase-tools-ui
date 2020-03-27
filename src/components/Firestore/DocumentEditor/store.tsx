@@ -107,18 +107,6 @@ export function isContainerField(
   return 'childrenIds' in field;
 }
 
-// export function isNotArrayChild(
-//   field: Field,
-// ): field is Extract<Field, PrimitiveFields | MapField> {
-//   return 'name' in field;
-// }
-
-// export function isContainerField(
-//   field: Field,
-// ): field is ContainerField<infer FieldType> {
-//   return 'childrenIds' in field;
-// }
-
 interface State {
   fields: { [id: number]: Field };
   rootFieldIds: number[];
@@ -141,10 +129,6 @@ function getDescendantIds(
 }
 
 const reducer = createReducer<State, Action>({ fields: {}, rootFieldIds: [] })
-  //  .handleAction(actions.reset, (state, { payload }) => {
-  //    return [];
-  //  })
-
   .handleAction(
     actions.addMapChildField,
     produce((draft, { payload }) => {
@@ -372,19 +356,6 @@ export const DocumentProvider: React.FC<{ value: FirestoreMap }> = ({
 };
 
 function denormalizeField(field: Field, state: State): FirestoreAny {
-  // if (!isNotArrayChild(field)) {
-  //   return field.childrenIds.reduce((acc, id) => {
-  //     const childField = state.fields[id];
-  //     if (childField.type !== FieldType.ARRAY) {
-  //       const foo = denormalizeField(childField, state);
-  //       if (!isArray(foo)) {
-  //         acc.push(foo);
-  //         // acc.push(denormalizeField(childField, state));
-  //       }
-  //     }
-  //     return acc;
-  //   }, [] as FirestoreArray);
-  // }
   if (field.type === FieldType.ARRAY) {
     return field.childrenIds.reduce((acc, id) => {
       const childField = state.fields[id];
@@ -392,7 +363,6 @@ function denormalizeField(field: Field, state: State): FirestoreAny {
         const foo = denormalizeField(childField, state);
         if (!isArray(foo)) {
           acc.push(foo);
-          // acc.push(denormalizeField(childField, state));
         }
       }
       return acc;

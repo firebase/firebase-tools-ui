@@ -20,12 +20,12 @@ import { fetchError, fetchRequest, fetchSuccess } from './actions';
 import { ConfigState } from './types';
 
 export const configReducer = createReducer<ConfigState, Action>({
-  fetching: false,
+  loading: false,
 })
-  .handleAction(fetchRequest, (_, __) => ({ fetching: true }))
+  .handleAction(fetchRequest, (state, __) => ({ ...state, loading: true }))
   .handleAction(fetchSuccess, (_, { payload }) => {
-    return { fetching: false, config: payload };
+    return { loading: false, result: { data: payload } };
   })
   .handleAction(fetchError, (_, { payload }) => {
-    return { fetching: false, error: payload };
+    return { loading: false, result: { error: payload } };
   });

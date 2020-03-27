@@ -33,6 +33,14 @@ $name: 'NodeParent';
     }
   }
 
+  .Firestore-Field-inline-editor {
+    position: absolute;
+    left: -4px;
+    top: 32px;
+    right: -4px;
+    z-index: 2;
+  }
+
   .#{$name}__children-container {
     margin-left: 36px;
   }

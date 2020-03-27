@@ -27,7 +27,8 @@ const InlineEditor: React.FC<{
   onCancel: () => void;
   onSave: (key: string, value: FirestoreAny) => void;
   areRootKeysMutable: boolean;
-}> = ({ value, onCancel, onSave, areRootKeysMutable }) => {
+  rtdb?: boolean;
+}> = ({ value, onCancel, onSave, areRootKeysMutable, rtdb }) => {
   const [internalValue, setInternalValue] = useState<
     FirestoreMap | undefined
   >();
@@ -56,6 +57,7 @@ const InlineEditor: React.FC<{
             onChange={handleChange}
             areRootNamesMutable={areRootKeysMutable}
             areRootFieldsMutable={false}
+            rtdb={rtdb}
           />
         </div>
         <CardActionButtons>

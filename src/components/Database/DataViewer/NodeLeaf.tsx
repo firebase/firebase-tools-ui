@@ -21,7 +21,8 @@ import { Tooltip } from '@rmwc/tooltip';
 import * as React from 'react';
 import { useState } from 'react';
 
-import { EditNode } from './EditNode';
+import InlineEditor from '../../Firestore/DocumentPreview/InlineEditor';
+import { FirestoreAny } from '../../Firestore/models';
 import { NodeLink } from './NodeLink';
 import { ValueDisplay } from './ValueDisplay';
 
@@ -37,11 +38,26 @@ export const NodeLeaf = React.memo<Props>(function NodeLeaf$({
   baseUrl,
 }) {
   const [isEditing, setIsEditing] = useState(false);
-  const toggleEditing = () => {
+  const [isAdding, setIsAdding] = useState(false);
+  const handleEdit = () => {
     setIsEditing(!isEditing);
   };
 
-  const removeNode = async () => {
+  const handleEditSuccess = async (key: string, value: FirestoreAny) => {
+    await realtimeRef.set(value);
+    setIsEditing(false);
+  };
+
+  const handleAdd = () => {
+    setIsAdding(!isAdding);
+  };
+
+  const handleAddSuccess = async (key: string, value: FirestoreAny) => {
+    await realtimeRef.child(key).set(value);
+    setIsAdding(false);
+  };
+
+  const handleDelete = async () => {
     try {
       await realtimeRef.remove();
     } catch (e) {
@@ -49,28 +65,45 @@ export const NodeLeaf = React.memo<Props>(function NodeLeaf$({
     }
   };
 
+  const showAddButton = !realtimeRef.parent && value === null;
   return (
     <div className="NodeLeaf">
       {isEditing && (
-        <EditNode
-          value={value}
-          realtimeRef={realtimeRef}
-          onClose={() => setIsEditing(false)}
+        <InlineEditor
+          rtdb
+          value={{ [realtimeRef.key || realtimeRef.toString()]: value }}
+          onCancel={() => setIsEditing(false)}
+          onSave={handleEditSuccess}
+          areRootKeysMutable={false}
         />
       )}
       <div className="NodeLeaf__key">
         <NodeLink dbRef={realtimeRef} baseUrl={baseUrl} />
         {': '}
-        <ValueDisplay use="body1" value={value} onClick={toggleEditing} />
+        <ValueDisplay use="body1" value={value} onClick={handleEdit} />
       </div>
       <span className="NodeLeaf__actions">
         <Tooltip content="Edit value">
-          <IconButton icon="edit" onClick={toggleEditing} />
+          <IconButton icon="edit" onClick={handleEdit} />
         </Tooltip>
+        {showAddButton && (
+          <Tooltip content="Add child">
+            <IconButton icon="add" onClick={handleAdd} />
+          </Tooltip>
+        )}
         <Tooltip content="Delete value">
-          <IconButton icon="delete" onClick={removeNode} />
+          <IconButton icon="delete" onClick={handleDelete} />
         </Tooltip>
       </span>
+      {isAdding && (
+        <InlineEditor
+          rtdb
+          value={{ [realtimeRef.push().key!]: '' }}
+          onCancel={() => setIsAdding(false)}
+          onSave={handleAddSuccess}
+          areRootKeysMutable={true}
+        />
+      )}
     </div>
   );
 });

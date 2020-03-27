@@ -23,13 +23,12 @@ import {
   take,
   takeLatest,
 } from 'redux-saga/effects';
+import { createSelector } from 'reselect';
 import { ActionType, getType } from 'typesafe-actions';
 
-import {
-  Config,
-  DatabaseConfig,
-  fetchSuccess as configFetchSuccess,
-} from '../config';
+import { DatabaseConfig } from '../config';
+import { getDatabaseConfig, getProjectId } from '../config/selectors';
+import { combineData, hasError } from '../utils';
 import {
   databasesFetchError,
   databasesFetchRequest,
@@ -54,18 +53,31 @@ export interface GetDbConfigReturn {
   projectId: string;
 }
 
-export function* getDbConfig(): Generator<unknown, GetDbConfigReturn> {
-  const selectEffect = select((state: AppState) => state.config.config);
-  let config = (yield selectEffect) as Config | undefined;
-  if (!config) {
-    yield take(getType(configFetchSuccess)); // Wait for config to load.
-    config = (yield selectEffect) as Config;
-  }
+const getProjectIdAndDbConfig = createSelector(
+  getProjectId,
+  getDatabaseConfig,
+  combineData
+);
 
-  if (!config.database) {
+type ProjectIdAndDbConfigRemote = ReturnType<typeof getProjectIdAndDbConfig>;
+
+export function* getDbConfig(): Generator<unknown, GetDbConfigReturn> {
+  const remote = (yield select(
+    getProjectIdAndDbConfig
+  )) as ProjectIdAndDbConfigRemote;
+  if (!remote.result) {
+    throw new Error('Database emulator config is not ready yet.');
+  }
+  if (hasError(remote.result)) {
+    throw new Error(
+      'Error fetching Database emulator config: ' + remote.result.error.message
+    );
+  }
+  const [projectId, config] = remote.result.data;
+  if (!config) {
     throw new Error('Database emulator is not started!');
   }
-  return { projectId: config.projectId, config: config.database };
+  return { projectId, config };
 }
 
 export function* fetchDatabases(

@@ -24,14 +24,57 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { AppState } from '../../store';
-import { ConfigState } from '../../store/config';
+import { createStructuredSelector } from '../../store';
+import { getConfig } from '../../store/config/selectors';
+import { ErrorInfo, squash } from '../../store/utils';
 
-export interface PropsFromState {
-  config: ConfigState;
-}
+export const mapStateToProps = createStructuredSelector({
+  configRemote: getConfig,
+});
 
+export type PropsFromState = ReturnType<typeof mapStateToProps>;
 export type Props = PropsFromState;
+
+export const Home: React.FC<Props> = ({ configRemote }) => {
+  return (
+    <GridCell span={12} className="Home">
+      {squash(configRemote, {
+        onNone: () => <HomeLoading />,
+        onError: error => <HomeError error={error} />,
+        onData: config => {
+          return (
+            <GridInner>
+              <GridCell span={12}>
+                <Typography use="headline5">Emulator Overview</Typography>
+              </GridCell>
+              {config.database && (
+                <EmulatorCard
+                  name="RTDB Emulator"
+                  port={config.database.port}
+                  linkTo="/database"
+                />
+              )}
+              {config.firestore && (
+                <EmulatorCard
+                  name="Firestore Emulator"
+                  port={config.firestore.port}
+                  linkTo="/firestore"
+                />
+              )}
+            </GridInner>
+          );
+        },
+      })}
+    </GridCell>
+  );
+};
+
+export default connect(mapStateToProps)(Home);
+
+export const HomeLoading: React.FC = () => <p>Fetching Config...</p>;
+export const HomeError: React.FC<{ error: ErrorInfo }> = ({ error }) => (
+  <p className="Home-error">{error.message}</p>
+);
 
 export const EmulatorCard: React.FC<{
   name: string;
@@ -66,41 +109,3 @@ export const EmulatorCard: React.FC<{
     </Card>
   </GridCell>
 );
-
-export const Home: React.FC<Props> = ({ config }) => {
-  return (
-    <GridCell span={12} className="Home">
-      {config.fetching ? (
-        <p>Fetching Config...</p>
-      ) : config.error ? (
-        <p className="Home-error">{config.error.message}</p>
-      ) : (
-        config.config && (
-          <GridInner>
-            <GridCell span={12}>
-              <Typography use="headline5">Emulator Overview</Typography>
-            </GridCell>
-            {config.config.database && (
-              <EmulatorCard
-                name="RTDB Emulator"
-                port={config.config.database.port}
-                linkTo="/database"
-              />
-            )}
-            {config.config.firestore && (
-              <EmulatorCard
-                name="Firestore Emulator"
-                port={config.config.firestore.port}
-                linkTo="/firestore"
-              />
-            )}
-          </GridInner>
-        )
-      )}
-    </GridCell>
-  );
-};
-
-export const mapStateToProps = ({ config }: AppState) => ({ config });
-
-export default connect(mapStateToProps)(Home);

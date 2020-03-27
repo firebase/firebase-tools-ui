@@ -51,7 +51,7 @@ import {
 import StringEditor from './StringEditor';
 import TimestampEditor from './TimestampEditor';
 
-const supportedFieldTypes = [
+const FIRESTORE_FIELD_TYPES = [
   FieldType.STRING,
   FieldType.NUMBER,
   FieldType.BOOLEAN,
@@ -63,7 +63,15 @@ const supportedFieldTypes = [
   FieldType.REFERENCE,
 ];
 
-const supportedFieldTypeSet = new Set(supportedFieldTypes);
+const RTDB_FIELD_TYPES = [
+  FieldType.STRING,
+  FieldType.NUMBER,
+  FieldType.BOOLEAN,
+  FieldType.MAP,
+  FieldType.ARRAY,
+];
+
+const supportedFieldTypeSet = new Set(FIRESTORE_FIELD_TYPES);
 
 export function supportsEditing(value: FirestoreAny): boolean {
   return supportedFieldTypeSet.has(getFieldType(value));
@@ -81,11 +89,13 @@ const DocumentEditor: React.FC<{
   onChange?: (value?: FirestoreMap) => void;
   areRootNamesMutable?: boolean;
   areRootFieldsMutable?: boolean;
+  rtdb?: boolean;
 }> = ({
   value,
   onChange,
   areRootNamesMutable = true,
   areRootFieldsMutable = true,
+  rtdb: isRtdb,
 }) => {
   const methods = useForm({ mode: 'onChange' });
 
@@ -96,6 +106,7 @@ const DocumentEditor: React.FC<{
           onChange={onChange}
           areRootNamesMutable={areRootNamesMutable}
           areRootFieldsMutable={areRootFieldsMutable}
+          isRtdb={isRtdb}
         />
       </DocumentProvider>
     </FormContext>
@@ -115,7 +126,8 @@ const RootEditor: React.FC<{
   onChange?: (value?: FirestoreMap) => void;
   areRootNamesMutable: boolean;
   areRootFieldsMutable: boolean;
-}> = ({ onChange, areRootNamesMutable, areRootFieldsMutable }) => {
+  isRtdb?: boolean;
+}> = ({ onChange, areRootNamesMutable, areRootFieldsMutable, isRtdb }) => {
   const rootFields = useRootFields();
   const dispatch = useDocumentDispatch()!;
   const sdkMap = useSdkMap();
@@ -142,14 +154,17 @@ const RootEditor: React.FC<{
           key={field.id}
           id={field.id}
           isNameMutable={areRootNamesMutable}
+          isRtdb={isRtdb}
         />
       ))}
       {areRootFieldsMutable && (
         <IconButton
+          label="Add field"
+          type="button"
           icon="add"
           onClick={() =>
             dispatch(
-              actions.addField({
+              actions.addMapChildField({
                 state: {
                   name: '',
                   type: FieldType.STRING,
@@ -170,8 +185,9 @@ const RootEditor: React.FC<{
 const FieldEditor: React.FC<{
   id: number;
   index?: number;
+  isRtdb?: boolean;
   isNameMutable: boolean;
-}> = ({ id, index, isNameMutable = true }) => {
+}> = ({ id, index, isRtdb, isNameMutable = true }) => {
   const state = useFieldState(id);
   const siblingFields = useSiblingFields(id);
   const dispatch = useDocumentDispatch()!;
@@ -233,7 +249,7 @@ const FieldEditor: React.FC<{
         <SelectField
           label="Type"
           outlined
-          options={supportedFieldTypes}
+          options={isRtdb ? RTDB_FIELD_TYPES : FIRESTORE_FIELD_TYPES}
           value={state.type}
           onChange={e => {
             dispatch(actions.updateType({ id, type: e.currentTarget.value }));
@@ -280,6 +296,7 @@ const FieldEditor: React.FC<{
         {/* Field actions*/}
         <div className="FieldEditor-actions">
           <IconButton
+            type="button"
             icon="delete"
             label="Remove field"
             onClick={() => dispatch(actions.deleteField({ id }))}
