@@ -98,7 +98,7 @@ export const NodeLeaf = React.memo<Props>(function NodeLeaf$({
       {isAdding && (
         <InlineEditor
           rtdb
-          value={{ key: value }}
+          value={{ [realtimeRef.push().key!]: '' }}
           onCancel={() => setIsAdding(false)}
           onSave={handleAddSuccess}
           areRootKeysMutable={true}
