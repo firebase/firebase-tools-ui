@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-import { TextField } from '@rmwc/textfield';
 import { firestore } from 'firebase';
 import React, { useEffect, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
+
+import { Field } from '../../common/Field';
 
 function dateToLocale(date: Date): string {
   const year = date.getFullYear();
@@ -33,8 +35,25 @@ function dateToLocale(date: Date): string {
 const TimestampEditor: React.FC<{
   value: firestore.Timestamp;
   onChange: (value: firestore.Timestamp) => void;
-}> = ({ value, onChange }) => {
+  name: string;
+}> = ({ value, onChange, name }) => {
   const [date, setDate] = useState(value.toDate());
+
+  const {
+    errors,
+    formState: { touched },
+    register,
+    unregister,
+    setValue,
+  } = useFormContext();
+
+  useEffect(() => {
+    register(name, {
+      validate: e => !isNaN(e) || 'Must be a date-time',
+    });
+
+    return () => unregister(name);
+  }, [register, unregister, name]);
 
   useEffect(() => {
     if (value.toMillis() !== date.getTime()) {
@@ -43,20 +62,19 @@ const TimestampEditor: React.FC<{
   }, [value, date, onChange]);
 
   return (
-    <>
-      <TextField
-        label="Value"
-        outlined
-        type="datetime-local"
-        value={dateToLocale(date)}
-        onChange={e => {
-          const timestamp = Date.parse(e.currentTarget.value);
-          if (!isNaN(timestamp) && timestamp !== date.getTime()) {
-            setDate(new Date(timestamp));
-          }
-        }}
-      />
-    </>
+    <Field
+      label="Value"
+      type="datetime-local"
+      defaultValue={dateToLocale(date)}
+      onChange={e => {
+        const timestamp = Date.parse(e.currentTarget.value);
+        setValue(name, timestamp, true);
+        if (!isNaN(timestamp) && timestamp !== date.getTime()) {
+          setDate(new Date(timestamp));
+        }
+      }}
+      error={touched[name] && errors[name]?.message}
+    />
   );
 };
 

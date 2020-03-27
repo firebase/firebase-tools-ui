@@ -37,11 +37,10 @@ const InlineEditor: React.FC<{
   }
 
   function handleCancel(e: React.MouseEvent<HTMLButtonElement>) {
-    e.stopPropagation();
     onCancel();
   }
 
-  function handleSave(e: React.MouseEvent<HTMLButtonElement>) {
+  function handleSubmit(e: React.MouseEvent<HTMLButtonElement>) {
     e.stopPropagation();
     if (internalValue) {
       onSave(Object.keys(internalValue)[0], Object.values(internalValue)[0]);
@@ -55,13 +54,15 @@ const InlineEditor: React.FC<{
           <DocumentEditor
             value={value}
             onChange={handleChange}
-            areRootKeysMutable={areRootKeysMutable}
+            areRootNamesMutable={areRootKeysMutable}
             areRootFieldsMutable={false}
           />
         </div>
         <CardActionButtons>
           <CardActionButton onClick={handleCancel}>Cancel</CardActionButton>
-          <CardActionButton onClick={handleSave}>Save</CardActionButton>
+          <CardActionButton onClick={handleSubmit} disabled={!internalValue}>
+            Save
+          </CardActionButton>
         </CardActionButtons>
       </Card>
     </Elevation>

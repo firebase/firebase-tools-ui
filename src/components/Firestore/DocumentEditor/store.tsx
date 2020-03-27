@@ -16,7 +16,6 @@
 
 import { firestore } from 'firebase';
 import produce from 'immer';
-import get from 'lodash.get';
 import React, { useMemo } from 'react';
 import { Action, createReducer } from 'typesafe-actions';
 
@@ -27,18 +26,14 @@ import {
   FirestoreMap,
 } from '../models';
 import {
-  getFieldType,
-  getParentPath,
   isArray,
   isBoolean,
   isGeoPoint,
-  isMap,
   isNumber,
   isPrimitive,
   isReference,
   isString,
   isTimestamp,
-  lastFieldName,
 } from '../utils';
 import * as actions from './actions';
 
@@ -56,6 +51,7 @@ interface FieldBase<T extends FieldType> {
 }
 
 interface PrimitiveField<T extends FieldType, V> extends FieldBase<T> {
+  name: string;
   value: V;
 }
 
@@ -88,8 +84,40 @@ type ArrayField = ContainerField<FieldType.ARRAY>;
 
 type ContainerFields = MapField | ArrayField;
 
+type ArrayChildField = MapField | PrimitiveFields;
+
 export type NewField = PrimitiveFields | ContainerFields;
-type Field = NewField & { id: number };
+type Field = NewField & { readonly id: number };
+
+export function isMapChildField(
+  field: Field
+): field is Extract<Field, NewField> {
+  return 'name' in field;
+}
+
+export function isArrayChildField(
+  field: Field
+): field is Extract<Field, ArrayChildField> {
+  return !('name' in field);
+}
+
+export function isContainerField(
+  field: Field
+): field is Extract<Field, MapField | ArrayField> {
+  return 'childrenIds' in field;
+}
+
+// export function isNotArrayChild(
+//   field: Field,
+// ): field is Extract<Field, PrimitiveFields | MapField> {
+//   return 'name' in field;
+// }
+
+// export function isContainerField(
+//   field: Field,
+// ): field is ContainerField<infer FieldType> {
+//   return 'childrenIds' in field;
+// }
 
 interface State {
   fields: { [id: number]: Field };
@@ -116,6 +144,40 @@ const reducer = createReducer<State, Action>({ fields: {}, rootFieldIds: [] })
   //  .handleAction(actions.reset, (state, { payload }) => {
   //    return [];
   //  })
+
+  .handleAction(
+    actions.addMapChildField,
+    produce((draft, { payload }) => {
+      if (
+        payload.parentId &&
+        draft.fields[payload.parentId]?.type !== FieldType.MAP
+      ) {
+        throw new Error('Tried to add a map-child to a non-map');
+      }
+
+      const id = getUniqueId();
+      draft.fields[id] = { ...payload.state, id };
+      if (payload.parentId) {
+        draft.fields[payload.parentId].childrenIds.push(id);
+      } else {
+        draft.rootFieldIds.push(id);
+      }
+    })
+  )
+  .handleAction(
+    actions.addArrayChildField,
+    produce((draft, { payload }) => {
+      if (draft.fields[payload.parentId]?.type !== FieldType.ARRAY) {
+        throw new Error('Tried to add an array-child to a non-array');
+      }
+
+      const id = getUniqueId();
+      draft.fields[id] = { ...payload.state, id };
+      if (payload.parentId) {
+        draft.fields[payload.parentId].childrenIds.push(id);
+      }
+    })
+  )
   .handleAction(
     actions.addField,
     produce((draft, { payload }) => {
@@ -153,9 +215,34 @@ const reducer = createReducer<State, Action>({ fields: {}, rootFieldIds: [] })
       draft.fields[payload.id].value = payload.value;
     })
   )
-  .handleAction(actions.deleteField, (state, { payload }) => {
-    return withFieldRemoved(state, payload);
-  });
+  .handleAction(
+    actions.deleteField,
+    produce((draft, { payload }) => {
+      // Remove the referenced-field and any getDescendantIds
+      for (const id of getDescendantIds(draft.fields, [payload.id])) {
+        delete draft.fields[id];
+      }
+      // Remove reference from parent
+      for (const field of Object.values(draft.fields) as Field[]) {
+        if (
+          (field.type === FieldType.MAP || field.type === FieldType.ARRAY) &&
+          field.childrenIds.includes(payload.id)
+        ) {
+          field.childrenIds.splice(
+            field.childrenIds.findIndex(id => id === payload.id),
+            1
+          );
+        }
+      }
+      // Remove reference from root
+      if (draft.rootFieldIds.includes(payload.id)) {
+        draft.rootFieldIds.splice(
+          draft.rootFieldIds.findIndex((id: number) => id === payload.id),
+          1
+        );
+      }
+    })
+  );
 
 function exhaustiveCheck(param: never): never {
   throw new Error(`Unknown FieldType: ${param}`);
@@ -197,37 +284,6 @@ const DocumentDispatchContext = React.createContext<React.Dispatch<
   Action
 > | null>(null);
 
-export function useSdkMap(): FirestoreMap {
-  const context = React.useContext(DocumentStateContext);
-  if (context === undefined) {
-    throw new Error('useSdkMap must be used within a DocumentProvider');
-  }
-
-  const rootFields = useRootFields();
-
-  const sdkMap = useMemo(
-    () =>
-      rootFields.reduce((acc, field) => {
-        acc[field.name] = denormalizeField(field, context)[field.name];
-        return acc;
-      }, {} as { [name: string]: FirestoreAny }),
-    [context]
-  );
-
-  return sdkMap;
-}
-
-export function useRootFields(): Field[] {
-  const context = React.useContext(DocumentStateContext);
-  if (context === undefined) {
-    throw new Error('useRootFields must be used within a DocumentProvider');
-  }
-  return context.rootFieldIds.reduce(
-    (acc, id) => [...acc, context.fields[id]],
-    [] as Field[]
-  );
-}
-
 export function useDocumentDispatch() {
   const context = React.useContext(DocumentDispatchContext);
   if (context === undefined) {
@@ -238,12 +294,66 @@ export function useDocumentDispatch() {
   return context;
 }
 
-export function useFieldState(id: number): Field {
+function useDocumentState(): State {
   const context = React.useContext(DocumentStateContext);
   if (context === undefined) {
-    throw new Error('useFieldState must be used within a DocumentProvider');
+    throw new Error('useDocumentState must be used within a DocumentProvider');
   }
-  return context.fields[id];
+
+  return context;
+}
+
+export function useRootFields(): Field[] {
+  const state = useDocumentState();
+  return useMemo(
+    () => state.rootFieldIds.map(fieldId => state.fields[fieldId]),
+    [state]
+  );
+}
+
+export function useSdkMap(): FirestoreMap {
+  const state = useDocumentState();
+  const rootFields = useRootFields();
+
+  const sdkMap = useMemo(
+    () =>
+      rootFields.reduce((acc, field) => {
+        // Root-fields are always map-children
+        if (isMapChildField(field)) {
+          acc[field.name] = denormalizeField(field, state);
+        }
+        return acc;
+      }, {} as { [name: string]: FirestoreAny }),
+    [state, rootFields]
+  );
+
+  return sdkMap;
+}
+
+export function useFieldState(id: number): Field {
+  const state = useDocumentState();
+  return useMemo(() => state.fields[id], [state, id]);
+}
+
+export function useSiblingFields(id: number): Field[] {
+  const state = useDocumentState();
+
+  return useMemo(() => {
+    let siblingIds: number[] = [];
+
+    if (state.rootFieldIds.includes(id)) {
+      siblingIds = state.rootFieldIds.filter(fieldId => fieldId !== id);
+    }
+
+    for (const field of Object.values(state.fields)) {
+      if (isContainerField(field) && field.childrenIds.includes(id)) {
+        siblingIds = field.childrenIds.filter(fieldId => fieldId !== id);
+        break;
+      }
+    }
+
+    return siblingIds.map(fieldId => state.fields[fieldId]);
+  }, [state, id]);
 }
 
 export const DocumentProvider: React.FC<{ value: FirestoreMap }> = ({
@@ -261,113 +371,117 @@ export const DocumentProvider: React.FC<{ value: FirestoreMap }> = ({
   );
 };
 
-function denormalizeField(field: Field, state: State): FirestoreMap {
-  if (field.type === FieldType.MAP) {
-    return {
-      [field.name]: field.childrenIds.reduce((acc, id) => {
-        const childField = state.fields[id];
-        acc[childField.name] = denormalizeField(childField, state)[
-          childField.name
-        ];
-        return acc;
-      }, {} as FirestoreMap),
-    };
-  }
+function denormalizeField(field: Field, state: State): FirestoreAny {
+  // if (!isNotArrayChild(field)) {
+  //   return field.childrenIds.reduce((acc, id) => {
+  //     const childField = state.fields[id];
+  //     if (childField.type !== FieldType.ARRAY) {
+  //       const foo = denormalizeField(childField, state);
+  //       if (!isArray(foo)) {
+  //         acc.push(foo);
+  //         // acc.push(denormalizeField(childField, state));
+  //       }
+  //     }
+  //     return acc;
+  //   }, [] as FirestoreArray);
+  // }
   if (field.type === FieldType.ARRAY) {
-    return {
-      [field.name]: field.childrenIds.reduce((acc, id) => {
+    return field.childrenIds.reduce((acc, id) => {
+      const childField = state.fields[id];
+      if (isArrayChildField(childField)) {
+        const foo = denormalizeField(childField, state);
+        if (!isArray(foo)) {
+          acc.push(foo);
+          // acc.push(denormalizeField(childField, state));
+        }
+      }
+      return acc;
+    }, [] as FirestoreArray);
+  }
+  if (isMapChildField(field)) {
+    if (field.type === FieldType.MAP) {
+      return field.childrenIds.reduce((acc, id) => {
         const childField = state.fields[id];
-        if (childField.type !== FieldType.ARRAY) {
-          acc.push(denormalizeField(childField, state)[childField.name] as any);
+        if (isMapChildField(childField)) {
+          acc[childField.name] = denormalizeField(childField, state);
         }
         return acc;
-      }, [] as FirestoreArray),
-    };
+      }, {} as FirestoreMap);
+    }
   }
-  return { [field.name]: field.value };
+  return field.value;
 }
 
 function sdkToState(sdk: FirestoreMap): State {
   const fields: { [id: number]: Field } = {};
   const rootFieldIds = [];
   for (const [key, value] of Object.entries(sdk)) {
-    const fieldType = getFieldType(value);
+    // TODO: add support for ingesting maps/arrays into the editor, not required
+    // as of 3/27/20
+    if (isPrimitive(value)) {
+      let newField: NewField | undefined = undefined;
 
-    if (isString(value)) {
-      const field: Field = {
-        id: getUniqueId(),
-        name: key,
-        type: FieldType.STRING,
-        value: value,
-      };
-      fields[field.id] = field;
-      rootFieldIds.push(field.id);
-    }
+      if (isString(value)) {
+        newField = {
+          name: key,
+          type: FieldType.STRING,
+          value: value,
+        };
+      }
 
-    if (isNumber(value)) {
-      const field: Field = {
-        id: getUniqueId(),
-        name: key,
-        type: FieldType.NUMBER,
-        value: value,
-      };
-      fields[field.id] = field;
-      rootFieldIds.push(field.id);
-    }
+      if (isNumber(value)) {
+        newField = {
+          name: key,
+          type: FieldType.NUMBER,
+          value: value,
+        };
+      }
 
-    if (isBoolean(value)) {
-      const field: Field = {
-        id: getUniqueId(),
-        name: key,
-        type: FieldType.BOOLEAN,
-        value: value,
-      };
-      fields[field.id] = field;
-      rootFieldIds.push(field.id);
-    }
+      if (isBoolean(value)) {
+        newField = {
+          name: key,
+          type: FieldType.BOOLEAN,
+          value: value,
+        };
+      }
 
-    if (isGeoPoint(value)) {
-      const field: Field = {
-        id: getUniqueId(),
-        name: key,
-        type: FieldType.GEOPOINT,
-        value: value,
-      };
-      fields[field.id] = field;
-      rootFieldIds.push(field.id);
-    }
+      if (isGeoPoint(value)) {
+        newField = {
+          name: key,
+          type: FieldType.GEOPOINT,
+          value: value,
+        };
+      }
 
-    if (isReference(value)) {
-      const field: Field = {
-        id: getUniqueId(),
-        name: key,
-        type: FieldType.REFERENCE,
-        value: value,
-      };
-      fields[field.id] = field;
-      rootFieldIds.push(field.id);
-    }
+      if (isReference(value)) {
+        newField = {
+          name: key,
+          type: FieldType.REFERENCE,
+          value: value,
+        };
+      }
 
-    if (isTimestamp(value)) {
-      const field: Field = {
-        id: getUniqueId(),
-        name: key,
-        type: FieldType.TIMESTAMP,
-        value: value,
-      };
-      fields[field.id] = field;
-      rootFieldIds.push(field.id);
-    }
+      if (isTimestamp(value)) {
+        newField = {
+          name: key,
+          type: FieldType.TIMESTAMP,
+          value: value,
+        };
+      }
 
-    if (value === null) {
-      const field: Field = {
-        id: getUniqueId(),
-        name: key,
-        type: FieldType.NULL,
-        value: value,
-      };
-      fields[field.id] = field;
-      rootFieldIds.push(field.id);
+      if (value === null) {
+        newField = {
+          name: key,
+          type: FieldType.NULL,
+          value: value,
+        };
+      }
+
+      if (newField) {
+        const field: Field = { ...newField, id: getUniqueId() };
+        fields[field.id] = field;
+        rootFieldIds.push(field.id);
+      }
     }
   }
   return {

@@ -26,7 +26,15 @@ import { NewField } from './store';
 
 export const reset = createAction('@document/reset')<FirestoreMap>();
 
-export const addField = createAction('@document/addNew')<{
+export const addField = createAction('@document/add')<{
+  parentId?: number;
+  state: NewField;
+}>();
+export const addArrayChildField = createAction('@document/addArrayChildField')<{
+  parentId?: number;
+  state: { type: FieldType; value: FirestoreAny };
+}>();
+export const addMapChildField = createAction('@document/addMapChildField')<{
   parentId?: number;
   state: NewField;
 }>();
@@ -34,14 +42,12 @@ export const updateName = createAction('@document/updateFieldName')<{
   id: number;
   name: string;
 }>();
-export const updateType = createAction('@document/updateTypeNew')<{
+export const updateType = createAction('@document/updateType')<{
   id: number;
   type: FieldType;
 }>();
-export const updateValue = createAction('@document/updateValueNew')<{
+export const updateValue = createAction('@document/updateValue')<{
   id: number;
   value: FirestorePrimitive;
 }>();
-export const deleteField = createAction('@document/deleteNew')<{
-  id: number;
-}>();
+export const deleteField = createAction('@document/delete')<{ id: number }>();

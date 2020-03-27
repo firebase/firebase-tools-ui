@@ -14,62 +14,53 @@
  * limitations under the License.
  */
 
-import { TextField } from '@rmwc/textfield';
-import React, { useEffect, useState } from 'react';
-import { Controller, ErrorMessage, useFormContext } from 'react-hook-form';
+import React, { useEffect } from 'react';
+import { useFormContext } from 'react-hook-form';
+
+import { Field } from '../../common/Field';
 
 const NumberEditor: React.FC<{
   value: number;
   onChange: (value: number) => void;
   name: string;
 }> = ({ value, onChange, name }) => {
-  const [number, setNumber] = useState(String(value));
   const {
     errors,
     formState: { touched },
-    getValues,
+    register,
+    unregister,
+    setValue,
+    triggerValidation,
   } = useFormContext();
 
   useEffect(() => {
-    const num = parseFloat(number);
-    if (!isNaN(num)) {
-      onChange(num);
-    }
-  }, [number, onChange]);
+    register(name, {
+      required: 'Required',
+      pattern: {
+        value: /^-?([\d]*\.?[\d+]|Infinity|NaN)$/,
+        message: 'Must be a number',
+      },
+    });
 
-  console.log({ errors, touched, values: getValues() });
-  console.log(errors[name]);
+    return () => unregister(name);
+  }, [register, unregister, name]);
+
+  async function handleChange(value: string) {
+    if (await triggerValidation(name)) {
+      onChange(parseFloat(value));
+    }
+  }
 
   return (
-    //<TextField
-    //  label="Value"
-    //  outlined
-    //  type="string"
-    //  value={number}
-    //  onChange={(e) => setNumber(e.currentTarget.value)}
-    ///>
-    <>
-      <Controller
-        as={TextField}
-        name={name}
-        defaultValue={number}
-        onChange={([e]) => {
-          // console.log(e);
-          // Continue validation while updating the document-store
-          // setNumber(e.currentTarget.value);
-          // dispatch(actions.updateName({ id, name: e.currentTarget.value }));
-          return e;
-        }}
-        rules={{
-          required: 'This is really required',
-          // validate: (value) => value === '1',
-        }}
-        outlined
-        label="Value"
-        invalid={touched[name] && errors[name]}
-      />
-      <ErrorMessage errors={errors} name={name} />
-    </>
+    <Field
+      label="Value"
+      defaultValue={value}
+      onChange={e => {
+        setValue(name, e.currentTarget.value);
+        handleChange(e.currentTarget.value);
+      }}
+      error={touched[name] && errors[name]?.message}
+    />
   );
 };
 

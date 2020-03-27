@@ -121,7 +121,12 @@ export const AddDocumentDialog: React.FC<Props> = ({
         <DialogButton action="close" type="button" theme="secondary">
           Cancel
         </DialogButton>
-        <DialogButton unelevated action="accept" isDefaultAction>
+        <DialogButton
+          unelevated
+          action="accept"
+          isDefaultAction
+          disabled={!document.data}
+        >
           Save
         </DialogButton>
       </DialogActions>
