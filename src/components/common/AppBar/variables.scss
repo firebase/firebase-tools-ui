@@ -3,4 +3,5 @@ $mdc-tab-height: 44px;
 @import '@material/tab/variables';
 @import '@material/top-app-bar/variables';
 
-$app-bar-height: $mdc-tab-height + 48px;
+$app-bar-title-height: 48px;
+$app-bar-height: $mdc-tab-height + $app-bar-title-height;
