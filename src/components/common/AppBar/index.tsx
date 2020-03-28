@@ -23,9 +23,9 @@ import { Typography } from '@rmwc/typography';
 import React from 'react';
 import { Link, matchPath, useLocation } from 'react-router-dom';
 
-import { navBarOnSurface, navBarPrimary, navBarSurface } from '../../colors';
-import { Route } from '../../routes';
-import Logo from '../common/Logo';
+import { navBarOnSurface, navBarPrimary, navBarSurface } from '../../../colors';
+import { Route } from '../../../routes';
+import Logo from '../Logo';
 
 type Props = {
   routes: ReadonlyArray<Route>;
