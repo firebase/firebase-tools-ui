@@ -1,5 +1,6 @@
+$mdc-tab-height: 44px;
 @import '@material/theme/variables'; // for mdc-theme-prop-value
 @import '@material/tab/variables';
 @import '@material/top-app-bar/variables';
 
-$app-bar-height: $mdc-tab-height + $mdc-top-app-bar-row-height;
+$app-bar-height: $mdc-tab-height + 48px;

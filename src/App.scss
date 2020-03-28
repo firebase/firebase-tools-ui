@@ -1,6 +1,8 @@
 @import './components/AppBar/variables';
 @import './App_variables.scss';
 
+$page-gutter-size: 48px;
+
 .App {
   // Mainly to fill the whole screen with background color.
   min-height: 100vh;
@@ -10,7 +12,7 @@
   padding-top: $app-bar-height + $app-main-real-vert-padding;
   padding-bottom: $app-main-real-vert-padding;
   margin: 0 auto;
-  max-width: 1256px + 48px; // offset grid margins
-  padding-left: 48px;
-  padding-right: 48px;
+  max-width: 1256px + (2 * $page-gutter-size); // offset grid margins
+  padding-left: $page-gutter-size;
+  padding-right: $page-gutter-size;
 }

@@ -18,12 +18,12 @@ import './index.scss';
 
 import { Tab, TabBar } from '@rmwc/tabs';
 import { ThemeProvider } from '@rmwc/theme';
-import { TopAppBar, TopAppBarRow, TopAppBarSection } from '@rmwc/top-app-bar';
+import { TopAppBar } from '@rmwc/top-app-bar';
 import { Typography } from '@rmwc/typography';
 import React from 'react';
 import { Link, matchPath, useLocation } from 'react-router-dom';
 
-import { navBarOnSurface, navBarPrimary } from '../../colors';
+import { navBarOnSurface, navBarPrimary, navBarSurface } from '../../colors';
 import { Route } from '../../routes';
 import Logo from '../common/Logo';
 
@@ -57,20 +57,23 @@ export const AppBar: React.FC<Props> = ({ routes }) => {
     <ThemeProvider
       options={{
         primary: navBarPrimary,
+        surface: navBarSurface,
         onSurface: navBarOnSurface,
       }}
       wrap
     >
-      <TopAppBar fixed className="AppBar">
-        <TopAppBarRow>
-          <TopAppBarSection>
+      <TopAppBar fixed className="AppBar" theme="surface">
+        <div className="AppBar-title-row">
+          <div className="AppBar-logo-lockup">
             <Logo />
-            <Typography use="headline5" className="title" tag="h1">
+            <Typography use="headline5" className="AppBar-title" tag="h1">
               Firebase Emulator Suite
             </Typography>
-          </TopAppBarSection>
-        </TopAppBarRow>
-        <TabBar activeTabIndex={activeTabIndex}>{tabs}</TabBar>
+          </div>
+        </div>
+        <TabBar theme="onSurface" activeTabIndex={activeTabIndex}>
+          {tabs}
+        </TabBar>
       </TopAppBar>
     </ThemeProvider>
   );
