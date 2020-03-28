@@ -19,7 +19,7 @@ import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
 import { FirestoreConfig } from '../../store/config';
-import { confirm } from '../DialogQueue';
+import { confirm } from '../common/DialogQueue';
 import DatabaseApi from './api';
 import { Firestore, FirestoreRoute } from './index';
 import { fakeCollectionReference } from './testing/models';
