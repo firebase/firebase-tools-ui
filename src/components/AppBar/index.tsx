@@ -25,7 +25,7 @@ import { Link, matchPath, useLocation } from 'react-router-dom';
 
 import { navBarOnSurface, navBarPrimary } from '../../colors';
 import { Route } from '../../routes';
-import Logo from '../Logo';
+import Logo from '../common/Logo';
 
 type Props = {
   routes: ReadonlyArray<Route>;
@@ -61,18 +61,13 @@ export const AppBar: React.FC<Props> = ({ routes }) => {
       }}
       wrap
     >
-      <TopAppBar fixed prominent className="AppBar">
+      <TopAppBar fixed className="AppBar">
         <TopAppBarRow>
           <TopAppBarSection>
-            <div className="title-grid">
-              <Logo />
-              <Typography use="headline5" className="title">
-                Firebase Emulator Suite
-              </Typography>
-              <Typography use="subtitle1" className="subtitle">
-                This is a local environment and not the Firebase console
-              </Typography>
-            </div>
+            <Logo />
+            <Typography use="headline5" className="title" tag="h1">
+              Firebase Emulator Suite
+            </Typography>
           </TopAppBarSection>
         </TopAppBarRow>
         <TabBar activeTabIndex={activeTabIndex}>{tabs}</TabBar>

@@ -14,55 +14,16 @@
  * limitations under the License.
  */
 
-@import '@material/tab/mixins';
-@import '@material/tab-indicator/mixins';
-
-// We're using an old version of @material/tab (from rmwc) that does not theme
-// non-active tab text label properly. Let's fill the gap here.
-.mdc-tab:not(.mdc-tab--active) .mdc-tab__text-label {
-  color: var(--mdc-theme-on-surface, rgba(0, 0, 0, 0.6));
-}
-
 .AppBar {
-  padding: 0 24px;
+  padding: 0 48px;
   background-color: #0c2d48;
 
-  .title-grid {
-    align-items: center;
-    align-self: flex-end;
-    display: grid;
-    grid-gap: 4px;
-    grid-template-areas:
-      'logo title'
-      '.    subtitle';
-
-    .title {
-      grid-area: title;
-    }
-
-    .subtitle {
-      grid-area: subtitle;
-    }
-
-    svg {
-      grid-area: logo;
-    }
-  }
-
-  .mdc-tab-bar {
-    padding-left: 24px;
-  }
-
   .mdc-tab {
-    @include mdc-tab-horizontal-padding(5px);
-
-    &:nth-of-type(n + 1) {
+    &:not(:first-of-type) {
       margin-left: 16px;
     }
-  }
-
-  .mdc-tab-indicator {
-    @include mdc-tab-indicator-underline-height(3px);
-    @include mdc-tab-indicator-underline-top-corner-radius(2px);
+    &:not(.mdc-tab--active) .mdc-tab__text-label {
+      color: var(--mdc-theme-on-surface, rgba(0, 0, 0, 0.6));
+    }
   }
 }
