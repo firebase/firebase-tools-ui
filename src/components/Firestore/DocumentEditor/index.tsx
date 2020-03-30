@@ -32,24 +32,39 @@ import {
   FirestoreMap,
   FirestorePrimitive,
 } from '../models';
-import { getFieldType } from '../utils';
+import {
+  getFieldType,
+  isBoolean,
+  isGeoPoint,
+  isNumber,
+  isString,
+  isTimestamp,
+} from '../utils';
 import * as actions from './actions';
 import BooleanEditor from './BooleanEditor';
 import GeoPointEditor from './GeoPointEditor';
 import NumberEditor from './NumberEditor';
 import ReferenceEditor from './ReferenceEditor';
 import {
-  DocumentProvider,
-  isContainerField,
-  isMapChildField,
-  useDocumentDispatch,
-  useFieldState,
-  useRootFields,
-  useSdkMap,
-  useSiblingFields,
+  DocumentStore,
+  reducer,
+  storeReducer,
+  useDispatch,
+  useDocumentStore,
+  useField,
+  useStore,
 } from './store';
 import StringEditor from './StringEditor';
 import TimestampEditor from './TimestampEditor';
+import {
+  DocumentPath,
+  Field as FieldFoo,
+  PrimitiveValue,
+  Store,
+  isArrayField,
+  isMapField,
+} from './types';
+import { denormalize, normalize } from './utils';
 
 const FIRESTORE_FIELD_TYPES = [
   FieldType.STRING,
@@ -85,7 +100,7 @@ export function supportsEditing(value: FirestoreAny): boolean {
  * areRootFielsMutable: can a root field be added/removed.
  */
 const DocumentEditor: React.FC<{
-  value: FirestoreMap;
+  value: FirestoreAny;
   onChange?: (value?: FirestoreMap) => void;
   areRootNamesMutable?: boolean;
   areRootFieldsMutable?: boolean;
@@ -97,18 +112,23 @@ const DocumentEditor: React.FC<{
   areRootFieldsMutable = true,
   rtdb: isRtdb,
 }) => {
+  const initialState = normalize(value);
+  const [store, dispatch] = React.useReducer(storeReducer, initialState);
   const methods = useForm({ mode: 'onChange' });
+
+  const denormalizedStore = React.useMemo(() => denormalize(store), [store]);
+
+  useEffect(() => {
+    onChange && onChange(denormalizedStore as FirestoreMap);
+  }, [denormalizedStore]);
 
   return (
     <FormContext {...methods}>
-      <DocumentProvider value={value}>
-        <RootEditor
-          onChange={onChange}
-          areRootNamesMutable={areRootNamesMutable}
-          areRootFieldsMutable={areRootFieldsMutable}
-          isRtdb={isRtdb}
-        />
-      </DocumentProvider>
+      <DocumentStore store={store} dispatch={dispatch}>
+        <div className="DocumentEditor">
+          {<>{store.id !== undefined && <FieldEditor id={store.id} />}</>};
+        </div>
+      </DocumentStore>
     </FormContext>
   );
 };
@@ -119,238 +139,168 @@ function useErrorCount() {
 }
 
 /**
- * Special representation of a Document Root, where we don't want to show
- * the implicit top-level map.
+ * Field with call-to-actions for editing as well as rendering applicable child-nodes
  */
-const RootEditor: React.FC<{
-  onChange?: (value?: FirestoreMap) => void;
-  areRootNamesMutable: boolean;
-  areRootFieldsMutable: boolean;
-  isRtdb?: boolean;
-}> = ({ onChange, areRootNamesMutable, areRootFieldsMutable, isRtdb }) => {
-  const rootFields = useRootFields();
-  const dispatch = useDocumentDispatch()!;
-  const sdkMap = useSdkMap();
-  const errorCount = useErrorCount();
+const FieldEditor: React.FC<{ id: number }> = ({ id }) => {
+  const store = useStore();
+  const dispatch = useDispatch();
+  const field = useField(id);
 
-  useEffect(() => {
-    async function validate() {
-      if (onChange) {
-        if (errorCount === 0) {
-          onChange(sdkMap);
-        } else {
-          onChange(undefined);
-        }
-      }
-    }
+  const typeSelect = (
+    <SelectField
+      label="Type"
+      outlined
+      options={FIRESTORE_FIELD_TYPES}
+      value={getFieldTypeFoo(field)}
+      onChange={e => {
+        dispatch(actions.updateType({ id, type: e.currentTarget.value }));
+      }}
+    />
+  );
 
-    validate();
-  }, [errorCount, onChange, sdkMap]);
-
-  return (
-    <div className="RootEditor">
-      {rootFields.map((field, index) => (
-        <FieldEditor
-          key={field.id}
-          id={field.id}
-          isNameMutable={areRootNamesMutable}
-          isRtdb={isRtdb}
-        />
-      ))}
-      {areRootFieldsMutable && (
-        <IconButton
-          label="Add field"
-          type="button"
-          icon="add"
+  if (isMapField(field)) {
+    return (
+      <div className="DocumentEditor-Map">
+        {id !== store.id && typeSelect}
+        {field.mapChildren.map(c => {
+          return (
+            <div className="DocumentEditor-MapEntry" key={c.id}>
+              {/* Field name */}
+              <Field
+                label="Field"
+                outlined
+                value={c.name}
+                onChange={e => {
+                  dispatch(
+                    actions.updateName({
+                      id,
+                      childId: c.id,
+                      name: e.currentTarget.value,
+                    })
+                  );
+                }}
+              />
+              => <FieldEditor id={c.valueId} />
+              <button
+                onClick={() =>
+                  dispatch(actions.removeFromMap({ id, childId: c.id }))
+                }
+              >
+                x
+              </button>
+            </div>
+          );
+        })}
+        <button
           onClick={() =>
             dispatch(
-              actions.addMapChildField({
-                state: {
-                  name: '',
-                  type: FieldType.STRING,
-                  value: '',
-                },
+              actions.addToMap({
+                id,
+                name: '',
+                value: '',
               })
             )
           }
-        />
-      )}
-    </div>
-  );
-};
-
-/**
- * Field with call-to-actions for editing as well as rendering applicable child-nodes
- */
-const FieldEditor: React.FC<{
-  id: number;
-  index?: number;
-  isRtdb?: boolean;
-  isNameMutable: boolean;
-}> = ({ id, index, isRtdb, isNameMutable = true }) => {
-  const state = useFieldState(id);
-  const siblingFields = useSiblingFields(id);
-  const dispatch = useDocumentDispatch()!;
-  const {
-    errors,
-    triggerValidation,
-    formState: { touched },
-  } = useFormContext();
-
-  function handleEditValue(value: FirestorePrimitive) {
-    dispatch(actions.updateValue({ id, value }));
-  }
-
-  const nameInputName = `${id}-name`;
-  const valueInputName = `${id}-value`;
-
-  useEffect(() => {
-    // Validate `name` when siblings change
-    triggerValidation(nameInputName);
-  }, [siblingFields, triggerValidation, nameInputName]);
-
-  return (
-    <>
-      <div className="FieldEditor">
-        {/* Name editor */}
-        <Controller
-          as={Field}
-          name={nameInputName}
-          label="Field"
-          defaultValue={isMapChildField(state) ? state.name : index}
-          onChange={([e]) => {
-            // Continue validation while updating the document-store
-            dispatch(actions.updateName({ id, name: e.currentTarget.value }));
-            return e;
-          }}
-          disabled={!isNameMutable || index !== undefined}
-          rules={{
-            required: 'Required',
-            validate: {
-              unique: e =>
-                siblingFields.every(f => {
-                  if (isMapChildField(f)) {
-                    return f.name !== e;
-                  }
-                  return true;
-                }) || 'Needs to be unique',
-            },
-          }}
-          // Show the `unique` error regardless of the field having been
-          // touched; in case another field's name was updated to now conflict
-          error={
-            (touched[nameInputName] ||
-              errors[nameInputName]?.type === 'unique') &&
-            errors[nameInputName]?.message
-          }
-        />
-
-        {/* Type editor */}
-        <SelectField
-          label="Type"
-          outlined
-          options={isRtdb ? RTDB_FIELD_TYPES : FIRESTORE_FIELD_TYPES}
-          value={state.type}
-          onChange={e => {
-            dispatch(actions.updateType({ id, type: e.currentTarget.value }));
-          }}
-        />
-
-        {/* Value editor */}
-        {state.type === FieldType.STRING && (
-          <StringEditor value={state.value} onChange={handleEditValue} />
-        )}
-
-        {state.type === FieldType.NUMBER && (
-          <NumberEditor
-            value={state.value}
-            onChange={handleEditValue}
-            name={valueInputName}
-          />
-        )}
-        {state.type === FieldType.BOOLEAN && (
-          <BooleanEditor value={state.value} onChange={handleEditValue} />
-        )}
-        {state.type === FieldType.GEOPOINT && (
-          <GeoPointEditor
-            name={valueInputName}
-            value={state.value}
-            onChange={handleEditValue}
-          />
-        )}
-        {state.type === FieldType.TIMESTAMP && (
-          <TimestampEditor
-            name={valueInputName}
-            value={state.value}
-            onChange={handleEditValue}
-          />
-        )}
-        {state.type === FieldType.REFERENCE && (
-          <ReferenceEditor
-            name={valueInputName}
-            value={state.value}
-            onChange={handleEditValue}
-          />
-        )}
-
-        {/* Field actions*/}
-        <div className="FieldEditor-actions">
-          <IconButton
-            type="button"
-            icon="delete"
-            label="Remove field"
-            onClick={() => dispatch(actions.deleteField({ id }))}
-          />
-        </div>
+        >
+          add to map
+        </button>
       </div>
-
-      {isContainerField(state) && (
-        <div className="FieldEditor-children">
-          {/* Nested fields */}
-          {state.childrenIds.map((id, index) => (
-            <FieldEditor
-              key={id}
-              id={id}
-              index={state.type === FieldType.ARRAY ? index : undefined}
-              isNameMutable={state.type === FieldType.MAP}
-            />
-          ))}
-
-          {/* Add child */}
-          <div className="FieldEditor-add-child">
-            <IconButton
-              icon="add"
-              label="Add field"
-              onClick={e => {
-                if (state.type === FieldType.MAP) {
-                  dispatch(
-                    actions.addMapChildField({
-                      parentId: id,
-                      state: {
-                        name: '',
-                        type: FieldType.STRING,
-                        value: '',
-                      },
-                    })
-                  );
-                } else if (state.type === FieldType.ARRAY) {
-                  dispatch(
-                    actions.addArrayChildField({
-                      parentId: id,
-                      state: {
-                        type: FieldType.STRING,
-                        value: '',
-                      },
-                    })
-                  );
+    );
+  } else if (isArrayField(field)) {
+    return (
+      <div className="DocumentEditor-Array">
+        {id !== store.id && typeSelect}
+        {field.arrayChildren.map((c, index) => {
+          return (
+            <div className="DocumentEditor-ArrayEntry" key={c.id}>
+              {index} => <FieldEditor id={c.valueId} />
+              <button
+                onClick={() =>
+                  dispatch(actions.removeFromArray({ id, childId: c.id }))
                 }
-              }}
-            />
-          </div>
-        </div>
-      )}
-    </>
-  );
+              >
+                x
+              </button>
+            </div>
+          );
+        })}
+        <button
+          onClick={() =>
+            dispatch(
+              actions.addToArray({
+                id,
+                value: '',
+              })
+            )
+          }
+        >
+          add to array
+        </button>
+      </div>
+    );
+  } else {
+    const valueEditor =
+      field.value instanceof DocumentPath ? null : isString(field.value) ? (
+        <StringEditor
+          value={field.value}
+          onChange={e => {
+            dispatch(actions.updateValue({ id, value: e }));
+          }}
+        />
+      ) : isBoolean(field.value) ? (
+        <BooleanEditor
+          value={field.value}
+          onChange={e => {
+            dispatch(actions.updateValue({ id, value: e }));
+          }}
+        />
+      ) : isNumber(field.value) ? (
+        <NumberEditor
+          name="foobar"
+          value={field.value}
+          onChange={e => {
+            console.log(e);
+            dispatch(actions.updateValue({ id, value: e }));
+          }}
+        />
+      ) : isGeoPoint(field.value) ? (
+        <GeoPointEditor
+          name="foobar"
+          value={field.value}
+          onChange={e => {
+            dispatch(actions.updateValue({ id, value: e }));
+          }}
+        />
+      ) : isTimestamp(field.value) ? (
+        <TimestampEditor
+          name="foobar"
+          value={field.value}
+          onChange={e => {
+            dispatch(actions.updateValue({ id, value: e }));
+          }}
+        />
+      ) : null;
+
+    return (
+      <div className="DocumentEditor-Primitive">
+        {typeSelect}
+        {valueEditor}
+      </div>
+    );
+  }
 };
+
+function getFieldTypeFoo(field: FieldFoo): FieldType {
+  if (isMapField(field)) {
+    return FieldType.MAP;
+  } else if (isArrayField(field)) {
+    return FieldType.ARRAY;
+  } else {
+    if (field.value instanceof DocumentPath) {
+      return FieldType.REFERENCE;
+    }
+    return getFieldType(field.value);
+  }
+}
 
 export default DocumentEditor;

@@ -16,38 +16,39 @@
 
 import { createAction } from 'typesafe-actions';
 
-import {
-  FieldType,
-  FirestoreAny,
-  FirestoreMap,
-  FirestorePrimitive,
-} from '../models';
-import { NewField } from './store';
+import { FieldType } from '../models';
+import { PrimitiveValue } from './types';
 
-export const reset = createAction('@document/reset')<FirestoreMap>();
-
-export const addField = createAction('@document/add')<{
-  parentId?: number;
-  state: NewField;
-}>();
-export const addArrayChildField = createAction('@document/addArrayChildField')<{
-  parentId?: number;
-  state: { type: FieldType; value: FirestoreAny };
-}>();
-export const addMapChildField = createAction('@document/addMapChildField')<{
-  parentId?: number;
-  state: NewField;
-}>();
-export const updateName = createAction('@document/updateFieldName')<{
+export const addToMap = createAction('@document/addToMap')<{
   id: number;
+  name: string;
+  value: PrimitiveValue;
+}>();
+export const addToArray = createAction('@document/addToArray')<{
+  id: number;
+  value: PrimitiveValue;
+}>();
+// TODO
+export const removeFromMap = createAction('@document/removeFromMap')<{
+  id: number;
+  childId: number;
+}>();
+// TODO
+export const removeFromArray = createAction('@document/removeFromArray')<{
+  id: number;
+  childId: number;
+}>();
+export const updateName = createAction('@document/updateName')<{
+  id: number;
+  childId: number;
   name: string;
 }>();
 export const updateType = createAction('@document/updateType')<{
   id: number;
   type: FieldType;
 }>();
+// TODO
 export const updateValue = createAction('@document/updateValue')<{
   id: number;
-  value: FirestorePrimitive;
+  value: PrimitiveValue;
 }>();
-export const deleteField = createAction('@document/delete')<{ id: number }>();
