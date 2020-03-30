@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import './App.scss';
+import './index.scss';
 
 import { DialogQueue } from '@rmwc/dialog';
 import { Grid } from '@rmwc/grid';
@@ -22,9 +22,9 @@ import { Theme } from '@rmwc/theme';
 import React from 'react';
 import { Route } from 'react-router-dom';
 
-import AppBar from './components/common/AppBar';
-import { dialogs } from './components/common/DialogQueue';
-import { routes } from './routes';
+import { routes } from '../../routes';
+import { dialogs } from '../common/DialogQueue';
+import AppBar from './AppBar';
 
 const App: React.FC = () => {
   return (

@@ -27,8 +27,8 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
-import App from './App';
 import { background, primary, secondary } from './colors';
+import App from './components/App';
 import configureStore from './configureStore';
 import { fetchRequest as fetchConfigRequest } from './store/config';
 import { error } from './themes';
