@@ -74,7 +74,7 @@ export default connect(mapStateToProps)(Home);
 // TODO
 export const HomeLoading: React.FC = () => <p>Fetching Config...</p>;
 
-// Show no content on error since we have a general disconnected overlay anyway.
+// TODO: WIP
 export const HomeError: React.FC<{ error: ErrorInfo }> = ({ error }) => null;
 
 export const EmulatorCard: React.FC<{
