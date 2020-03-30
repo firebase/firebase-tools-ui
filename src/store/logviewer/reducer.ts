@@ -14,26 +14,12 @@
  * limitations under the License.
  */
 
-import { RemoteResult } from '../utils';
+import { createReducer, Action } from 'typesafe-actions';
+import { LogState } from './types';
+import { logReceived } from './actions';
 
-export interface EmulatorConfig {
-  hostAndPort: string;
-  host: string;
-  port: number;
-}
-
-export interface DatabaseConfig extends EmulatorConfig {}
-
-export interface FirestoreConfig extends EmulatorConfig {}
-
-export interface LoggingConfig extends EmulatorConfig {}
-
-export interface Config {
-  projectId: string;
-  database?: DatabaseConfig;
-  firestore?: FirestoreConfig;
-  logging?: LoggingConfig;
-  // TODO: More config for more emulators.
-}
-
-export type ConfigState = RemoteResult<Config>;
+export const logReducer = createReducer<LogState, Action>({
+  history: []
+}).handleAction(logReceived, (state: LogState, { payload }) => {
+  return {...state, history: [...state.history, payload]}
+});

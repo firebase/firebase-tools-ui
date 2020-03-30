@@ -14,26 +14,8 @@
  * limitations under the License.
  */
 
-import { RemoteResult } from '../utils';
-
-export interface EmulatorConfig {
-  hostAndPort: string;
-  host: string;
-  port: number;
+export interface LogState {
+  history: LogEntry[];
 }
 
-export interface DatabaseConfig extends EmulatorConfig {}
-
-export interface FirestoreConfig extends EmulatorConfig {}
-
-export interface LoggingConfig extends EmulatorConfig {}
-
-export interface Config {
-  projectId: string;
-  database?: DatabaseConfig;
-  firestore?: FirestoreConfig;
-  logging?: LoggingConfig;
-  // TODO: More config for more emulators.
-}
-
-export type ConfigState = RemoteResult<Config>;
+export interface LogEntry {level: string, message: string,  timestamp: number, data: {user: {[key: string]: any}}}

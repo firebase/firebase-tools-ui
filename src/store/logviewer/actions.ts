@@ -14,26 +14,7 @@
  * limitations under the License.
  */
 
-import { RemoteResult } from '../utils';
+import { createAction } from 'typesafe-actions';
+import { LogEntry } from './types';
 
-export interface EmulatorConfig {
-  hostAndPort: string;
-  host: string;
-  port: number;
-}
-
-export interface DatabaseConfig extends EmulatorConfig {}
-
-export interface FirestoreConfig extends EmulatorConfig {}
-
-export interface LoggingConfig extends EmulatorConfig {}
-
-export interface Config {
-  projectId: string;
-  database?: DatabaseConfig;
-  firestore?: FirestoreConfig;
-  logging?: LoggingConfig;
-  // TODO: More config for more emulators.
-}
-
-export type ConfigState = RemoteResult<Config>;
+export const logReceived = createAction('@log/RECEIVED')<LogEntry>();

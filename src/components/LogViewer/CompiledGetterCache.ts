@@ -14,26 +14,24 @@
  * limitations under the License.
  */
 
-import { RemoteResult } from '../utils';
+export class CompiledGetterCache {
+  getters: { [path: string]: Function } = {};
 
-export interface EmulatorConfig {
-  hostAndPort: string;
-  host: string;
-  port: number;
+  getOrCompile(path: string, obj: any) {
+    if (!this.getters[path]) {
+      try {
+        // eslint-disable-next-line no-new-func
+        this.getters[path] = new Function('obj', 'return obj.' + path + ';');
+      } catch (err) {
+        console.warn(err);
+        return undefined;
+      }
+    }
+
+    try {
+      return this.getters[path](obj);
+    } catch (err) {
+      return undefined;
+    }
+  }
 }
-
-export interface DatabaseConfig extends EmulatorConfig {}
-
-export interface FirestoreConfig extends EmulatorConfig {}
-
-export interface LoggingConfig extends EmulatorConfig {}
-
-export interface Config {
-  projectId: string;
-  database?: DatabaseConfig;
-  firestore?: FirestoreConfig;
-  logging?: LoggingConfig;
-  // TODO: More config for more emulators.
-}
-
-export type ConfigState = RemoteResult<Config>;
