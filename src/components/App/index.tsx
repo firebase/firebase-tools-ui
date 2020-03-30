@@ -25,11 +25,13 @@ import { Route } from 'react-router-dom';
 import { routes } from '../../routes';
 import { dialogs } from '../common/DialogQueue';
 import AppBar from './AppBar';
+import AppDisconnected from './AppDisconnected';
 
 const App: React.FC = () => {
   return (
     <>
       <DialogQueue dialogs={dialogs} />
+      <AppDisconnected />
       <Theme use="background" wrap>
         <div className="App">
           <AppBar routes={routes} />
