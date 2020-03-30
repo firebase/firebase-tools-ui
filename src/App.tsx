@@ -23,7 +23,7 @@ import React from 'react';
 import { Route } from 'react-router-dom';
 
 import AppBar from './components/common/AppBar';
-import { dialogs } from './components/DialogQueue';
+import { dialogs } from './components/common/DialogQueue';
 import { routes } from './routes';
 
 const App: React.FC = () => {
