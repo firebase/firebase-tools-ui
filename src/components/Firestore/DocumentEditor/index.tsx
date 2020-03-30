@@ -399,4 +399,5 @@ function getDocumentFieldType(field: DocumentField): FieldType {
   }
 }
 
+//
 export default DocumentEditor;
