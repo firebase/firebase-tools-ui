@@ -26,6 +26,7 @@ import {
 } from 'react-hook-form';
 
 import { Field, SelectField } from '../../common/Field';
+import { ApiProvider, useOptionalApi } from '../ApiContext';
 import {
   FieldType,
   FirestoreAny,
@@ -57,10 +58,12 @@ import {
 import StringEditor from './StringEditor';
 import TimestampEditor from './TimestampEditor';
 import {
+  Field as DocumentField,
   DocumentPath,
-  Field as FieldFoo,
+  MapField,
   PrimitiveValue,
   Store,
+  assertIsMapField,
   isArrayField,
   isMapField,
 } from './types';
@@ -108,40 +111,63 @@ const DocumentEditor: React.FC<{
 }> = ({
   value,
   onChange,
-  areRootNamesMutable = true,
-  areRootFieldsMutable = true,
-  rtdb: isRtdb,
+  areRootNamesMutable,
+  areRootFieldsMutable,
+  rtdb = false,
 }) => {
   const initialState = normalize(value);
   const [store, dispatch] = React.useReducer(storeReducer, initialState);
   const methods = useForm({ mode: 'onChange' });
+  const api = useOptionalApi();
 
-  const denormalizedStore = React.useMemo(() => denormalize(store), [store]);
+  const denormalizedStore = React.useMemo(() => denormalize(store, api), [
+    store,
+    api,
+  ]);
+
+  const errorCount = React.useMemo(() => Object.keys(methods.errors).length, [
+    methods,
+  ]);
 
   useEffect(() => {
-    onChange && onChange(denormalizedStore as FirestoreMap);
-  }, [denormalizedStore]);
+    if (errorCount === 0) {
+      onChange && onChange(denormalizedStore as FirestoreMap);
+    } else {
+      onChange && onChange(undefined);
+    }
+  }, [denormalizedStore, errorCount, onChange]);
 
   return (
     <FormContext {...methods}>
       <DocumentStore store={store} dispatch={dispatch}>
         <div className="DocumentEditor">
-          {<>{store.id !== undefined && <FieldEditor id={store.id} />}</>};
+          {
+            <>
+              {store.id !== undefined && (
+                <FieldEditor
+                  id={store.id}
+                  isRtdb={rtdb}
+                  areNamesMutable={areRootNamesMutable}
+                  areFieldsMutable={areRootFieldsMutable}
+                />
+              )}
+            </>
+          }
         </div>
       </DocumentStore>
     </FormContext>
   );
 };
 
-function useErrorCount() {
-  const { errors } = useFormContext();
-  return Object.keys(errors).length;
-}
-
 /**
  * Field with call-to-actions for editing as well as rendering applicable child-nodes
  */
-const FieldEditor: React.FC<{ id: number }> = ({ id }) => {
+const FieldEditor: React.FC<{
+  id: number;
+  isRtdb: boolean;
+  areNamesMutable?: boolean;
+  areFieldsMutable?: boolean;
+}> = ({ id, isRtdb, areNamesMutable = true, areFieldsMutable = true }) => {
   const store = useStore();
   const dispatch = useDispatch();
   const field = useField(id);
@@ -150,8 +176,8 @@ const FieldEditor: React.FC<{ id: number }> = ({ id }) => {
     <SelectField
       label="Type"
       outlined
-      options={FIRESTORE_FIELD_TYPES}
-      value={getFieldTypeFoo(field)}
+      options={isRtdb ? RTDB_FIELD_TYPES : FIRESTORE_FIELD_TYPES}
+      value={getDocumentFieldType(field)}
       onChange={e => {
         dispatch(actions.updateType({ id, type: e.currentTarget.value }));
       }}
@@ -165,45 +191,42 @@ const FieldEditor: React.FC<{ id: number }> = ({ id }) => {
         {field.mapChildren.map(c => {
           return (
             <div className="DocumentEditor-MapEntry" key={c.id}>
-              {/* Field name */}
-              <Field
-                label="Field"
-                outlined
-                value={c.name}
-                onChange={e => {
-                  dispatch(
-                    actions.updateName({
-                      id,
-                      childId: c.id,
-                      name: e.currentTarget.value,
-                    })
-                  );
-                }}
+              <NameEditor
+                id={id}
+                field={field}
+                childId={c.id}
+                readonly={!areNamesMutable && id === store.id}
               />
-              => <FieldEditor id={c.valueId} />
-              <button
-                onClick={() =>
-                  dispatch(actions.removeFromMap({ id, childId: c.id }))
-                }
-              >
-                x
-              </button>
+              => <FieldEditor id={c.valueId} isRtdb={isRtdb} />
+              {areFieldsMutable && (
+                <IconButton
+                  type="button"
+                  icon="delete"
+                  label="Remove field"
+                  onClick={() =>
+                    dispatch(actions.removeFromMap({ id, childId: c.id }))
+                  }
+                />
+              )}
             </div>
           );
         })}
-        <button
-          onClick={() =>
-            dispatch(
-              actions.addToMap({
-                id,
-                name: '',
-                value: '',
-              })
-            )
-          }
-        >
-          add to map
-        </button>
+        {areFieldsMutable && (
+          <IconButton
+            label="Add field"
+            type="button"
+            icon="add"
+            onClick={() =>
+              dispatch(
+                actions.addToMap({
+                  id,
+                  name: '',
+                  value: '',
+                })
+              )
+            }
+          />
+        )}
       </div>
     );
   } else if (isArrayField(field)) {
@@ -213,71 +236,72 @@ const FieldEditor: React.FC<{ id: number }> = ({ id }) => {
         {field.arrayChildren.map((c, index) => {
           return (
             <div className="DocumentEditor-ArrayEntry" key={c.id}>
-              {index} => <FieldEditor id={c.valueId} />
-              <button
-                onClick={() =>
-                  dispatch(actions.removeFromArray({ id, childId: c.id }))
-                }
-              >
-                x
-              </button>
+              {index} => <FieldEditor id={c.valueId} isRtdb={isRtdb} />
+              {areFieldsMutable && (
+                <IconButton
+                  type="button"
+                  icon="delete"
+                  label="Remove field"
+                  onClick={() =>
+                    dispatch(actions.removeFromArray({ id, childId: c.id }))
+                  }
+                />
+              )}
             </div>
           );
         })}
-        <button
-          onClick={() =>
-            dispatch(
-              actions.addToArray({
-                id,
-                value: '',
-              })
-            )
-          }
-        >
-          add to array
-        </button>
+        {areFieldsMutable && (
+          <IconButton
+            label="Add field"
+            type="button"
+            icon="add"
+            onClick={() =>
+              dispatch(
+                actions.addToArray({
+                  id,
+                  value: '',
+                })
+              )
+            }
+          />
+        )}
       </div>
     );
   } else {
     const valueEditor =
-      field.value instanceof DocumentPath ? null : isString(field.value) ? (
+      field.value instanceof DocumentPath ? (
+        <ReferenceEditor
+          name={`${id}`}
+          value={field.value}
+          onChange={value => dispatch(actions.updateValue({ id, value }))}
+        />
+      ) : isString(field.value) ? (
         <StringEditor
           value={field.value}
-          onChange={e => {
-            dispatch(actions.updateValue({ id, value: e }));
-          }}
+          onChange={value => dispatch(actions.updateValue({ id, value }))}
         />
       ) : isBoolean(field.value) ? (
         <BooleanEditor
           value={field.value}
-          onChange={e => {
-            dispatch(actions.updateValue({ id, value: e }));
-          }}
+          onChange={value => dispatch(actions.updateValue({ id, value }))}
         />
       ) : isNumber(field.value) ? (
         <NumberEditor
-          name="foobar"
+          name={`${id}`}
           value={field.value}
-          onChange={e => {
-            console.log(e);
-            dispatch(actions.updateValue({ id, value: e }));
-          }}
+          onChange={value => dispatch(actions.updateValue({ id, value }))}
         />
       ) : isGeoPoint(field.value) ? (
         <GeoPointEditor
-          name="foobar"
+          name={`${id}`}
           value={field.value}
-          onChange={e => {
-            dispatch(actions.updateValue({ id, value: e }));
-          }}
+          onChange={value => dispatch(actions.updateValue({ id, value }))}
         />
       ) : isTimestamp(field.value) ? (
         <TimestampEditor
-          name="foobar"
+          name={`${id}`}
           value={field.value}
-          onChange={e => {
-            dispatch(actions.updateValue({ id, value: e }));
-          }}
+          onChange={value => dispatch(actions.updateValue({ id, value }))}
         />
       ) : null;
 
@@ -290,7 +314,79 @@ const FieldEditor: React.FC<{ id: number }> = ({ id }) => {
   }
 };
 
-function getFieldTypeFoo(field: FieldFoo): FieldType {
+const NameEditor: React.FC<{
+  id: number;
+  field: MapField;
+  childId: number;
+  readonly: boolean;
+}> = ({ id, field, childId, readonly }) => {
+  const {
+    register,
+    unregister,
+    errors,
+    triggerValidation,
+    clearError,
+    setValue,
+    setError,
+    formState: { touched },
+  } = useFormContext();
+
+  const dispatch = useDispatch();
+  const child = field.mapChildren.find(c => c.id === childId);
+  if (!child) {
+    throw 'Tried to render a name-edtior for a non-map-child';
+  }
+
+  const formName = `${childId}`;
+
+  const siblingNames = React.useMemo(() => {
+    return field.mapChildren.filter(c => c.id !== childId).map(c => c.name);
+  }, [field, childId]);
+
+  useEffect(() => {
+    register(formName);
+    return () => unregister(formName);
+  }, [register, unregister, formName]);
+
+  useEffect(() => {
+    // Validate `name` when siblings change
+    const isUnique = siblingNames.every(name => name != child.name);
+    if (!child.name) {
+      setError(formName, 'required', 'Required');
+    } else if (!isUnique) {
+      setError(formName, 'unique', 'Must be unique');
+    } else {
+      clearError(formName);
+    }
+  }, [child, siblingNames, formName, setError, clearError]);
+
+  return (
+    <Field
+      label="Field"
+      outlined
+      value={child.name}
+      disabled={readonly}
+      onChange={e => {
+        setValue(formName, e.currentTarget.value);
+        dispatch(
+          actions.updateName({
+            id,
+            childId,
+            name: e.currentTarget.value,
+          })
+        );
+      }}
+      // Show the `unique` error regardless of the field having been
+      // touched; in case another field's name was updated to now conflict
+      error={
+        (touched[formName] || errors[formName]?.type === 'unique') &&
+        errors[formName]?.message
+      }
+    />
+  );
+};
+
+function getDocumentFieldType(field: DocumentField): FieldType {
   if (isMapField(field)) {
     return FieldType.MAP;
   } else if (isArrayField(field)) {

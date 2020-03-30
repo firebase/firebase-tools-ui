@@ -20,10 +20,11 @@ import { useFormContext } from 'react-hook-form';
 
 import { Field } from '../../common/Field';
 import { useApi } from '../ApiContext';
+import { DocumentPath } from './types';
 
 const ReferenceEditor: React.FC<{
-  value: firestore.DocumentReference;
-  onChange: (value: firestore.DocumentReference) => void;
+  value: DocumentPath;
+  onChange: (value: DocumentPath) => void;
   name: string;
 }> = ({ value, onChange, name }) => {
   const [path] = useState(value.path);
@@ -54,7 +55,7 @@ const ReferenceEditor: React.FC<{
 
   async function handleChange(value: string) {
     if (await triggerValidation(name)) {
-      onChange(api.database.doc(value));
+      onChange(new DocumentPath(value));
     }
   }
 

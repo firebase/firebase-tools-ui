@@ -1,5 +1,6 @@
 import { firestore } from 'firebase';
 
+import DatabaseApi from '../api';
 import {
   FieldType,
   FirestoreAny,
@@ -110,25 +111,39 @@ export function normalize(data: FirestoreAny): Store {
   }
 }
 
-export function denormalize(store: Store): FirestoreAny {
+export function denormalize(
+  store: Store,
+  api: DatabaseApi | null
+): FirestoreAny {
   assertStoreHasRoot(store);
   const field = store.fields[store.id];
   if (isMapField(field)) {
     return field.mapChildren.reduce((acc, curr) => {
-      acc[curr.name] = denormalize({
-        id: curr.valueId,
-        fields: store.fields,
-      });
+      acc[curr.name] = denormalize(
+        {
+          id: curr.valueId,
+          fields: store.fields,
+        },
+        api
+      );
       return acc;
     }, {} as any);
   } else if (isArrayField(field)) {
     return field.arrayChildren.reduce((acc, curr) => {
-      acc.push(denormalize({ id: curr.valueId, fields: store.fields }));
+      acc.push(denormalize({ id: curr.valueId, fields: store.fields }, api));
       return acc;
     }, [] as any);
   } else {
     if (field.value instanceof DocumentPath) {
-      return 'TODO api.doc...';
+      if (!api) {
+        throw 'Tried to denormalize a DocumentRef without the FirestoreAPI';
+      }
+      try {
+        return api.database.doc(field.value.path);
+      } catch {
+        // TODO: The store does not always have a valid DocRef, reconsider.
+        return '';
+      }
     }
     return field.value;
   }
@@ -136,8 +151,6 @@ export function denormalize(store: Store): FirestoreAny {
 
 export function defaultValueForPrimitiveType(type: FieldType): PrimitiveValue {
   switch (type) {
-    // case FieldType.ARRAY:
-    // return [];
     case FieldType.BLOB:
       // TODO
       return '';
@@ -145,8 +158,6 @@ export function defaultValueForPrimitiveType(type: FieldType): PrimitiveValue {
       return true;
     case FieldType.GEOPOINT:
       return new firestore.GeoPoint(0, 0);
-    // case FieldType.MAP:
-    // return {};
     case FieldType.NULL:
       return null;
     case FieldType.NUMBER:
