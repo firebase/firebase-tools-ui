@@ -17,7 +17,7 @@
 import { DialogButton } from '@rmwc/dialog';
 import React from 'react';
 
-import { confirm } from '../../DialogQueue';
+import { confirm } from '../../common/DialogQueue';
 
 export const promptClearAll = () =>
   confirm({

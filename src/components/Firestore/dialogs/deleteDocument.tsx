@@ -19,8 +19,8 @@ import { firestore } from 'firebase';
 import React from 'react';
 
 import { Callout } from '../../common/Callout';
+import { confirm } from '../../common/DialogQueue';
 import { Field } from '../../common/Field';
-import { confirm } from '../../DialogQueue';
 
 export const promptDeleteDocument = (reference: firestore.DocumentReference) =>
   confirm({
