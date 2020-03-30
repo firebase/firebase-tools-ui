@@ -25,7 +25,7 @@ import { Firestore, FirestoreRoute } from './index';
 import { fakeCollectionReference } from './testing/models';
 
 jest.mock('./api');
-jest.mock('../DialogQueue');
+jest.mock('../common/DialogQueue');
 
 const sampleConfig: FirestoreConfig = {
   host: 'localhost',
