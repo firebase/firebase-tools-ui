@@ -20,7 +20,7 @@
     "@rmwc/tabs": "^5.7.2",
     "@rmwc/textfield": "^6.0.0",
     "@rmwc/theme": "^5.7.2",
-    "@rmwc/tooltip": "^5.7.2",
+    "@rmwc/tooltip": "^6.0.0",
     "@rmwc/top-app-bar": "^5.7.2",
     "@rmwc/types": "^5.6.0",
     "@rmwc/typography": "^5.7.2",
