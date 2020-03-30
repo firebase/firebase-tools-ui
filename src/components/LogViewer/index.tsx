@@ -22,6 +22,7 @@ import { connect } from 'react-redux';
 import { AppState } from '../../store';
 import { LoggingConfig } from '../../store/config';
 import { LogEntry, LogState } from '../../store/logviewer';
+import { hasData } from '../../store/utils';
 import { CompiledGetterCache } from './CompiledGetterCache';
 import History from './History';
 import { QueryBar, parseQuery } from './QueryBar';
@@ -80,9 +81,8 @@ export const LogViewer: React.FC<Props> = ({ logReceived, config }) => {
 };
 
 export const mapStateToProps = ({ config }: AppState) => {
-  console.log(config);
   return {
-    config: config.config ? config.config.logging : undefined,
+    config: hasData(config.result) ? config.result.data.logging : undefined,
   };
 };
 export const mapDispatchToProps = {
