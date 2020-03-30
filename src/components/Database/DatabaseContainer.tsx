@@ -5,10 +5,15 @@ import { GridCell } from '@rmwc/grid';
 import React, { ReactElement, useEffect, useState } from 'react';
 import { MapDispatchToPropsFunction, connect } from 'react-redux';
 
-import { AppState } from '../../store';
+import { createStructuredSelector } from '../../store';
 import { databasesSubscribe, databasesUnsubscribe } from '../../store/database';
+import { getDatabaseNames } from '../../store/database/selectors';
 import { Callout } from '../common/Callout';
 import DatabasePicker from './DatabasePicker';
+
+export const mapStateToProps = createStructuredSelector({
+  databases: getDatabaseNames,
+});
 
 export interface PropsFromState {
   databases: string[] | undefined;
@@ -91,12 +96,6 @@ export const DatabaseContainer: React.FC<Props> = ({
     </>
   );
 };
-
-export const mapStateToProps = ({ database }: AppState): PropsFromState => ({
-  databases:
-    database.databases.databases &&
-    database.databases.databases.map(({ name }) => name),
-});
 
 export const mapDispatchToProps: MapDispatchToPropsFunction<
   PropsFromDispatch,

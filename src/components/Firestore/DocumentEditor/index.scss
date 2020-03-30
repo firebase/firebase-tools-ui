@@ -1,0 +1,15 @@
+.RootEditor {
+  overflow: scroll;
+}
+
+.FieldEditor {
+  position: relative;
+  display: grid;
+  grid-auto-flow: column;
+  grid-gap: 16px;
+  grid-auto-columns: max-content;
+}
+
+.FieldEditor-children {
+  padding-left: 32px;
+}

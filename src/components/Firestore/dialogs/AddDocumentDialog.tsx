@@ -23,11 +23,10 @@ import {
   DialogProps,
   DialogTitle,
 } from '@rmwc/dialog';
-import { TextField } from '@rmwc/textfield';
-import { Theme } from '@rmwc/theme';
 import { firestore } from 'firebase';
 import React, { useCallback, useEffect, useState } from 'react';
 
+import { Field } from '../../common/Field';
 import DocumentEditor from '../DocumentEditor';
 import { FirestoreMap } from '../models';
 
@@ -46,7 +45,7 @@ export const AddDocumentStep: React.FC<AddDocumentStepProps> = ({
   onChange,
 }) => {
   const [id, setId] = useState(collectionRef.doc().id);
-  const [data, setData] = useState<FirestoreMap>({ '': '' });
+  const [data, setData] = useState<FirestoreMap | undefined>();
 
   // TODO: Validation
   const getValue = useCallback(() => {
@@ -69,14 +68,14 @@ export const AddDocumentStep: React.FC<AddDocumentStepProps> = ({
 
   return (
     <>
-      <TextField
+      <Field
         id="add-document-path"
         fullwidth
         disabled
         label="Parent path"
         value={collectionRef.path}
       />
-      <TextField
+      <Field
         id="add-document-id"
         fullwidth
         label="Document ID"
@@ -84,7 +83,7 @@ export const AddDocumentStep: React.FC<AddDocumentStepProps> = ({
         onChange={updateId}
         required
       />
-      <DocumentEditor value={data} onChange={data => setData(data)} />
+      <DocumentEditor value={{ '': '' }} onChange={data => setData(data)} />
     </>
   );
 };
@@ -119,10 +118,15 @@ export const AddDocumentDialog: React.FC<Props> = ({
       </DialogContent>
 
       <DialogActions>
-        <Theme use={['textSecondaryOnBackground']} wrap>
-          <DialogButton action="close">Cancel</DialogButton>
-        </Theme>
-        <DialogButton unelevated action="accept" isDefaultAction>
+        <DialogButton action="close" type="button" theme="secondary">
+          Cancel
+        </DialogButton>
+        <DialogButton
+          unelevated
+          action="accept"
+          isDefaultAction
+          disabled={!document.data}
+        >
           Save
         </DialogButton>
       </DialogActions>

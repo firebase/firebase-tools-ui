@@ -16,6 +16,7 @@
 
 @import './material-components';
 @import './material-overrides-buttons';
+@import './material-overrides-inputs';
 
 @import '@material/card/mixins';
 @import '@material/dialog/mixins';
@@ -41,8 +42,27 @@
   }
 }
 
+$mdc-tab-height: 44px;
+@import '@material/tab-bar/mdc-tab-bar';
+@import '@material/tab/mdc-tab';
+@import '@material/tab-scroller/mdc-tab-scroller';
+@import '@material/tab-indicator/mdc-tab-indicator';
 // TODO: Use text-transform mixins once RMWC updates to @material/tabs v4.0+
 // https://github.com/material-components/material-components-web/commit/22d7ad2fb1796fbd71a3a5ee9c7ab2e77c60e34e
 .mdc-tab {
+  @include mdc-tab-horizontal-padding(5px);
   text-transform: none;
+}
+
+.mdc-tab-indicator {
+  @include mdc-tab-indicator-underline-height(3px);
+  @include mdc-tab-indicator-underline-top-corner-radius(2px);
+}
+
+.mdc-dialog {
+  @include mdc-dialog-container-fill-color(#fafafa);
+
+  .mdc-dialog__surface {
+    @include mdc-elevation(9);
+  }
 }

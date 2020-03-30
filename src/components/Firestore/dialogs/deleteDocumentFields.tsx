@@ -15,13 +15,12 @@
  */
 
 import { DialogButton } from '@rmwc/dialog';
-import { TextField } from '@rmwc/textfield';
-import { Theme } from '@rmwc/theme';
 import { firestore } from 'firebase';
 import React from 'react';
 
 import { Callout } from '../../common/Callout';
-import { confirm } from '../../DialogQueue';
+import { confirm } from '../../common/DialogQueue';
+import { Field } from '../../common/Field';
 
 export const promptDeleteDocumentFields = (
   reference: firestore.DocumentReference
@@ -29,26 +28,26 @@ export const promptDeleteDocumentFields = (
   confirm({
     title: 'Delete data',
     body: (
-      <>
+      <div className="Firestore--dialog-body">
         <Callout aside type="warning">
           This will delete all fields of the document, excluding subcollections.
         </Callout>
-        <TextField
+        <Field
           label="Document location"
           value={reference.path || '/'}
           fullwidth
           disabled
         />
-      </>
+      </div>
     ),
     // hide standard buttons so as to use `danger` button
     acceptLabel: null,
     cancelLabel: null,
     footer: (
       <>
-        <Theme use={['textSecondaryOnBackground']} wrap>
-          <DialogButton action="close">Cancel</DialogButton>
-        </Theme>
+        <DialogButton action="close" type="button" theme="secondary">
+          Cancel
+        </DialogButton>
         <DialogButton unelevated action="accept" isDefaultAction danger>
           Delete
         </DialogButton>

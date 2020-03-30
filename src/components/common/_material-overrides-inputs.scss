@@ -1,0 +1,71 @@
+/**
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@import './color';
+
+$input-default-padding: 8px;
+$input-height: 36px;
+
+$mdc-select-height: $input-height;
+$mdc-select-input-padding: $input-default-padding;
+$mdc-select-label-offset: $input-default-padding;
+
+$mdc-select-outlined-idle-border: var(--fire-color-input-borders);
+$mdc-select-outlined-hover-border: var(--fire-color-input-borders);
+@import '@material/select/mdc-select';
+
+.mdc-select {
+  .mdc-select__native-control,
+  .mdc-select__selected-text {
+    padding: $mdc-select-input-padding; // base component doesnt do this yet
+  }
+
+  .mdc-select__dropdown-icon {
+    bottom: $mdc-select-input-padding; // base component doesnt do this yet
+  }
+}
+
+$mdc-text-field-height: $input-height;
+$mdc-text-field-input-padding: $input-default-padding;
+$mdc-text-field-label-offset: $input-default-padding; // not working
+
+$mdc-text-field-outlined-idle-border: var(--fire-color-input-borders);
+$mdc-text-field-outlined-hover-border: var(--fire-color-input-borders);
+@import '@material/textfield/mdc-text-field';
+
+.mdc-text-field {
+  .mdc-text-field__input {
+    padding: $mdc-text-field-input-padding; // base component doesnt do this yet
+  }
+}
+
+@import '@material/notched-outline/mdc-notched-outline';
+.mdc-select--outlined,
+.mdc-text-field--outlined {
+  .mdc-notched-outline {
+    @include mdc-notched-outline-floating-label-float-position(85%);
+
+    .mdc-floating-label {
+      top: $input-default-padding + 1px; // no var to config
+    }
+  }
+}
+.mdc-select--outlined:not(.mdc-select--disabled),
+.mdc-text-field--outlined:not(.mdc-text-field--disabled) {
+  .mdc-notched-outline {
+    background-color: $COLOR_WHITE_PRIMARY;
+  }
+}

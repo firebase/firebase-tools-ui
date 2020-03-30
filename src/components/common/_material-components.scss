@@ -27,17 +27,10 @@
 @import '@material/list/dist/mdc.list';
 @import '@material/notched-outline/dist/mdc.notched-outline';
 @import '@material/ripple/dist/mdc.ripple';
-@import '@material/select/dist/mdc.select';
-@import '@material/tab-bar/dist/mdc.tab-bar';
-@import '@material/tab/dist/mdc.tab';
-@import '@material/tab-scroller/dist/mdc.tab-scroller';
-@import '@material/tab-indicator/dist/mdc.tab-indicator';
-@import '@material/textfield/dist/mdc.textfield';
 @import '@material/floating-label/dist/mdc.floating-label';
-@import '@material/notched-outline/dist/mdc.notched-outline';
 @import '@material/line-ripple/dist/mdc.line-ripple';
 @import '@material/theme/dist/mdc.theme';
-@import '@material/top-app-bar/dist/mdc.top-app-bar';
+@import '@material/top-app-bar/mdc-top-app-bar';
 @import '@material/typography/dist/mdc.typography';
 
 @import '@rmwc/data-table/data-table';

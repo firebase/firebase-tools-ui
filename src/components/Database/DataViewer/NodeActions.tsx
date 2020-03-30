@@ -16,18 +16,19 @@
 
 import { Icon } from '@rmwc/icon';
 import { IconButton } from '@rmwc/icon-button';
-import { Menu, MenuItem, MenuSurfaceAnchor } from '@rmwc/menu';
+import { MenuItem, SimpleMenu } from '@rmwc/menu';
 import { Tooltip } from '@rmwc/tooltip';
 import * as React from 'react';
 import { useState } from 'react';
 
+import InlineEditor from '../../Firestore/DocumentPreview/InlineEditor';
+import { FirestoreAny } from '../../Firestore/models';
 import { CloneDialog } from './CloneDialog';
 import {
   ChildrenDisplayType,
   DEFAULT_QUERY_PARAMS,
   QueryParams,
 } from './common/view_model';
-import { EditNode } from './EditNode';
 import { InlineQuery } from './InlineQuery';
 import { RenameDialog } from './RenameDialog';
 
@@ -82,6 +83,11 @@ export const NodeActions = React.memo<Props>(function NodeActions$({
     queryParams !== DEFAULT_QUERY_PARAMS;
   const isRoot = realtimeRef.parent === null;
 
+  const pushId = realtimeRef.push().key!;
+  const handleAddSuccess = async (key: string, value: FirestoreAny) => {
+    await realtimeRef.child(key).set(value);
+    setIsAdding(false);
+  };
   const addChild = () => {
     onExpandRequested();
     setIsAdding(!isAdding);
@@ -125,31 +131,42 @@ export const NodeActions = React.memo<Props>(function NodeActions$({
           />
         </Tooltip>
       ) : null}
-      <MenuSurfaceAnchor>
-        <Menu open={isMenuOpen} onClose={() => setMenuOpen(false)}>
-          <MenuItem onClick={removeNode}>
-            <Icon icon="delete" /> Remove
+      <SimpleMenu
+        hoistToBody={
+          /*
+           * Actions show on hover, so hoisting has some weird effects, popping
+           * in and out of the top left corner
+           */
+          false
+        }
+        handle={<IconButton icon="more_vert" />}
+        onOpen={() => setMenuOpen(true)}
+        onClose={() => setMenuOpen(false)}
+      >
+        <MenuItem onClick={removeNode}>
+          <Icon icon="delete" /> Remove
+        </MenuItem>
+        {!isRoot && (
+          <MenuItem onClick={() => setCloneDialogIsOpen(true)}>
+            <Icon icon="file_copy" /> Clone
           </MenuItem>
-          {!isRoot && (
-            <MenuItem onClick={() => setCloneDialogIsOpen(true)}>
-              <Icon icon="file_copy" /> Clone
-            </MenuItem>
-          )}
-          {!isRoot && (
-            <MenuItem onClick={() => setRenameDialogIsOpen(true)}>
-              <Icon icon="edit" /> Rename
-            </MenuItem>
-          )}
-        </Menu>
-        <IconButton icon="more_vert" onClick={() => setMenuOpen(!isMenuOpen)} />
-      </MenuSurfaceAnchor>
+        )}
+        {!isRoot && (
+          <MenuItem onClick={() => setRenameDialogIsOpen(true)}>
+            <Icon icon="edit" /> Rename
+          </MenuItem>
+        )}
+      </SimpleMenu>
+
       {/* Extra UI that shows when actions are triggered */}
       <div className="NodeActions__additional-ui">
         {isAdding && (
-          <EditNode
-            realtimeRef={realtimeRef}
-            isAdding={isAdding}
-            onClose={() => setIsAdding(false)}
+          <InlineEditor
+            rtdb
+            value={{ [pushId]: '' }}
+            onCancel={() => setIsAdding(false)}
+            onSave={handleAddSuccess}
+            areRootKeysMutable={true}
           />
         )}
         {showQueryUi && (
@@ -162,10 +179,9 @@ export const NodeActions = React.memo<Props>(function NodeActions$({
             onCancel={() => setShowQueryUi(false)}
           />
         )}
-        {!isRoot && (
+        {cloneDialogIsOpen && (
           <CloneDialog
             realtimeRef={realtimeRef}
-            isOpen={cloneDialogIsOpen}
             onComplete={() => setCloneDialogIsOpen(false)}
           />
         )}

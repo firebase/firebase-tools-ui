@@ -22,12 +22,11 @@ import {
   CardActionButtons,
   CardActions,
 } from '@rmwc/card';
-import { Select } from '@rmwc/select';
-import { TextField } from '@rmwc/textfield';
 import keycode from 'keycode';
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
 
+import { Field, SelectField } from '../../common/Field';
 import {
   DEFAULT_PAGE_SIZE,
   DEFAULT_QUERY_PARAMS,
@@ -102,33 +101,30 @@ export const InlineQuery = React.memo<Props>(function InlineQuery$({
       onKeyDown={cancelOnEscape}
     >
       <div className="InlineQuery__form-fields">
-        <TextField
+        <Field
           outlined
-          label="key"
+          label="Key"
           name="key"
           value={form.key}
           onChange={updateField}
           inputRef={keyInputRef}
         />
-        <Select
-          outlined
-          label="operator"
+        <SelectField
+          label="Condition"
           name="operator"
           options={['==', '>=', '<=']}
           value={form.operator}
           onChange={updateField}
         />
-        <TextField
-          outlined
-          label="value"
+        <Field
+          label="Value"
           name="value"
           value={form.value}
           onChange={updateField}
           inputRef={valueInputRef}
           placeholder="JSON or plain text"
         />
-        <TextField
-          outlined
+        <Field
           label="limit"
           name="limit"
           value={form.limit}
@@ -146,10 +142,10 @@ export const InlineQuery = React.memo<Props>(function InlineQuery$({
             />
           )}
           <CardActionButton
+            theme="secondary"
             type="button"
             label="Cancel"
             onClick={() => onCancel && onCancel()}
-            theme="textSecondaryOnBackground"
           />
           <CardActionButton unelevated type="submit" label="Search" />
         </CardActionButtons>

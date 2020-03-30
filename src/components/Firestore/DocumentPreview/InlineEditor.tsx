@@ -27,21 +27,25 @@ const InlineEditor: React.FC<{
   onCancel: () => void;
   onSave: (key: string, value: FirestoreAny) => void;
   areRootKeysMutable: boolean;
-}> = ({ value, onCancel, onSave, areRootKeysMutable }) => {
-  const [internalValue, setInternalValue] = useState(value);
+  rtdb?: boolean;
+}> = ({ value, onCancel, onSave, areRootKeysMutable, rtdb }) => {
+  const [internalValue, setInternalValue] = useState<
+    FirestoreMap | undefined
+  >();
 
-  function handleChange(value: FirestoreMap) {
+  function handleChange(value: FirestoreMap | undefined) {
     setInternalValue(value);
   }
 
   function handleCancel(e: React.MouseEvent<HTMLButtonElement>) {
-    e.stopPropagation();
     onCancel();
   }
 
-  function handleSave(e: React.MouseEvent<HTMLButtonElement>) {
+  function handleSubmit(e: React.MouseEvent<HTMLButtonElement>) {
     e.stopPropagation();
-    onSave(Object.keys(internalValue)[0], Object.values(internalValue)[0]);
+    if (internalValue) {
+      onSave(Object.keys(internalValue)[0], Object.values(internalValue)[0]);
+    }
   }
 
   return (
@@ -51,13 +55,16 @@ const InlineEditor: React.FC<{
           <DocumentEditor
             value={value}
             onChange={handleChange}
-            areRootKeysMutable={areRootKeysMutable}
+            areRootNamesMutable={areRootKeysMutable}
             areRootFieldsMutable={false}
+            rtdb={rtdb}
           />
         </div>
         <CardActionButtons>
           <CardActionButton onClick={handleCancel}>Cancel</CardActionButton>
-          <CardActionButton onClick={handleSave}>Save</CardActionButton>
+          <CardActionButton onClick={handleSubmit} disabled={!internalValue}>
+            Save
+          </CardActionButton>
         </CardActionButtons>
       </Card>
     </Elevation>

@@ -15,10 +15,9 @@
  */
 
 import { DialogButton } from '@rmwc/dialog';
-import { Theme } from '@rmwc/theme';
 import React from 'react';
 
-import { confirm } from '../../DialogQueue';
+import { confirm } from '../../common/DialogQueue';
 
 export const promptClearAll = () =>
   confirm({
@@ -30,9 +29,9 @@ export const promptClearAll = () =>
     cancelLabel: null,
     footer: (
       <>
-        <Theme use={['textSecondaryOnBackground']} wrap>
-          <DialogButton action="close">Cancel</DialogButton>
-        </Theme>
+        <DialogButton type="button" theme="secondary" action="close">
+          Cancel
+        </DialogButton>
         <DialogButton unelevated action="accept" isDefaultAction danger>
           Clear
         </DialogButton>

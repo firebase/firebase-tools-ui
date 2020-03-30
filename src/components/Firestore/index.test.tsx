@@ -18,82 +18,126 @@ import { act, render, wait } from '@testing-library/react';
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
-import { confirm } from '../DialogQueue';
+import { FirestoreConfig } from '../../store/config';
+import { confirm } from '../common/DialogQueue';
 import DatabaseApi from './api';
-import { Firestore } from './index';
+import { Firestore, FirestoreRoute } from './index';
 import { fakeCollectionReference } from './testing/models';
 
 jest.mock('./api');
-jest.mock('../DialogQueue');
+jest.mock('../common/DialogQueue');
 
-it('shows the loading state when connecting to Firestore', () => {
-  const { getByText, queryByText } = render(
-    <MemoryRouter>
-      <Firestore config={undefined} projectId={undefined} />
-    </MemoryRouter>
-  );
+const sampleConfig: FirestoreConfig = {
+  host: 'localhost',
+  port: 8080,
+  hostAndPort: 'localhost:8080',
+};
 
-  expect(getByText(/Connecting to Firestore/)).not.toBeNull();
+describe('FirestoreRoute', () => {
+  it('renders loading when projectId is not ready', () => {
+    const { getByText } = render(
+      <FirestoreRoute
+        projectIdRemote={{ loading: true }}
+        configRemote={{ loading: false, result: { data: sampleConfig } }}
+      />
+    );
+    expect(getByText('Loading...')).not.toBeNull();
+  });
+  it('renders loading when config is not ready', () => {
+    const { getByText } = render(
+      <FirestoreRoute
+        projectIdRemote={{ loading: false, result: { data: 'foo' } }}
+        configRemote={{ loading: true }}
+      />
+    );
+    expect(getByText('Loading...')).not.toBeNull();
+  });
+  it('renders error when loading config fails', () => {
+    const { getByText } = render(
+      <FirestoreRoute
+        projectIdRemote={{ loading: false, result: { data: 'foo' } }}
+        configRemote={{
+          loading: false,
+          result: { error: { message: 'Oh, snap!' } },
+        }}
+      />
+    );
+    expect(getByText(/currently off/)).not.toBeNull();
+  });
+  it('renders "emulator is off" when config is not present', () => {
+    const { getByText } = render(
+      <FirestoreRoute
+        projectIdRemote={{ loading: false, result: { data: 'foo' } }}
+        configRemote={{
+          loading: false,
+          result: { data: undefined /* emulator absent */ },
+        }}
+      />
+    );
+    expect(getByText(/currently off/)).not.toBeNull();
+  });
 });
 
-it('shows the top-level collections', async () => {
-  DatabaseApi.prototype.getCollections.mockResolvedValue([
-    fakeCollectionReference({ id: 'cool-coll' }),
-  ]);
-  const { getByText, queryByText } = render(
-    <MemoryRouter>
-      <Firestore config={{}} projectId={'foo'} />
-    </MemoryRouter>
-  );
+describe('Firestore', () => {
+  it('shows the top-level collections', async () => {
+    DatabaseApi.prototype.getCollections.mockResolvedValue([
+      fakeCollectionReference({ id: 'cool-coll' }),
+    ]);
+    const { getByText, queryByText } = render(
+      <MemoryRouter>
+        <Firestore config={sampleConfig} projectId={'foo'} />
+      </MemoryRouter>
+    );
 
-  await wait();
+    await wait();
 
-  expect(queryByText(/Connecting to Firestore/)).toBeNull();
-  expect(getByText(/cool-coll/)).not.toBeNull();
-});
+    expect(queryByText(/Connecting to Firestore/)).toBeNull();
+    expect(getByText(/cool-coll/)).not.toBeNull();
+  });
 
-it('triggers clearing all data', async () => {
-  confirm.mockResolvedValueOnce(true);
-  const nukeSpy = jest.fn();
+  it('triggers clearing all data', async () => {
+    confirm.mockResolvedValueOnce(true);
+    const nukeSpy = jest.fn();
 
-  DatabaseApi.mockImplementationOnce(() => ({
-    getCollections: jest.fn(),
-    delete: jest.fn(),
-    nukeDocuments: nukeSpy,
-  }));
+    DatabaseApi.mockImplementationOnce(() => ({
+      getCollections: jest.fn(),
+      delete: jest.fn(),
+      nukeDocuments: nukeSpy,
+    }));
 
-  const { getByText } = render(
-    <MemoryRouter>
-      <Firestore config={{}} projectId={'foo'} />
-    </MemoryRouter>
-  );
+    const { getByText } = render(
+      <MemoryRouter>
+        <Firestore config={sampleConfig} projectId={'foo'} />
+      </MemoryRouter>
+    );
 
-  act(() => getByText('Clear all data').click());
+    act(() => getByText('Clear all data').click());
 
-  await wait();
+    await wait();
 
-  expect(nukeSpy).toHaveBeenCalled();
-});
+    expect(nukeSpy).toHaveBeenCalled();
+  });
 
-it('does not trigger clearing all data if dialog is not confirmed', async () => {
-  confirm.mockResolvedValueOnce(false);
-  const nukeSpy = jest.fn();
+  it('does not trigger clearing all data if dialog is not confirmed', async () => {
+    confirm.mockResolvedValueOnce(false);
+    const nukeSpy = jest.fn();
 
-  DatabaseApi.mockImplementationOnce(() => ({
-    getCollections: jest.fn(),
-    delete: jest.fn(),
-    nukeDocuments: nukeSpy,
-  }));
+    DatabaseApi.mockImplementationOnce(() => ({
+      getCollections: jest.fn(),
+      delete: jest.fn(),
+      nukeDocuments: nukeSpy,
+    }));
 
-  const { getByText } = render(
-    <MemoryRouter>
-      <Firestore config={{}} projectId={'foo'} />
-    </MemoryRouter>
-  );
+    const { getByText } = render(
+      <MemoryRouter>
+        <Firestore config={sampleConfig} projectId={'foo'} />
+      </MemoryRouter>
+    );
 
-  act(() => getByText('Clear all data').click());
+    act(() => getByText('Clear all data').click());
 
-  await wait();
+    await wait();
 
-  expect(nukeSpy).not.toHaveBeenCalled();
+    expect(nukeSpy).not.toHaveBeenCalled();
+  });
 });

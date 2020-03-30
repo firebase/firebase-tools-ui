@@ -28,6 +28,7 @@ import {
   AddCollectionDialog,
   AddCollectionDialogValue,
 } from './dialogs/AddCollectionDialog';
+import { useAutoSelect } from './useAutoSelect';
 
 export interface Props {
   reference?: firestore.DocumentReference;
@@ -37,6 +38,7 @@ export const CollectionList: React.FC<Props> = ({ reference }) => {
   const { url } = useRouteMatch()!;
   const api = useApi();
   const collections = useCollections(api, reference);
+  const redirectIfAutoSelectable = useAutoSelect(collections);
 
   const [isAddCollectionDialogOpen, setAddCollectionDialogOpen] = useState(
     false
@@ -54,6 +56,8 @@ export const CollectionList: React.FC<Props> = ({ reference }) => {
 
   return (
     <div className="Firestore-CollectionList" data-testid="collection-list">
+      {redirectIfAutoSelectable}
+
       {isAddCollectionDialogOpen && (
         <AddCollectionDialog
           documentRef={reference}

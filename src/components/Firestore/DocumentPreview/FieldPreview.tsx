@@ -115,11 +115,7 @@ const FieldPreview: React.FC<{
             icon: isExpanded ? 'arrow_drop_down' : 'arrow_right',
           }}
         />
-        <Theme
-          use="textSecondaryOnBackground"
-          tag="span"
-          className="FieldPreview-key"
-        >
+        <Theme use="secondary" tag="span" className="FieldPreview-key">
           {lastFieldName(path)}
         </Theme>
         <span className="FieldPreview-summary">

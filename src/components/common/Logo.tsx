@@ -19,6 +19,7 @@ import React from 'react';
 
 export const Logo: React.FC = () => (
   <Icon
+    className="Logo"
     icon={{
       strategy: 'component',
       icon: (

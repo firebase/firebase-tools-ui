@@ -21,11 +21,9 @@ import { ListDivider } from '@rmwc/list';
 import { MenuItem, SimpleMenu } from '@rmwc/menu';
 import * as firebase from 'firebase/app';
 import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
 import { initDatabase } from '../../firebase';
-import { AppState } from '../../store';
 import { DatabaseConfig } from '../../store/config';
 import { InteractiveBreadCrumbBar } from '../common/InteractiveBreadCrumbBar';
 import { NodeContainer } from './DataViewer/NodeContainer';
@@ -33,7 +31,7 @@ import { NodeContainer } from './DataViewer/NodeContainer';
 export interface PropsFromState {
   namespace: string;
   path?: string;
-  config?: DatabaseConfig;
+  config: DatabaseConfig;
 }
 
 export type Props = PropsFromState;
@@ -50,7 +48,6 @@ export const Database: React.FC<Props> = ({ config, namespace, path }) => {
   const history = useHistory();
 
   useEffect(() => {
-    if (!config) return;
     const [db, { cleanup }] = initDatabase(config, namespace);
     setRef(path ? db.ref(path) : db.ref());
     return cleanup;
@@ -74,7 +71,7 @@ export const Database: React.FC<Props> = ({ config, namespace, path }) => {
             inputPrefix={getPrefix(ref)}
             onNavigate={handleNavigate}
           >
-            <SimpleMenu handle={<IconButton icon="more_vert" />}>
+            <SimpleMenu handle={<IconButton icon="more_vert" />} hoistToBody>
               <MenuItem disabled>Export JSON</MenuItem>
               <MenuItem disabled>Import JSON</MenuItem>
               <ListDivider />
@@ -92,8 +89,4 @@ export const Database: React.FC<Props> = ({ config, namespace, path }) => {
   );
 };
 
-export const mapStateToProps = ({ config }: AppState) => ({
-  config: config.config ? config.config.database : undefined,
-});
-
-export default connect(mapStateToProps)(Database);
+export default Database;
