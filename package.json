@@ -10,7 +10,7 @@
     "@rmwc/card": "^5.7.2",
     "@rmwc/data-table": "^5.7.2",
     "@rmwc/dialog": "^5.7.2",
-    "@rmwc/elevation": "^5.7.2",
+    "@rmwc/elevation": "^6.0.0",
     "@rmwc/grid": "^5.7.2",
     "@rmwc/icon": "^5.7.2",
     "@rmwc/icon-button": "^5.7.2",
