@@ -15,7 +15,7 @@
     "@rmwc/icon": "^5.7.2",
     "@rmwc/icon-button": "^5.7.2",
     "@rmwc/list": "^5.7.2",
-    "@rmwc/menu": "^5.7.2",
+    "@rmwc/menu": "^6.0.0",
     "@rmwc/select": "^5.7.2",
     "@rmwc/tabs": "^5.7.2",
     "@rmwc/textfield": "^6.0.0",
