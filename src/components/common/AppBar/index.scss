@@ -1,0 +1,57 @@
+/**
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@import '../../common/utils';
+
+.AppBar {
+  background-color: var(--mdc-theme-surface);
+  padding: 0 48px;
+
+  .AppBar-title-row {
+    align-items: center;
+    display: flex;
+    height: 48px;
+  }
+
+  .AppBar-title {
+    @include ellipsis();
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 32px;
+    margin: 0;
+  }
+
+  .AppBar-logo-lockup {
+    align-items: center;
+    display: flex;
+    left: -32px;
+    min-width: 0;
+    position: relative;
+  }
+
+  .Logo {
+    margin-right: 8px;
+  }
+
+  .mdc-tab {
+    &:not(:first-of-type) {
+      margin-left: 16px;
+    }
+    &:not(.mdc-tab--active) .mdc-tab__text-label {
+      color: var(--mdc-theme-on-surface);
+    }
+  }
+}

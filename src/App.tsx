@@ -22,7 +22,7 @@ import { Theme } from '@rmwc/theme';
 import React from 'react';
 import { Route } from 'react-router-dom';
 
-import AppBar from './components/AppBar';
+import AppBar from './components/common/AppBar';
 import { dialogs } from './components/DialogQueue';
 import { routes } from './routes';
 
