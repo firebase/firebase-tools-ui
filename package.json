@@ -12,7 +12,7 @@
     "@rmwc/dialog": "^5.7.2",
     "@rmwc/elevation": "^5.7.2",
     "@rmwc/grid": "^5.7.2",
-    "@rmwc/icon": "^5.7.2",
+    "@rmwc/icon": "^6.0.0",
     "@rmwc/icon-button": "^5.7.2",
     "@rmwc/list": "^5.7.2",
     "@rmwc/menu": "^5.7.2",
