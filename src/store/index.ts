@@ -20,10 +20,12 @@ import * as reselect from 'reselect';
 
 import { ConfigState, configReducer, configSaga } from './config';
 import { DatabaseState, databaseReducer, databaseSaga } from './database';
+import { LogState, logReducer } from './logviewer';
 
 export interface AppState {
   config: ConfigState;
   database: DatabaseState;
+  log: LogState;
 }
 
 export function* rootSaga() {
@@ -33,6 +35,7 @@ export function* rootSaga() {
 export const rootReducer = combineReducers<AppState>({
   config: configReducer,
   database: databaseReducer,
+  log: logReducer,
 });
 
 export function createStructuredSelector<T>(

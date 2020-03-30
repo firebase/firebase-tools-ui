@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import './index.scss';
+import './AppBar.scss';
 
 import { Tab, TabBar } from '@rmwc/tabs';
 import { ThemeProvider } from '@rmwc/theme';
@@ -23,9 +23,9 @@ import { Typography } from '@rmwc/typography';
 import React from 'react';
 import { Link, matchPath, useLocation } from 'react-router-dom';
 
-import { navBarOnSurface, navBarPrimary, navBarSurface } from '../../../colors';
-import { Route } from '../../../routes';
-import Logo from '../Logo';
+import { navBarOnSurface, navBarPrimary, navBarSurface } from '../../colors';
+import { Route } from '../../routes';
+import Logo from '../common/Logo';
 
 type Props = {
   routes: ReadonlyArray<Route>;

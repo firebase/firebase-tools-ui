@@ -14,14 +14,24 @@
  * limitations under the License.
  */
 
-import { createAction } from 'typesafe-actions';
+export class CompiledGetterCache {
+  getters: { [path: string]: Function } = {};
 
-import { Config } from './types';
+  getOrCompile(path: string, obj: any) {
+    if (!this.getters[path]) {
+      try {
+        // eslint-disable-next-line no-new-func
+        this.getters[path] = new Function('obj', 'return obj.' + path + ';');
+      } catch (err) {
+        console.warn(err);
+        return undefined;
+      }
+    }
 
-export const fetchRequest = createAction('@config/FETCH_REQUEST')();
-export const fetchSuccess = createAction('@config/FETCH_SUCCESS')<Config>();
-export const fetchError = createAction('@config/FETCH_ERROR')<{
-  message: string;
-}>();
-
-export const subscribe = createAction('@config/SUBSCRIBE')();
+    try {
+      return this.getters[path](obj);
+    } catch (err) {
+      return undefined;
+    }
+  }
+}

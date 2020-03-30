@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-import { createAction } from 'typesafe-actions';
+import { Action, createReducer } from 'typesafe-actions';
 
-import { Config } from './types';
+import { logReceived } from './actions';
+import { LogState } from './types';
 
-export const fetchRequest = createAction('@config/FETCH_REQUEST')();
-export const fetchSuccess = createAction('@config/FETCH_SUCCESS')<Config>();
-export const fetchError = createAction('@config/FETCH_ERROR')<{
-  message: string;
-}>();
-
-export const subscribe = createAction('@config/SUBSCRIBE')();
+export const logReducer = createReducer<LogState, Action>({
+  history: [],
+}).handleAction(logReceived, (state: LogState, { payload }) => {
+  return { ...state, history: [...state.history, payload] };
+});
