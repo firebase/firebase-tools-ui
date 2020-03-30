@@ -14,7 +14,7 @@
     "@rmwc/grid": "^5.7.2",
     "@rmwc/icon": "^5.7.2",
     "@rmwc/icon-button": "^5.7.2",
-    "@rmwc/list": "^5.7.2",
+    "@rmwc/list": "^6.0.0",
     "@rmwc/menu": "^5.7.2",
     "@rmwc/select": "^5.7.2",
     "@rmwc/tabs": "^5.7.2",
