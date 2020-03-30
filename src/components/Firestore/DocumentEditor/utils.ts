@@ -136,7 +136,9 @@ export function denormalize(
   } else {
     if (field.value instanceof DocumentPath) {
       if (!api) {
-        throw 'Tried to denormalize a DocumentRef without the FirestoreAPI';
+        throw new Error(
+          'Tried to denormalize a DocumentRef without the FirestoreAPI'
+        );
       }
       try {
         return api.database.doc(field.value.path);

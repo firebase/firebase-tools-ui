@@ -18,21 +18,11 @@ import './index.scss';
 
 import { IconButton } from '@rmwc/icon-button';
 import React, { useEffect } from 'react';
-import {
-  Controller,
-  FormContext,
-  useForm,
-  useFormContext,
-} from 'react-hook-form';
+import { FormContext, useForm, useFormContext } from 'react-hook-form';
 
 import { Field, SelectField } from '../../common/Field';
-import { ApiProvider, useOptionalApi } from '../ApiContext';
-import {
-  FieldType,
-  FirestoreAny,
-  FirestoreMap,
-  FirestorePrimitive,
-} from '../models';
+import { useOptionalApi } from '../ApiContext';
+import { FieldType, FirestoreAny, FirestoreMap } from '../models';
 import {
   getFieldType,
   isBoolean,
@@ -48,10 +38,8 @@ import NumberEditor from './NumberEditor';
 import ReferenceEditor from './ReferenceEditor';
 import {
   DocumentStore,
-  reducer,
   storeReducer,
   useDispatch,
-  useDocumentStore,
   useField,
   useStore,
 } from './store';
@@ -61,9 +49,6 @@ import {
   Field as DocumentField,
   DocumentPath,
   MapField,
-  PrimitiveValue,
-  Store,
-  assertIsMapField,
   isArrayField,
   isMapField,
 } from './types';
@@ -324,7 +309,6 @@ const NameEditor: React.FC<{
     register,
     unregister,
     errors,
-    triggerValidation,
     clearError,
     setValue,
     setError,
@@ -334,7 +318,7 @@ const NameEditor: React.FC<{
   const dispatch = useDispatch();
   const child = field.mapChildren.find(c => c.id === childId);
   if (!child) {
-    throw 'Tried to render a name-edtior for a non-map-child';
+    throw new Error('Tried to render a name-edtior for a non-map-child');
   }
 
   const formName = `${childId}`;
@@ -350,7 +334,7 @@ const NameEditor: React.FC<{
 
   useEffect(() => {
     // Validate `name` when siblings change
-    const isUnique = siblingNames.every(name => name != child.name);
+    const isUnique = siblingNames.every(name => name !== child.name);
     if (!child.name) {
       setError(formName, 'required', 'Required');
     } else if (!isUnique) {

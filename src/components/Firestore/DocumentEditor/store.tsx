@@ -18,8 +18,7 @@ import produce from 'immer';
 import * as React from 'react';
 import { Action, createReducer } from 'typesafe-actions';
 
-import { FieldType, FirestoreAny } from '../models';
-import { isArray, isMap, isPrimitive } from '../utils';
+import { FieldType } from '../models';
 import * as actions from './actions';
 import {
   Field,
@@ -31,7 +30,6 @@ import {
 } from './types';
 import {
   defaultValueForPrimitiveType,
-  denormalize,
   getDescendantIds,
   getUniqueId,
   normalize,
@@ -87,7 +85,7 @@ export const reducer = createReducer<Store, Action>({ fields: {} })
       assertIsMapField(field);
       const child = field.mapChildren.find(c => c.id === payload.childId);
       if (!child) {
-        throw 'No map-child found with given ID';
+        throw new Error('No map-child found with given ID');
       }
 
       // Remove any descendants
@@ -108,7 +106,7 @@ export const reducer = createReducer<Store, Action>({ fields: {} })
       assertIsArrayField(field);
       const child = field.arrayChildren.find(c => c.id === payload.childId);
       if (!child) {
-        throw 'No array-child found with given ID';
+        throw new Error('No array-child found with given ID');
       }
 
       // Remove any descendants
@@ -129,7 +127,7 @@ export const reducer = createReducer<Store, Action>({ fields: {} })
       assertIsMapField(field);
       const childField = field.mapChildren.find(c => c.id === payload.childId);
       if (!childField) {
-        throw 'No map-child found with given ID';
+        throw new Error('No map-child found with given ID');
       }
       childField.name = payload.name;
     })
@@ -137,7 +135,6 @@ export const reducer = createReducer<Store, Action>({ fields: {} })
   .handleAction(
     actions.updateType,
     produce((draft, { payload }) => {
-      const field = draft.fields[payload.id];
       if (payload.type === FieldType.MAP) {
         draft.fields[payload.id] = { mapChildren: [] };
       } else if (payload.type === FieldType.ARRAY) {

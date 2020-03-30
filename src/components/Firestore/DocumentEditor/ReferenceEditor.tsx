@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { firestore } from 'firebase';
 import React, { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 

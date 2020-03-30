@@ -1,5 +1,3 @@
-import { firestore } from 'firebase';
-
 import {
   FirestoreAny,
   FirestoreArray,
@@ -35,7 +33,10 @@ export type Field = MapField | ArrayField | PrimitiveField;
 export type Fields = {
   [id: number]: Field;
 };
-export type Store = { id?: number; fields: Fields };
+export type Store = {
+  id?: number;
+  fields: Fields;
+};
 
 export function isPrimitive(
   data: FirestoreAny | DocumentPath
@@ -63,7 +64,7 @@ export function assertStoreHasRoot(
   store: Store
 ): asserts store is Store & { id: number } {
   if (store.id === undefined) {
-    throw 'Store has no root';
+    throw new Error('Store has no root');
   }
 }
 
@@ -71,18 +72,18 @@ export function assertIsPrimitiveField(
   field: Field
 ): asserts field is PrimitiveField {
   if (!('value' in field)) {
-    throw 'Field is not primitive';
+    throw new Error('Field is not primitive');
   }
 }
 
 export function assertIsMapField(field: Field): asserts field is MapField {
   if (!isMapField(field)) {
-    throw 'Field is not a map';
+    throw new Error('Field is not a map');
   }
 }
 
 export function assertIsArrayField(field: Field): asserts field is ArrayField {
   if (!isArrayField(field)) {
-    throw 'Field is not an array';
+    throw new Error('Field is not an array');
   }
 }
