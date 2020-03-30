@@ -28,3 +28,8 @@ export const useApi = () => {
   }
   return api;
 };
+
+// TODO: need a better strategy to handle missing API in RTDB-documentEditor
+export const useOptionalApi = () => {
+  return useContext(ApiContext);
+};

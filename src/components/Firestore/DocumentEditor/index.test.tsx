@@ -86,7 +86,7 @@ describe('with basic root fields', () => {
       });
     });
 
-    expect(getAllByText(/Needs to be unique/).length).toBe(2);
+    expect(getAllByText(/Must be unique/).length).toBe(2);
 
     await act(async () => {
       fireEvent.change(getAllByLabelText(/Field/)[0], {
@@ -94,7 +94,7 @@ describe('with basic root fields', () => {
       });
     });
 
-    expect(queryByText(/Needs to be unique/)).toBeNull();
+    expect(queryByText(/Must be unique/)).toBeNull();
   });
 
   it('edits the value', async () => {

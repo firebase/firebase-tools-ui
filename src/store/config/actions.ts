@@ -23,3 +23,5 @@ export const fetchSuccess = createAction('@config/FETCH_SUCCESS')<Config>();
 export const fetchError = createAction('@config/FETCH_ERROR')<{
   message: string;
 }>();
+
+export const subscribe = createAction('@config/SUBSCRIBE')();

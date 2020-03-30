@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-@import '../../common/utils';
+@import '../common/utils';
 
 .AppBar {
   background-color: var(--mdc-theme-surface);
@@ -23,7 +23,7 @@
   .AppBar-title-row {
     align-items: center;
     display: flex;
-    height: 48px;
+    margin-top: 8px;
   }
 
   .AppBar-title {
@@ -48,7 +48,7 @@
 
   .mdc-tab {
     &:not(:first-of-type) {
-      margin-left: 16px;
+      margin-left: 24px;
     }
     &:not(.mdc-tab--active) .mdc-tab__text-label {
       color: var(--mdc-theme-on-surface);

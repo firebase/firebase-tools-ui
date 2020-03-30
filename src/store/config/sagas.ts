@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { call, put, takeLatest } from 'redux-saga/effects';
+import { all, call, delay, put, takeLatest } from 'redux-saga/effects';
 import { ActionType, getType } from 'typesafe-actions';
 
-import { fetchError, fetchRequest, fetchSuccess } from './actions';
+import { fetchError, fetchRequest, fetchSuccess, subscribe } from './actions';
 import { Config } from './types';
 
 export async function fetchConfigApi(): Promise<Config> {
@@ -34,6 +34,19 @@ export function* fetchConfig(_: ActionType<typeof fetchRequest>) {
   }
 }
 
+export const POLL_COOLDOWN_MS = 5000;
+
+// TODO: Refactor subscription and polling logic into a common util.
+export function* pollConfig() {
+  while (true) {
+    yield put(fetchRequest());
+    yield delay(POLL_COOLDOWN_MS);
+  }
+}
+
 export function* configSaga() {
-  yield takeLatest(getType(fetchRequest), fetchConfig);
+  yield all([
+    takeLatest(getType(fetchRequest), fetchConfig),
+    takeLatest(getType(subscribe), pollConfig),
+  ]);
 }

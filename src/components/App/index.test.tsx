@@ -20,9 +20,9 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 
-import App from './App';
-import { alert } from './components/common/DialogQueue';
-import configureStore from './configureStore';
+import configureStore from '../../configureStore';
+import { alert } from '../common/DialogQueue';
+import App from '.';
 
 it('renders without crashing', () => {
   const div = document.createElement('div');
