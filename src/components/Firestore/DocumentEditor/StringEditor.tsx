@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
-import { TextField } from '@rmwc/textfield';
 import React from 'react';
+
+import { Field } from '../../common/Field';
 
 const StringEditor: React.FC<{
   value: string;
   onChange: (value: string) => void;
 }> = ({ value, onChange }) => {
   return (
-    <TextField
+    <Field
       value={value}
       outlined
       label="Value"

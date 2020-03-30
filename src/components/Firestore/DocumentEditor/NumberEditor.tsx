@@ -14,29 +14,52 @@
  * limitations under the License.
  */
 
-import { TextField } from '@rmwc/textfield';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
+import { useFormContext } from 'react-hook-form';
+
+import { Field } from '../../common/Field';
 
 const NumberEditor: React.FC<{
   value: number;
   onChange: (value: number) => void;
-}> = ({ value, onChange }) => {
-  const [number, setNumber] = useState(String(value));
+  name: string;
+}> = ({ value, onChange, name }) => {
+  const {
+    errors,
+    formState: { touched },
+    register,
+    unregister,
+    setValue,
+    triggerValidation,
+  } = useFormContext();
 
   useEffect(() => {
-    const num = parseFloat(number);
-    if (!isNaN(num)) {
-      onChange(num);
+    register(name, {
+      required: 'Required',
+      pattern: {
+        value: /^-?([\d]*\.?[\d+]|Infinity|NaN)$/,
+        message: 'Must be a number',
+      },
+    });
+
+    return () => unregister(name);
+  }, [register, unregister, name]);
+
+  async function handleChange(value: string) {
+    if (await triggerValidation(name)) {
+      onChange(parseFloat(value));
     }
-  }, [number, onChange]);
+  }
 
   return (
-    <TextField
+    <Field
       label="Value"
-      outlined
-      type="number"
-      value={number}
-      onChange={e => setNumber(e.currentTarget.value)}
+      defaultValue={value}
+      onChange={e => {
+        setValue(name, e.currentTarget.value);
+        handleChange(e.currentTarget.value);
+      }}
+      error={touched[name] && errors[name]?.message}
     />
   );
 };

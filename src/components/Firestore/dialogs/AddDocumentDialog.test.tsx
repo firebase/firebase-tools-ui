@@ -15,6 +15,7 @@
  */
 
 import { fireEvent, render, wait } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 
@@ -34,7 +35,7 @@ const collectionReference = fakeCollectionReference({
 });
 collectionReference.doc.mockReturnValue(docRef);
 
-it('shows correct title', () => {
+it('shows correct title', async () => {
   const { getByText } = render(
     <AddDocumentDialog
       open={true}
@@ -43,10 +44,12 @@ it('shows correct title', () => {
     />
   );
 
+  await wait();
+
   expect(getByText(/Add a document/)).not.toBeNull();
 });
 
-it('shows the (disabled) creation path', () => {
+it('shows the (disabled) creation path', async () => {
   const { getByLabelText } = render(
     <AddDocumentDialog
       open={true}
@@ -54,12 +57,14 @@ it('shows the (disabled) creation path', () => {
       onValue={() => {}}
     />
   );
+
+  await wait();
 
   expect(getByLabelText('Parent path').value).toBe('users/bob/my-stuff');
   expect(getByLabelText('Parent path').disabled).toBe(true);
 });
 
-it('auto generates an id', () => {
+it('auto generates an id', async () => {
   const { getByLabelText } = render(
     <AddDocumentDialog
       open={true}
@@ -67,11 +72,13 @@ it('auto generates an id', () => {
       onValue={() => {}}
     />
   );
+
+  await wait();
 
   expect(getByLabelText('Document ID').value).toBe('random-identifier');
 });
 
-it('provides a document-editor', () => {
+it('provides a document-editor', async () => {
   const { getByLabelText } = render(
     <AddDocumentDialog
       open={true}
@@ -80,7 +87,29 @@ it('provides a document-editor', () => {
     />
   );
 
+  await wait();
+
   expect(getByLabelText('Field')).not.toBe(null);
+});
+
+// TODO testing suggests that the button is infact disabed by inspecting the DOM
+// but triggering a click event still triggers the underlying event. This is no
+// reproducible in the actual GUI.
+it.skip('[Save] is disabled with invalid doc-data', async () => {
+  const onValue = jest.fn();
+  const { getByText, getByLabelText } = render(
+    <AddDocumentDialog
+      open={true}
+      collectionRef={collectionReference}
+      onValue={onValue}
+    />
+  );
+
+  await act(async () => {
+    getByText('Save').click();
+  });
+
+  expect(onValue).not.toHaveBeenCalled();
 });
 
 it('emits id and parsed data when [Save] is clicked', async () => {
@@ -93,15 +122,16 @@ it('emits id and parsed data when [Save] is clicked', async () => {
     />
   );
 
-  fireEvent.change(getByLabelText('Document ID'), {
-    target: { value: 'new-document-id' },
-  });
-  fireEvent.change(getByLabelText('Field'), {
-    target: { value: 'foo' },
-  });
-  fireEvent.blur(getByLabelText('Field'));
-  fireEvent.change(getByLabelText('Value'), {
-    target: { value: 'bar' },
+  await act(async () => {
+    fireEvent.change(getByLabelText('Document ID'), {
+      target: { value: 'new-document-id' },
+    });
+    fireEvent.change(getByLabelText('Field'), {
+      target: { value: 'foo' },
+    });
+    fireEvent.change(getByLabelText('Value'), {
+      target: { value: 'bar' },
+    });
   });
 
   act(() => getByText('Save').click());
@@ -124,8 +154,10 @@ it('emits null when [Cancel] is clicked', async () => {
     />
   );
 
-  fireEvent.change(getByLabelText('Document ID'), {
-    target: { value: 'new-document-id' },
+  await act(async () => {
+    fireEvent.change(getByLabelText('Document ID'), {
+      target: { value: 'new-document-id' },
+    });
   });
 
   act(() => getByText('Cancel').click());

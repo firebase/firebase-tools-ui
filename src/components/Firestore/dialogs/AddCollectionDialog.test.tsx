@@ -125,8 +125,27 @@ describe('step 2', () => {
     expect(getByLabelText('Field')).not.toBeNull();
   });
 
+  // TODO testing suggests that the button is infact disabed by inspecting the DOM
+  // but triggering a click event still triggers the underlying event. This is no
+  // reproducible in the actual GUI.
+  it.skip('[Save] is disabled if invalid doc-data', async () => {
+    const { getByLabelText, getByText } = result;
+
+    await act(async () => {
+      getByText('Save').click();
+    });
+
+    expect(onValue).not.toHaveBeenCalled();
+  });
+
   it('emits doc data when clicking [Save]', async () => {
     const { getByLabelText, getByText } = result;
+
+    await act(async () => {
+      fireEvent.change(getByLabelText('Field'), {
+        target: { value: 'valid' },
+      });
+    });
 
     act(() => getByText('Save').click());
 
@@ -136,7 +155,7 @@ describe('step 2', () => {
       collectionId: 'my-col',
       document: {
         id: 'random-id',
-        data: { '': '' },
+        data: { valid: '' },
       },
     });
   });
