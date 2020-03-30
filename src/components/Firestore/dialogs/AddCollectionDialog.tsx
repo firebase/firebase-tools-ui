@@ -128,7 +128,12 @@ export const AddCollectionDialog: React.FC<Props> = ({
           Cancel
         </DialogButton>
         {step === Step.DOCUMENT ? (
-          <DialogButton unelevated action="accept" isDefaultAction>
+          <DialogButton
+            unelevated
+            action="accept"
+            isDefaultAction
+            disabled={!document.data}
+          >
             Save
           </DialogButton>
         ) : (

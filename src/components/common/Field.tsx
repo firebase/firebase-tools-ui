@@ -22,7 +22,7 @@ import { ComponentProps } from '@rmwc/types';
 import { Typography } from '@rmwc/typography';
 import React from 'react';
 
-type Props = { tip?: string } & ComponentProps & TextFieldProps;
+type Props = { tip?: string; error?: string } & ComponentProps & TextFieldProps;
 
 export const Field: React.FC<Props> = ({
   label,
@@ -30,6 +30,7 @@ export const Field: React.FC<Props> = ({
   fullwidth,
   outlined,
   tip,
+  error,
   ...textFieldProps
 }) => {
   return (
@@ -37,11 +38,17 @@ export const Field: React.FC<Props> = ({
       <Typography className="Field-label" use="body2" theme="secondary">
         {label}
       </Typography>
-      <TextField outlined {...textFieldProps} />
-      <Typography className="Field-tip" use="body2" theme="secondary">
-        {tip}
-      </Typography>
-      {/* TODO: Error text */}
+      <TextField outlined invalid={!!error} {...textFieldProps} />
+      {tip && (
+        <Typography className="Field-tip" use="body2" theme="secondary">
+          {tip}
+        </Typography>
+      )}
+      {error && (
+        <Typography className="Field-tip" use="body2" theme="error">
+          {error}
+        </Typography>
+      )}
     </label>
   );
 };

@@ -14,22 +14,63 @@
  * limitations under the License.
  */
 
-import { TextField } from '@rmwc/textfield';
 import { firestore } from 'firebase';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
+
+import { Field } from '../../common/Field';
+import { useApi } from '../ApiContext';
 
 const ReferenceEditor: React.FC<{
   value: firestore.DocumentReference;
   onChange: (value: firestore.DocumentReference) => void;
-}> = ({ value, onChange }) => {
+  name: string;
+}> = ({ value, onChange, name }) => {
+  const [path] = useState(value.path);
+  const api = useApi();
+  const {
+    errors,
+    formState: { touched },
+    register,
+    unregister,
+    setValue,
+    triggerValidation,
+  } = useFormContext();
+
+  useEffect(() => {
+    register(name, {
+      validate: e => {
+        try {
+          api.database.doc(e);
+          return true;
+        } catch {
+          return 'Must point to a document';
+        }
+      },
+    });
+
+    return () => unregister(name);
+  }, [register, unregister, name, api]);
+
+  async function handleChange(value: string) {
+    if (await triggerValidation(name)) {
+      onChange(api.database.doc(value));
+    }
+  }
+
   return (
-    <TextField
-      value={value.path}
+    <Field
+      label="Document path"
+      defaultValue={path}
       onChange={e => {
-        // TODO: parse the input and find the document in the global api
+        setValue(name, e.currentTarget.value);
+        handleChange(e.currentTarget.value);
       }}
+      error={touched[name] && errors[name]?.message}
     />
   );
 };
+
+// api.doc(path)
 
 export default ReferenceEditor;

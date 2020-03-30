@@ -15,51 +15,66 @@
  */
 
 import { act, fireEvent, render } from '@testing-library/react';
-import { firestore } from 'firebase';
 import React from 'react';
 import { FormContext, useForm } from 'react-hook-form';
 
-import TimestampEditor from './TimestampEditor';
+import { ApiProvider } from '../ApiContext';
+import { fakeDocumentReference } from '../testing/models';
+import ReferenceEditor from './ReferenceEditor';
+
+const GOOD_PATH = '/wow/cool';
+
+const API = {
+  database: {
+    doc: path => {
+      if (path !== GOOD_PATH) {
+        throw '';
+      }
+
+      return fakeDocumentReference({ path });
+    },
+  },
+};
 
 const TestForm: React.FC = ({ children }) => {
   const methods = useForm();
-  return <FormContext {...methods}>{children}</FormContext>;
+  return (
+    <FormContext {...methods}>
+      <ApiProvider value={API}>{children}</ApiProvider>
+    </FormContext>
+  );
 };
 
-it('renders an editor for a timestamp', async () => {
+it('renders an editor for a document-ref', async () => {
   const onChange = jest.fn();
-  const date = new Date(2000, 0, 2, 10, 30);
   const { getByLabelText, getByText } = render(
     <TestForm>
-      <TimestampEditor
+      <ReferenceEditor
         name="foo"
-        value={firestore.Timestamp.fromDate(date)}
+        value={fakeDocumentReference({
+          path: '/foo/bar',
+        })}
         onChange={onChange}
       />
     </TestForm>
   );
 
-  const [displayDate, displayTime] = getByLabelText('Value').value.split('T');
-  expect(displayDate).toBe('2000-01-02');
-  expect(displayTime).toBe('10:30');
-
-  onChange.mockReset();
+  expect(getByLabelText(/Document path/).value).toBe('/foo/bar');
 
   await act(async () => {
-    fireEvent.change(getByLabelText(/Value/), {
+    fireEvent.change(getByLabelText(/Document path/), {
       target: { value: 'foo' },
     });
   });
+
   expect(onChange).not.toHaveBeenCalled();
-  expect(getByText(/Must be a date-time/)).not.toBeNull();
+  expect(getByText(/Must point to a document/)).not.toBeNull();
 
   await act(async () => {
-    fireEvent.change(getByLabelText(/Value/), {
-      target: { value: '2001-01-02T14:30' },
+    fireEvent.change(getByLabelText(/Document path/), {
+      target: { value: GOOD_PATH },
     });
   });
 
-  expect(onChange).toHaveBeenCalledWith(
-    firestore.Timestamp.fromDate(new Date(2001, 0, 2, 14, 30))
-  );
+  expect(onChange.mock.calls[0][0].path).toBe(GOOD_PATH);
 });
