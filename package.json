@@ -6,7 +6,7 @@
     "node": ">= 8.0.0"
   },
   "dependencies": {
-    "@rmwc/button": "^5.7.2",
+    "@rmwc/button": "^6.0.0",
     "@rmwc/card": "^5.7.2",
     "@rmwc/data-table": "^5.7.2",
     "@rmwc/dialog": "^5.7.2",
