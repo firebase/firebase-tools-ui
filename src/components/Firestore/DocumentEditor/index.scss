@@ -1,15 +1,59 @@
 .DocumentEditor {
   overflow: scroll;
+
+  .Field {
+    width: 136px;
+  }
+
+  .FieldSelect {
+    width: 120px;
+  }
 }
 
-.FieldEditor {
-  position: relative;
+.DocumentEditor-ArrayIndex .Field {
+  width: 40px;
+}
+
+.DocumentEditor-Array,
+.DocumentEditor-Map {
+  grid-area: child;
+}
+
+.DocumentEditor-ArrayEntry,
+.DocumentEditor-MapEntry {
   display: grid;
-  grid-auto-flow: column;
-  grid-gap: 16px;
-  grid-auto-columns: max-content;
+  grid-template-areas:
+    'parent parent secondary action'
+    '. child child child';
+  grid-auto-columns: 32px max-content max-content min-content;
+  align-items: center;
+  grid-gap: 8px;
 }
 
-.FieldEditor-children {
-  padding-left: 32px;
+.DocumentEditor-ArrayEntryMetadata,
+.DocumentEditor-MapEntryMetadata {
+  display: inline-flex;
+  grid-area: parent;
+  align-items: center;
+}
+
+.DocumentEditor-ArrayEntries,
+.DocumentEditor-MapEntries {
+  grid-area: child;
+}
+
+.DocumentEditor-Primitive {
+  grid-area: secondary;
+}
+
+.DocumentEditor-ArrayEntryDelete,
+.DocumentEditor-MapEntryDelete {
+  float: left;
+  // Pull down to align with fields
+  bottom: -8px;
+}
+
+.Document-TypeSymbol {
+  margin-bottom: -16px;
+  padding: 0 8px;
 }
