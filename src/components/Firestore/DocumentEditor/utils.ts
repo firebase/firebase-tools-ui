@@ -22,13 +22,13 @@ import {
   isMapField,
 } from './types';
 
-let id = 0;
+let uuid = 0;
 export function getUniqueId() {
-  return id++;
+  return uuid++;
 }
 
 function normalizeMap(data: FirestoreMap): Store {
-  const id = getUniqueId();
+  const uuid = getUniqueId();
 
   // reducer over object.entries -> childFields
   const children = Object.entries(data).reduce(
@@ -39,26 +39,26 @@ function normalizeMap(data: FirestoreMap): Store {
       const child = normalize(value);
       assertStoreHasRoot(child);
       mapChildren.push({
-        id: getUniqueId(),
+        uuid: getUniqueId(),
         name,
-        valueId: child.id,
+        valueId: child.uuid,
       });
       return { mapChildren, fields: { ...fields, ...child.fields } };
     },
     { mapChildren: [], fields: {} }
   );
   return {
-    id,
+    uuid,
     fields: {
       ...children.fields,
       // add item for current node
-      [id]: { mapChildren: children.mapChildren },
+      [uuid]: { mapChildren: children.mapChildren },
     },
   };
 }
 
 function normalizeArray(data: FirestoreArray): Store {
-  const id = getUniqueId();
+  const uuid = getUniqueId();
 
   // reducer over array elements -> childFields
   const children = data.reduce(
@@ -72,33 +72,33 @@ function normalizeArray(data: FirestoreArray): Store {
       const child = normalize(value);
       assertStoreHasRoot(child);
       arrayChildren.push({
-        id: getUniqueId(),
-        valueId: child.id,
+        uuid: getUniqueId(),
+        valueId: child.uuid,
       });
       return { arrayChildren, fields: { ...fields, ...child.fields } };
     },
     { arrayChildren: [], fields: {} }
   );
   return {
-    id,
+    uuid,
     fields: {
       ...children.fields,
       // add item for current node
-      [id]: { arrayChildren: children.arrayChildren },
+      [uuid]: { arrayChildren: children.arrayChildren },
     },
   };
 }
 
 function normalizePrimitive(data: FirestorePrimitive): Store {
-  const id = getUniqueId();
+  const uuid = getUniqueId();
 
   if (data instanceof firestore.DocumentReference) {
     return {
-      id,
-      fields: { [id]: { value: new DocumentPath(data.path) } },
+      uuid,
+      fields: { [uuid]: { value: new DocumentPath(data.path) } },
     };
   }
-  return { id, fields: { [id]: { value: data } } };
+  return { uuid, fields: { [uuid]: { value: data } } };
 }
 
 export function normalize(data: FirestoreAny): Store {
@@ -116,12 +116,12 @@ export function denormalize(
   api: DatabaseApi | null
 ): FirestoreAny {
   assertStoreHasRoot(store);
-  const field = store.fields[store.id];
+  const field = store.fields[store.uuid];
   if (isMapField(field)) {
     return field.mapChildren.reduce((acc, curr) => {
       acc[curr.name] = denormalize(
         {
-          id: curr.valueId,
+          uuid: curr.valueId,
           fields: store.fields,
         },
         api
@@ -130,7 +130,7 @@ export function denormalize(
     }, {} as any);
   } else if (isArrayField(field)) {
     return field.arrayChildren.reduce((acc, curr) => {
-      acc.push(denormalize({ id: curr.valueId, fields: store.fields }, api));
+      acc.push(denormalize({ uuid: curr.valueId, fields: store.fields }, api));
       return acc;
     }, [] as any);
   } else {

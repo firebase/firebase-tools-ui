@@ -128,9 +128,9 @@ const DocumentEditor: React.FC<{
         <div className="DocumentEditor">
           {
             <>
-              {store.id !== undefined && (
+              {store.uuid !== undefined && (
                 <FieldEditor
-                  id={store.id}
+                  uuid={store.uuid}
                   isRtdb={rtdb}
                   areNamesMutable={areRootNamesMutable}
                   areFieldsMutable={areRootFieldsMutable}
@@ -148,14 +148,14 @@ const DocumentEditor: React.FC<{
  * Field with call-to-actions for editing as well as rendering applicable child-nodes
  */
 const FieldEditor: React.FC<{
-  id: number;
+  uuid: number;
   isRtdb: boolean;
   areNamesMutable?: boolean;
   areFieldsMutable?: boolean;
-}> = ({ id, isRtdb, areNamesMutable = true, areFieldsMutable = true }) => {
+}> = ({ uuid, isRtdb, areNamesMutable = true, areFieldsMutable = true }) => {
   const store = useStore();
   const dispatch = useDispatch();
-  const field = useField(id);
+  const field = useField(uuid);
 
   const typeSelect = (
     <SelectField
@@ -164,7 +164,7 @@ const FieldEditor: React.FC<{
       options={isRtdb ? RTDB_FIELD_TYPES : FIRESTORE_FIELD_TYPES}
       value={getDocumentFieldType(field)}
       onChange={e => {
-        dispatch(actions.updateType({ id, type: e.currentTarget.value }));
+        dispatch(actions.updateType({ uuid, type: e.currentTarget.value }));
       }}
     />
   );
@@ -172,24 +172,24 @@ const FieldEditor: React.FC<{
   if (isMapField(field)) {
     return (
       <div className="DocumentEditor-Map">
-        {id !== store.id && typeSelect}
+        {uuid !== store.uuid && typeSelect}
         {field.mapChildren.map(c => {
           return (
-            <div className="DocumentEditor-MapEntry" key={c.id}>
+            <div className="DocumentEditor-MapEntry" key={c.uuid}>
               <NameEditor
-                id={id}
+                uuid={uuid}
                 field={field}
-                childId={c.id}
-                readonly={!areNamesMutable && id === store.id}
+                childId={c.uuid}
+                readonly={!areNamesMutable && uuid === store.uuid}
               />
-              => <FieldEditor id={c.valueId} isRtdb={isRtdb} />
+              => <FieldEditor uuid={c.valueId} isRtdb={isRtdb} />
               {areFieldsMutable && (
                 <IconButton
                   type="button"
                   icon="delete"
                   label="Remove field"
                   onClick={() =>
-                    dispatch(actions.removeFromMap({ id, childId: c.id }))
+                    dispatch(actions.removeFromMap({ uuid, childId: c.uuid }))
                   }
                 />
               )}
@@ -204,7 +204,7 @@ const FieldEditor: React.FC<{
             onClick={() =>
               dispatch(
                 actions.addToMap({
-                  id,
+                  uuid,
                   name: '',
                   value: '',
                 })
@@ -217,18 +217,18 @@ const FieldEditor: React.FC<{
   } else if (isArrayField(field)) {
     return (
       <div className="DocumentEditor-Array">
-        {id !== store.id && typeSelect}
+        {uuid !== store.uuid && typeSelect}
         {field.arrayChildren.map((c, index) => {
           return (
-            <div className="DocumentEditor-ArrayEntry" key={c.id}>
-              {index} => <FieldEditor id={c.valueId} isRtdb={isRtdb} />
+            <div className="DocumentEditor-ArrayEntry" key={c.uuid}>
+              {index} => <FieldEditor uuid={c.valueId} isRtdb={isRtdb} />
               {areFieldsMutable && (
                 <IconButton
                   type="button"
                   icon="delete"
                   label="Remove field"
                   onClick={() =>
-                    dispatch(actions.removeFromArray({ id, childId: c.id }))
+                    dispatch(actions.removeFromArray({ uuid, childId: c.uuid }))
                   }
                 />
               )}
@@ -243,7 +243,7 @@ const FieldEditor: React.FC<{
             onClick={() =>
               dispatch(
                 actions.addToArray({
-                  id,
+                  uuid,
                   value: '',
                 })
               )
@@ -256,37 +256,37 @@ const FieldEditor: React.FC<{
     const valueEditor =
       field.value instanceof DocumentPath ? (
         <ReferenceEditor
-          name={`${id}`}
+          name={`${uuid}`}
           value={field.value}
-          onChange={value => dispatch(actions.updateValue({ id, value }))}
+          onChange={value => dispatch(actions.updateValue({ uuid, value }))}
         />
       ) : isString(field.value) ? (
         <StringEditor
           value={field.value}
-          onChange={value => dispatch(actions.updateValue({ id, value }))}
+          onChange={value => dispatch(actions.updateValue({ uuid, value }))}
         />
       ) : isBoolean(field.value) ? (
         <BooleanEditor
           value={field.value}
-          onChange={value => dispatch(actions.updateValue({ id, value }))}
+          onChange={value => dispatch(actions.updateValue({ uuid, value }))}
         />
       ) : isNumber(field.value) ? (
         <NumberEditor
-          name={`${id}`}
+          name={`${uuid}`}
           value={field.value}
-          onChange={value => dispatch(actions.updateValue({ id, value }))}
+          onChange={value => dispatch(actions.updateValue({ uuid, value }))}
         />
       ) : isGeoPoint(field.value) ? (
         <GeoPointEditor
-          name={`${id}`}
+          name={`${uuid}`}
           value={field.value}
-          onChange={value => dispatch(actions.updateValue({ id, value }))}
+          onChange={value => dispatch(actions.updateValue({ uuid, value }))}
         />
       ) : isTimestamp(field.value) ? (
         <TimestampEditor
-          name={`${id}`}
+          name={`${uuid}`}
           value={field.value}
-          onChange={value => dispatch(actions.updateValue({ id, value }))}
+          onChange={value => dispatch(actions.updateValue({ uuid, value }))}
         />
       ) : null;
 
@@ -300,11 +300,11 @@ const FieldEditor: React.FC<{
 };
 
 const NameEditor: React.FC<{
-  id: number;
+  uuid: number;
   field: MapField;
   childId: number;
   readonly: boolean;
-}> = ({ id, field, childId, readonly }) => {
+}> = ({ uuid, field, childId, readonly }) => {
   const {
     register,
     unregister,
@@ -316,7 +316,7 @@ const NameEditor: React.FC<{
   } = useFormContext();
 
   const dispatch = useDispatch();
-  const child = field.mapChildren.find(c => c.id === childId);
+  const child = field.mapChildren.find(c => c.uuid === childId);
   if (!child) {
     throw new Error('Tried to render a name-edtior for a non-map-child');
   }
@@ -324,7 +324,7 @@ const NameEditor: React.FC<{
   const formName = `${childId}`;
 
   const siblingNames = React.useMemo(() => {
-    return field.mapChildren.filter(c => c.id !== childId).map(c => c.name);
+    return field.mapChildren.filter(c => c.uuid !== childId).map(c => c.name);
   }, [field, childId]);
 
   useEffect(() => {
@@ -354,7 +354,7 @@ const NameEditor: React.FC<{
         setValue(formName, e.currentTarget.value);
         dispatch(
           actions.updateName({
-            id,
+            uuid,
             childId,
             name: e.currentTarget.value,
           })

@@ -46,7 +46,7 @@ export const reducer = createReducer<Store, Action>({ fields: {} })
   .handleAction(
     actions.addToMap,
     produce((draft, { payload }) => {
-      const field = draft.fields[payload.id];
+      const field = draft.fields[payload.uuid];
       assertIsMapField(field);
       const normalized = normalize(payload.value);
       assertStoreHasRoot(normalized);
@@ -55,16 +55,16 @@ export const reducer = createReducer<Store, Action>({ fields: {} })
         ...normalized.fields,
       };
       field.mapChildren.push({
-        id: getUniqueId(),
+        uuid: getUniqueId(),
         name: payload.name,
-        valueId: normalized.id,
+        valueId: normalized.uuid,
       });
     })
   )
   .handleAction(
     actions.addToArray,
     produce((draft, { payload }) => {
-      const field = draft.fields[payload.id];
+      const field = draft.fields[payload.uuid];
       assertIsArrayField(field);
       const normalized = normalize(payload.value);
       assertStoreHasRoot(normalized);
@@ -72,60 +72,62 @@ export const reducer = createReducer<Store, Action>({ fields: {} })
         ...draft.fields,
         ...normalized.fields,
       };
-      draft.fields[payload.id].arrayChildren.push({
-        id: getUniqueId(),
-        valueId: normalized.id,
+      draft.fields[payload.uuid].arrayChildren.push({
+        uuid: getUniqueId(),
+        valueId: normalized.uuid,
       });
     })
   )
   .handleAction(
     actions.removeFromMap,
     produce((draft, { payload }) => {
-      const field = draft.fields[payload.id];
+      const field = draft.fields[payload.uuid];
       assertIsMapField(field);
-      const child = field.mapChildren.find(c => c.id === payload.childId);
+      const child = field.mapChildren.find(c => c.uuid === payload.childId);
       if (!child) {
         throw new Error('No map-child found with given ID');
       }
 
       // Remove any descendants
-      for (const id of getDescendantIds(draft.fields, [child.valueId])) {
-        delete draft.fields[id];
+      for (const uuid of getDescendantIds(draft.fields, [child.valueId])) {
+        delete draft.fields[uuid];
       }
 
       // Remove reference from parent
       field.mapChildren = field.mapChildren.filter(
-        c => c.id !== payload.childId
+        c => c.uuid !== payload.childId
       );
     })
   )
   .handleAction(
     actions.removeFromArray,
     produce((draft, { payload }) => {
-      const field = draft.fields[payload.id];
+      const field = draft.fields[payload.uuid];
       assertIsArrayField(field);
-      const child = field.arrayChildren.find(c => c.id === payload.childId);
+      const child = field.arrayChildren.find(c => c.uuid === payload.childId);
       if (!child) {
         throw new Error('No array-child found with given ID');
       }
 
       // Remove any descendants
-      for (const id of getDescendantIds(draft.fields, [child.valueId])) {
-        delete draft.fields[id];
+      for (const uuid of getDescendantIds(draft.fields, [child.valueId])) {
+        delete draft.fields[uuid];
       }
 
       // Remove reference from parent
       field.arrayChildren = field.arrayChildren.filter(
-        c => c.id !== payload.childId
+        c => c.uuid !== payload.childId
       );
     })
   )
   .handleAction(
     actions.updateName,
     produce((draft, { payload }) => {
-      const field = draft.fields[payload.id];
+      const field = draft.fields[payload.uuid];
       assertIsMapField(field);
-      const childField = field.mapChildren.find(c => c.id === payload.childId);
+      const childField = field.mapChildren.find(
+        c => c.uuid === payload.childId
+      );
       if (!childField) {
         throw new Error('No map-child found with given ID');
       }
@@ -136,11 +138,11 @@ export const reducer = createReducer<Store, Action>({ fields: {} })
     actions.updateType,
     produce((draft, { payload }) => {
       if (payload.type === FieldType.MAP) {
-        draft.fields[payload.id] = { mapChildren: [] };
+        draft.fields[payload.uuid] = { mapChildren: [] };
       } else if (payload.type === FieldType.ARRAY) {
-        draft.fields[payload.id] = { arrayChildren: [] };
+        draft.fields[payload.uuid] = { arrayChildren: [] };
       } else {
-        draft.fields[payload.id] = {
+        draft.fields[payload.uuid] = {
           value: defaultValueForPrimitiveType(payload.type),
         };
       }
@@ -149,7 +151,7 @@ export const reducer = createReducer<Store, Action>({ fields: {} })
   .handleAction(
     actions.updateValue,
     produce((draft, { payload }) => {
-      const field = draft.fields[payload.id];
+      const field = draft.fields[payload.uuid];
       assertIsPrimitiveField(field);
       field.value = payload.value;
     })
@@ -191,7 +193,7 @@ export function useDispatch(): React.Dispatch<Action> {
   return React.useMemo(() => dispatch, [dispatch]);
 }
 
-export function useField(id: number): Field {
+export function useField(uuid: number): Field {
   const store = useStore();
-  return React.useMemo(() => store.fields[id], [store, id]);
+  return React.useMemo(() => store.fields[uuid], [store, uuid]);
 }

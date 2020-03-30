@@ -20,35 +20,34 @@ import { FieldType } from '../models';
 import { PrimitiveValue } from './types';
 
 export const addToMap = createAction('@document/addToMap')<{
-  id: number;
+  uuid: number;
   name: string;
   value: PrimitiveValue;
 }>();
 export const addToArray = createAction('@document/addToArray')<{
-  id: number;
+  uuid: number;
   value: PrimitiveValue;
 }>();
 // TODO
 export const removeFromMap = createAction('@document/removeFromMap')<{
-  id: number;
+  uuid: number;
   childId: number;
 }>();
 // TODO
 export const removeFromArray = createAction('@document/removeFromArray')<{
-  id: number;
+  uuid: number;
   childId: number;
 }>();
 export const updateName = createAction('@document/updateName')<{
-  id: number;
+  uuid: number;
   childId: number;
   name: string;
 }>();
 export const updateType = createAction('@document/updateType')<{
-  id: number;
+  uuid: number;
   type: FieldType;
 }>();
-// TODO
 export const updateValue = createAction('@document/updateValue')<{
-  id: number;
+  uuid: number;
   value: PrimitiveValue;
 }>();

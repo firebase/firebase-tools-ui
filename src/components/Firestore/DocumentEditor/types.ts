@@ -11,7 +11,7 @@ export class DocumentPath {
 }
 
 export type MapChildren = Array<{
-  readonly id: number;
+  readonly uuid: number;
   name: string;
   valueId: number;
 }>;
@@ -19,7 +19,7 @@ export interface MapField {
   mapChildren: MapChildren;
 }
 
-export type ArrayChildren = Array<{ readonly id: number; valueId: number }>;
+export type ArrayChildren = Array<{ readonly uuid: number; valueId: number }>;
 export interface ArrayField {
   arrayChildren: ArrayChildren;
 }
@@ -31,10 +31,10 @@ export interface PrimitiveField {
 
 export type Field = MapField | ArrayField | PrimitiveField;
 export type Fields = {
-  [id: number]: Field;
+  [uuid: number]: Field;
 };
 export type Store = {
-  id?: number;
+  uuid?: number;
   fields: Fields;
 };
 
@@ -62,8 +62,8 @@ export function isArrayField(field: Field): field is ArrayField {
 
 export function assertStoreHasRoot(
   store: Store
-): asserts store is Store & { id: number } {
-  if (store.id === undefined) {
+): asserts store is Store & { uuid: number } {
+  if (store.uuid === undefined) {
     throw new Error('Store has no root');
   }
 }
