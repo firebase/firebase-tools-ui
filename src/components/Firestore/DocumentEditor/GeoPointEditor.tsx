@@ -14,51 +14,96 @@
  * limitations under the License.
  */
 
-import { TextField } from '@rmwc/textfield';
 import { firestore } from 'firebase';
 import React, { useEffect, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
+
+import { Field } from '../../common/Field';
 
 const GeoPointEditor: React.FC<{
+  name: string;
   value: firestore.GeoPoint;
   onChange: (value: firestore.GeoPoint) => void;
-}> = ({ value, onChange }) => {
+}> = ({ name, value, onChange }) => {
   const [latitude, setLatitude] = useState(String(value.latitude));
   const [longitude, setLongitude] = useState(String(value.longitude));
+  const {
+    errors,
+    formState: { touched },
+    register,
+    unregister,
+    setValue,
+  } = useFormContext();
 
-  // Update the parent when _both_ fields are valid
+  const latitudeName = `${name}-lat`;
+  const longitudeName = `${name}-long`;
+
+  useEffect(() => {
+    register(latitudeName, {
+      required: 'Required',
+      min: {
+        value: -90,
+        message: 'Must be >= -90',
+      },
+      max: {
+        value: 90,
+        message: 'Must be <= -90',
+      },
+    });
+
+    register(longitudeName, {
+      required: 'Required',
+      min: {
+        value: -180,
+        message: 'Must be >= -180',
+      },
+      max: {
+        value: 180,
+        message: 'Must be <= -180',
+      },
+    });
+
+    return () => unregister([latitudeName, longitudeName]);
+  }, [register, unregister, latitudeName, longitudeName]);
+
   useEffect(() => {
     const lat = parseInt(latitude);
     const long = parseInt(longitude);
-    if (
-      !isNaN(lat) &&
-      !isNaN(long) &&
-      !(value.latitude === lat && value.longitude === long)
-    ) {
-      onChange(new firestore.GeoPoint(lat, long));
+    if (value.latitude === lat && value.longitude === long) {
+      return;
     }
+
+    try {
+      // Update the parent when _both_ fields are valid
+      const geoPoint = new firestore.GeoPoint(lat, long);
+      onChange(geoPoint);
+    } catch {}
   }, [value, latitude, longitude, onChange]);
 
   return (
-    <>
-      <TextField
-        outlined
+    <div className="FieldEditor-geo-point">
+      <Field
         label="Latitude"
-        value={latitude}
         type="number"
+        defaultValue={latitude}
         onChange={e => {
+          setValue(latitudeName, e.currentTarget.value, true);
           setLatitude(e.currentTarget.value);
         }}
+        error={touched[latitudeName] && errors[latitudeName]?.message}
       />
-      <TextField
-        outlined
+
+      <Field
         label="Longitude"
-        value={longitude}
         type="number"
+        defaultValue={longitude}
         onChange={e => {
+          setValue(longitudeName, e.currentTarget.value, true);
           setLongitude(e.currentTarget.value);
         }}
+        error={touched[longitudeName] && errors[longitudeName]?.message}
       />
-    </>
+    </div>
   );
 };
 

@@ -14,34 +14,68 @@
  * limitations under the License.
  */
 
-import { fireEvent, render } from '@testing-library/react';
+import { act, fireEvent, render } from '@testing-library/react';
 import React from 'react';
+import { FormContext, useForm } from 'react-hook-form';
 
 import NumberEditor from './NumberEditor';
 
-it('renders an editor for a number', () => {
+const TestForm: React.FC = ({ children }) => {
+  const methods = useForm();
+  return <FormContext {...methods}>{children}</FormContext>;
+};
+
+it('renders an editor for a number', async () => {
   const onChange = jest.fn();
-  const { getByLabelText } = render(
-    <NumberEditor value={1} onChange={onChange} />
+  const { getByLabelText, getByText } = render(
+    <TestForm>
+      <NumberEditor name="foo" value={1} onChange={onChange} />
+    </TestForm>
   );
 
-  expect(getByLabelText('Value').value).toBe('1');
+  expect(getByLabelText(/Value/).value).toBe('1');
 
   onChange.mockReset();
-  fireEvent.change(getByLabelText('Value'), {
-    target: { value: 'foo' },
-  });
-  expect(onChange).not.toHaveBeenCalled();
 
-  fireEvent.change(getByLabelText('Value'), {
-    target: { value: 2 },
+  await act(async () => {
+    fireEvent.change(getByLabelText(/Value/), {
+      target: { value: 'foo' },
+    });
+  });
+
+  expect(onChange).not.toHaveBeenCalled();
+  expect(getByText(/Must be a number/)).not.toBeNull();
+
+  await act(async () => {
+    fireEvent.change(getByLabelText(/Value/), {
+      target: { value: '' },
+    });
+  });
+
+  expect(onChange).not.toHaveBeenCalled();
+  expect(getByText(/Required/)).not.toBeNull();
+
+  await act(async () => {
+    fireEvent.change(getByLabelText(/Value/), {
+      target: { value: 2 },
+    });
   });
 
   expect(onChange).toHaveBeenCalledWith(2);
 
-  fireEvent.change(getByLabelText('Value'), {
-    target: { value: 2.5 },
+  await act(async () => {
+    fireEvent.change(getByLabelText(/Value/), {
+      target: { value: '-2.5' },
+    });
   });
 
-  expect(onChange).toHaveBeenCalledWith(2.5);
+  expect(onChange).toHaveBeenCalledWith(-2.5);
+
+  await act(async () => {
+    fireEvent.change(getByLabelText(/Value/), {
+      target: { value: 'Infinity' },
+    });
+  });
+
+  expect(onChange).toHaveBeenCalledWith(Infinity);
 });

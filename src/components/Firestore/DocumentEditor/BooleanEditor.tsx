@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
-import { Select } from '@rmwc/select';
 import React from 'react';
+
+import { SelectField } from '../../common/Field';
 
 const BooleanEditor: React.FC<{
   value: boolean;
   onChange: (value: boolean) => void;
 }> = ({ value, onChange }) => {
   return (
-    <Select
+    <SelectField
       label="Value"
       outlined
       value={value.toString()}

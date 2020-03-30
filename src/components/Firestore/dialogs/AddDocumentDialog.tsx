@@ -45,7 +45,7 @@ export const AddDocumentStep: React.FC<AddDocumentStepProps> = ({
   onChange,
 }) => {
   const [id, setId] = useState(collectionRef.doc().id);
-  const [data, setData] = useState<FirestoreMap>({ '': '' });
+  const [data, setData] = useState<FirestoreMap | undefined>();
 
   // TODO: Validation
   const getValue = useCallback(() => {
@@ -83,7 +83,7 @@ export const AddDocumentStep: React.FC<AddDocumentStepProps> = ({
         onChange={updateId}
         required
       />
-      <DocumentEditor value={data} onChange={data => setData(data)} />
+      <DocumentEditor value={{ '': '' }} onChange={data => setData(data)} />
     </>
   );
 };
@@ -121,7 +121,12 @@ export const AddDocumentDialog: React.FC<Props> = ({
         <DialogButton action="close" type="button" theme="secondary">
           Cancel
         </DialogButton>
-        <DialogButton unelevated action="accept" isDefaultAction>
+        <DialogButton
+          unelevated
+          action="accept"
+          isDefaultAction
+          disabled={!document.data}
+        >
           Save
         </DialogButton>
       </DialogActions>
