@@ -21,7 +21,7 @@ import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 
 import App from './App';
-import { alert } from './components/DialogQueue';
+import { alert } from './components/common/DialogQueue';
 import configureStore from './configureStore';
 
 it('renders without crashing', () => {
