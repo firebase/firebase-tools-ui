@@ -71,10 +71,11 @@ export const Home: React.FC<Props> = ({ configRemote }) => {
 
 export default connect(mapStateToProps)(Home);
 
+// TODO
 export const HomeLoading: React.FC = () => <p>Fetching Config...</p>;
-export const HomeError: React.FC<{ error: ErrorInfo }> = ({ error }) => (
-  <p className="Home-error">{error.message}</p>
-);
+
+// Show no content on error since we have a general disconnected overlay anyway.
+export const HomeError: React.FC<{ error: ErrorInfo }> = ({ error }) => null;
 
 export const EmulatorCard: React.FC<{
   name: string;

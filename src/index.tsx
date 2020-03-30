@@ -30,14 +30,14 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { background, primary, secondary } from './colors';
 import App from './components/App';
 import configureStore from './configureStore';
-import { fetchRequest as fetchConfigRequest } from './store/config';
+import { subscribe as subscribeToConfig } from './store/config';
 import { error } from './themes';
 
 const store = configureStore();
 
 const RouterWithInit = () => {
   useEffect(() => {
-    store.dispatch(fetchConfigRequest());
+    store.dispatch(subscribeToConfig());
   }, []); // Empty-array means "run only once on init": https://reactjs.org/docs/hooks-effect.html#tip-optimizing-performance-by-skipping-effects
   return (
     <BrowserRouter>
