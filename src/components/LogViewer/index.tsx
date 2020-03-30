@@ -54,6 +54,10 @@ export const LogViewer: React.FC<Props> = ({ logReceived, config }) => {
         .slice(1)
         .join(' ');
       logReceived(log);
+
+      return () => {
+        webSocket.listener = undefined;
+      };
     };
   }, [config, logReceived]);
 

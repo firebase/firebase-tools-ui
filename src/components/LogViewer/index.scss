@@ -243,6 +243,7 @@
     .line {
       div {
         text-decoration: none;
+        display: inline;
 
         &:hover {
           text-decoration: underline;

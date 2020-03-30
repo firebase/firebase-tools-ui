@@ -18,7 +18,7 @@ import React, { useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 
 import { AppState } from '../../store';
-import { LogState } from '../../store/logviewer';
+import { LogEntry, LogState } from '../../store/logviewer';
 import { CompiledGetterCache } from './CompiledGetterCache';
 import { HighlightedJSON } from './HighlightedJSON';
 import { ParsedQuery, filtersToQueryString, isQueryMatch } from './QueryBar';
@@ -73,6 +73,9 @@ export const History: React.FC<Props> = ({
     setQuery(filtersToQueryString({ ...parsedQuery.filters, [key]: value }));
   };
 
+  const getUserData = (log: LogEntry) =>
+    log?.data?.user && Object.keys(log?.data?.user).length;
+
   return (
     <div id="log-history">
       {history.length ? (
@@ -88,8 +91,7 @@ export const History: React.FC<Props> = ({
               {log.level[0].toUpperCase()}
             </span>
 
-            {Object.keys(log.data && log.data.user ? log.data.user : {})
-              .length || log.data.user ? (
+            {getUserData(log) ? (
               <>
                 <div className="log-message-single">{log.message}</div>
                 <input

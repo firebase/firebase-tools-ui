@@ -199,7 +199,7 @@ export const QueryBar: React.FC<Props> = ({ query, parsedQuery, setQuery }) => {
       ></textarea>
       {query.length ? (
         <div id="log-query-actions">
-          <button onClick={() => setQuery('')}>clear query</button>
+          {/*<button onClick={() => setQuery('')}>clear query</button>*/}
         </div>
       ) : (
         ''
