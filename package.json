@@ -6,6 +6,7 @@
     "node": ">= 8.0.0"
   },
   "dependencies": {
+    "@rehooks/local-storage": "^2.3.0",
     "@rmwc/button": "^5.7.2",
     "@rmwc/card": "^5.7.2",
     "@rmwc/data-table": "^5.7.2",
