@@ -66,6 +66,7 @@
   .Firestore-Collection {
     display: none;
     flex-direction: column;
+    min-width: 0;
 
     /* Show a border _between_ rendered panels */
     + .Firestore-Document,
@@ -99,7 +100,7 @@
   .List-Actions {
     padding: 0;
 
-    .mdc-button {
+    .list-button {
       @include ellipsis;
       border-radius: 0;
       width: 100%;

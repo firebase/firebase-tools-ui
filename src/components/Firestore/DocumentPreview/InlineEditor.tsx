@@ -14,7 +14,14 @@
  * limitations under the License.
  */
 
-import { Card, CardActionButton, CardActionButtons } from '@rmwc/card';
+import './InlineEditor.scss';
+
+import {
+  Card,
+  CardActionButton,
+  CardActionButtons,
+  CardActions,
+} from '@rmwc/card';
 import { Elevation } from '@rmwc/elevation';
 import React, { useState } from 'react';
 
@@ -50,8 +57,8 @@ const InlineEditor: React.FC<{
 
   return (
     <Elevation z={8} wrap>
-      <Card className="Firestore-Field-inline-editor">
-        <div>
+      <Card className="Firestore-InlineEditor">
+        <div className="Firestore-InlineEditorContent">
           <DocumentEditor
             value={value}
             onChange={handleChange}
@@ -60,12 +67,18 @@ const InlineEditor: React.FC<{
             rtdb={rtdb}
           />
         </div>
-        <CardActionButtons>
-          <CardActionButton onClick={handleCancel}>Cancel</CardActionButton>
-          <CardActionButton onClick={handleSubmit} disabled={!internalValue}>
-            Save
-          </CardActionButton>
-        </CardActionButtons>
+        <CardActions className="Firestore-InlineEditorActions">
+          <CardActionButtons>
+            <CardActionButton onClick={handleCancel}>Cancel</CardActionButton>
+            <CardActionButton
+              unelevated
+              onClick={handleSubmit}
+              disabled={!internalValue}
+            >
+              Save
+            </CardActionButton>
+          </CardActionButtons>
+        </CardActions>
       </Card>
     </Elevation>
   );
