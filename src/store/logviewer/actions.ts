@@ -15,6 +15,7 @@
  */
 
 import { createAction } from 'typesafe-actions';
+
 import { LogEntry } from './types';
 
 export const logReceived = createAction('@log/RECEIVED')<LogEntry>();

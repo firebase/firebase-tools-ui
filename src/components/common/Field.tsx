@@ -68,9 +68,11 @@ export const SelectField: React.FC<SelectFieldProps> = ({
         {label}
       </Typography>
       <Select outlined {...selectProps} />
-      <Typography className="Field-tip" use="body2" theme="secondary">
-        {tip}
-      </Typography>
+      {tip && (
+        <Typography className="Field-tip" use="body2" theme="secondary">
+          {tip}
+        </Typography>
+      )}
       {/* TODO: Error text */}
     </label>
   );

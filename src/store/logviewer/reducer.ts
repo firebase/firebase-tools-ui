@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-import { createReducer, Action } from 'typesafe-actions';
-import { LogState } from './types';
+import { Action, createReducer } from 'typesafe-actions';
+
 import { logReceived } from './actions';
+import { LogState } from './types';
 
 export const logReducer = createReducer<LogState, Action>({
-  history: []
+  history: [],
 }).handleAction(logReceived, (state: LogState, { payload }) => {
-  return {...state, history: [...state.history, payload]}
+  return { ...state, history: [...state.history, payload] };
 });

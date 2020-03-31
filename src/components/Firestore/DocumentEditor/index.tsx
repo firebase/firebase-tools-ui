@@ -157,99 +157,104 @@ const FieldEditor: React.FC<{
   const dispatch = useDispatch();
   const field = useField(uuid);
 
-  const typeSelect = (
-    <SelectField
-      label="Type"
-      outlined
-      options={isRtdb ? RTDB_FIELD_TYPES : FIRESTORE_FIELD_TYPES}
-      value={getDocumentFieldType(field)}
-      onChange={e => {
-        dispatch(actions.updateType({ uuid, type: e.currentTarget.value }));
-      }}
-    />
-  );
-
   if (isMapField(field)) {
     return (
       <div className="DocumentEditor-Map">
-        {uuid !== store.uuid && typeSelect}
-        {field.mapChildren.map(c => {
-          return (
-            <div className="DocumentEditor-MapEntry" key={c.uuid}>
-              <NameEditor
-                uuid={uuid}
-                field={field}
-                childId={c.uuid}
-                readonly={!areNamesMutable && uuid === store.uuid}
-              />
-              => <FieldEditor uuid={c.valueId} isRtdb={isRtdb} />
-              {areFieldsMutable && (
-                <IconButton
-                  type="button"
-                  icon="delete"
-                  label="Remove field"
-                  onClick={() =>
-                    dispatch(actions.removeFromMap({ uuid, childId: c.uuid }))
-                  }
-                />
-              )}
-            </div>
-          );
-        })}
-        {areFieldsMutable && (
-          <IconButton
-            label="Add field"
-            type="button"
-            icon="add"
-            onClick={() =>
-              dispatch(
-                actions.addToMap({
-                  uuid,
-                  name: '',
-                  value: '',
-                })
-              )
-            }
-          />
-        )}
+        <div className="DocumentEditor-MapEntries">
+          {field.mapChildren.map(c => {
+            return (
+              <div className="DocumentEditor-MapEntry" key={c.uuid}>
+                <div className="DocumentEditor-MapEntryMetadata">
+                  <NameEditor
+                    uuid={uuid}
+                    field={field}
+                    childId={c.uuid}
+                    readonly={!areNamesMutable && uuid === store.uuid}
+                  />
+                  <span className="Document-TypeSymbol">=</span>
+                  <ChildTypeSelect uuid={c.valueId} isRtdb={isRtdb} />
+                </div>
+                <FieldEditor uuid={c.valueId} isRtdb={isRtdb} />
+                {areFieldsMutable && (
+                  <IconButton
+                    className="DocumentEditor-MapEntryDelete"
+                    type="button"
+                    icon="delete"
+                    label="Remove field"
+                    onClick={() =>
+                      dispatch(actions.removeFromMap({ uuid, childId: c.uuid }))
+                    }
+                  />
+                )}
+              </div>
+            );
+          })}
+          {areFieldsMutable && (
+            <IconButton
+              label="Add field"
+              type="button"
+              icon="add"
+              onClick={() =>
+                dispatch(
+                  actions.addToMap({
+                    uuid,
+                    name: '',
+                    value: '',
+                  })
+                )
+              }
+            />
+          )}
+        </div>
       </div>
     );
   } else if (isArrayField(field)) {
     return (
       <div className="DocumentEditor-Array">
-        {uuid !== store.uuid && typeSelect}
-        {field.arrayChildren.map((c, index) => {
-          return (
-            <div className="DocumentEditor-ArrayEntry" key={c.uuid}>
-              {index} => <FieldEditor uuid={c.valueId} isRtdb={isRtdb} />
-              {areFieldsMutable && (
-                <IconButton
-                  type="button"
-                  icon="delete"
-                  label="Remove field"
-                  onClick={() =>
-                    dispatch(actions.removeFromArray({ uuid, childId: c.uuid }))
-                  }
-                />
-              )}
-            </div>
-          );
-        })}
-        {areFieldsMutable && (
-          <IconButton
-            label="Add field"
-            type="button"
-            icon="add"
-            onClick={() =>
-              dispatch(
-                actions.addToArray({
-                  uuid,
-                  value: '',
-                })
-              )
-            }
-          />
-        )}
+        <div className="DocumentEditor-ArrayEntries">
+          {field.arrayChildren.map((c, index) => {
+            return (
+              <div className="DocumentEditor-ArrayEntry" key={c.uuid}>
+                <div className="DocumentEditor-ArrayEntryMetadata">
+                  <div className="DocumentEditor-ArrayIndex">
+                    <Field value={index} label="Index" disabled />
+                  </div>
+                  <span className="Document-TypeSymbol">=</span>
+                  <ChildTypeSelect uuid={c.valueId} isRtdb={isRtdb} />
+                </div>
+                <FieldEditor uuid={c.valueId} isRtdb={isRtdb} />
+                {areFieldsMutable && (
+                  <IconButton
+                    className="DocumentEditor-ArrayEntryDelete"
+                    type="button"
+                    icon="delete"
+                    label="Remove field"
+                    onClick={() =>
+                      dispatch(
+                        actions.removeFromArray({ uuid, childId: c.uuid })
+                      )
+                    }
+                  />
+                )}
+              </div>
+            );
+          })}
+          {areFieldsMutable && (
+            <IconButton
+              label="Add field"
+              type="button"
+              icon="add"
+              onClick={() =>
+                dispatch(
+                  actions.addToArray({
+                    uuid,
+                    value: '',
+                  })
+                )
+              }
+            />
+          )}
+        </div>
       </div>
     );
   } else {
@@ -290,13 +295,28 @@ const FieldEditor: React.FC<{
         />
       ) : null;
 
-    return (
-      <div className="DocumentEditor-Primitive">
-        {typeSelect}
-        {valueEditor}
-      </div>
-    );
+    return <div className="DocumentEditor-Primitive">{valueEditor}</div>;
   }
+};
+
+const ChildTypeSelect: React.FC<{
+  uuid: number;
+  isRtdb: boolean;
+}> = ({ uuid, isRtdb }) => {
+  const field = useField(uuid);
+  const dispatch = useDispatch();
+
+  return (
+    <SelectField
+      label="Type"
+      outlined
+      options={isRtdb ? RTDB_FIELD_TYPES : FIRESTORE_FIELD_TYPES}
+      value={getDocumentFieldType(field)}
+      onChange={e => {
+        dispatch(actions.updateType({ uuid, type: e.currentTarget.value }));
+      }}
+    />
+  );
 };
 
 const NameEditor: React.FC<{

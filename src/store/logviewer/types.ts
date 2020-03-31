@@ -18,4 +18,9 @@ export interface LogState {
   history: LogEntry[];
 }
 
-export interface LogEntry {level: string, message: string,  timestamp: number, data: {user: {[key: string]: any}}}
+export interface LogEntry {
+  level: string;
+  message: string;
+  timestamp: number;
+  data: { user: { [key: string]: any } };
+}
