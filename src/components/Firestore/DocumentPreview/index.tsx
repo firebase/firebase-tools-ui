@@ -49,6 +49,7 @@ const DocumentPreview: React.FC<Props> = ({
         <List dense className="List-Actions Firestore-Document-Fields">
           {/* Actions */}
           <ListItem
+            className="list-button"
             tag={props => (
               <Button dense label="Add field" icon="add" {...props} />
             )}
