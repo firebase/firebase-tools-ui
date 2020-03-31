@@ -16,6 +16,7 @@
 
 import { fetchError, fetchRequest, fetchSuccess } from './actions';
 import { configReducer } from './reducer';
+import { Config } from './types';
 
 it(`${fetchRequest} => sets loading to true`, () => {
   expect(configReducer({ loading: false }, fetchRequest())).toEqual({
@@ -23,14 +24,61 @@ it(`${fetchRequest} => sets loading to true`, () => {
   });
 });
 
-it(`${fetchSuccess} => sets config and unsets loading`, () => {
-  const config = {
-    projectId: 'example',
-    database: { hostAndPort: 'localhost:8080', host: 'localhost', port: 8080 },
-  };
-  expect(configReducer({ loading: true }, fetchSuccess(config))).toEqual({
-    loading: false,
-    result: { data: config },
+describe(fetchSuccess.toString(), () => {
+  it(`sets config and unsets loading`, () => {
+    const config = {
+      projectId: 'example',
+      database: {
+        hostAndPort: 'localhost:8080',
+        host: 'localhost',
+        port: 8080,
+      },
+    };
+    expect(configReducer({ loading: true }, fetchSuccess(config))).toEqual({
+      loading: false,
+      result: { data: config },
+    });
+  });
+  it(`overwrites existing config`, () => {
+    const config = {
+      projectId: 'example',
+      database: {
+        hostAndPort: 'localhost:8080',
+        host: 'localhost',
+        port: 8080,
+      },
+    };
+    expect(
+      configReducer(
+        { loading: false, result: { data: { projectId: 'sample' } } },
+        fetchSuccess(config)
+      )
+    ).toEqual({
+      loading: false,
+      result: { data: config },
+    });
+  });
+  it(`keeps the object identity of existing state, if data unchanged`, () => {
+    const existingState = {
+      loading: false,
+      result: {
+        data: {
+          projectId: 'example',
+          database: {
+            hostAndPort: 'localhost:8080',
+            host: 'localhost',
+            port: 8080,
+          },
+        },
+      },
+    };
+    // Make an equivalent new data object with different identity.
+    const newConfig = JSON.parse(
+      JSON.stringify(existingState.result.data)
+    ) as Config;
+    expect(configReducer(existingState, fetchSuccess(newConfig)).result).toBe(
+      existingState.result
+    ); // Must be the same object.
   });
 });
 

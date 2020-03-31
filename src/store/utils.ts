@@ -1,3 +1,6 @@
+import { isDraft, original } from 'immer';
+import deepEquals from 'lodash.isequal';
+
 export interface ErrorInfo {
   message: string;
 }
@@ -110,5 +113,18 @@ export function squash<T, E, R>(
     } else {
       return mappers.onData(remoteResult.result.data, remoteResult.loading);
     }
+  }
+}
+
+// Set parent[key] to newValue unless exising value is deeply equal.
+// Can be used to set an immer draft property to a nested external object.
+export function replaceIfChanged<Parent, Key extends keyof Parent>(
+  parent: Parent,
+  key: Key,
+  newValue: Parent[Key]
+): void {
+  const oldValue = isDraft(parent) ? original(parent)![key] : parent[key];
+  if (!deepEquals(oldValue, newValue)) {
+    parent[key] = newValue;
   }
 }
