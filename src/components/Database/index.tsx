@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+import { Card } from '@rmwc/card';
+import { GridCell } from '@rmwc/grid';
+import { Typography } from '@rmwc/typography';
 import React from 'react';
 import { connect } from 'react-redux';
 import {
@@ -31,6 +34,8 @@ import {
   getProjectIdResult,
 } from '../../store/config/selectors';
 import { combineData, handle } from '../../store/utils';
+import { EmulatorDisabled } from '../common/EmulatorDisabled';
+import { HintIcon } from '../common/icons';
 import Database from './Database';
 import DatabaseContainer from './DatabaseContainer';
 
@@ -106,6 +111,5 @@ export const DatabaseRouteLoading: React.FC = () => (
 );
 
 export const DatabaseRouteDisabled: React.FC = () => (
-  // TODO
-  <div>The RTDB Emulator is currently off.</div>
+  <EmulatorDisabled productName="RTDB" />
 );
