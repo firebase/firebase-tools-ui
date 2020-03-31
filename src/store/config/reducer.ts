@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import produce, { isDraft, original } from 'immer';
+import produce from 'immer';
 import { Action, createReducer } from 'typesafe-actions';
 
 import { replaceIfChanged } from '../utils';
