@@ -85,7 +85,6 @@ export const InteractiveBreadCrumbBar: React.FC<Props> = ({
               <Typography
                 use="body2"
                 className="InteractiveBreadCrumbBar-prefix"
-                tag="code"
                 theme="secondary"
               >
                 {inputPrefix}

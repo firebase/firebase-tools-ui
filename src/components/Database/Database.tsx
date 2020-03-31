@@ -16,9 +16,6 @@
 
 import './Database.scss';
 
-import { IconButton } from '@rmwc/icon-button';
-import { ListDivider } from '@rmwc/list';
-import { MenuItem, SimpleMenu } from '@rmwc/menu';
 import * as firebase from 'firebase/app';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
@@ -70,14 +67,7 @@ export const Database: React.FC<Props> = ({ config, namespace, path }) => {
             path={path || '/'}
             inputPrefix={getPrefix(ref)}
             onNavigate={handleNavigate}
-          >
-            <SimpleMenu handle={<IconButton icon="more_vert" />} hoistToBody>
-              <MenuItem disabled>Export JSON</MenuItem>
-              <MenuItem disabled>Import JSON</MenuItem>
-              <ListDivider />
-              <MenuItem disabled>Create new database</MenuItem>
-            </SimpleMenu>
-          </InteractiveBreadCrumbBar>
+          />
           <div className="Database-Content">
             <NodeContainer realtimeRef={ref} isViewRoot baseUrl={urlBase} />
           </div>
