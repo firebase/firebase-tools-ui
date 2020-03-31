@@ -15,7 +15,6 @@
  */
 
 import produce from 'immer';
-import deepEquals from 'lodash.isequal';
 import { Action, createReducer } from 'typesafe-actions';
 
 import { replaceIfChanged } from '../utils';
