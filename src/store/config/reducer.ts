@@ -14,18 +14,30 @@
  * limitations under the License.
  */
 
+import produce, { isDraft, original } from 'immer';
 import { Action, createReducer } from 'typesafe-actions';
 
+import { replaceIfChanged } from '../utils';
 import { fetchError, fetchRequest, fetchSuccess } from './actions';
 import { ConfigState } from './types';
 
 export const configReducer = createReducer<ConfigState, Action>({
   loading: false,
 })
-  .handleAction(fetchRequest, (state, __) => ({ ...state, loading: true }))
-  .handleAction(fetchSuccess, (_, { payload }) => {
-    return { loading: false, result: { data: payload } };
-  })
-  .handleAction(fetchError, (_, { payload }) => {
-    return { loading: false, result: { error: payload } };
-  });
+  .handleAction(fetchRequest, state =>
+    produce(state, draft => {
+      draft.loading = true;
+    })
+  )
+  .handleAction(fetchSuccess, (state, { payload }) =>
+    produce(state, draft => {
+      draft.loading = false;
+      replaceIfChanged(draft, 'result', { data: payload });
+    })
+  )
+  .handleAction(fetchError, (state, { payload }) =>
+    produce(state, draft => {
+      draft.loading = false;
+      replaceIfChanged(draft, 'result', { error: payload });
+    })
+  );

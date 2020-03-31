@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 
+import produce from 'immer';
+import deepEquals from 'lodash.isequal';
 import { Action, createReducer } from 'typesafe-actions';
 
+import { replaceIfChanged } from '../utils';
 import {
   databasesFetchError,
   databasesFetchRequest,
@@ -29,27 +32,32 @@ export const databaseReducer = createReducer<DatabaseState, Action>({
   databases: { loading: false },
   databasesSubscribed: false,
 })
-  .handleAction(databasesFetchRequest, (props, _) => ({
-    ...props,
-    databases: { loading: true, result: props.databases.result },
-  }))
-  .handleAction(databasesFetchSuccess, (props, { payload }) => {
+  .handleAction(databasesFetchRequest, (state, _) =>
+    produce(state, draft => {
+      draft.databases.loading = true;
+    })
+  )
+  .handleAction(databasesFetchSuccess, (state, { payload }) => {
     const databases = [...payload];
     databases.sort((db1, db2) => db1.name.localeCompare(db2.name));
-    return {
-      ...props,
-      databases: { loading: false, result: { data: databases } },
-    };
+    return produce(state, draft => {
+      draft.databases.loading = false;
+      replaceIfChanged(draft.databases, 'result', { data: databases });
+    });
   })
-  .handleAction(databasesFetchError, (props, { payload }) => {
-    return {
-      ...props,
-      databases: { loading: false, result: { error: payload } },
-    };
-  })
-  .handleAction(databasesSubscribe, (props, _) => {
-    return { ...props, databasesSubscribed: true };
-  })
-  .handleAction(databasesUnsubscribe, (props, _) => {
-    return { ...props, databasesSubscribed: false };
-  });
+  .handleAction(databasesFetchError, (state, { payload }) =>
+    produce(state, draft => {
+      draft.databases.loading = false;
+      replaceIfChanged(draft.databases, 'result', { error: payload });
+    })
+  )
+  .handleAction(databasesSubscribe, state =>
+    produce(state, draft => {
+      draft.databasesSubscribed = true;
+    })
+  )
+  .handleAction(databasesUnsubscribe, state =>
+    produce(state, draft => {
+      draft.databasesSubscribed = false;
+    })
+  );
