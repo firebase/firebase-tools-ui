@@ -26,23 +26,26 @@ import {
 
 import { createStructuredSelector } from '../../store';
 import { DatabaseConfig } from '../../store/config';
-import { getDatabaseConfig, getProjectId } from '../../store/config/selectors';
-import { combineData, squash } from '../../store/utils';
+import {
+  getDatabaseConfigResult,
+  getProjectIdResult,
+} from '../../store/config/selectors';
+import { combineData, handle } from '../../store/utils';
 import Database from './Database';
 import DatabaseContainer from './DatabaseContainer';
 
 export const mapStateToProps = createStructuredSelector({
-  projectIdRemote: getProjectId,
-  configRemote: getDatabaseConfig,
+  projectIdResult: getProjectIdResult,
+  configResult: getDatabaseConfigResult,
 });
 
 export type PropsFromState = ReturnType<typeof mapStateToProps>;
 
 export const DatabaseRoute: React.FC<PropsFromState> = ({
-  projectIdRemote,
-  configRemote,
+  projectIdResult,
+  configResult,
 }) => {
-  return squash(combineData(projectIdRemote, configRemote), {
+  return handle(combineData(projectIdResult, configResult), {
     onNone: () => <DatabaseRouteLoading />,
     onError: () => <DatabaseRouteDisabled />,
     onData: ([projectId, config]) =>

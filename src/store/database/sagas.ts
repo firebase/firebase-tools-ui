@@ -27,7 +27,10 @@ import { createSelector } from 'reselect';
 import { ActionType, getType } from 'typesafe-actions';
 
 import { DatabaseConfig } from '../config';
-import { getDatabaseConfig, getProjectId } from '../config/selectors';
+import {
+  getDatabaseConfigResult,
+  getProjectIdResult,
+} from '../config/selectors';
 import { combineData, hasError } from '../utils';
 import {
   databasesFetchError,
@@ -54,26 +57,26 @@ export interface GetDbConfigReturn {
 }
 
 const getProjectIdAndDbConfig = createSelector(
-  getProjectId,
-  getDatabaseConfig,
+  getProjectIdResult,
+  getDatabaseConfigResult,
   combineData
 );
 
-type ProjectIdAndDbConfigRemote = ReturnType<typeof getProjectIdAndDbConfig>;
+type ProjectIdAndDbConfigResult = ReturnType<typeof getProjectIdAndDbConfig>;
 
 export function* getDbConfig(): Generator<unknown, GetDbConfigReturn> {
-  const remote = (yield select(
+  const result = (yield select(
     getProjectIdAndDbConfig
-  )) as ProjectIdAndDbConfigRemote;
-  if (!remote.result) {
+  )) as ProjectIdAndDbConfigResult;
+  if (!result) {
     throw new Error('Database emulator config is not ready yet.');
   }
-  if (hasError(remote.result)) {
+  if (hasError(result)) {
     throw new Error(
-      'Error fetching Database emulator config: ' + remote.result.error.message
+      'Error fetching Database emulator config: ' + result.error.message
     );
   }
-  const [projectId, config] = remote.result.data;
+  const [projectId, config] = result.data;
   if (!config) {
     throw new Error('Database emulator is not started!');
   }

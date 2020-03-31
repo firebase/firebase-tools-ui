@@ -26,8 +26,11 @@ import { useHistory, useLocation } from 'react-router-dom';
 
 import { createStructuredSelector } from '../../store';
 import { FirestoreConfig } from '../../store/config';
-import { getFirestoreConfig, getProjectId } from '../../store/config/selectors';
-import { combineData, squash } from '../../store/utils';
+import {
+  getFirestoreConfigResult,
+  getProjectIdResult,
+} from '../../store/config/selectors';
+import { combineData, handle } from '../../store/utils';
 import { CustomThemeProvider } from '../../themes';
 import { InteractiveBreadCrumbBar } from '../common/InteractiveBreadCrumbBar';
 import DatabaseApi from './api';
@@ -36,17 +39,17 @@ import { promptClearAll } from './dialogs/clearAll';
 import { Root } from './Document';
 
 export const mapStateToProps = createStructuredSelector({
-  projectIdRemote: getProjectId,
-  configRemote: getFirestoreConfig,
+  projectIdResult: getProjectIdResult,
+  configResult: getFirestoreConfigResult,
 });
 
 export type PropsFromState = ReturnType<typeof mapStateToProps>;
 
 export const FirestoreRoute: React.FC<PropsFromState> = ({
-  projectIdRemote,
-  configRemote,
+  projectIdResult,
+  configResult,
 }) => {
-  return squash(combineData(projectIdRemote, configRemote), {
+  return handle(combineData(projectIdResult, configResult), {
     onNone: () => <FirestoreRouteLoading />,
     onError: () => <FirestoreRouteDisabled />,
     onData: ([projectId, config]) =>
