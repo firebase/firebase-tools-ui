@@ -19,7 +19,6 @@ import './index.scss';
 import {
   Card,
   CardActionButton,
-  CardActionButtons,
   CardActionIcons,
   CardActions,
 } from '@rmwc/card';
