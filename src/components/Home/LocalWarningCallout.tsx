@@ -4,8 +4,8 @@ import { GridCell } from '@rmwc/grid';
 import React from 'react';
 
 import { Callout } from '../common/Callout';
+import { CONSOLE_ROOT } from '../common/constants';
 
-const CONSOLE_ROOT = 'https://console.firebase.google.com';
 const DISMISS_KEY = 'isDismissed';
 
 export const LocalWarningCallout: React.FC<{
