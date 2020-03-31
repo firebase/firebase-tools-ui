@@ -25,11 +25,10 @@ import {
   ListItemGraphic,
   ListItemText,
 } from '@rmwc/list';
-import { Theme } from '@rmwc/theme';
 import { Typography } from '@rmwc/typography';
 import React, { ReactElement } from 'react';
 
-import { databaseIcon } from './icons';
+import { DatabaseCircleIcon } from '../common/icons';
 
 export interface PropsFromState {
   databases: string[] | undefined;
@@ -40,8 +39,6 @@ export type Props = PropsFromState & {
   current: string;
   navigation: (db: string) => ReactElement;
 };
-
-const databaseIconSize = { width: '36px', height: '36px' };
 
 const DatabaseListItem: React.FC<{
   name: string;
@@ -55,9 +52,12 @@ const DatabaseListItem: React.FC<{
       return { ...element, props: { ...element.props, ...props } };
     }}
   >
-    <Theme use="primary" wrap>
-      <ListItemGraphic style={databaseIconSize} icon={databaseIcon} />
-    </Theme>
+    <ListItemGraphic
+      tag={props => (
+        <DatabaseCircleIcon size="large" theme="primary" {...props} />
+      )}
+    />
+
     <ListItemText>{name}</ListItemText>
   </ListItem>
 );
