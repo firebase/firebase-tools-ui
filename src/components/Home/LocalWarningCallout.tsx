@@ -36,7 +36,7 @@ export const LocalWarningCallout: React.FC<{
           </>
         }
       >
-        Remember this is a local enivornment. Visit the production version of{' '}
+        Remember this is a local environment. Visit the production version of{' '}
         <strong>{projectId}</strong> in the console.
       </Callout>
     </GridCell>
