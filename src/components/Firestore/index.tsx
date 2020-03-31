@@ -32,6 +32,7 @@ import {
 } from '../../store/config/selectors';
 import { combineData, handle } from '../../store/utils';
 import { CustomThemeProvider } from '../../themes';
+import { EmulatorDisabled } from '../common/EmulatorDisabled';
 import { InteractiveBreadCrumbBar } from '../common/InteractiveBreadCrumbBar';
 import DatabaseApi from './api';
 import { ApiProvider } from './ApiContext';
@@ -133,6 +134,5 @@ export const FirestoreRouteLoading: React.FC = () => (
 );
 
 export const FirestoreRouteDisabled: React.FC = () => (
-  // TODO
-  <div>The Firestore Emulator is currently off.</div>
+  <EmulatorDisabled productName="Firestore" />
 );
