@@ -1,6 +1,6 @@
 # Firebase Tools UI
 
-A local web UI for Firebase Emulator Suite. Features include:
+The web UI for Firebase Emulator Suite. Features include:
 
 - Overview of Emulators running
 - Firebase Realtime Database Data Viewer/Editor
@@ -8,11 +8,9 @@ A local web UI for Firebase Emulator Suite. Features include:
 
 ## Development
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
 ### Start the Development Server
 
-To run the development server with emulators:
+To run the development server with test data:
 
 ```bash
 firebase emulators:exec --project sample --only database,firestore --import test-data 'npm start'
@@ -25,6 +23,28 @@ The page will reload if you make edits.<br />
 You will also see any lint errors in the console.
 
 NOTE: The `emulators:exec` command is necessary to set the environment variables for the web app to talk to emulators.
+
+### Developing within a user project
+
+To run the emulator suite in your project folder:
+
+```bash
+cd project/
+firebase emulators:start --import my-data
+
+✔  hub: emulator hub started at http://localhost:4400
+```
+
+This will run the emulators for you project.<br />
+
+Run the Emulator Suite UI from the firebase-tools-ui folder:
+
+```
+cd firebase-tools-ui/
+GCLOUD_PROJECT=<project-id> FIREBASE_EMULATOR_HUB=localhost:4400 npm start
+```
+
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 ### Other Available Scripts
 
