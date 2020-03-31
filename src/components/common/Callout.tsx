@@ -12,7 +12,7 @@ export interface CalloutProps {
   icon?: string;
   /** Show a lighter version of the callout */
   aside?: true;
-  /** The color scheme of the callout */
+  /** The color scheme of the callout. Defaults to 'note' */
   type?: CustomThemeType;
 
   /** Action buttons */
