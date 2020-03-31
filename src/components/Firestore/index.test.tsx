@@ -37,8 +37,8 @@ describe('FirestoreRoute', () => {
   it('renders loading when projectId is not ready', () => {
     const { getByText } = render(
       <FirestoreRoute
-        projectIdRemote={{ loading: true }}
-        configRemote={{ loading: false, result: { data: sampleConfig } }}
+        projectIdResult={undefined}
+        configResult={{ data: sampleConfig }}
       />
     );
     expect(getByText('Loading...')).not.toBeNull();
@@ -46,8 +46,8 @@ describe('FirestoreRoute', () => {
   it('renders loading when config is not ready', () => {
     const { getByText } = render(
       <FirestoreRoute
-        projectIdRemote={{ loading: false, result: { data: 'foo' } }}
-        configRemote={{ loading: true }}
+        projectIdResult={{ data: 'foo' }}
+        configResult={undefined}
       />
     );
     expect(getByText('Loading...')).not.toBeNull();
@@ -55,11 +55,8 @@ describe('FirestoreRoute', () => {
   it('renders error when loading config fails', () => {
     const { getByText } = render(
       <FirestoreRoute
-        projectIdRemote={{ loading: false, result: { data: 'foo' } }}
-        configRemote={{
-          loading: false,
-          result: { error: { message: 'Oh, snap!' } },
-        }}
+        projectIdResult={{ data: 'foo' }}
+        configResult={{ error: { message: 'Oh, snap!' } }}
       />
     );
     expect(getByText(/currently off/)).not.toBeNull();
@@ -67,11 +64,8 @@ describe('FirestoreRoute', () => {
   it('renders "emulator is off" when config is not present', () => {
     const { getByText } = render(
       <FirestoreRoute
-        projectIdRemote={{ loading: false, result: { data: 'foo' } }}
-        configRemote={{
-          loading: false,
-          result: { data: undefined /* emulator absent */ },
-        }}
+        projectIdResult={{ data: 'foo' }}
+        configResult={{ data: undefined /* emulator absent */ }}
       />
     );
     expect(getByText(/currently off/)).not.toBeNull();
