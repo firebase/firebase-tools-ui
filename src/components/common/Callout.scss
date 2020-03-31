@@ -43,6 +43,15 @@
   flex: 1 1 auto;
   justify-content: flex-end;
   padding-right: 16px;
+
+  .mdc-button {
+    padding: 0 8px;
+    margin-left: 4px;
+
+    &:first-child {
+      margin-left: 0;
+    }
+  }
 }
 
 // situational overrides
