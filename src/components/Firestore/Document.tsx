@@ -24,13 +24,13 @@ import { firestore } from 'firebase';
 import React from 'react';
 import { Route, useRouteMatch } from 'react-router-dom';
 
+import { FirestoreIcon } from '../common/icons';
 import { useApi } from './ApiContext';
 import Collection from './Collection';
 import CollectionList from './CollectionList';
 import { promptDeleteDocument } from './dialogs/deleteDocument';
 import { promptDeleteDocumentFields } from './dialogs/deleteDocumentFields';
 import DocumentPreview from './DocumentPreview';
-import FirestoreLogo from './FirestoreLogo';
 import PanelHeader from './PanelHeader';
 
 const Doc: React.FC<{
@@ -63,7 +63,7 @@ export const Root: React.FC = () => {
       id={'Root'}
       collectionById={(id: string) => api.database.collection(id)}
     >
-      <PanelHeader id="Root" icon={<FirestoreLogo size="small" />} />
+      <PanelHeader id="Root" icon={<FirestoreIcon />} />
       <CollectionList />
     </Doc>
   );

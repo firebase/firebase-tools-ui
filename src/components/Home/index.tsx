@@ -17,7 +17,7 @@
 import './index.scss';
 
 import { Card, CardActionButton, CardActionIcons } from '@rmwc/card';
-import { GridCell, GridInner } from '@rmwc/grid';
+import { GridCell } from '@rmwc/grid';
 import { ListDivider } from '@rmwc/list';
 import { Typography } from '@rmwc/typography';
 import React from 'react';
@@ -25,8 +25,10 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { createStructuredSelector } from '../../store';
+import { EmulatorConfig } from '../../store/config';
 import { getConfig } from '../../store/config/selectors';
-import { ErrorInfo, squash } from '../../store/utils';
+import { squash } from '../../store/utils';
+import { DatabaseIcon, FirestoreIcon, FunctionsIcon } from '../common/icons';
 
 export const mapStateToProps = createStructuredSelector({
   configRemote: getConfig,
@@ -35,76 +37,84 @@ export const mapStateToProps = createStructuredSelector({
 export type PropsFromState = ReturnType<typeof mapStateToProps>;
 export type Props = PropsFromState;
 
-export const Home: React.FC<Props> = ({ configRemote }) => {
-  return (
-    <GridCell span={12} className="Home">
-      {squash(configRemote, {
-        onNone: () => <HomeLoading />,
-        onError: error => <HomeError error={error} />,
-        onData: config => {
-          return (
-            <GridInner>
-              <GridCell span={12}>
-                <Typography use="headline5">Emulator Overview</Typography>
-              </GridCell>
-              {config.database && (
-                <EmulatorCard
-                  name="RTDB Emulator"
-                  port={config.database.port}
-                  linkTo="/database"
-                />
-              )}
-              {config.firestore && (
-                <EmulatorCard
-                  name="Firestore Emulator"
-                  port={config.firestore.port}
-                  linkTo="/firestore"
-                />
-              )}
-            </GridInner>
-          );
-        },
-      })}
-    </GridCell>
-  );
-};
+export const Home: React.FC<Props> = ({ configRemote }) =>
+  squash(configRemote, {
+    onNone: () => <HomeLoading />,
+    onData: config => <Overview emulators={config} />,
+    // Show all emulators as "off" on error.
+    onError: error => <Overview emulators={{}} />,
+  });
 
 export default connect(mapStateToProps)(Home);
 
 // TODO
 export const HomeLoading: React.FC = () => <p>Fetching Config...</p>;
 
-// TODO: WIP
-export const HomeError: React.FC<{ error: ErrorInfo }> = ({ error }) => null;
+type EmulatorId = 'database' | 'firestore' | 'functions';
+
+const Overview: React.FC<{
+  emulators: Partial<Record<EmulatorId, EmulatorConfig>>;
+}> = ({ emulators }) => (
+  <>
+    <GridCell span={12}>
+      <Typography use="headline5">Emulator Overview</Typography>
+    </GridCell>
+    <EmulatorCard
+      name="RTDB Emulator"
+      icon={<DatabaseIcon theme="secondary" />}
+      config={emulators.database}
+      linkTo="/database"
+      testId="emulator-info-database"
+    />
+    <EmulatorCard
+      name="Firestore Emulator"
+      icon={<FirestoreIcon theme="secondary" />}
+      config={emulators.firestore}
+      linkTo="/firestore"
+      testId="emulator-info-firestore"
+    />
+    <EmulatorCard
+      name="Functions Emulator"
+      icon={<FunctionsIcon theme="secondary" />}
+      config={emulators.functions}
+      linkTo="/logs"
+      linkLabel="View Logs"
+      testId="emulator-info-functions"
+    />
+  </>
+);
 
 export const EmulatorCard: React.FC<{
   name: string;
-  port: number;
+  icon: React.ReactElement;
+  config: EmulatorConfig | undefined;
   linkTo: string;
-}> = ({ name, port, linkTo }) => (
+  linkLabel?: string;
+  testId?: string;
+}> = ({ name, icon, config, linkTo, linkLabel, testId }) => (
   <GridCell span={4}>
-    <Card className="Home-EmulatorCard">
+    <Card className="Home-EmulatorCard" data-testid={testId}>
       <div className="Home-EmulatorCard-Info">
         <Typography use="headline6" tag="h3">
-          {name}
+          {icon} {name}
         </Typography>
         <Typography use="subtitle2" tag="h4">
           Status
         </Typography>
         <Typography use="headline6" tag="div">
-          On
+          {config ? 'On' : 'Off'}
         </Typography>
         <Typography use="subtitle2" tag="h4">
           Port number
         </Typography>
         <Typography use="headline6" tag="div">
-          {port}
+          {config ? config.port : 'N/A'}
         </Typography>
       </div>
       <ListDivider />
       <CardActionIcons className="Home-EmulatorCard-Action">
         <CardActionButton tag={props => <Link to={linkTo} {...props} />}>
-          Go to Emulator
+          {linkLabel || 'Go to Emulator'}
         </CardActionButton>
       </CardActionIcons>
     </Card>

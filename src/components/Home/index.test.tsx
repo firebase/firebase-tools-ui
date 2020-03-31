@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { render } from '@testing-library/react';
+import { getByText, render } from '@testing-library/react';
 import React from 'react';
 import { MemoryRouter } from 'react-router';
 
@@ -43,8 +43,8 @@ it('renders an overview when config is loaded', () => {
   expect(getByText(/Emulator Overview/)).not.toBeNull();
 });
 
-it('shows port for emulator that are loaded', () => {
-  const { getByText } = render(
+it('shows port for emulator that are loaded and N/A for not loaded', () => {
+  const { getByTestId } = render(
     <MemoryRouter>
       <Home
         configRemote={{
@@ -63,20 +63,59 @@ it('shows port for emulator that are loaded', () => {
       />
     </MemoryRouter>
   );
-  expect(getByText(/9000/)).not.toBeNull();
+  // Database Emulator is running.
+  const databaseCard = getByTestId(`emulator-info-database`);
+  expect(getByText(databaseCard, '9000')).not.toBeNull();
+  expect(getByText(databaseCard, 'Go to Emulator')).not.toBeNull();
+
+  // Firestore Emulator is not running.
+  const firestoreCard = getByTestId(`emulator-info-firestore`);
+  expect(getByText(firestoreCard, 'Off')).not.toBeNull();
+  expect(getByText(firestoreCard, 'N/A')).not.toBeNull(); // Port is N/A
 });
 
-// Updated error screen is WIP for Home for now.
-it.skip('renders error message when errored', () => {
-  const { getByText } = render(
+it('shows button for function emulator logs', () => {
+  const { getByTestId } = render(
     <MemoryRouter>
       <Home
         configRemote={{
           loading: false,
-          result: { error: { message: '420 Enhance Your Calm' } },
+          result: {
+            data: {
+              projectId: 'example',
+              functions: {
+                host: 'localhost',
+                port: 5001,
+                hostAndPort: 'localhost:5001',
+              },
+            },
+          },
         }}
       />
     </MemoryRouter>
   );
-  expect(getByText('420 Enhance Your Calm')).not.toBeNull();
+  const card = getByTestId(`emulator-info-functions`);
+  expect(getByText(card, '5001')).not.toBeNull();
+  expect(getByText(card, 'View Logs')).not.toBeNull();
+});
+
+it('renders all emulators as "off" when error loading config', () => {
+  // We don't need to show the error here because there is an app-wide
+  // disconnected overlay. Just keep the layout and show everything as "off".
+  const { getByTestId } = render(
+    <MemoryRouter>
+      <Home
+        configRemote={{
+          loading: false,
+          result: { error: { message: 'failed to fetch' } },
+        }}
+      />
+    </MemoryRouter>
+  );
+
+  for (const emulator of ['database', 'firestore', 'functions']) {
+    const card = getByTestId(`emulator-info-${emulator}`);
+    expect(getByText(card, 'Off')).not.toBeNull();
+    expect(getByText(card, 'N/A')).not.toBeNull(); // Port is N/A
+  }
 });
