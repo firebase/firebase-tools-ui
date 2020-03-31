@@ -76,6 +76,7 @@ export const Collection: React.FC<Props> = ({ collection }) => {
         )}
         <List dense className="List-Actions">
           <ListItem
+            className="list-button"
             tag={props => (
               <Button
                 dense
