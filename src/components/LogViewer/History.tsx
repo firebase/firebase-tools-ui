@@ -14,9 +14,13 @@
  * limitations under the License.
  */
 
+import './History.scss';
+
+import { ThemeProvider } from '@rmwc/theme';
 import React, { useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 
+import { grey100 } from '../../colors';
 import { AppState } from '../../store';
 import { LogEntry, LogState } from '../../store/logviewer';
 import { CompiledGetterCache } from './CompiledGetterCache';
@@ -77,7 +81,7 @@ export const History: React.FC<Props> = ({
     log?.data?.user && Object.keys(log?.data?.user).length;
 
   return (
-    <div id="log-history">
+    <ThemeProvider options={{ surface: grey100 }} className="LogHistory">
       {history.length ? (
         history.map((log, index) => (
           <div id={`log_${index}`} className="log-entry" key={index}>
@@ -122,12 +126,12 @@ export const History: React.FC<Props> = ({
           </div>
         ))
       ) : (
-        <div id="log-history-empty">
+        <div className="LogHistoryEmpty">
           No logs are found which match your filters.
         </div>
       )}
       <div ref={messagesEndRef} />
-    </div>
+    </ThemeProvider>
   );
 };
 

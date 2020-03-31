@@ -16,6 +16,9 @@
 
 import './index.scss';
 
+import { Card } from '@rmwc/card';
+import { Elevation } from '@rmwc/elevation';
+import { GridCell } from '@rmwc/grid';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
@@ -65,22 +68,23 @@ export const LogViewer: React.FC<Props> = ({ logReceived, config }) => {
   const parsedQuery = parseQuery(query);
 
   return (
-    <div
-      id="log"
-      className="mdc-layout-grid__cell mdc-layout-grid__cell--span-12 mdc-elevation--z2"
-    >
-      <QueryBar
-        query={query}
-        parsedQuery={parsedQuery}
-        setQuery={setQuery}
-        compiledGetters={compiledGetters}
-      />
-      <History
-        parsedQuery={parsedQuery}
-        setQuery={setQuery}
-        compiledGetters={compiledGetters}
-      />
-    </div>
+    <GridCell span={12}>
+      <Elevation z={2} wrap>
+        <Card className="LogViewer">
+          <QueryBar
+            query={query}
+            parsedQuery={parsedQuery}
+            setQuery={setQuery}
+            compiledGetters={compiledGetters}
+          />
+          <History
+            parsedQuery={parsedQuery}
+            setQuery={setQuery}
+            compiledGetters={compiledGetters}
+          />
+        </Card>
+      </Elevation>
+    </GridCell>
   );
 };
 

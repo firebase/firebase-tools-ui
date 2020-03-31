@@ -14,22 +14,32 @@
  * limitations under the License.
  */
 
-@import '../App/variables';
-@import '../common/radius';
+.HighlightedJSON {
+  background-color: #fff;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  margin: 10px 0px 0px 0px;
+  overflow: auto;
+  padding: 10px;
+  white-space: pre;
 
-.LogViewer {
-  display: grid;
-  grid-template-areas: 'query' 'history' 'debug';
-  grid-template-rows: fit-content(100%) 1fr fit-content(100%);
-  height: $app-remaining-viewport-height-for-content;
+  .line {
+    div {
+      display: inline;
+      text-decoration: none;
 
-  .QueryBar {
-    grid-area: query;
-  }
+      &:hover {
+        text-decoration: underline;
+      }
+    }
 
-  #debug {
-    border-radius: 10px;
-    opacity: 0.2;
-    padding: 10px;
+    color: #aaa;
+
+    .key {
+      color: black;
+    }
+    .value {
+      color: #005ae5;
+    }
   }
 }

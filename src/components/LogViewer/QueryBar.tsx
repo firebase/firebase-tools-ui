@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import './QueryBar.scss';
 
 import React from 'react';
 
@@ -187,18 +188,18 @@ interface Props {
 
 export const QueryBar: React.FC<Props> = ({ query, parsedQuery, setQuery }) => {
   return (
-    <div id="log-query">
-      <div id="log-query-render">{parsedQuery.elements}</div>
+    <div className="QueryBar">
+      <div className="QueryBar-render">{parsedQuery.elements}</div>
       <textarea
         rows={1}
-        id="log-query-input"
+        className="QueryBar-input"
         spellCheck={false}
         value={query}
         onChange={e => setQuery((e.target as any).value)}
         placeholder="Filter or search logs..."
       ></textarea>
       {query.length ? (
-        <div id="log-query-actions">
+        <div className="QueryBar-actions">
           {/*<button onClick={() => setQuery('')}>clear query</button>*/}
         </div>
       ) : (

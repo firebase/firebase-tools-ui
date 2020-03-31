@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import './HighlightedJSON.scss';
 
 import React from 'react';
 
@@ -257,5 +258,5 @@ export const HighlightedJSON: React.FC<Props> = ({
     );
   });
 
-  return <div className="highlighted-json">{elements}</div>;
+  return <div className="HighlightedJSON">{elements}</div>;
 };
