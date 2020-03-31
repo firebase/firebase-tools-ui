@@ -6,7 +6,7 @@ import React from 'react';
 import { Callout } from '../common/Callout';
 import { CONSOLE_ROOT } from '../common/constants';
 
-const DISMISS_KEY = 'isDismissed';
+const DISMISS_KEY = 'isLocalWarningCalloutDismissed';
 
 export const LocalWarningCallout: React.FC<{
   projectId: string;
