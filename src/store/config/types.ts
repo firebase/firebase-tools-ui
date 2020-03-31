@@ -26,14 +26,16 @@ export interface DatabaseConfig extends EmulatorConfig {}
 
 export interface FirestoreConfig extends EmulatorConfig {}
 
+export interface FunctionsConfig extends EmulatorConfig {}
+
 export interface LoggingConfig extends EmulatorConfig {}
 
 export interface Config {
   projectId: string;
   database?: DatabaseConfig;
   firestore?: FirestoreConfig;
+  functions?: FunctionsConfig;
   logging?: LoggingConfig;
-  // TODO: More config for more emulators.
 }
 
 export type ConfigState = RemoteResult<Config>;
