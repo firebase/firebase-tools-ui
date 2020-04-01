@@ -35,7 +35,7 @@ firebase emulators:start --import my-data
 ✔  hub: emulator hub started at http://localhost:4400
 ```
 
-This will run the emulators for you project.<br />
+This will run the emulators for your project.<br />
 
 Run the Emulator Suite UI from the firebase-tools-ui folder:
 
