@@ -81,6 +81,14 @@ export const Firestore: React.FC<FirestoreProps> = ({ config, projectId }) => {
   useEffect(() => {
     const api = new DatabaseApi(projectId, databaseId, config);
     setApi(api);
+    api
+      .getDocuments(api.database.collection('users'), {
+        'mask.fieldPaths': '_none_',
+        // pageSize: 300,
+        showMissing: true,
+      })
+      .then(res => console.log(res))
+      .catch(err => console.warn(err));
 
     return function cleanup() {
       api.delete();
