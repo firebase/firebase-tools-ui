@@ -61,7 +61,7 @@ describe('FirestoreRoute', () => {
         configResult={{ error: { message: 'Oh, snap!' } }}
       />
     );
-    expect(getByText(/currently off/)).not.toBeNull();
+    expect(getByText(/not running/)).not.toBeNull();
   });
 
   it('renders "emulator is off" when config is not present', () => {
@@ -71,7 +71,7 @@ describe('FirestoreRoute', () => {
         configResult={{ data: undefined /* emulator absent */ }}
       />
     );
-    expect(getByText(/currently off/)).not.toBeNull();
+    expect(getByText(/not running/)).not.toBeNull();
   });
 });
 

@@ -31,6 +31,7 @@ import {
   getProjectIdResult,
 } from '../../store/config/selectors';
 import { combineData, handle } from '../../store/utils';
+import { EmulatorDisabled } from '../common/EmulatorDisabled';
 import Database from './Database';
 import DatabaseContainer from './DatabaseContainer';
 
@@ -106,6 +107,5 @@ export const DatabaseRouteLoading: React.FC = () => (
 );
 
 export const DatabaseRouteDisabled: React.FC = () => (
-  // TODO
-  <div>The RTDB Emulator is currently off.</div>
+  <EmulatorDisabled productName="RTDB" />
 );

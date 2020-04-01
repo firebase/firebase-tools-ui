@@ -6,8 +6,7 @@
     "node": ">= 8.0.0"
   },
   "dependencies": {
-    "@material/circular-progress": "^6.0.0-canary.d6f60c98b.0",
-    "@material/linear-progress": "^5.1.0",
+    "@rehooks/local-storage": "^2.3.0",
     "@rmwc/button": "^5.7.2",
     "@rmwc/card": "^5.7.2",
     "@rmwc/circular-progress": "^5.7.2",
