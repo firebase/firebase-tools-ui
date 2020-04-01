@@ -18,8 +18,7 @@
 @import '../common/utils';
 @import '../App/variables';
 
-.Firestore,
-.Firestore-loading {
+.Firestore {
   display: flex;
   flex-direction: column;
 
@@ -28,11 +27,6 @@
   height: $app-remaining-viewport-height-for-content;
   // But keep a min-height to keep it usable (at the cost of page scrolling).
   min-height: 400px;
-}
-
-.Firestore-loading {
-  align-items: center;
-  justify-content: center;
 }
 
 .Firestore-actions {

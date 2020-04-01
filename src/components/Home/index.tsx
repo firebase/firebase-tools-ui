@@ -22,7 +22,7 @@ import {
   CardActionIcons,
   CardActions,
 } from '@rmwc/card';
-import { GridCell } from '@rmwc/grid';
+import { GridCell, GridInner } from '@rmwc/grid';
 import { ListDivider } from '@rmwc/list';
 import { Typography } from '@rmwc/typography';
 import React from 'react';
@@ -34,6 +34,7 @@ import { Config, EmulatorConfig } from '../../store/config';
 import { getConfig } from '../../store/config/selectors';
 import { squash } from '../../store/utils';
 import { DatabaseIcon, FirestoreIcon, FunctionsIcon } from '../common/icons';
+import { Spinner } from '../common/Spinner';
 import { LocalWarningCallout } from './LocalWarningCallout';
 
 export const mapStateToProps = createStructuredSelector({
@@ -45,49 +46,50 @@ export type Props = PropsFromState;
 
 export const Home: React.FC<Props> = ({ configRemote }) =>
   squash(configRemote, {
-    onNone: () => <HomeLoading />,
+    onNone: () => <Spinner span={12} message="Overview Page Loading..." />,
     onData: config => <Overview config={config} />,
     // Show all emulators as "off" on error.
-    onError: error => <Overview config={{}} />,
+    onError: () => <Overview config={{}} />,
   });
 
 export default connect(mapStateToProps)(Home);
-
-// TODO
-export const HomeLoading: React.FC = () => <p>Fetching Config...</p>;
 
 const Overview: React.FC<{
   config: Partial<Config>;
 }> = ({ config }) => {
   return (
-    <>
-      {config.projectId && <LocalWarningCallout projectId={config.projectId} />}
-      <GridCell span={12}>
-        <Typography use="headline5">Emulator Overview</Typography>
-      </GridCell>
-      <EmulatorCard
-        name="RTDB Emulator"
-        icon={<DatabaseIcon theme="secondary" />}
-        config={config.database}
-        linkTo="/database"
-        testId="emulator-info-database"
-      />
-      <EmulatorCard
-        name="Firestore Emulator"
-        icon={<FirestoreIcon theme="secondary" />}
-        config={config.firestore}
-        linkTo="/firestore"
-        testId="emulator-info-firestore"
-      />
-      <EmulatorCard
-        name="Functions Emulator"
-        icon={<FunctionsIcon theme="secondary" />}
-        config={config.functions}
-        linkTo="/logs"
-        linkLabel="View Logs"
-        testId="emulator-info-functions"
-      />
-    </>
+    <GridCell span={12}>
+      <GridInner>
+        {config.projectId && (
+          <LocalWarningCallout projectId={config.projectId} />
+        )}
+        <GridCell span={12}>
+          <Typography use="headline5">Emulator Overview</Typography>
+        </GridCell>
+        <EmulatorCard
+          name="RTDB Emulator"
+          icon={<DatabaseIcon theme="secondary" />}
+          config={config.database}
+          linkTo="/database"
+          testId="emulator-info-database"
+        />
+        <EmulatorCard
+          name="Firestore Emulator"
+          icon={<FirestoreIcon theme="secondary" />}
+          config={config.firestore}
+          linkTo="/firestore"
+          testId="emulator-info-firestore"
+        />
+        <EmulatorCard
+          name="Functions Emulator"
+          icon={<FunctionsIcon theme="secondary" />}
+          config={config.functions}
+          linkTo="/logs"
+          linkLabel="View Logs"
+          testId="emulator-info-functions"
+        />
+      </GridInner>
+    </GridCell>
   );
 };
 

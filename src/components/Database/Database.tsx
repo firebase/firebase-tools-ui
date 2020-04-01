@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import './Database.scss';
-
 import * as firebase from 'firebase/app';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';

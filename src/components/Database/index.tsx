@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import './index.scss';
+
 import React from 'react';
 import { connect } from 'react-redux';
 import {
@@ -32,6 +34,7 @@ import {
 } from '../../store/config/selectors';
 import { combineData, handle } from '../../store/utils';
 import { EmulatorDisabled } from '../common/EmulatorDisabled';
+import { Spinner } from '../common/Spinner';
 import Database from './Database';
 import DatabaseContainer from './DatabaseContainer';
 
@@ -47,7 +50,7 @@ export const DatabaseRoute: React.FC<PropsFromState> = ({
   configResult,
 }) => {
   return handle(combineData(projectIdResult, configResult), {
-    onNone: () => <DatabaseRouteLoading />,
+    onNone: () => <Spinner span={12} message="RTDB Emulator Loading..." />,
     onError: () => <DatabaseRouteDisabled />,
     onData: ([projectId, config]) =>
       config === undefined ? (
@@ -100,11 +103,6 @@ export const DatabaseRouteContent: React.FC<ContentProps> = ({
     </Switch>
   );
 };
-
-export const DatabaseRouteLoading: React.FC = () => (
-  // TODO
-  <div>Loading...</div>
-);
 
 export const DatabaseRouteDisabled: React.FC = () => (
   <EmulatorDisabled productName="RTDB" />

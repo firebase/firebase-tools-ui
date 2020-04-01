@@ -22,6 +22,9 @@ import { Config } from './types';
 
 export async function fetchConfigApi(): Promise<Config> {
   const res = await fetch('/api/config');
+  if (res.status !== 200) {
+    throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+  }
   return res.json();
 }
 

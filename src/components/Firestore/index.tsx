@@ -21,6 +21,7 @@ import { Card } from '@rmwc/card';
 import { CircularProgress } from '@rmwc/circular-progress';
 import { Elevation } from '@rmwc/elevation';
 import { GridCell } from '@rmwc/grid';
+import { Typography } from '@rmwc/typography';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
@@ -35,6 +36,7 @@ import { combineData, handle } from '../../store/utils';
 import { CustomThemeProvider } from '../../themes';
 import { EmulatorDisabled } from '../common/EmulatorDisabled';
 import { InteractiveBreadCrumbBar } from '../common/InteractiveBreadCrumbBar';
+import { Spinner } from '../common/Spinner';
 import DatabaseApi from './api';
 import { ApiProvider } from './ApiContext';
 import { promptClearAll } from './dialogs/clearAll';
@@ -52,7 +54,7 @@ export const FirestoreRoute: React.FC<PropsFromState> = ({
   configResult,
 }) => {
   return handle(combineData(projectIdResult, configResult), {
-    onNone: () => <FirestoreRouteLoading />,
+    onNone: () => <Spinner span={12} message="Firestore Emulator Loading..." />,
     onError: () => <FirestoreRouteDisabled />,
     onData: ([projectId, config]) =>
       config === undefined ? (
@@ -113,13 +115,7 @@ export const Firestore: React.FC<FirestoreProps> = ({ config, projectId }) => {
   }
 
   return isRefreshing ? (
-    <GridCell
-      span={12}
-      className="Firestore-loading"
-      data-testid="firestore-loading"
-    >
-      <CircularProgress size="xlarge" />
-    </GridCell>
+    <Spinner span={12} data-testid="firestore-loading" />
   ) : (
     <ApiProvider value={api}>
       <GridCell span={12} className="Firestore">
@@ -147,9 +143,17 @@ export const Firestore: React.FC<FirestoreProps> = ({ config, projectId }) => {
   );
 };
 
-export const FirestoreRouteLoading: React.FC = () => (
-  // TODO
-  <div>Loading...</div>
+export const FirestoreLoading: React.FC = () => (
+  <GridCell
+    span={12}
+    className="Firestore-loading"
+    data-testid="firestore-loading"
+  >
+    <CircularProgress size="xlarge" />
+    <Typography use="body2" tag="p">
+      Firestore Emulator Loading...
+    </Typography>
+  </GridCell>
 );
 
 export const FirestoreRouteDisabled: React.FC = () => (

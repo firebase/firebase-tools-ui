@@ -41,7 +41,7 @@ describe('FirestoreRoute', () => {
         configResult={{ data: sampleConfig }}
       />
     );
-    expect(getByText('Loading...')).not.toBeNull();
+    expect(getByText('Firestore Emulator Loading...')).not.toBeNull();
   });
 
   it('renders loading when config is not ready', () => {
@@ -51,7 +51,7 @@ describe('FirestoreRoute', () => {
         configResult={undefined}
       />
     );
-    expect(getByText('Loading...')).not.toBeNull();
+    expect(getByText('Firestore Emulator Loading...')).not.toBeNull();
   });
 
   it('renders error when loading config fails', () => {
