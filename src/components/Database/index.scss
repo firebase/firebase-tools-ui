@@ -20,6 +20,12 @@
   display: flex;
 }
 
+.Database-loading {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
 .Database-Picker {
   border-bottom-left-radius: $BORDER_RADIUS_CARD;
   border-top-left-radius: $BORDER_RADIUS_CARD;

@@ -14,6 +14,11 @@
  * limitations under the License.
  */
 
+import './index.scss';
+
+import { CircularProgress } from '@rmwc/circular-progress';
+import { GridCell } from '@rmwc/grid';
+import { Typography } from '@rmwc/typography';
 import React from 'react';
 import { connect } from 'react-redux';
 import {
@@ -102,8 +107,12 @@ export const DatabaseRouteContent: React.FC<ContentProps> = ({
 };
 
 export const DatabaseRouteLoading: React.FC = () => (
-  // TODO
-  <div>Loading...</div>
+  <GridCell span={12} align="middle" className="Database-loading">
+    <CircularProgress size="xlarge" />
+    <Typography use="body2" tag="p">
+      RTDB Emulator Loading...
+    </Typography>
+  </GridCell>
 );
 
 export const DatabaseRouteDisabled: React.FC = () => (

@@ -1,3 +1,9 @@
+.Home-loading {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
 .Home-EmulatorCard {
   h4 {
     margin-bottom: 0;
@@ -13,6 +19,7 @@
     }
   }
 }
+
 .Home-EmulatorCard-Info {
   margin: 16px;
 }

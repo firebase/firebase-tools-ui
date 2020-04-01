@@ -15,4 +15,11 @@ $page-gutter-size: 48px;
   max-width: 1256px + (2 * $page-gutter-size); // offset grid margins
   padding-left: $page-gutter-size;
   padding-right: $page-gutter-size;
+
+  // Make main part at least fill the rest of the viewport.
+  // If for any reason this is undesirable for certain routes, use a nested grid
+  // like <GridCell span={12}><GridInner>Content</GridInner></GridCell> .
+  > .mdc-layout-grid__inner {
+    min-height: $app-remaining-viewport-height-for-content;
+  }
 }

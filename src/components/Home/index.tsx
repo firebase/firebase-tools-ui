@@ -22,7 +22,8 @@ import {
   CardActionIcons,
   CardActions,
 } from '@rmwc/card';
-import { GridCell } from '@rmwc/grid';
+import { CircularProgress } from '@rmwc/circular-progress';
+import { GridCell, GridInner } from '@rmwc/grid';
 import { ListDivider } from '@rmwc/list';
 import { Typography } from '@rmwc/typography';
 import React from 'react';
@@ -53,41 +54,51 @@ export const Home: React.FC<Props> = ({ configRemote }) =>
 
 export default connect(mapStateToProps)(Home);
 
-// TODO
-export const HomeLoading: React.FC = () => <p>Fetching Config...</p>;
+export const HomeLoading: React.FC = () => (
+  <GridCell span={12} align="middle" className="Home-loading">
+    <CircularProgress size="xlarge" />
+    <Typography use="body2" tag="p">
+      Overview Page Loading...
+    </Typography>
+  </GridCell>
+);
 
 const Overview: React.FC<{
   config: Partial<Config>;
 }> = ({ config }) => {
   return (
-    <>
-      {config.projectId && <LocalWarningCallout projectId={config.projectId} />}
-      <GridCell span={12}>
-        <Typography use="headline5">Emulator Overview</Typography>
-      </GridCell>
-      <EmulatorCard
-        name="RTDB Emulator"
-        icon={<DatabaseIcon theme="secondary" />}
-        config={config.database}
-        linkTo="/database"
-        testId="emulator-info-database"
-      />
-      <EmulatorCard
-        name="Firestore Emulator"
-        icon={<FirestoreIcon theme="secondary" />}
-        config={config.firestore}
-        linkTo="/firestore"
-        testId="emulator-info-firestore"
-      />
-      <EmulatorCard
-        name="Functions Emulator"
-        icon={<FunctionsIcon theme="secondary" />}
-        config={config.functions}
-        linkTo="/logs"
-        linkLabel="View Logs"
-        testId="emulator-info-functions"
-      />
-    </>
+    <GridCell span={12}>
+      <GridInner>
+        {config.projectId && (
+          <LocalWarningCallout projectId={config.projectId} />
+        )}
+        <GridCell span={12}>
+          <Typography use="headline5">Emulator Overview</Typography>
+        </GridCell>
+        <EmulatorCard
+          name="RTDB Emulator"
+          icon={<DatabaseIcon theme="secondary" />}
+          config={config.database}
+          linkTo="/database"
+          testId="emulator-info-database"
+        />
+        <EmulatorCard
+          name="Firestore Emulator"
+          icon={<FirestoreIcon theme="secondary" />}
+          config={config.firestore}
+          linkTo="/firestore"
+          testId="emulator-info-firestore"
+        />
+        <EmulatorCard
+          name="Functions Emulator"
+          icon={<FunctionsIcon theme="secondary" />}
+          config={config.functions}
+          linkTo="/logs"
+          linkLabel="View Logs"
+          testId="emulator-info-functions"
+        />
+      </GridInner>
+    </GridCell>
   );
 };
 
