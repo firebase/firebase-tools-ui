@@ -71,7 +71,7 @@ export const LogViewer: React.FC<Props> = ({
       logReceived(log);
     };
     return () => webSocket.cleanup();
-  }, [config, logReceived]);
+  }, [config, logReceived, logReset]);
 
   const parsedQuery = parseQuery(query);
 
