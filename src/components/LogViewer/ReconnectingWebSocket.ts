@@ -25,16 +25,19 @@ export enum WebSocketState {
 export class ReconnectingWebSocket {
   state: WebSocketState = WebSocketState.DISCONNECTED;
   listener: Function | undefined = undefined;
+  interval: number | undefined = undefined;
+  ws: WebSocket | undefined = undefined;
 
   constructor(config: EmulatorConfig) {
     this.connect(config);
-    setInterval(this.connect.bind(this), 1000);
+    this.interval = setInterval(this.connect.bind(this), 1000);
   }
 
   private connect(config: EmulatorConfig) {
     if (this.state !== WebSocketState.DISCONNECTED) return;
 
     const ws = new WebSocket(`ws://${config.hostAndPort}`);
+    this.ws = ws;
     this.state = WebSocketState.PENDING;
 
     ws.onopen = () => {
@@ -49,5 +52,12 @@ export class ReconnectingWebSocket {
       const data = JSON.parse(msg.data);
       this.listener && this.listener(data);
     };
+  }
+
+  cleanup() {
+    this.listener = undefined;
+    if (this.interval) clearInterval(this.interval);
+    if (this.ws) this.ws.close();
+    this.ws = undefined;
   }
 }

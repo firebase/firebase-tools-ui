@@ -19,3 +19,6 @@ import { createAction } from 'typesafe-actions';
 import { LogEntry } from './types';
 
 export const logReceived = createAction('@log/RECEIVED')<LogEntry>();
+
+// TODO: Remove this hack once it's not needed.
+export const logReset = createAction('@log/RESET')();
