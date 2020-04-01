@@ -20,7 +20,7 @@ import { initFirestore } from '../../firebase';
 import { FirestoreConfig } from '../../store/config';
 import { FirestoreApi } from './models';
 
-type RequestMethod = 'POST' | 'DELETE';
+type RequestMethod = 'GET' | 'POST' | 'DELETE';
 
 export default class DatabaseApi implements FirestoreApi {
   private baseUrl: string;
@@ -47,16 +47,25 @@ export default class DatabaseApi implements FirestoreApi {
     return this.cleanup();
   }
 
-  private async restRequest(
+  private async restRequest<RES = any, REQ = {}>(
     path: string,
-    jsonBody: {},
+    params: REQ,
     baseUrl: string,
     method: RequestMethod
-  ) {
+  ): Promise<{ res: Response; json: RES }> {
     const { accessToken } = await this.getToken();
-    const res = await fetch(baseUrl + path, {
+
+    const url = new URL(baseUrl + path);
+
+    if (method === 'GET' && params) {
+      Object.entries(params).forEach(([k, v]) => {
+        url.searchParams.set(k, v);
+      });
+    }
+
+    const res = await fetch(url.toString(), {
       method,
-      body: JSON.stringify(jsonBody),
+      body: method !== 'GET' ? JSON.stringify(params) : undefined,
       headers: {
         Authorization: 'Bearer ' + accessToken,
         'Content-Type': 'application/json',
@@ -103,4 +112,36 @@ export default class DatabaseApi implements FirestoreApi {
     await this.restRequest(`documents`, {}, this.baseEmulatorUrl, 'DELETE');
     return [];
   }
+
+  async getDocuments(
+    collectionRef: firestore.CollectionReference,
+    options?: GetDocumentsRequest
+  ): Promise<firestore.DocumentReference[]> {
+    const encodedPath = collectionRef.path; // TODO: Encode each segment.
+
+    const { json } = await this.restRequest<GetDocumentsResponse>(
+      `documents/${encodedPath}`,
+      { ...options },
+      this.baseUrl,
+      'GET'
+    );
+    const { documents } = json;
+    return documents.map(doc => collectionRef.firestore.doc(doc.name));
+  }
+}
+
+interface GetDocumentsRequest {
+  'mask.fieldPaths'?: string;
+  pageSize?: number;
+  showMissing?: boolean;
+}
+
+interface GetDocumentsResponse {
+  documents: Document[];
+}
+
+interface Document {
+  name: string;
+  createTime: string;
+  updateTime: string;
 }
