@@ -26,7 +26,7 @@ it('renders fetching placeholder when fetching config', () => {
       <Home configRemote={{ loading: true }} />
     </MemoryRouter>
   );
-  expect(getByText(/Fetching/)).not.toBeNull();
+  expect(getByText('Overview Page Loading...')).not.toBeNull();
 });
 
 it('renders an overview when config is loaded', () => {
