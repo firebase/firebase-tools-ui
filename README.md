@@ -27,7 +27,7 @@ NOTE: The `emulators:exec` command is necessary to set the environment variables
 
 ### Developing within a user project
 
-To run the emulator suite in your project folder:
+You can also start the dev server of GUI and connect to your real project. To do so, first start the emulator suite in your project folder:
 
 ```bash
 cd project/
