@@ -97,10 +97,9 @@ export const Firestore: React.FC<FirestoreProps> = ({ config, projectId }) => {
     const shouldNuke = await promptClearAll();
     if (!shouldNuke) return;
     setIsRefreshing(true);
-    api.nukeDocuments().then(() => {
-      handleNavigate();
-      setIsRefreshing(false);
-    });
+    await api.nukeDocuments();
+    handleNavigate();
+    setIsRefreshing(false);
   }
 
   function handleNavigate(path?: string) {
