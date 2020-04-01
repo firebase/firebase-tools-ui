@@ -6,14 +6,18 @@
     "node": ">= 8.0.0"
   },
   "dependencies": {
+    "@material/circular-progress": "^6.0.0-canary.d6f60c98b.0",
+    "@material/linear-progress": "^5.1.0",
     "@rmwc/button": "^5.7.2",
     "@rmwc/card": "^5.7.2",
+    "@rmwc/circular-progress": "^5.7.2",
     "@rmwc/data-table": "^5.7.2",
     "@rmwc/dialog": "^5.7.2",
     "@rmwc/elevation": "^5.7.2",
     "@rmwc/grid": "^5.7.2",
     "@rmwc/icon": "^5.7.2",
     "@rmwc/icon-button": "^5.7.2",
+    "@rmwc/linear-progress": "^5.7.2",
     "@rmwc/list": "^5.7.2",
     "@rmwc/menu": "^5.7.2",
     "@rmwc/select": "^5.7.2",

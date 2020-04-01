@@ -16,7 +16,7 @@
 
 import { act, render, wait } from '@testing-library/react';
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, Route } from 'react-router-dom';
 
 import { FirestoreConfig } from '../../store/config';
 import { confirm } from '../common/DialogQueue';
@@ -43,6 +43,7 @@ describe('FirestoreRoute', () => {
     );
     expect(getByText('Loading...')).not.toBeNull();
   });
+
   it('renders loading when config is not ready', () => {
     const { getByText } = render(
       <FirestoreRoute
@@ -52,6 +53,7 @@ describe('FirestoreRoute', () => {
     );
     expect(getByText('Loading...')).not.toBeNull();
   });
+
   it('renders error when loading config fails', () => {
     const { getByText } = render(
       <FirestoreRoute
@@ -61,6 +63,7 @@ describe('FirestoreRoute', () => {
     );
     expect(getByText(/currently off/)).not.toBeNull();
   });
+
   it('renders "emulator is off" when config is not present', () => {
     const { getByText } = render(
       <FirestoreRoute
@@ -91,7 +94,12 @@ describe('Firestore', () => {
 
   it('triggers clearing all data', async () => {
     confirm.mockResolvedValueOnce(true);
-    const nukeSpy = jest.fn();
+    let nukeResolve;
+    const nukeSpy = jest
+      .fn()
+      .mockImplementation(
+        () => new Promise(resolve => (nukeResolve = resolve))
+      );
 
     DatabaseApi.mockImplementationOnce(() => ({
       getCollections: jest.fn(),
@@ -99,9 +107,14 @@ describe('Firestore', () => {
       nukeDocuments: nukeSpy,
     }));
 
-    const { getByText } = render(
+    const { getByTestId, getByText, queryByTestId } = render(
       <MemoryRouter>
         <Firestore config={sampleConfig} projectId={'foo'} />
+        <Route
+          path="/firestore"
+          exact
+          render={() => <div data-testid="ROOT"></div>}
+        />
       </MemoryRouter>
     );
 
@@ -110,6 +123,13 @@ describe('Firestore', () => {
     await wait();
 
     expect(nukeSpy).toHaveBeenCalled();
+    expect(getByTestId('firestore-loading')).not.toBeNull();
+
+    nukeResolve();
+    await wait();
+
+    expect(queryByTestId('firestore-loading')).toBeNull();
+    expect(getByTestId('ROOT')).not.toBeNull();
   });
 
   it('does not trigger clearing all data if dialog is not confirmed', async () => {

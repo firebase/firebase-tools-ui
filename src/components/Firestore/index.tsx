@@ -18,6 +18,7 @@ import './index.scss';
 
 import { Button } from '@rmwc/button';
 import { Card } from '@rmwc/card';
+import { CircularProgress } from '@rmwc/circular-progress';
 import { Elevation } from '@rmwc/elevation';
 import { GridCell } from '@rmwc/grid';
 import React, { useEffect, useState } from 'react';
@@ -73,6 +74,7 @@ export const Firestore: React.FC<FirestoreProps> = ({ config, projectId }) => {
   const databaseId = '(default)';
   const location = useLocation();
   const history = useHistory();
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   // TODO: do something better here!
   const path = location.pathname.replace(/^\/firestore/, '');
@@ -93,14 +95,32 @@ export const Firestore: React.FC<FirestoreProps> = ({ config, projectId }) => {
   async function handleClearData(api: DatabaseApi) {
     const shouldNuke = await promptClearAll();
     if (!shouldNuke) return;
-    api.nukeDocuments();
+    setIsRefreshing(true);
+    api.nukeDocuments().then(() => {
+      handleNavigate();
+      setIsRefreshing(false);
+    });
   }
 
-  function handleNavigate(path: string) {
-    history.push(`/firestore/${path}`);
+  function handleNavigate(path?: string) {
+    // TODO: move to routing constants
+    const root = '/firestore';
+    if (path === undefined) {
+      history.push(root);
+    } else {
+      history.push(`${root}/${path}`);
+    }
   }
 
-  return (
+  return isRefreshing ? (
+    <GridCell
+      span={12}
+      className="Firestore-loading"
+      data-testid="firestore-loading"
+    >
+      <CircularProgress size="xlarge" />
+    </GridCell>
+  ) : (
     <ApiProvider value={api}>
       <GridCell span={12} className="Firestore">
         <div className="Firestore-actions">
