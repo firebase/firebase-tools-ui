@@ -54,9 +54,7 @@ export const FirestoreRoute: React.FC<PropsFromState> = ({
   configResult,
 }) => {
   return handle(combineData(projectIdResult, configResult), {
-    onNone: () => (
-      <Spinner span={12} message={'Firestore Emulator Loading...'} />
-    ),
+    onNone: () => <Spinner span={12} message="Firestore Emulator Loading..." />,
     onError: () => <FirestoreRouteDisabled />,
     onData: ([projectId, config]) =>
       config === undefined ? (
@@ -117,7 +115,7 @@ export const Firestore: React.FC<FirestoreProps> = ({ config, projectId }) => {
   }
 
   return isRefreshing ? (
-    <Spinner span={12} />
+    <Spinner span={12} data-testid="firestore-loading" />
   ) : (
     <ApiProvider value={api}>
       <GridCell span={12} className="Firestore">

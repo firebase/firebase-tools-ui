@@ -24,7 +24,7 @@ import React from 'react';
 export const Spinner: React.FC<{
   message?: string;
   span?: number;
-}> = ({ message, span }) => {
+} & React.HTMLProps<any>> = ({ message, span, ...props }) => {
   const children = (
     <>
       <CircularProgress size="xlarge" />
@@ -36,10 +36,14 @@ export const Spinner: React.FC<{
     </>
   );
   if (span === undefined) {
-    return <div className="Spinner">{children}</div>;
+    return (
+      <div className="Spinner" {...props}>
+        {children}
+      </div>
+    );
   } else {
     return (
-      <GridCell span={span} align="middle" className="Spinner">
+      <GridCell span={span} align="middle" className="Spinner" {...props}>
         {children}
       </GridCell>
     );
