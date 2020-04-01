@@ -38,7 +38,7 @@ firebase emulators:start --import my-data
 
 This will run the emulators for your project.<br />
 
-Run the Emulator Suite UI from the firebase-tools-ui folder:
+In another terminal, run the Emulator Suite UI from the firebase-tools-ui folder: (note that `<project-id>` must be replaced with the matching project id of your project.)
 
 ```
 cd firebase-tools-ui/
