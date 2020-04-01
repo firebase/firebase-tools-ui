@@ -18,10 +18,8 @@ import './index.scss';
 
 import { Button } from '@rmwc/button';
 import { Card } from '@rmwc/card';
-import { CircularProgress } from '@rmwc/circular-progress';
 import { Elevation } from '@rmwc/elevation';
 import { GridCell } from '@rmwc/grid';
-import { Typography } from '@rmwc/typography';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
@@ -142,19 +140,6 @@ export const Firestore: React.FC<FirestoreProps> = ({ config, projectId }) => {
     </ApiProvider>
   );
 };
-
-export const FirestoreLoading: React.FC = () => (
-  <GridCell
-    span={12}
-    className="Firestore-loading"
-    data-testid="firestore-loading"
-  >
-    <CircularProgress size="xlarge" />
-    <Typography use="body2" tag="p">
-      Firestore Emulator Loading...
-    </Typography>
-  </GridCell>
-);
 
 export const FirestoreRouteDisabled: React.FC = () => (
   <EmulatorDisabled productName="Firestore" />
