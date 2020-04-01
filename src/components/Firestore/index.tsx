@@ -36,6 +36,7 @@ import { combineData, handle } from '../../store/utils';
 import { CustomThemeProvider } from '../../themes';
 import { EmulatorDisabled } from '../common/EmulatorDisabled';
 import { InteractiveBreadCrumbBar } from '../common/InteractiveBreadCrumbBar';
+import { Spinner } from '../common/Spinner';
 import DatabaseApi from './api';
 import { ApiProvider } from './ApiContext';
 import { promptClearAll } from './dialogs/clearAll';
@@ -53,7 +54,9 @@ export const FirestoreRoute: React.FC<PropsFromState> = ({
   configResult,
 }) => {
   return handle(combineData(projectIdResult, configResult), {
-    onNone: () => <FirestoreLoading />,
+    onNone: () => (
+      <Spinner span={12} message={'Firestore Emulator Loading...'} />
+    ),
     onError: () => <FirestoreRouteDisabled />,
     onData: ([projectId, config]) =>
       config === undefined ? (
@@ -114,7 +117,7 @@ export const Firestore: React.FC<FirestoreProps> = ({ config, projectId }) => {
   }
 
   return isRefreshing ? (
-    <FirestoreLoading />
+    <Spinner span={12} />
   ) : (
     <ApiProvider value={api}>
       <GridCell span={12} className="Firestore">

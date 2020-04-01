@@ -16,9 +16,6 @@
 
 import './index.scss';
 
-import { CircularProgress } from '@rmwc/circular-progress';
-import { GridCell } from '@rmwc/grid';
-import { Typography } from '@rmwc/typography';
 import React from 'react';
 import { connect } from 'react-redux';
 import {
@@ -37,6 +34,7 @@ import {
 } from '../../store/config/selectors';
 import { combineData, handle } from '../../store/utils';
 import { EmulatorDisabled } from '../common/EmulatorDisabled';
+import { Spinner } from '../common/Spinner';
 import Database from './Database';
 import DatabaseContainer from './DatabaseContainer';
 
@@ -52,7 +50,7 @@ export const DatabaseRoute: React.FC<PropsFromState> = ({
   configResult,
 }) => {
   return handle(combineData(projectIdResult, configResult), {
-    onNone: () => <DatabaseRouteLoading />,
+    onNone: () => <Spinner span={12} message="Database Emulator Loading..." />,
     onError: () => <DatabaseRouteDisabled />,
     onData: ([projectId, config]) =>
       config === undefined ? (
@@ -105,15 +103,6 @@ export const DatabaseRouteContent: React.FC<ContentProps> = ({
     </Switch>
   );
 };
-
-export const DatabaseRouteLoading: React.FC = () => (
-  <GridCell span={12} align="middle" className="Database-loading">
-    <CircularProgress size="xlarge" />
-    <Typography use="body2" tag="p">
-      RTDB Emulator Loading...
-    </Typography>
-  </GridCell>
-);
 
 export const DatabaseRouteDisabled: React.FC = () => (
   <EmulatorDisabled productName="RTDB" />

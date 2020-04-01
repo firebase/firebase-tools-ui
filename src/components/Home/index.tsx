@@ -22,7 +22,6 @@ import {
   CardActionIcons,
   CardActions,
 } from '@rmwc/card';
-import { CircularProgress } from '@rmwc/circular-progress';
 import { GridCell, GridInner } from '@rmwc/grid';
 import { ListDivider } from '@rmwc/list';
 import { Typography } from '@rmwc/typography';
@@ -35,6 +34,7 @@ import { Config, EmulatorConfig } from '../../store/config';
 import { getConfig } from '../../store/config/selectors';
 import { squash } from '../../store/utils';
 import { DatabaseIcon, FirestoreIcon, FunctionsIcon } from '../common/icons';
+import { Spinner } from '../common/Spinner';
 import { LocalWarningCallout } from './LocalWarningCallout';
 
 export const mapStateToProps = createStructuredSelector({
@@ -46,22 +46,13 @@ export type Props = PropsFromState;
 
 export const Home: React.FC<Props> = ({ configRemote }) =>
   squash(configRemote, {
-    onNone: () => <HomeLoading />,
+    onNone: () => <Spinner span={12} message="Overview Page Loading..." />,
     onData: config => <Overview config={config} />,
     // Show all emulators as "off" on error.
-    onError: error => <Overview config={{}} />,
+    onError: () => <Overview config={{}} />,
   });
 
 export default connect(mapStateToProps)(Home);
-
-export const HomeLoading: React.FC = () => (
-  <GridCell span={12} align="middle" className="Home-loading">
-    <CircularProgress size="xlarge" />
-    <Typography use="body2" tag="p">
-      Overview Page Loading...
-    </Typography>
-  </GridCell>
-);
 
 const Overview: React.FC<{
   config: Partial<Config>;

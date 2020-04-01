@@ -48,6 +48,9 @@ export async function fetchDatabasesApi(
   const res = await fetch(
     `http://${config.hostAndPort}/.inspect/databases.json?ns=${projectId}`
   );
+  if (res.status !== 200) {
+    throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+  }
   return res.json();
 }
 
