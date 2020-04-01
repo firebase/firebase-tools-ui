@@ -4,7 +4,6 @@
 {
   extends: [
     "config:base",
-    ":preserveSemverRanges",
   ],
   packageRules: [
     {
@@ -34,4 +33,7 @@
     },
     // END version constraints for Node.js 8 support.
   ],
+  // Update package-lock.json when in-range updates are available, otherwise replace
+  // the range in package.json for updates out of range.
+  rangeStrategy: "update-lockfile",
 }
