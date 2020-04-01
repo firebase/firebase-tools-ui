@@ -33,4 +33,4 @@ jobs:
           MERGE_FORKS: "false"
           MERGE_RETRIES: "6"
           MERGE_RETRY_SLEEP: "10000"
-          UPDATE_METHOD: "rebase"
+          UPDATE_METHOD: "merge"
