@@ -16,11 +16,15 @@
 
 import { Action, createReducer } from 'typesafe-actions';
 
-import { logReceived } from './actions';
+import { logReceived, logReset } from './actions';
 import { LogState } from './types';
 
 export const logReducer = createReducer<LogState, Action>({
   history: [],
-}).handleAction(logReceived, (state: LogState, { payload }) => {
-  return { ...state, history: [...state.history, payload] };
-});
+})
+  .handleAction(logReceived, (state: LogState, { payload }) => {
+    return { ...state, history: [...state.history, payload] };
+  })
+  .handleAction(logReset, (state: LogState) => {
+    return { ...state, history: [] };
+  });
