@@ -4,7 +4,8 @@ The web UI for Firebase Emulator Suite. Features include:
 
 - Overview of Emulators running
 - Firebase Realtime Database Data Viewer/Editor
-- More to come...
+- Cloud Firestore Data Viewer/Editor
+- Logs Viewer with powerful filters
 
 ## Development
 
