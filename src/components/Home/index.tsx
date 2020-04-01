@@ -16,7 +16,12 @@
 
 import './index.scss';
 
-import { Card, CardActionButton, CardActionIcons } from '@rmwc/card';
+import {
+  Card,
+  CardActionButton,
+  CardActionIcons,
+  CardActions,
+} from '@rmwc/card';
 import { GridCell } from '@rmwc/grid';
 import { ListDivider } from '@rmwc/list';
 import { Typography } from '@rmwc/typography';
@@ -97,16 +102,16 @@ export const EmulatorCard: React.FC<{
   <GridCell span={4}>
     <Card className="Home-EmulatorCard" data-testid={testId}>
       <div className="Home-EmulatorCard-Info">
-        <Typography use="headline6" tag="h3">
+        <Typography use="headline6" tag="h3" className="title">
           {icon} {name}
         </Typography>
-        <Typography use="subtitle2" tag="h4">
+        <Typography use="body2" tag="h4" theme="secondary">
           Status
         </Typography>
         <Typography use="headline6" tag="div">
           {config ? 'On' : 'Off'}
         </Typography>
-        <Typography use="subtitle2" tag="h4">
+        <Typography use="body2" tag="h4" theme="secondary">
           Port number
         </Typography>
         <Typography use="headline6" tag="div">
@@ -114,11 +119,13 @@ export const EmulatorCard: React.FC<{
         </Typography>
       </div>
       <ListDivider />
-      <CardActionIcons className="Home-EmulatorCard-Action">
-        <CardActionButton tag={props => <Link to={linkTo} {...props} />}>
-          {linkLabel || 'Go to Emulator'}
-        </CardActionButton>
-      </CardActionIcons>
+      <CardActions>
+        <CardActionIcons>
+          <CardActionButton tag={props => <Link to={linkTo} {...props} />}>
+            {linkLabel || 'Go to Emulator'}
+          </CardActionButton>
+        </CardActionIcons>
+      </CardActions>
     </Card>
   </GridCell>
 );

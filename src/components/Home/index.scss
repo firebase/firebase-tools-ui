@@ -2,10 +2,17 @@
   h4 {
     margin-bottom: 0;
   }
+
+  .title {
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+
+    .rmwc-icon {
+      margin-right: 8px;
+    }
+  }
 }
 .Home-EmulatorCard-Info {
   margin: 16px;
-}
-.Home-EmulatorCard-Action {
-  padding: 16px;
 }
