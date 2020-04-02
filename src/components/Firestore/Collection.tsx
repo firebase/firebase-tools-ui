@@ -77,15 +77,11 @@ export const Collection: React.FC<Props> = ({ collection }) => {
         <List dense className="List-Actions">
           <ListItem
             className="list-button"
-            tag={props => (
-              <Button
-                dense
-                label="Add document"
-                icon="add"
-                {...props}
-                onClick={() => setAddDocumentDialogOpen(true)}
-              />
-            )}
+            tag={Button}
+            // dense
+            label="Add document"
+            // icon="add"
+            onClick={() => setAddDocumentDialogOpen(true)}
           ></ListItem>
         </List>
 
@@ -94,13 +90,9 @@ export const Collection: React.FC<Props> = ({ collection }) => {
             <ListItem
               key={doc.ref.id}
               className="Firestore-List-Item"
-              tag={props => (
-                <NavLink
-                  to={`${url}/${doc.ref.id}`}
-                  activeClassName="mdc-list-item--activated"
-                  {...props}
-                />
-              )}
+              tag={NavLink}
+              to={`${url}/${doc.ref.id}`}
+              activeClassName="mdc-list-item--activated"
             >
               {doc.ref.id}
             </ListItem>

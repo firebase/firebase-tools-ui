@@ -27,6 +27,7 @@ import {
 } from '@rmwc/list';
 import { Typography } from '@rmwc/typography';
 import React, { ReactElement } from 'react';
+import { Link } from 'react-router-dom';
 
 import { DatabaseCircleIcon } from '../common/icons';
 
@@ -47,17 +48,14 @@ const DatabaseListItem: React.FC<{
 }> = ({ name, navigation, activated }) => (
   <ListItem
     activated={activated}
-    tag={props => {
-      const element = navigation(name);
-      return { ...element, props: { ...element.props, ...props } };
-    }}
+    tag={Link}
+    to={`/database/${name}/data`}
+    // {props => {
+    //   const element = navigation(name);
+    //   return { ...element, props: { ...element.props, ...props } };
+    // }}
   >
-    <ListItemGraphic
-      tag={props => (
-        <DatabaseCircleIcon size="large" theme="primary" {...props} />
-      )}
-    />
-
+    <ListItemGraphic tag={DatabaseCircleIcon} size="large" theme="primary" />
     <ListItemText>{name}</ListItemText>
   </ListItem>
 );

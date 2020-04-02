@@ -50,9 +50,10 @@ const DocumentPreview: React.FC<Props> = ({
           {/* Actions */}
           <ListItem
             className="list-button"
-            tag={props => (
-              <Button dense label="Add field" icon="add" {...props} />
-            )}
+            tag={Button}
+            // dense
+            label="Add field"
+            // icon="add"
             onClick={() => setIsAddingField(true)}
           ></ListItem>
 

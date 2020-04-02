@@ -123,7 +123,7 @@ export const EmulatorCard: React.FC<{
       <ListDivider />
       <CardActions>
         <CardActionIcons>
-          <CardActionButton tag={props => <Link to={linkTo} {...props} />}>
+          <CardActionButton tag={Link} to={linkTo}>
             {linkLabel || 'Go to Emulator'}
           </CardActionButton>
         </CardActionIcons>

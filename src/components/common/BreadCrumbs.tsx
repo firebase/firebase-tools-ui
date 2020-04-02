@@ -48,7 +48,7 @@ export const BreadCrumbs: React.FC<Props> = ({
   return (
     <ul role="navigation" className="BreadCrumbs">
       <li className="BreadCrumbs-crumb">
-        <IconButton icon="home" tag={props => <Link to={base} {...props} />} />
+        <IconButton icon="home" tag={Link} to={base} />
       </li>
 
       {keys.map((key, i) => (

@@ -313,7 +313,9 @@ const ChildTypeSelect: React.FC<{
       options={isRtdb ? RTDB_FIELD_TYPES : FIRESTORE_FIELD_TYPES}
       value={getDocumentFieldType(field)}
       onChange={e => {
-        dispatch(actions.updateType({ uuid, type: e.currentTarget.value }));
+        dispatch(
+          actions.updateType({ uuid, type: e.currentTarget.value as FieldType })
+        );
       }}
     />
   );

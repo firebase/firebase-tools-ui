@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Icon } from '@rmwc/icon';
+import { Icon, IconProps } from '@rmwc/icon';
 import { ComponentProps } from '@rmwc/types';
 import React from 'react';
 
@@ -99,7 +99,9 @@ export const HintIcon = svgIcon(
 
 function svgIcon(
   svgElement: JSX.Element
-): React.FC<{ size?: string } & Omit<ComponentProps, 'size'>> {
+): React.FC<
+  { size?: string } & ComponentProps<Omit<IconProps, 'size'>, {}, 'svg'>
+> {
   return ({ size = 'small', ...props }) => {
     return (
       <Icon

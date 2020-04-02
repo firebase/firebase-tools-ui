@@ -16,13 +16,13 @@
 
 import './Field.scss';
 
-import { Select, SelectProps } from '@rmwc/select';
-import { TextField, TextFieldProps } from '@rmwc/textfield';
-import { ComponentProps } from '@rmwc/types';
+import { Select, SelectHTMLProps, SelectProps } from '@rmwc/select';
+import { TextField, TextFieldHTMLProps, TextFieldProps } from '@rmwc/textfield';
 import { Typography } from '@rmwc/typography';
 import React from 'react';
 
-type Props = { tip?: string; error?: string } & ComponentProps & TextFieldProps;
+type Props = { tip?: string; error?: string } & TextFieldProps &
+  TextFieldHTMLProps;
 
 export const Field: React.FC<Props> = ({
   label,
@@ -53,7 +53,7 @@ export const Field: React.FC<Props> = ({
   );
 };
 
-type SelectFieldProps = { tip?: string } & ComponentProps & SelectProps;
+type SelectFieldProps = { tip?: string } & SelectProps & SelectHTMLProps;
 
 export const SelectField: React.FC<SelectFieldProps> = ({
   label,
