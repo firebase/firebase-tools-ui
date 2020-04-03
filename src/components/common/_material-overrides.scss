@@ -14,22 +14,36 @@
  * limitations under the License.
  */
 
+// mixins and config
+@use '@material/card/_index' as card;
+@use '@material/tab/_index' as tab with (
+  $height: 40px,
+);
+@use '@material/tab-indicator/_index' as tab-indicator;
+@use '@material/dialog/_index' as dialog;
+@use '@material/ripple/_index' as ripple;
+@use '@material/elevation/_index' as elevation;
+
+// style imports
+@import '@material/card/dist/mdc.card';
+@import '@material/dialog/dist/mdc.dialog';
+@import '@material/tab/dist/mdc.tab';
+@import '@material/tab-bar/dist/mdc.tab-bar';
+@import '@material/tab-scroller/dist/mdc.tab-scroller';
+@import '@material/tab-indicator/dist/mdc.tab-indicator';
+
 @import './material-components';
 @import './material-overrides-buttons';
 @import './material-overrides-inputs';
 
-@import '@material/card/mixins';
-@import '@material/dialog/mixins';
-@import '@material/ripple/mixins';
-
 @import './components/common/radius';
 
 .mdc-card {
-  @include mdc-card-shape-radius($BORDER_RADIUS_CARD);
+  @include card.shape-radius($BORDER_RADIUS_CARD);
 }
 
 .mdc-dialog {
-  @include mdc-dialog-shape-radius($BORDER_RADIUS_DIALOG);
+  @include dialog.shape-radius($BORDER_RADIUS_DIALOG);
 }
 
 :not(.mdc-list--non-interactive) {
@@ -42,27 +56,22 @@
   }
 }
 
-$mdc-tab-height: 40px;
-@import '@material/tab-bar/mdc-tab-bar';
-@import '@material/tab/mdc-tab';
-@import '@material/tab-scroller/mdc-tab-scroller';
-@import '@material/tab-indicator/mdc-tab-indicator';
 // TODO: Use text-transform mixins once RMWC updates to @material/tabs v4.0+
 // https://github.com/material-components/material-components-web/commit/22d7ad2fb1796fbd71a3a5ee9c7ab2e77c60e34e
 .mdc-tab {
-  @include mdc-tab-horizontal-padding(5px);
+  @include tab.horizontal-padding(5px);
   text-transform: none;
 }
 
 .mdc-tab-indicator {
-  @include mdc-tab-indicator-underline-height(3px);
-  @include mdc-tab-indicator-underline-top-corner-radius(2px);
+  @include tab-indicator.underline-height(3px);
+  @include tab-indicator.underline-top-corner-radius(2px);
 }
 
 .mdc-dialog {
-  @include mdc-dialog-container-fill-color(#fafafa);
+  @include dialog.container-fill-color(#fafafa);
 
   .mdc-dialog__surface {
-    @include mdc-elevation(9);
+    @include elevation.elevation(9);
   }
 }

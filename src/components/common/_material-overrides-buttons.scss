@@ -14,16 +14,20 @@
  * limitations under the License.
  */
 
-@import '@material/button/mixins';
+@use '@material/button';
+
+// export styles
+@use '@material/button/mdc-button';
 
 @import './components/common/radius';
 
 $FOCUS_OUTLINE_THICKNESS: 2px;
 
 .mdc-button {
-  @include mdc-button-shape-radius($BORDER_RADIUS_CARD);
+  @include button.shape-radius($BORDER_RADIUS_CARD);
+  // no dense buttons
+  @include button.horizontal-padding(16px);
   text-transform: none;
-  padding: 0 16px; // default buttons should not be "dense"
 }
 
 // This is a helper mixin that selects a given button variation and applies the

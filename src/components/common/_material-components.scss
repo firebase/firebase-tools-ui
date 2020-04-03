@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-@import '@material/theme/mdc-theme';
+// Use @material/x/dist/mdc.x for faster compilation if no customization is
+// needed
+@import '@material/theme/dist/mdc.theme';
 @import '@material/elevation/dist/mdc.elevation';
 @import '@material/floating-label/dist/mdc.floating-label';
 @import '@material/icon-button/dist/mdc.icon-button';

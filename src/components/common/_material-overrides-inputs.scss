@@ -14,31 +14,36 @@
  * limitations under the License.
  */
 
-@import './color';
-
 $input-default-padding: 8px;
 $input-height: 36px;
 
-$mdc-select-height: $input-height;
-$mdc-select-input-padding: $input-default-padding;
-$mdc-select-label-offset: $input-default-padding;
+@use '@material/notched-outline/_index' as notched-outline;
+@use '@material/select/_index' as select with (
+  $height: $input-height,
+  $label-padding: $input-default-padding,
+  $arrow-padding: $input-default-padding,
+  $outline-label-offset: $input-default-padding,
+  $outlined-idle-border: var(--fire-color-input-borders),
+  $outlined-hover-border: var(--fire-color-input-borders),
+);
 
-$mdc-select-outlined-idle-border: var(--fire-color-input-borders);
-$mdc-select-outlined-hover-border: var(--fire-color-input-borders);
+@import './color';
+
 @import '@material/select/mdc-select';
 
 .mdc-select {
   .mdc-select__native-control,
   .mdc-select__selected-text {
-    padding: $mdc-select-input-padding; // base component doesnt do this yet
+    // padding: $mdc-select-input-padding; // base component doesnt do this yet
   }
 
   .mdc-select__dropdown-icon {
-    bottom: $mdc-select-input-padding; // base component doesnt do this yet
+    // bottom: $mdc-select-input-padding; // base component doesnt do this yet
   }
 }
 
-$mdc-text-field-height: $input-height;
+// cannot "@use with" textfield because of circular dep on textfield/helper-text
+// $mdc-text-field-height: $input-height; // cannot be 36px kill me
 $mdc-text-field-input-padding: $input-default-padding;
 $mdc-text-field-label-offset: $input-default-padding; // not working
 
@@ -52,11 +57,10 @@ $mdc-text-field-outlined-hover-border: var(--fire-color-input-borders);
   }
 }
 
-@import '@material/notched-outline/mdc-notched-outline';
 .mdc-select--outlined,
 .mdc-text-field--outlined {
   .mdc-notched-outline {
-    @include mdc-notched-outline-floating-label-float-position(85%);
+    @include notched-outline.floating-label-float-position(85%);
 
     .mdc-floating-label {
       top: $input-default-padding + 1px; // no var to config
