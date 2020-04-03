@@ -18,6 +18,18 @@ $input-default-padding: 8px;
 $input-height: 36px;
 
 @use '@material/notched-outline/_index' as notched-outline;
+@use '@material/textfield/_index' as textfield with (
+  $height: 40px, // wow, cant set to 36px
+  $input-padding: $input-default-padding,
+  $input-padding-top: $input-default-padding,
+  $input-padding-bottom: $input-default-padding,
+  $label-offset: $input-default-padding,
+  $outlined-idle-border: var(--fire-color-input-borders),
+  $outlined-hover-border: var(--fire-color-input-borders),
+  $outlined-input-padding-top: $input-default-padding,
+  $outlined-input-padding-bottom: $input-default-padding,
+);
+
 @use '@material/select/_index' as select with (
   $height: $input-height,
   $label-padding: $input-default-padding,
@@ -30,31 +42,26 @@ $input-height: 36px;
 @import './color';
 
 @import '@material/select/mdc-select';
+@import '@rmwc/select/select';
 
 .mdc-select {
   .mdc-select__native-control,
   .mdc-select__selected-text {
-    // padding: $mdc-select-input-padding; // base component doesnt do this yet
+    padding: $input-default-padding; // base component doesnt do this yet
+    min-width: 0;
+    line-height: normal;
   }
 
   .mdc-select__dropdown-icon {
-    // bottom: $mdc-select-input-padding; // base component doesnt do this yet
+    bottom: $input-default-padding - 2px; // base component doesnt do this yet
+    z-index: 2;
   }
 }
 
-// cannot "@use with" textfield because of circular dep on textfield/helper-text
-// $mdc-text-field-height: $input-height; // cannot be 36px kill me
-$mdc-text-field-input-padding: $input-default-padding;
-$mdc-text-field-label-offset: $input-default-padding; // not working
-
-$mdc-text-field-outlined-idle-border: var(--fire-color-input-borders);
-$mdc-text-field-outlined-hover-border: var(--fire-color-input-borders);
 @import '@material/textfield/mdc-text-field';
 
 .mdc-text-field {
-  .mdc-text-field__input {
-    padding: $mdc-text-field-input-padding; // base component doesnt do this yet
-  }
+  @include textfield.height(36px); // lol, but this works
 }
 
 .mdc-select--outlined,

@@ -38,7 +38,7 @@ export const Field: React.FC<Props> = ({
       <Typography className="Field-label" use="body2" theme="secondary">
         {label}
       </Typography>
-      <TextField outlined invalid={!!error} {...textFieldProps} />
+      <TextField outlined invalid={!!error} {...textFieldProps} tag="div" />
       {tip && (
         <Typography className="Field-tip" use="body2" theme="secondary">
           {tip}
@@ -67,7 +67,7 @@ export const SelectField: React.FC<SelectFieldProps> = ({
       <Typography className="Field-label" use="body2" theme="secondary">
         {label}
       </Typography>
-      <Select outlined {...selectProps} />
+      <Select outlined {...selectProps} tag="div" />
       {tip && (
         <Typography className="Field-tip" use="body2" theme="secondary">
           {tip}
