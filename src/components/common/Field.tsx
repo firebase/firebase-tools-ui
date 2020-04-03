@@ -19,7 +19,9 @@ import './Field.scss';
 import { Select, SelectHTMLProps, SelectProps } from '@rmwc/select';
 import { TextField, TextFieldHTMLProps, TextFieldProps } from '@rmwc/textfield';
 import { Typography } from '@rmwc/typography';
-import React from 'react';
+import React, { useState } from 'react';
+
+import { uuid } from './utils';
 
 type Props = { tip?: string; error?: string } & TextFieldProps &
   TextFieldHTMLProps;
@@ -33,12 +35,25 @@ export const Field: React.FC<Props> = ({
   error,
   ...textFieldProps
 }) => {
+  const [id] = useState(uuid());
   return (
-    <label className="Field">
-      <Typography className="Field-label" use="body2" theme="secondary">
+    <div className="Field">
+      <Typography
+        className="Field-label"
+        use="body2"
+        theme="secondary"
+        tag="label"
+        htmlFor={id}
+      >
         {label}
       </Typography>
-      <TextField outlined invalid={!!error} {...textFieldProps} tag="div" />
+      <TextField
+        outlined
+        invalid={!!error}
+        {...textFieldProps}
+        tag="div"
+        id={id}
+      />
       {tip && (
         <Typography className="Field-tip" use="body2" theme="secondary">
           {tip}
@@ -49,7 +64,7 @@ export const Field: React.FC<Props> = ({
           {error}
         </Typography>
       )}
-    </label>
+    </div>
   );
 };
 
@@ -62,18 +77,25 @@ export const SelectField: React.FC<SelectFieldProps> = ({
   tip,
   ...selectProps
 }) => {
+  const [id] = useState(uuid());
   return (
-    <label className="Field">
-      <Typography className="Field-label" use="body2" theme="secondary">
+    <div className="Field">
+      <Typography
+        className="Field-label"
+        use="body2"
+        theme="secondary"
+        tag="label"
+        htmlFor={id}
+      >
         {label}
       </Typography>
-      <Select outlined {...selectProps} tag="div" />
+      <Select outlined {...selectProps} id={id} />
       {tip && (
         <Typography className="Field-tip" use="body2" theme="secondary">
           {tip}
         </Typography>
       )}
       {/* TODO: Error text */}
-    </label>
+    </div>
   );
 };
