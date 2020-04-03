@@ -46,14 +46,17 @@ const DocumentPreview: React.FC<Props> = ({
   return (
     <>
       <DocumentProvider value={data as FirestoreMap}>
-        <List dense className="List-Actions Firestore-Document-Fields">
+        <List
+          dense
+          className="List-Actions Firestore-Document-Fields"
+          tag="div"
+        >
           {/* Actions */}
           <ListItem
             className="list-button"
             tag={Button}
-            // dense
             label="Add field"
-            // icon="add"
+            {...{ dense: true, icon: 'add' }}
             onClick={() => setIsAddingField(true)}
           ></ListItem>
 

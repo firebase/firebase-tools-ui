@@ -100,7 +100,7 @@ export const Document: React.FC<{ reference: firestore.DocumentReference }> = ({
       </PanelHeader>
 
       <CollectionList reference={reference} />
-      <ListDivider />
+      <ListDivider tag="div" />
       <DocumentPreview reference={reference} />
     </Doc>
   );

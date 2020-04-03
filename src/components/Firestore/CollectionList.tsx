@@ -68,18 +68,17 @@ export const CollectionList: React.FC<Props> = ({ reference }) => {
         />
       )}
       {/* Actions */}
-      <List dense className="List-Actions">
+      <List dense className="List-Actions" tag="div">
         <ListItem
           className="list-button"
           tag={Button}
-          // dense
+          {...{ dense: true, icon: 'add' }}
           label="Start collection"
-          // icon="add"
           onClick={() => setAddCollectionDialogOpen(true)}
         ></ListItem>
       </List>
 
-      <List dense>
+      <List dense tag="div">
         {collections &&
           collections.map(coll => (
             <ListItem

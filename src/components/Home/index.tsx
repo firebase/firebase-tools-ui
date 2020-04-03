@@ -120,7 +120,7 @@ export const EmulatorCard: React.FC<{
           {config ? config.port : 'N/A'}
         </Typography>
       </div>
-      <ListDivider />
+      <ListDivider tag="div" />
       <CardActions>
         <CardActionIcons>
           <CardActionButton tag={Link} to={linkTo}>

@@ -46,15 +46,7 @@ const DatabaseListItem: React.FC<{
   navigation: (db: string) => ReactElement;
   activated: boolean;
 }> = ({ name, navigation, activated }) => (
-  <ListItem
-    activated={activated}
-    tag={Link}
-    to={`/database/${name}/data`}
-    // {props => {
-    //   const element = navigation(name);
-    //   return { ...element, props: { ...element.props, ...props } };
-    // }}
-  >
+  <ListItem activated={activated} tag={Link} to={`/database/${name}/data`}>
     <ListItemGraphic tag={DatabaseCircleIcon} size="large" theme="primary" />
     <ListItemText>{name}</ListItemText>
   </ListItem>
@@ -90,7 +82,7 @@ export const DatabasePicker: React.FC<Props> = ({
             name={primary}
             navigation={navigation}
           />
-          <ListDivider />
+          <ListDivider tag="div" />
           {secondaryDbs.map(db => (
             <DatabaseListItem
               key={db}

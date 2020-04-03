@@ -74,18 +74,17 @@ export const Collection: React.FC<Props> = ({ collection }) => {
             onClose={() => setAddDocumentDialogOpen(false)}
           />
         )}
-        <List dense className="List-Actions">
+        <List dense className="List-Actions" tag="div">
           <ListItem
             className="list-button"
             tag={Button}
-            // dense
             label="Add document"
-            // icon="add"
+            {...{ dense: true, icon: 'add' }}
             onClick={() => setAddDocumentDialogOpen(true)}
           ></ListItem>
         </List>
 
-        <List dense className="Firestore-Document-List">
+        <List dense className="Firestore-Document-List" tag="div">
           {docs.map(doc => (
             <ListItem
               key={doc.ref.id}
