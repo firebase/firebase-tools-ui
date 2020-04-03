@@ -22,7 +22,7 @@ import {
   CardActionIcons,
   CardActions,
 } from '@rmwc/card';
-import { GridCell, GridInner } from '@rmwc/grid';
+import { GridCell, GridRow } from '@rmwc/grid';
 import { ListDivider } from '@rmwc/list';
 import { Typography } from '@rmwc/typography';
 import React from 'react';
@@ -59,7 +59,7 @@ const Overview: React.FC<{
 }> = ({ config }) => {
   return (
     <GridCell span={12}>
-      <GridInner>
+      <GridRow>
         {config.projectId && (
           <LocalWarningCallout projectId={config.projectId} />
         )}
@@ -88,7 +88,7 @@ const Overview: React.FC<{
           linkLabel="View Logs"
           testId="emulator-info-functions"
         />
-      </GridInner>
+      </GridRow>
     </GridCell>
   );
 };
