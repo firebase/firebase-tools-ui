@@ -105,6 +105,10 @@
       border-radius: 0;
       width: 100%;
       justify-content: flex-start;
+
+      .mdc-button__ripple {
+        border-radius: 0;
+      }
     }
   }
 }
