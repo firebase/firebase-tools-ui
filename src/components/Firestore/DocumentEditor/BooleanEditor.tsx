@@ -25,7 +25,6 @@ const BooleanEditor: React.FC<{
   return (
     <SelectField
       label="Value"
-      outlined
       value={value.toString()}
       options={['true', 'false']}
       onChange={e => {

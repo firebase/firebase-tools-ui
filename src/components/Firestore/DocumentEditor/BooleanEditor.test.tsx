@@ -21,13 +21,13 @@ import BooleanEditor from './BooleanEditor';
 
 it('renders an editor for a boolean', () => {
   const onChange = jest.fn();
-  const { getByDisplayValue } = render(
+  const { getByLabelText } = render(
     <BooleanEditor value={true} onChange={onChange} />
   );
 
-  expect(getByDisplayValue('true')).not.toBe('null');
+  expect(getByLabelText('Value').value).toBe('true');
 
-  fireEvent.change(getByDisplayValue('true'), {
+  fireEvent.change(getByLabelText('Value'), {
     target: { value: 'false' },
   });
 
