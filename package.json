@@ -7,6 +7,7 @@
   },
   "dependencies": {
     "@rehooks/local-storage": "^2.3.0",
+    "@rmwc/base": "^6.0.9",
     "@rmwc/button": "^6.0.9",
     "@rmwc/card": "^6.0.9",
     "@rmwc/circular-progress": "^6.0.9",
