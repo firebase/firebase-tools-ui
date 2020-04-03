@@ -26,7 +26,7 @@ import {
   ListItemText,
 } from '@rmwc/list';
 import { Typography } from '@rmwc/typography';
-import React, { ReactElement } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { DatabaseCircleIcon } from '../common/icons';
@@ -38,19 +38,27 @@ export interface PropsFromState {
 export type Props = PropsFromState & {
   primary: string;
   current: string;
-  navigation: (db: string) => ReactElement;
+  navigation: (db: string) => string;
 };
 
 const DatabaseListItem: React.FC<{
   name: string;
-  navigation: (db: string) => ReactElement;
+  navigation: (db: string) => string;
   activated: boolean;
-}> = ({ name, navigation, activated }) => (
-  <ListItem activated={activated} tag={Link} to={`/database/${name}/data`}>
-    <ListItemGraphic tag={DatabaseCircleIcon} size="large" theme="primary" />
-    <ListItemText>{name}</ListItemText>
-  </ListItem>
-);
+}> = ({ name, navigation, activated }) => {
+  const to = navigation(name);
+  return (
+    <ListItem
+      activated={activated}
+      tag={Link}
+      to={to}
+      data-testid={`nav-${name}`}
+    >
+      <ListItemGraphic tag={DatabaseCircleIcon} size="large" theme="primary" />
+      <ListItemText>{name}</ListItemText>
+    </ListItem>
+  );
+};
 
 export const DatabasePicker: React.FC<Props> = ({
   primary,

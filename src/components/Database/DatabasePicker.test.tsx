@@ -16,43 +16,51 @@
 
 import { render } from '@testing-library/react';
 import React from 'react';
+import { MemoryRouter } from 'react-router-dom';
 
 import { DatabasePicker } from './DatabasePicker';
 
 it('renders primary database name and link', () => {
-  const { getByTestId } = render(
-    <DatabasePicker
-      primary="foo"
-      current="foo"
-      navigation={db => <div data-testid={`nav-${db}`} />}
-      databases={['foo']}
-    />
+  const { getByText } = render(
+    <MemoryRouter>
+      <DatabasePicker
+        primary="foo"
+        current="foo"
+        navigation={db => `/nav/${db}`}
+        databases={['foo']}
+      />
+    </MemoryRouter>
   );
-  expect(getByTestId('nav-foo')).not.toBeNull();
+  expect(getByText('foo')).not.toBeNull();
 });
 
 it('renders current database name even if it is not in list', () => {
-  const { getByTestId } = render(
-    <DatabasePicker
-      primary="foo"
-      current="random"
-      navigation={db => <div data-testid={`nav-${db}`} />}
-      databases={['foo']}
-    />
+  const { getByText } = render(
+    <MemoryRouter>
+      <DatabasePicker
+        primary="foo"
+        current="random"
+        navigation={db => `/nav/${db}`}
+        databases={['foo']}
+      />
+    </MemoryRouter>
   );
-  expect(getByTestId('nav-random')).not.toBeNull();
+  expect(getByText('random')).not.toBeNull();
 });
 
 it('renders extra databases with link', () => {
   const { getByTestId } = render(
-    <DatabasePicker
-      primary="foo"
-      current="bar"
-      navigation={db => <div data-testid={`nav-${db}`} />}
-      databases={['foo', 'bar', 'baz']}
-    />
+    <MemoryRouter>
+      <DatabasePicker
+        primary="foo"
+        current="bar"
+        navigation={db => `/nav/${db}`}
+        databases={['foo', 'bar', 'baz']}
+      />
+    </MemoryRouter>
   );
-  expect(getByTestId('nav-foo')).not.toBeNull();
-  expect(getByTestId('nav-bar')).not.toBeNull();
-  expect(getByTestId('nav-baz')).not.toBeNull();
+
+  expect(getByTestId('nav-foo').href).toContain('/nav/foo');
+  expect(getByTestId('nav-bar').href).toContain('/nav/bar');
+  expect(getByTestId('nav-baz').href).toContain('/nav/baz');
 });

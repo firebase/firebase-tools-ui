@@ -2,7 +2,7 @@ import { Button } from '@rmwc/button';
 import { Card } from '@rmwc/card';
 import { Elevation } from '@rmwc/elevation';
 import { GridCell } from '@rmwc/grid';
-import React, { ReactElement, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { MapDispatchToPropsFunction, connect } from 'react-redux';
 
 import { createStructuredSelector } from '../../store';
@@ -29,7 +29,7 @@ export type Props = PropsFromState &
     children?: React.ReactNode;
     current: string;
     primary: string;
-    navigation: (db: string) => ReactElement;
+    navigation: (db: string) => string;
   };
 
 export const DatabaseContainer: React.FC<Props> = ({
