@@ -56,7 +56,7 @@ const DocumentPreview: React.FC<Props> = ({
             className="list-button"
             tag={Button}
             label="Add field"
-            {...{ dense: true, icon: 'add' }}
+            {...{ dense: true, icon: 'add' }} // types get confused
             onClick={() => setIsAddingField(true)}
           ></ListItem>
 

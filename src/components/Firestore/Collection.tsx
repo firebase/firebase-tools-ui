@@ -79,7 +79,7 @@ export const Collection: React.FC<Props> = ({ collection }) => {
             className="list-button"
             tag={Button}
             label="Add document"
-            {...{ dense: true, icon: 'add' }}
+            {...{ dense: true, icon: 'add' }} // types get confused
             onClick={() => setAddDocumentDialogOpen(true)}
           ></ListItem>
         </List>
