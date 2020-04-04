@@ -34,7 +34,7 @@ describe('with basic root fields', () => {
   });
 
   it('renders current field name, type, value', () => {
-    const { getByLabelText, getByDisplayValue } = result;
+    const { getByLabelText } = result;
 
     expect(getByLabelText(/Field/).value).toBe('hello');
     expect(getByLabelText(/Type/).value).toBe('string');
@@ -151,7 +151,7 @@ it.skip('renders an editable field with children', async () => {
 
 it('renders an editable key-field', async () => {
   const onChange = jest.fn();
-  const { getByLabelText, getByPlaceholderText, getByDisplayValue } = render(
+  const { getByLabelText } = render(
     <DocumentEditor value={{ hello: 'world' }} onChange={onChange} />
   );
 
@@ -195,11 +195,11 @@ describe('changing types', () => {
   });
 
   it('switches to a boolean', async () => {
-    const { getByDisplayValue } = result;
+    const { getByLabelText } = result;
     await act(async () => {
       setType(FieldType.BOOLEAN);
     });
-    expect(getByDisplayValue('true')).not.toBe(null);
+    expect(getByLabelText('Value').value).toBe('true');
   });
 
   it('switches to a geopoint', async () => {
