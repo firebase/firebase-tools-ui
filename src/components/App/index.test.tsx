@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-import { act, render, wait } from '@testing-library/react';
+import { render, wait } from '@testing-library/react';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 
@@ -24,7 +25,7 @@ import configureStore from '../../configureStore';
 import { alert } from '../common/DialogQueue';
 import App from '.';
 
-it('renders without crashing', () => {
+it('renders without crashing', async () => {
   const div = document.createElement('div');
   const store = configureStore();
   ReactDOM.render(
@@ -35,6 +36,14 @@ it('renders without crashing', () => {
     </Provider>,
     div
   );
+
+  await wait();
+  await wait();
+  await wait();
+  await wait();
+  await wait();
+  await wait(); // these are due to TabScroller/TabIndicator
+
   ReactDOM.unmountComponentAtNode(div);
 });
 
@@ -48,9 +57,37 @@ it('shows dialogs in the queue', async () => {
     </Provider>
   );
 
-  alert({ title: 'wowah' });
+  await wait();
+  await wait();
+  await wait();
+  await wait();
+  await wait();
+  await wait();
+  await wait();
+  await wait();
+  await wait();
+  await wait();
+  await wait();
+  await wait();
+  await wait();
+  await wait();
+
+  act(() => {
+    alert({ title: 'wowah' });
+  });
 
   await wait();
+  await wait();
+  await wait();
+  await wait();
+  await wait();
+  await wait();
+  await wait();
+  await wait();
+  await wait();
+  await wait();
+  await wait();
+  await wait(); // just, sorry. TabScroller/TabIndicator animations
 
   expect(getByText('wowah')).not.toBeNull();
 });
