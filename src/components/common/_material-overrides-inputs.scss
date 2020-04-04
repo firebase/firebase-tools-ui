@@ -52,12 +52,31 @@ $mdc-select-outlined-hover-border: var(--fire-color-input-borders);
 @import '@material/select/dist/mdc.select';
 // @import '@rmwc/select/select'; // 6.0.9, when fixed
 
+// TODO: Cannot use mixins because the mixins deps are 6.0.9 and select is 5.7.2
 .mdc-select {
+  height: $input-height;
+
+  &.mdc-select--outlined {
+    .mdc-notched-outline {
+      @include notched-outline.color($mdc-select-outlined-idle-border);
+    }
+
+    &:not(.mdc-select--disabled) {
+      &:not(.mdc-select--focused) .mdc-select__native-control:hover ~,
+      &:not(.mdc-select--focused) .mdc-select__selected-text:hover ~ {
+        .mdc-notched-outline {
+          @include notched-outline.color($mdc-select-outlined-hover-border);
+        }
+      }
+    }
+  }
+
   .mdc-select__native-control,
   .mdc-select__selected-text {
-    padding: $input-default-padding; // base component doesnt do this yet
-    min-width: 0;
+    height: $input-height;
     line-height: normal;
+    min-width: 0;
+    padding: $input-default-padding; // base component doesnt do this yet
   }
 
   .mdc-select__dropdown-icon {
