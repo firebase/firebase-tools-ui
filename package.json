@@ -20,7 +20,7 @@
     "@rmwc/linear-progress": "^6.0.9",
     "@rmwc/list": "^6.0.9",
     "@rmwc/menu": "^6.0.9",
-    "@rmwc/select": "^6.0.9",
+    "@rmwc/select": "^5.7.2",
     "@rmwc/tabs": "^6.0.9",
     "@rmwc/textfield": "^6.0.9",
     "@rmwc/theme": "^6.0.9",

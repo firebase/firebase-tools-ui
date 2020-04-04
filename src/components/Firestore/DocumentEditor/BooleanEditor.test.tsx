@@ -27,9 +27,7 @@ it('renders an editor for a boolean', () => {
 
   expect(getByLabelText('Value').value).toBe('true');
 
-  fireEvent.change(getByLabelText('Value'), {
-    target: { value: 'false' },
-  });
+  fireEvent.change(getByLabelText('Value'), { target: { value: 'false' } });
 
   expect(onChange).toHaveBeenCalledWith(false);
 });

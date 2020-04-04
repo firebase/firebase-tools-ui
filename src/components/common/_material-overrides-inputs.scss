@@ -30,19 +30,27 @@ $input-height: 36px;
   $outlined-input-padding-bottom: $input-default-padding,
 );
 
-@use '@material/select/_index' as select with (
-  $height: $input-height,
-  $label-padding: $input-default-padding,
-  $arrow-padding: $input-default-padding,
-  $outline-label-offset: $input-default-padding,
-  $outlined-idle-border: var(--fire-color-input-borders),
-  $outlined-hover-border: var(--fire-color-input-borders),
-);
+// TODO: uncomment for 6.0.9, when fixed
+// @use '@material/select/_index' as select with (
+//   $height: $input-height,
+//   $label-padding: $input-default-padding,
+//   $arrow-padding: $input-default-padding,
+//   $outline-label-offset: $input-default-padding,
+//   $outlined-idle-border: var(--fire-color-input-borders),
+//   $outlined-hover-border: var(--fire-color-input-borders),
+// );
 
 @import './color';
 
-@import '@material/select/mdc-select';
-@import '@rmwc/select/select';
+// TODO: remove below for select 6.0.9
+$mdc-select-height: $input-height;
+$mdc-select-label-padding: $input-default-padding;
+$mdc-select-arrow-padding: $input-default-padding;
+$mdc-select-outline-label-offset: $input-default-padding;
+$mdc-select-outlined-idle-border: var(--fire-color-input-borders);
+$mdc-select-outlined-hover-border: var(--fire-color-input-borders);
+@import '@material/select/dist/mdc.select';
+// @import '@rmwc/select/select'; // 6.0.9, when fixed
 
 .mdc-select {
   .mdc-select__native-control,

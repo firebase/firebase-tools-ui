@@ -16,8 +16,9 @@
 
 import './Field.scss';
 
-import { Select, SelectHTMLProps, SelectProps } from '@rmwc/select';
+import { Select, SelectProps } from '@rmwc/select';
 import { TextField, TextFieldHTMLProps, TextFieldProps } from '@rmwc/textfield';
+import { HTMLProps } from '@rmwc/types';
 import { Typography } from '@rmwc/typography';
 import React, { useState } from 'react';
 
@@ -68,13 +69,15 @@ export const Field: React.FC<Props> = ({
   );
 };
 
-type SelectFieldProps = { tip?: string } & SelectProps & SelectHTMLProps;
+type SelectFieldProps = { tip?: string } & SelectProps &
+  HTMLProps<HTMLSelectElement>;
 
 export const SelectField: React.FC<SelectFieldProps> = ({
   label,
   // strip outlined bool, always use outlined
   outlined,
   tip,
+  theme, // TODO: 5.0 theme, incompatible with 6.0 remove at 6.0
   ...selectProps
 }) => {
   const [id] = useState(uuid());
