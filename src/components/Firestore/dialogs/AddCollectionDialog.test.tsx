@@ -105,6 +105,7 @@ describe('step 2', () => {
     act(() => getByText('Next').click());
 
     await wait();
+    await wait();
   });
 
   it('displays the parent collection path', () => {
