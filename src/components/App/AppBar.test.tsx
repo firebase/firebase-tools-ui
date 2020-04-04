@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { render } from '@testing-library/react';
+import { act, render, wait } from '@testing-library/react';
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
@@ -25,7 +25,7 @@ function isTabActive(labelEl: HTMLElement) {
   return tabEl.classList.contains('mdc-tab--active');
 }
 
-it('selects the matching nav-tab', () => {
+it('selects the matching nav-tab', async () => {
   const { getByText } = render(
     <MemoryRouter initialEntries={['/bar']}>
       <AppBar
@@ -48,6 +48,21 @@ it('selects the matching nav-tab', () => {
       />
     </MemoryRouter>
   );
+
+  await wait();
+  await wait();
+  await wait();
+  await wait();
+  await wait();
+  await wait();
+  await wait();
+  await wait();
+  await wait();
+  await wait();
+  await wait();
+  await wait();
+  await wait();
+  await wait(); // dont ask. Due to TabScroller doing stuff on requestAnimationFrame
 
   expect(isTabActive(getByText('foo'))).toBe(false);
   expect(isTabActive(getByText('bar'))).toBe(true);
