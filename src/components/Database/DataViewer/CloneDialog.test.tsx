@@ -38,7 +38,7 @@ const setup = () => {
   return { ref, parent, onComplete, getByLabelText, getByText, getByTestId };
 };
 
-it('fails when trying to clone the root', () => {
+it('fails when trying to clone the root', async () => {
   spyOn(console, 'error'); // hide expected errors
 
   const rootRef = fakeReference({
@@ -51,11 +51,15 @@ it('fails when trying to clone the root', () => {
   expect(() =>
     render(<CloneDialog onComplete={jest.fn()} realtimeRef={rootRef} />)
   ).toThrow();
+
+  await wait();
+  await wait(); // both are needed
 });
 
 it('shows a title with the key to clone', async () => {
   const { getByText } = setup();
   await wait();
+  await wait(); // both are needed
 
   expect(getByText(/Clone "to_clone"/)).not.toBeNull();
 });
@@ -64,6 +68,7 @@ it('defaults the new key field to <key>_copy', async () => {
   const { getByLabelText } = setup();
 
   await wait();
+  await wait(); // both are needed
 
   expect(getByLabelText(/New key:/).value).toBe('to_clone_copy');
 });
@@ -72,6 +77,7 @@ it('contains an input and json value for each field', async () => {
   const { getByLabelText } = setup();
 
   await wait();
+  await wait(); // both are needed
 
   expect(getByLabelText(/bool:/).value).toBe('true');
   expect(getByLabelText(/number:/).value).toBe('1234');
@@ -83,22 +89,29 @@ it('clones dialog data when the dialog is accepted', async () => {
   const { ref, parent, getByText, getByLabelText } = setup();
 
   await wait();
+  await wait(); // both are needed
 
   act(() => {
     fireEvent.change(getByLabelText('string:'), {
-      target: { value: '"new string"' },
+      target: {
+        value: '"new string"',
+      },
     });
   });
 
   act(() => {
     fireEvent.change(getByLabelText('number:'), {
-      target: { value: '12' },
+      target: {
+        value: '12',
+      },
     });
   });
 
   act(() => {
     fireEvent.change(getByLabelText('json:'), {
-      target: { value: '{"x": "y"}' },
+      target: {
+        value: '{"x": "y"}',
+      },
     });
   });
 
@@ -111,7 +124,9 @@ it('clones dialog data when the dialog is accepted', async () => {
     bool: true,
     number: 12,
     string: 'new string',
-    json: { x: 'y' },
+    json: {
+      x: 'y',
+    },
   });
 });
 
@@ -119,6 +134,7 @@ it('calls onComplete with new key value when accepted', async () => {
   const { getByText, onComplete } = setup();
 
   await wait();
+  await wait(); // both are needed
 
   act(() => {
     fireEvent.submit(getByText('Clone'));
@@ -131,6 +147,7 @@ it('does not set data when the dialog is cancelled', async () => {
   const { ref, getByText } = setup();
 
   await wait();
+  await wait(); // both are needed
 
   act(() => {
     getByText('Cancel').click();
@@ -143,6 +160,7 @@ it('calls onComplete with undefined when cancelled', async () => {
   const { getByText, onComplete } = setup();
 
   await wait();
+  await wait(); // both are needed
 
   act(() => getByText('Cancel').click());
 
