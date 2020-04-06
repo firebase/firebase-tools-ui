@@ -53,6 +53,7 @@ $mdc-select-outlined-hover-border: var(--fire-color-input-borders);
 // @import '@rmwc/select/select'; // 6.0.9, when fixed
 
 // TODO: Cannot use mixins because the mixins deps are 6.0.9 and select is 5.7.2
+// @link https://github.com/jamesmfriedman/rmwc/issues/596
 .mdc-select {
   height: $input-height;
 
