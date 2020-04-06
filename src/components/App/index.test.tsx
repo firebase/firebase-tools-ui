@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { render, wait } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { act } from 'react-dom/test-utils';
@@ -22,34 +22,31 @@ import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 
 import configureStore from '../../configureStore';
+import { delay, renderAndWait } from '../../test_utils';
 import { alert } from '../common/DialogQueue';
 import App from '.';
 
 it('renders without crashing', async () => {
   const div = document.createElement('div');
   const store = configureStore();
-  ReactDOM.render(
-    <Provider store={store}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </Provider>,
-    div
-  );
-
-  await wait();
-  await wait();
-  await wait();
-  await wait();
-  await wait();
-  await wait(); // these are due to TabScroller/TabIndicator
-
-  ReactDOM.unmountComponentAtNode(div);
+  await act(async () => {
+    ReactDOM.render(
+      <Provider store={store}>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </Provider>,
+      div
+    );
+    // Wait for async tab indicator changes.
+    await delay(100);
+    ReactDOM.unmountComponentAtNode(div);
+  });
 });
 
 it('shows dialogs in the queue', async () => {
   const store = configureStore();
-  const { getByText } = render(
+  const { getByText } = await renderAndWait(
     <Provider store={store}>
       <BrowserRouter>
         <App />
@@ -57,37 +54,9 @@ it('shows dialogs in the queue', async () => {
     </Provider>
   );
 
-  await wait();
-  await wait();
-  await wait();
-  await wait();
-  await wait();
-  await wait();
-  await wait();
-  await wait();
-  await wait();
-  await wait();
-  await wait();
-  await wait();
-  await wait();
-  await wait();
-
   act(() => {
     alert({ title: 'wowah' });
   });
-
-  await wait();
-  await wait();
-  await wait();
-  await wait();
-  await wait();
-  await wait();
-  await wait();
-  await wait();
-  await wait();
-  await wait();
-  await wait();
-  await wait(); // just, sorry. TabScroller/TabIndicator animations
 
   expect(getByText('wowah')).not.toBeNull();
 });

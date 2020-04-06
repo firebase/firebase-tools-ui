@@ -25,6 +25,7 @@ import { firestore } from 'firebase';
 import React from 'react';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 
+import { renderAndWait } from '../../../test_utils';
 import { fakeDocumentReference } from '../testing/models';
 import DocumentPreview from './index';
 
@@ -52,8 +53,9 @@ describe('loaded document', () => {
     ]);
     documentReference = fakeDocumentReference();
 
-    result = render(<DocumentPreview reference={documentReference} />);
-    await wait();
+    result = await renderAndWait(
+      <DocumentPreview reference={documentReference} />
+    );
   });
 
   it('adds a new field', () => {
