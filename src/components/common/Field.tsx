@@ -17,12 +17,15 @@
 import './Field.scss';
 
 import { Select, SelectProps } from '@rmwc/select';
-import { TextField, TextFieldProps } from '@rmwc/textfield';
-import { ComponentProps } from '@rmwc/types';
+import { TextField, TextFieldHTMLProps, TextFieldProps } from '@rmwc/textfield';
+import { HTMLProps } from '@rmwc/types';
 import { Typography } from '@rmwc/typography';
-import React from 'react';
+import React, { useState } from 'react';
 
-type Props = { tip?: string; error?: string } & ComponentProps & TextFieldProps;
+import { uuid } from './utils';
+
+type Props = { tip?: string; error?: string } & TextFieldProps &
+  TextFieldHTMLProps;
 
 export const Field: React.FC<Props> = ({
   label,
@@ -33,12 +36,25 @@ export const Field: React.FC<Props> = ({
   error,
   ...textFieldProps
 }) => {
+  const [id] = useState(uuid());
   return (
-    <label className="Field">
-      <Typography className="Field-label" use="body2" theme="secondary">
+    <div className="Field">
+      <Typography
+        className="Field-label"
+        use="body2"
+        theme="secondary"
+        tag="label"
+        htmlFor={id}
+      >
         {label}
       </Typography>
-      <TextField outlined invalid={!!error} {...textFieldProps} />
+      <TextField
+        outlined
+        invalid={!!error}
+        {...textFieldProps}
+        tag="div"
+        id={id}
+      />
       {tip && (
         <Typography className="Field-tip" use="body2" theme="secondary">
           {tip}
@@ -49,31 +65,40 @@ export const Field: React.FC<Props> = ({
           {error}
         </Typography>
       )}
-    </label>
+    </div>
   );
 };
 
-type SelectFieldProps = { tip?: string } & ComponentProps & SelectProps;
+type SelectFieldProps = { tip?: string } & SelectProps &
+  HTMLProps<HTMLSelectElement>;
 
 export const SelectField: React.FC<SelectFieldProps> = ({
   label,
   // strip outlined bool, always use outlined
   outlined,
   tip,
+  theme, // TODO: 5.0 theme, incompatible with 6.0 remove at 6.0
   ...selectProps
 }) => {
+  const [id] = useState(uuid());
   return (
-    <label className="Field">
-      <Typography className="Field-label" use="body2" theme="secondary">
+    <div className="Field">
+      <Typography
+        className="Field-label"
+        use="body2"
+        theme="secondary"
+        tag="label"
+        htmlFor={id}
+      >
         {label}
       </Typography>
-      <Select outlined {...selectProps} />
+      <Select outlined {...selectProps} id={id} />
       {tip && (
         <Typography className="Field-tip" use="body2" theme="secondary">
           {tip}
         </Typography>
       )}
       {/* TODO: Error text */}
-    </label>
+    </div>
   );
 };

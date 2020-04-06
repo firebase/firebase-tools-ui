@@ -61,7 +61,9 @@ export const InlineQuery = React.memo<Props>(function InlineQuery$({
     limit: `${limit}`,
   });
 
-  const updateField = (e: React.FormEvent<HTMLInputElement>) => {
+  const updateField = (
+    e: React.FormEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const target = e.target as HTMLInputElement;
     setValues({
       ...form,

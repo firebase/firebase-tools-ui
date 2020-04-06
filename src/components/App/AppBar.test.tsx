@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-import { render } from '@testing-library/react';
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
+import { renderAndWait } from '../../test_utils';
 import { AppBar } from './AppBar';
 
-function isTabActive(labelEl) {
-  const tabEl = labelEl.closest('.mdc-tab');
-  return tabEl.className.includes('mdc-tab--active');
+function isTabActive(labelEl: HTMLElement) {
+  const tabEl = labelEl.closest('.mdc-tab')!;
+  return tabEl.classList.contains('mdc-tab--active');
 }
 
-it('selects the matching nav-tab', () => {
-  const { getByText } = render(
+it('selects the matching nav-tab', async () => {
+  const { getByText } = await renderAndWait(
     <MemoryRouter initialEntries={['/bar']}>
       <AppBar
         routes={[
@@ -34,11 +34,15 @@ it('selects the matching nav-tab', () => {
             label: 'foo',
             path: '/foo',
             showInNav: true,
+            component: React.Fragment,
+            exact: false,
           },
           {
             label: 'bar',
             path: '/bar',
             showInNav: true,
+            component: React.Fragment,
+            exact: false,
           },
         ]}
       />

@@ -18,7 +18,7 @@ $page-gutter-size: 48px;
 
   // Make main part at least fill the rest of the viewport.
   // If for any reason this is undesirable for certain routes, use a nested grid
-  // like <GridCell span={12}><GridInner>Content</GridInner></GridCell> .
+  // like <GridCell span={12}><GridRow>Content</GridRow></GridCell> .
   > .mdc-layout-grid__inner {
     min-height: $app-remaining-viewport-height-for-content;
   }

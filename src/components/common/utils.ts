@@ -14,24 +14,13 @@
  * limitations under the License.
  */
 
-import React from 'react';
-
-import { SelectField } from '../../common/Field';
-
-const BooleanEditor: React.FC<{
-  value: boolean;
-  onChange: (value: boolean) => void;
-}> = ({ value, onChange }) => {
-  return (
-    <SelectField
-      label="Value"
-      value={value.toString()}
-      options={['true', 'false']}
-      onChange={e => {
-        onChange(e.currentTarget.value === 'true');
-      }}
-    />
-  );
-};
-
-export default BooleanEditor;
+/**
+ * UUID using web crypto.
+ *
+ * @link https://gist.github.com/jed/982883#gistcomment-45104
+ */
+export function uuid() {
+  return ('' + 1e7 + -1e3 + -4e3 + -8e3 + -1e11).replace(/1|0/g, function() {
+    return (0 | (Math.random() * 16)).toString(16);
+  });
+}

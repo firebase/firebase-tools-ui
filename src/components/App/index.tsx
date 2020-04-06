@@ -16,6 +16,7 @@
 
 import './index.scss';
 
+import { Portal } from '@rmwc/base';
 import { DialogQueue } from '@rmwc/dialog';
 import { Grid } from '@rmwc/grid';
 import { Theme } from '@rmwc/theme';
@@ -31,6 +32,7 @@ const App: React.FC = () => {
   return (
     <>
       <DialogQueue dialogs={dialogs} />
+      <Portal />
       <AppDisconnected />
       <Theme use="background" wrap>
         <div className="App">

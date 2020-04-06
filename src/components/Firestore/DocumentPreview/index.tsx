@@ -46,13 +46,17 @@ const DocumentPreview: React.FC<Props> = ({
   return (
     <>
       <DocumentProvider value={data as FirestoreMap}>
-        <List dense className="List-Actions Firestore-Document-Fields">
+        <List
+          dense
+          className="List-Actions Firestore-Document-Fields"
+          tag="div"
+        >
           {/* Actions */}
           <ListItem
             className="list-button"
-            tag={props => (
-              <Button dense label="Add field" icon="add" {...props} />
-            )}
+            tag={Button}
+            label="Add field"
+            {...{ dense: true, icon: 'add' }} // types get confused
             onClick={() => setIsAddingField(true)}
           ></ListItem>
 

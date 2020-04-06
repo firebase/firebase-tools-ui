@@ -137,6 +137,7 @@ it('emits id and parsed data when [Save] is clicked', async () => {
   act(() => getByText('Save').click());
 
   await wait();
+  await wait();
 
   expect(onValue).toHaveBeenCalledWith({
     id: 'new-document-id',
@@ -163,6 +164,7 @@ it('emits null when [Cancel] is clicked', async () => {
   act(() => getByText('Cancel').click());
 
   await wait();
+  await wait(); // gets rid of some act warning flakes (eww, sorry)
 
   expect(onValue).toHaveBeenCalledWith(null);
 });

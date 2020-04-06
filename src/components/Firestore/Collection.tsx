@@ -74,33 +74,24 @@ export const Collection: React.FC<Props> = ({ collection }) => {
             onClose={() => setAddDocumentDialogOpen(false)}
           />
         )}
-        <List dense className="List-Actions">
+        <List dense className="List-Actions" tag="div">
           <ListItem
             className="list-button"
-            tag={props => (
-              <Button
-                dense
-                label="Add document"
-                icon="add"
-                {...props}
-                onClick={() => setAddDocumentDialogOpen(true)}
-              />
-            )}
+            tag={Button}
+            label="Add document"
+            {...{ dense: true, icon: 'add' }} // types get confused
+            onClick={() => setAddDocumentDialogOpen(true)}
           ></ListItem>
         </List>
 
-        <List dense className="Firestore-Document-List">
+        <List dense className="Firestore-Document-List" tag="div">
           {docs.map(doc => (
             <ListItem
               key={doc.ref.id}
               className="Firestore-List-Item"
-              tag={props => (
-                <NavLink
-                  to={`${url}/${doc.ref.id}`}
-                  activeClassName="mdc-list-item--activated"
-                  {...props}
-                />
-              )}
+              tag={NavLink}
+              to={`${url}/${doc.ref.id}`}
+              activeClassName="mdc-list-item--activated"
             >
               {doc.ref.id}
             </ListItem>

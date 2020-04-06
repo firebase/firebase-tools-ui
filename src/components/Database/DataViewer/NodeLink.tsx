@@ -39,7 +39,8 @@ export const NodeLink = React.memo<Props>(function NodeLink$({
       className="NodeLink"
       use="body1"
       aria-label="Key name"
-      tag={props => <Link to={href} {...props} />}
+      tag={Link}
+      to={href}
     >
       {key}
     </Typography>

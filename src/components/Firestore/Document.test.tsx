@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { Portal } from '@rmwc/base';
 import { render } from '@testing-library/react';
 import React from 'react';
 import { useCollection, useDocumentData } from 'react-firebase-hooks/firestore';
@@ -30,6 +31,7 @@ it('shows the root-id', () => {
 
   const { getByText } = render(
     <MemoryRouter>
+      <Portal />
       <ApiProvider value={fakeFirestoreApi()}>
         <Root />
       </ApiProvider>
@@ -42,6 +44,7 @@ it('shows the root-id', () => {
 it('shows the document-id', () => {
   const { getByText } = render(
     <MemoryRouter>
+      <Portal />
       <ApiProvider value={fakeFirestoreApi()}>
         <Document reference={fakeDocumentReference({ id: 'my-stuff' })} />
       </ApiProvider>
@@ -54,6 +57,7 @@ it('shows the document-id', () => {
 it('shows the root collection-list', () => {
   const { getByTestId } = render(
     <MemoryRouter>
+      <Portal />
       <ApiProvider value={fakeFirestoreApi()}>
         <Root />
       </ApiProvider>
@@ -68,6 +72,7 @@ it('shows the document collection-list', () => {
 
   const { getByTestId } = render(
     <MemoryRouter>
+      <Portal />
       <ApiProvider value={fakeFirestoreApi()}>
         <Document reference={fakeDocumentReference()} />
       </ApiProvider>
@@ -83,6 +88,7 @@ it('shows the selected root-collection', () => {
 
   const { getByText, queryAllByText } = render(
     <MemoryRouter initialEntries={['//cool-coll-1']}>
+      <Portal />
       <ApiProvider value={fakeFirestoreApi()}>
         <Root />
       </ApiProvider>
@@ -98,6 +104,7 @@ it('shows the selected document-collection', () => {
 
   const { getByText, queryAllByText } = render(
     <MemoryRouter initialEntries={['//cool-coll-1']}>
+      <Portal />
       <ApiProvider value={fakeFirestoreApi()}>
         <Document reference={fakeDocumentReference()} />
       </ApiProvider>

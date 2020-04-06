@@ -1,5 +1,6 @@
 import { act, render } from '@testing-library/react';
 import React, { useState } from 'react';
+import { MemoryRouter } from 'react-router-dom';
 
 import { DatabaseContainer } from './DatabaseContainer';
 
@@ -12,7 +13,7 @@ it('renders prompt to refresh when new dbs are added', async () => {
       <DatabaseContainer
         primary="foo"
         current="bar"
-        navigation={db => <div data-testid={`nav-${db}`} />}
+        navigation={db => `/nav/${db}`}
         databasesSubscribe={() => {}}
         databasesUnsubscribe={() => {}}
         databases={databases}
@@ -20,7 +21,9 @@ it('renders prompt to refresh when new dbs are added', async () => {
     );
   };
   const { queryByTestId, getByTestId, getByText, queryByText } = render(
-    <DatabasesPickerTest />
+    <MemoryRouter>
+      <DatabasesPickerTest />
+    </MemoryRouter>
   );
 
   act(triggerAddDbs!);

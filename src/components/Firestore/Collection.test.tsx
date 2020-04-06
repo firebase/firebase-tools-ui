@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { Portal } from '@rmwc/base';
 import { act, render } from '@testing-library/react';
 import React from 'react';
 import { useCollection, useDocumentData } from 'react-firebase-hooks/firestore';
@@ -40,6 +41,7 @@ it('shows the list of documents in the collection', () => {
   const collectionReference = fakeCollectionReference({ id: 'my-stuff' });
   const { getByText, queryByText } = render(
     <MemoryRouter>
+      <Portal />
       <Collection collection={collectionReference} />
     </MemoryRouter>
   );
@@ -77,6 +79,7 @@ it('shows the selected sub-document', () => {
 
   const { getByText, queryAllByText } = render(
     <MemoryRouter initialEntries={['//cool-doc-1']}>
+      <Portal />
       <ApiProvider value={fakeFirestoreApi()}>
         <Collection collection={collectionReference} api={fakeFirestoreApi()} />
       </ApiProvider>

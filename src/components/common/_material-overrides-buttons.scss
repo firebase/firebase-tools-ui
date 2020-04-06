@@ -14,16 +14,19 @@
  * limitations under the License.
  */
 
-@import '@material/button/mixins';
+@use '@material/button';
+
+// export styles
+@use '@material/button/mdc-button';
 
 @import './components/common/radius';
 
 $FOCUS_OUTLINE_THICKNESS: 2px;
 
 .mdc-button {
-  @include mdc-button-shape-radius($BORDER_RADIUS_CARD);
+  @include button.shape-radius($BORDER_RADIUS_CARD);
+  @include button.horizontal-padding(16px); // no "dense" buttons
   text-transform: none;
-  padding: 0 16px; // default buttons should not be "dense"
 }
 
 // This is a helper mixin that selects a given button variation and applies the
@@ -88,15 +91,15 @@ $FOCUS_OUTLINE_THICKNESS: 2px;
       z-index: 2; // white text does not get darkened by ::after overlay
     }
 
-    &:before,
-    &:after {
+    :before,
+    :after {
       background-color: $bgColorHoverFocus;
       opacity: 0;
     }
 
     &:hover {
-      &:before,
-      &:after {
+      :before,
+      :after {
         opacity: 0.12;
       }
       box-shadow: $hairlineShadowHoverFocus;
@@ -107,8 +110,8 @@ $FOCUS_OUTLINE_THICKNESS: 2px;
     }
 
     &:active {
-      &:before,
-      &:after {
+      :before,
+      :after {
         opacity: 0.24;
       }
       box-shadow: $hairlineShadowActive;
@@ -178,14 +181,14 @@ $FOCUS_OUTLINE_THICKNESS: 2px;
   &:not(:disabled) {
     color: $foreColor;
 
-    &:before,
-    &:after {
+    :before,
+    :after {
       background-color: $bgColorHoverFocus;
     }
 
     &:hover {
-      &:before,
-      &:after {
+      :before,
+      :after {
         opacity: 0.12;
       }
     }
@@ -195,8 +198,8 @@ $FOCUS_OUTLINE_THICKNESS: 2px;
     }
 
     &:active {
-      &:before,
-      &:after {
+      :before,
+      :after {
         opacity: 0.24;
       }
     }

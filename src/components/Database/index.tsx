@@ -18,13 +18,7 @@ import './index.scss';
 
 import React from 'react';
 import { connect } from 'react-redux';
-import {
-  NavLink,
-  Redirect,
-  Route,
-  Switch,
-  useRouteMatch,
-} from 'react-router-dom';
+import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 
 import { createStructuredSelector } from '../../store';
 import { DatabaseConfig } from '../../store/config';
@@ -91,9 +85,7 @@ export const DatabaseRouteContent: React.FC<ContentProps> = ({
             <DatabaseContainer
               primary={primary}
               current={current}
-              navigation={db => (
-                <NavLink to={`${url}/${db}/data`}>{db}</NavLink>
-              )}
+              navigation={db => `${url}/${db}/data`}
             >
               <Database namespace={current} path={dbPath} config={config} />
             </DatabaseContainer>
