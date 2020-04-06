@@ -18,6 +18,7 @@ import { RenderResult, fireEvent, render, wait } from '@testing-library/react';
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 
+import { delay, renderAndWait } from '../../../test_utils';
 import DatabaseApi from '../api';
 import {
   fakeCollectionReference,
@@ -73,8 +74,8 @@ describe('step 1', () => {
     expect(getByLabelText(/Parent path/).value).toBe('docs/my-doc');
   });
 
-  it('contains a collection id input', () => {
-    const { getByLabelText } = render(
+  it('contains a collection id input', async () => {
+    const { getByLabelText } = await renderAndWait(
       <AddCollectionDialog open={true} api={api} onValue={() => {}} />
     );
 
@@ -88,7 +89,7 @@ describe('step 2', () => {
 
   beforeEach(async () => {
     onValue = jest.fn();
-    result = render(
+    result = await renderAndWait(
       <AddCollectionDialog
         open={true}
         api={api}
@@ -102,10 +103,11 @@ describe('step 2', () => {
       target: { value: 'my-col' },
     });
 
-    act(() => getByText('Next').click());
-
-    await wait();
-    await wait();
+    await act(async () => {
+      getByText('Next').click();
+      // Wait for async Dialogs DOM changes for the second step dialog.
+      await delay(100);
+    });
   });
 
   it('displays the parent collection path', () => {
