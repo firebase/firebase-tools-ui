@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-import { render, wait } from '@testing-library/react';
+import { act, render, wait } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Route, Router } from 'react-router-dom';
 
+import { renderAndWait } from '../../test_utils';
 import { useAutoSelect } from './useAutoSelect';
 
 interface TestData {
@@ -34,9 +35,9 @@ const EMPTY: Array<{ id: string }> = [];
 
 describe('useAutoSelect', () => {
   describe('at /firestore', () => {
-    it('does not redirect if the list is null', () => {
+    it('does not redirect if the list is null', async () => {
       const history = createMemoryHistory({ initialEntries: ['/firestore'] });
-      render(
+      await renderAndWait(
         <Router history={history}>
           <Route path="/firestore">
             <Test list={null} />
@@ -74,24 +75,23 @@ describe('useAutoSelect', () => {
 
     it('redirects to the first child', async () => {
       const history = createMemoryHistory({ initialEntries: ['/firestore'] });
-      render(
+      await renderAndWait(
         <Router history={history}>
           <Route path="/firestore">
             <Test list={WITH_CHILDREN} />
           </Route>
         </Router>
       );
-      await wait();
       expect(history.location.pathname).toBe('/firestore/first');
     });
   }); // at /firestore
 
   describe('at /firestore/:collectionId', () => {
-    it('does not redirect if the list is null', () => {
+    it('does not redirect if the list is null', async () => {
       const history = createMemoryHistory({
         initialEntries: ['/firestore/users'],
       });
-      render(
+      await renderAndWait(
         <Router history={history}>
           <Route path="/firestore/users">
             <Test list={null} />
@@ -101,11 +101,11 @@ describe('useAutoSelect', () => {
       expect(history.location.pathname).toBe('/firestore/users');
     });
 
-    it('does not redirect if there is nothing to select', () => {
+    it('does not redirect if there is nothing to select', async () => {
       const history = createMemoryHistory({
         initialEntries: ['/firestore/users'],
       });
-      render(
+      await renderAndWait(
         <Router history={history}>
           <Route path="/firestore/users">
             <Test list={EMPTY} />
@@ -115,11 +115,11 @@ describe('useAutoSelect', () => {
       expect(history.location.pathname).toBe('/firestore/users');
     });
 
-    it('does not redirect if there is something selected', () => {
+    it('does not redirect if there is something selected', async () => {
       const history = createMemoryHistory({
         initialEntries: ['/firestore/users/x'],
       });
-      render(
+      await renderAndWait(
         <Router history={history}>
           <Route path="/firestore/users">
             <Test list={EMPTY} />
@@ -133,24 +133,23 @@ describe('useAutoSelect', () => {
       const history = createMemoryHistory({
         initialEntries: ['/firestore/users'],
       });
-      render(
+      await renderAndWait(
         <Router history={history}>
           <Route path="/firestore/users">
             <Test list={WITH_CHILDREN} />
           </Route>
         </Router>
       );
-      await wait();
       expect(history.location.pathname).toBe('/firestore/users/first');
     });
   }); // at /firestore/:collectionId
 
   describe('elsewhere below /firestore/a/b/x', () => {
-    it('does not redirect if the list is null', () => {
+    it('does not redirect if the list is null', async () => {
       const history = createMemoryHistory({
         initialEntries: ['/firestore/users/alice/friends'],
       });
-      render(
+      await renderAndWait(
         <Router history={history}>
           <Route path="/firestore/users/alice/friends">
             <Test list={null} />
@@ -160,11 +159,11 @@ describe('useAutoSelect', () => {
       expect(history.location.pathname).toBe('/firestore/users/alice/friends');
     });
 
-    it('does not redirect if there is nothing to select', () => {
+    it('does not redirect if there is nothing to select', async () => {
       const history = createMemoryHistory({
         initialEntries: ['/firestore/users/alice/friends'],
       });
-      render(
+      await renderAndWait(
         <Router history={history}>
           <Route path="/firestore/users/alice/friends">
             <Test list={EMPTY} />
@@ -174,11 +173,11 @@ describe('useAutoSelect', () => {
       expect(history.location.pathname).toBe('/firestore/users/alice/friends');
     });
 
-    it('does not redirect if there is something selected', () => {
+    it('does not redirect if there is something selected', async () => {
       const history = createMemoryHistory({
         initialEntries: ['/firestore/users/alice/friends/x'],
       });
-      render(
+      await renderAndWait(
         <Router history={history}>
           <Route path="/firestore/users/alice/friends">
             <Test list={EMPTY} />
@@ -194,24 +193,23 @@ describe('useAutoSelect', () => {
       const history = createMemoryHistory({
         initialEntries: ['/firestore/users/alice/friends'],
       });
-      render(
+      await renderAndWait(
         <Router history={history}>
           <Route path="/firestore/users/alice/friends">
             <Test list={WITH_CHILDREN} />
           </Route>
         </Router>
       );
-      await wait();
       expect(history.location.pathname).toBe('/firestore/users/alice/friends');
     });
   }); // elsewhere below /firestore/a/b/x
 
   describe('other routes', () => {
-    it('does not redirect at /', () => {
+    it('does not redirect at /', async () => {
       const history = createMemoryHistory({
         initialEntries: ['/'],
       });
-      render(
+      await renderAndWait(
         <Router history={history}>
           <Route path="/">
             <Test list={EMPTY} />
@@ -220,11 +218,11 @@ describe('useAutoSelect', () => {
       );
       expect(history.location.pathname).toBe('/');
     });
-    it('does not redirect at /x', () => {
+    it('does not redirect at /x', async () => {
       const history = createMemoryHistory({
         initialEntries: ['/x'],
       });
-      render(
+      await renderAndWait(
         <Router history={history}>
           <Route path="/x">
             <Test list={EMPTY} />
@@ -233,11 +231,11 @@ describe('useAutoSelect', () => {
       );
       expect(history.location.pathname).toBe('/x');
     });
-    it('does not redirect at /x/y', () => {
+    it('does not redirect at /x/y', async () => {
       const history = createMemoryHistory({
         initialEntries: ['/x/y'],
       });
-      render(
+      await renderAndWait(
         <Router history={history}>
           <Route path="/x/y">
             <Test list={EMPTY} />
@@ -246,11 +244,11 @@ describe('useAutoSelect', () => {
       );
       expect(history.location.pathname).toBe('/x/y');
     });
-    it('does not redirect at /x/y/z', () => {
+    it('does not redirect at /x/y/z', async () => {
       const history = createMemoryHistory({
         initialEntries: ['/x/y/z'],
       });
-      render(
+      await renderAndWait(
         <Router history={history}>
           <Route path="/x/y/z">
             <Test list={EMPTY} />

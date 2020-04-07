@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { fireEvent, render, wait } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { fireEvent, wait } from '@testing-library/react';
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 
+import { renderDialog, waitForDialogsToClose } from '../../../test_utils';
 import {
   fakeCollectionReference,
   fakeDocumentReference,
@@ -36,58 +36,50 @@ const collectionReference = fakeCollectionReference({
 collectionReference.doc.mockReturnValue(docRef);
 
 it('shows correct title', async () => {
-  const { getByText } = render(
+  const { getByText } = await renderDialog(
     <AddDocumentDialog
       open={true}
       collectionRef={collectionReference}
       onValue={() => {}}
     />
   );
-
-  await wait();
 
   expect(getByText(/Add a document/)).not.toBeNull();
 });
 
 it('shows the (disabled) creation path', async () => {
-  const { getByLabelText } = render(
+  const { getByLabelText } = await renderDialog(
     <AddDocumentDialog
       open={true}
       collectionRef={collectionReference}
       onValue={() => {}}
     />
   );
-
-  await wait();
 
   expect(getByLabelText('Parent path').value).toBe('users/bob/my-stuff');
   expect(getByLabelText('Parent path').disabled).toBe(true);
 });
 
 it('auto generates an id', async () => {
-  const { getByLabelText } = render(
+  const { getByLabelText } = await renderDialog(
     <AddDocumentDialog
       open={true}
       collectionRef={collectionReference}
       onValue={() => {}}
     />
   );
-
-  await wait();
 
   expect(getByLabelText('Document ID').value).toBe('random-identifier');
 });
 
 it('provides a document-editor', async () => {
-  const { getByLabelText } = render(
+  const { getByLabelText } = await renderDialog(
     <AddDocumentDialog
       open={true}
       collectionRef={collectionReference}
       onValue={() => {}}
     />
   );
-
-  await wait();
 
   expect(getByLabelText('Field')).not.toBe(null);
 });
@@ -97,7 +89,7 @@ it('provides a document-editor', async () => {
 // reproducible in the actual GUI.
 it.skip('[Save] is disabled with invalid doc-data', async () => {
   const onValue = jest.fn();
-  const { getByText, getByLabelText } = render(
+  const { getByText, getByLabelText } = await renderDialog(
     <AddDocumentDialog
       open={true}
       collectionRef={collectionReference}
@@ -114,7 +106,7 @@ it.skip('[Save] is disabled with invalid doc-data', async () => {
 
 it('emits id and parsed data when [Save] is clicked', async () => {
   const onValue = jest.fn();
-  const { getByText, getByLabelText } = render(
+  const { getByText, getByLabelText } = await renderDialog(
     <AddDocumentDialog
       open={true}
       collectionRef={collectionReference}
@@ -136,8 +128,7 @@ it('emits id and parsed data when [Save] is clicked', async () => {
 
   act(() => getByText('Save').click());
 
-  await wait();
-  await wait();
+  await waitForDialogsToClose();
 
   expect(onValue).toHaveBeenCalledWith({
     id: 'new-document-id',
@@ -147,7 +138,7 @@ it('emits id and parsed data when [Save] is clicked', async () => {
 
 it('emits null when [Cancel] is clicked', async () => {
   const onValue = jest.fn();
-  const { getByText, getByLabelText } = render(
+  const { getByText, getByLabelText } = await renderDialog(
     <AddDocumentDialog
       open={true}
       collectionRef={collectionReference}
@@ -163,8 +154,7 @@ it('emits null when [Cancel] is clicked', async () => {
 
   act(() => getByText('Cancel').click());
 
-  await wait();
-  await wait(); // gets rid of some act warning flakes (eww, sorry)
+  await waitForDialogsToClose();
 
   expect(onValue).toHaveBeenCalledWith(null);
 });

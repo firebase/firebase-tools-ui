@@ -14,16 +14,10 @@
  * limitations under the License.
  */
 
-import {
-  RenderResult,
-  act,
-  fireEvent,
-  render,
-  wait,
-} from '@testing-library/react';
+import { act, fireEvent, render } from '@testing-library/react';
 import React from 'react';
 
-import { delay, renderAndWait } from '../../../test_utils';
+import { delay, renderDialog } from '../../../test_utils';
 import { fakeReference } from '../testing/models';
 import { CloneDialog } from './CloneDialog';
 
@@ -39,7 +33,7 @@ const setup = async () => {
   ref.child.mockReturnValue(ref);
   parent.child.mockReturnValue(ref);
 
-  const { getByText, getByLabelText, getByTestId } = await renderAndWait(
+  const { getByText, getByLabelText, getByTestId } = await renderDialog(
     <CloneDialog onComplete={onComplete} realtimeRef={ref} />
   );
   return { ref, parent, onComplete, getByLabelText, getByText, getByTestId };
@@ -108,8 +102,9 @@ it('clones dialog data when the dialog is accepted', async () => {
     });
   });
 
-  act(() => {
+  await act(async () => {
     fireEvent.submit(getByText('Clone'));
+    await delay(100); // Wait for the dialog DOM changes to settle.
   });
 
   expect(parent.child).toHaveBeenCalledWith('to_clone_copy');

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { render } from '@testing-library/react';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { act } from 'react-dom/test-utils';
@@ -22,7 +21,7 @@ import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 
 import configureStore from '../../configureStore';
-import { delay, renderAndWait } from '../../test_utils';
+import { delay, renderAndWait, waitForDialogsToOpen } from '../../test_utils';
 import { alert } from '../common/DialogQueue';
 import App from '.';
 
@@ -57,6 +56,8 @@ it('shows dialogs in the queue', async () => {
   act(() => {
     alert({ title: 'wowah' });
   });
+
+  await waitForDialogsToOpen();
 
   expect(getByText('wowah')).not.toBeNull();
 });

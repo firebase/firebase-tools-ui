@@ -18,7 +18,11 @@ import { RenderResult, fireEvent, render, wait } from '@testing-library/react';
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 
-import { delay, renderAndWait } from '../../../test_utils';
+import {
+  delay,
+  renderDialog,
+  waitForDialogsToClose,
+} from '../../../test_utils';
 import DatabaseApi from '../api';
 import {
   fakeCollectionReference,
@@ -61,8 +65,8 @@ it('shows correct title', () => {
 });
 
 describe('step 1', () => {
-  it('displays the parent document path', () => {
-    const { getByLabelText } = render(
+  it('displays the parent document path', async () => {
+    const { getByLabelText } = await renderDialog(
       <AddCollectionDialog
         open={true}
         api={api}
@@ -75,7 +79,7 @@ describe('step 1', () => {
   });
 
   it('contains a collection id input', async () => {
-    const { getByLabelText } = await renderAndWait(
+    const { getByLabelText } = await renderDialog(
       <AddCollectionDialog open={true} api={api} onValue={() => {}} />
     );
 
@@ -89,7 +93,7 @@ describe('step 2', () => {
 
   beforeEach(async () => {
     onValue = jest.fn();
-    result = await renderAndWait(
+    result = await renderDialog(
       <AddCollectionDialog
         open={true}
         api={api}
@@ -151,8 +155,7 @@ describe('step 2', () => {
     });
 
     act(() => getByText('Save').click());
-
-    await wait();
+    await waitForDialogsToClose();
 
     expect(onValue).toHaveBeenCalledWith({
       collectionId: 'my-col',
@@ -167,16 +170,15 @@ describe('step 2', () => {
     const { getByText } = result;
 
     act(() => getByText('Cancel').click());
-
-    await wait();
+    await waitForDialogsToClose();
 
     expect(onValue).toHaveBeenCalledWith(null);
   });
 }); // step 2
 
 describe('at the root of the db', () => {
-  it('shows the correct parent path', () => {
-    const { getByLabelText } = render(
+  it('shows the correct parent path', async () => {
+    const { getByLabelText } = await renderDialog(
       <AddCollectionDialog open={true} api={api} onValue={() => {}} />
     );
 

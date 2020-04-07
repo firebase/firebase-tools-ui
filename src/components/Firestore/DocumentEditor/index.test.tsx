@@ -190,8 +190,7 @@ describe('changing types', () => {
     await act(async () => {
       setType(FieldType.ARRAY);
     });
-    await wait();
-    expect(getAllByText('add').length).toBe(2);
+    await wait(() => expect(getAllByText('add').length).toBe(2));
   });
 
   it('switches to a boolean', async () => {
