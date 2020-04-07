@@ -16,13 +16,12 @@
 
 import './Field.scss';
 
+import { randomId } from '@rmwc/base';
 import { Select, SelectProps } from '@rmwc/select';
 import { TextField, TextFieldHTMLProps, TextFieldProps } from '@rmwc/textfield';
 import { HTMLProps } from '@rmwc/types';
 import { Typography } from '@rmwc/typography';
 import React, { useState } from 'react';
-
-import { uuid } from './utils';
 
 type Props = { tip?: string; error?: string } & TextFieldProps &
   TextFieldHTMLProps;
@@ -36,7 +35,7 @@ export const Field: React.FC<Props> = ({
   error,
   ...textFieldProps
 }) => {
-  const [id] = useState(uuid());
+  const [id] = useState(randomId());
   return (
     <div className="Field">
       <Typography
@@ -80,7 +79,7 @@ export const SelectField: React.FC<SelectFieldProps> = ({
   theme, // TODO: 5.0 theme, incompatible with 6.0 remove at 6.0
   ...selectProps
 }) => {
-  const [id] = useState(uuid());
+  const [id] = useState(randomId());
   return (
     <div className="Field">
       <Typography
