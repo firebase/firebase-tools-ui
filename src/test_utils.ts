@@ -36,18 +36,6 @@ export function delay(timeoutMs: number): Promise<void> {
  * - For Dialogs, use renderDialog or waitForDialogsToOpen/Close instead.
  * - To test components that change state based on Promises, use makeDeferred().
  */
-export async function renderAndWait(
-  ui: React.ReactElement,
-  options?: Omit<RenderOptions, 'queries'>
-): Promise<RenderResult> {
-  let renderResult: RenderResult;
-  await act(async () => {
-    renderResult = render(ui, options);
-    // Silence warnings caused by async DOM updates.
-    await delay(200);
-  });
-  return renderResult!;
-}
 
 /**
  * Wait for MDC dialogs to be fully open, so no DOM changes happen outside

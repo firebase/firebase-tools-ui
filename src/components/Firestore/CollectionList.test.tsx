@@ -18,7 +18,7 @@ import { act, render, wait } from '@testing-library/react';
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
-import { makeDeferred, renderAndWait } from '../../test_utils';
+import { delay, makeDeferred } from '../../test_utils';
 import DatabaseApi from './api';
 import { ApiProvider } from './ApiContext';
 import CollectionList from './CollectionList';
@@ -58,13 +58,15 @@ it('shows the list of collections', async () => {
 it('requests root-collections with no docRef', async () => {
   const fakeApi = new DatabaseApi();
 
-  await renderAndWait(
+  render(
     <MemoryRouter>
       <ApiProvider value={fakeApi}>
         <CollectionList />
       </ApiProvider>
     </MemoryRouter>
   );
+
+  await act(() => delay(100)); // Give it some time to call getCollections.
 
   expect(fakeApi.getCollections).toHaveBeenCalledWith(undefined);
 });
@@ -73,13 +75,15 @@ it('requests sub-collections with docRef', async () => {
   const fakeApi = new DatabaseApi();
   const fakeDocRef = fakeDocumentReference();
 
-  await renderAndWait(
+  render(
     <MemoryRouter>
       <ApiProvider value={fakeApi}>
         <CollectionList reference={fakeDocRef} />
       </ApiProvider>
     </MemoryRouter>
   );
+
+  await act(() => delay(100)); // Give it some time to call getCollections.
 
   expect(fakeApi.getCollections).toHaveBeenCalledWith(fakeDocRef);
 });

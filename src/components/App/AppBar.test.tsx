@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
+import { render } from '@testing-library/react';
 import React from 'react';
+import { act } from 'react-dom/test-utils';
 import { MemoryRouter } from 'react-router-dom';
 
-import { renderAndWait } from '../../test_utils';
+import { delay } from '../../test_utils';
 import { AppBar } from './AppBar';
 
 function isTabActive(labelEl: HTMLElement) {
@@ -26,7 +28,7 @@ function isTabActive(labelEl: HTMLElement) {
 }
 
 it('selects the matching nav-tab', async () => {
-  const { getByText } = await renderAndWait(
+  const { getByText } = render(
     <MemoryRouter initialEntries={['/bar']}>
       <AppBar
         routes={[
@@ -48,6 +50,8 @@ it('selects the matching nav-tab', async () => {
       />
     </MemoryRouter>
   );
+
+  await act(() => delay(300)); // Wait for tab indicator async DOM updates.
 
   expect(isTabActive(getByText('foo'))).toBe(false);
   expect(isTabActive(getByText('bar'))).toBe(true);
