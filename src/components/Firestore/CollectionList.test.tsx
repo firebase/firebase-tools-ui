@@ -37,7 +37,7 @@ it('shows the list of collections', async () => {
   const getCollections = makeDeferred<FakeCollectionReference[]>();
   fakeApi.getCollections.mockReturnValueOnce(getCollections.promise);
 
-  const { getByText } = await render(
+  const { getByText } = render(
     <MemoryRouter>
       <ApiProvider value={fakeApi}>
         <CollectionList />
