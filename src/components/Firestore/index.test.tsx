@@ -85,15 +85,11 @@ describe('Firestore', () => {
     DatabaseApi.prototype.getCollections.mockReturnValue(
       getCollections.promise
     );
-    let renderResult!: RenderResult;
-    act(() => {
-      renderResult = render(
-        <MemoryRouter>
-          <Firestore config={sampleConfig} projectId={'foo'} />
-        </MemoryRouter>
-      );
-    });
-    const { getByText, queryByText } = renderResult;
+    const { getByText, queryByText } = render(
+      <MemoryRouter>
+        <Firestore config={sampleConfig} projectId={'foo'} />
+      </MemoryRouter>
+    );
 
     await act(() =>
       getCollections.resolve([fakeCollectionReference({ id: 'cool-coll' })])
