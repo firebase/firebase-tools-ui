@@ -14,18 +14,11 @@
  * limitations under the License.
  */
 
-import {
-  RenderResult,
-  act,
-  fireEvent,
-  render,
-  wait,
-} from '@testing-library/react';
+import { RenderResult, act, fireEvent, render } from '@testing-library/react';
 import { firestore } from 'firebase';
 import React from 'react';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 
-import { renderAndWait } from '../../../test_utils';
 import { fakeDocumentReference } from '../testing/models';
 import DocumentPreview from './index';
 
@@ -53,9 +46,7 @@ describe('loaded document', () => {
     ]);
     documentReference = fakeDocumentReference();
 
-    result = await renderAndWait(
-      <DocumentPreview reference={documentReference} />
-    );
+    result = render(<DocumentPreview reference={documentReference} />);
   });
 
   it('adds a new field', () => {

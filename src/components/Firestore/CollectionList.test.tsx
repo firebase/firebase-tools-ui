@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-import { render, wait } from '@testing-library/react';
+import { act, render, wait } from '@testing-library/react';
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
+import { delay, makeDeferred } from '../../test_utils';
 import DatabaseApi from './api';
 import { ApiProvider } from './ApiContext';
 import CollectionList from './CollectionList';
 import {
+  FakeCollectionReference,
   fakeCollectionReference,
   fakeDocumentReference,
   fakeDocumentSnapshot,
@@ -32,12 +34,10 @@ jest.mock('./api');
 
 it('shows the list of collections', async () => {
   const fakeApi = new DatabaseApi();
-  fakeApi.getCollections.mockResolvedValueOnce([
-    fakeCollectionReference({ id: 'coll-1' }),
-    fakeCollectionReference({ id: 'coll-2' }),
-  ]);
+  const getCollections = makeDeferred<FakeCollectionReference[]>();
+  fakeApi.getCollections.mockReturnValueOnce(getCollections.promise);
 
-  const { getByText, queryByText } = render(
+  const { getByText } = render(
     <MemoryRouter>
       <ApiProvider value={fakeApi}>
         <CollectionList />
@@ -45,8 +45,12 @@ it('shows the list of collections', async () => {
     </MemoryRouter>
   );
 
-  await wait();
-
+  await act(() =>
+    getCollections.resolve([
+      fakeCollectionReference({ id: 'coll-1' }),
+      fakeCollectionReference({ id: 'coll-2' }),
+    ])
+  );
   expect(getByText(/coll-1/)).not.toBeNull();
   expect(getByText(/coll-2/)).not.toBeNull();
 });
@@ -54,7 +58,7 @@ it('shows the list of collections', async () => {
 it('requests root-collections with no docRef', async () => {
   const fakeApi = new DatabaseApi();
 
-  const { getByText, queryByText } = render(
+  render(
     <MemoryRouter>
       <ApiProvider value={fakeApi}>
         <CollectionList />
@@ -62,7 +66,7 @@ it('requests root-collections with no docRef', async () => {
     </MemoryRouter>
   );
 
-  await wait();
+  await act(() => delay(100)); // Give it some time to call getCollections.
 
   expect(fakeApi.getCollections).toHaveBeenCalledWith(undefined);
 });
@@ -71,7 +75,7 @@ it('requests sub-collections with docRef', async () => {
   const fakeApi = new DatabaseApi();
   const fakeDocRef = fakeDocumentReference();
 
-  const { getByText, queryByText } = render(
+  render(
     <MemoryRouter>
       <ApiProvider value={fakeApi}>
         <CollectionList reference={fakeDocRef} />
@@ -79,7 +83,7 @@ it('requests sub-collections with docRef', async () => {
     </MemoryRouter>
   );
 
-  await wait();
+  await act(() => delay(100)); // Give it some time to call getCollections.
 
   expect(fakeApi.getCollections).toHaveBeenCalledWith(fakeDocRef);
 });

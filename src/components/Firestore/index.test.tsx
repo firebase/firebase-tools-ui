@@ -14,15 +14,19 @@
  * limitations under the License.
  */
 
-import { act, render, wait } from '@testing-library/react';
+import { RenderResult, act, render, wait } from '@testing-library/react';
 import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 
 import { FirestoreConfig } from '../../store/config';
+import { makeDeferred } from '../../test_utils';
 import { confirm } from '../common/DialogQueue';
 import DatabaseApi from './api';
 import { Firestore, FirestoreRoute } from './index';
-import { fakeCollectionReference } from './testing/models';
+import {
+  FakeCollectionReference,
+  fakeCollectionReference,
+} from './testing/models';
 
 jest.mock('./api');
 jest.mock('../common/DialogQueue');
@@ -77,16 +81,19 @@ describe('FirestoreRoute', () => {
 
 describe('Firestore', () => {
   it('shows the top-level collections', async () => {
-    DatabaseApi.prototype.getCollections.mockResolvedValue([
-      fakeCollectionReference({ id: 'cool-coll' }),
-    ]);
+    let getCollections = makeDeferred<FakeCollectionReference[]>();
+    DatabaseApi.prototype.getCollections.mockReturnValue(
+      getCollections.promise
+    );
     const { getByText, queryByText } = render(
       <MemoryRouter>
         <Firestore config={sampleConfig} projectId={'foo'} />
       </MemoryRouter>
     );
 
-    await wait();
+    await act(() =>
+      getCollections.resolve([fakeCollectionReference({ id: 'cool-coll' })])
+    );
 
     expect(queryByText(/Connecting to Firestore/)).toBeNull();
     expect(getByText(/cool-coll/)).not.toBeNull();
@@ -94,12 +101,8 @@ describe('Firestore', () => {
 
   it('triggers clearing all data', async () => {
     confirm.mockResolvedValueOnce(true);
-    let nukeResolve;
-    const nukeSpy = jest
-      .fn()
-      .mockImplementation(
-        () => new Promise(resolve => (nukeResolve = resolve))
-      );
+    const nuke = makeDeferred<void>();
+    const nukeSpy = jest.fn().mockReturnValueOnce(nuke.promise);
 
     DatabaseApi.mockImplementationOnce(() => ({
       getCollections: jest.fn(),
@@ -120,20 +123,18 @@ describe('Firestore', () => {
 
     act(() => getByText('Clear all data').click());
 
-    await wait();
-
-    expect(nukeSpy).toHaveBeenCalled();
+    await wait(() => expect(nukeSpy).toHaveBeenCalled());
     expect(getByTestId('firestore-loading')).not.toBeNull();
 
-    nukeResolve();
-    await wait();
+    await act(() => nuke.resolve());
 
     expect(queryByTestId('firestore-loading')).toBeNull();
     expect(getByTestId('ROOT')).not.toBeNull();
   });
 
   it('does not trigger clearing all data if dialog is not confirmed', async () => {
-    confirm.mockResolvedValueOnce(false);
+    const confirmDeferred = makeDeferred<boolean>();
+    confirm.mockReturnValueOnce(confirmDeferred.promise);
     const nukeSpy = jest.fn();
 
     DatabaseApi.mockImplementationOnce(() => ({
@@ -150,7 +151,8 @@ describe('Firestore', () => {
 
     act(() => getByText('Clear all data').click());
 
-    await wait();
+    // Simulate the case where user clicked on Cancel in the confirm dialog.
+    await act(() => confirmDeferred.resolve(false));
 
     expect(nukeSpy).not.toHaveBeenCalled();
   });

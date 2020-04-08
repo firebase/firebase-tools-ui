@@ -22,7 +22,7 @@ import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 
 import configureStore from '../../configureStore';
-import { delay, renderAndWait } from '../../test_utils';
+import { delay, waitForDialogsToOpen } from '../../test_utils';
 import { alert } from '../common/DialogQueue';
 import App from '.';
 
@@ -46,7 +46,7 @@ it('renders without crashing', async () => {
 
 it('shows dialogs in the queue', async () => {
   const store = configureStore();
-  const { getByText } = await renderAndWait(
+  const { getByText } = render(
     <Provider store={store}>
       <BrowserRouter>
         <App />
@@ -54,9 +54,13 @@ it('shows dialogs in the queue', async () => {
     </Provider>
   );
 
+  await act(() => delay(100)); // Wait for tab indicator async DOM updates.
+
   act(() => {
     alert({ title: 'wowah' });
   });
+
+  await waitForDialogsToOpen();
 
   expect(getByText('wowah')).not.toBeNull();
 });
