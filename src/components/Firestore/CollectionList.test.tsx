@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { act, render, wait } from '@testing-library/react';
+import { act, fireEvent, render, wait } from '@testing-library/react';
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, Route } from 'react-router-dom';
 
 import { delay, makeDeferred } from '../../test_utils';
 import DatabaseApi from './api';
@@ -86,4 +86,85 @@ it('requests sub-collections with docRef', async () => {
   await act(() => delay(100)); // Give it some time to call getCollections.
 
   expect(fakeApi.getCollections).toHaveBeenCalledWith(fakeDocRef);
+});
+
+it('triggers a redirect to a new collection at the root', async () => {
+  const fakeApi = new DatabaseApi();
+  const documentRef = fakeDocumentReference({ id: 'foo' });
+  const collectionRef = fakeCollectionReference({
+    id: 'abc',
+    doc: () => documentRef,
+  });
+  fakeApi.getCollections.mockReturnValueOnce([]);
+  fakeApi.database = {
+    collection: () => collectionRef,
+  };
+
+  const { getByText, getByLabelText } = render(
+    <MemoryRouter initialEntries={['/firestore/parent']}>
+      <ApiProvider value={fakeApi}>
+        <CollectionList />
+        <Route path="/firestore/abc">_redirected_to_foo_</Route>
+      </ApiProvider>
+    </MemoryRouter>
+  );
+
+  act(() => getByText(/Start collection/).click());
+
+  await act(async () => {
+    fireEvent.change(getByLabelText(/Collection ID/), {
+      target: { value: 'abc' },
+    });
+  });
+
+  act(() => getByText(/Next/).click());
+
+  await act(async () => {
+    getByText(/delete/).click();
+
+    getByText(/Save/).click();
+  });
+
+  expect(getByText(/abc/)).not.toBeNull();
+  expect(getByText(/_redirected_to_foo/)).not.toBeNull();
+});
+
+it('triggers a redirect to a new collection in a document', async () => {
+  debugger;
+  const fakeApi = new DatabaseApi();
+  const wantDoc = fakeDocumentReference({ id: 'abc' });
+  const parentDocumentRef = fakeDocumentReference({
+    id: 'parent',
+    path: 'parent',
+    collectionDoc: () => wantDoc,
+  });
+  fakeApi.getCollections.mockReturnValueOnce([]);
+
+  const { getByText, getByLabelText } = render(
+    <MemoryRouter>
+      <ApiProvider value={fakeApi}>
+        <CollectionList reference={parentDocumentRef} />
+      </ApiProvider>
+      <Route path="/firestore/parent/abc">_redirected_to_foo_</Route>
+    </MemoryRouter>
+  );
+
+  act(() => getByText(/Start collection/).click());
+
+  await act(async () => {
+    fireEvent.change(getByLabelText(/Collection ID/), {
+      target: { value: wantDoc.id },
+    });
+  });
+
+  act(() => getByText(/Next/).click());
+
+  await act(async () => {
+    getByText(/delete/).click();
+
+    getByText(/Save/).click();
+  });
+
+  expect(getByText(/abc/)).not.toBeNull();
+  expect(getByText(/_redirected_to_foo/)).not.toBeNull();
 });

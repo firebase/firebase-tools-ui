@@ -5,6 +5,7 @@ import { FirestoreApi } from '../models';
 export function fakeDocumentReference({
   id = '',
   path = '',
+  collectionDoc = () => {},
 } = {}): firestore.DocumentReference {
   return ({
     id,
@@ -13,8 +14,10 @@ export function fakeDocumentReference({
       fakeCollectionReference({
         id: collectionPath,
         path: `${path}/${collectionPath}`,
+        doc: collectionDoc,
       }),
     update: jest.fn(),
+    set: jest.fn(),
   } as unknown) as firestore.DocumentReference;
 }
 
