@@ -26,21 +26,22 @@ import { Elevation } from '@rmwc/elevation';
 import React, { useState } from 'react';
 
 import DocumentEditor from '../DocumentEditor';
-import { FirestoreAny, FirestoreMap } from '../models';
+import { FirestoreAny } from '../models';
 
 /** Editor entry point for a selected field */
 const InlineEditor: React.FC<{
-  value: FirestoreMap;
+  value: FirestoreAny;
   onCancel: () => void;
   onSave: (key: string, value: FirestoreAny) => void;
   areRootKeysMutable: boolean;
   rtdb?: boolean;
-}> = ({ value, onCancel, onSave, areRootKeysMutable, rtdb }) => {
+  startingIndex?: number;
+}> = ({ value, onCancel, onSave, areRootKeysMutable, rtdb, startingIndex }) => {
   const [internalValue, setInternalValue] = useState<
-    FirestoreMap | undefined
+    FirestoreAny | undefined
   >();
 
-  function handleChange(value: FirestoreMap | undefined) {
+  function handleChange(value: FirestoreAny | undefined) {
     setInternalValue(value);
   }
 
@@ -65,6 +66,7 @@ const InlineEditor: React.FC<{
             areRootNamesMutable={areRootKeysMutable}
             areRootFieldsMutable={false}
             rtdb={rtdb}
+            startingIndex={startingIndex}
           />
         </div>
         <CardActions className="Firestore-InlineEditorActions">

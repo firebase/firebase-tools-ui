@@ -93,12 +93,14 @@ const DocumentEditor: React.FC<{
   areRootNamesMutable?: boolean;
   areRootFieldsMutable?: boolean;
   rtdb?: boolean;
+  startingIndex?: number;
 }> = ({
   value,
   onChange,
   areRootNamesMutable,
   areRootFieldsMutable,
   rtdb = false,
+  startingIndex,
 }) => {
   const initialState = normalize(value);
   const [store, dispatch] = React.useReducer(storeReducer, initialState);
@@ -134,6 +136,7 @@ const DocumentEditor: React.FC<{
                   isRtdb={rtdb}
                   areNamesMutable={areRootNamesMutable}
                   areFieldsMutable={areRootFieldsMutable}
+                  startingIndex={startingIndex}
                 />
               )}
             </>
@@ -152,7 +155,14 @@ const FieldEditor: React.FC<{
   isRtdb: boolean;
   areNamesMutable?: boolean;
   areFieldsMutable?: boolean;
-}> = ({ uuid, isRtdb, areNamesMutable = true, areFieldsMutable = true }) => {
+  startingIndex?: number;
+}> = ({
+  uuid,
+  isRtdb,
+  areNamesMutable = true,
+  areFieldsMutable = true,
+  startingIndex = 0,
+}) => {
   const store = useStore();
   const dispatch = useDispatch();
   const field = useField(uuid);
@@ -217,7 +227,11 @@ const FieldEditor: React.FC<{
               <div className="DocumentEditor-ArrayEntry" key={c.uuid}>
                 <div className="DocumentEditor-ArrayEntryMetadata">
                   <div className="DocumentEditor-ArrayIndex">
-                    <Field value={index} label="Index" disabled />
+                    <Field
+                      value={index + startingIndex}
+                      label="Index"
+                      disabled
+                    />
                   </div>
                   <span className="Document-TypeSymbol">=</span>
                   <ChildTypeSelect uuid={c.valueId} isRtdb={isRtdb} />
