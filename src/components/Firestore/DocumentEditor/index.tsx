@@ -94,6 +94,7 @@ const DocumentEditor: React.FC<{
   areRootFieldsMutable?: boolean;
   rtdb?: boolean;
   startingIndex?: number;
+  supportNestedArrays?: boolean;
 }> = ({
   value,
   onChange,
@@ -101,6 +102,7 @@ const DocumentEditor: React.FC<{
   areRootFieldsMutable,
   rtdb = false,
   startingIndex,
+  supportNestedArrays,
 }) => {
   const initialState = normalize(value);
   const [store, dispatch] = React.useReducer(storeReducer, initialState);
@@ -137,6 +139,7 @@ const DocumentEditor: React.FC<{
                   areNamesMutable={areRootNamesMutable}
                   areFieldsMutable={areRootFieldsMutable}
                   startingIndex={startingIndex}
+                  supportNestedArrays={supportNestedArrays}
                 />
               )}
             </>
@@ -156,12 +159,14 @@ const FieldEditor: React.FC<{
   areNamesMutable?: boolean;
   areFieldsMutable?: boolean;
   startingIndex?: number;
+  supportNestedArrays?: boolean;
 }> = ({
   uuid,
   isRtdb,
   areNamesMutable = true,
   areFieldsMutable = true,
   startingIndex = 0,
+  supportNestedArrays = true,
 }) => {
   const store = useStore();
   const dispatch = useDispatch();
@@ -234,7 +239,11 @@ const FieldEditor: React.FC<{
                     />
                   </div>
                   <span className="Document-TypeSymbol">=</span>
-                  <ChildTypeSelect uuid={c.valueId} isRtdb={isRtdb} />
+                  <ChildTypeSelect
+                    uuid={c.valueId}
+                    isRtdb={isRtdb}
+                    blacklist={!supportNestedArrays ? [FieldType.ARRAY] : []}
+                  />
                 </div>
                 <FieldEditor uuid={c.valueId} isRtdb={isRtdb} />
                 {areFieldsMutable && (
@@ -316,15 +325,20 @@ const FieldEditor: React.FC<{
 const ChildTypeSelect: React.FC<{
   uuid: number;
   isRtdb: boolean;
-}> = ({ uuid, isRtdb }) => {
+  blacklist?: FieldType[];
+}> = ({ uuid, isRtdb, blacklist = [] }) => {
   const field = useField(uuid);
   const dispatch = useDispatch();
+
+  const options = (isRtdb ? RTDB_FIELD_TYPES : FIRESTORE_FIELD_TYPES).filter(
+    fieldType => !blacklist.includes(fieldType)
+  );
 
   return (
     <SelectField
       label="Type"
       outlined
-      options={isRtdb ? RTDB_FIELD_TYPES : FIRESTORE_FIELD_TYPES}
+      options={options}
       value={getDocumentFieldType(field)}
       onChange={e => {
         dispatch(

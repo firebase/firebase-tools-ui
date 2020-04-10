@@ -67,6 +67,7 @@ const InlineEditor: React.FC<{
             areRootFieldsMutable={false}
             rtdb={rtdb}
             startingIndex={startingIndex}
+            supportNestedArrays={false}
           />
         </div>
         <CardActions className="Firestore-InlineEditorActions">
