@@ -174,7 +174,7 @@ describe('loaded array', () => {
     const { getByLabelText, getByText, queryAllByText } = result;
     // update the bravo-element
     await act(async () => queryAllByText('edit')[1].click());
-    expect(getByLabelText('Field').disabled).toBe(true);
+    expect(getByLabelText('Index').disabled).toBe(true);
   });
 
   it('updates a top-level array element', () => {
@@ -217,6 +217,9 @@ describe('loaded array', () => {
     const { getByLabelText, getByText, queryAllByText } = result;
     // ignore top-level add
     queryAllByText('add')[1].click();
+
+    expect(getByLabelText('Index').value).toBe('4');
+
     fireEvent.change(getByLabelText('Value'), {
       target: { value: 'new' },
     });
