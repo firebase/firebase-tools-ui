@@ -93,12 +93,16 @@ const DocumentEditor: React.FC<{
   areRootNamesMutable?: boolean;
   areRootFieldsMutable?: boolean;
   rtdb?: boolean;
+  startingIndex?: number;
+  supportNestedArrays?: boolean;
 }> = ({
   value,
   onChange,
   areRootNamesMutable,
   areRootFieldsMutable,
   rtdb = false,
+  startingIndex,
+  supportNestedArrays,
 }) => {
   const initialState = normalize(value);
   const [store, dispatch] = React.useReducer(storeReducer, initialState);
@@ -134,6 +138,8 @@ const DocumentEditor: React.FC<{
                   isRtdb={rtdb}
                   areNamesMutable={areRootNamesMutable}
                   areFieldsMutable={areRootFieldsMutable}
+                  startingIndex={startingIndex}
+                  supportNestedArrays={supportNestedArrays}
                 />
               )}
             </>
@@ -152,7 +158,16 @@ const FieldEditor: React.FC<{
   isRtdb: boolean;
   areNamesMutable?: boolean;
   areFieldsMutable?: boolean;
-}> = ({ uuid, isRtdb, areNamesMutable = true, areFieldsMutable = true }) => {
+  startingIndex?: number;
+  supportNestedArrays?: boolean;
+}> = ({
+  uuid,
+  isRtdb,
+  areNamesMutable = true,
+  areFieldsMutable = true,
+  startingIndex = 0,
+  supportNestedArrays = true,
+}) => {
   const store = useStore();
   const dispatch = useDispatch();
   const field = useField(uuid);
@@ -217,10 +232,18 @@ const FieldEditor: React.FC<{
               <div className="DocumentEditor-ArrayEntry" key={c.uuid}>
                 <div className="DocumentEditor-ArrayEntryMetadata">
                   <div className="DocumentEditor-ArrayIndex">
-                    <Field value={index} label="Index" disabled />
+                    <Field
+                      value={index + startingIndex}
+                      label="Index"
+                      disabled
+                    />
                   </div>
                   <span className="Document-TypeSymbol">=</span>
-                  <ChildTypeSelect uuid={c.valueId} isRtdb={isRtdb} />
+                  <ChildTypeSelect
+                    uuid={c.valueId}
+                    isRtdb={isRtdb}
+                    blacklist={!supportNestedArrays ? [FieldType.ARRAY] : []}
+                  />
                 </div>
                 <FieldEditor uuid={c.valueId} isRtdb={isRtdb} />
                 {areFieldsMutable && (
@@ -302,15 +325,20 @@ const FieldEditor: React.FC<{
 const ChildTypeSelect: React.FC<{
   uuid: number;
   isRtdb: boolean;
-}> = ({ uuid, isRtdb }) => {
+  blacklist?: FieldType[];
+}> = ({ uuid, isRtdb, blacklist = [] }) => {
   const field = useField(uuid);
   const dispatch = useDispatch();
+
+  const options = (isRtdb ? RTDB_FIELD_TYPES : FIRESTORE_FIELD_TYPES).filter(
+    fieldType => !blacklist.includes(fieldType)
+  );
 
   return (
     <SelectField
       label="Type"
       outlined
-      options={isRtdb ? RTDB_FIELD_TYPES : FIRESTORE_FIELD_TYPES}
+      options={options}
       value={getDocumentFieldType(field)}
       onChange={e => {
         dispatch(

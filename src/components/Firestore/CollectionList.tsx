@@ -20,7 +20,7 @@ import { Button } from '@rmwc/button';
 import { List, ListItem } from '@rmwc/list';
 import { firestore } from 'firebase';
 import React, { useEffect, useState } from 'react';
-import { NavLink, useRouteMatch } from 'react-router-dom';
+import { NavLink, useHistory, useRouteMatch } from 'react-router-dom';
 
 import DatabaseApi from './api';
 import { useApi } from './ApiContext';
@@ -37,8 +37,16 @@ export interface Props {
 export const CollectionList: React.FC<Props> = ({ reference }) => {
   const { url } = useRouteMatch()!;
   const api = useApi();
-  const collections = useCollections(api, reference);
+  const history = useHistory();
+  const restCollections = useCollections(api, reference);
+  const [collections, setCollections] = useState(restCollections);
   const redirectIfAutoSelectable = useAutoSelect(collections);
+
+  useEffect(() => {
+    // Update the current list of collections whenever the rest-query resolves
+    // with CollectionRefs
+    setCollections(restCollections);
+  }, [restCollections]);
 
   const [isAddCollectionDialogOpen, setAddCollectionDialogOpen] = useState(
     false
@@ -47,10 +55,19 @@ export const CollectionList: React.FC<Props> = ({ reference }) => {
   const addCollection = async (value: AddCollectionDialogValue | null) => {
     if (value && value.collectionId && value.document.id) {
       const ref = reference || api.database;
-      await ref
-        .collection(value.collectionId)
-        .doc(value.document.id)
-        .set(value.document.data);
+      const newCollection = ref.collection(value.collectionId);
+
+      await newCollection.doc(value.document.id).set(value.document.data);
+
+      // Append to the current collection-list because the hook is not triggered
+      setCollections([...collections, newCollection]);
+
+      // Redirect to the new collection
+      if (reference) {
+        history.push(`/firestore/${reference.path}/${value.collectionId}`);
+      } else {
+        history.push(`/firestore/${value.collectionId}`);
+      }
     }
   };
 

@@ -25,7 +25,7 @@ import { firestore } from 'firebase';
 import React, { useState } from 'react';
 
 import { supportsEditing } from '../DocumentEditor';
-import { FieldType, FirestoreAny } from '../models';
+import { FieldType, FirestoreAny, FirestoreArray } from '../models';
 import {
   getFieldType,
   getParentPath,
@@ -44,16 +44,15 @@ const FieldPreview: React.FC<{
   maxSummaryLen: number;
 }> = ({ path, documentRef, maxSummaryLen }) => {
   const documentData = useDocumentState();
+  const parentState = useFieldState(path.slice(0, -1));
   const state = useFieldState(path);
   const [isEditing, setIsEditing] = useState(false);
   const [isExpanded, setIsExpanded] = useState(true);
   const [isAddingField, setIsAddingField] = useState(false);
 
-  let addPath: string[] = [];
   let childFields = null;
   if (isMap(state)) {
     // Inline editor for new field will default to key: ''
-    addPath = [...path, ''];
     childFields = Object.keys(state).map(childLeaf => {
       const childPath = [...path, childLeaf];
       return (
@@ -67,7 +66,6 @@ const FieldPreview: React.FC<{
     });
   } else if (isArray(state)) {
     // Inline editor for new field will default to key: '{index}'
-    addPath = [...path, `${state.length}`];
     childFields = state.map((value, index) => {
       const childPath = [...path, `${index}`];
       return (
@@ -82,23 +80,39 @@ const FieldPreview: React.FC<{
   }
 
   return isEditing ? (
-    <InlineEditor
-      value={{ [lastFieldName(path)]: state }}
-      onCancel={() => {
-        setIsEditing(false);
-      }}
-      onSave={(key, value) => {
-        updateField(
-          documentRef,
-          documentData,
-          isArray(state) ? [...path, key] : [...getParentPath(path), key],
-          // [...getParentPath(path), key],
-          value
-        );
-        setIsEditing(false);
-      }}
-      areRootKeysMutable={false}
-    />
+    <>
+      {isArray(parentState) && (
+        <InlineEditor
+          value={[state] as FirestoreArray}
+          onCancel={() => {
+            setIsEditing(false);
+          }}
+          onSave={(key, value) => {
+            updateField(documentRef, documentData, path, value);
+            setIsEditing(false);
+          }}
+          areRootKeysMutable={false}
+        />
+      )}
+      {isMap(parentState) && (
+        <InlineEditor
+          value={{ [lastFieldName(path)]: state }}
+          onCancel={() => {
+            setIsEditing(false);
+          }}
+          onSave={(key, value) => {
+            updateField(
+              documentRef,
+              documentData,
+              [...getParentPath(path), key],
+              value
+            );
+            setIsEditing(false);
+          }}
+          areRootKeysMutable={false}
+        />
+      )}
+    </>
   ) : (
     <>
       <ListItem
@@ -153,20 +167,38 @@ const FieldPreview: React.FC<{
           />
         </ListItemMeta>
       </ListItem>
-      {addPath && isAddingField && (
+
+      {isAddingField && isArray(state) && (
         <InlineEditor
-          value={{ [lastFieldName(addPath)]: '' }}
+          value={['']}
           onCancel={() => {
             setIsAddingField(false);
           }}
+          startingIndex={state.length}
           onSave={(key, value) => {
-            const newPath = isArray(state) ? addPath : [...path, key];
+            const newPath = [...path, `${state.length}`];
             updateField(documentRef, documentData, newPath, value);
             setIsAddingField(false);
           }}
           areRootKeysMutable={!isArray(state)}
         />
       )}
+
+      {isAddingField && isMap(state) && (
+        <InlineEditor
+          value={{ '': '' }}
+          onCancel={() => {
+            setIsAddingField(false);
+          }}
+          onSave={(key, value) => {
+            const newPath = [...path, key];
+            updateField(documentRef, documentData, newPath, value);
+            setIsAddingField(false);
+          }}
+          areRootKeysMutable={!isArray(state)}
+        />
+      )}
+
       {!isPrimitive(state) && isExpanded && (
         <div className="FieldPreview-children">{childFields}</div>
       )}

@@ -127,8 +127,7 @@ describe('with basic root fields', () => {
   });
 });
 
-// TODO: update editor to work with imported maps/arrays
-it.skip('renders an editable field with children', async () => {
+it('renders an editable field with children', async () => {
   const onChange = jest.fn();
 
   const { getAllByLabelText } = render(
@@ -147,6 +146,46 @@ it.skip('renders an editable field with children', async () => {
   expect(onChange).toHaveBeenCalledWith({
     hello: { foo: ['bar', { spam: 'new' }] },
   });
+});
+
+it('allows nested-arrays by default', async () => {
+  const onChange = jest.fn();
+
+  const { getAllByLabelText, getByText } = render(
+    <DocumentEditor value={['bar']} onChange={onChange} />
+  );
+
+  act(() => getByText('add').click());
+
+  await act(async () => {
+    fireEvent.change(getAllByLabelText(/Type/)[1], {
+      target: { value: FieldType.ARRAY },
+    });
+  });
+
+  expect(onChange).toHaveBeenCalledWith(['bar', []]);
+});
+
+it('conditionally does not allow nested-arrays', async () => {
+  const onChange = jest.fn();
+
+  const { getAllByLabelText, getByText } = render(
+    <DocumentEditor
+      value={['bar']}
+      onChange={onChange}
+      supportNestedArrays={false}
+    />
+  );
+
+  act(() => getByText('add').click());
+
+  await act(async () => {
+    fireEvent.change(getAllByLabelText(/Type/)[1], {
+      target: { value: FieldType.ARRAY },
+    });
+  });
+
+  expect(onChange).not.toHaveBeenCalledWith(['bar', []]);
 });
 
 it('renders an editable key-field', async () => {
