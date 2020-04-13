@@ -76,6 +76,10 @@ export const HighlightedJSON: React.FC<Props> = ({
 }) => {
   const lines = JSON.stringify(data, null, 2).split('\n');
 
+  if (lines.length === 1)
+    return <div className="log-message-single">{data}</div>;
+  console.log(lines);
+
   let isObject = false;
 
   let hierarchy: HierarchyReference[] = [
