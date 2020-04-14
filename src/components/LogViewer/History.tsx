@@ -53,6 +53,8 @@ interface PropsFromState {
 
 type Props = PropsFromState & PropsFromAttributes;
 
+const MAX_LOG_LINES = 100;
+
 export const History: React.FC<Props> = ({
   parsedQuery,
   setQuery,
@@ -83,7 +85,7 @@ export const History: React.FC<Props> = ({
   return (
     <ThemeProvider options={{ surface: grey100 }} className="LogHistory">
       {history.length ? (
-        history.map((log, index) => (
+        history.slice(-MAX_LOG_LINES).map((log, index) => (
           <div id={`log_${index}`} className="log-entry" key={index}>
             <span className="log-timestamp">
               {formatTimestamp(log.timestamp)}
@@ -96,32 +98,13 @@ export const History: React.FC<Props> = ({
             </span>
 
             {getUserData(log) ? (
-              <>
-                <div className="log-message-single">{log.message}</div>
-                <input
-                  className="log-toggle"
-                  type="checkbox"
-                  defaultChecked={true}
-                />
-                <div className="log-data-rich">
-                  <HighlightedJSON
-                    data={log.data.user}
-                    appendToQuery={appendToQuery}
-                    compiledGetters={compiledGetters}
-                  />
-                </div>
-              </>
-            ) : log.message.split('\n').length === 1 ? (
-              <div className="log-message-single">{log.message}</div>
+              <HighlightedJSON
+                data={log.data.user}
+                appendToQuery={appendToQuery}
+                compiledGetters={compiledGetters}
+              />
             ) : (
-              <>
-                <div className="log-message-single">
-                  {log.message.split('\n')[0]}
-                </div>
-                <div className="log-message-multi">
-                  <pre>{log.message}</pre>
-                </div>
-              </>
+              <div className="log-message-single">{log.message}</div>
             )}
           </div>
         ))

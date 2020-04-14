@@ -16,12 +16,11 @@
 
 .HighlightedJSON {
   background-color: #fff;
-  border-radius: 5px;
-  border: 1px solid #ddd;
-  margin: 10px 0px 0px 0px;
+  border-left: 1px solid #ddd;
   overflow: auto;
-  padding: 10px;
+  padding: 2px 0px 2px 8px;
   white-space: pre;
+  grid-area: message;
 
   .line {
     div {
@@ -37,9 +36,11 @@
 
     .key {
       color: black;
+      cursor: pointer;
     }
     .value {
       color: #005ae5;
+      cursor: pointer;
     }
   }
 }

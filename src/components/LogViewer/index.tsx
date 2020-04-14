@@ -66,7 +66,7 @@ export const LogViewer: React.FC<Props> = ({
       //todo: remove hack to cut off icon
       log.message = log.message
         .split(' ')
-        .slice(1)
+        .slice(2)
         .join(' ');
       logReceived(log);
     };

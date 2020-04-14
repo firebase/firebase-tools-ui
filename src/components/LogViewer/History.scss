@@ -15,11 +15,10 @@
  */
 
 .LogHistory {
-  background-color: var(--mdc-theme-surface);
   font-family: monospace;
   font-size: 0.9em;
   overflow: auto;
-  padding: 10px 0px;
+  background-color: white;
 
   .LogHistoryEmpty {
     padding: 0px 10px;
@@ -28,36 +27,37 @@
 
 .log-entry {
   align-items: center;
-  border-bottom: 1px solid #eee;
   display: grid;
-  grid-column-gap: 10px;
-  grid-template-areas: 'timestamp level message expand';
-  grid-template-columns: fit-content(100%) fit-content(100%) 1fr fit-content(
-      100%
-    );
-  grid-template-rows: fit-content(100%) fit-content(100%);
-  padding: 5px 10px;
+  grid-column-gap: 5px;
+  grid-template-areas: 'timestamp level message';
+  grid-template-columns: fit-content(100%) fit-content(100%) 1fr;
+  padding-left: 8px;
+  background-color: var(--mdc-theme-surface);
 
   &:first-child {
-    border-top: 1px solid #eee;
+    border-top: 1px solid var(--mdc-theme-surface);
+  }
+
+  &:nth-last-child(2) {
+    border-bottom: 1px solid #ccc;
   }
 
   .log-timestamp {
     grid-area: timestamp;
     opacity: 0.5;
+    align-self: start;
   }
 
   .log-level {
-    background-color: rgba(0, 0, 0, 0.1);
-    border-radius: 100%;
+    border-radius: 3px;
     color: rgba(0, 0, 0, 1);
     cursor: pointer;
     font-weight: bold;
     grid-area: level;
-    height: 20px;
-    padding: 4px;
+    padding: 0px 3px;
+
+    align-self: start;
     text-align: center;
-    width: 20px;
 
     &.warn {
       background-color: orange;
@@ -77,6 +77,11 @@
     grid-row: 1;
     line-height: 1.2em;
     word-break: break-all;
+    white-space: pre-wrap;
+    border-left: 1px solid #ccc;
+    align-self: stretch;
+    background-color: white;
+    padding: 2px 8px;
   }
 
   .log-message-multi {
@@ -85,8 +90,11 @@
   }
 
   .log-data-rich {
-    display: none;
-    visibility: hidden;
+    display: block;
+    grid-column: 1 / span 4;
+    grid-row: 2;
+    visibility: visible;
+    padding-bottom: 8px;
   }
 
   .log-toggle {
