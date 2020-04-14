@@ -94,27 +94,29 @@ export const NodeLeaf = React.memo<Props>(function NodeLeaf$({
           />
         </Tooltip>
       </span>
-      {isEditing && (
-        <InlineEditor
-          rtdb
-          value={{
-            [realtimeRef.key || realtimeRef.toString()]:
-              value === null ? '' : value,
-          }}
-          onCancel={() => setIsEditing(false)}
-          onSave={handleEditSuccess}
-          areRootKeysMutable={false}
-        />
-      )}
-      {isAdding && (
-        <InlineEditor
-          rtdb
-          value={{ [realtimeRef.push().key!]: '' }}
-          onCancel={() => setIsAdding(false)}
-          onSave={handleAddSuccess}
-          areRootKeysMutable={true}
-        />
-      )}
+      <div className="NodeLeaf__edit-ui">
+        {isEditing && (
+          <InlineEditor
+            rtdb
+            value={{
+              [realtimeRef.key || realtimeRef.toString()]:
+                value === null ? '' : value,
+            }}
+            onCancel={() => setIsEditing(false)}
+            onSave={handleEditSuccess}
+            areRootKeysMutable={false}
+          />
+        )}
+        {isAdding && (
+          <InlineEditor
+            rtdb
+            value={{ [realtimeRef.push().key!]: '' }}
+            onCancel={() => setIsAdding(false)}
+            onSave={handleAddSuccess}
+            areRootKeysMutable={true}
+          />
+        )}
+      </div>
     </div>
   );
 });

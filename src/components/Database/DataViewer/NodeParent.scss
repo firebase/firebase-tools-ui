@@ -50,12 +50,13 @@ $name: 'NodeParent';
     }
   }
 
-  .Firestore-Field-inline-editor {
+  .Firestore-InlineEditor-relative-anchor {
     position: absolute;
-    left: -4px;
-    top: 32px;
-    right: -4px;
-    z-index: $ZINDEX_MEDIUM;
+
+    .Firestore-InlineEditor {
+      left: -8px;
+      right: initial;
+    }
   }
 
   .#{$name}__children-container {
