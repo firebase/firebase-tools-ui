@@ -67,7 +67,7 @@ const Overview: React.FC<{
           <Typography use="headline5">Emulator Overview</Typography>
         </GridCell>
         <EmulatorCard
-          name="RTDB Emulator"
+          name="Realtime Database Emulator"
           icon={<DatabaseIcon theme="secondary" />}
           config={config.database}
           linkTo="/database"
