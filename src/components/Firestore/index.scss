@@ -57,7 +57,7 @@
 .Firestore-Document-List,
 .Firestore-Field-List {
   flex: 1;
-  overflow: auto;
+  min-width: 0;
 }
 
 /** Only show at most 3 panels (Documents/Collections) */
