@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { act, fireEvent, render, wait } from '@testing-library/react';
+import { act, render } from '@testing-library/react';
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
