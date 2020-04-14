@@ -68,15 +68,6 @@ export const NodeLeaf = React.memo<Props>(function NodeLeaf$({
   const showAddButton = !realtimeRef.parent && value === null;
   return (
     <div className="NodeLeaf">
-      {isEditing && (
-        <InlineEditor
-          rtdb
-          value={{ [realtimeRef.key || realtimeRef.toString()]: value }}
-          onCancel={() => setIsEditing(false)}
-          onSave={handleEditSuccess}
-          areRootKeysMutable={false}
-        />
-      )}
       <div className="NodeLeaf__key">
         <NodeLink dbRef={realtimeRef} baseUrl={baseUrl} />
         {': '}
@@ -95,6 +86,15 @@ export const NodeLeaf = React.memo<Props>(function NodeLeaf$({
           <IconButton icon="delete" onClick={handleDelete} />
         </Tooltip>
       </span>
+      {isEditing && (
+        <InlineEditor
+          rtdb
+          value={{ [realtimeRef.key || realtimeRef.toString()]: value }}
+          onCancel={() => setIsEditing(false)}
+          onSave={handleEditSuccess}
+          areRootKeysMutable={false}
+        />
+      )}
       {isAdding && (
         <InlineEditor
           rtdb

@@ -27,7 +27,7 @@ $container-overhang: 8px;
     top: 0;
     right: -$container-overhang;
     z-index: $ZINDEX_INLINE_EDITOR;
-    width: calc(100% + #{2 * $container-overhang});
+    min-width: calc(100% + #{2 * $container-overhang});
   }
 }
 

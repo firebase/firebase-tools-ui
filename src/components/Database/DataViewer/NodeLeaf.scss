@@ -25,10 +25,15 @@ $name: 'NodeLeaf';
   }
 
   .#{$name}__actions {
-    display: none;
+    visibility: hidden;
+  }
+
+  .Firestore-InlineEditor-relative-anchor {
+    position: relative;
+    top: 20px; // offset so it appears below the editing field
   }
 
   &:hover > .#{$name}__actions {
-    display: inline-block;
+    visibility: visible;
   }
 }
