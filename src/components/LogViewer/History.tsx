@@ -53,6 +53,8 @@ interface PropsFromState {
 
 type Props = PropsFromState & PropsFromAttributes;
 
+const MAX_LOG_LINES = 100;
+
 export const History: React.FC<Props> = ({
   parsedQuery,
   setQuery,
@@ -83,7 +85,7 @@ export const History: React.FC<Props> = ({
   return (
     <ThemeProvider options={{ surface: grey100 }} className="LogHistory">
       {history.length ? (
-        history.slice(-100).map((log, index) => (
+        history.slice(-MAX_LOG_LINES).map((log, index) => (
           <div id={`log_${index}`} className="log-entry" key={index}>
             <span className="log-timestamp">
               {formatTimestamp(log.timestamp)}
