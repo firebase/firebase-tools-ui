@@ -41,6 +41,7 @@ $input-height: 36px;
 // );
 
 @import './color';
+@import './z';
 
 // TODO: remove below for select 6.0.9
 $mdc-select-height: $input-height;
@@ -82,7 +83,7 @@ $mdc-select-outlined-hover-border: var(--fire-color-input-borders);
 
   .mdc-select__dropdown-icon {
     bottom: $input-default-padding - 2px; // base component doesnt do this yet
-    z-index: 2;
+    z-index: $ZINDEX_MEDIUM;
   }
 }
 

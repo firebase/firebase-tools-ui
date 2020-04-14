@@ -14,31 +14,22 @@
  * limitations under the License.
  */
 
-@import '../../common/z';
+@import './utils';
 
-$container-overhang: 8px;
+$ZINDEX_LOW: 1;
+$ZINDEX_MEDIUM: 1;
+$ZINDEX_SPINNER: 6;
+$ZINDEX_FEATURE_BAR: 10;
 
-.Firestore-InlineEditor-relative-anchor {
-  position: relative;
+$ZINDEX_INLINE_EDITOR_SCRIM: 39;
+$ZINDEX_INLINE_EDITOR: 40;
 
-  .Firestore-InlineEditor {
-    position: absolute;
-    // left: -4px;
-    top: 0;
-    right: -$container-overhang;
-    z-index: $ZINDEX_INLINE_EDITOR;
-    width: calc(100% + #{2 * $container-overhang});
-  }
-}
+$ZINDEX_CRITICAL_ALERTS: 49;
+$ZINDEX_ALERTS_DRAWER_SCRIM: 51;
+$ZINDEX_ALERTS_DRAWER: 52;
 
-.Firestore-InlineEditor {
-  background-color: var(--mdc-theme-surface);
-}
+// This should be above almost everything
+$ZINDEX_FULL_PAGE_MODAL: 1000;
 
-.Firestore-InlineEditorContent {
-  padding: 8px 16px;
-}
-
-.Firestore-InlineEditorActions {
-  justify-content: flex-end;
-}
+$ZINDEX_UNDER_TOP: 1000;
+$ZINDEX_TOP: 1001;

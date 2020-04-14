@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
+@import '../common/z';
+
 .InteractiveBreadCrumbBar {
-  z-index: 1; // show elevation shadow
+  z-index: $ZINDEX_LOW; // show elevation shadow
 
   .InteractiveBreadCrumbBar-form {
     align-items: center;

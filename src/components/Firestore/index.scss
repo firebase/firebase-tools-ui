@@ -36,13 +36,13 @@
 
 .Firestore-panels-wrapper {
   flex: 1;
-  overflow: hidden;
+  min-width: 0;
 }
 
 .Firestore-panels {
   display: flex;
   flex-direction: row !important;
-  overflow: hidden;
+  min-width: 0;
   flex: 1 1 auto; // grow panels to bottom of card
 }
 
@@ -51,7 +51,7 @@
   display: flex;
   flex-direction: column;
   flex: 1;
-  overflow: hidden;
+  min-width: 0;
 }
 
 .Firestore-Document-List,
