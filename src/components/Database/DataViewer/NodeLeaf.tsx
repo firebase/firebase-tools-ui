@@ -68,18 +68,6 @@ export const NodeLeaf = React.memo<Props>(function NodeLeaf$({
   const showAddButton = !realtimeRef.parent && value === null;
   return (
     <div className="NodeLeaf">
-      {isEditing && (
-        <InlineEditor
-          rtdb
-          value={{
-            [realtimeRef.key || realtimeRef.toString()]:
-              value === null ? '' : value,
-          }}
-          onCancel={() => setIsEditing(false)}
-          onSave={handleEditSuccess}
-          areRootKeysMutable={false}
-        />
-      )}
       <div className="NodeLeaf__key">
         <NodeLink dbRef={realtimeRef} baseUrl={baseUrl} />
         {': '}
@@ -106,15 +94,29 @@ export const NodeLeaf = React.memo<Props>(function NodeLeaf$({
           />
         </Tooltip>
       </span>
-      {isAdding && (
-        <InlineEditor
-          rtdb
-          value={{ [realtimeRef.push().key!]: '' }}
-          onCancel={() => setIsAdding(false)}
-          onSave={handleAddSuccess}
-          areRootKeysMutable={true}
-        />
-      )}
+      <div className="NodeLeaf__edit-ui">
+        {isEditing && (
+          <InlineEditor
+            rtdb
+            value={{
+              [realtimeRef.key || realtimeRef.toString()]:
+                value === null ? '' : value,
+            }}
+            onCancel={() => setIsEditing(false)}
+            onSave={handleEditSuccess}
+            areRootKeysMutable={false}
+          />
+        )}
+        {isAdding && (
+          <InlineEditor
+            rtdb
+            value={{ [realtimeRef.push().key!]: '' }}
+            onCancel={() => setIsAdding(false)}
+            onSave={handleAddSuccess}
+            areRootKeysMutable={true}
+          />
+        )}
+      </div>
     </div>
   );
 });

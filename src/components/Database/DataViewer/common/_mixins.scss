@@ -1,4 +1,5 @@
 @import '../../../common/color';
+@import '../../../common/z';
 
 @mixin inlineEditCard($baseName) {
   left: 0;
@@ -8,7 +9,7 @@
   top: 0;
 
   &.#{$baseName}__card {
-    z-index: 1000;
+    z-index: $ZINDEX_INLINE_EDITOR;
   }
 
   .#{$baseName}__form-fields {
