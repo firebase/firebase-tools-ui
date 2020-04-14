@@ -21,7 +21,7 @@ import * as React from 'react';
 import { DOMAttributes } from 'react';
 
 export interface Props extends DOMAttributes<HTMLSpanElement>, TypographyProps {
-  value: string | number | boolean;
+  value: string | number | boolean | null;
 }
 
 export const ValueDisplay = React.memo<Props>(function ValueDisplay$({
@@ -36,7 +36,12 @@ export const ValueDisplay = React.memo<Props>(function ValueDisplay$({
   const getClass = (value: Props['value']) =>
     `ValueDisplay ValueDisplay__${typeof value}`;
   return (
-    <Typography use="body1" className={getClass(value)} {...otherProps}>
+    <Typography
+      use="body1"
+      className={getClass(value)}
+      {...otherProps}
+      aria-label="Node value"
+    >
       {JSON.stringify(trimmedValue)}
     </Typography>
   );
