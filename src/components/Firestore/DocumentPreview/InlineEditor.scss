@@ -22,12 +22,11 @@ $container-overhang: 8px;
   position: relative;
 
   .Firestore-InlineEditor {
-    position: absolute;
-    // left: -4px;
-    top: 0;
-    right: -$container-overhang;
-    z-index: $ZINDEX_INLINE_EDITOR;
     min-width: calc(100% + #{2 * $container-overhang});
+    position: absolute;
+    right: -$container-overhang;
+    top: 0;
+    z-index: $ZINDEX_INLINE_EDITOR;
   }
 }
 
