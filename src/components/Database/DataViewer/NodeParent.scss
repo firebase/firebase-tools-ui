@@ -51,7 +51,11 @@ $name: 'NodeParent';
   }
 
   .Firestore-InlineEditor-relative-anchor {
+    left: 0;
+    margin: 0 20px 0 36px;
     position: absolute;
+    right: 0;
+    top: 36px;
 
     .Firestore-InlineEditor {
       left: -8px;
