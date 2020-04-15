@@ -105,7 +105,7 @@ export const EmulatorCard: React.FC<{
     <Card className="Home-EmulatorCard" data-testid={testId}>
       <div className="Home-EmulatorCard-Info">
         <Typography use="headline6" tag="h3" className="title">
-          {icon} {name}
+          {icon} <span>{name}</span>
         </Typography>
         <Typography use="body2" tag="h4" theme="secondary">
           Status
