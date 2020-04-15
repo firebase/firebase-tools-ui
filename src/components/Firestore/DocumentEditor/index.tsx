@@ -81,6 +81,7 @@ const RTDB_FIELD_TYPES = [
   FieldType.BOOLEAN,
   FieldType.MAP,
   FieldType.ARRAY,
+  FieldType.JSON,
 ];
 
 const supportedFieldTypeSet = new Set(FIRESTORE_FIELD_TYPES);
