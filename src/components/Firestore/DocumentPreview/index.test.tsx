@@ -14,7 +14,13 @@
  * limitations under the License.
  */
 
-import { RenderResult, act, fireEvent, render } from '@testing-library/react';
+import {
+  RenderResult,
+  act,
+  fireEvent,
+  render,
+  wait,
+} from '@testing-library/react';
 import { firestore } from 'firebase';
 import React from 'react';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
@@ -128,6 +134,7 @@ describe('missing document', () => {
   beforeEach(async () => {
     useDocumentData.mockReturnValue([undefined]);
     documentReference = fakeDocumentReference();
+    documentReference.get.mockResolvedValue({});
 
     result = render(<DocumentPreview reference={documentReference} />);
   });
@@ -138,10 +145,11 @@ describe('missing document', () => {
     expect(getByText(/This document does not exist/)).not.toBeNull();
   });
 
-  it('calls ref.set() when adding a field', () => {
+  it('calls ref.set() when adding a field', async () => {
     const { getByText, getByLabelText } = result;
 
     getByText('Add field').click();
+
     fireEvent.change(getByLabelText('Field'), {
       target: { value: 'meaningOfLife' },
     });
@@ -149,7 +157,10 @@ describe('missing document', () => {
     fireEvent.change(getByLabelText('Value'), {
       target: { value: '42' },
     });
-    fireEvent.submit(getByText('Save'));
+
+    await act(async () => {
+      fireEvent.submit(getByText('Save'));
+    });
 
     expect(documentReference.set).toHaveBeenCalledWith({ meaningOfLife: '42' });
   });
