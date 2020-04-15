@@ -121,6 +121,40 @@ describe('loaded document', () => {
   });
 });
 
+describe('missing document', () => {
+  let result: RenderResult;
+  let documentReference: firestore.DocumentReference;
+
+  beforeEach(async () => {
+    useDocumentData.mockReturnValue([undefined]);
+    documentReference = fakeDocumentReference();
+
+    result = render(<DocumentPreview reference={documentReference} />);
+  });
+
+  it('shows a warning', () => {
+    const { getByText } = result;
+
+    expect(getByText(/This document does not exist/)).not.toBeNull();
+  });
+
+  it('can add a new field', () => {
+    const { getByText, getByLabelText } = result;
+
+    getByText('Add field').click();
+    fireEvent.change(getByLabelText('Field'), {
+      target: { value: 'meaningOfLife' },
+    });
+    fireEvent.blur(getByLabelText('Field'));
+    fireEvent.change(getByLabelText('Value'), {
+      target: { value: '42' },
+    });
+    fireEvent.submit(getByText('Save'));
+
+    expect(documentReference.set).toHaveBeenCalledWith({ meaningOfLife: '42' });
+  });
+}); // missing document
+
 describe('loaded array', () => {
   let result: RenderResult;
   let documentReference: firestore.DocumentReference;
