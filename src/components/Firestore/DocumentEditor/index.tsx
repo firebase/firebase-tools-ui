@@ -34,6 +34,7 @@ import {
 import * as actions from './actions';
 import BooleanEditor from './BooleanEditor';
 import GeoPointEditor from './GeoPointEditor';
+import JsonEditor from './JsonEditor';
 import NumberEditor from './NumberEditor';
 import ReferenceEditor from './ReferenceEditor';
 import {
