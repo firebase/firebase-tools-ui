@@ -60,7 +60,7 @@ describe('loaded document', () => {
     fireEvent.change(getByLabelText('Value'), {
       target: { value: '42' },
     });
-    getByText('Save').click();
+    fireEvent.submit(getByText('Save'));
 
     expect(documentReference.update).toHaveBeenCalledWith(
       new firestore.FieldPath('new'),
@@ -94,7 +94,7 @@ describe('loaded document', () => {
     fireEvent.change(getByLabelText('Value'), {
       target: { value: 'new' },
     });
-    getByText('Save').click();
+    fireEvent.submit(getByText('Save'));
 
     expect(documentReference.update).toHaveBeenCalledWith(
       new firestore.FieldPath('foo'),
@@ -184,7 +184,7 @@ describe('loaded array', () => {
     fireEvent.change(getByLabelText('Value'), {
       target: { value: 'new' },
     });
-    getByText('Save').click();
+    fireEvent.submit(getByText('Save'));
     expect(
       documentReference.update
     ).toHaveBeenCalledWith(new firestore.FieldPath('foo'), [
@@ -202,7 +202,7 @@ describe('loaded array', () => {
     fireEvent.change(getByLabelText('Value'), {
       target: { value: 'new' },
     });
-    getByText('Save').click();
+    fireEvent.submit(getByText('Save'));
     expect(
       documentReference.update
     ).toHaveBeenCalledWith(new firestore.FieldPath('foo'), [
@@ -223,7 +223,7 @@ describe('loaded array', () => {
     fireEvent.change(getByLabelText('Value'), {
       target: { value: 'new' },
     });
-    getByText('Save').click();
+    fireEvent.submit(getByText('Save'));
     expect(
       documentReference.update
     ).toHaveBeenCalledWith(new firestore.FieldPath('foo'), [
@@ -242,7 +242,7 @@ describe('loaded array', () => {
     fireEvent.change(getByLabelText('Value'), {
       target: { value: 'new' },
     });
-    getByText('Save').click();
+    fireEvent.submit(getByText('Save'));
     expect(
       documentReference.update
     ).toHaveBeenCalledWith(new firestore.FieldPath('foo'), [
@@ -314,7 +314,7 @@ describe('loaded map', () => {
       });
     });
     await act(async () => {
-      getByText('Save').click();
+      fireEvent.submit(getByText('Save'));
     });
     expect(documentReference.update).toHaveBeenCalledWith(
       new firestore.FieldPath('foo', 'last_name'),
@@ -333,7 +333,7 @@ describe('loaded map', () => {
     fireEvent.change(getByLabelText('Value'), {
       target: { value: 'new' },
     });
-    getByText('Save').click();
+    fireEvent.submit(getByText('Save'));
     expect(documentReference.update).toHaveBeenCalledWith(
       new firestore.FieldPath('foo', 'wow'),
       'new'
