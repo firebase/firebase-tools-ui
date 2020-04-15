@@ -64,7 +64,11 @@ const InlineEditor: React.FC<{
       onEscapeKey={handleCancel}
     >
       <Elevation z={8} wrap>
-        <Card className="Firestore-InlineEditor">
+        <Card
+          className="Firestore-InlineEditor"
+          tag="form"
+          onSubmit={handleSubmit}
+        >
           <div className="Firestore-InlineEditorContent">
             <DocumentEditor
               value={value}
@@ -78,10 +82,12 @@ const InlineEditor: React.FC<{
           </div>
           <CardActions className="Firestore-InlineEditorActions">
             <CardActionButtons>
-              <CardActionButton onClick={handleCancel}>Cancel</CardActionButton>
+              <CardActionButton type="button" onClick={handleCancel}>
+                Cancel
+              </CardActionButton>
               <CardActionButton
+                type="submit"
                 unelevated
-                onClick={handleSubmit}
                 disabled={!internalValue}
               >
                 Save
