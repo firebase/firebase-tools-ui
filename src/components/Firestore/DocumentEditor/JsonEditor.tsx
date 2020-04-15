@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import { Field } from '../../common/Field';
 import { useApi } from '../ApiContext';
+import { PrimitiveValue } from './types';
 
 const JsonEditor: React.FC<{
-  value: {};
-  onChange: (value: {}) => void;
+  value: PrimitiveValue;
+  onChange: (value: PrimitiveValue) => void;
   name: string;
 }> = ({ value, onChange, name }) => {
   // const [defaultValue] = useState(JSON.stringify(value));

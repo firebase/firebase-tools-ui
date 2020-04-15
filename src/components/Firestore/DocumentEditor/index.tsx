@@ -171,6 +171,7 @@ const FieldEditor: React.FC<{
   areFieldsMutable?: boolean;
   startingIndex?: number;
   supportNestedArrays?: boolean;
+  isJson?: boolean;
 }> = ({
   uuid,
   isRtdb,
@@ -178,6 +179,7 @@ const FieldEditor: React.FC<{
   areFieldsMutable = true,
   startingIndex = 0,
   supportNestedArrays = true,
+  isJson = false,
 }) => {
   const store = useStore();
   const dispatch = useDispatch();
@@ -205,7 +207,7 @@ const FieldEditor: React.FC<{
                     allowedTypes={allowedChildTypes}
                   />
                 </div>
-                <FieldEditor uuid={c.valueId} isRtdb={isRtdb} />
+                <FieldEditor uuid={c.valueId} isRtdb={isRtdb} isJson={isJson} />
                 {areFieldsMutable && (
                   <IconButton
                     className="DocumentEditor-MapEntryDelete"
@@ -300,6 +302,14 @@ const FieldEditor: React.FC<{
           )}
         </div>
       </div>
+    );
+  } else if (isJson) {
+    return (
+      <JsonEditor
+        name={`${uuid}`}
+        value={field.value}
+        onChange={value => dispatch(actions.updateValue({ uuid, value }))}
+      />
     );
   } else {
     const valueEditor =
