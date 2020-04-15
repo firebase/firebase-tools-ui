@@ -23,7 +23,7 @@ import { useDocumentData } from 'react-firebase-hooks/firestore';
 
 import { FirestoreMap } from '../models';
 import { isMap } from '../utils';
-import { updateField } from './api';
+import { addFieldToMissingDocument, updateField } from './api';
 import FieldPreview from './FieldPreview';
 import InlineEditor from './InlineEditor';
 import { DocumentProvider } from './store';
@@ -66,9 +66,9 @@ const DocumentPreview: React.FC<Props> = ({
               onCancel={() => {
                 setIsAddingField(false);
               }}
-              onSave={(key, value) => {
+              onSave={async (key, value) => {
                 if (!data) {
-                  reference.set({ [key]: value });
+                  await addFieldToMissingDocument(reference, key, value);
                 } else {
                   updateField(reference, data, [key], value);
                 }
