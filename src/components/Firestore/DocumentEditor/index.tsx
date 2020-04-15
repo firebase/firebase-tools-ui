@@ -66,6 +66,15 @@ const FIRESTORE_FIELD_TYPES = [
   FieldType.REFERENCE,
 ];
 
+/**
+ * Firestore does not support nested arrays
+ * TODO(tlavelle): consider moving these upstream, and outside
+ * of the "DocumentEditor"
+ */
+const FIRESTORE_ARRAY_FIELD_TYPES = FIRESTORE_FIELD_TYPES.filter(
+  ft => ft !== FieldType.ARRAY
+);
+
 const RTDB_FIELD_TYPES = [
   FieldType.STRING,
   FieldType.NUMBER,
@@ -173,6 +182,8 @@ const FieldEditor: React.FC<{
   const field = useField(uuid);
 
   if (isMapField(field)) {
+    const allowedChildTypes = isRtdb ? RTDB_FIELD_TYPES : FIRESTORE_FIELD_TYPES;
+
     return (
       <div className="DocumentEditor-Map">
         <div className="DocumentEditor-MapEntries">
@@ -187,7 +198,10 @@ const FieldEditor: React.FC<{
                     readonly={!areNamesMutable && uuid === store.uuid}
                   />
                   <span className="Document-TypeSymbol">=</span>
-                  <ChildTypeSelect uuid={c.valueId} isRtdb={isRtdb} />
+                  <ChildTypeSelect
+                    uuid={c.valueId}
+                    allowedTypes={allowedChildTypes}
+                  />
                 </div>
                 <FieldEditor uuid={c.valueId} isRtdb={isRtdb} />
                 {areFieldsMutable && (
@@ -224,6 +238,12 @@ const FieldEditor: React.FC<{
       </div>
     );
   } else if (isArrayField(field)) {
+    const allowedChildTypes = isRtdb
+      ? RTDB_FIELD_TYPES
+      : supportNestedArrays
+      ? FIRESTORE_FIELD_TYPES
+      : FIRESTORE_ARRAY_FIELD_TYPES;
+
     return (
       <div className="DocumentEditor-Array">
         <div className="DocumentEditor-ArrayEntries">
@@ -241,8 +261,7 @@ const FieldEditor: React.FC<{
                   <span className="Document-TypeSymbol">=</span>
                   <ChildTypeSelect
                     uuid={c.valueId}
-                    isRtdb={isRtdb}
-                    blacklist={!supportNestedArrays ? [FieldType.ARRAY] : []}
+                    allowedTypes={allowedChildTypes}
                   />
                 </div>
                 <FieldEditor uuid={c.valueId} isRtdb={isRtdb} />
@@ -324,21 +343,16 @@ const FieldEditor: React.FC<{
 
 const ChildTypeSelect: React.FC<{
   uuid: number;
-  isRtdb: boolean;
-  blacklist?: FieldType[];
-}> = ({ uuid, isRtdb, blacklist = [] }) => {
+  allowedTypes: FieldType[];
+}> = ({ uuid, allowedTypes }) => {
   const field = useField(uuid);
   const dispatch = useDispatch();
-
-  const options = (isRtdb ? RTDB_FIELD_TYPES : FIRESTORE_FIELD_TYPES).filter(
-    fieldType => !blacklist.includes(fieldType)
-  );
 
   return (
     <SelectField
       label="Type"
       outlined
-      options={options}
+      options={allowedTypes}
       value={getDocumentFieldType(field)}
       onChange={e => {
         dispatch(
