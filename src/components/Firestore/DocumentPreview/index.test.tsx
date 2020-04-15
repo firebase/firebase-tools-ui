@@ -138,7 +138,7 @@ describe('missing document', () => {
     expect(getByText(/This document does not exist/)).not.toBeNull();
   });
 
-  it('can add a new field', () => {
+  it('calls ref.set() when adding a field', () => {
     const { getByText, getByLabelText } = result;
 
     getByText('Add field').click();
