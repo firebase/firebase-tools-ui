@@ -22,7 +22,6 @@ $container-overhang: 8px;
   position: relative;
 
   .Firestore-InlineEditor {
-    min-width: calc(100% + #{2 * $container-overhang});
     position: absolute;
     right: -$container-overhang;
     top: 0;
