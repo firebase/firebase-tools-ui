@@ -51,6 +51,7 @@ const InlineEditor: React.FC<{
   }
 
   function handleSubmit(e: React.MouseEvent<HTMLButtonElement>) {
+    e.preventDefault();
     e.stopPropagation();
     if (internalValue) {
       onSave(Object.keys(internalValue)[0], Object.values(internalValue)[0]);
