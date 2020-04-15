@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+import '@material/data-table/dist/mdc.data-table.css';
+import '@rmwc/data-table/styles';
+
 import './NodeTabularDisplay.scss';
 
 import { Button } from '@rmwc/button';
