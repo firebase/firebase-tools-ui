@@ -4,12 +4,13 @@
 name: Node.js CI
 
 on:
-  - push
-  - pull_request
+  push:
+    branches: [master]
+  pull_request:
+    branches: "*"
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
@@ -17,18 +18,17 @@ jobs:
         node-version: [8.x, 10.x, 12.x]
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: npm ci
-    - run: npm run build
-      env:
-        CI: true
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm ci
+      - run: npm run build
+        env:
+          CI: true
 
   unit:
-
     runs-on: ubuntu-latest
 
     strategy:
@@ -36,18 +36,17 @@ jobs:
         node-version: [8.x, 10.x, 12.x]
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: npm ci
-    - run: npm run test:coverage
-      env:
-        CI: true
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm ci
+      - run: npm run test:coverage
+        env:
+          CI: true
 
   check-package-lock:
-
     runs-on: ubuntu-latest
 
     strategy:
@@ -55,10 +54,10 @@ jobs:
         node-version: [12.x]
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: npm install --package-lock-only
-    - run: "git diff --exit-code -- package-lock.json || (echo 'Error: package-lock.json is changed during npm install! Please make sure to use npm >= 6.9.0 and commit package-lock.json.' && false)"
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm install --package-lock-only
+      - run: "git diff --exit-code -- package-lock.json || (echo 'Error: package-lock.json is changed during npm install! Please make sure to use npm >= 6.9.0 and commit package-lock.json.' && false)"
