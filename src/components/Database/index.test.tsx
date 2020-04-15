@@ -37,7 +37,7 @@ describe('DatabaseRoute', () => {
         configResult={{ data: sampleConfig }}
       />
     );
-    expect(getByText('RTDB Emulator Loading...')).not.toBeNull();
+    expect(getByText('Realtime Database Emulator Loading...')).not.toBeNull();
   });
   it('renders loading when config is not ready', () => {
     const { getByText } = render(
@@ -46,7 +46,7 @@ describe('DatabaseRoute', () => {
         configResult={undefined}
       />
     );
-    expect(getByText('RTDB Emulator Loading...')).not.toBeNull();
+    expect(getByText('Realtime Database Emulator Loading...')).not.toBeNull();
   });
   it('renders error when loading config fails', () => {
     const { getByText } = render(

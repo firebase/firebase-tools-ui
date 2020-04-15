@@ -38,7 +38,7 @@ export const routes: ReadonlyArray<Route> = [
   {
     path: '/database',
     component: Database,
-    label: 'RTDB',
+    label: 'Realtime Database',
     exact: false,
     showInNav: true,
   },
