@@ -14,33 +14,22 @@
  * limitations under the License.
  */
 
-.HighlightedJSON {
-  background-color: #fff;
-  border-left: 1px solid #ddd;
-  overflow: auto;
-  padding: 2px 0px 2px 8px;
-  white-space: pre;
-  grid-area: message;
+@import './utils';
 
-  .line {
-    div {
-      display: inline;
-      text-decoration: none;
+$ZINDEX_LOW: 1;
+$ZINDEX_MEDIUM: 1;
+$ZINDEX_SPINNER: 6;
+$ZINDEX_FEATURE_BAR: 10;
 
-      &:hover {
-        text-decoration: underline;
-      }
-    }
+$ZINDEX_INLINE_EDITOR_SCRIM: 39;
+$ZINDEX_INLINE_EDITOR: 40;
 
-    color: #aaa;
+$ZINDEX_CRITICAL_ALERTS: 49;
+$ZINDEX_ALERTS_DRAWER_SCRIM: 51;
+$ZINDEX_ALERTS_DRAWER: 52;
 
-    .key {
-      color: black;
-      cursor: pointer;
-    }
-    .value {
-      color: #005ae5;
-      cursor: pointer;
-    }
-  }
-}
+// This should be above almost everything
+$ZINDEX_FULL_PAGE_MODAL: 1000;
+
+$ZINDEX_UNDER_TOP: 1000;
+$ZINDEX_TOP: 1001;

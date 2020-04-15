@@ -20,6 +20,7 @@
 @use '@material/button/mdc-button';
 
 @import './components/common/radius';
+@import './components/common/z';
 
 $FOCUS_OUTLINE_THICKNESS: 2px;
 
@@ -88,7 +89,7 @@ $FOCUS_OUTLINE_THICKNESS: 2px;
 
     .mdc-button__label {
       color: $foreColor;
-      z-index: 2; // white text does not get darkened by ::after overlay
+      z-index: $ZINDEX_MEDIUM; // white text does not get darkened by ::after overlay
     }
 
     :before,

@@ -28,7 +28,7 @@ import { ValueDisplay } from './ValueDisplay';
 
 export interface Props {
   realtimeRef: firebase.database.Reference;
-  value: string | boolean | number;
+  value: string | boolean | number | null;
   baseUrl: string;
 }
 
@@ -68,15 +68,6 @@ export const NodeLeaf = React.memo<Props>(function NodeLeaf$({
   const showAddButton = !realtimeRef.parent && value === null;
   return (
     <div className="NodeLeaf">
-      {isEditing && (
-        <InlineEditor
-          rtdb
-          value={{ [realtimeRef.key || realtimeRef.toString()]: value }}
-          onCancel={() => setIsEditing(false)}
-          onSave={handleEditSuccess}
-          areRootKeysMutable={false}
-        />
-      )}
       <div className="NodeLeaf__key">
         <NodeLink dbRef={realtimeRef} baseUrl={baseUrl} />
         {': '}
@@ -84,26 +75,48 @@ export const NodeLeaf = React.memo<Props>(function NodeLeaf$({
       </div>
       <span className="NodeLeaf__actions">
         <Tooltip content="Edit value">
-          <IconButton icon="edit" onClick={handleEdit} />
+          <IconButton
+            icon="edit"
+            onClick={handleEdit}
+            aria-label="Edit value"
+          />
         </Tooltip>
         {showAddButton && (
           <Tooltip content="Add child">
-            <IconButton icon="add" onClick={handleAdd} />
+            <IconButton icon="add" onClick={handleAdd} aria-label="Add child" />
           </Tooltip>
         )}
         <Tooltip content="Delete value">
-          <IconButton icon="delete" onClick={handleDelete} />
+          <IconButton
+            icon="delete"
+            onClick={handleDelete}
+            aria-label="Delete value"
+          />
         </Tooltip>
       </span>
-      {isAdding && (
-        <InlineEditor
-          rtdb
-          value={{ [realtimeRef.push().key!]: '' }}
-          onCancel={() => setIsAdding(false)}
-          onSave={handleAddSuccess}
-          areRootKeysMutable={true}
-        />
-      )}
+      <div className="NodeLeaf__edit-ui">
+        {isEditing && (
+          <InlineEditor
+            rtdb
+            value={{
+              [realtimeRef.key || realtimeRef.toString()]:
+                value === null ? '' : value,
+            }}
+            onCancel={() => setIsEditing(false)}
+            onSave={handleEditSuccess}
+            areRootKeysMutable={false}
+          />
+        )}
+        {isAdding && (
+          <InlineEditor
+            rtdb
+            value={{ [realtimeRef.push().key!]: '' }}
+            onCancel={() => setIsAdding(false)}
+            onSave={handleAddSuccess}
+            areRootKeysMutable={true}
+          />
+        )}
+      </div>
     </div>
   );
 });

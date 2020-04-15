@@ -343,8 +343,8 @@ const FieldEditor: React.FC<{
 
 const ChildTypeSelect: React.FC<{
   uuid: number;
-  allowedTypes?: FieldType[];
-}> = ({ uuid, allowedTypes = [] }) => {
+  allowedTypes: FieldType[];
+}> = ({ uuid, allowedTypes }) => {
   const field = useField(uuid);
   const dispatch = useDispatch();
 

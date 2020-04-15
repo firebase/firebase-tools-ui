@@ -44,7 +44,9 @@ export const DatabaseRoute: React.FC<PropsFromState> = ({
   configResult,
 }) => {
   return handle(combineData(projectIdResult, configResult), {
-    onNone: () => <Spinner span={12} message="RTDB Emulator Loading..." />,
+    onNone: () => (
+      <Spinner span={12} message="Realtime Database Emulator Loading..." />
+    ),
     onError: () => <DatabaseRouteDisabled />,
     onData: ([projectId, config]) =>
       config === undefined ? (

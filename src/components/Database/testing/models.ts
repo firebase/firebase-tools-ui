@@ -35,6 +35,7 @@ export function fakeReference({
     set: jest.fn(),
     remove: jest.fn(),
     once: jest.fn((event: string) => fakeSnapshot({ key, data })),
+    toString: jest.fn(() => path),
   } as unknown) as database.Reference;
 }
 

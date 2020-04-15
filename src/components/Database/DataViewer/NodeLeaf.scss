@@ -12,6 +12,7 @@ $name: 'NodeLeaf';
   height: 32px;
   padding-left: 38px; // alignment with expand/collapse icons
   position: relative;
+  flex-wrap: wrap;
 
   .#{$name}__key,
   .#{$name}__value {
@@ -25,18 +26,23 @@ $name: 'NodeLeaf';
   }
 
   .#{$name}__actions {
-    display: none;
+    visibility: hidden;
+    flex: 1;
   }
 
-  .Firestore-Field-inline-editor {
-    position: absolute;
-    left: -4px;
-    top: 32px;
-    right: -4px;
-    z-index: 2;
+  .#{$name}__edit-ui {
+    width: 100%; // force flex-wrap
+  }
+
+  .Firestore-InlineEditor-relative-anchor {
+    .Firestore-InlineEditor {
+      left: -8px;
+      right: initial;
+      top: -36px; // float over the key being edited
+    }
   }
 
   &:hover > .#{$name}__actions {
-    display: inline-block;
+    visibility: visible;
   }
 }

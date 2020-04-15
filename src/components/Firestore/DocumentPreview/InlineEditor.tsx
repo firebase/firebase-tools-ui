@@ -24,6 +24,7 @@ import {
 } from '@rmwc/card';
 import { Elevation } from '@rmwc/elevation';
 import React, { useState } from 'react';
+import { FocusOn } from 'react-focus-on';
 
 import DocumentEditor from '../DocumentEditor';
 import { FirestoreAny } from '../models';
@@ -45,7 +46,7 @@ const InlineEditor: React.FC<{
     setInternalValue(value);
   }
 
-  function handleCancel(e: React.MouseEvent<HTMLButtonElement>) {
+  function handleCancel() {
     onCancel();
   }
 
@@ -57,33 +58,39 @@ const InlineEditor: React.FC<{
   }
 
   return (
-    <Elevation z={8} wrap>
-      <Card className="Firestore-InlineEditor">
-        <div className="Firestore-InlineEditorContent">
-          <DocumentEditor
-            value={value}
-            onChange={handleChange}
-            areRootNamesMutable={areRootKeysMutable}
-            areRootFieldsMutable={false}
-            rtdb={rtdb}
-            startingIndex={startingIndex}
-            supportNestedArrays={false}
-          />
-        </div>
-        <CardActions className="Firestore-InlineEditorActions">
-          <CardActionButtons>
-            <CardActionButton onClick={handleCancel}>Cancel</CardActionButton>
-            <CardActionButton
-              unelevated
-              onClick={handleSubmit}
-              disabled={!internalValue}
-            >
-              Save
-            </CardActionButton>
-          </CardActionButtons>
-        </CardActions>
-      </Card>
-    </Elevation>
+    <FocusOn
+      className="Firestore-InlineEditor-relative-anchor"
+      onClickOutside={handleCancel}
+      onEscapeKey={handleCancel}
+    >
+      <Elevation z={8} wrap>
+        <Card className="Firestore-InlineEditor">
+          <div className="Firestore-InlineEditorContent">
+            <DocumentEditor
+              value={value}
+              onChange={handleChange}
+              areRootNamesMutable={areRootKeysMutable}
+              areRootFieldsMutable={false}
+              rtdb={rtdb}
+              startingIndex={startingIndex}
+              supportNestedArrays={false}
+            />
+          </div>
+          <CardActions className="Firestore-InlineEditorActions">
+            <CardActionButtons>
+              <CardActionButton onClick={handleCancel}>Cancel</CardActionButton>
+              <CardActionButton
+                unelevated
+                onClick={handleSubmit}
+                disabled={!internalValue}
+              >
+                Save
+              </CardActionButton>
+            </CardActionButtons>
+          </CardActions>
+        </Card>
+      </Elevation>
+    </FocusOn>
   );
 };
 
