@@ -59,6 +59,15 @@
       min-width: calc(100% + 16px);
     }
   }
+
+  .Firestore-Document-Warning {
+    align-items: center;
+    align-self: center;
+    display: flex;
+    flex: 1;
+    max-width: 256px;
+    text-align: center;
+  }
 }
 
 .Firestore-Document-List,
