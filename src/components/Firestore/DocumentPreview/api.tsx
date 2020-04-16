@@ -49,6 +49,7 @@ export async function addFieldToMissingDocument(
 ) {
   const snapshot = await reference.get();
   if (snapshot.exists) {
+    // TODO: Better surface this to the user.
     throw new Error('.set() on an existing document would delete other fields');
   }
 
