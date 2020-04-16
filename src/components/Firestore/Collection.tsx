@@ -24,12 +24,14 @@ import React, { useState } from 'react';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import { NavLink, Route, useRouteMatch } from 'react-router-dom';
 
+import * as actions from './actions';
 import {
   AddDocumentDialog,
   AddDocumentDialogValue,
 } from './dialogs/AddDocumentDialog';
 import { Document } from './Document';
 import PanelHeader from './PanelHeader';
+import { useCollectionFilter, useDispatch } from './store';
 import { useAutoSelect } from './useAutoSelect';
 
 const NO_DOCS: firestore.QueryDocumentSnapshot<firestore.DocumentData>[] = [];
@@ -39,7 +41,17 @@ export interface Props {
 }
 
 export const Collection: React.FC<Props> = ({ collection }) => {
-  const [collectionSnapshot, loading, error] = useCollection(collection);
+  const collectionFilter = useCollectionFilter(collection.path);
+  const filteredCollection = collectionFilter
+    ? collection.where('waypoint', '==', collectionFilter.foo)
+    : collection;
+
+  const [collectionSnapshot, loading, error] = useCollection(
+    filteredCollection
+  );
+  const dispatch = useDispatch();
+  console.log({ collectionFilter, dispatch });
+
   const [isAddDocumentDialogOpen, setAddDocumentDialogOpen] = useState(false);
 
   const { url } = useRouteMatch()!;
@@ -53,7 +65,7 @@ export const Collection: React.FC<Props> = ({ collection }) => {
     }
   };
 
-  if (loading) return <></>;
+  // if (loading) return <></>;
   if (error) return <></>;
 
   return (
@@ -64,6 +76,29 @@ export const Collection: React.FC<Props> = ({ collection }) => {
           id={collection.id}
           icon={<Icon icon={{ icon: 'collections_bookmark', size: 'small' }} />}
         />
+        <button
+          onClick={() =>
+            dispatch(
+              actions.addCollectionFilter({
+                path: collection.path,
+                filter: true,
+              })
+            )
+          }
+        >
+          Filter
+        </button>
+        <button
+          onClick={() =>
+            dispatch(
+              actions.removeCollectionFilter({
+                path: collection.path,
+              })
+            )
+          }
+        >
+          Clear filter
+        </button>
 
         {/* Actions */}
         {isAddDocumentDialogOpen && (
