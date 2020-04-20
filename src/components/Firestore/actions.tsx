@@ -20,7 +20,12 @@ export const addCollectionFilter = createAction(
   '@firestore/addCollectionFilter'
 )<{
   path: string;
-  filter: string | boolean;
+  field: string;
+  condition: {
+    type: string;
+    entries: string[];
+  };
+  sort: string;
 }>();
 export const removeCollectionFilter = createAction(
   '@firestore/removeCollectionFilter'

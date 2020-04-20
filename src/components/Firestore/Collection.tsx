@@ -18,20 +18,23 @@ import './index.scss';
 
 import { Button } from '@rmwc/button';
 import { Icon } from '@rmwc/icon';
+import { IconButton } from '@rmwc/icon-button';
 import { List, ListItem } from '@rmwc/list';
+import { MenuSurface, MenuSurfaceAnchor } from '@rmwc/menu';
 import { firestore } from 'firebase';
 import React, { useState } from 'react';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import { NavLink, Route, useRouteMatch } from 'react-router-dom';
 
 import * as actions from './actions';
+import { CollectionFilter } from './CollectionFilter';
 import {
   AddDocumentDialog,
   AddDocumentDialogValue,
 } from './dialogs/AddDocumentDialog';
 import { Document } from './Document';
 import PanelHeader from './PanelHeader';
-import { useCollectionFilter, useDispatch } from './store';
+import { useCollectionFilter } from './store';
 import { useAutoSelect } from './useAutoSelect';
 
 const NO_DOCS: firestore.QueryDocumentSnapshot<firestore.DocumentData>[] = [];
@@ -42,17 +45,22 @@ export interface Props {
 
 export const Collection: React.FC<Props> = ({ collection }) => {
   const collectionFilter = useCollectionFilter(collection.path);
+  console.log({ collectionFilter });
+  // const filteredCollection = collection;
   const filteredCollection = collectionFilter
-    ? collection.where('waypoint', '==', collectionFilter.foo)
+    ? collection.where(
+        collectionFilter.field,
+        '==',
+        collectionFilter.condition.entries[0]
+      )
     : collection;
 
   const [collectionSnapshot, loading, error] = useCollection(
     filteredCollection
   );
-  const dispatch = useDispatch();
-  console.log({ collectionFilter, dispatch });
 
   const [isAddDocumentDialogOpen, setAddDocumentDialogOpen] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const { url } = useRouteMatch()!;
   // TODO: Fetch missing documents (i.e. nonexistent docs with subcollections).
@@ -70,35 +78,29 @@ export const Collection: React.FC<Props> = ({ collection }) => {
 
   return (
     <>
-      {redirectIfAutoSelectable}
+      {!loading && redirectIfAutoSelectable}
       <div className="Firestore-Collection">
         <PanelHeader
           id={collection.id}
           icon={<Icon icon={{ icon: 'collections_bookmark', size: 'small' }} />}
-        />
-        <button
-          onClick={() =>
-            dispatch(
-              actions.addCollectionFilter({
-                path: collection.path,
-                filter: true,
-              })
-            )
-          }
         >
-          Filter
-        </button>
-        <button
-          onClick={() =>
-            dispatch(
-              actions.removeCollectionFilter({
-                path: collection.path,
-              })
-            )
-          }
-        >
-          Clear filter
-        </button>
+          <MenuSurfaceAnchor>
+            <MenuSurface open={open} onClose={evt => setOpen(false)}>
+              {!loading && (
+                <CollectionFilter
+                  path={collection.path}
+                  onClose={() => setOpen(false)}
+                />
+              )}
+            </MenuSurface>
+
+            <IconButton
+              icon="filter_list"
+              label="Filter documents in this collection"
+              onClick={() => setOpen(!open)}
+            />
+          </MenuSurfaceAnchor>
+        </PanelHeader>
 
         {/* Actions */}
         {isAddDocumentDialogOpen && (

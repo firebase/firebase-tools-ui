@@ -21,7 +21,12 @@ import { Action, createReducer } from 'typesafe-actions';
 import * as actions from './actions';
 
 export interface CollectionFilter {
-  foo: string | boolean;
+  field: string;
+  condition: {
+    type: string;
+    entries: string[];
+  };
+  sort: string;
 }
 
 export interface CollectionFilters {
@@ -43,7 +48,8 @@ const reducer = createReducer<Store, Action>(INIT_STATE)
   .handleAction(
     actions.addCollectionFilter,
     produce((draft, { payload }) => {
-      draft.collectionFilters[payload.path] = { foo: payload.filter };
+      const { path, ...filter } = payload;
+      draft.collectionFilters[payload.path] = filter;
     })
   )
   .handleAction(
