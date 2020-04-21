@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { getByText, render } from '@testing-library/react';
+import { getByRole, getByText, render } from '@testing-library/react';
 import React from 'react';
 import { MemoryRouter } from 'react-router';
 
@@ -72,6 +72,86 @@ it('shows port for emulator that are loaded and N/A for not loaded', () => {
   const firestoreCard = getByTestId(`emulator-info-firestore`);
   expect(getByText(firestoreCard, 'Off')).not.toBeNull();
   expect(getByText(firestoreCard, 'N/A')).not.toBeNull(); // Port is N/A
+});
+
+it('shows hosting emulator card', () => {
+  const { getByTestId } = render(
+    <MemoryRouter>
+      <Home
+        configRemote={{
+          loading: false,
+          result: {
+            data: {
+              projectId: 'example',
+              hosting: {
+                host: 'localhost',
+                port: 5000,
+                hostAndPort: 'localhost:5000',
+              },
+            },
+          },
+        }}
+      />
+    </MemoryRouter>
+  );
+
+  const card = getByTestId(`emulator-info-hosting`);
+  expect(getByText(card, '5000')).not.toBeNull();
+  expect(getByText(card, 'Hosting Emulator')).not.toBeNull();
+});
+
+it('links to the hosting website externally', () => {
+  const { getByTestId } = render(
+    <MemoryRouter>
+      <Home
+        configRemote={{
+          loading: false,
+          result: {
+            data: {
+              projectId: 'example',
+              hosting: {
+                host: 'localhost',
+                port: 5000,
+                hostAndPort: 'localhost:5000',
+              },
+            },
+          },
+        }}
+      />
+    </MemoryRouter>
+  );
+
+  const card = getByTestId(`emulator-info-hosting`);
+  expect(getByText(card, '5000')).not.toBeNull();
+  const link = getByRole(card, 'link', { name: 'View website' });
+  expect(link.href).toBe('http://localhost:5000/');
+  expect(link.target).toBe('_blank');
+});
+
+it('shows pubsub emulator card', () => {
+  const { getByTestId } = render(
+    <MemoryRouter>
+      <Home
+        configRemote={{
+          loading: false,
+          result: {
+            data: {
+              projectId: 'example',
+              pubsub: {
+                host: 'localhost',
+                port: 8085,
+                hostAndPort: 'localhost:8085',
+              },
+            },
+          },
+        }}
+      />
+    </MemoryRouter>
+  );
+
+  const card = getByTestId(`emulator-info-pubsub`);
+  expect(getByText(card, '8085')).not.toBeNull();
+  expect(getByText(card, 'PubSub Emulator')).not.toBeNull();
 });
 
 it('shows button for function emulator logs', () => {

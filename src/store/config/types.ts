@@ -36,6 +36,8 @@ export interface Config {
   firestore?: FirestoreConfig;
   functions?: FunctionsConfig;
   logging?: LoggingConfig;
+  hosting?: EmulatorConfig;
+  pubsub?: EmulatorConfig;
 }
 
 export type ConfigState = RemoteResult<Config>;
