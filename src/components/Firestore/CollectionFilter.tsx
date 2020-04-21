@@ -19,11 +19,18 @@ import { CollapsibleList, SimpleListItem } from '@rmwc/list';
 import { Radio } from '@rmwc/radio';
 import { Typography } from '@rmwc/typography';
 import React, { useReducer, useState } from 'react';
-import { Controller, useFieldArray, useForm } from 'react-hook-form';
+import {
+  Controller,
+  FormContext,
+  useFieldArray,
+  useForm,
+} from 'react-hook-form';
 
 import { Field, SelectField } from '../../components/common/Field';
 import * as actions from './actions';
 import styles from './CollectionFilter.module.scss';
+import DocumentEditor from './DocumentEditor';
+import NumberEditor from './DocumentEditor/NumberEditor';
 import {
   CollectionFilter as CollectionFilterType,
   isCollectionFilterConditionMultiple,
@@ -49,28 +56,18 @@ export const CollectionFilter: React.FC<{
   onClose?: () => void;
 }> = ({ className, path, onClose }) => {
   const collectionFilter = useCollectionFilter(path);
-  console.log(collectionFilter);
   const dispatch = useDispatch();
   // const [sort, setSort] = useState<undefined | string>(undefined);
-  const { getValues, handleSubmit, register, errors, control, watch } = useForm(
-    {
-      defaultValues: collectionFilter,
-    }
-  );
-  const {
-    fields,
-    append,
-    prepend,
-    remove,
-    swap,
-    move,
-    insert,
-  } = useFieldArray({ name: 'condition.entries', control });
+  const methods = useForm({
+    defaultValues: collectionFilter,
+  });
+  const { getValues, handleSubmit, register, errors, control, watch } = methods;
+  const foo = useFieldArray({ name: 'condition.entries', control });
+  const { fields, append, prepend, remove, swap, move, insert } = foo;
 
   const transientCollectionFilter: Partial<CollectionFilterType> = watch({
     nest: true,
   });
-  console.log({ transientCollectionFilter });
 
   const onSubmit = (collectionFilter: CollectionFilterType) => {
     dispatch(
@@ -83,134 +80,135 @@ export const CollectionFilter: React.FC<{
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className={className}>
-      <div>{path}</div>
+    <FormContext {...methods}>
+      <form onSubmit={handleSubmit(onSubmit)} className={className}>
+        <div>{path}</div>
 
-      <FilterItem title="Filter by field" preview="" open>
-        <Controller
-          as={Field}
-          name="field"
-          label="Enter field"
-          control={control}
-          defaultValue=""
-        />
-      </FilterItem>
+        <FilterItem title="Filter by field" preview="" open>
+          <Controller
+            as={Field}
+            name="field"
+            label="Enter field"
+            control={control}
+            defaultValue=""
+          />
+        </FilterItem>
 
-      <FilterItem title="Add condition" preview="">
-        <Controller
-          as={SelectField}
-          name="condition.type"
-          label="Only show documents where the specified field is..."
-          control={control}
-          options={[
-            {
-              label: 'No condition',
-              value: 'unspecified',
-            },
-            {
-              label: 'Equal to',
-              value: '==',
-            },
-            {
-              label: 'Greater than',
-              value: '>',
-            },
-            {
-              label: 'Array contains',
-              value: 'array-contains',
-            },
-          ]}
-          defaultValue="unspecified"
-        />
+        <FilterItem title="Add condition" preview="">
+          <Controller
+            as={SelectField}
+            name="condition.type"
+            label="Only show documents where the specified field is..."
+            control={control}
+            options={[
+              {
+                label: 'No condition',
+                value: 'unspecified',
+              },
+              {
+                label: 'Equal to',
+                value: '==',
+              },
+              {
+                label: 'Greater than',
+                value: '>',
+              },
+              {
+                label: 'Array contains',
+                value: 'array-contains',
+              },
+            ]}
+            defaultValue="unspecified"
+          />
 
-        {transientCollectionFilter.condition &&
-          isCollectionFilterConditionSingle(
-            transientCollectionFilter.condition
-          ) && (
-            <Controller
-              as={Field}
-              name={`condition.entry`}
-              control={control}
-              defaultValue=""
-            />
-          )}
+          {transientCollectionFilter.condition &&
+            isCollectionFilterConditionSingle(
+              transientCollectionFilter.condition
+            ) && <DocumentEditor value={true} />}
 
-        {transientCollectionFilter.condition &&
-          isCollectionFilterConditionMultiple(
-            transientCollectionFilter.condition
-          ) && (
-            <>
-              <Controller
-                as={Field}
-                name={`condition.entries.0`}
-                control={control}
-                defaultValue=""
-              />
-              {fields
-                .filter((field, index) => {
-                  console.log(index);
-                  return index > 0;
-                })
-                .map((field, index) => (
-                  <div key={field.id}>
-                    <Controller
-                      as={Field}
-                      name={`condition.entries.${index}`}
-                      control={control}
-                      defaultValue=""
-                    />
-                  </div>
-                ))}
-              <Button type="button" onClick={() => append({ foo: '' })}>
-                +
-              </Button>
-            </>
-          )}
-      </FilterItem>
+          {transientCollectionFilter.condition &&
+            isCollectionFilterConditionMultiple(
+              transientCollectionFilter.condition
+            ) && (
+              <>
+                <Controller
+                  as={NumberEditor}
+                  name={`condition.entries.0`}
+                  control={control}
+                  value={0}
+                />
+                {fields.map((field, index) => {
+                  return (
+                    index > 0 && (
+                      <div key={field.id}>
+                        <Controller
+                          as={Field}
+                          name={`condition.entries.${index}`}
+                          control={control}
+                          defaultValue=""
+                        />
+                      </div>
+                    )
+                  );
+                })}
+                <Button type="button" onClick={() => append({ foo: '' })}>
+                  +
+                </Button>
+              </>
+            )}
+        </FilterItem>
 
-      <FilterItem title="Sort results" preview="">
-        <Controller
-          as={Radio}
-          label="Ascending"
-          name="sort"
-          control={control}
-          onChange={([selected]) => {
-            return 'ascending';
+        <FilterItem title="Sort results" preview="">
+          <Controller
+            as={Radio}
+            label="Ascending"
+            name="sort"
+            control={control}
+            onChange={([selected]) => {
+              return 'ascending';
+            }}
+            checked={transientCollectionFilter.sort === 'ascending'}
+          />
+
+          <Controller
+            as={Radio}
+            label="Descending"
+            name="sort"
+            control={control}
+            onChange={([selected]) => {
+              return 'descending';
+            }}
+            checked={transientCollectionFilter.sort === 'descending'}
+          />
+        </FilterItem>
+
+        <Button type="submit">Filter</Button>
+        <Button
+          type="button"
+          onClick={() => {
+            dispatch(
+              actions.removeCollectionFilter({
+                path,
+              })
+            );
+            onClose?.();
           }}
-          checked={transientCollectionFilter.sort === 'ascending'}
-        />
-
-        <Controller
-          as={Radio}
-          label="Descending"
-          name="sort"
-          control={control}
-          onChange={([selected]) => {
-            return 'descending';
-          }}
-          checked={transientCollectionFilter.sort === 'descending'}
-        />
-      </FilterItem>
-
-      <Button type="submit">Filter</Button>
-      <Button
-        type="button"
-        onClick={() => {
-          dispatch(
-            actions.removeCollectionFilter({
-              path,
-            })
-          );
-          onClose?.();
-        }}
-      >
-        Clear filter
-      </Button>
-    </form>
+        >
+          Clear filter
+        </Button>
+      </form>
+    </FormContext>
   );
 };
 
-const ConditionEntry: React.FC = () => null;
+const ConditionEntry: React.FC<{ value: string | number | boolean }> = ({
+  value,
+}) => (
+  <div>
+    <SelectField />
+    <div>TODO</div>
+  </div>
+);
 
 const FilterItem: React.FC<{
   title: string;
