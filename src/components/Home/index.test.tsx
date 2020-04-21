@@ -74,6 +74,58 @@ it('shows port for emulator that are loaded and N/A for not loaded', () => {
   expect(getByText(firestoreCard, 'N/A')).not.toBeNull(); // Port is N/A
 });
 
+it('shows hosting emulator card', () => {
+  const { getByTestId } = render(
+    <MemoryRouter>
+      <Home
+        configRemote={{
+          loading: false,
+          result: {
+            data: {
+              projectId: 'example',
+              hosting: {
+                host: 'localhost',
+                port: 5000,
+                hostAndPort: 'localhost:5000',
+              },
+            },
+          },
+        }}
+      />
+    </MemoryRouter>
+  );
+
+  const card = getByTestId(`emulator-info-hosting`);
+  expect(getByText(card, '5000')).not.toBeNull();
+  expect(getByText(card, 'Hosting Emulator')).not.toBeNull();
+});
+
+it('shows pubsub emulator card', () => {
+  const { getByTestId } = render(
+    <MemoryRouter>
+      <Home
+        configRemote={{
+          loading: false,
+          result: {
+            data: {
+              projectId: 'example',
+              pubsub: {
+                host: 'localhost',
+                port: 8085,
+                hostAndPort: 'localhost:8085',
+              },
+            },
+          },
+        }}
+      />
+    </MemoryRouter>
+  );
+
+  const card = getByTestId(`emulator-info-pubsub`);
+  expect(getByText(card, '8085')).not.toBeNull();
+  expect(getByText(card, 'PubSub Emulator')).not.toBeNull();
+});
+
 it('shows button for function emulator logs', () => {
   const { getByTestId } = render(
     <MemoryRouter>

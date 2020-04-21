@@ -88,6 +88,18 @@ const Overview: React.FC<{
           linkLabel="View Logs"
           testId="emulator-info-functions"
         />
+        <EmulatorCard
+          name="Hosting Emulator"
+          icon={<FunctionsIcon theme="secondary" />}
+          config={config.hosting}
+          testId="emulator-info-hosting"
+        />
+        <EmulatorCard
+          name="PubSub Emulator"
+          icon={<FunctionsIcon theme="secondary" />}
+          config={config.pubsub}
+          testId="emulator-info-pubsub"
+        />
       </GridRow>
     </GridCell>
   );
@@ -97,7 +109,7 @@ export const EmulatorCard: React.FC<{
   name: string;
   icon: React.ReactElement;
   config: EmulatorConfig | undefined;
-  linkTo: string;
+  linkTo?: string;
   linkLabel?: string;
   testId?: string;
 }> = ({ name, icon, config, linkTo, linkLabel, testId }) => (
@@ -121,13 +133,15 @@ export const EmulatorCard: React.FC<{
         </Typography>
       </div>
       <ListDivider tag="div" />
-      <CardActions>
-        <CardActionIcons>
-          <CardActionButton tag={Link} to={linkTo}>
-            {linkLabel || 'Go to Emulator'}
-          </CardActionButton>
-        </CardActionIcons>
-      </CardActions>
+      {linkTo && (
+        <CardActions>
+          <CardActionIcons>
+            <CardActionButton tag={Link} to={linkTo}>
+              {linkLabel || 'Go to Emulator'}
+            </CardActionButton>
+          </CardActionIcons>
+        </CardActions>
+      )}
     </Card>
   </GridCell>
 );
