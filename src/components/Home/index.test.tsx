@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { getByLabelText, getByText, render } from '@testing-library/react';
+import { getByRole, getByText, render } from '@testing-library/react';
 import React from 'react';
 import { MemoryRouter } from 'react-router';
 
@@ -123,8 +123,7 @@ it('links to the hosting website externally', () => {
 
   const card = getByTestId(`emulator-info-hosting`);
   expect(getByText(card, '5000')).not.toBeNull();
-  const label = getByText(card, 'View website');
-  const link = label.closest('a')!;
+  const link = getByRole(card, 'link', { name: 'View website' });
   expect(link.href).toBe('http://localhost:5000/');
   expect(link.target).toBe('_blank');
 });
