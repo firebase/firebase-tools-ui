@@ -93,6 +93,10 @@ const Overview: React.FC<{
           icon={<FunctionsIcon theme="secondary" />}
           config={config.hosting}
           testId="emulator-info-hosting"
+          linkToExternal={
+            config.hosting && `http://${config.hosting?.hostAndPort}/`
+          }
+          linkLabel="View website"
         />
         <EmulatorCard
           name="PubSub Emulator"
@@ -110,9 +114,10 @@ export const EmulatorCard: React.FC<{
   icon: React.ReactElement;
   config: EmulatorConfig | undefined;
   linkTo?: string;
+  linkToExternal?: string;
   linkLabel?: string;
   testId?: string;
-}> = ({ name, icon, config, linkTo, linkLabel, testId }) => (
+}> = ({ name, icon, config, linkTo, linkLabel, linkToExternal, testId }) => (
   <GridCell span={4}>
     <Card className="Home-EmulatorCard" data-testid={testId}>
       <div className="Home-EmulatorCard-Info">
@@ -133,15 +138,20 @@ export const EmulatorCard: React.FC<{
         </Typography>
       </div>
       <ListDivider tag="div" />
-      {linkTo && (
-        <CardActions>
-          <CardActionIcons>
+      <CardActions>
+        <CardActionIcons>
+          {linkToExternal && (
+            <CardActionButton tag="a" href={linkToExternal} target="_blank">
+              {linkLabel}
+            </CardActionButton>
+          )}
+          {linkTo && (
             <CardActionButton tag={Link} to={linkTo}>
               {linkLabel || 'Go to Emulator'}
             </CardActionButton>
-          </CardActionIcons>
-        </CardActions>
-      )}
+          )}
+        </CardActionIcons>
+      </CardActions>
     </Card>
   </GridCell>
 );

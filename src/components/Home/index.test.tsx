@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { getByText, render } from '@testing-library/react';
+import { getByLabelText, getByText, render } from '@testing-library/react';
 import React from 'react';
 import { MemoryRouter } from 'react-router';
 
@@ -98,6 +98,35 @@ it('shows hosting emulator card', () => {
   const card = getByTestId(`emulator-info-hosting`);
   expect(getByText(card, '5000')).not.toBeNull();
   expect(getByText(card, 'Hosting Emulator')).not.toBeNull();
+});
+
+it('links to the hosting website externally', () => {
+  const { getByTestId } = render(
+    <MemoryRouter>
+      <Home
+        configRemote={{
+          loading: false,
+          result: {
+            data: {
+              projectId: 'example',
+              hosting: {
+                host: 'localhost',
+                port: 5000,
+                hostAndPort: 'localhost:5000',
+              },
+            },
+          },
+        }}
+      />
+    </MemoryRouter>
+  );
+
+  const card = getByTestId(`emulator-info-hosting`);
+  expect(getByText(card, '5000')).not.toBeNull();
+  const label = getByText(card, 'View website');
+  const link = label.closest('a')!;
+  expect(link.href).toBe('http://localhost:5000/');
+  expect(link.target).toBe('_blank');
 });
 
 it('shows pubsub emulator card', () => {
