@@ -27,6 +27,7 @@ import { useCollection } from 'react-firebase-hooks/firestore';
 import { NavLink, Route, useRouteMatch } from 'react-router-dom';
 
 import * as actions from './actions';
+import styles from './Collection.module.scss';
 import { CollectionFilter } from './CollectionFilter';
 import {
   AddDocumentDialog,
@@ -45,22 +46,22 @@ export interface Props {
 
 export const Collection: React.FC<Props> = ({ collection }) => {
   const collectionFilter = useCollectionFilter(collection.path);
-  console.log({ collectionFilter });
-  // const filteredCollection = collection;
-  const filteredCollection = collectionFilter
-    ? collection.where(
-        collectionFilter.field,
-        '==',
-        collectionFilter.condition.entries[0]
-      )
-    : collection;
+  const filteredCollection = collection;
+  // const filteredCollection = collectionFilter
+  //   ? collection.where(
+  //       collectionFilter.field,
+  //       '==',
+  //       collectionFilter.condition.entries[0]
+  //     )
+  //   : collection;
 
   const [collectionSnapshot, loading, error] = useCollection(
     filteredCollection
   );
 
   const [isAddDocumentDialogOpen, setAddDocumentDialogOpen] = useState(false);
-  const [open, setOpen] = useState(false);
+  // TODO: DO NOT SUBMIT: Default to false before Submitting
+  const [open, setOpen] = useState(true);
 
   const { url } = useRouteMatch()!;
   // TODO: Fetch missing documents (i.e. nonexistent docs with subcollections).
@@ -73,7 +74,6 @@ export const Collection: React.FC<Props> = ({ collection }) => {
     }
   };
 
-  // if (loading) return <></>;
   if (error) return <></>;
 
   return (
@@ -86,8 +86,9 @@ export const Collection: React.FC<Props> = ({ collection }) => {
         >
           <MenuSurfaceAnchor>
             <MenuSurface open={open} onClose={evt => setOpen(false)}>
-              {!loading && (
+              {!loading && open && (
                 <CollectionFilter
+                  className={styles['query-panel']}
                   path={collection.path}
                   onClose={() => setOpen(false)}
                 />

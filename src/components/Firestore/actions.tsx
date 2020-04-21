@@ -16,17 +16,15 @@
 
 import { createAction } from 'typesafe-actions';
 
+import { CollectionFilter } from './models';
+
 export const addCollectionFilter = createAction(
   '@firestore/addCollectionFilter'
-)<{
-  path: string;
-  field: string;
-  condition: {
-    type: string;
-    entries: string[];
-  };
-  sort: string;
-}>();
+)<
+  {
+    path: string;
+  } & CollectionFilter
+>();
 export const removeCollectionFilter = createAction(
   '@firestore/removeCollectionFilter'
 )<{

@@ -19,15 +19,7 @@ import * as React from 'react';
 import { Action, createReducer } from 'typesafe-actions';
 
 import * as actions from './actions';
-
-export interface CollectionFilter {
-  field: string;
-  condition: {
-    type: string;
-    entries: string[];
-  };
-  sort: string;
-}
+import { CollectionFilter } from './models';
 
 export interface CollectionFilters {
   [path: string]: CollectionFilter;
@@ -55,6 +47,7 @@ const reducer = createReducer<Store, Action>(INIT_STATE)
   .handleAction(
     actions.removeCollectionFilter,
     produce((draft, { payload }) => {
+      console.log('remove', payload);
       delete draft.collectionFilters[payload.path];
     })
   );
@@ -93,7 +86,7 @@ export function useDispatch(): React.Dispatch<Action> {
   return React.useMemo(() => dispatch, [dispatch]);
 }
 
-export function useCollectionFilter(path: string) {
+export function useCollectionFilter(path: string): CollectionFilter {
   const { store } = useFirestoreStore();
   return store.collectionFilters[path];
 }
