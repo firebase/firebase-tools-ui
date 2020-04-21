@@ -49,23 +49,25 @@ const RouterWithInit = () => {
 };
 
 ReactDOM.render(
-  <RMWCProvider
-    // Globally disable ripples
-    ripple={false}
-  >
-    <ThemeProvider
-      options={{
-        background,
-        primary,
-        primaryRgb: '104, 29, 168',
-        secondary,
-        error,
-      }}
+  <React.StrictMode>
+    <RMWCProvider
+      // Globally disable ripples
+      ripple={false}
     >
-      <Provider store={store}>
-        <RouterWithInit />
-      </Provider>
-    </ThemeProvider>
-  </RMWCProvider>,
+      <ThemeProvider
+        options={{
+          background,
+          primary,
+          primaryRgb: '104, 29, 168',
+          secondary,
+          error,
+        }}
+      >
+        <Provider store={store}>
+          <RouterWithInit />
+        </Provider>
+      </ThemeProvider>
+    </RMWCProvider>
+  </React.StrictMode>,
   document.getElementById('root')
 );

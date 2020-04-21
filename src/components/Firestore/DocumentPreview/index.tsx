@@ -16,13 +16,14 @@
 
 import { Button } from '@rmwc/button';
 import { List, ListItem } from '@rmwc/list';
+import { Typography } from '@rmwc/typography';
 import { firestore } from 'firebase';
 import React, { useState } from 'react';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 
 import { FirestoreMap } from '../models';
 import { isMap } from '../utils';
-import { updateField } from './api';
+import { addFieldToMissingDocument, updateField } from './api';
 import FieldPreview from './FieldPreview';
 import InlineEditor from './InlineEditor';
 import { DocumentProvider } from './store';
@@ -36,16 +37,15 @@ const DocumentPreview: React.FC<Props> = ({
   reference,
   maxSummaryLen = 20,
 }) => {
-  const [data, loading, error] = useDocumentData(reference);
+  const [data, loading, error] = useDocumentData<FirestoreMap>(reference);
   const [isAddingField, setIsAddingField] = useState(false);
 
   if (loading) return <div>Loading document...</div>;
   if (error) return <div>Error retrieving document</div>;
-  if (!data) return <div>Error resolving document</div>;
 
   return (
     <>
-      <DocumentProvider value={data as FirestoreMap}>
+      <DocumentProvider value={data || {}}>
         <List
           dense
           className="List-Actions Firestore-Document-Fields"
@@ -66,15 +66,19 @@ const DocumentPreview: React.FC<Props> = ({
               onCancel={() => {
                 setIsAddingField(false);
               }}
-              onSave={(key, value) => {
-                updateField(reference, data as FirestoreMap, [key], value);
+              onSave={async (key, value) => {
+                if (!data) {
+                  await addFieldToMissingDocument(reference, key, value);
+                } else {
+                  updateField(reference, data, [key], value);
+                }
                 setIsAddingField(false);
               }}
               areRootKeysMutable={true}
             />
           )}
 
-          {isMap(data) && (
+          {data && isMap(data) ? (
             <div className="Firestore-Field-List">
               {Object.keys(data).map(name => (
                 <FieldPreview
@@ -85,6 +89,17 @@ const DocumentPreview: React.FC<Props> = ({
                 />
               ))}
             </div>
+          ) : (
+            <Typography
+              theme="secondary"
+              use="body2"
+              className="Firestore-Document-Warning"
+            >
+              <i>
+                This document does not exist, it will not appear in queries or
+                snapshots
+              </i>
+            </Typography>
           )}
         </List>
       </DocumentProvider>

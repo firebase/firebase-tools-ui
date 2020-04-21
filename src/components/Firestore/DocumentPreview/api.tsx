@@ -42,6 +42,20 @@ export function updateField(
   documentRef.update(...payload);
 }
 
+export async function addFieldToMissingDocument(
+  reference: firestore.DocumentReference,
+  key: string,
+  value: FirestoreAny
+) {
+  const snapshot = await reference.get();
+  if (snapshot.exists) {
+    // TODO: Better surface this to the user.
+    throw new Error('.set() on an existing document would delete other fields');
+  }
+
+  await reference.set({ [key]: value });
+}
+
 /**
  * Firestore does not allow array syntax when updating/deleting fields i.e.
  * .update('obj.array[2]', true)
