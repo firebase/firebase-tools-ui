@@ -18,60 +18,54 @@ import { act, fireEvent, render } from '@testing-library/react';
 import React from 'react';
 import { FormContext, useForm } from 'react-hook-form';
 
-import { ApiProvider } from '../ApiContext';
-import { fakeDocumentReference } from '../testing/models';
 import JsonEditor from './JsonEditor';
 
 const GOOD_PATH = '/wow/cool';
 
-const API = {
-  database: {
-    doc: path => {
-      if (path !== GOOD_PATH) {
-        throw '';
-      }
-
-      return fakeDocumentReference({ path });
-    },
-  },
-};
-
 const TestForm: React.FC = ({ children }) => {
   const methods = useForm();
-  return (
-    <FormContext {...methods}>
-      <ApiProvider value={API}>{children}</ApiProvider>
-    </FormContext>
-  );
+  return <FormContext {...methods}>{children}</FormContext>;
 };
 
-it('renders an editor for a document-ref', async () => {
+it('renders a field with json stringified value', async () => {
   const onChange = jest.fn();
-  const { getByLabelText, getByText } = render(
+  const { getByLabelText } = render(
     <TestForm>
-      <JsonEditor
-        name="foo"
-        value={fakeDocumentReference({
-          path: '/foo/bar',
-        })}
-        onChange={onChange}
-      />
+      <JsonEditor name="foo" value={{ a: 'b' }} onChange={onChange} />
     </TestForm>
   );
 
-  expect(getByLabelText(/Document path/).value).toBe('/foo/bar');
+  expect(getByLabelText('JSON').value).toBe('{"a": "b"}');
+});
+
+it('shows an error on invalid json and does not emit onChange', async () => {
+  const onChange = jest.fn();
+  const { getByLabelText, getByText } = render(
+    <TestForm>
+      <JsonEditor name="foo" value={{ a: 'b' }} onChange={onChange} />
+    </TestForm>
+  );
 
   await act(async () => {
-    fireEvent.change(getByLabelText(/Document path/), {
-      target: { value: 'foo' },
+    fireEvent.change(getByLabelText('JSON'), {
+      target: { value: 'not json' },
     });
   });
 
   expect(onChange).not.toHaveBeenCalled();
-  expect(getByText(/Must point to a document/)).not.toBeNull();
+  expect(getByText(/Must be valid JSON/)).not.toBeNull();
+});
+
+it('emits the JSON parsed value into onChange if valid', async () => {
+  const onChange = jest.fn();
+  const { getByLabelText } = render(
+    <TestForm>
+      <JsonEditor name="foo" value={{ a: 'b' }} onChange={onChange} />
+    </TestForm>
+  );
 
   await act(async () => {
-    fireEvent.change(getByLabelText(/Document path/), {
+    fireEvent.change(getByLabelText('JSON'), {
       target: { value: GOOD_PATH },
     });
   });

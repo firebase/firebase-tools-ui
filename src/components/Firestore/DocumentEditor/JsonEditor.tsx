@@ -14,20 +14,18 @@
  * limitations under the License.
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import { Field } from '../../common/Field';
-import { useApi } from '../ApiContext';
-import { PrimitiveValue } from './types';
+import { FirestoreAny } from '../models';
 
 const JsonEditor: React.FC<{
-  value: PrimitiveValue;
-  onChange: (value: PrimitiveValue) => void;
+  value: FirestoreAny;
+  onChange: (value: FirestoreAny) => void;
   name: string;
 }> = ({ value, onChange, name }) => {
-  // const [defaultValue] = useState(JSON.stringify(value));
-  const api = useApi();
+  const [initialValue] = useState(JSON.stringify(value));
   const {
     errors,
     formState: { touched },
@@ -50,7 +48,7 @@ const JsonEditor: React.FC<{
     });
 
     return () => unregister(name);
-  }, [register, unregister, name, api]);
+  }, [register, unregister, name]);
 
   async function handleChange(value: string) {
     if (await triggerValidation(name)) {
@@ -61,7 +59,7 @@ const JsonEditor: React.FC<{
   return (
     <Field
       label="JSON"
-      defaultValue={'JSON!'}
+      defaultValue={initialValue}
       onChange={e => {
         setValue(name, e.currentTarget.value);
         handleChange(e.currentTarget.value);
