@@ -452,6 +452,8 @@ function getDocumentFieldType(field: DocumentField): FieldType {
     return FieldType.MAP;
   } else if (isArrayField(field)) {
     return FieldType.ARRAY;
+  } else if (isJSONField(field)) {
+    return FieldType.JSON;
   } else {
     if (field.value instanceof DocumentPath) {
       return FieldType.REFERENCE;
