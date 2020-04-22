@@ -55,15 +55,16 @@ export const Field: React.FC<Props> = ({
         id={id}
       />
       <div className="Field-subtext">
-        {tip && (
-          <Typography className="Field-tip" use="body2" theme="secondary">
-            {tip}
-          </Typography>
-        )}
-        {error && (
+        {error ? (
           <Typography className="Field-tip" use="body2" theme="error">
             {error}
           </Typography>
+        ) : (
+          tip && (
+            <Typography className="Field-tip" use="body2" theme="secondary">
+              {tip}
+            </Typography>
+          )
         )}
       </div>
     </div>
@@ -96,15 +97,16 @@ export const SelectField: React.FC<SelectFieldProps> = ({
       </Typography>
       <Select outlined {...selectProps} id={id} />
       <div className="Field-subtext">
-        {tip && (
-          <Typography className="Field-tip" use="body2" theme="secondary">
-            {tip}
-          </Typography>
-        )}
-        {error && (
+        {error ? (
           <Typography className="Field-tip" use="body2" theme="error">
             {error}
           </Typography>
+        ) : (
+          tip && (
+            <Typography className="Field-tip" use="body2" theme="secondary">
+              {tip}
+            </Typography>
+          )
         )}
       </div>
     </div>
