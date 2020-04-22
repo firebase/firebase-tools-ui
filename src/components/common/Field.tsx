@@ -54,21 +54,24 @@ export const Field: React.FC<Props> = ({
         tag="div"
         id={id}
       />
-      {tip && (
-        <Typography className="Field-tip" use="body2" theme="secondary">
-          {tip}
-        </Typography>
-      )}
-      {error && (
-        <Typography className="Field-tip" use="body2" theme="error">
-          {error}
-        </Typography>
-      )}
+      <div className="Field-subtext">
+        {error ? (
+          <Typography className="Field-tip" use="body2" theme="error">
+            {error}
+          </Typography>
+        ) : (
+          tip && (
+            <Typography className="Field-tip" use="body2" theme="secondary">
+              {tip}
+            </Typography>
+          )
+        )}
+      </div>
     </div>
   );
 };
 
-type SelectFieldProps = { tip?: string } & SelectProps &
+type SelectFieldProps = { tip?: string; error?: string } & SelectProps &
   HTMLProps<HTMLSelectElement>;
 
 export const SelectField: React.FC<SelectFieldProps> = ({
@@ -77,6 +80,7 @@ export const SelectField: React.FC<SelectFieldProps> = ({
   outlined,
   tip,
   theme, // TODO: 5.0 theme, incompatible with 6.0 remove at 6.0
+  error,
   ...selectProps
 }) => {
   const [id] = useState(randomId());
@@ -92,12 +96,19 @@ export const SelectField: React.FC<SelectFieldProps> = ({
         {label}
       </Typography>
       <Select outlined {...selectProps} id={id} />
-      {tip && (
-        <Typography className="Field-tip" use="body2" theme="secondary">
-          {tip}
-        </Typography>
-      )}
-      {/* TODO: Error text */}
+      <div className="Field-subtext">
+        {error ? (
+          <Typography className="Field-tip" use="body2" theme="error">
+            {error}
+          </Typography>
+        ) : (
+          tip && (
+            <Typography className="Field-tip" use="body2" theme="secondary">
+              {tip}
+            </Typography>
+          )
+        )}
+      </div>
     </div>
   );
 };
