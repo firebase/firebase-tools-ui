@@ -24,12 +24,17 @@ export interface ArrayField {
   arrayChildren: ArrayChildren;
 }
 
+export interface JSONField {
+  isJson: boolean;
+  value: FirestoreAny;
+}
+
 export type PrimitiveValue = FirestorePrimitive | DocumentPath;
 export interface PrimitiveField {
   value: PrimitiveValue;
 }
 
-export type Field = MapField | ArrayField | PrimitiveField;
+export type Field = MapField | ArrayField | JSONField | PrimitiveField;
 export type Fields = {
   [uuid: number]: Field;
 };
@@ -58,6 +63,10 @@ export function isMapField(field: Field): field is MapField {
 
 export function isArrayField(field: Field): field is ArrayField {
   return 'arrayChildren' in field;
+}
+
+export function isJSONField(field: Field): field is JSONField {
+  return 'isJson' in field;
 }
 
 export function assertStoreHasRoot(

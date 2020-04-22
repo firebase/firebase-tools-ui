@@ -51,6 +51,7 @@ import {
   DocumentPath,
   MapField,
   isArrayField,
+  isJSONField,
   isMapField,
 } from './types';
 import { denormalize, normalize } from './utils';
@@ -303,7 +304,7 @@ const FieldEditor: React.FC<{
         </div>
       </div>
     );
-  } else if (isJson) {
+  } else if (isJSONField(field)) {
     return (
       <JsonEditor
         name={`${uuid}`}
