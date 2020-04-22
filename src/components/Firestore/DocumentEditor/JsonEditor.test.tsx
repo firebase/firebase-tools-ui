@@ -35,7 +35,7 @@ it('renders a field with json stringified value', async () => {
     </TestForm>
   );
 
-  expect(getByLabelText('JSON').value).toBe('{"a": "b"}');
+  expect(getByLabelText('JSON').value).toBe('{"a":"b"}');
 });
 
 it('shows an error on invalid json and does not emit onChange', async () => {
@@ -66,9 +66,10 @@ it('emits the JSON parsed value into onChange if valid', async () => {
 
   await act(async () => {
     fireEvent.change(getByLabelText('JSON'), {
-      target: { value: GOOD_PATH },
+      target: { value: '{"x": "y"}' },
     });
   });
 
-  expect(onChange.mock.calls[0][0].path).toBe(GOOD_PATH);
+  expect(onChange).toHaveBeenCalledTimes(1);
+  expect(onChange).toHaveBeenCalledWith({ x: 'y' });
 });
