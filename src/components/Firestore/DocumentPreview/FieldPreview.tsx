@@ -235,6 +235,8 @@ function summarize(data: FirestoreAny, maxLen: number): string {
       // TODO: Better date time formatting.
       // Note: Not using toLocaleString() since it does not stringify timezone.
       return (data as firestore.Timestamp).toDate().toString();
+    case FieldType.JSON:
+      throw new Error('JSON field type is input only');
   }
 }
 

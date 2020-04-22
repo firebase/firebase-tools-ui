@@ -141,6 +141,8 @@ export const reducer = createReducer<Store, Action>({ fields: {} })
         draft.fields[payload.uuid] = { mapChildren: [] };
       } else if (payload.type === FieldType.ARRAY) {
         draft.fields[payload.uuid] = { arrayChildren: [] };
+      } else if (payload.type === FieldType.JSON) {
+        draft.fields[payload.uuid] = { isJson: true, value: {} };
       } else {
         draft.fields[payload.uuid] = {
           value: defaultValueForPrimitiveType(payload.type),
