@@ -86,7 +86,9 @@ export function useDispatch(): React.Dispatch<Action> {
   return React.useMemo(() => dispatch, [dispatch]);
 }
 
-export function useCollectionFilter(path: string): CollectionFilter {
+export function useCollectionFilter(
+  path: string
+): CollectionFilter | undefined {
   const { store } = useFirestoreStore();
   return store.collectionFilters[path];
 }

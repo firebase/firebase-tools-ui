@@ -1,3 +1,12 @@
 .panel {
   width: 360px; // taken from console
 }
+
+.header {
+  border-top: 1px solid grey;
+}
+
+.children {
+  border-top: 1px solid lightgrey;
+  padding: 0 16px;
+}

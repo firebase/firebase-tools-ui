@@ -16,39 +16,30 @@
 
 import { Button } from '@rmwc/button';
 import { CollapsibleList, SimpleListItem } from '@rmwc/list';
-import { Radio } from '@rmwc/radio';
+import { Radio, RadioHTMLProps, RadioProps } from '@rmwc/radio';
+import { Select, SelectProps } from '@rmwc/select';
+import { TextField, TextFieldHTMLProps, TextFieldProps } from '@rmwc/textfield';
 import { Typography } from '@rmwc/typography';
-import React, { useReducer, useState } from 'react';
+import { firestore } from 'firebase';
+import React, { useEffect, useState } from 'react';
 import {
   Controller,
   FormContext,
   useFieldArray,
   useForm,
+  useFormContext,
 } from 'react-hook-form';
 
 import { Field, SelectField } from '../../components/common/Field';
 import * as actions from './actions';
 import styles from './CollectionFilter.module.scss';
-import DocumentEditor from './DocumentEditor';
-import NumberEditor from './DocumentEditor/NumberEditor';
 import {
   CollectionFilter as CollectionFilterType,
   isCollectionFilterConditionMultiple,
   isCollectionFilterConditionSingle,
 } from './models';
 import { useCollectionFilter, useDispatch } from './store';
-
-enum CONDITION_OPTIONS {
-  NONE = 'No condition',
-  EQUAL_TO = '(==) equal to',
-  GREATER_THAN = '(>) greater than',
-  GREATER_THAN_EQUAL_TO = '(>=) greater than or equal to',
-  LESS_THAN = '(<) less than',
-  LESS_THAN_EQUAL_TO = '(<=) less than or equal to',
-  IN = '(in) equal to any of the following',
-  ARRAY_CONTAINS = '(array-contains) an array containing',
-  ARRAY_CONTAINS_ANY = '(array-contains-any) an array containing any',
-}
+import { isBoolean, isNumber, isString } from './utils';
 
 export const CollectionFilter: React.FC<{
   className: string;
@@ -57,130 +48,79 @@ export const CollectionFilter: React.FC<{
 }> = ({ className, path, onClose }) => {
   const collectionFilter = useCollectionFilter(path);
   const dispatch = useDispatch();
-  // const [sort, setSort] = useState<undefined | string>(undefined);
-  const methods = useForm({
-    defaultValues: collectionFilter,
-  });
-  const { getValues, handleSubmit, register, errors, control, watch } = methods;
-  const foo = useFieldArray({ name: 'condition.entries', control });
-  const { fields, append, prepend, remove, swap, move, insert } = foo;
 
-  const transientCollectionFilter: Partial<CollectionFilterType> = watch({
+  const defaultValues = {
+    field: collectionFilter?.field || '',
+    sort: collectionFilter?.sort,
+    condition: {
+      type: undefined,
+      value: '',
+      values: [''],
+      ...collectionFilter?.condition,
+    },
+  };
+
+  const methods = useForm({
+    mode: 'onChange',
+    defaultValues,
+  });
+
+  const { handleSubmit, watch } = methods;
+
+  const transientCollectionFilter = watch({
     nest: true,
   });
 
-  const onSubmit = (collectionFilter: CollectionFilterType) => {
+  const onSubmit = (data: CollectionFilterType) => {
+    console.log(data);
     dispatch(
       actions.addCollectionFilter({
         path,
-        ...collectionFilter,
+        ...data,
       })
     );
-    onClose?.();
+    // onClose?.();
   };
 
   return (
     <FormContext {...methods}>
       <form onSubmit={handleSubmit(onSubmit)} className={className}>
-        <div>{path}</div>
-
+        {/* Field entry */}
         <FilterItem title="Filter by field" preview="" open>
           <Controller
             as={Field}
             name="field"
             label="Enter field"
-            control={control}
             defaultValue=""
           />
         </FilterItem>
 
-        <FilterItem title="Add condition" preview="">
-          <Controller
-            as={SelectField}
-            name="condition.type"
-            label="Only show documents where the specified field is..."
-            control={control}
-            options={[
-              {
-                label: 'No condition',
-                value: 'unspecified',
-              },
-              {
-                label: 'Equal to',
-                value: '==',
-              },
-              {
-                label: 'Greater than',
-                value: '>',
-              },
-              {
-                label: 'Array contains',
-                value: 'array-contains',
-              },
-            ]}
-            defaultValue="unspecified"
-          />
-
-          {transientCollectionFilter.condition &&
-            isCollectionFilterConditionSingle(
-              transientCollectionFilter.condition
-            ) && <DocumentEditor value={true} />}
-
-          {transientCollectionFilter.condition &&
-            isCollectionFilterConditionMultiple(
-              transientCollectionFilter.condition
-            ) && (
-              <>
-                <Controller
-                  as={NumberEditor}
-                  name={`condition.entries.0`}
-                  control={control}
-                  value={0}
-                />
-                {fields.map((field, index) => {
-                  return (
-                    index > 0 && (
-                      <div key={field.id}>
-                        <Controller
-                          as={Field}
-                          name={`condition.entries.${index}`}
-                          control={control}
-                          defaultValue=""
-                        />
-                      </div>
-                    )
-                  );
-                })}
-                <Button type="button" onClick={() => append({ foo: '' })}>
-                  +
-                </Button>
-              </>
-            )}
+        {/* Condition entry */}
+        <FilterItem title="Add condition" preview="..." open>
+          <ConditionBuilder />
         </FilterItem>
 
-        <FilterItem title="Sort results" preview="">
+        {/* Sort entry */}
+        <FilterItem
+          title="Sort results"
+          preview={
+            transientCollectionFilter.sort === 'ascending'
+              ? 'asc'
+              : transientCollectionFilter.sort === 'descending'
+              ? 'desc'
+              : undefined
+          }
+          open
+        >
           <Controller
-            as={Radio}
-            label="Ascending"
+            as={SortRadioGroup}
             name="sort"
-            control={control}
-            onChange={([selected]) => {
-              return 'ascending';
-            }}
-            checked={transientCollectionFilter.sort === 'ascending'}
-          />
-
-          <Controller
-            as={Radio}
-            label="Descending"
-            name="sort"
-            control={control}
-            onChange={([selected]) => {
-              return 'descending';
-            }}
-            checked={transientCollectionFilter.sort === 'descending'}
+            sort={transientCollectionFilter.sort}
+            onChange={([evt]) => evt.currentTarget.value}
           />
         </FilterItem>
+
+        <FilterPreview path={path} />
 
         <Button type="submit">Filter</Button>
         <Button
@@ -201,18 +141,201 @@ export const CollectionFilter: React.FC<{
   );
 };
 
-const ConditionEntry: React.FC<{ value: string | number | boolean }> = ({
-  value,
-}) => (
-  <div>
-    <SelectField />
-    <div>TODO</div>
-  </div>
+const FilterPreview: React.FC<{ path: string }> = ({ path }) => {
+  const collectionId = path.split('/').pop();
+  return <div>.collection({`${collectionId}`})</div>;
+};
+
+const ConditionBuilder: React.FC = () => {
+  const { watch } = useFormContext();
+  const condition = watch('condition');
+
+  const options: Array<{ label: string; value: firestore.WhereFilterOp }> = [
+    {
+      label: '(==) equal to',
+      value: '==',
+    },
+    {
+      label: '(>) greater than',
+      value: '>',
+    },
+    {
+      label: '(>=) greater than or equal to',
+      value: '>=',
+    },
+    {
+      label: '(<) less than',
+      value: '<',
+    },
+    {
+      label: '(<=) less than or equal to',
+      value: '<=',
+    },
+    {
+      label: '(in) equal to any of the following',
+      value: 'in',
+    },
+    {
+      label: '(array-contains) an array containing',
+      value: 'array-contains',
+    },
+    {
+      label: '(array-contains-any) an array containing any',
+      value: 'array-contains-any',
+    },
+  ];
+
+  return (
+    <>
+      <Controller
+        as={SelectField}
+        name="condition.type"
+        label="Only show documents where the specified field is..."
+        placeholder="No condition"
+        options={options}
+        onChange={([selected]) => selected.currentTarget.value || undefined}
+      />
+
+      {condition && isCollectionFilterConditionSingle(condition) && (
+        <ConditionEntry name="condition.value" />
+      )}
+
+      {condition && isCollectionFilterConditionMultiple(condition) && (
+        <ConditionEntries name="condition.values" />
+      )}
+    </>
+  );
+};
+
+const ConditionEntries: React.FC<{ name: string }> = ({ name }) => {
+  const { fields, append, remove } = useFieldArray({
+    name,
+  });
+
+  return (
+    <>
+      {fields.map((field, index) => (
+        <div key={field.id}>
+          <ConditionEntry name={`${name}[${index}]`} />
+          <Button type="button" onClick={() => remove(index)}>
+            -
+          </Button>
+        </div>
+      ))}
+      <Button type="button" onClick={() => append({ _: '' })}>
+        +
+      </Button>
+    </>
+  );
+};
+
+const SortRadioGroup: React.FC<{ sort?: string } & RadioProps &
+  RadioHTMLProps> = ({ sort, value, ...radioProps }) => (
+  <>
+    <Radio
+      value="ascending"
+      label="Ascending"
+      checked={sort === 'ascending'}
+      {...radioProps}
+    />
+
+    <Radio
+      value="descending"
+      label="Descending"
+      checked={sort === 'descending'}
+      {...radioProps}
+    />
+  </>
 );
 
+function getConditionEntryType(value: any) {
+  if (isBoolean(value)) {
+    return 'boolean';
+  }
+  if (isNumber(value)) {
+    return 'number';
+  }
+  return 'string';
+}
+
+const ConditionEntry: React.FC<{
+  name: string;
+  error?: string;
+}> = React.memo(({ name, error }) => {
+  const { setValue, reset, triggerValidation, watch } = useFormContext();
+  const value = watch(name);
+  const [fieldType, setFieldType] = useState(getConditionEntryType(value));
+
+  const numberRegex = /^-?([\d]*\.?[\d+]|Infinity|NaN)$/;
+
+  return (
+    <div>
+      <SelectField
+        options={['string', 'number', 'boolean']}
+        value={fieldType}
+        onChange={evt => {
+          setFieldType(evt.currentTarget.value);
+        }}
+      />
+
+      {fieldType === 'string' && (
+        <Controller as={Field} name={name} defaultValue="" error={error} />
+      )}
+
+      {fieldType === 'number' && (
+        <Controller
+          as={Field}
+          name={name}
+          defaultValue={''}
+          rules={{
+            pattern: {
+              value: numberRegex,
+              message: 'Must be a number',
+            },
+          }}
+          error={error}
+          onChange={([event]) =>
+            // Cast it back to a number before saving to model
+            event.target.value.match(numberRegex)
+              ? parseFloat(event.target.value)
+              : event.target.value
+          }
+        />
+      )}
+
+      {fieldType === 'boolean' && <BooleanCondition name={name} />}
+    </div>
+  );
+});
+
+// RMWC select-menus do not work well with boolean values, requiring
+// custom-registration w/ the parent form
+const BooleanCondition: React.FC<{ name: string }> = ({ name }) => {
+  const { register, setValue, unregister, watch } = useFormContext();
+
+  useEffect(() => {
+    register({ name });
+    setValue(name, true);
+
+    return () => unregister(name);
+  }, [register]);
+
+  const selectValue = watch(name);
+
+  return (
+    <SelectField
+      name={name}
+      options={['true', 'false']}
+      value={selectValue}
+      onChange={evt => setValue(name, evt.currentTarget.value === 'true')}
+    />
+  );
+};
+
+// Accordian-view for expanding/collapsing panels in the query-view
 const FilterItem: React.FC<{
   title: string;
-  preview: string;
+  preview?: string;
   open?: boolean;
 }> = ({ title, preview, open = false, children }) => {
   const [isOpen, setIsOpen] = useState(open);
@@ -225,16 +348,19 @@ const FilterItem: React.FC<{
           text={
             <>
               <Typography use="body1">{title}</Typography>
-              {isOpen && <Typography use="body1">{preview}</Typography>}
+              {!isOpen && preview && (
+                <Typography use="body1">{preview}</Typography>
+              )}
             </>
           }
           metaIcon="chevron_right"
+          className={styles.header}
         />
       }
       onOpen={() => setIsOpen(true)}
       onClose={() => setIsOpen(false)}
     >
-      {children}
+      <div className={styles.children}>{children}</div>
     </CollapsibleList>
   );
 };

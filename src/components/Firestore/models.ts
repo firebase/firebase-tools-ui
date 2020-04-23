@@ -71,7 +71,7 @@ export type CollectionFilterSort = 'ascending' | 'descending';
 type CollectionFilterConditionType = 'unspecified' | firestore.WhereFilterOp;
 
 interface CollectionFilterConditionNone {
-  type: 'unspecified';
+  type: undefined;
 }
 
 interface CollectionFilterConditionSingle<
@@ -91,14 +91,14 @@ interface CollectionFilterConditionMultiple<
   entries: Array<string | number | boolean>;
 }
 
-type CollectionFilterConditionSingles =
+export type CollectionFilterConditionSingles =
   | CollectionFilterConditionSingle<'<'>
   | CollectionFilterConditionSingle<'<='>
   | CollectionFilterConditionSingle<'=='>
   | CollectionFilterConditionSingle<'>='>
   | CollectionFilterConditionSingle<'>'>;
 
-type CollectionFilterConditionMultiples =
+export type CollectionFilterConditionMultiples =
   | CollectionFilterConditionMultiple<'array-contains'>
   | CollectionFilterConditionMultiple<'in'>
   | CollectionFilterConditionMultiple<'array-contains-any'>;
@@ -117,13 +117,19 @@ export interface CollectionFilter {
 export function isCollectionFilterConditionSingle(
   collectionFilterCondition: CollectionFilterCondition
 ): collectionFilterCondition is CollectionFilterConditionSingles {
-  return ['<', '<=', '==', '>=', '>'].includes(collectionFilterCondition.type);
+  return (
+    !!collectionFilterCondition.type &&
+    ['<', '<=', '==', '>=', '>'].includes(collectionFilterCondition.type)
+  );
 }
 
 export function isCollectionFilterConditionMultiple(
   collectionFilterCondition: CollectionFilterCondition
 ): collectionFilterCondition is CollectionFilterConditionMultiples {
-  return ['array-contains', 'in', 'array-contains-any'].includes(
-    collectionFilterCondition.type
+  return (
+    !!collectionFilterCondition.type &&
+    ['array-contains', 'in', 'array-contains-any'].includes(
+      collectionFilterCondition.type
+    )
   );
 }

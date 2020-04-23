@@ -23,7 +23,10 @@ import { HTMLProps } from '@rmwc/types';
 import { Typography } from '@rmwc/typography';
 import React, { useState } from 'react';
 
-type Props = { tip?: string; error?: string } & TextFieldProps &
+type Props = {
+  tip?: string;
+  error?: React.ReactNode | string;
+} & TextFieldProps &
   TextFieldHTMLProps;
 
 export const Field: React.FC<Props> = ({
