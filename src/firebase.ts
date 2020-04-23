@@ -33,7 +33,7 @@ interface WindowWithDb extends Window {
 export function initDatabase(
   config: DatabaseConfig,
   namespace: string
-): [firebase.database.Database, { cleanup: () => void }] {
+): [firebase.database.Database, { cleanup: () => Promise<void> }] {
   const databaseURL = `http://${config.hostAndPort}/?ns=${namespace}`;
   const app = firebase.initializeApp(
     { databaseURL },
