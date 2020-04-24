@@ -16,9 +16,7 @@
 
 import { Button } from '@rmwc/button';
 import { CollapsibleList, SimpleListItem } from '@rmwc/list';
-import { Radio, RadioHTMLProps, RadioProps } from '@rmwc/radio';
-import { Select, SelectProps } from '@rmwc/select';
-import { TextField, TextFieldHTMLProps, TextFieldProps } from '@rmwc/textfield';
+import { Radio } from '@rmwc/radio';
 import { Typography } from '@rmwc/typography';
 import { firestore } from 'firebase';
 import React, { useEffect, useState } from 'react';
@@ -35,13 +33,12 @@ import * as actions from './actions';
 import styles from './CollectionFilter.module.scss';
 import {
   CollectionFilter as CollectionFilterType,
-  Condition,
-  isCollectionFilterConditionMultiple,
-  isCollectionFilterConditionSingle,
-  isSortableCondition,
+  isMultiValueCollectionFilter,
+  isSingleValueCollectionFilter,
+  isSortableCollectionFilter,
 } from './models';
 import { useCollectionFilter, useDispatch } from './store';
-import { isBoolean, isNumber, isString } from './utils';
+import { isBoolean, isNumber } from './utils';
 
 export const CollectionFilter: React.FC<{
   className: string;
@@ -50,33 +47,15 @@ export const CollectionFilter: React.FC<{
 }> = ({ className, path, onClose }) => {
   const collectionFilter = useCollectionFilter(path);
   const dispatch = useDispatch();
-  const [expanded, setExpanded] = useState(0);
-
-  // const defaultValues: CollectionFilterType = {
-  //   // values: [''],
-  //   // field: '',
-  //   // operator: undefined,
-  //   ...collectionFilter,
-  //   // condition: {
-  //   //   type: undefined,
-  //   //   value: '',
-  //   //   values: [''],
-  //   //   ...collectionFilter?.condition,
-  //   // },
-  // };
 
   const methods = useForm<CollectionFilterType>({
     mode: 'onChange',
-    defaultValues: {
-      ...collectionFilter,
-    },
+    defaultValues: collectionFilter,
   });
 
   const { handleSubmit, watch } = methods;
 
-  // const transientCollectionFilter: CollectionFilterType = watch({
-  //   nest: true,
-  // });
+  const cf = watch({ nest: true });
 
   //const sortableCondition = isSortableCondition(transientCollectionFilter);
 
@@ -91,67 +70,49 @@ export const CollectionFilter: React.FC<{
     // onClose?.();
   };
 
-  const fieldPreview: string = ''; // watch('field');
-  const fieldPreviewStringified = JSON.stringify(fieldPreview);
-
-  const operatorPreview: string | undefined = '';
-  // watch('operator') && JSON.stringify(watch('operator'));
-  const valuePreview: string = JSON.stringify(
-    ''
-    // watch('value') || watch('values')
-  );
-
-  const conditionPreview =
-    operatorPreview && `${operatorPreview}, ${valuePreview}`;
-
-  const sortPreview: string = ''; // watch('sort') || '';
-  const sortPreviewStringified = JSON.stringify(sortPreview);
-
   return (
-    <FormContext {...methods} watch={watch}>
+    <FormContext {...(methods as any)}>
       <form onSubmit={handleSubmit(onSubmit)} className={className}>
         {/* Field entry */}
-        <FilterItem title="Filter by field" preview={fieldPreview} defaultOpen>
-          {/*<Controller
+        <FilterItem title="Filter by field" preview={cf.field} defaultOpen>
+          <Controller
             as={Field}
             name="field"
             label="Enter field"
             defaultValue=""
-          />*/}
+          />
         </FilterItem>
 
         {/* Condition entry */}
         <FilterItem
           title="Add condition"
-          preview={conditionPreview}
+          preview={<ConditionPreview cf={cf} />}
           defaultOpen
         >
-          {/*<ConditionBuilder />*/}
+          <ConditionSelect>
+            {cf && isSingleValueCollectionFilter(cf) && (
+              <ConditionEntry name="value" />
+            )}
+
+            {cf && isMultiValueCollectionFilter(cf) && (
+              <ConditionEntries name="values" />
+            )}
+          </ConditionSelect>
         </FilterItem>
 
         {/* Sort entry */}
-        <FilterItem title="Sort results" preview={sortPreview} defaultOpen>
-          {/*<SortRadioGroup
+        <FilterItem
+          title="Sort results"
+          preview={isSortableCollectionFilter(cf) && cf.sort}
+          defaultOpen
+        >
+          <SortRadioGroup
             name="sort"
-            disabled={!isSortableCondition(transientCollectionFilter)}
-          />*/}
+            disabled={!isSortableCollectionFilter(cf)}
+          />
         </FilterItem>
 
-        <div>
-          <div>.collection({`${JSON.stringify(path)}`})</div>
-          {conditionPreview && (
-            <div>
-              .where(
-              {`${fieldPreviewStringified}, ${conditionPreview}`})
-            </div>
-          )}
-          {sortPreview && (
-            <div>
-              .orderBy({`${fieldPreviewStringified}, ${sortPreviewStringified}`}
-              )
-            </div>
-          )}
-        </div>
+        <Preview path={path} cf={cf} />
 
         <Button type="submit">Filter</Button>
         <Button
@@ -172,15 +133,39 @@ export const CollectionFilter: React.FC<{
   );
 };
 
-const FilterPreview: React.FC<{ path: string }> = ({ path }) => {
-  const collectionId = path.split('/').pop();
-  return <div>.collection({`${collectionId}`})</div>;
+const ConditionPreview: React.FC<{ cf: CollectionFilterType }> = ({ cf }) => {
+  const operator = `"${cf.operator}"`;
+  if (isSingleValueCollectionFilter(cf)) {
+    return <span>{`${operator}, "${cf.value}"`}</span>;
+  }
+  if (isMultiValueCollectionFilter(cf)) {
+    return <span>{`${operator}, ${JSON.stringify(cf.values)}`}</span>;
+  }
+  return null;
 };
 
-const ConditionBuilder: React.FC = () => {
-  const { reset, setValue, watch } = useFormContext();
-  const condition = (watch({ nest: true }) as unknown) as Condition;
+const Preview: React.FC<{ path: string; cf: CollectionFilterType }> = ({
+  path,
+  cf,
+}) => {
+  const collectionId = path.split('/').pop();
+  return (
+    <div>
+      <div>.collection({`${JSON.stringify(collectionId)}`})</div>
+      {(isSingleValueCollectionFilter(cf) ||
+        isMultiValueCollectionFilter(cf)) && (
+        <div>
+          .where("{cf.field}", <ConditionPreview cf={cf} />)
+        </div>
+      )}
+      {isSortableCollectionFilter(cf) && !!cf.sort && (
+        <div>.orderBy({`"${cf.field}", "${cf.sort}"`})</div>
+      )}
+    </div>
+  );
+};
 
+const ConditionSelect: React.FC = ({ children }) => {
   const options: Array<{ label: string; value: firestore.WhereFilterOp }> = [
     {
       label: '(==) equal to',
@@ -224,22 +209,9 @@ const ConditionBuilder: React.FC = () => {
         label="Only show documents where the specified field is..."
         placeholder="No condition"
         options={options}
-        onChange={([selected]) => {
-          if (selected.currentTarget.value === 'in') {
-            console.log('in-detected');
-            setValue('values.0', '');
-          }
-          return selected.currentTarget.value || undefined;
-        }}
+        onChange={([selected]) => selected.currentTarget.value || undefined}
       />
-
-      {condition && isCollectionFilterConditionSingle(condition) && (
-        <ConditionEntry name="value" />
-      )}
-
-      {condition && isCollectionFilterConditionMultiple(condition) && (
-        <ConditionEntries name="values" />
-      )}
+      {children}
     </>
   );
 };
@@ -325,7 +297,7 @@ const ConditionEntry: React.FC<{
   name: string;
   error?: string;
 }> = React.memo(({ name, error }) => {
-  const { setValue, reset, triggerValidation, watch } = useFormContext();
+  const { watch } = useFormContext();
   const value = watch(name);
   const [fieldType, setFieldType] = useState(getConditionEntryType(value));
 
@@ -398,7 +370,7 @@ const BooleanCondition: React.FC<{ name: string }> = ({ name }) => {
 // Accordian-view for expanding/collapsing panels in the query-view
 const FilterItem: React.FC<{
   title: string;
-  preview?: string;
+  preview?: React.ReactNode;
   defaultOpen: boolean;
 }> = ({ title, preview, defaultOpen, children }) => {
   const [expanded, setExpanded] = useState(defaultOpen);

@@ -121,114 +121,188 @@ export type CollectionFilterSort = 'ascending' | 'descending';
 //   ].includes(collectionFilterCondition.type));
 // }
 
-export interface Condition {
+// export interface Condition {
+//   field: string;
+//   operator?: firestore.WhereFilterOp;
+// }
+//
+// interface SortableCondition {
+//   sort?: CollectionFilterSort;
+// }
+//
+// interface SingleValueCondition {
+//   value: string | number | boolean;
+// }
+//
+// interface MultiValueCondition {
+//   values: Array<string | number | boolean>;
+// }
+//
+// interface ConditionUnspecified extends Condition, SortableCondition {
+//   operator: undefined;
+// }
+//
+// interface ConditionEqual extends Condition, SingleValueCondition {
+//   operator: '==';
+// }
+//
+// interface ConditionGreaterThan
+//   extends Condition,
+//     SingleValueCondition,
+//     SortableCondition {
+//   operator: '>';
+// }
+//
+// interface ConditionGreaterThanOrEqual
+//   extends Condition,
+//     SingleValueCondition,
+//     SortableCondition {
+//   operator: '>=';
+// }
+//
+// interface ConditionLessThan
+//   extends Condition,
+//     SingleValueCondition,
+//     SortableCondition {
+//   operator: '<';
+// }
+//
+// interface ConditionLessThanOrEqual
+//   extends Condition,
+//     SingleValueCondition,
+//     SortableCondition {
+//   operator: '<=';
+// }
+//
+// interface ConditionIn extends Condition, MultiValueCondition {
+//   operator: 'in';
+// }
+//
+// interface ConditionArrayContains extends Condition, MultiValueCondition {
+//   operator: 'array-contains';
+// }
+//
+// interface ConditionArrayContainsAny extends Condition, MultiValueCondition {
+//   operator: 'array-contains-any';
+// }
+//
+// export type CollectionFilter =
+//   | ConditionUnspecified
+//   | ConditionEqual
+//   | ConditionGreaterThan
+//   | ConditionGreaterThanOrEqual
+//   | ConditionLessThan
+//   | ConditionLessThanOrEqual
+//   | ConditionIn
+//   | ConditionArrayContains
+//   | ConditionArrayContainsAny;
+//
+// export function isCollectionFilterConditionSingle(
+//   collectionFilter: Condition
+// ): collectionFilter is {
+//   field: string;
+//   operator: '<' | '<=' | '==' | '>=' | '>';
+// } & SingleValueCondition {
+//   return (
+//     'operator' in collectionFilter &&
+//     !!collectionFilter.operator &&
+//     ['<', '<=', '==', '>=', '>'].includes(collectionFilter.operator)
+//   );
+// }
+//
+// export function isCollectionFilterConditionMultiple(
+//   collectionFilter: Condition
+// ): collectionFilter is {
+//   field: string;
+//   operator: 'array-contains' | 'array-contains-any' | 'in';
+// } & MultiValueCondition {
+//   return (
+//     !!collectionFilter.operator &&
+//     ['array-contains', 'array-contains-any', 'in'].includes(
+//       collectionFilter.operator
+//     )
+//   );
+// }
+//
+// export function isSortableCondition(
+//   collectionFilter: Condition
+// ): collectionFilter is { field: string } & SortableCondition {
+//   return (
+//     !collectionFilter.operator ||
+//     ['<', '<=', '>=', '>'].includes(collectionFilter.operator)
+//   );
+// }
+
+interface Filter<T extends firestore.WhereFilterOp | undefined> {
   field: string;
-  operator?: firestore.WhereFilterOp;
+  operator: T;
 }
 
-interface SortableCondition {
-  sort?: CollectionFilterSort;
-}
+type ConditionValue = number | boolean | string;
 
 interface SingleValueCondition {
-  value: string | number | boolean;
+  value: ConditionValue;
 }
 
 interface MultiValueCondition {
-  values: Array<string | number | boolean>;
+  values: ConditionValue[];
 }
 
-interface ConditionUnspecified extends Condition, SortableCondition {
-  operator: undefined;
+interface SortableCondition {
+  sort?: 'asc' | 'desc';
 }
 
-interface ConditionEqual extends Condition, SingleValueCondition {
-  operator: '==';
-}
-
-interface ConditionGreaterThan
-  extends Condition,
-    SingleValueCondition,
-    SortableCondition {
-  operator: '>';
-}
-
-interface ConditionGreaterThanOrEqual
-  extends Condition,
-    SingleValueCondition,
-    SortableCondition {
-  operator: '>=';
-}
-
-interface ConditionLessThan
-  extends Condition,
-    SingleValueCondition,
-    SortableCondition {
-  operator: '<';
-}
-
-interface ConditionLessThanOrEqual
-  extends Condition,
-    SingleValueCondition,
-    SortableCondition {
-  operator: '<=';
-}
-
-interface ConditionIn extends Condition, MultiValueCondition {
-  operator: 'in';
-}
-
-interface ConditionArrayContains extends Condition, MultiValueCondition {
-  operator: 'array-contains';
-}
-
-interface ConditionArrayContainsAny extends Condition, MultiValueCondition {
-  operator: 'array-contains-any';
-}
+type Unspecified = Filter<undefined> & SortableCondition;
+type Equal = Filter<'=='> & SingleValueCondition;
+type GreaterThan = Filter<'>'> & SingleValueCondition & SortableCondition;
+type GreaterThanEqual = Filter<'>='> & SingleValueCondition & SortableCondition;
+type LessThanEqual = Filter<'<='> & SingleValueCondition & SortableCondition;
+type LessThan = Filter<'<'> & SingleValueCondition & SortableCondition;
+type In = Filter<'in'> & MultiValueCondition;
+type ArrayContains = Filter<'array-contains'> & MultiValueCondition;
+type ArrayContainsAny = Filter<'array-contains-any'> & MultiValueCondition;
 
 export type CollectionFilter =
-  | ConditionUnspecified
-  | ConditionEqual
-  | ConditionGreaterThan
-  | ConditionGreaterThanOrEqual
-  | ConditionLessThan
-  | ConditionLessThanOrEqual
-  | ConditionIn
-  | ConditionArrayContains
-  | ConditionArrayContainsAny;
+  | Unspecified
+  | Equal
+  | GreaterThan
+  | GreaterThanEqual
+  | LessThanEqual
+  | LessThan
+  | In
+  | ArrayContains
+  | ArrayContainsAny;
 
-export function isCollectionFilterConditionSingle(
-  collectionFilter: Condition
-): collectionFilter is {
-  field: string;
-  operator: '<' | '<=' | '==' | '>=' | '>';
-} & SingleValueCondition {
+export function isSingleValueCollectionFilter(
+  cf: CollectionFilter
+): cf is Extract<CollectionFilter, SingleValueCondition> {
   return (
-    'operator' in collectionFilter &&
-    !!collectionFilter.operator &&
-    ['<', '<=', '==', '>=', '>'].includes(collectionFilter.operator)
+    cf.operator === '==' ||
+    cf.operator === '>' ||
+    cf.operator === '>=' ||
+    cf.operator === '<=' ||
+    cf.operator === '<'
   );
 }
 
-export function isCollectionFilterConditionMultiple(
-  collectionFilter: Condition
-): collectionFilter is {
-  field: string;
-  operator: 'array-contains' | 'array-contains-any' | 'in';
-} & MultiValueCondition {
+export function isMultiValueCollectionFilter(
+  cf: CollectionFilter
+): cf is Extract<CollectionFilter, MultiValueCondition> {
   return (
-    !!collectionFilter.operator &&
-    ['array-contains', 'array-contains-any', 'in'].includes(
-      collectionFilter.operator
-    )
+    cf.operator === 'in' ||
+    cf.operator === 'array-contains' ||
+    cf.operator === 'array-contains-any'
   );
 }
 
-export function isSortableCondition(
-  collectionFilter: Condition
-): collectionFilter is { field: string } & SortableCondition {
+export function isSortableCollectionFilter(
+  cf: CollectionFilter
+): cf is Extract<CollectionFilter, SortableCondition> {
   return (
-    !collectionFilter.operator ||
-    ['<', '<=', '>=', '>'].includes(collectionFilter.operator)
+    !cf.operator ||
+    cf.operator === '>' ||
+    cf.operator === '>=' ||
+    cf.operator === '<=' ||
+    cf.operator === '<'
   );
 }
