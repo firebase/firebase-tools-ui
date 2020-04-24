@@ -259,7 +259,7 @@ type GreaterThanEqual = Filter<'>='> & SingleValueCondition & SortableCondition;
 type LessThanEqual = Filter<'<='> & SingleValueCondition & SortableCondition;
 type LessThan = Filter<'<'> & SingleValueCondition & SortableCondition;
 type In = Filter<'in'> & MultiValueCondition;
-type ArrayContains = Filter<'array-contains'> & MultiValueCondition;
+type ArrayContains = Filter<'array-contains'> & SingleValueCondition;
 type ArrayContainsAny = Filter<'array-contains-any'> & MultiValueCondition;
 
 export type CollectionFilter =
@@ -281,18 +281,15 @@ export function isSingleValueCollectionFilter(
     cf.operator === '>' ||
     cf.operator === '>=' ||
     cf.operator === '<=' ||
-    cf.operator === '<'
+    cf.operator === '<' ||
+    cf.operator === 'array-contains'
   );
 }
 
 export function isMultiValueCollectionFilter(
   cf: CollectionFilter
 ): cf is Extract<CollectionFilter, MultiValueCondition> {
-  return (
-    cf.operator === 'in' ||
-    cf.operator === 'array-contains' ||
-    cf.operator === 'array-contains-any'
-  );
+  return cf.operator === 'in' || cf.operator === 'array-contains-any';
 }
 
 export function isSortableCollectionFilter(

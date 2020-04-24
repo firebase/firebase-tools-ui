@@ -34,6 +34,11 @@ import {
   AddDocumentDialogValue,
 } from './dialogs/AddDocumentDialog';
 import { Document } from './Document';
+import {
+  isMultiValueCollectionFilter,
+  isSingleValueCollectionFilter,
+  isSortableCollectionFilter,
+} from './models';
 import PanelHeader from './PanelHeader';
 import { useCollectionFilter } from './store';
 import { useAutoSelect } from './useAutoSelect';
@@ -46,7 +51,28 @@ export interface Props {
 
 export const Collection: React.FC<Props> = ({ collection }) => {
   const collectionFilter = useCollectionFilter(collection.path);
-  const filteredCollection = collection;
+  let filteredCollection: firestore.Query<firestore.DocumentData> = collection;
+  if (collectionFilter && isSingleValueCollectionFilter(collectionFilter)) {
+    filteredCollection = filteredCollection.where(
+      collectionFilter.field,
+      collectionFilter.operator,
+      collectionFilter.value
+    );
+  }
+  if (collectionFilter && isMultiValueCollectionFilter(collectionFilter)) {
+    filteredCollection = filteredCollection.where(
+      collectionFilter.field,
+      collectionFilter.operator,
+      collectionFilter.values
+    );
+  }
+  if (collectionFilter && isSortableCollectionFilter(collectionFilter)) {
+    filteredCollection = filteredCollection.orderBy(
+      collectionFilter.field,
+      collectionFilter.sort
+    );
+  }
+  // const filteredCollection = collection;
   // const filteredCollection = collectionFilter
   //   ? collection.where(
   //       collectionFilter.field,

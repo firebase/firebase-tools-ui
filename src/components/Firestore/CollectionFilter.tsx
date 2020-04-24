@@ -48,16 +48,12 @@ export const CollectionFilter: React.FC<{
   const collectionFilter = useCollectionFilter(path);
   const dispatch = useDispatch();
 
-  const methods = useForm<CollectionFilterType>({
+  const formMethods = useForm<CollectionFilterType>({
     mode: 'onChange',
     defaultValues: collectionFilter,
   });
 
-  const { handleSubmit, watch } = methods;
-
-  const cf = watch({ nest: true });
-
-  //const sortableCondition = isSortableCondition(transientCollectionFilter);
+  const cf = formMethods.watch({ nest: true });
 
   const onSubmit = (data: CollectionFilterType) => {
     console.log(data);
@@ -71,8 +67,8 @@ export const CollectionFilter: React.FC<{
   };
 
   return (
-    <FormContext {...(methods as any)}>
-      <form onSubmit={handleSubmit(onSubmit)} className={className}>
+    <FormContext {...(formMethods as any)}>
+      <form onSubmit={formMethods.handleSubmit(onSubmit)} className={className}>
         {/* Field entry */}
         <FilterItem title="Filter by field" preview={cf.field} defaultOpen>
           <Controller
@@ -297,11 +293,19 @@ const ConditionEntry: React.FC<{
   name: string;
   error?: string;
 }> = React.memo(({ name, error }) => {
-  const { watch } = useFormContext();
+  const { setValue, watch } = useFormContext();
   const value = watch(name);
   const [fieldType, setFieldType] = useState(getConditionEntryType(value));
 
   const numberRegex = /^-?([\d]*\.?[\d+]|Infinity|NaN)$/;
+
+  useEffect(() => {
+    // Essentially setting the defaultValue of this form-field,
+    // specifically when chaning types between Single <--> Multi
+    if (value === undefined) {
+      setValue(name, '');
+    }
+  }, [value]);
 
   return (
     <div>
