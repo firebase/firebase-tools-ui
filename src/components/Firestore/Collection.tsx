@@ -34,6 +34,7 @@ import {
 } from './dialogs/AddDocumentDialog';
 import { Document } from './Document';
 import {
+  CollectionFilter as CollectionFilterType,
   isMultiValueCollectionFilter,
   isSingleValueCollectionFilter,
   isSortableCollectionFilter,
@@ -50,28 +51,10 @@ export interface Props {
 
 export const Collection: React.FC<Props> = ({ collection }) => {
   const collectionFilter = useCollectionFilter(collection.path);
-  let filteredCollection: firestore.Query<firestore.DocumentData> = collection;
-  if (collectionFilter && isSingleValueCollectionFilter(collectionFilter)) {
-    filteredCollection = filteredCollection.where(
-      collectionFilter.field,
-      collectionFilter.operator,
-      collectionFilter.value
-    );
-  }
-  if (collectionFilter && isMultiValueCollectionFilter(collectionFilter)) {
-    filteredCollection = filteredCollection.where(
-      collectionFilter.field,
-      collectionFilter.operator,
-      collectionFilter.values
-    );
-  }
-  if (collectionFilter && isSortableCollectionFilter(collectionFilter)) {
-    filteredCollection = filteredCollection.orderBy(
-      collectionFilter.field,
-      collectionFilter.sort
-    );
-  }
-
+  const filteredCollection = applyCollectionFilter(
+    collection,
+    collectionFilter
+  );
   const [collectionSnapshot, loading, error] = useCollection(
     filteredCollection
   );
@@ -167,5 +150,33 @@ export const Collection: React.FC<Props> = ({ collection }) => {
     </>
   );
 };
+
+function applyCollectionFilter(
+  collection: firestore.Query<firestore.DocumentData>,
+  collectionFilter?: CollectionFilterType
+): firestore.Query<firestore.DocumentData> {
+  let filteredCollection = collection;
+  if (collectionFilter && isSingleValueCollectionFilter(collectionFilter)) {
+    filteredCollection = filteredCollection.where(
+      collectionFilter.field,
+      collectionFilter.operator,
+      collectionFilter.value
+    );
+  }
+  if (collectionFilter && isMultiValueCollectionFilter(collectionFilter)) {
+    filteredCollection = filteredCollection.where(
+      collectionFilter.field,
+      collectionFilter.operator,
+      collectionFilter.values
+    );
+  }
+  if (collectionFilter && isSortableCollectionFilter(collectionFilter)) {
+    filteredCollection = filteredCollection.orderBy(
+      collectionFilter.field,
+      collectionFilter.sort
+    );
+  }
+  return filteredCollection;
+}
 
 export default Collection;

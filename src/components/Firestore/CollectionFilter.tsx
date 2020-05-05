@@ -44,6 +44,8 @@ import {
 import { useCollectionFilter, useDispatch } from './store';
 import { isBoolean, isNumber } from './utils';
 
+const NUMBER_REGEX = /^-?([\d]*\.?[\d+]|Infinity|NaN)$/;
+
 export const CollectionFilter: React.FC<{
   className?: string;
   path: string;
@@ -334,8 +336,6 @@ const ConditionEntry: React.FC<{
   const value = watch(name);
   const [fieldType, setFieldType] = useState(getConditionEntryType(value));
 
-  const numberRegex = /^-?([\d]*\.?[\d+]|Infinity|NaN)$/;
-
   useEffect(() => {
     // Essentially setting the defaultValue of this form-field,
     // specifically when chaning types between Single <--> Multi
@@ -373,14 +373,14 @@ const ConditionEntry: React.FC<{
           defaultValue={''}
           rules={{
             pattern: {
-              value: numberRegex,
+              value: NUMBER_REGEX,
               message: 'Must be a number',
             },
           }}
           error={error}
           onChange={([event]) =>
             // Cast it back to a number before saving to model
-            event.target.value.match(numberRegex)
+            event.target.value.match(NUMBER_REGEX)
               ? parseFloat(event.target.value)
               : event.target.value
           }
