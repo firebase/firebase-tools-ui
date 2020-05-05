@@ -45,7 +45,7 @@ import { useCollectionFilter, useDispatch } from './store';
 import { isBoolean, isNumber } from './utils';
 
 export const CollectionFilter: React.FC<{
-  className: string;
+  className?: string;
   path: string;
   onClose?: () => void;
 }> = ({ className, path, onClose }) => {
@@ -60,14 +60,13 @@ export const CollectionFilter: React.FC<{
   const cf = formMethods.watch({ nest: true });
 
   const onSubmit = (data: CollectionFilterType) => {
-    console.log(data);
     dispatch(
       actions.addCollectionFilter({
         path,
         ...data,
       })
     );
-    // onClose?.();
+    onClose?.();
   };
 
   return (
@@ -178,7 +177,7 @@ const Preview: React.FC<{ path: string; cf: CollectionFilterType }> = ({
 }) => {
   const collectionId = path.split('/').pop();
   return (
-    <code className={styles.preview}>
+    <code className={styles.preview} aria-label="Code preview">
       <div>.collection({`${JSON.stringify(collectionId)}`})</div>
       {(isSingleValueCollectionFilter(cf) ||
         isMultiValueCollectionFilter(cf)) && (
@@ -357,7 +356,13 @@ const ConditionEntry: React.FC<{
       />
 
       {fieldType === 'string' && (
-        <Controller as={Field} name={name} defaultValue="" error={error} />
+        <Controller
+          as={Field}
+          name={name}
+          defaultValue=""
+          error={error}
+          aria-label="Value"
+        />
       )}
 
       {fieldType === 'number' && (
@@ -378,6 +383,7 @@ const ConditionEntry: React.FC<{
               ? parseFloat(event.target.value)
               : event.target.value
           }
+          aria-label="Value"
         />
       )}
 
@@ -406,6 +412,7 @@ const BooleanCondition: React.FC<{ name: string }> = ({ name }) => {
       options={['true', 'false']}
       value={selectValue}
       onChange={evt => setValue(name, evt.currentTarget.value === 'true')}
+      aria-label="Value"
     />
   );
 };

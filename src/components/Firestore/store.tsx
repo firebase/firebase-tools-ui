@@ -47,7 +47,6 @@ const reducer = createReducer<Store, Action>(INIT_STATE)
   .handleAction(
     actions.removeCollectionFilter,
     produce((draft, { payload }) => {
-      console.log('remove', payload);
       delete draft.collectionFilters[payload.path];
     })
   );
@@ -56,8 +55,11 @@ const storeReducer: React.Reducer<Store, Action> = (state, action) => {
   return (reducer.handlers as any)[action.type](state, action);
 };
 
-export const FirestoreStore: React.FC<{}> = ({ children }) => {
-  const [store, dispatch] = React.useReducer(storeReducer, INIT_STATE);
+export const FirestoreStore: React.FC<{ initState?: Store }> = ({
+  initState = INIT_STATE,
+  children,
+}) => {
+  const [store, dispatch] = React.useReducer(storeReducer, initState);
   return (
     <firestoreStoreContext.Provider value={{ store, dispatch }}>
       {children}

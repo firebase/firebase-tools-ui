@@ -22,6 +22,7 @@ import { MemoryRouter } from 'react-router-dom';
 
 import { ApiProvider } from './ApiContext';
 import Collection from './Collection';
+import { useCollectionFilter } from './store';
 import {
   fakeCollectionReference,
   fakeDocumentReference,
@@ -30,6 +31,7 @@ import {
 } from './testing/models';
 
 jest.mock('react-firebase-hooks/firestore');
+jest.mock('./store');
 
 it('shows the list of documents in the collection', () => {
   useCollection.mockReturnValue([
@@ -59,6 +61,71 @@ it('shows the list of documents in the collection', () => {
   expect(getByText(/my-stuff/)).not.toBeNull();
   expect(queryByText(/Loading documents/)).toBeNull();
   expect(getByText(/cool-doc-1/)).not.toBeNull();
+});
+
+it('filters documents for single-value filters', () => {
+  useCollectionFilter.mockReturnValue({
+    field: 'foo',
+    operator: '==',
+    value: 'bar',
+  });
+  useCollection.mockReturnValue([]);
+  const whereSpy = jest.fn();
+
+  render(
+    <MemoryRouter>
+      <Collection
+        collection={fakeCollectionReference({
+          where: whereSpy,
+        })}
+      />
+    </MemoryRouter>
+  );
+
+  expect(whereSpy).toHaveBeenCalledWith('foo', '==', 'bar');
+});
+
+it('filters documents for multi-value filters', () => {
+  useCollectionFilter.mockReturnValue({
+    field: 'foo',
+    operator: 'in',
+    values: ['eggs', 'spam'],
+  });
+  useCollection.mockReturnValue([]);
+  const whereSpy = jest.fn();
+
+  render(
+    <MemoryRouter>
+      <Collection
+        collection={fakeCollectionReference({
+          where: whereSpy,
+        })}
+      />
+    </MemoryRouter>
+  );
+
+  expect(whereSpy).toHaveBeenCalledWith('foo', 'in', ['eggs', 'spam']);
+});
+
+it('sorts documents when filtered', () => {
+  useCollectionFilter.mockReturnValue({
+    field: 'foo',
+    sort: 'asc',
+  });
+  useCollection.mockReturnValue([]);
+  const orderBySpy = jest.fn();
+
+  render(
+    <MemoryRouter>
+      <Collection
+        collection={fakeCollectionReference({
+          orderBy: orderBySpy,
+        })}
+      />
+    </MemoryRouter>
+  );
+
+  expect(orderBySpy).toHaveBeenCalledWith('foo', 'asc');
 });
 
 it('shows the selected sub-document', () => {
