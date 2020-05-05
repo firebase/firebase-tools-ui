@@ -1,12 +1,82 @@
+@import '../common/color';
+
 .panel {
   width: 360px; // taken from console
 }
 
 .header {
-  border-top: 1px solid grey;
+  border-bottom: 1px solid $COLOR_DIVIDER;
+}
+
+.headerTitle {
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+}
+
+.preview,
+.header {
+  background: var(--mdc-theme-background);
 }
 
 .children {
-  border-top: 1px solid lightgrey;
-  padding: 0 16px;
+  background: var(--mdc-theme-surface);
+}
+
+.preview,
+.children {
+  border-bottom: 1px solid $COLOR_DIVIDER;
+  padding: 12px 16px;
+}
+
+.preview {
+  background: var(--mdc-theme-background);
+  color: var(--mdc-theme-secondary);
+  display: block;
+}
+
+.previewFilter {
+  text-indent: 24px;
+}
+
+.conditionEntries {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  li {
+    align-items: center;
+    display: flex;
+  }
+}
+
+/**
+ * Don't remove the "delete"-btn from the DOM.
+ * Doing so adjusts the layout when the number of values
+ * changes between 1 and 1+.
+ */
+.removeFilter {
+  opacity: 0;
+
+  &:hover,
+  &:focus {
+    opacity: 1;
+  }
+}
+
+.hidden {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.conditionEntry {
+  display: flex;
+}
+
+.conditionEntryType {
+  flex-basis: 100px;
+}
+
+.actions {
+  justify-content: space-between;
 }

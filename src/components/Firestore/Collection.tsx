@@ -26,7 +26,6 @@ import React, { useState } from 'react';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import { NavLink, Route, useRouteMatch } from 'react-router-dom';
 
-import * as actions from './actions';
 import styles from './Collection.module.scss';
 import { CollectionFilter } from './CollectionFilter';
 import {
@@ -72,22 +71,13 @@ export const Collection: React.FC<Props> = ({ collection }) => {
       collectionFilter.sort
     );
   }
-  // const filteredCollection = collection;
-  // const filteredCollection = collectionFilter
-  //   ? collection.where(
-  //       collectionFilter.field,
-  //       '==',
-  //       collectionFilter.condition.entries[0]
-  //     )
-  //   : collection;
 
   const [collectionSnapshot, loading, error] = useCollection(
     filteredCollection
   );
 
   const [isAddDocumentDialogOpen, setAddDocumentDialogOpen] = useState(false);
-  // TODO: DO NOT SUBMIT: Default to false before Submitting
-  const [open, setOpen] = useState(true);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const { url } = useRouteMatch()!;
   // TODO: Fetch missing documents (i.e. nonexistent docs with subcollections).
@@ -111,21 +101,26 @@ export const Collection: React.FC<Props> = ({ collection }) => {
           icon={<Icon icon={{ icon: 'collections_bookmark', size: 'small' }} />}
         >
           <MenuSurfaceAnchor>
-            <MenuSurface open={open} onClose={evt => setOpen(false)}>
-              {!loading && open && (
+            <MenuSurface
+              open={isFilterOpen}
+              onClose={() => setIsFilterOpen(false)}
+            >
+              {!loading && isFilterOpen && (
                 <CollectionFilter
                   className={styles['query-panel']}
                   path={collection.path}
-                  onClose={() => setOpen(false)}
+                  onClose={() => setIsFilterOpen(false)}
                 />
               )}
             </MenuSurface>
 
-            <IconButton
-              icon="filter_list"
-              label="Filter documents in this collection"
-              onClick={() => setOpen(!open)}
-            />
+            <div className={collectionFilter && styles.badge}>
+              <IconButton
+                icon="filter_list"
+                label="Filter documents in this collection"
+                onClick={() => setIsFilterOpen(!isFilterOpen)}
+              />
+            </div>
           </MenuSurfaceAnchor>
         </PanelHeader>
 

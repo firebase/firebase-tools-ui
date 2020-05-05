@@ -21,6 +21,7 @@ import { Select, SelectProps } from '@rmwc/select';
 import { TextField, TextFieldHTMLProps, TextFieldProps } from '@rmwc/textfield';
 import { HTMLProps } from '@rmwc/types';
 import { Typography } from '@rmwc/typography';
+import classnames from 'classnames';
 import React, { useState } from 'react';
 
 type Props = {
@@ -71,7 +72,10 @@ export const Field: React.FC<Props> = ({
   );
 };
 
-type SelectFieldProps = { tip?: string } & SelectProps &
+type SelectFieldProps = {
+  tip?: string;
+  fieldClassName?: string;
+} & SelectProps &
   HTMLProps<HTMLSelectElement>;
 
 export const SelectField: React.FC<SelectFieldProps> = ({
@@ -79,12 +83,13 @@ export const SelectField: React.FC<SelectFieldProps> = ({
   // strip outlined bool, always use outlined
   outlined,
   tip,
+  fieldClassName,
   theme, // TODO: 5.0 theme, incompatible with 6.0 remove at 6.0
   ...selectProps
 }) => {
   const [id] = useState(randomId());
   return (
-    <div className="Field">
+    <div className={classnames('Field', fieldClassName)}>
       <Typography
         className="Field-label"
         use="body2"

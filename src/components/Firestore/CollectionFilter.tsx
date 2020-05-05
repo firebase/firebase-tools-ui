@@ -15,8 +15,11 @@
  */
 
 import { Button } from '@rmwc/button';
+import { CardActionButton, CardActionButtons, CardActions } from '@rmwc/card';
+import { IconButton } from '@rmwc/icon-button';
 import { CollapsibleList, SimpleListItem } from '@rmwc/list';
 import { Radio } from '@rmwc/radio';
+import { Theme, ThemeProvider } from '@rmwc/theme';
 import { Typography } from '@rmwc/typography';
 import { firestore } from 'firebase';
 import React, { useEffect, useState } from 'react';
@@ -28,6 +31,7 @@ import {
   useFormContext,
 } from 'react-hook-form';
 
+import { grey100 } from '../../colors';
 import { Field, SelectField } from '../../components/common/Field';
 import * as actions from './actions';
 import styles from './CollectionFilter.module.scss';
@@ -67,67 +71,95 @@ export const CollectionFilter: React.FC<{
   };
 
   return (
-    <FormContext {...(formMethods as any)}>
-      <form onSubmit={formMethods.handleSubmit(onSubmit)} className={className}>
-        {/* Field entry */}
-        <FilterItem title="Filter by field" preview={cf.field} defaultOpen>
-          <Controller
-            as={Field}
-            name="field"
-            label="Enter field"
-            defaultValue=""
-          />
-        </FilterItem>
-
-        {/* Condition entry */}
-        <FilterItem
-          title="Add condition"
-          preview={<ConditionPreview cf={cf} />}
-          defaultOpen
+    <CollectionFilterTheme>
+      <FormContext {...(formMethods as any)}>
+        <form
+          onSubmit={formMethods.handleSubmit(onSubmit)}
+          className={className}
         >
-          <ConditionSelect>
-            {cf && isSingleValueCollectionFilter(cf) && (
-              <ConditionEntry name="value" />
-            )}
+          {/* Field entry */}
+          <FilterItem title="Filter by field" preview={cf.field} defaultOpen>
+            <Controller
+              as={Field}
+              name="field"
+              label="Enter field"
+              defaultValue=""
+            />
+          </FilterItem>
 
-            {cf && isMultiValueCollectionFilter(cf) && (
-              <ConditionEntries name="values" />
-            )}
-          </ConditionSelect>
-        </FilterItem>
+          {/* Condition entry */}
+          <FilterItem
+            title="Add condition"
+            preview={<ConditionPreview cf={cf} />}
+            defaultOpen
+          >
+            <ConditionSelect>
+              {cf && isSingleValueCollectionFilter(cf) && (
+                <ConditionEntry name="value" />
+              )}
 
-        {/* Sort entry */}
-        <FilterItem
-          title="Sort results"
-          preview={isSortableCollectionFilter(cf) && cf.sort}
-          defaultOpen
-        >
-          <SortRadioGroup
-            name="sort"
-            disabled={!isSortableCollectionFilter(cf)}
-          />
-        </FilterItem>
+              {cf && isMultiValueCollectionFilter(cf) && (
+                <ConditionEntries name="values" />
+              )}
+            </ConditionSelect>
+          </FilterItem>
 
-        <Preview path={path} cf={cf} />
+          {/* Sort entry */}
+          <FilterItem
+            title="Sort results"
+            preview={isSortableCollectionFilter(cf) && cf.sort}
+            defaultOpen
+          >
+            <SortRadioGroup
+              name="sort"
+              disabled={!isSortableCollectionFilter(cf)}
+            />
+          </FilterItem>
 
-        <Button type="submit">Filter</Button>
-        <Button
-          type="button"
-          onClick={() => {
-            dispatch(
-              actions.removeCollectionFilter({
-                path,
-              })
-            );
-            onClose?.();
-          }}
-        >
-          Clear filter
-        </Button>
-      </form>
-    </FormContext>
+          <Preview path={path} cf={cf} />
+
+          <CardActions className={styles.actions}>
+            <CardActionButtons>
+              <CardActionButton
+                type="button"
+                onClick={() => {
+                  dispatch(
+                    actions.removeCollectionFilter({
+                      path,
+                    })
+                  );
+                  onClose?.();
+                }}
+              >
+                Clear
+              </CardActionButton>
+            </CardActionButtons>
+            <CardActionButtons>
+              <CardActionButton type="button" onClick={() => onClose?.()}>
+                Cancel
+              </CardActionButton>
+              <CardActionButton
+                unelevated
+                type="submit"
+                disabled={!formMethods.formState.isValid}
+              >
+                Apply
+              </CardActionButton>
+            </CardActionButtons>
+          </CardActions>
+        </form>
+      </FormContext>
+    </CollectionFilterTheme>
   );
 };
+
+const CollectionFilterTheme: React.FC = ({ children }) => (
+  <ThemeProvider options={{ background: grey100, surface: '#fff' }}>
+    <Theme use={['background']} tag="div">
+      {children}
+    </Theme>
+  </ThemeProvider>
+);
 
 const ConditionPreview: React.FC<{ cf: CollectionFilterType }> = ({ cf }) => {
   const operator = `"${cf.operator}"`;
@@ -146,18 +178,20 @@ const Preview: React.FC<{ path: string; cf: CollectionFilterType }> = ({
 }) => {
   const collectionId = path.split('/').pop();
   return (
-    <div>
+    <code className={styles.preview}>
       <div>.collection({`${JSON.stringify(collectionId)}`})</div>
       {(isSingleValueCollectionFilter(cf) ||
         isMultiValueCollectionFilter(cf)) && (
-        <div>
+        <div className={styles.previewFilter}>
           .where("{cf.field}", <ConditionPreview cf={cf} />)
         </div>
       )}
       {isSortableCollectionFilter(cf) && !!cf.sort && (
-        <div>.orderBy({`"${cf.field}", "${cf.sort}"`})</div>
+        <div className={styles.previewFilter}>
+          .orderBy({`"${cf.field}", "${cf.sort}"`})
+        </div>
       )}
-    </div>
+    </code>
   );
 };
 
@@ -221,22 +255,26 @@ const ConditionEntries: React.FC<{ name: string }> = ({ name }) => {
     if (fields.length < 1) {
       append({ _: '' });
     }
-  }, [fields]);
+  }, [append, fields]);
 
   return (
-    <>
+    <ul className={styles.conditionEntries}>
       {fields.map((field, index) => (
-        <div key={field.id}>
+        <li key={field.id}>
           <ConditionEntry name={`${name}[${index}]`} />
-          <Button type="button" onClick={() => remove(index)}>
-            -
-          </Button>
-        </div>
+          <IconButton
+            className={fields.length > 1 ? styles.removeFilter : styles.hidden}
+            icon="delete"
+            label="Remove filter"
+            type="button"
+            onClick={() => remove(index)}
+          />
+        </li>
       ))}
-      <Button type="button" onClick={() => append({ _: '' })}>
-        +
+      <Button type="button" icon="add" onClick={() => append({ _: '' })}>
+        Add value
       </Button>
-    </>
+    </ul>
   );
 };
 
@@ -254,7 +292,7 @@ const SortRadioGroup: React.FC<{ name: string; disabled: boolean }> = ({
     }
 
     return () => unregister(name);
-  }, [register, disabled]);
+  }, [register, unregister, disabled, name, setValue]);
 
   const sort = watch(name);
 
@@ -305,11 +343,12 @@ const ConditionEntry: React.FC<{
     if (value === undefined) {
       setValue(name, '');
     }
-  }, [value]);
+  }, [value, setValue, name]);
 
   return (
-    <div>
+    <div className={styles.conditionEntry}>
       <SelectField
+        fieldClassName={styles.conditionEntryType}
         options={['string', 'number', 'boolean']}
         value={fieldType}
         onChange={evt => {
@@ -357,7 +396,7 @@ const BooleanCondition: React.FC<{ name: string }> = ({ name }) => {
     setValue(name, true);
 
     return () => unregister(name);
-  }, [register]);
+  }, [register, unregister, setValue, name]);
 
   const selectValue = watch(name);
 
@@ -381,16 +420,17 @@ const FilterItem: React.FC<{
 
   return (
     <CollapsibleList
+      className={styles.listItem}
       defaultOpen={expanded}
       handle={
         <SimpleListItem
           text={
-            <>
+            <div className={styles.headerTitle}>
               <Typography use="body1">{title}</Typography>
               {!expanded && preview && (
-                <Typography use="body1">{preview}</Typography>
+                <Typography use="caption">{preview}</Typography>
               )}
-            </>
+            </div>
           }
           metaIcon="chevron_right"
           className={styles.header}
