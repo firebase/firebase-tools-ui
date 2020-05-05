@@ -347,12 +347,12 @@ const ConditionEntry: React.FC<{
   return (
     <div className={styles.conditionEntry}>
       <SelectField
-        fieldClassName={styles.conditionEntryType}
         options={['string', 'number', 'boolean']}
         value={fieldType}
         onChange={evt => {
           setFieldType(evt.currentTarget.value);
         }}
+        fieldClassName={styles.conditionEntryType}
       />
 
       {fieldType === 'string' && (
@@ -361,6 +361,7 @@ const ConditionEntry: React.FC<{
           name={name}
           defaultValue=""
           error={error}
+          fieldClassName={styles.conditionEntryValue}
           aria-label="Value"
         />
       )}
@@ -383,6 +384,7 @@ const ConditionEntry: React.FC<{
               ? parseFloat(event.target.value)
               : event.target.value
           }
+          fieldClassName={styles.conditionEntryValue}
           aria-label="Value"
         />
       )}
@@ -412,6 +414,7 @@ const BooleanCondition: React.FC<{ name: string }> = ({ name }) => {
       options={['true', 'false']}
       value={selectValue}
       onChange={evt => setValue(name, evt.currentTarget.value === 'true')}
+      fieldClassName={styles.conditionEntryValue}
       aria-label="Value"
     />
   );

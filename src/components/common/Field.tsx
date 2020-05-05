@@ -25,12 +25,14 @@ import classnames from 'classnames';
 import React, { useState } from 'react';
 
 type Props = {
+  fieldClassName?: string;
   tip?: string;
   error?: React.ReactNode | string;
 } & TextFieldProps &
   TextFieldHTMLProps;
 
 export const Field: React.FC<Props> = ({
+  fieldClassName,
   label,
   // strip fullwidth or outlined, always use outlined
   fullwidth,
@@ -41,7 +43,7 @@ export const Field: React.FC<Props> = ({
 }) => {
   const [id] = useState(randomId());
   return (
-    <div className="Field">
+    <div className={classnames('Field', fieldClassName)}>
       <Typography
         className="Field-label"
         use="body2"
@@ -73,17 +75,17 @@ export const Field: React.FC<Props> = ({
 };
 
 type SelectFieldProps = {
-  tip?: string;
   fieldClassName?: string;
+  tip?: string;
 } & SelectProps &
   HTMLProps<HTMLSelectElement>;
 
 export const SelectField: React.FC<SelectFieldProps> = ({
+  fieldClassName,
   label,
   // strip outlined bool, always use outlined
   outlined,
   tip,
-  fieldClassName,
   theme, // TODO: 5.0 theme, incompatible with 6.0 remove at 6.0
   ...selectProps
 }) => {

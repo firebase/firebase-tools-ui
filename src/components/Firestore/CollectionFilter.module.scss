@@ -71,10 +71,15 @@
 
 .conditionEntry {
   display: flex;
+  flex: 1;
 }
 
 .conditionEntryType {
-  flex-basis: 100px;
+  flex: 0 0 100px;
+}
+
+.conditionEntryValue {
+  flex: 1;
 }
 
 .actions {
