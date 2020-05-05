@@ -25,8 +25,6 @@ import {
   useDispatch,
 } from './store';
 
-// jest.mock('./store');
-
 function setup({
   collectionFilter = {} as CollectionFilter,
   path = '/foo/bar',
