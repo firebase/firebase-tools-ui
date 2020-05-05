@@ -34,6 +34,7 @@ import {
 import * as actions from './actions';
 import BooleanEditor from './BooleanEditor';
 import GeoPointEditor from './GeoPointEditor';
+import JsonEditor from './JsonEditor';
 import NumberEditor from './NumberEditor';
 import ReferenceEditor from './ReferenceEditor';
 import {
@@ -50,6 +51,7 @@ import {
   DocumentPath,
   MapField,
   isArrayField,
+  isJSONField,
   isMapField,
 } from './types';
 import { denormalize, normalize } from './utils';
@@ -81,6 +83,7 @@ const RTDB_FIELD_TYPES = [
   FieldType.BOOLEAN,
   FieldType.MAP,
   FieldType.ARRAY,
+  FieldType.JSON,
 ];
 
 const supportedFieldTypeSet = new Set(FIRESTORE_FIELD_TYPES);
@@ -169,6 +172,7 @@ const FieldEditor: React.FC<{
   areFieldsMutable?: boolean;
   startingIndex?: number;
   supportNestedArrays?: boolean;
+  isJson?: boolean;
 }> = ({
   uuid,
   isRtdb,
@@ -176,6 +180,7 @@ const FieldEditor: React.FC<{
   areFieldsMutable = true,
   startingIndex = 0,
   supportNestedArrays = true,
+  isJson = false,
 }) => {
   const store = useStore();
   const dispatch = useDispatch();
@@ -203,7 +208,7 @@ const FieldEditor: React.FC<{
                     allowedTypes={allowedChildTypes}
                   />
                 </div>
-                <FieldEditor uuid={c.valueId} isRtdb={isRtdb} />
+                <FieldEditor uuid={c.valueId} isRtdb={isRtdb} isJson={isJson} />
                 {areFieldsMutable && (
                   <IconButton
                     className="DocumentEditor-MapEntryDelete"
@@ -298,6 +303,14 @@ const FieldEditor: React.FC<{
           )}
         </div>
       </div>
+    );
+  } else if (isJSONField(field)) {
+    return (
+      <JsonEditor
+        name={`${uuid}`}
+        value={field.value}
+        onChange={value => dispatch(actions.updateValue({ uuid, value }))}
+      />
     );
   } else {
     const valueEditor =
@@ -439,6 +452,8 @@ function getDocumentFieldType(field: DocumentField): FieldType {
     return FieldType.MAP;
   } else if (isArrayField(field)) {
     return FieldType.ARRAY;
+  } else if (isJSONField(field)) {
+    return FieldType.JSON;
   } else {
     if (field.value instanceof DocumentPath) {
       return FieldType.REFERENCE;

@@ -52,6 +52,22 @@
   flex-direction: column;
   flex: 1;
   min-width: 0;
+
+  .Firestore-InlineEditor-relative-anchor {
+    .Firestore-InlineEditor {
+      // default to the size of the panel + 8px overhang on each side
+      min-width: calc(100% + 16px);
+    }
+  }
+
+  .Firestore-Document-Warning {
+    align-items: center;
+    align-self: center;
+    display: flex;
+    flex: 1;
+    max-width: 256px;
+    text-align: center;
+  }
 }
 
 .Firestore-Document-List,

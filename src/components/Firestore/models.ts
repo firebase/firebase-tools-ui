@@ -38,6 +38,7 @@ export enum FieldType {
   BLOB = 'blob',
   BOOLEAN = 'boolean',
   GEOPOINT = 'geopoint',
+  JSON = 'json',
   MAP = 'map',
   NULL = 'null',
   NUMBER = 'number',

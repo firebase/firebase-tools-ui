@@ -18,6 +18,7 @@ export function fakeDocumentReference({
       }),
     update: jest.fn(),
     set: jest.fn(),
+    get: jest.fn(),
   } as unknown) as firestore.DocumentReference;
 }
 

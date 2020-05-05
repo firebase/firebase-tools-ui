@@ -17,7 +17,7 @@
 import { createAction } from 'typesafe-actions';
 
 import { FieldType } from '../models';
-import { PrimitiveValue } from './types';
+import { JSONField, PrimitiveValue } from './types';
 
 export const addToMap = createAction('@document/addToMap')<{
   uuid: number;
@@ -49,5 +49,5 @@ export const updateType = createAction('@document/updateType')<{
 }>();
 export const updateValue = createAction('@document/updateValue')<{
   uuid: number;
-  value: PrimitiveValue;
+  value: PrimitiveValue | JSONField['value'];
 }>();
