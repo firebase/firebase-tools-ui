@@ -108,6 +108,6 @@ export class DatabaseApi {
     // build `multipart/form-data` payload
     const formData = new FormData();
     formData.append('upload', file);
-    return await this.restRequest(path, formData, this.baseUrl);
+    return await this.restRequest(path, formData, this.baseUrl, 'POST');
   }
 }
