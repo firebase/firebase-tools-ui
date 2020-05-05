@@ -73,6 +73,14 @@ it('renders an editor for a number', async () => {
 
   await act(async () => {
     fireEvent.change(getByLabelText(/Value/), {
+      target: { value: '-2.555' },
+    });
+  });
+
+  expect(onChange).toHaveBeenCalledWith(-2.555);
+
+  await act(async () => {
+    fireEvent.change(getByLabelText(/Value/), {
       target: { value: 'Infinity' },
     });
   });

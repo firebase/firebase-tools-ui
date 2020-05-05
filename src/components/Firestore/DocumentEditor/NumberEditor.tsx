@@ -37,7 +37,7 @@ const NumberEditor: React.FC<{
     register(name, {
       required: 'Required',
       pattern: {
-        value: /^-?([\d]*\.?[\d+]|Infinity|NaN)$/,
+        value: /^-?([\d]*\.?\d+|Infinity|NaN)$/,
         message: 'Must be a number',
       },
     });
