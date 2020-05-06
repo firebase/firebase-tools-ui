@@ -23,6 +23,7 @@ import { useHistory } from 'react-router-dom';
 import { initDatabase } from '../../firebase';
 import { DatabaseConfig } from '../../store/config';
 import { InteractiveBreadCrumbBar } from '../common/InteractiveBreadCrumbBar';
+import { DatabaseApi } from './api';
 import { ImportDialog } from './DataViewer/ImportDialog';
 import { NodeContainer } from './DataViewer/NodeContainer';
 
@@ -43,6 +44,8 @@ export const Database: React.FC<Props> = ({ config, namespace, path }) => {
   const [ref, setRef] = useState<firebase.database.Reference | undefined>(
     undefined
   );
+  const [api, setApi] = useState<DatabaseApi | undefined>(undefined);
+
   const history = useHistory();
 
   const [importDialogOpen, setImportDialogOpen] = useState(false);
@@ -50,7 +53,14 @@ export const Database: React.FC<Props> = ({ config, namespace, path }) => {
   useEffect(() => {
     const [db, { cleanup }] = initDatabase(config, namespace);
     setRef(path ? db.ref(path) : db.ref());
-    return cleanup;
+
+    const api = new DatabaseApi(config, namespace);
+    setApi(api);
+
+    return function cleanupDb() {
+      cleanup();
+      api.delete();
+    };
   }, [config, namespace, path]);
 
   const urlBase = `/database/${namespace}/data`;
@@ -62,12 +72,12 @@ export const Database: React.FC<Props> = ({ config, namespace, path }) => {
   };
 
   const openImportDialog = () => setImportDialogOpen(true);
-  const closeImportDialog = (
+  const closeImportDialog = async (
     ref?: firebase.database.Reference,
     file?: File
   ) => {
-    if (ref && file) {
-      api.importJson(ref, file);
+    if (ref && file && api) {
+      await api.importFile(ref, namespace, file);
     }
     setImportDialogOpen(false);
   };
