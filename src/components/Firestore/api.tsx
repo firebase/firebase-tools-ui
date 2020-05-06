@@ -18,59 +18,37 @@ import { firestore } from 'firebase';
 
 import { initFirestore } from '../../firebase';
 import { FirestoreConfig } from '../../store/config';
+import { RestApi } from '../common/rest_api';
 import { FirestoreApi } from './models';
 
-type RequestMethod = 'POST' | 'DELETE';
-
-export default class DatabaseApi implements FirestoreApi {
+export default class DatabaseApi extends RestApi implements FirestoreApi {
   private baseUrl: string;
   private baseEmulatorUrl: string;
-  private getToken: () => Promise<{ accessToken: string }>;
   private cleanup: () => Promise<void>;
   readonly database: firestore.Firestore;
 
   constructor(
     public readonly projectId: string,
     public readonly databaseId: string,
-    private config: FirestoreConfig
+    config: FirestoreConfig
   ) {
+    super();
     const [database, { cleanup }] = initFirestore(projectId, config);
-    this.getToken = async () => ({ accessToken: 'owner' });
     this.database = database;
     this.cleanup = cleanup;
 
-    this.baseUrl = `http://${config.hostAndPort}/v1/projects/${projectId}/databases/${databaseId}/`;
-    this.baseEmulatorUrl = `http://${config.hostAndPort}/emulator/v1/projects/${projectId}/databases/${databaseId}/`;
+    this.baseUrl = `http://${config.hostAndPort}/v1/projects/${projectId}/databases/${databaseId}`;
+    this.baseEmulatorUrl = `http://${config.hostAndPort}/emulator/v1/projects/${projectId}/databases/${databaseId}`;
   }
 
   delete(): Promise<void> {
     return this.cleanup();
   }
 
-  private async restRequest(
-    path: string,
-    jsonBody: {},
-    baseUrl: string,
-    method: RequestMethod
-  ) {
-    const { accessToken } = await this.getToken();
-    const res = await fetch(baseUrl + path, {
-      method,
-      body: JSON.stringify(jsonBody),
-      headers: {
-        Authorization: 'Bearer ' + accessToken,
-        'Content-Type': 'application/json',
-      },
-    });
-    const json = await res.json();
-    return { res, json };
-  }
-
   private async getRootCollections(): Promise<firestore.CollectionReference[]> {
     const { json } = await this.restRequest(
-      'documents:listCollectionIds',
+      `${this.baseUrl}/documents:listCollectionIds`,
       {},
-      this.baseUrl,
       'POST'
     );
     const collectionIds = json.collectionIds || [];
@@ -82,9 +60,8 @@ export default class DatabaseApi implements FirestoreApi {
   ): Promise<firestore.CollectionReference[]> {
     const encodedPath = docRef.path; // TODO: Encode each segment.
     const { json } = await this.restRequest(
-      `documents/${encodedPath}:listCollectionIds`,
+      `${this.baseUrl}/documents/${encodedPath}:listCollectionIds`,
       {},
-      this.baseUrl,
       'POST'
     );
     const collectionIds = json.collectionIds || [];
@@ -100,7 +77,7 @@ export default class DatabaseApi implements FirestoreApi {
   }
 
   async nukeDocuments() {
-    await this.restRequest(`documents`, {}, this.baseEmulatorUrl, 'DELETE');
+    await this.restRequest(`${this.baseEmulatorUrl}/documents`, {}, 'DELETE');
     return [];
   }
 }

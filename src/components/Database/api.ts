@@ -16,8 +16,63 @@
 
 import { initDatabase } from '../../firebase';
 import { DatabaseConfig } from '../../store/config';
+import { RestApi } from '../common/rest_api';
 
-type RequestMethod = 'POST' | 'DELETE';
+export class DatabaseApi extends RestApi {
+  private readonly baseUrl: string;
+  private cleanup: () => Promise<void>;
+  readonly database: firebase.database.Database;
+
+  constructor(config: DatabaseConfig, namespace: string) {
+    super();
+    const [database, { cleanup }] = initDatabase(config, namespace);
+    this.database = database;
+    this.cleanup = cleanup;
+    this.baseUrl = `http://${config.hostAndPort}`;
+  }
+
+  delete(): Promise<void> {
+    return this.cleanup();
+  }
+
+  /**
+   * Import a file at a specific path within the current database.
+   */
+  async importFile(
+    ref: firebase.database.Reference,
+    namespace: string,
+    file: File
+  ) {
+    const params = new URLSearchParams({ ns: namespace });
+    const path = getUploadPath(ref) + `?${params.toString()}`;
+    return await this.restRequest(
+      `${this.baseUrl}/${path}`,
+      toFormData(file),
+      // { a: 'b' },
+      'POST',
+      'multipart/form-data'
+    );
+  }
+}
+
+/** build `multipart/form-data` payload */
+function toFormData(file: File) {
+  const formData = new FormData();
+  formData.append('upload', file);
+  return formData;
+}
+
+/** Get absolute path for file upload (the path with `.upload` appended) */
+function getUploadPath(ref: firebase.database.Reference) {
+  const absolutePath = new URL(ref.toString()).pathname;
+  // trim leading and trailing slashes
+  let path = absolutePath.replace(/^\//, '').replace(/\/$/, '');
+  if (path !== '') {
+    path = path + '/';
+  }
+  path += '.upload';
+  return path;
+}
 
 /**
  * Convert the FileReader.readAsText to a promise interface.
@@ -46,68 +101,4 @@ async function validateJSON(file: File) {
   const json = await readFile(file);
   JSON.parse(json || 'null');
   return file;
-}
-
-export class DatabaseApi {
-  private baseUrl: string;
-  private getToken: () => Promise<{ accessToken: string }>;
-  private cleanup: () => Promise<void>;
-  readonly database: firebase.database.Database;
-
-  constructor(config: DatabaseConfig, namespace: string) {
-    const [database, { cleanup }] = initDatabase(config, namespace);
-    this.getToken = async () => ({ accessToken: 'owner' });
-    this.database = database;
-    this.cleanup = cleanup;
-
-    this.baseUrl = `http://${config.hostAndPort}/`;
-  }
-
-  delete(): Promise<void> {
-    return this.cleanup();
-  }
-
-  private async restRequest(
-    path: string,
-    jsonBody: {},
-    baseUrl: string,
-    method: RequestMethod
-  ) {
-    const { accessToken } = await this.getToken();
-    const res = await fetch(baseUrl + path, {
-      method,
-      body: JSON.stringify(jsonBody),
-      headers: {
-        Authorization: 'Bearer ' + accessToken,
-        'Content-Type': 'application/json',
-      },
-    });
-    const json = await res.json();
-    return { res, json };
-  }
-
-  /**
-   * Import a file at a specific path within the current database.
-   */
-  async importFile(ref: firebase.database.Reference, file: File) {
-    const absolutePath = new URL(ref.toString()).pathname;
-    // trim leading and trailing slashes
-    let path = absolutePath.replace(/^\//, '').replace(/\/$/, '');
-    if (path !== '') {
-      path = path + '/';
-    }
-    path = encodeURIComponent(path);
-    const token = await this.getToken();
-    const url = new URL(this.baseUrl);
-    // .getUrl(namespace)
-    // .setPath(`${path}.upload`)
-    // .setParameterValue('auth', token)
-    // .setParameterValue('ns')
-    // .toString();
-
-    // build `multipart/form-data` payload
-    const formData = new FormData();
-    formData.append('upload', file);
-    return await this.restRequest(path, formData, this.baseUrl, 'POST');
-  }
 }
