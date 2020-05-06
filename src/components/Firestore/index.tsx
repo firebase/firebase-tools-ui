@@ -39,6 +39,7 @@ import DatabaseApi from './api';
 import { ApiProvider } from './ApiContext';
 import { promptClearAll } from './dialogs/clearAll';
 import { Root } from './Document';
+import { FirestoreStore } from './store';
 
 export const mapStateToProps = createStructuredSelector({
   projectIdResult: getProjectIdResult,
@@ -115,29 +116,31 @@ export const Firestore: React.FC<FirestoreProps> = ({ config, projectId }) => {
   return isRefreshing ? (
     <Spinner span={12} data-testid="firestore-loading" />
   ) : (
-    <ApiProvider value={api}>
-      <GridCell span={12} className="Firestore">
-        <div className="Firestore-actions">
-          <CustomThemeProvider use="warning" wrap>
-            <Button unelevated onClick={() => handleClearData(api)}>
-              Clear all data
-            </Button>
-          </CustomThemeProvider>
-        </div>
-        <Elevation z="2" wrap>
-          <Card className="Firestore-panels-wrapper">
-            <InteractiveBreadCrumbBar
-              base="/firestore"
-              path={path}
-              onNavigate={handleNavigate}
-            />
-            <div className="Firestore-panels">
-              <Root />
-            </div>
-          </Card>
-        </Elevation>
-      </GridCell>
-    </ApiProvider>
+    <FirestoreStore>
+      <ApiProvider value={api}>
+        <GridCell span={12} className="Firestore">
+          <div className="Firestore-actions">
+            <CustomThemeProvider use="warning" wrap>
+              <Button unelevated onClick={() => handleClearData(api)}>
+                Clear all data
+              </Button>
+            </CustomThemeProvider>
+          </div>
+          <Elevation z="2" wrap>
+            <Card className="Firestore-panels-wrapper">
+              <InteractiveBreadCrumbBar
+                base="/firestore"
+                path={path}
+                onNavigate={handleNavigate}
+              />
+              <div className="Firestore-panels">
+                <Root />
+              </div>
+            </Card>
+          </Elevation>
+        </GridCell>
+      </ApiProvider>
+    </FirestoreStore>
   );
 };
 

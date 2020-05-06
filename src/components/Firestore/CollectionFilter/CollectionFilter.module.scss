@@ -1,0 +1,103 @@
+/**
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@import '../../common/color';
+
+.panel {
+  width: 360px; // taken from console
+}
+
+.header {
+  border-bottom: 1px solid $COLOR_DIVIDER;
+}
+
+.headerTitle {
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+}
+
+.preview,
+.header {
+  background: var(--mdc-theme-background);
+}
+
+.children {
+  background: var(--mdc-theme-surface);
+}
+
+.preview,
+.children {
+  border-bottom: 1px solid $COLOR_DIVIDER;
+  padding: 12px 16px;
+}
+
+.preview {
+  background: var(--mdc-theme-background);
+  color: var(--mdc-theme-secondary);
+  display: block;
+}
+
+.previewFilter {
+  text-indent: 24px;
+}
+
+.conditionEntries {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  li {
+    align-items: center;
+    display: flex;
+  }
+}
+
+/**
+ * Don't remove the "delete"-btn from the DOM.
+ * Doing so adjusts the layout when the number of values
+ * changes between 1 and 1+.
+ */
+.removeFilter {
+  opacity: 0;
+
+  &:hover,
+  &:focus {
+    opacity: 1;
+  }
+}
+
+.hidden {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.conditionEntry {
+  display: flex;
+  flex: 1;
+}
+
+.conditionEntryType {
+  flex: 0 0 100px;
+}
+
+.conditionEntryValue {
+  flex: 1;
+}
+
+.actions {
+  justify-content: space-between;
+}

@@ -18,18 +18,29 @@ import './index.scss';
 
 import { Button } from '@rmwc/button';
 import { Icon } from '@rmwc/icon';
+import { IconButton } from '@rmwc/icon-button';
 import { List, ListItem } from '@rmwc/list';
+import { MenuSurface, MenuSurfaceAnchor } from '@rmwc/menu';
 import { firestore } from 'firebase';
 import React, { useState } from 'react';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import { NavLink, Route, useRouteMatch } from 'react-router-dom';
 
+import styles from './Collection.module.scss';
+import { CollectionFilter } from './CollectionFilter';
 import {
   AddDocumentDialog,
   AddDocumentDialogValue,
 } from './dialogs/AddDocumentDialog';
 import { Document } from './Document';
+import {
+  CollectionFilter as CollectionFilterType,
+  isMultiValueCollectionFilter,
+  isSingleValueCollectionFilter,
+  isSortableCollectionFilter,
+} from './models';
 import PanelHeader from './PanelHeader';
+import { useCollectionFilter } from './store';
 import { useAutoSelect } from './useAutoSelect';
 
 const NO_DOCS: firestore.QueryDocumentSnapshot<firestore.DocumentData>[] = [];
@@ -39,8 +50,17 @@ export interface Props {
 }
 
 export const Collection: React.FC<Props> = ({ collection }) => {
-  const [collectionSnapshot, loading, error] = useCollection(collection);
+  const collectionFilter = useCollectionFilter(collection.path);
+  const filteredCollection = applyCollectionFilter(
+    collection,
+    collectionFilter
+  );
+  const [collectionSnapshot, loading, error] = useCollection(
+    filteredCollection
+  );
+
   const [isAddDocumentDialogOpen, setAddDocumentDialogOpen] = useState(false);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const { url } = useRouteMatch()!;
   // TODO: Fetch missing documents (i.e. nonexistent docs with subcollections).
@@ -53,17 +73,39 @@ export const Collection: React.FC<Props> = ({ collection }) => {
     }
   };
 
-  if (loading) return <></>;
   if (error) return <></>;
 
   return (
     <>
-      {redirectIfAutoSelectable}
+      {!loading && redirectIfAutoSelectable}
       <div className="Firestore-Collection">
         <PanelHeader
           id={collection.id}
           icon={<Icon icon={{ icon: 'collections_bookmark', size: 'small' }} />}
-        />
+        >
+          <MenuSurfaceAnchor>
+            <MenuSurface
+              open={isFilterOpen}
+              onClose={() => setIsFilterOpen(false)}
+            >
+              {!loading && isFilterOpen && (
+                <CollectionFilter
+                  className={styles['query-panel']}
+                  path={collection.path}
+                  onClose={() => setIsFilterOpen(false)}
+                />
+              )}
+            </MenuSurface>
+
+            <div className={collectionFilter && styles.badge}>
+              <IconButton
+                icon="filter_list"
+                label="Filter documents in this collection"
+                onClick={() => setIsFilterOpen(!isFilterOpen)}
+              />
+            </div>
+          </MenuSurfaceAnchor>
+        </PanelHeader>
 
         {/* Actions */}
         {isAddDocumentDialogOpen && (
@@ -108,5 +150,33 @@ export const Collection: React.FC<Props> = ({ collection }) => {
     </>
   );
 };
+
+function applyCollectionFilter(
+  collection: firestore.Query<firestore.DocumentData>,
+  collectionFilter?: CollectionFilterType
+): firestore.Query<firestore.DocumentData> {
+  let filteredCollection = collection;
+  if (collectionFilter && isSingleValueCollectionFilter(collectionFilter)) {
+    filteredCollection = filteredCollection.where(
+      collectionFilter.field,
+      collectionFilter.operator,
+      collectionFilter.value
+    );
+  }
+  if (collectionFilter && isMultiValueCollectionFilter(collectionFilter)) {
+    filteredCollection = filteredCollection.where(
+      collectionFilter.field,
+      collectionFilter.operator,
+      collectionFilter.values
+    );
+  }
+  if (collectionFilter && isSortableCollectionFilter(collectionFilter)) {
+    filteredCollection = filteredCollection.orderBy(
+      collectionFilter.field,
+      collectionFilter.sort
+    );
+  }
+  return filteredCollection;
+}
 
 export default Collection;

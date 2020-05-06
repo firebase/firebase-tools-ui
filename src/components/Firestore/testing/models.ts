@@ -42,6 +42,8 @@ export function fakeCollectionReference({
   id = '',
   doc = () => {},
   path = '',
+  where = jest.fn(),
+  orderBy = jest.fn(),
 } = {}): FakeCollectionReference {
   let thisObserver = (snapshot: firestore.DocumentSnapshot) => {};
 
@@ -55,6 +57,8 @@ export function fakeCollectionReference({
     },
     setSnapshot: (snapshot: firestore.DocumentSnapshot) =>
       thisObserver(snapshot),
+    where,
+    orderBy,
   } as unknown) as FakeCollectionReference;
 }
 
