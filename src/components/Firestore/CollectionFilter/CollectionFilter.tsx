@@ -14,37 +14,28 @@
  * limitations under the License.
  */
 
-import { Button } from '@rmwc/button';
 import { CardActionButton, CardActionButtons, CardActions } from '@rmwc/card';
-import { IconButton } from '@rmwc/icon-button';
 import { CollapsibleList, SimpleListItem } from '@rmwc/list';
-import { Radio } from '@rmwc/radio';
 import { Theme, ThemeProvider } from '@rmwc/theme';
 import { Typography } from '@rmwc/typography';
 import { firestore } from 'firebase';
-import React, { useEffect, useState } from 'react';
-import {
-  Controller,
-  FormContext,
-  useFieldArray,
-  useForm,
-  useFormContext,
-} from 'react-hook-form';
+import React, { useState } from 'react';
+import { Controller, FormContext, useForm } from 'react-hook-form';
 
-import { grey100 } from '../../colors';
-import { Field, SelectField } from '../../components/common/Field';
-import * as actions from './actions';
-import styles from './CollectionFilter.module.scss';
+import { grey100 } from '../../../colors';
+import { Field, SelectField } from '../../../components/common/Field';
+import * as actions from '../actions';
 import {
   CollectionFilter as CollectionFilterType,
   isMultiValueCollectionFilter,
   isSingleValueCollectionFilter,
   isSortableCollectionFilter,
-} from './models';
-import { useCollectionFilter, useDispatch } from './store';
-import { isBoolean, isNumber } from './utils';
-
-const NUMBER_REGEX = /^-?([\d]*\.?[\d+]|Infinity|NaN)$/;
+} from '../models';
+import { useCollectionFilter, useDispatch } from '../store';
+import styles from './CollectionFilter.module.scss';
+import { ConditionEntries } from './ConditionEntries';
+import { ConditionEntry } from './ConditionEntry';
+import { SortRadioGroup } from './SortRadioGroup';
 
 export const CollectionFilter: React.FC<{
   className?: string;
@@ -244,179 +235,6 @@ const ConditionSelect: React.FC = ({ children }) => {
       />
       {children}
     </>
-  );
-};
-
-const ConditionEntries: React.FC<{ name: string }> = ({ name }) => {
-  const { fields, append, remove } = useFieldArray({
-    name,
-  });
-
-  useEffect(() => {
-    if (fields.length < 1) {
-      append({ _: '' });
-    }
-  }, [append, fields]);
-
-  return (
-    <ul className={styles.conditionEntries}>
-      {fields.map((field, index) => (
-        <li key={field.id}>
-          <ConditionEntry name={`${name}[${index}]`} />
-          <IconButton
-            className={fields.length > 1 ? styles.removeFilter : styles.hidden}
-            icon="delete"
-            label="Remove filter"
-            type="button"
-            onClick={() => remove(index)}
-          />
-        </li>
-      ))}
-      <Button type="button" icon="add" onClick={() => append({ _: '' })}>
-        Add value
-      </Button>
-    </ul>
-  );
-};
-
-const SortRadioGroup: React.FC<{ name: string; disabled: boolean }> = ({
-  name,
-  disabled,
-}) => {
-  const { register, setValue, unregister, watch } = useFormContext();
-
-  useEffect(() => {
-    if (!disabled) {
-      register({ name });
-    } else {
-      setValue(name, undefined);
-    }
-
-    return () => unregister(name);
-  }, [register, unregister, disabled, name, setValue]);
-
-  const sort = watch(name);
-
-  return (
-    <>
-      <Radio
-        value="asc"
-        label="Ascending"
-        checked={sort === 'asc'}
-        onChange={() => setValue(name, 'asc')}
-        disabled={disabled}
-      />
-
-      <Radio
-        value="desc"
-        label="Descending"
-        checked={sort === 'desc'}
-        onChange={() => setValue(name, 'desc')}
-        disabled={disabled}
-      />
-    </>
-  );
-};
-
-function getConditionEntryType(value: any) {
-  if (isBoolean(value)) {
-    return 'boolean';
-  }
-  if (isNumber(value)) {
-    return 'number';
-  }
-  return 'string';
-}
-
-const ConditionEntry: React.FC<{
-  name: string;
-  error?: string;
-}> = React.memo(({ name, error }) => {
-  const { setValue, watch } = useFormContext();
-  const value = watch(name);
-  const [fieldType, setFieldType] = useState(getConditionEntryType(value));
-
-  useEffect(() => {
-    // Essentially setting the defaultValue of this form-field,
-    // specifically when chaning types between Single <--> Multi
-    if (value === undefined) {
-      setValue(name, '');
-    }
-  }, [value, setValue, name]);
-
-  return (
-    <div className={styles.conditionEntry}>
-      <SelectField
-        options={['string', 'number', 'boolean']}
-        value={fieldType}
-        onChange={evt => {
-          setFieldType(evt.currentTarget.value);
-        }}
-        fieldClassName={styles.conditionEntryType}
-      />
-
-      {fieldType === 'string' && (
-        <Controller
-          as={Field}
-          name={name}
-          defaultValue=""
-          error={error}
-          fieldClassName={styles.conditionEntryValue}
-          aria-label="Value"
-        />
-      )}
-
-      {fieldType === 'number' && (
-        <Controller
-          as={Field}
-          name={name}
-          defaultValue={''}
-          rules={{
-            pattern: {
-              value: NUMBER_REGEX,
-              message: 'Must be a number',
-            },
-          }}
-          error={error}
-          onChange={([event]) =>
-            // Cast it back to a number before saving to model
-            event.target.value.match(NUMBER_REGEX)
-              ? parseFloat(event.target.value)
-              : event.target.value
-          }
-          fieldClassName={styles.conditionEntryValue}
-          aria-label="Value"
-        />
-      )}
-
-      {fieldType === 'boolean' && <BooleanCondition name={name} />}
-    </div>
-  );
-});
-
-// RMWC select-menus do not work well with boolean values, requiring
-// custom-registration w/ the parent form
-const BooleanCondition: React.FC<{ name: string }> = ({ name }) => {
-  const { register, setValue, unregister, watch } = useFormContext();
-
-  useEffect(() => {
-    register({ name });
-    setValue(name, true);
-
-    return () => unregister(name);
-  }, [register, unregister, setValue, name]);
-
-  const selectValue = watch(name);
-
-  return (
-    <SelectField
-      name={name}
-      options={['true', 'false']}
-      value={selectValue}
-      onChange={evt => setValue(name, evt.currentTarget.value === 'true')}
-      fieldClassName={styles.conditionEntryValue}
-      aria-label="Value"
-    />
   );
 };
 

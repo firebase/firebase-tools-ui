@@ -18,6 +18,7 @@ import React, { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import { Field } from '../../common/Field';
+import { NUMBER_REGEX } from '../utils';
 
 const NumberEditor: React.FC<{
   value: number;
@@ -37,7 +38,7 @@ const NumberEditor: React.FC<{
     register(name, {
       required: 'Required',
       pattern: {
-        value: /^-?([\d]*\.?\d+|Infinity|NaN)$/,
+        value: NUMBER_REGEX,
         message: 'Must be a number',
       },
     });
