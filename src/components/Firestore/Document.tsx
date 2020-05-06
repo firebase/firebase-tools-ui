@@ -16,17 +16,18 @@
 
 import './index.scss';
 
+import { CircularProgress } from '@rmwc/circular-progress';
 import { Icon } from '@rmwc/icon';
 import { IconButton } from '@rmwc/icon-button';
 import { ListDivider } from '@rmwc/list';
 import { MenuItem, SimpleMenu } from '@rmwc/menu';
 import { firestore } from 'firebase';
-import React from 'react';
+import React, { Suspense } from 'react';
 import { Route, useRouteMatch } from 'react-router-dom';
 
 import { FirestoreIcon } from '../common/icons';
 import { useApi } from './ApiContext';
-import Collection from './Collection';
+import Collection, { CollectionSkeleton } from './Collection';
 import CollectionList from './CollectionList';
 import { promptDeleteDocument } from './dialogs/deleteDocument';
 import { promptDeleteDocumentFields } from './dialogs/deleteDocumentFields';
@@ -47,7 +48,9 @@ const Doc: React.FC<{
       <Route
         path={`${url}/:id`}
         render={({ match }: any) => (
-          <Collection collection={collectionById(match.params.id)} />
+          <Suspense fallback={<CollectionSkeleton id={match.params.id} />}>
+            <Collection collection={collectionById(match.params.id)} />
+          </Suspense>
         )}
       ></Route>
     </>
@@ -105,3 +108,26 @@ export const Document: React.FC<{ reference: firestore.DocumentReference }> = ({
     </Doc>
   );
 };
+
+export const RootSkeleton: React.FC = () => (
+  <div className="Firestore-Document">
+    <PanelHeader id="Root" icon={<FirestoreIcon />} />
+    <CircularProgress
+      className="Firestore--panel-loadingIndicator"
+      size="large"
+    />
+  </div>
+);
+
+export const DocumentSkeleton: React.FC<{ id: string }> = ({ id }) => (
+  <div className="Firestore-Document">
+    <PanelHeader
+      id={id}
+      icon={<Icon icon={{ icon: 'insert_drive_file', size: 'small' }} />}
+    />
+    <CircularProgress
+      className="Firestore--panel-loadingIndicator"
+      size="large"
+    />
+  </div>
+);

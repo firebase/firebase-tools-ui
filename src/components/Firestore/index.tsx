@@ -20,7 +20,7 @@ import { Button } from '@rmwc/button';
 import { Card } from '@rmwc/card';
 import { Elevation } from '@rmwc/elevation';
 import { GridCell } from '@rmwc/grid';
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 
@@ -38,7 +38,7 @@ import { Spinner } from '../common/Spinner';
 import DatabaseApi from './api';
 import { ApiProvider } from './ApiContext';
 import { promptClearAll } from './dialogs/clearAll';
-import { Root } from './Document';
+import { Root, RootSkeleton } from './Document';
 import { FirestoreStore } from './store';
 
 export const mapStateToProps = createStructuredSelector({
@@ -134,7 +134,9 @@ export const Firestore: React.FC<FirestoreProps> = ({ config, projectId }) => {
                 onNavigate={handleNavigate}
               />
               <div className="Firestore-panels">
-                <Root />
+                <Suspense fallback={<RootSkeleton />}>
+                  <Root />
+                </Suspense>
               </div>
             </Card>
           </Elevation>

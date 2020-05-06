@@ -96,11 +96,11 @@
 
     &:nth-last-child(-n + 3) {
       display: flex;
-      flex: 1;
+      flex: 0 1 25%;
     }
 
     &:nth-last-child(1) {
-      flex: 2;
+      flex: 1;
     }
   }
 
@@ -133,4 +133,9 @@
   .Callout {
     margin-bottom: 16px;
   }
+}
+
+.Firestore--panel-loadingIndicator {
+  flex: 1;
+  margin: 0 auto;
 }

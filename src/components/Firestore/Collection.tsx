@@ -17,14 +17,15 @@
 import './index.scss';
 
 import { Button } from '@rmwc/button';
+import { CircularProgress } from '@rmwc/circular-progress';
 import { Icon } from '@rmwc/icon';
 import { IconButton } from '@rmwc/icon-button';
 import { List, ListItem } from '@rmwc/list';
 import { MenuSurface, MenuSurfaceAnchor } from '@rmwc/menu';
 import { firestore } from 'firebase';
-import React, { useState } from 'react';
-import { useCollection } from 'react-firebase-hooks/firestore';
+import React, { Suspense, useState } from 'react';
 import { NavLink, Route, useRouteMatch } from 'react-router-dom';
+import { useFirestoreCollection } from 'reactfire';
 
 import styles from './Collection.module.scss';
 import { CollectionFilter } from './CollectionFilter';
@@ -32,7 +33,7 @@ import {
   AddDocumentDialog,
   AddDocumentDialogValue,
 } from './dialogs/AddDocumentDialog';
-import { Document } from './Document';
+import { Document, DocumentSkeleton } from './Document';
 import {
   CollectionFilter as CollectionFilterType,
   isMultiValueCollectionFilter,
@@ -55,7 +56,7 @@ export const Collection: React.FC<Props> = ({ collection }) => {
     collection,
     collectionFilter
   );
-  const [collectionSnapshot, loading, error] = useCollection(
+  const collectionSnapshot = useFirestoreCollection<unknown>(
     filteredCollection
   );
 
@@ -64,7 +65,9 @@ export const Collection: React.FC<Props> = ({ collection }) => {
 
   const { url } = useRouteMatch()!;
   // TODO: Fetch missing documents (i.e. nonexistent docs with subcollections).
-  const docs = collectionSnapshot ? collectionSnapshot.docs : NO_DOCS;
+  const docs = collectionSnapshot.docs.length
+    ? collectionSnapshot.docs
+    : NO_DOCS;
   const redirectIfAutoSelectable = useAutoSelect(docs);
 
   const addDocument = async (value: AddDocumentDialogValue | null) => {
@@ -73,11 +76,9 @@ export const Collection: React.FC<Props> = ({ collection }) => {
     }
   };
 
-  if (error) return <></>;
-
   return (
     <>
-      {!loading && redirectIfAutoSelectable}
+      {redirectIfAutoSelectable}
       <div className="Firestore-Collection">
         <PanelHeader
           id={collection.id}
@@ -88,7 +89,7 @@ export const Collection: React.FC<Props> = ({ collection }) => {
               open={isFilterOpen}
               onClose={() => setIsFilterOpen(false)}
             >
-              {!loading && isFilterOpen && (
+              {isFilterOpen && (
                 <CollectionFilter
                   className={styles['query-panel']}
                   path={collection.path}
@@ -127,7 +128,7 @@ export const Collection: React.FC<Props> = ({ collection }) => {
         </List>
 
         <List dense className="Firestore-Document-List" tag="div">
-          {docs.map(doc => (
+          {docs.map((doc: any) => (
             <ListItem
               key={doc.ref.id}
               className="Firestore-List-Item"
@@ -144,12 +145,29 @@ export const Collection: React.FC<Props> = ({ collection }) => {
         path={`${url}/:id`}
         render={({ match }: any) => {
           const docRef = collection.doc(match.params.id);
-          return <Document reference={docRef} />;
+          return (
+            <Suspense fallback={<DocumentSkeleton id={match.params.id} />}>
+              <Document reference={docRef} />
+            </Suspense>
+          );
         }}
       ></Route>
     </>
   );
 };
+
+export const CollectionSkeleton: React.FC<{ id: string }> = ({ id }) => (
+  <div className="Firestore-Collection">
+    <PanelHeader
+      id={id}
+      icon={<Icon icon={{ icon: 'collections_bookmark', size: 'small' }} />}
+    />
+    <CircularProgress
+      className="Firestore--panel-loadingIndicator"
+      size="large"
+    />
+  </div>
+);
 
 function applyCollectionFilter(
   collection: firestore.Query<firestore.DocumentData>,

@@ -19,7 +19,7 @@ import { List, ListItem } from '@rmwc/list';
 import { Typography } from '@rmwc/typography';
 import { firestore } from 'firebase';
 import React, { useState } from 'react';
-import { useDocumentData } from 'react-firebase-hooks/firestore';
+import { useFirestoreDocData } from 'reactfire';
 
 import { FirestoreMap } from '../models';
 import { isMap } from '../utils';
@@ -37,11 +37,8 @@ const DocumentPreview: React.FC<Props> = ({
   reference,
   maxSummaryLen = 20,
 }) => {
-  const [data, loading, error] = useDocumentData<FirestoreMap>(reference);
+  const data = useFirestoreDocData<FirestoreMap>(reference);
   const [isAddingField, setIsAddingField] = useState(false);
-
-  if (loading) return <div>Loading document...</div>;
-  if (error) return <div>Error retrieving document</div>;
 
   return (
     <>
