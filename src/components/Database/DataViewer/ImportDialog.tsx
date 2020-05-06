@@ -26,6 +26,7 @@ import { useState } from 'react';
 
 import { Callout } from '../../common/Callout';
 import { Field } from '../../common/Field';
+import { FileField } from '../../common/FileField';
 
 export interface Props {
   reference: firebase.database.Reference;
@@ -34,7 +35,8 @@ export interface Props {
 
 export const ImportDialog: React.FC<Props> = ({ reference, onComplete }) => {
   const [file, setFile] = useState<File>();
-  const onSubmit = async (e: React.FormEvent<HTMLElement>) => {
+
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     file ? onComplete(reference, file) : onComplete();
   };
@@ -56,13 +58,14 @@ export const ImportDialog: React.FC<Props> = ({ reference, onComplete }) => {
             value={path}
             type="text"
           />
-          <Field
+          <FileField
             name="file"
-            type="file"
             accept="application/json"
             label="Data (JSON)"
             value={file?.name}
-            onChange={e => console.log('file', e.target)}
+            onFiles={files => {
+              return setFile(files.length ? files[0] : undefined);
+            }}
           />
         </DialogContent>
         <DialogActions>
