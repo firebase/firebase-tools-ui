@@ -17,16 +17,12 @@
 import { act, fireEvent, render } from '@testing-library/react';
 import React from 'react';
 
+import { CollectionFilter as CollectionFilterType } from '../models';
+import { FirestoreStore, useCollectionFilter } from '../store';
 import { CollectionFilter } from './CollectionFilter';
-import {
-  CollectionFilters,
-  FirestoreStore,
-  useCollectionFilter,
-  useDispatch,
-} from './store';
 
 function setup({
-  collectionFilter = {} as CollectionFilter,
+  collectionFilter = {} as CollectionFilterType,
   path = '/foo/bar',
   children = null as React.ReactNode,
   onClose = () => {},
