@@ -53,6 +53,7 @@ export abstract class RestApi {
     const { accessToken } = await this.getToken();
     body.append('auth', accessToken);
 
+    // headers are NOT allowed or it breaks the multipart/form-data payload
     const res = await fetch(url, { method, body });
 
     const text = await res.text();
