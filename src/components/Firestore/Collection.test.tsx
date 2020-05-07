@@ -17,8 +17,8 @@
 import { Portal } from '@rmwc/base';
 import { act, render } from '@testing-library/react';
 import React from 'react';
-import { useCollection, useDocumentData } from 'react-firebase-hooks/firestore';
 import { MemoryRouter } from 'react-router-dom';
+import { useFirestoreCollection, useFirestoreDocData } from 'reactfire';
 
 import { ApiProvider } from './ApiContext';
 import Collection from './Collection';
@@ -30,15 +30,16 @@ import {
   fakeFirestoreApi,
 } from './testing/models';
 
-jest.mock('react-firebase-hooks/firestore');
 jest.mock('./store');
+jest.mock('reactfire', () => ({
+  useFirestoreCollection: jest.fn(),
+  useFirestoreDocData: jest.fn(),
+}));
 
 it('shows the list of documents in the collection', () => {
-  useCollection.mockReturnValue([
-    {
-      docs: [{ ref: fakeDocumentSnapshot({ id: 'cool-doc-1' }) }],
-    },
-  ]);
+  useFirestoreCollection.mockReturnValueOnce({
+    docs: [{ ref: fakeDocumentSnapshot({ id: 'cool-doc-1' }) }],
+  });
 
   const collectionReference = fakeCollectionReference({ id: 'my-stuff' });
   const { getByText, queryByText } = render(
@@ -64,12 +65,12 @@ it('shows the list of documents in the collection', () => {
 });
 
 it('filters documents for single-value filters', () => {
-  useCollectionFilter.mockReturnValue({
+  useCollectionFilter.mockReturnValueOnce({
     field: 'foo',
     operator: '==',
     value: 'bar',
   });
-  useCollection.mockReturnValue([]);
+  useFirestoreCollection.mockReturnValueOnce({ docs: [] });
   const whereSpy = jest.fn();
 
   render(
@@ -86,12 +87,12 @@ it('filters documents for single-value filters', () => {
 });
 
 it('filters documents for multi-value filters', () => {
-  useCollectionFilter.mockReturnValue({
+  useCollectionFilter.mockReturnValueOnce({
     field: 'foo',
     operator: 'in',
     values: ['eggs', 'spam'],
   });
-  useCollection.mockReturnValue([]);
+  useFirestoreCollection.mockReturnValueOnce({ docs: [] });
   const whereSpy = jest.fn();
 
   render(
@@ -108,11 +109,11 @@ it('filters documents for multi-value filters', () => {
 });
 
 it('sorts documents when filtered', () => {
-  useCollectionFilter.mockReturnValue({
+  useCollectionFilter.mockReturnValueOnce({
     field: 'foo',
     sort: 'asc',
   });
-  useCollection.mockReturnValue([]);
+  useFirestoreCollection.mockReturnValueOnce({ docs: [] });
   const orderBySpy = jest.fn();
 
   render(
@@ -131,18 +132,15 @@ it('sorts documents when filtered', () => {
 it('shows the selected sub-document', () => {
   const subDocRef = fakeDocumentReference({ id: 'cool-doc-1' });
 
-  useDocumentData.mockReturnValue([]);
-  useCollection.mockReturnValue([
-    {
-      docs: [{ ref: subDocRef }],
-    },
-  ]);
+  useFirestoreCollection.mockReturnValueOnce({
+    docs: [{ ref: subDocRef }],
+  });
 
   const collectionReference = fakeCollectionReference({
     id: 'my-stuff',
     doc: jest.fn(),
   });
-  collectionReference.doc.mockReturnValue(subDocRef);
+  collectionReference.doc.mockReturnValueOnce(subDocRef);
 
   const { getByText, queryAllByText } = render(
     <MemoryRouter initialEntries={['//cool-doc-1']}>
