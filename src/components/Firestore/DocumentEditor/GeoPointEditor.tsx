@@ -67,8 +67,8 @@ const GeoPointEditor: React.FC<{
   }, [register, unregister, latitudeName, longitudeName]);
 
   useEffect(() => {
-    const lat = parseInt(latitude);
-    const long = parseInt(longitude);
+    const lat = Number(latitude);
+    const long = Number(longitude);
     if (value.latitude === lat && value.longitude === long) {
       return;
     }
@@ -85,6 +85,7 @@ const GeoPointEditor: React.FC<{
       <Field
         label="Latitude"
         type="number"
+        step="any"
         defaultValue={latitude}
         onChange={e => {
           setValue(latitudeName, e.currentTarget.value, true);
@@ -96,6 +97,7 @@ const GeoPointEditor: React.FC<{
       <Field
         label="Longitude"
         type="number"
+        step="any"
         defaultValue={longitude}
         onChange={e => {
           setValue(longitudeName, e.currentTarget.value, true);
