@@ -39,6 +39,7 @@ import DatabaseApi from './api';
 import { ApiProvider } from './ApiContext';
 import { promptClearAll } from './dialogs/clearAll';
 import { Root } from './Document';
+import PanelHeader from './PanelHeader';
 import { FirestoreStore } from './store';
 
 export const mapStateToProps = createStructuredSelector({
@@ -80,6 +81,8 @@ export const Firestore: React.FC<FirestoreProps> = ({ config, projectId }) => {
 
   // TODO: do something better here!
   const path = location.pathname.replace(/^\/firestore/, '');
+  const showCollectionShell = path.split('/').length < 3;
+  const showDocumentShell = path.split('/').length < 4;
 
   useEffect(() => {
     const api = new DatabaseApi(projectId, databaseId, config);
@@ -135,6 +138,28 @@ export const Firestore: React.FC<FirestoreProps> = ({ config, projectId }) => {
               />
               <div className="Firestore-panels">
                 <Root />
+                {/*
+                 * TODO: This should really be handled by the constituent Document/Collection components,
+                 * where those components can conditionally show their nested-child. Doing so will be
+                 * easiest once we move to a Suspense-ful render, where we can always show the
+                 * Document/Collection-skeletons, but lazy-render the lists wihin those components.
+                 */}
+                {showCollectionShell && (
+                  <div
+                    className="Firestore-Collection"
+                    data-testid="collection-shell"
+                  >
+                    <PanelHeader id="" icon={null} />
+                  </div>
+                )}
+                {showDocumentShell && (
+                  <div
+                    className="Firestore-Document"
+                    data-testid="document-shell"
+                  >
+                    <PanelHeader id="" icon={null} />
+                  </div>
+                )}
               </div>
             </Card>
           </Elevation>
