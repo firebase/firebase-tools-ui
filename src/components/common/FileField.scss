@@ -16,12 +16,12 @@
 
 .Field {
   .Field-filename {
-    display: flex;
     align-items: center;
     background-color: #eee;
-    padding: 0 8px 0 24px;
-    height: 60px;
     cursor: pointer;
+    display: flex;
+    height: 60px;
+    padding: 0 8px 0 24px;
 
     > span {
       flex: 1 auto;
