@@ -47,6 +47,7 @@
     "node-fetch": "^2.6.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-dropzone": "^11.0.1",
     "react-firebase-hooks": "^2.1.1",
     "react-focus-on": "^3.3.0",
     "react-hook-form": "^5.1.3",

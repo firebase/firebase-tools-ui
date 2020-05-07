@@ -14,23 +14,17 @@
  * limitations under the License.
  */
 
-@import './color';
+.Field {
+  .Field-filename {
+    align-items: center;
+    background-color: #eee;
+    cursor: pointer;
+    display: flex;
+    height: 60px;
+    padding: 0 8px 0 24px;
 
-.Spinner {
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-
-  &.cover {
-    position: absolute;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    justify-content: center;
-
-    &.scrim {
-      background-color: $COLOR_WHITE_ALPHA_87;
+    > span {
+      flex: 1 auto;
     }
   }
 }

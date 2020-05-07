@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { IconButton } from '@rmwc/icon-button';
+import { MenuItem, SimpleMenu } from '@rmwc/menu';
 import * as firebase from 'firebase/app';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
@@ -21,6 +23,8 @@ import { useHistory } from 'react-router-dom';
 import { initDatabase } from '../../firebase';
 import { DatabaseConfig } from '../../store/config';
 import { InteractiveBreadCrumbBar } from '../common/InteractiveBreadCrumbBar';
+import { DatabaseApi } from './api';
+import { ImportDialog } from './DataViewer/ImportDialog';
 import { NodeContainer } from './DataViewer/NodeContainer';
 
 export interface PropsFromState {
@@ -40,12 +44,23 @@ export const Database: React.FC<Props> = ({ config, namespace, path }) => {
   const [ref, setRef] = useState<firebase.database.Reference | undefined>(
     undefined
   );
+  const [api, setApi] = useState<DatabaseApi | undefined>(undefined);
+
   const history = useHistory();
+
+  const [importDialogOpen, setImportDialogOpen] = useState(false);
 
   useEffect(() => {
     const [db, { cleanup }] = initDatabase(config, namespace);
     setRef(path ? db.ref(path) : db.ref());
-    return cleanup;
+
+    const api = new DatabaseApi(config, namespace);
+    setApi(api);
+
+    return function cleanupDb() {
+      cleanup();
+      api.delete();
+    };
   }, [config, namespace, path]);
 
   const urlBase = `/database/${namespace}/data`;
@@ -58,17 +73,34 @@ export const Database: React.FC<Props> = ({ config, namespace, path }) => {
 
   return (
     <div className="Database-Database">
-      {ref ? (
+      {ref && api ? (
         <>
           <InteractiveBreadCrumbBar
             base={urlBase}
             path={path || '/'}
             inputPrefix={getPrefix(ref)}
             onNavigate={handleNavigate}
-          />
+          >
+            <SimpleMenu
+              handle={<IconButton icon="more_vert" label="Open menu" />}
+              renderToPortal
+            >
+              <MenuItem onClick={() => setImportDialogOpen(true)}>
+                Import JSON
+              </MenuItem>
+            </SimpleMenu>
+          </InteractiveBreadCrumbBar>
           <div className="Database-Content">
             <NodeContainer realtimeRef={ref} isViewRoot baseUrl={urlBase} />
           </div>
+
+          {importDialogOpen && (
+            <ImportDialog
+              api={api}
+              reference={ref}
+              onComplete={() => setImportDialogOpen(false)}
+            />
+          )}
         </>
       ) : (
         <p>Loading</p>

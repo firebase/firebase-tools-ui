@@ -14,23 +14,10 @@
  * limitations under the License.
  */
 
-@import './color';
+.container {
+  position: relative;
 
-.Spinner {
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-
-  &.cover {
-    position: absolute;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    justify-content: center;
-
-    &.scrim {
-      background-color: $COLOR_WHITE_ALPHA_87;
-    }
+  :global(.Callout) {
+    margin-bottom: 24px;
   }
 }
