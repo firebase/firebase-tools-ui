@@ -3,13 +3,10 @@ import './FileField.scss';
 
 import { randomId } from '@rmwc/base';
 import { Button } from '@rmwc/button';
-import { ThemeProvider } from '@rmwc/theme';
 import { HTMLProps } from '@rmwc/types';
 import { Typography } from '@rmwc/typography';
 import React, { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-
-import { grey100 } from '../../colors';
 
 type FileFieldProps = {
   tip?: string;
@@ -18,6 +15,7 @@ type FileFieldProps = {
 } & HTMLProps<HTMLInputElement>;
 
 const DROP_MESSAGE = 'Drop file(s) here';
+const INVALID_FILE_MESSAGE = 'File type is not accepted';
 
 export const FileField: React.FC<FileFieldProps> = ({
   label,
@@ -25,11 +23,18 @@ export const FileField: React.FC<FileFieldProps> = ({
   error,
   onFiles,
   value,
+  accept,
 }) => {
   const [id] = useState(randomId());
 
-  const { isDragActive, getRootProps, getInputProps } = useDropzone({
+  const {
+    isDragActive,
+    getRootProps,
+    getInputProps,
+    isDragReject,
+  } = useDropzone({
     onDrop: onFiles,
+    accept,
   });
 
   return (
@@ -45,17 +50,21 @@ export const FileField: React.FC<FileFieldProps> = ({
         {label}
       </Typography>
 
-      <ThemeProvider
-        options={{ surface: '#eee' }}
+      <div
         className="Field-filename"
         {...getRootProps()}
+        data-testid="dropzone"
       >
-        <input {...getInputProps()} />
+        <input {...getInputProps({ id })} />
         <Typography use="body2" theme="secondary">
-          {isDragActive ? DROP_MESSAGE : value}
+          {isDragActive
+            ? isDragReject
+              ? INVALID_FILE_MESSAGE
+              : DROP_MESSAGE
+            : value}
         </Typography>
         <Button type="button">Browse</Button>
-      </ThemeProvider>
+      </div>
       <div className="Field-subtext">
         {error ? (
           <Typography className="Field-tip" use="body2" theme="error">
