@@ -26,6 +26,9 @@ import {
   FirestorePrimitive,
 } from './models';
 
+/** Firestore supported numbers */
+export const NUMBER_REGEX = /^-?([\d]*\.?\d+|Infinity|NaN)$/;
+
 export function getParentPath(path: string[]) {
   return path.slice(0, path.length - 1);
 }

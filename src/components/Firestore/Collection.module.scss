@@ -1,0 +1,16 @@
+.query-panel {
+  width: 360px;
+}
+
+.badge {
+  &:after {
+    content: ' ';
+    width: 16px;
+    height: 16px;
+    background: var(--mdc-theme-primary);
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    border-radius: 100%;
+  }
+}
