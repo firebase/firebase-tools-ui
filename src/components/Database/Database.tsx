@@ -24,6 +24,7 @@ import { initDatabase } from '../../firebase';
 import { DatabaseConfig } from '../../store/config';
 import { InteractiveBreadCrumbBar } from '../common/InteractiveBreadCrumbBar';
 import { DatabaseApi } from './api';
+import { ApiProvider } from './ApiContext';
 import { ImportDialog } from './DataViewer/ImportDialog';
 import { NodeContainer } from './DataViewer/NodeContainer';
 
@@ -71,21 +72,10 @@ export const Database: React.FC<Props> = ({ config, namespace, path }) => {
     history.push(`${urlBase}/${newPath}`);
   };
 
-  const openImportDialog = () => setImportDialogOpen(true);
-  const closeImportDialog = async (
-    ref?: firebase.database.Reference,
-    file?: File
-  ) => {
-    setImportDialogOpen(false);
-    if (ref && file && api) {
-      await api.importFile(ref, namespace, file);
-    }
-  };
-
   return (
     <div className="Database-Database">
-      {ref ? (
-        <>
+      {ref && api ? (
+        <ApiProvider value={api}>
           <InteractiveBreadCrumbBar
             base={urlBase}
             path={path || '/'}
@@ -96,7 +86,9 @@ export const Database: React.FC<Props> = ({ config, namespace, path }) => {
               handle={<IconButton icon="more_vert" label="Open menu" />}
               renderToPortal
             >
-              <MenuItem onClick={openImportDialog}>Import JSON</MenuItem>
+              <MenuItem onClick={() => setImportDialogOpen(true)}>
+                Import JSON
+              </MenuItem>
             </SimpleMenu>
           </InteractiveBreadCrumbBar>
           <div className="Database-Content">
@@ -104,9 +96,13 @@ export const Database: React.FC<Props> = ({ config, namespace, path }) => {
           </div>
 
           {importDialogOpen && (
-            <ImportDialog reference={ref} onComplete={closeImportDialog} />
+            <ImportDialog
+              api={api}
+              reference={ref}
+              onComplete={() => setImportDialogOpen(false)}
+            />
           )}
-        </>
+        </ApiProvider>
       ) : (
         <p>Loading</p>
       )}

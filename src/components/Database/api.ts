@@ -23,9 +23,9 @@ export class DatabaseApi extends RestApi {
   private cleanup: () => Promise<void>;
   readonly database: firebase.database.Database;
 
-  constructor(config: DatabaseConfig, namespace: string) {
+  constructor(config: DatabaseConfig, private readonly namespace: string) {
     super();
-    const [database, { cleanup }] = initDatabase(config, namespace);
+    const [database, { cleanup }] = initDatabase(config, this.namespace);
     this.database = database;
     this.cleanup = cleanup;
     this.baseUrl = `http://${config.hostAndPort}`;
@@ -38,12 +38,8 @@ export class DatabaseApi extends RestApi {
   /**
    * Import a file at a specific path within the current database.
    */
-  async importFile(
-    ref: firebase.database.Reference,
-    namespace: string,
-    file: File
-  ) {
-    const params = new URLSearchParams({ ns: namespace });
+  async importFile(ref: firebase.database.Reference, file: File) {
+    const params = new URLSearchParams({ ns: this.namespace });
     const path = getUploadPath(ref) + `?${params.toString()}`;
     return await this.postFile(`${this.baseUrl}/${path}`, file);
   }
