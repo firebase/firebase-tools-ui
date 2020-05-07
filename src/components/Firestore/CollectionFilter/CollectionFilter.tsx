@@ -75,7 +75,12 @@ export const CollectionFilter: React.FC<{
               as={Field}
               name="field"
               label="Enter field"
+              rules={{ required: 'Required' }}
               defaultValue=""
+              error={
+                (formMethods.formState.touched as any)['field'] &&
+                (formMethods.errors as any)['field']?.message
+              }
             />
           </FilterItem>
 
@@ -87,7 +92,13 @@ export const CollectionFilter: React.FC<{
           >
             <ConditionSelect>
               {cf && isSingleValueCollectionFilter(cf) && (
-                <ConditionEntry name="value" />
+                <ConditionEntry
+                  name="value"
+                  error={
+                    (formMethods.formState.touched as any)['value'] &&
+                    (formMethods.errors as any)['value']?.message
+                  }
+                />
               )}
 
               {cf && isMultiValueCollectionFilter(cf) && (

@@ -33,7 +33,7 @@ function getConditionEntryType(value: any) {
 
 export const ConditionEntry: React.FC<{
   name: string;
-  error?: string;
+  error: string | undefined;
 }> = React.memo(({ name, error }) => {
   const { setValue, watch } = useFormContext();
   const value = watch(name);

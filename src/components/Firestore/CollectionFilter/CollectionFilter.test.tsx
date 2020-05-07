@@ -132,6 +132,37 @@ const StorePreview: React.FC<{ path: string }> = ({ path }) => {
   );
 };
 
+it('requires a field-name', async () => {
+  const onCloseSpy = jest.fn();
+
+  const { getByTestId, getByLabelText, getByText } = setup({
+    path: '/foo/bar',
+    collectionFilter: {
+      field: '__field__',
+      operator: '>',
+      value: '__value__',
+      sort: 'asc',
+    },
+    children: <StorePreview path="/foo/bar" />,
+    onClose: onCloseSpy,
+  });
+
+  await act(async () => {
+    fireEvent.change(getByLabelText(/Enter field/), {
+      target: { value: '' },
+    });
+  });
+
+  await act(async () => {
+    fireEvent.submit(getByText(/Apply/));
+  });
+
+  expect(getByTestId('store-preview').textContent).toContain(
+    '"field":"__field__"'
+  );
+  expect(onCloseSpy).not.toHaveBeenCalled();
+});
+
 it('dispatches the collection-filter to the store', async () => {
   const onCloseSpy = jest.fn();
 
