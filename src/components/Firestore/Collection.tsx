@@ -156,18 +156,29 @@ export const Collection: React.FC<Props> = ({ collection }) => {
   );
 };
 
-export const CollectionSkeleton: React.FC<{ id: string }> = ({ id }) => (
-  <div className="Firestore-Collection">
-    <PanelHeader
-      id={id}
-      icon={<Icon icon={{ icon: 'collections_bookmark', size: 'small' }} />}
-    />
-    <CircularProgress
-      className="Firestore--panel-loadingIndicator"
-      size="large"
-    />
-  </div>
-);
+export const CollectionSkeleton: React.FC<{ id: string }> = ({ id }) => {
+  const { url } = useRouteMatch()!;
+  return (
+    <>
+      <div className="Firestore-Collection">
+        <PanelHeader
+          id={id}
+          icon={<Icon icon={{ icon: 'collections_bookmark', size: 'small' }} />}
+        />
+        <CircularProgress
+          className="Firestore--panel-loadingIndicator"
+          size="large"
+        />
+      </div>
+      <Route
+        path={`${url}/:id`}
+        render={({ match }: any) => {
+          return <DocumentSkeleton id={match.params.id} />;
+        }}
+      ></Route>
+    </>
+  );
+};
 
 function applyCollectionFilter(
   collection: firestore.Query<firestore.DocumentData>,

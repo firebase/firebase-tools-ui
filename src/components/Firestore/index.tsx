@@ -23,6 +23,7 @@ import { GridCell } from '@rmwc/grid';
 import React, { Suspense, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
+import { FirebaseAppProvider } from 'reactfire';
 
 import { createStructuredSelector } from '../../store';
 import { FirestoreConfig } from '../../store/config';
@@ -36,6 +37,7 @@ import { EmulatorDisabled } from '../common/EmulatorDisabled';
 import { InteractiveBreadCrumbBar } from '../common/InteractiveBreadCrumbBar';
 import { Spinner } from '../common/Spinner';
 import DatabaseApi from './api';
+import { FirestoreRestApi } from './Api-NEW';
 import { ApiProvider } from './ApiContext';
 import { promptClearAll } from './dialogs/clearAll';
 import { Root, RootSkeleton } from './Document';
@@ -116,33 +118,41 @@ export const Firestore: React.FC<FirestoreProps> = ({ config, projectId }) => {
   return isRefreshing ? (
     <Spinner span={12} data-testid="firestore-loading" />
   ) : (
-    <FirestoreStore>
-      <ApiProvider value={api}>
-        <GridCell span={12} className="Firestore">
-          <div className="Firestore-actions">
-            <CustomThemeProvider use="warning" wrap>
-              <Button unelevated onClick={() => handleClearData(api)}>
-                Clear all data
-              </Button>
-            </CustomThemeProvider>
-          </div>
-          <Elevation z="2" wrap>
-            <Card className="Firestore-panels-wrapper">
-              <InteractiveBreadCrumbBar
-                base="/firestore"
-                path={path}
-                onNavigate={handleNavigate}
-              />
-              <div className="Firestore-panels">
-                <Suspense fallback={<RootSkeleton />}>
-                  <Root />
-                </Suspense>
+    <FirebaseAppProvider firebaseConfig={{ projectId }}>
+      <FirestoreStore>
+        <FirestoreRestApi
+          projectId={projectId}
+          databaseId={databaseId}
+          config={config}
+        >
+          <ApiProvider value={api}>
+            <GridCell span={12} className="Firestore">
+              <div className="Firestore-actions">
+                <CustomThemeProvider use="warning" wrap>
+                  <Button unelevated onClick={() => handleClearData(api)}>
+                    Clear all data
+                  </Button>
+                </CustomThemeProvider>
               </div>
-            </Card>
-          </Elevation>
-        </GridCell>
-      </ApiProvider>
-    </FirestoreStore>
+              <Elevation z="2" wrap>
+                <Card className="Firestore-panels-wrapper">
+                  <InteractiveBreadCrumbBar
+                    base="/firestore"
+                    path={path}
+                    onNavigate={handleNavigate}
+                  />
+                  <div className="Firestore-panels">
+                    <Suspense fallback={<RootSkeleton />}>
+                      <Root />
+                    </Suspense>
+                  </div>
+                </Card>
+              </Elevation>
+            </GridCell>
+          </ApiProvider>
+        </FirestoreRestApi>
+      </FirestoreStore>
+    </FirebaseAppProvider>
   );
 };
 

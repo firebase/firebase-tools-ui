@@ -34,10 +34,10 @@ export default class DatabaseApi implements FirestoreApi {
     public readonly databaseId: string,
     private config: FirestoreConfig
   ) {
-    const [database, { cleanup }] = initFirestore(projectId, config);
+    // const [database, { cleanup }] = initFirestore(projectId, config);
     this.getToken = async () => ({ accessToken: 'owner' });
-    this.database = database;
-    this.cleanup = cleanup;
+    this.database = {} as firestore.Firestore; // database;
+    this.cleanup = () => new Promise(() => {});
 
     this.baseUrl = `http://${config.hostAndPort}/v1/projects/${projectId}/databases/${databaseId}/`;
     this.baseEmulatorUrl = `http://${config.hostAndPort}/emulator/v1/projects/${projectId}/databases/${databaseId}/`;

@@ -23,6 +23,7 @@ import React, { useEffect, useState } from 'react';
 import { NavLink, useHistory, useRouteMatch } from 'react-router-dom';
 
 import DatabaseApi from './api';
+import { useCollectionsNew } from './Api-NEW';
 import { useApi } from './ApiContext';
 import {
   AddCollectionDialog,
@@ -38,7 +39,9 @@ export const CollectionList: React.FC<Props> = ({ reference }) => {
   const { url } = useRouteMatch()!;
   const api = useApi();
   const history = useHistory();
-  const restCollections = useCollections(api, reference);
+  // const restCollections = useCollections(api, reference);
+  const restCollections = useCollectionsNew(reference);
+  // const rootCollections = useRootCollections();
   const [collections, setCollections] = useState(restCollections);
   const redirectIfAutoSelectable = useAutoSelect(collections);
 

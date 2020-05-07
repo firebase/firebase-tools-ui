@@ -38,6 +38,7 @@
     "@types/recompose": "^0.30.7",
     "classnames": "^2.2.6",
     "express": "^4.17.1",
+    "fetch-suspense": "^1.2.2",
     "firebase": "^7.12.0",
     "font-awesome": "^4.7.0",
     "immer": "^6.0.2",

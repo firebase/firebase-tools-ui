@@ -24,6 +24,7 @@ import { MenuItem, SimpleMenu } from '@rmwc/menu';
 import { firestore } from 'firebase';
 import React, { Suspense } from 'react';
 import { Route, useRouteMatch } from 'react-router-dom';
+import { useFirestore } from 'reactfire';
 
 import { FirestoreIcon } from '../common/icons';
 import { useApi } from './ApiContext';
@@ -60,12 +61,10 @@ const Doc: React.FC<{
 /** Root node */
 export const Root: React.FC = () => {
   const api = useApi();
+  const firestore = useFirestore();
 
   return (
-    <Doc
-      id={'Root'}
-      collectionById={(id: string) => api.database.collection(id)}
-    >
+    <Doc id={'Root'} collectionById={(id: string) => firestore.collection(id)}>
       <PanelHeader id="Root" icon={<FirestoreIcon />} />
       <CollectionList />
     </Doc>
@@ -109,25 +108,45 @@ export const Document: React.FC<{ reference: firestore.DocumentReference }> = ({
   );
 };
 
-export const RootSkeleton: React.FC = () => (
-  <div className="Firestore-Document">
-    <PanelHeader id="Root" icon={<FirestoreIcon />} />
-    <CircularProgress
-      className="Firestore--panel-loadingIndicator"
-      size="large"
-    />
-  </div>
-);
+export const RootSkeleton: React.FC = () => {
+  const { url } = useRouteMatch()!;
 
-export const DocumentSkeleton: React.FC<{ id: string }> = ({ id }) => (
-  <div className="Firestore-Document">
-    <PanelHeader
-      id={id}
-      icon={<Icon icon={{ icon: 'insert_drive_file', size: 'small' }} />}
-    />
-    <CircularProgress
-      className="Firestore--panel-loadingIndicator"
-      size="large"
-    />
-  </div>
-);
+  return (
+    <>
+      <div className="Firestore-Document">
+        <PanelHeader id="Root" icon={<FirestoreIcon />} />
+        <CircularProgress
+          className="Firestore--panel-loadingIndicator"
+          size="large"
+        />
+      </div>
+      <Route
+        path={`${url}/:id`}
+        render={({ match }: any) => <CollectionSkeleton id={match.params.id} />}
+      ></Route>
+    </>
+  );
+};
+
+export const DocumentSkeleton: React.FC<{ id: string }> = ({ id }) => {
+  const { url } = useRouteMatch()!;
+
+  return (
+    <>
+      <div className="Firestore-Document">
+        <PanelHeader
+          id={id}
+          icon={<Icon icon={{ icon: 'insert_drive_file', size: 'small' }} />}
+        />
+        <CircularProgress
+          className="Firestore--panel-loadingIndicator"
+          size="large"
+        />
+      </div>
+      <Route
+        path={`${url}/:id`}
+        render={({ match }: any) => <CollectionSkeleton id={match.params.id} />}
+      ></Route>
+    </>
+  );
+};
