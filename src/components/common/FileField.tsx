@@ -1,29 +1,30 @@
+import './Field.scss';
+import './FileField.scss';
+
 import { randomId } from '@rmwc/base';
-import { TextField, TextFieldProps } from '@rmwc/textfield';
+import { Button } from '@rmwc/button';
+import { ThemeProvider } from '@rmwc/theme';
 import { HTMLProps } from '@rmwc/types';
 import { Typography } from '@rmwc/typography';
 import React, { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 
+import { grey100 } from '../../colors';
+
 type FileFieldProps = {
   tip?: string;
   error?: string;
   onFiles?: (files: File[]) => void;
-} & TextFieldProps &
-  HTMLProps<HTMLInputElement>;
+} & HTMLProps<HTMLInputElement>;
 
 const DROP_MESSAGE = 'Drop file(s) here';
 
 export const FileField: React.FC<FileFieldProps> = ({
   label,
-  // strip outlined bool, always use outlined
-  outlined,
-  type,
   tip,
   error,
   onFiles,
   value,
-  ...otherProps
 }) => {
   const [id] = useState(randomId());
 
@@ -32,9 +33,8 @@ export const FileField: React.FC<FileFieldProps> = ({
   });
 
   return (
-    <div className="Field" {...getRootProps()}>
+    <div className="Field">
       {/* hidden input */}
-      <input {...getInputProps()} />
       <Typography
         className="Field-label"
         use="body2"
@@ -44,13 +44,18 @@ export const FileField: React.FC<FileFieldProps> = ({
       >
         {label}
       </Typography>
-      <TextField
-        {...otherProps}
-        outlined
-        id={id}
-        disabled
-        value={isDragActive ? DROP_MESSAGE : value}
-      />
+
+      <ThemeProvider
+        options={{ surface: '#eee' }}
+        className="Field-filename"
+        {...getRootProps()}
+      >
+        <input {...getInputProps()} />
+        <Typography use="body2" theme="secondary">
+          {isDragActive ? DROP_MESSAGE : value}
+        </Typography>
+        <Button type="button">Browse</Button>
+      </ThemeProvider>
       <div className="Field-subtext">
         {error ? (
           <Typography className="Field-tip" use="body2" theme="error">

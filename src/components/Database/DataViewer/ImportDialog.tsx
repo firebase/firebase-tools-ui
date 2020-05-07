@@ -27,6 +27,7 @@ import { useState } from 'react';
 import { Callout } from '../../common/Callout';
 import { Field } from '../../common/Field';
 import { FileField } from '../../common/FileField';
+import styles from './ImportDialog.module.scss';
 
 export interface Props {
   reference: firebase.database.Reference;
@@ -38,14 +39,14 @@ export const ImportDialog: React.FC<Props> = ({ reference, onComplete }) => {
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    file ? onComplete(reference, file) : onComplete();
+    file && onComplete(reference, file);
   };
 
   const path = new URL(reference.toString()).pathname;
 
   return (
-    <Dialog open>
-      <form onSubmit={onSubmit}>
+    <Dialog open onClose={() => onComplete()}>
+      <form onSubmit={onSubmit} className={styles.container}>
         <DialogTitle>Import JSON</DialogTitle>
         <DialogContent onSubmit={onSubmit}>
           <Callout aside type="warning">
@@ -62,7 +63,8 @@ export const ImportDialog: React.FC<Props> = ({ reference, onComplete }) => {
             name="file"
             accept="application/json"
             label="Data (JSON)"
-            value={file?.name}
+            required
+            value={file?.name || 'Drop a file, or click to select'}
             onFiles={files => {
               return setFile(files.length ? files[0] : undefined);
             }}
