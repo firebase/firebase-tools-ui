@@ -58,7 +58,6 @@ it('updates the latitude', async () => {
       target: { value: '' },
     });
   });
-  expect(onChange).not.toHaveBeenCalled();
   expect(getByText(/Required/)).not.toBeNull();
 
   await act(async () => {
