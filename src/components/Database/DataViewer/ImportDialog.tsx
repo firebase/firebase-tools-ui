@@ -44,6 +44,7 @@ export const ImportDialog: React.FC<Props> = ({
 }) => {
   const [file, setFile] = useState<File>();
   const [isImporting, setIsImporting] = useState(false);
+  const [error, setError] = useState();
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -53,7 +54,7 @@ export const ImportDialog: React.FC<Props> = ({
         await api.importFile(reference, file);
         onComplete(reference, file);
       } catch (e) {
-        // TODO: show error
+        setError(e.message);
       }
       setIsImporting(false);
     }
@@ -87,6 +88,7 @@ export const ImportDialog: React.FC<Props> = ({
             required
             value={file?.name || 'Drop a file, or click to select'}
             onFiles={files => setFile(files[0])}
+            error={error}
           />
         </DialogContent>
         <DialogActions>

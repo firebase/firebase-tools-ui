@@ -16,6 +16,16 @@
 
 type RequestMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
+export class ResponseError extends Error {
+  constructor(
+    message: string,
+    readonly response: Response,
+    readonly json?: {}
+  ) {
+    super(message);
+  }
+}
+
 /** Simple REST api helpers */
 export abstract class RestApi {
   protected async getToken() {
@@ -39,6 +49,11 @@ export abstract class RestApi {
     });
 
     const json = await res.json();
+
+    if (res.status >= 400 && res.status < 600) {
+      throw new ResponseError(await res.text(), res, json);
+    }
+
     return { res, json };
   }
 
@@ -57,6 +72,11 @@ export abstract class RestApi {
     const res = await fetch(url, { method, body });
 
     const text = await res.text();
+
+    if (res.status >= 400 && res.status < 600) {
+      throw new ResponseError(text, res);
+    }
+
     return { res, text };
   }
 }
