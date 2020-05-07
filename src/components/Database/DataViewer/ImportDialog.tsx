@@ -27,26 +27,41 @@ import { useState } from 'react';
 import { Callout } from '../../common/Callout';
 import { Field } from '../../common/Field';
 import { FileField } from '../../common/FileField';
+import { Spinner } from '../../common/Spinner';
+import { DatabaseApi } from '../api';
+import { useApi } from '../ApiContext';
 import styles from './ImportDialog.module.scss';
 
 export interface Props {
+  api: DatabaseApi;
   reference: firebase.database.Reference;
   onComplete: (reference?: firebase.database.Reference, file?: File) => void;
 }
 
 export const ImportDialog: React.FC<Props> = ({ reference, onComplete }) => {
+  const api = useApi();
   const [file, setFile] = useState<File>();
+  const [isImporting, setIsImporting] = useState(false);
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    file && onComplete(reference, file);
+    if (file) {
+      try {
+        setIsImporting(true);
+        await api.importFile(reference, file);
+        onComplete(reference, file);
+      } catch (e) {
+        // TODO: show error
+      }
+      setIsImporting(false);
+    }
   };
 
   const path = new URL(reference.toString()).pathname;
 
   return (
-    <Dialog open onClose={() => onComplete()}>
-      <form onSubmit={onSubmit} className={styles.container}>
+    <Dialog open onClose={() => onComplete()} className={styles.container}>
+      <form onSubmit={onSubmit}>
         <DialogTitle>Import JSON</DialogTitle>
         <DialogContent onSubmit={onSubmit}>
           <Callout aside type="warning">
@@ -77,6 +92,7 @@ export const ImportDialog: React.FC<Props> = ({ reference, onComplete }) => {
           </DialogButton>
         </DialogActions>
       </form>
+      {isImporting && <Spinner cover scrim message="Importing..." />}
     </Dialog>
   );
 };
