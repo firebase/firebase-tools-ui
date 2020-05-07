@@ -76,10 +76,10 @@ export const Database: React.FC<Props> = ({ config, namespace, path }) => {
     ref?: firebase.database.Reference,
     file?: File
   ) => {
+    setImportDialogOpen(false);
     if (ref && file && api) {
       await api.importFile(ref, namespace, file);
     }
-    setImportDialogOpen(false);
   };
 
   return (
@@ -97,16 +97,15 @@ export const Database: React.FC<Props> = ({ config, namespace, path }) => {
               renderToPortal
             >
               <MenuItem onClick={openImportDialog}>Import JSON</MenuItem>
-              <MenuItem>Export JSON</MenuItem>
             </SimpleMenu>
           </InteractiveBreadCrumbBar>
           <div className="Database-Content">
             <NodeContainer realtimeRef={ref} isViewRoot baseUrl={urlBase} />
           </div>
 
-          {/* {importDialogOpen && ( */}
-          <ImportDialog reference={ref} onComplete={closeImportDialog} />
-          {/* )} */}
+          {importDialogOpen && (
+            <ImportDialog reference={ref} onComplete={closeImportDialog} />
+          )}
         </>
       ) : (
         <p>Loading</p>
