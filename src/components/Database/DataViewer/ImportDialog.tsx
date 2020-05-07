@@ -62,12 +62,16 @@ export const ImportDialog: React.FC<Props> = ({
   const path = new URL(reference.toString()).pathname;
 
   return (
-    <Dialog open onClose={() => onComplete()} className={styles.container}>
-      <form onSubmit={onSubmit}>
+    <Dialog renderToPortal open onClose={() => onComplete()}>
+      <form onSubmit={onSubmit} className={styles.container}>
         <DialogTitle>Import JSON</DialogTitle>
         <DialogContent onSubmit={onSubmit}>
           <Callout aside type="warning">
             All data at this location will be overwritten
+          </Callout>
+          <Callout aside type="caution">
+            If the Functions emulator is running, database functions will be
+            executed.
           </Callout>
           <Field
             disabled
