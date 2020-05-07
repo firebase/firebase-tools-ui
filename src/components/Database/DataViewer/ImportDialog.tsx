@@ -29,7 +29,6 @@ import { Field } from '../../common/Field';
 import { FileField } from '../../common/FileField';
 import { Spinner } from '../../common/Spinner';
 import { DatabaseApi } from '../api';
-import { useApi } from '../ApiContext';
 import styles from './ImportDialog.module.scss';
 
 export interface Props {
@@ -38,8 +37,11 @@ export interface Props {
   onComplete: (reference?: firebase.database.Reference, file?: File) => void;
 }
 
-export const ImportDialog: React.FC<Props> = ({ reference, onComplete }) => {
-  const api = useApi();
+export const ImportDialog: React.FC<Props> = ({
+  api,
+  reference,
+  onComplete,
+}) => {
   const [file, setFile] = useState<File>();
   const [isImporting, setIsImporting] = useState(false);
 

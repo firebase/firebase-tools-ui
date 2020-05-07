@@ -24,7 +24,6 @@ import { initDatabase } from '../../firebase';
 import { DatabaseConfig } from '../../store/config';
 import { InteractiveBreadCrumbBar } from '../common/InteractiveBreadCrumbBar';
 import { DatabaseApi } from './api';
-import { ApiProvider } from './ApiContext';
 import { ImportDialog } from './DataViewer/ImportDialog';
 import { NodeContainer } from './DataViewer/NodeContainer';
 
@@ -75,7 +74,7 @@ export const Database: React.FC<Props> = ({ config, namespace, path }) => {
   return (
     <div className="Database-Database">
       {ref && api ? (
-        <ApiProvider value={api}>
+        <>
           <InteractiveBreadCrumbBar
             base={urlBase}
             path={path || '/'}
@@ -102,7 +101,7 @@ export const Database: React.FC<Props> = ({ config, namespace, path }) => {
               onComplete={() => setImportDialogOpen(false)}
             />
           )}
-        </ApiProvider>
+        </>
       ) : (
         <p>Loading</p>
       )}
