@@ -46,7 +46,7 @@ export default class DatabaseApi extends RestApi implements FirestoreApi {
   }
 
   private async getRootCollections(): Promise<firestore.CollectionReference[]> {
-    const { json } = await this.restRequest(
+    const { json } = await this.jsonRequest(
       `${this.baseUrl}/documents:listCollectionIds`,
       {},
       'POST'
@@ -59,7 +59,7 @@ export default class DatabaseApi extends RestApi implements FirestoreApi {
     docRef: firestore.DocumentReference
   ): Promise<firestore.CollectionReference[]> {
     const encodedPath = docRef.path; // TODO: Encode each segment.
-    const { json } = await this.restRequest(
+    const { json } = await this.jsonRequest(
       `${this.baseUrl}/documents/${encodedPath}:listCollectionIds`,
       {},
       'POST'
@@ -77,7 +77,7 @@ export default class DatabaseApi extends RestApi implements FirestoreApi {
   }
 
   async nukeDocuments() {
-    await this.restRequest(`${this.baseEmulatorUrl}/documents`, {}, 'DELETE');
+    await this.jsonRequest(`${this.baseEmulatorUrl}/documents`, {}, 'DELETE');
     return [];
   }
 }

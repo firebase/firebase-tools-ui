@@ -45,21 +45,8 @@ export class DatabaseApi extends RestApi {
   ) {
     const params = new URLSearchParams({ ns: namespace });
     const path = getUploadPath(ref) + `?${params.toString()}`;
-    return await this.restRequest(
-      `${this.baseUrl}/${path}`,
-      toFormData(file),
-      // { a: 'b' },
-      'POST',
-      'multipart/form-data'
-    );
+    return await this.postFile(`${this.baseUrl}/${path}`, file);
   }
-}
-
-/** build `multipart/form-data` payload */
-function toFormData(file: File) {
-  const formData = new FormData();
-  formData.append('upload', file);
-  return formData;
 }
 
 /** Get absolute path for file upload (the path with `.upload` appended) */
@@ -72,33 +59,4 @@ function getUploadPath(ref: firebase.database.Reference) {
   }
   path += '.upload';
   return path;
-}
-
-/**
- * Convert the FileReader.readAsText to a promise interface.
- */
-function readFile(file: File): Promise<string | undefined | null> {
-  return new Promise((resolve, reject) => {
-    if (window.FileReader) {
-      reject(new Error('HTML5 File API not supported'));
-    }
-    const reader = new FileReader();
-    reader.onload = e => {
-      const result = e.target?.result;
-      resolve(result && result.toString());
-    };
-    reader.onerror = e => {
-      reject(e);
-    };
-    reader.readAsText(file);
-  });
-}
-
-/**
- * Reads the file and validates the JSON content.
- */
-async function validateJSON(file: File) {
-  const json = await readFile(file);
-  JSON.parse(json || 'null');
-  return file;
 }

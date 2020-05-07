@@ -16,37 +16,53 @@
 
 type RequestMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
-const JSON_TYPE = 'application/json';
-
 /** Simple REST api helpers */
 export abstract class RestApi {
   protected async getToken() {
     return { accessToken: 'owner' };
   }
 
-  protected async restRequest(
+  protected async jsonRequest(
     url: string,
-    data: BodyInit | {},
-    method: RequestMethod = 'GET',
-    contentType = JSON_TYPE
+    data: {},
+    method: RequestMethod = 'GET'
   ) {
     const { accessToken } = await this.getToken();
 
-    const body: BodyInit =
-      contentType === JSON_TYPE ? JSON.stringify(data) : (data as BodyInit);
-
-    const contentTypeHeaders: HeadersInit =
-      data instanceof FormData ? {} : { 'Content-Type': contentType };
-
     const res = await fetch(url, {
       method,
-      body,
+      body: JSON.stringify(data),
       headers: {
-        // Authorization: 'Bearer ' + accessToken,
-        ...contentTypeHeaders,
+        Authorization: 'Bearer ' + accessToken,
+        'Content-Type': 'application/json',
       },
     });
+
     const json = await res.json();
     return { res, json };
   }
+
+  /** Upload a file with multipart/form-data */
+  protected async postFile(
+    url: string,
+    file: File,
+    method: RequestMethod = 'POST'
+  ) {
+    const body = toFormData(file);
+
+    const { accessToken } = await this.getToken();
+    body.append('auth', accessToken);
+
+    const res = await fetch(url, { method, body });
+
+    const text = await res.text();
+    return { res, text };
+  }
+}
+
+/** build `multipart/form-data` payload */
+function toFormData(file: File) {
+  const formData = new FormData();
+  formData.append('upload', file);
+  return formData;
 }
