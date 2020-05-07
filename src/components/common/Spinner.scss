@@ -15,7 +15,6 @@
  */
 
 @import './color';
-@import './radius';
 
 .Spinner {
   align-items: center;
@@ -32,10 +31,6 @@
 
     &.scrim {
       background-color: $COLOR_WHITE_ALPHA_87;
-    }
-
-    &.dialog {
-      border-radius: $BORDER_RADIUS_DIALOG;
     }
   }
 }
