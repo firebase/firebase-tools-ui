@@ -81,8 +81,8 @@ export const Firestore: React.FC<FirestoreProps> = ({ config, projectId }) => {
 
   // TODO: do something better here!
   const path = location.pathname.replace(/^\/firestore/, '');
-  const showCollectionShell = path.split('/').length < 3;
-  const showDocumentShell = path.split('/').length < 4;
+  const showCollectionShell = path.split('/').length < 2;
+  const showDocumentShell = path.split('/').length < 3;
 
   useEffect(() => {
     const api = new DatabaseApi(projectId, databaseId, config);

@@ -99,13 +99,13 @@ describe('Firestore', () => {
     expect(getByText(/cool-coll/)).not.toBeNull();
   });
 
-  it('shows a collection-shell if <2 levels deep ', async () => {
+  it('shows a collection-shell if at the root', async () => {
     let getCollections = makeDeferred<FakeCollectionReference[]>();
     DatabaseApi.prototype.getCollections.mockReturnValue(
       getCollections.promise
     );
     const { getByTestId } = render(
-      <MemoryRouter initialEntries={['/firebase']}>
+      <MemoryRouter initialEntries={['/firestore']}>
         <Firestore config={sampleConfig} projectId={'foo'} />
       </MemoryRouter>
     );
@@ -114,13 +114,13 @@ describe('Firestore', () => {
     expect(getByTestId(/document-shell/)).not.toBeNull();
   });
 
-  it('shows a document-shell if <3 levels deep', async () => {
+  it('shows a document-shell if 1-level deep', async () => {
     let getCollections = makeDeferred<FakeCollectionReference[]>();
     DatabaseApi.prototype.getCollections.mockReturnValue(
       getCollections.promise
     );
     const { getByTestId, queryByTestId } = render(
-      <MemoryRouter initialEntries={['/firebase/coll']}>
+      <MemoryRouter initialEntries={['/firestore/coll']}>
         <Firestore config={sampleConfig} projectId={'foo'} />
       </MemoryRouter>
     );
@@ -129,13 +129,13 @@ describe('Firestore', () => {
     expect(getByTestId(/document-shell/)).not.toBeNull();
   });
 
-  it('shows no shells if 3 levels deep', async () => {
+  it('shows no shells if 2-levels deep', async () => {
     let getCollections = makeDeferred<FakeCollectionReference[]>();
     DatabaseApi.prototype.getCollections.mockReturnValue(
       getCollections.promise
     );
     const { queryByTestId } = render(
-      <MemoryRouter initialEntries={['/firebase/coll/doc']}>
+      <MemoryRouter initialEntries={['/firestore/coll/doc']}>
         <Firestore config={sampleConfig} projectId={'foo'} />
       </MemoryRouter>
     );
