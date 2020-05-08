@@ -121,5 +121,8 @@
       "parser": "typescript",
       "style": "module"
     }
+  },
+  "jest": {
+    "resetMocks": true
   }
 }
