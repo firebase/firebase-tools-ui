@@ -24,7 +24,7 @@ import { MenuSurface, MenuSurfaceAnchor } from '@rmwc/menu';
 import { firestore } from 'firebase';
 import React, { useState } from 'react';
 import { useCollection } from 'react-firebase-hooks/firestore';
-import { NavLink, Route, useRouteMatch } from 'react-router-dom';
+import { NavLink, Redirect, Route, useRouteMatch } from 'react-router-dom';
 
 import styles from './Collection.module.scss';
 import { CollectionFilter } from './CollectionFilter';
@@ -50,6 +50,7 @@ export interface Props {
 }
 
 export const Collection: React.FC<Props> = ({ collection }) => {
+  const [newDocumentId, setNewDocumentId] = useState<string>();
   const collectionFilter = useCollectionFilter(collection.path);
   const filteredCollection = applyCollectionFilter(
     collection,
@@ -70,6 +71,7 @@ export const Collection: React.FC<Props> = ({ collection }) => {
   const addDocument = async (value: AddDocumentDialogValue | null) => {
     if (value && value.id) {
       await collection.doc(value.id).set(value.data);
+      setNewDocumentId(value.id);
     }
   };
 
@@ -78,6 +80,7 @@ export const Collection: React.FC<Props> = ({ collection }) => {
   return (
     <>
       {!loading && redirectIfAutoSelectable}
+      {newDocumentId && <Redirect to={`./${newDocumentId}`} />}
       <div className="Firestore-Collection">
         <PanelHeader
           id={collection.id}
