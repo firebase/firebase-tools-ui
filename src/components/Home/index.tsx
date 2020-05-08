@@ -33,7 +33,13 @@ import { createStructuredSelector } from '../../store';
 import { Config, EmulatorConfig } from '../../store/config';
 import { getConfig } from '../../store/config/selectors';
 import { squash } from '../../store/utils';
-import { DatabaseIcon, FirestoreIcon, FunctionsIcon } from '../common/icons';
+import {
+  DatabaseIcon,
+  FirestoreIcon,
+  FunctionsIcon,
+  HostingIcon,
+  PubSubIcon,
+} from '../common/icons';
 import { Spinner } from '../common/Spinner';
 import { LocalWarningCallout } from './LocalWarningCallout';
 
@@ -90,7 +96,7 @@ const Overview: React.FC<{
         />
         <EmulatorCard
           name="Hosting Emulator"
-          icon={<FunctionsIcon theme="secondary" />}
+          icon={<HostingIcon theme="secondary" />}
           config={config.hosting}
           testId="emulator-info-hosting"
           linkToExternal={
@@ -100,7 +106,7 @@ const Overview: React.FC<{
         />
         <EmulatorCard
           name="PubSub Emulator"
-          icon={<FunctionsIcon theme="secondary" />}
+          icon={<PubSubIcon theme="secondary" />}
           config={config.pubsub}
           testId="emulator-info-pubsub"
         />
@@ -137,7 +143,7 @@ export const EmulatorCard: React.FC<{
           {config ? config.port : 'N/A'}
         </Typography>
       </div>
-      <ListDivider tag="div" />
+      {(linkToExternal || linkTo) && <ListDivider tag="div" />}
       <CardActions>
         <CardActionIcons>
           {linkToExternal && (
