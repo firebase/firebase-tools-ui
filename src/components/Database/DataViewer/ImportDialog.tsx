@@ -34,6 +34,7 @@ import styles from './ImportDialog.module.scss';
 export interface Props {
   api: DatabaseApi;
   reference: firebase.database.Reference;
+  droppedFile?: File;
   onComplete: (reference?: firebase.database.Reference, file?: File) => void;
 }
 
@@ -41,8 +42,9 @@ export const ImportDialog: React.FC<Props> = ({
   api,
   reference,
   onComplete,
+  droppedFile,
 }) => {
-  const [file, setFile] = useState<File>();
+  const [file, setFile] = useState<File | undefined>(droppedFile);
   const [isImporting, setIsImporting] = useState(false);
   const [error, setError] = useState();
 

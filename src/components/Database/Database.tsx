@@ -18,6 +18,7 @@ import { IconButton } from '@rmwc/icon-button';
 import { MenuItem, SimpleMenu } from '@rmwc/menu';
 import * as firebase from 'firebase/app';
 import React, { useEffect, useState } from 'react';
+import { useDropzone } from 'react-dropzone';
 import { useHistory } from 'react-router-dom';
 
 import { initDatabase } from '../../firebase';
@@ -49,6 +50,12 @@ export const Database: React.FC<Props> = ({ config, namespace, path }) => {
   const history = useHistory();
 
   const [importDialogOpen, setImportDialogOpen] = useState(false);
+  const [droppedFile, setDroppedFile] = useState<File | undefined>();
+
+  const closeImportDialog = () => {
+    setDroppedFile(undefined);
+    setImportDialogOpen(false);
+  };
 
   useEffect(() => {
     const [db, { cleanup }] = initDatabase(config, namespace);
@@ -90,15 +97,17 @@ export const Database: React.FC<Props> = ({ config, namespace, path }) => {
               </MenuItem>
             </SimpleMenu>
           </InteractiveBreadCrumbBar>
-          <div className="Database-Content">
-            <NodeContainer realtimeRef={ref} isViewRoot baseUrl={urlBase} />
-          </div>
 
-          {importDialogOpen && (
+          <DatabaseDropZone onDrop={f => setDroppedFile(f)}>
+            <NodeContainer realtimeRef={ref} isViewRoot baseUrl={urlBase} />
+          </DatabaseDropZone>
+
+          {(importDialogOpen || droppedFile) && (
             <ImportDialog
               api={api}
               reference={ref}
-              onComplete={() => setImportDialogOpen(false)}
+              droppedFile={droppedFile}
+              onComplete={closeImportDialog}
             />
           )}
         </>
@@ -110,3 +119,41 @@ export const Database: React.FC<Props> = ({ config, namespace, path }) => {
 };
 
 export default Database;
+
+/**
+ * Renders child content inside a dropzone that will show a scrim and accept
+ * JSON files
+ */
+const DatabaseDropZone: React.FC<{ onDrop: (file: File) => void }> = ({
+  onDrop,
+  children,
+}) => {
+  const {
+    getInputProps,
+    getRootProps,
+    isDragActive,
+    isDragAccept,
+  } = useDropzone({
+    onDrop: files => onDrop(files[0]),
+    noClick: true,
+    accept: 'application/json',
+  });
+
+  return (
+    <div className="Database-Content" {...getRootProps()}>
+      {children}
+
+      {isDragActive && (
+        <div className="Database-Content-Dragging">
+          {isDragAccept ? (
+            'Drop JSON file to import'
+          ) : (
+            <span className="invalid">JSON files only</span>
+          )}
+        </div>
+      )}
+
+      <input {...getInputProps()} />
+    </div>
+  );
+};
