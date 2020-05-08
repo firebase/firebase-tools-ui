@@ -105,7 +105,7 @@ const Overview: React.FC<{
           linkLabel="View website"
         />
         <EmulatorCard
-          name="PubSub Emulator"
+          name="PubSub emulator"
           icon={<PubSubIcon theme="secondary" />}
           config={config.pubsub}
           testId="emulator-info-pubsub"
