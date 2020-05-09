@@ -42,6 +42,7 @@ it('shows the root-id', () => {
 });
 
 it('shows the document-id', () => {
+  useDocumentData.mockReturnValueOnce([]);
   const { getByText } = render(
     <MemoryRouter>
       <Portal />

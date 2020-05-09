@@ -44,6 +44,7 @@ const docRef = fakeDocumentReference({
   id: 'my-doc',
   path: 'docs/my-doc',
 });
+docRef.collection = jest.fn();
 const collectionReference = fakeCollectionReference({
   id: 'my-col',
   path: 'docs/my-doc/my-col',
@@ -53,8 +54,10 @@ const autoGenDocRef = fakeDocumentReference({
   id: 'random-id',
 });
 
-docRef.collection = jest.fn().mockReturnValue(collectionReference);
-collectionReference.doc.mockReturnValue(autoGenDocRef);
+beforeEach(() => {
+  docRef.collection.mockReturnValue(collectionReference);
+  collectionReference.doc.mockReturnValue(autoGenDocRef);
+});
 
 it('shows correct title', () => {
   const { getByText } = render(
