@@ -70,32 +70,32 @@ const Overview: React.FC<{
           <LocalWarningCallout projectId={config.projectId} />
         )}
         <GridCell span={12}>
-          <Typography use="headline5">Emulator Overview</Typography>
+          <Typography use="headline5">Emulator overview</Typography>
         </GridCell>
         <EmulatorCard
-          name="Realtime Database Emulator"
+          name="Realtime Database emulator"
           icon={<DatabaseIcon theme="secondary" />}
           config={config.database}
           linkTo="/database"
           testId="emulator-info-database"
         />
         <EmulatorCard
-          name="Firestore Emulator"
+          name="Firestore emulator"
           icon={<FirestoreIcon theme="secondary" />}
           config={config.firestore}
           linkTo="/firestore"
           testId="emulator-info-firestore"
         />
         <EmulatorCard
-          name="Functions Emulator"
+          name="Functions emulator"
           icon={<FunctionsIcon theme="secondary" />}
           config={config.functions}
           linkTo="/logs"
-          linkLabel="View Logs"
+          linkLabel="View logs"
           testId="emulator-info-functions"
         />
         <EmulatorCard
-          name="Hosting Emulator"
+          name="Hosting emulator"
           icon={<HostingIcon theme="secondary" />}
           config={config.hosting}
           testId="emulator-info-hosting"
@@ -105,7 +105,7 @@ const Overview: React.FC<{
           linkLabel="View website"
         />
         <EmulatorCard
-          name="PubSub Emulator"
+          name="PubSub emulator"
           icon={<PubSubIcon theme="secondary" />}
           config={config.pubsub}
           testId="emulator-info-pubsub"
@@ -153,7 +153,7 @@ export const EmulatorCard: React.FC<{
           )}
           {linkTo && (
             <CardActionButton tag={Link} to={linkTo}>
-              {linkLabel || 'Go to Emulator'}
+              {linkLabel || 'Go to emulator'}
             </CardActionButton>
           )}
         </CardActionIcons>
