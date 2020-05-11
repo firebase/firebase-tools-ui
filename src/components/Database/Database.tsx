@@ -148,7 +148,7 @@ const DatabaseDropZone: React.FC<{ onDrop: (file: File) => void }> = ({
           {isDragAccept ? (
             'Drop JSON file to import'
           ) : (
-            <span className="invalid">JSON files only</span>
+            <span className="invalid">Only JSON files are supported for data import.</span>
           )}
         </div>
       )}
