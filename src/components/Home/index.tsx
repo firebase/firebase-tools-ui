@@ -33,7 +33,13 @@ import { createStructuredSelector } from '../../store';
 import { Config, EmulatorConfig } from '../../store/config';
 import { getConfig } from '../../store/config/selectors';
 import { squash } from '../../store/utils';
-import { DatabaseIcon, FirestoreIcon, FunctionsIcon } from '../common/icons';
+import {
+  DatabaseIcon,
+  FirestoreIcon,
+  FunctionsIcon,
+  HostingIcon,
+  PubSubIcon,
+} from '../common/icons';
 import { Spinner } from '../common/Spinner';
 import { LocalWarningCallout } from './LocalWarningCallout';
 
@@ -64,33 +70,33 @@ const Overview: React.FC<{
           <LocalWarningCallout projectId={config.projectId} />
         )}
         <GridCell span={12}>
-          <Typography use="headline5">Emulator Overview</Typography>
+          <Typography use="headline5">Emulator overview</Typography>
         </GridCell>
         <EmulatorCard
-          name="Realtime Database Emulator"
+          name="Realtime Database emulator"
           icon={<DatabaseIcon theme="secondary" />}
           config={config.database}
           linkTo="/database"
           testId="emulator-info-database"
         />
         <EmulatorCard
-          name="Firestore Emulator"
+          name="Firestore emulator"
           icon={<FirestoreIcon theme="secondary" />}
           config={config.firestore}
           linkTo="/firestore"
           testId="emulator-info-firestore"
         />
         <EmulatorCard
-          name="Functions Emulator"
+          name="Functions emulator"
           icon={<FunctionsIcon theme="secondary" />}
           config={config.functions}
           linkTo="/logs"
-          linkLabel="View Logs"
+          linkLabel="View logs"
           testId="emulator-info-functions"
         />
         <EmulatorCard
-          name="Hosting Emulator"
-          icon={<FunctionsIcon theme="secondary" />}
+          name="Hosting emulator"
+          icon={<HostingIcon theme="secondary" />}
           config={config.hosting}
           testId="emulator-info-hosting"
           linkToExternal={
@@ -99,8 +105,8 @@ const Overview: React.FC<{
           linkLabel="View website"
         />
         <EmulatorCard
-          name="PubSub Emulator"
-          icon={<FunctionsIcon theme="secondary" />}
+          name="PubSub emulator"
+          icon={<PubSubIcon theme="secondary" />}
           config={config.pubsub}
           testId="emulator-info-pubsub"
         />
@@ -137,7 +143,7 @@ export const EmulatorCard: React.FC<{
           {config ? config.port : 'N/A'}
         </Typography>
       </div>
-      <ListDivider tag="div" />
+      {(linkToExternal || linkTo) && <ListDivider tag="div" />}
       <CardActions>
         <CardActionIcons>
           {linkToExternal && (
@@ -147,7 +153,7 @@ export const EmulatorCard: React.FC<{
           )}
           {linkTo && (
             <CardActionButton tag={Link} to={linkTo}>
-              {linkLabel || 'Go to Emulator'}
+              {linkLabel || 'Go to emulator'}
             </CardActionButton>
           )}
         </CardActionIcons>

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { fireEvent, wait } from '@testing-library/react';
+import { fireEvent } from '@testing-library/react';
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 
@@ -33,7 +33,10 @@ const collectionReference = fakeCollectionReference({
   path: 'users/bob/my-stuff',
   doc: jest.fn(),
 });
-collectionReference.doc.mockReturnValue(docRef);
+
+beforeEach(() => {
+  collectionReference.doc.mockReturnValue(docRef);
+});
 
 it('shows correct title', async () => {
   const { getByText } = await renderDialog(

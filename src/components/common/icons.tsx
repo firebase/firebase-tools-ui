@@ -66,6 +66,36 @@ export const FunctionsIcon = svgIcon(
   </svg>
 );
 
+export const HostingIcon = svgIcon(
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
+    <path
+      d="M96 16c-44.16 0-80 35.84-80 80s35.84 80 80 80 80-35.84 80-80-35.84-80-80-80zm-8 143.44c-31.6-3.92-56-30.8-56-63.44 0-4.96.64-9.68 1.68-14.32L72 120v8c0 8.8 7.2 16 16 16zm55.2-20.32c-2.08-6.48-8-11.12-15.2-11.12h-8v-24c0-4.4-3.6-8-8-8H64V80h16c4.4 0 8-3.6 8-8V56h16c8.8 0 16-7.2 16-16v-3.28c23.44 9.52 40 32.48 40 59.28 0 16.64-6.4 31.76-16.8 43.12z"
+      fillRule="evenodd"
+      fill="currentColor"
+    />
+  </svg>
+);
+
+export const PubSubIcon = svgIcon(
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <g>
+      <path
+        d="M19.83,9.7a1.72,1.72,0,1,0-2.36-.63A1.73,1.73,0,0,0,19.83,9.7Z"
+        fill="currentColor"
+      />
+      <path
+        d="M4.17,9.7a1.72,1.72,0,1,0-.63-2.35A1.72,1.72,0,0,0,4.17,9.7Z"
+        fill="currentColor"
+      />
+      <circle cx="12" cy="20.28" r="1.72" fill="currentColor" />
+      <path
+        d="M20.06,14.36a2.19,2.19,0,0,0-2.46.19l-2.9-1.68a2.67,2.67,0,0,0,.08-.64,2.77,2.77,0,0,0-2-2.65V6.22a2.19,2.19,0,1,0-1.6,0V9.58a2.77,2.77,0,0,0-2,2.65,2.67,2.67,0,0,0,.08.64L6.4,14.55a2.2,2.2,0,1,0,.79,1.38l2.9-1.68a2.75,2.75,0,0,0,3.82,0l2.9,1.68a2.18,2.18,0,1,0,3.25-1.57Z"
+        fill="currentColor"
+      />
+    </g>
+  </svg>
+);
+
 // Other icons below:
 
 // TODO: Re-implement outer circle using CSS and dedupe with DatabaseIcon.

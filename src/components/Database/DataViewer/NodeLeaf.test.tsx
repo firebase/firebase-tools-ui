@@ -28,13 +28,16 @@ const REF = fakeReference({
   path: 'my_key',
   data: 'my_value',
 });
-REF.toString.mockReturnValue('http://localhost:9000/my_key');
-
-ROOT_REF.child.mockReturnValue(REF);
-ROOT_REF.toString.mockReturnValue('http://localhost:9000/');
 (ROOT_REF as any).database = {
   app: { options: { databaseURL: 'http://localhost:9000/' } },
 };
+
+beforeEach(() => {
+  REF.toString.mockReturnValue('http://localhost:9000/my_key');
+
+  ROOT_REF.child.mockReturnValue(REF);
+  ROOT_REF.toString.mockReturnValue('http://localhost:9000/');
+});
 
 describe('the node key', () => {
   it('shows options.databaseURL for root nodes', () => {

@@ -31,71 +31,77 @@ function getConditionEntryType(value: any) {
   return 'string';
 }
 
-export const ConditionEntry: React.FC<{
+interface ConditionEntryProps {
   name: string;
-  error?: string;
-}> = React.memo(({ name, error }) => {
-  const { setValue, watch } = useFormContext();
-  const value = watch(name);
-  const [fieldType, setFieldType] = useState(getConditionEntryType(value));
+  // Error may be undefined; require consumers to still pass or we might end up
+  // in a state where we validate without showing the error message.
+  error: string | undefined;
+}
 
-  useEffect(() => {
-    // Essentially setting the defaultValue of this form-field,
-    // specifically when chaning types between Single <--> Multi
-    if (value === undefined) {
-      setValue(name, '');
-    }
-  }, [value, setValue, name]);
+export const ConditionEntry: React.FC<ConditionEntryProps> = React.memo(
+  ({ name, error }) => {
+    const { setValue, watch } = useFormContext();
+    const value = watch(name);
+    const [fieldType, setFieldType] = useState(getConditionEntryType(value));
 
-  return (
-    <div className={styles.conditionEntry}>
-      <SelectField
-        options={['string', 'number', 'boolean']}
-        value={fieldType}
-        onChange={evt => {
-          setFieldType(evt.currentTarget.value);
-        }}
-        fieldClassName={styles.conditionEntryType}
-      />
+    useEffect(() => {
+      // Essentially setting the defaultValue of this form-field,
+      // specifically when chaning types between Single <--> Multi
+      if (value === undefined) {
+        setValue(name, '');
+      }
+    }, [value, setValue, name]);
 
-      {fieldType === 'string' && (
-        <Controller
-          as={Field}
-          name={name}
-          defaultValue=""
-          error={error}
-          fieldClassName={styles.conditionEntryValue}
-          aria-label="Value"
-        />
-      )}
-
-      {fieldType === 'number' && (
-        <Controller
-          as={Field}
-          name={name}
-          defaultValue={''}
-          rules={{
-            pattern: {
-              value: NUMBER_REGEX,
-              message: 'Must be a number',
-            },
+    return (
+      <div className={styles.conditionEntry}>
+        <SelectField
+          options={['string', 'number', 'boolean']}
+          value={fieldType}
+          onChange={evt => {
+            setFieldType(evt.currentTarget.value);
           }}
-          error={error}
-          onChange={([event]) =>
-            // Cast it back to a number before saving to model
-            event.target.value.match(NUMBER_REGEX)
-              ? parseFloat(event.target.value)
-              : event.target.value
-          }
-          fieldClassName={styles.conditionEntryValue}
-          aria-label="Value"
+          fieldClassName={styles.conditionEntryType}
         />
-      )}
 
-      {fieldType === 'boolean' && <BooleanCondition name={name} />}
-    </div>
-  );
-});
+        {fieldType === 'string' && (
+          <Controller
+            as={Field}
+            name={name}
+            defaultValue=""
+            error={error}
+            fieldClassName={styles.conditionEntryValue}
+            aria-label="Value"
+          />
+        )}
+
+        {fieldType === 'number' && (
+          <Controller
+            as={Field}
+            name={name}
+            defaultValue={''}
+            rules={{
+              pattern: {
+                value: NUMBER_REGEX,
+                message: 'Must be a number',
+              },
+            }}
+            error={error}
+            onChange={([event]) =>
+              // Cast it back to a number before saving to model
+              event.target.value.match(NUMBER_REGEX)
+                ? parseFloat(event.target.value)
+                : event.target.value
+            }
+            fieldClassName={styles.conditionEntryValue}
+            aria-label="Value"
+          />
+        )}
+
+        {fieldType === 'boolean' && <BooleanCondition name={name} />}
+      </div>
+    );
+  }
+);
 
 // RMWC select-menus do not work well with boolean values, requiring
 // custom-registration w/ the parent form

@@ -40,7 +40,7 @@ it('renders an overview when config is loaded', () => {
       />
     </MemoryRouter>
   );
-  expect(getByText(/Emulator Overview/)).not.toBeNull();
+  expect(getByText('Emulator overview')).not.toBeNull();
 });
 
 it('shows port for emulator that are loaded and N/A for not loaded', () => {
@@ -66,7 +66,7 @@ it('shows port for emulator that are loaded and N/A for not loaded', () => {
   // Database Emulator is running.
   const databaseCard = getByTestId(`emulator-info-database`);
   expect(getByText(databaseCard, '9000')).not.toBeNull();
-  expect(getByText(databaseCard, 'Go to Emulator')).not.toBeNull();
+  expect(getByText(databaseCard, 'Go to emulator')).not.toBeNull();
 
   // Firestore Emulator is not running.
   const firestoreCard = getByTestId(`emulator-info-firestore`);
@@ -97,7 +97,7 @@ it('shows hosting emulator card', () => {
 
   const card = getByTestId(`emulator-info-hosting`);
   expect(getByText(card, '5000')).not.toBeNull();
-  expect(getByText(card, 'Hosting Emulator')).not.toBeNull();
+  expect(getByText(card, 'Hosting emulator')).not.toBeNull();
 });
 
 it('links to the hosting website externally', () => {
@@ -151,7 +151,7 @@ it('shows pubsub emulator card', () => {
 
   const card = getByTestId(`emulator-info-pubsub`);
   expect(getByText(card, '8085')).not.toBeNull();
-  expect(getByText(card, 'PubSub Emulator')).not.toBeNull();
+  expect(getByText(card, 'PubSub emulator')).not.toBeNull();
 });
 
 it('shows button for function emulator logs', () => {
@@ -176,7 +176,7 @@ it('shows button for function emulator logs', () => {
   );
   const card = getByTestId(`emulator-info-functions`);
   expect(getByText(card, '5001')).not.toBeNull();
-  expect(getByText(card, 'View Logs')).not.toBeNull();
+  expect(getByText(card, 'View logs')).not.toBeNull();
 });
 
 it('renders all emulators as "off" when error loading config', () => {

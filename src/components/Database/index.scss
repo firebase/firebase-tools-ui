@@ -45,7 +45,26 @@
   position: relative;
 
   .Database-Content {
+    outline: none;
     padding: 16px;
     min-height: 400px;
+
+    .Database-Content-Dragging {
+      margin: 4px;
+      border: 2px dashed rgba(0, 0, 0, 0.54);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.12);
+
+      .invalid {
+        color: red;
+      }
+    }
   }
 }

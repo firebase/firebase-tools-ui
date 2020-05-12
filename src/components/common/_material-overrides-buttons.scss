@@ -24,6 +24,10 @@
 
 $FOCUS_OUTLINE_THICKNESS: 2px;
 
+:root {
+  --mdc-typography-button-letter-spacing: 0.25px;
+}
+
 .mdc-button {
   @include button.shape-radius($BORDER_RADIUS_CARD);
   @include button.horizontal-padding(16px); // no "dense" buttons
