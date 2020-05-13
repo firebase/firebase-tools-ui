@@ -90,7 +90,7 @@ function realtimeToViewModel(
   queryParams: QueryParams
 ) {
   const query = applyQuery(ref, queryParams);
-  return once(ref).pipe(
+  return once(query).pipe(
     switchMap(snap => {
       return snap.hasChildren() ? toObservable(query) : toObservable(ref);
     }),
@@ -100,6 +100,7 @@ function realtimeToViewModel(
         children: snap.hasChildren() ? Object.keys(snap.val()) : NO_CHILDREN,
         isRealtime: true,
         isLoading: false,
+        query,
       })
     )
   );

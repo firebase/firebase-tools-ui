@@ -42,6 +42,7 @@ export interface Props {
   isViewRoot?: boolean;
   baseUrl: string;
   updateQuery?: (params: QueryParams) => void;
+  query?: firebase.database.Query;
 }
 
 export const NodeParent = React.memo<Props>(function NodeParent$({
@@ -51,6 +52,7 @@ export const NodeParent = React.memo<Props>(function NodeParent$({
   updateQuery,
   isViewRoot,
   baseUrl,
+  query,
 }) {
   const isRoot = realtimeRef.parent === null;
   const hasChildren = !!children.length;
@@ -119,8 +121,7 @@ export const NodeParent = React.memo<Props>(function NodeParent$({
           isExpanded &&
           (displayType === ChildrenDisplayType.Table ? (
             <NodeTabularDisplay
-              realtimeRef={realtimeRef}
-              limit={children.length}
+              query={query || realtimeRef}
               hasMoreRows={hasMore}
               onLoadMore={loadMore}
             />
