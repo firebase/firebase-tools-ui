@@ -15,10 +15,10 @@
  */
 
 import { Portal } from '@rmwc/base';
-import { act, render } from '@testing-library/react';
+import { act, fireEvent, render } from '@testing-library/react';
 import React from 'react';
 import { useCollection, useDocumentData } from 'react-firebase-hooks/firestore';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, Route } from 'react-router-dom';
 
 import { ApiProvider } from './ApiContext';
 import Collection from './Collection';
@@ -156,4 +156,33 @@ it('shows the selected sub-document', () => {
   expect(getByText(/my-stuff/)).not.toBeNull();
   expect(collectionReference.doc).toHaveBeenCalledWith('cool-doc-1');
   expect(queryAllByText(/cool-doc-1/).length).toBe(2);
+});
+
+it('redirects to a newly created document', async () => {
+  useCollection.mockReturnValue([{ id: 'my-stuff', docs: [] }]);
+
+  const collectionReference = fakeCollectionReference({
+    id: 'my-stuff',
+    doc: () => fakeDocumentReference(),
+  });
+  const { getByLabelText, getByText } = render(
+    <MemoryRouter>
+      <Collection collection={collectionReference} />
+      <Route path="/new-document-id">_redirected_to_foo_</Route>
+    </MemoryRouter>
+  );
+
+  act(() => collectionReference.setSnapshot({ id: 'my-stuff', docs: [] }));
+
+  act(() => getByText('Add document').click());
+
+  await act(async () => {
+    fireEvent.change(getByLabelText('Document ID'), {
+      target: { value: 'new-document-id' },
+    });
+  });
+
+  await act(async () => getByText('Save').click());
+
+  expect(getByText(/_redirected_to_foo_/)).not.toBeNull();
 });
