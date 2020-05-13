@@ -1,4 +1,4 @@
-# Firebase Tools UI
+# Firebase Emulator UI
 
 The web UI for Firebase Emulator Suite. Features include:
 
@@ -27,7 +27,7 @@ NOTE: The `emulators:exec` command is necessary to set the environment variables
 
 ### Developing within a user project
 
-You can also start the dev server of GUI and connect to your real project. To do so, first start the emulator suite in your project folder:
+You can also start the dev server of the Emulator UI and connect to your real project. To do so, first start the Emulator Suite in your project folder:
 
 ```bash
 cd project/
