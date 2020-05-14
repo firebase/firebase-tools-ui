@@ -18,22 +18,23 @@ import './NodeLink.scss';
 
 import { Typography } from '@rmwc/typography';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useRouteMatch } from 'react-router-dom';
 
 import { getDbRootUrl } from './common/view_model';
 
 export interface Props {
   dbRef: firebase.database.Reference;
-  baseUrl: string;
 }
 
-export const NodeLink = React.memo<Props>(function NodeLink$({
-  dbRef,
-  baseUrl,
-}) {
+export const NodeLink = React.memo<Props>(function NodeLink$({ dbRef }) {
   const key = dbRef.parent === null ? getDbRootUrl(dbRef) : dbRef.key;
   const path = new URL(dbRef.toString()).pathname;
-  const href = `${baseUrl}${path}`;
+  const match = useRouteMatch();
+  const [baseRoute] = match.url.slice(1).split('/data');
+  // console.log(match.url, match.url.slice(1).split('/data'), baseRoute);
+  const baseUrl = baseRoute + '/data';
+
+  const href = `/${baseUrl}${path}`;
   return (
     <Typography
       className="NodeLink"

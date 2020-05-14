@@ -99,7 +99,7 @@ export const Database: React.FC<Props> = ({ config, namespace, path }) => {
           </InteractiveBreadCrumbBar>
 
           <DatabaseDropZone onDrop={f => setDroppedFile(f)}>
-            <NodeContainer realtimeRef={ref} isViewRoot baseUrl={urlBase} />
+            <NodeContainer realtimeRef={ref} isViewRoot />
           </DatabaseDropZone>
 
           {(importDialogOpen || droppedFile) && (
@@ -148,7 +148,9 @@ const DatabaseDropZone: React.FC<{ onDrop: (file: File) => void }> = ({
           {isDragAccept ? (
             'Drop JSON file to import'
           ) : (
-            <span className="invalid">Only JSON files are supported for data import.</span>
+            <span className="invalid">
+              Only JSON files are supported for data import.
+            </span>
           )}
         </div>
       )}
