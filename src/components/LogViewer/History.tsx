@@ -41,7 +41,10 @@ const formatTimestamp = (timestamp: number) => {
     .join(':');
 };
 
-const getFilterTag = (appendToQuery: Function, log: LogEntry) => {
+const FilterTag: React.FC<{ appendToQuery: Function; log: LogEntry }> = ({
+  appendToQuery,
+  log,
+}) => {
   const metadata = log.data.metadata;
   let tagButton;
 
@@ -127,7 +130,7 @@ export const History: React.FC<Props> = ({
             >
               {log.level[0].toUpperCase()}
             </span>
-            {getFilterTag(appendToQuery, log)}
+            <FilterTag appendToQuery={appendToQuery} log={log} />
             {getUserData(log) ? (
               <HighlightedJSON
                 data={log.data.user}
