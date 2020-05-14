@@ -55,7 +55,7 @@ describe('linking within the current <Route>', () => {
     );
 
     expect(getByText('my_key').getAttribute('href')).toEqual(
-      `/database/my-instance/data/a/b/c/my_key`
+      '/database/my-instance/data/a/b/c/my_key'
     );
   });
 
@@ -69,7 +69,7 @@ describe('linking within the current <Route>', () => {
     );
 
     expect(getByText('my_key').getAttribute('href')).toEqual(
-      `/nopath/a/b/c/my_key`
+      '/nopath/a/b/c/my_key'
     );
   });
 
@@ -82,7 +82,7 @@ describe('linking within the current <Route>', () => {
       </MemoryRouter>
     );
 
-    expect(getByText('my_key').getAttribute('href')).toEqual(`/a/b/c/my_key`);
+    expect(getByText('my_key').getAttribute('href')).toEqual('/a/b/c/my_key');
   });
 
   it('resolves a href even when not inside a route', () => {
@@ -92,7 +92,7 @@ describe('linking within the current <Route>', () => {
       </MemoryRouter>
     );
 
-    expect(getByText('my_key').getAttribute('href')).toEqual(`/a/b/c/my_key`);
+    expect(getByText('my_key').getAttribute('href')).toEqual('/a/b/c/my_key');
   });
 });
 
@@ -116,6 +116,6 @@ it('links root nodes to the route root: /database/:id/data/', () => {
   );
 
   expect(getByText(ROOT_REF.toString()).getAttribute('href')).toEqual(
-    `/database/test/data/`
+    '/database/test/data/'
   );
 });
