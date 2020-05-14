@@ -46,6 +46,11 @@ export const NodeLink = React.memo<Props>(function NodeLink$({ dbRef }) {
   );
 });
 
+/**
+ * Extracts the base route and instance name from the current url
+ *
+ * e.g. `/database/sample/data/a/b/c` -> `/database/sample/data`
+ */
 function getBaseUrl(url: string) {
   const [baseRoute] = url.slice(1).split('/data');
   return `/${baseRoute}/data`;
