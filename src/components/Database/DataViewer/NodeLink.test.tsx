@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      /www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -54,8 +54,8 @@ describe('linking within the current <Route>', () => {
       </MemoryRouter>
     );
 
-    expect(getByText('my_key').href).toEqual(
-      `http://localhost/database/my-instance/data/a/b/c/my_key`
+    expect(getByText('my_key').getAttribute('href')).toEqual(
+      `/database/my-instance/data/a/b/c/my_key`
     );
   });
 
@@ -68,8 +68,8 @@ describe('linking within the current <Route>', () => {
       </MemoryRouter>
     );
 
-    expect(getByText('my_key').href).toEqual(
-      `http://localhost/nopath/a/b/c/my_key`
+    expect(getByText('my_key').getAttribute('href')).toEqual(
+      `/nopath/a/b/c/my_key`
     );
   });
 
@@ -82,7 +82,7 @@ describe('linking within the current <Route>', () => {
       </MemoryRouter>
     );
 
-    expect(getByText('my_key').href).toEqual(`http://a/b/c/my_key`);
+    expect(getByText('my_key').getAttribute('href')).toEqual(`/a/b/c/my_key`);
   });
 
   it('resolves a href even when not inside a route', () => {
@@ -92,7 +92,7 @@ describe('linking within the current <Route>', () => {
       </MemoryRouter>
     );
 
-    expect(getByText('my_key').href).toEqual(`http://a/b/c/my_key`);
+    expect(getByText('my_key').getAttribute('href')).toEqual(`/a/b/c/my_key`);
   });
 });
 
@@ -115,7 +115,7 @@ it('links root nodes to the route root: /database/:id/data/', () => {
     </MemoryRouter>
   );
 
-  expect(getByText(ROOT_REF.toString()).href).toEqual(
-    `http://localhost/database/test/data/`
+  expect(getByText(ROOT_REF.toString()).getAttribute('href')).toEqual(
+    `/database/test/data/`
   );
 });

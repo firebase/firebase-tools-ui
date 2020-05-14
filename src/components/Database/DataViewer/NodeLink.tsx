@@ -56,5 +56,5 @@ function useHrefWithinSameRoute(absolutePath: string) {
 
   const result = matchPath(match.url, { path: withoutPath, strict: true });
   const baseUrl = result?.url || '';
-  return `${baseUrl}${absolutePath}`;
+  return baseUrl === '/' ? absolutePath : `${baseUrl}${absolutePath}`;
 }
