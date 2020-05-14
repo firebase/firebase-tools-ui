@@ -68,7 +68,7 @@ export const NodeContainer = React.memo<Props>(function NodeContainer$({
 
   const [queryParams, setQueryParams] = useState(DEFAULT_QUERY_PARAMS);
 
-  const { children } = viewModel;
+  const { children, query } = viewModel;
   const hasChildren = !!children.length;
   const isFiltered = queryParams !== DEFAULT_QUERY_PARAMS;
   return !hasChildren && !isFiltered ? (
@@ -85,6 +85,7 @@ export const NodeContainer = React.memo<Props>(function NodeContainer$({
       queryParams={queryParams}
       updateQuery={updateQuery}
       isViewRoot={isViewRoot}
+      query={query}
     />
   );
 });
