@@ -24,7 +24,7 @@ export interface LogEntry {
   timestamp: number;
   data: {
     user: { [key: string]: any };
-    metadata: {
+    metadata?: {
       level: string;
       message: string;
       function?: {

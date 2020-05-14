@@ -45,8 +45,7 @@ const getFilterTag = (appendToQuery: Function, log: LogEntry) => {
   const metadata = log.data.metadata;
   let tagButton;
 
-  console.log(metadata);
-  if (metadata.function?.name) {
+  if (metadata?.function?.name) {
     tagButton = (
       <div
         className="log-tag-button"
@@ -57,7 +56,7 @@ const getFilterTag = (appendToQuery: Function, log: LogEntry) => {
         function[{metadata.function.name}]
       </div>
     );
-  } else if (metadata.emulator?.name) {
+  } else if (metadata?.emulator?.name) {
     tagButton = (
       <div
         className="log-tag-button"
