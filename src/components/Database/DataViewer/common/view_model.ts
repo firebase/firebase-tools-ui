@@ -26,6 +26,7 @@ export interface ViewModel {
   isRealtime?: boolean;
   value?: string;
   children: string[];
+  query?: firebase.database.Query;
 }
 
 export interface QueryParams {

@@ -31,13 +31,15 @@
 
     font-size: 1em;
     font-family: monospace;
-    padding: 16px 16px 4px 16px;
+    padding: 20px 24px 4px 24px;
 
-    line-height: 1em;
+    line-height: 1.2em;
 
     &::placeholder {
       color: #333;
     }
+
+    overflow: hidden;
   }
 
   .QueryBar-input {
@@ -45,11 +47,10 @@
     resize: none;
     background-color: rgba(0, 0, 0, 0);
     caret-color: black;
-    color: rgba(0, 0, 0, 0.5);
+    color: rgba(0, 0, 0, 0);
 
     &:focus {
       outline: none;
-      //box-shadow: 4px 4px red;
     }
   }
 
@@ -59,19 +60,20 @@
     height: 100%;
 
     color: black;
+    margin-bottom: 16px;
 
     span {
       white-space: pre-wrap;
       &.text {
-        color: pink;
+        color: black;
       }
 
       &.key {
-        color: red;
+        color: grey;
       }
 
       &.value {
-        color: blue;
+        color: var(--mdc-theme-primary);
       }
 
       &.invalid_pair {
@@ -85,5 +87,11 @@
     grid-column: 1;
     grid-row: 1;
     justify-self: end;
+    align-self: start;
+    padding: 10px 10px 10px 0px;
+    margin-bottom: 1px;
+    display: grid;
+    grid-template-columns: repeat(2, fit-content(100%));
+    grid-column-gap: 8px;
   }
 }
