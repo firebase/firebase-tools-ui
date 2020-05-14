@@ -30,11 +30,9 @@ export const NodeLink = React.memo<Props>(function NodeLink$({ dbRef }) {
   const key = dbRef.parent === null ? getDbRootUrl(dbRef) : dbRef.key;
   const path = new URL(dbRef.toString()).pathname;
   const match = useRouteMatch();
-  const [baseRoute] = match.url.slice(1).split('/data');
-  // console.log(match.url, match.url.slice(1).split('/data'), baseRoute);
-  const baseUrl = baseRoute + '/data';
+  const baseUrl = getBaseUrl(match.url);
 
-  const href = `/${baseUrl}${path}`;
+  const href = `${baseUrl}${path}`;
   return (
     <Typography
       className="NodeLink"
@@ -47,3 +45,8 @@ export const NodeLink = React.memo<Props>(function NodeLink$({ dbRef }) {
     </Typography>
   );
 });
+
+function getBaseUrl(url: string) {
+  const [baseRoute] = url.slice(1).split('/data');
+  return `/${baseRoute}/data`;
+}
