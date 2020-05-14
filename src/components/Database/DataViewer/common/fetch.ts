@@ -89,10 +89,17 @@ function realtimeToViewModel(
   ref: firebase.database.Reference,
   queryParams: QueryParams
 ) {
-  const query = applyQuery(ref, queryParams);
-  return once(query).pipe(
+  let query: firebase.database.Query;
+  return once(ref).pipe(
     switchMap(snap => {
-      return snap.hasChildren() ? toObservable(query) : toObservable(ref);
+      // The "default" query contains limitToFirst(50), so we can not blindly
+      // apply the query to leaf nodes. leafNodeRef.limitToFirst(n) will yield
+      // null data.
+      if (snap.hasChildren()) {
+        query = applyQuery(ref, queryParams);
+        return toObservable(query);
+      }
+      return toObservable(ref);
     }),
     map(
       (snap): ViewModel => ({

@@ -15,7 +15,8 @@
  */
 import './QueryBar.scss';
 
-import React from 'react';
+import { Button } from '@rmwc/button';
+import React, { useEffect, useState } from 'react';
 
 import { LogEntry } from '../../store/logviewer';
 import { CompiledGetterCache } from './CompiledGetterCache';
@@ -50,9 +51,9 @@ export const isQueryMatch = (
       let fieldPath = originalFieldPath;
       if (
         fieldPath.startsWith('user.') ||
-        fieldPath.startsWith('system.') ||
+        fieldPath.startsWith('metadata.') ||
         fieldPath.startsWith('user[') ||
-        fieldPath.startsWith('system[')
+        fieldPath.startsWith('metadata[')
       ) {
         fieldPath = `data.${fieldPath}`;
       }
@@ -78,7 +79,14 @@ export interface ParsedQuery {
   filters: { [key: string]: string };
 }
 
-const queryFields = ['level', 'search'];
+const queryFields = [
+  'level',
+  'search',
+  'metadata.emulator',
+  'metadata.emulator.name',
+  'metadata.function',
+  'metadata.function.name',
+];
 export function parseQuery(query: string): ParsedQuery {
   let escapedQuery = '';
   let isEscaped = false;
@@ -124,7 +132,9 @@ export function parseQuery(query: string): ParsedQuery {
       equalPosition > -1 && section[0] !== '=' && section.slice(-1)[0] !== '=';
     const isNewline = section === '\n';
 
-    if (isNewline) return <br key={index} />;
+    if (isNewline) {
+      return <br key={index} />;
+    }
     if (!isKeyPair) {
       queryChunks.push(section);
       return (
@@ -181,12 +191,19 @@ export function parseQuery(query: string): ParsedQuery {
 
 interface Props {
   query: string;
-  parsedQuery: ParsedQuery;
   setQuery: (query: string) => void;
   compiledGetters: CompiledGetterCache;
 }
 
-export const QueryBar: React.FC<Props> = ({ query, parsedQuery, setQuery }) => {
+export const QueryBar: React.FC<Props> = ({ query, setQuery }) => {
+  const [temporaryQuery, setTemporaryQuery] = useState('');
+
+  useEffect(() => {
+    setTemporaryQuery(query);
+  }, [query]);
+
+  const parsedQuery = parseQuery(temporaryQuery);
+
   return (
     <div className="QueryBar">
       <div className="QueryBar-render">{parsedQuery.elements}</div>
@@ -194,17 +211,29 @@ export const QueryBar: React.FC<Props> = ({ query, parsedQuery, setQuery }) => {
         rows={1}
         className="QueryBar-input"
         spellCheck={false}
-        value={query}
-        onChange={e => setQuery((e.target as any).value)}
+        value={temporaryQuery}
+        onChange={e => setTemporaryQuery((e.target as any).value)}
         placeholder="Filter or search logs..."
       ></textarea>
-      {query.length ? (
-        <div className="QueryBar-actions">
-          {/*<button onClick={() => setQuery('')}>clear query</button>*/}
-        </div>
-      ) : (
-        ''
-      )}
+      <div className="QueryBar-actions">
+        <Button
+          unelevated
+          onClick={() => setQuery(temporaryQuery)}
+          disabled={query === temporaryQuery}
+        >
+          Apply
+        </Button>
+        <Button
+          unelevated
+          disabled={!temporaryQuery.length}
+          onClick={() => {
+            setTemporaryQuery('');
+            setQuery('');
+          }}
+        >
+          Reset
+        </Button>
+      </div>
     </div>
   );
 };

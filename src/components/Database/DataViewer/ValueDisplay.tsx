@@ -26,6 +26,7 @@ export interface Props extends DOMAttributes<HTMLSpanElement>, TypographyProps {
 
 export const ValueDisplay = React.memo<Props>(function ValueDisplay$({
   value,
+  use,
   ...otherProps
 }) {
   const trimmedValue =
