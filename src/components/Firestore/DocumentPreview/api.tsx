@@ -19,16 +19,14 @@ import { firestore } from 'firebase';
 import { FirestoreAny, FirestoreMap } from '../models';
 import { isArray, isMap, withFieldRemoved, withFieldSet } from '../utils';
 
+const DELETE_FIELD = firestore.FieldValue.delete();
+
 export function deleteField(
   documentRef: firestore.DocumentReference,
   documentData: FirestoreMap,
   path: string[]
 ) {
-  const payload = adjustPayloadForArray(
-    documentData,
-    path,
-    firestore.FieldValue.delete()
-  );
+  const payload = adjustPayloadForArray(documentData, path, DELETE_FIELD);
   documentRef.update(...payload);
 }
 
@@ -86,10 +84,10 @@ function adjustPayloadForArray(
       // than needed, but is always correct.
       const pathToUpdate = new firestore.FieldPath(...parentPath);
       const childPath = fieldPath.slice(parentPath.length);
-      if (
-        value instanceof firestore.FieldValue &&
-        value.isEqual(firestore.FieldValue.delete())
-      ) {
+
+      // Note: FieldValue sentinels are not guaranteed to be
+      // `instanceof FieldValue`, so let's just use type casting here.
+      if (value === DELETE_FIELD || (value as any)?.isEqual?.(DELETE_FIELD)) {
         return [pathToUpdate, withFieldRemoved(cur, childPath)];
       } else {
         return [pathToUpdate, withFieldSet(cur, childPath, value)];
