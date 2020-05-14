@@ -90,7 +90,7 @@ const Overview: React.FC<{
           name="Functions emulator"
           icon={<FunctionsIcon theme="secondary" />}
           config={config.functions}
-          linkTo="/logs"
+          linkTo="/functions"
           linkLabel="View logs"
           testId="emulator-info-functions"
         />
