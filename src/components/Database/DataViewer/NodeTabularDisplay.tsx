@@ -34,6 +34,7 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 
 import { DEFAULT_PAGE_SIZE } from './common/view_model';
+import { NodeLink } from './NodeLink';
 import { ValueDisplay } from './ValueDisplay';
 
 export interface Props {
@@ -92,7 +93,7 @@ export const NodeTabularDisplay = React.memo<Props>(
             {table.rows.map((row, idx) => (
               <DataTableRow key={idx}>
                 {table.headers.map((header, i) =>
-                  getColumnValue(table, row, header, i)
+                  getColumnValue(table, row, header, i, realtimeRef)
                 )}
               </DataTableRow>
             ))}
@@ -116,13 +117,14 @@ function getColumnValue(
   table: Table,
   row: { pkId: string; value: any },
   key: string,
-  colIndex: number
+  colIndex: number,
+  ref: firebase.database.Reference
 ) {
   if (colIndex === 0) {
     return (
       <DataTableCell key={key}>
         <Typography use="body2" className="NodeTabularDisplay__key">
-          {row.pkId}
+          <NodeLink dbRef={ref.child(row.pkId)} />
         </Typography>
       </DataTableCell>
     );
