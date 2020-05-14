@@ -39,8 +39,26 @@ export interface Props {
   onComplete: (string?: string) => void;
 }
 
+/**
+ * Strips protocol and domain name (usually http://localhost:9000/)
+ * from the ref's path
+ * @example "localhost:9000/todos/one" -> "/todos/one"
+ * @param ref
+ */
+const getAbsoluteRefPath = (ref: firebase.database.Reference) => {
+  return `/${ref.toString().replace(ref.root.toString(), '')}`;
+};
+
+/**
+ * Returns a key value that is either a new push id if the current
+ * ref's key is a push id or a "copy" key if not.
+ * @param key
+ * @param ref
+ */
 const cloneKey = (key: string, ref: firebase.database.Reference) => {
-  return key.startsWith('-') ? ref.push().key! : `${key}_copy`;
+  return key.startsWith('-')
+    ? `${getAbsoluteRefPath(ref.parent!)}/${ref.push().key!}`
+    : `${getAbsoluteRefPath(ref)}_copy`;
 };
 
 export const CloneDialog = React.memo<Props>(function CloneDialog$({
@@ -58,6 +76,7 @@ export const CloneDialog = React.memo<Props>(function CloneDialog$({
   useEffect(() => {
     const loadData = async () => {
       const snapshot = await realtimeRef.once('value');
+
       const data: Record<string, string> = {};
       Object.entries(snapshot.val() || {}).forEach(([key, val]) => {
         data[key] = JSON.stringify(val);
@@ -83,7 +102,7 @@ export const CloneDialog = React.memo<Props>(function CloneDialog$({
     Object.entries(form).forEach(([key, value]) => {
       data[key] = JSON.parse(value);
     });
-    realtimeRef.parent!.child(newKey).set(data);
+    realtimeRef.root.child(newKey).set(data);
     onComplete(newKey);
   };
 

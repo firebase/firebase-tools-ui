@@ -34,6 +34,7 @@ import { RenameDialog } from './RenameDialog';
 
 export interface Props {
   realtimeRef: firebase.database.Reference;
+
   displayType: ChildrenDisplayType;
   queryParams?: QueryParams;
   updateQuery?: (params: QueryParams) => void;
