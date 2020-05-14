@@ -41,6 +41,40 @@ const formatTimestamp = (timestamp: number) => {
     .join(':');
 };
 
+const FilterTag: React.FC<{ appendToQuery: Function; log: LogEntry }> = ({
+  appendToQuery,
+  log,
+}) => {
+  const metadata = log.data.metadata;
+  let tagButton;
+
+  if (metadata?.function?.name) {
+    tagButton = (
+      <div
+        className="log-tag-button"
+        onClick={() =>
+          appendToQuery('metadata.function.name', metadata.function?.name)
+        }
+      >
+        function[{metadata.function.name}]
+      </div>
+    );
+  } else if (metadata?.emulator?.name) {
+    tagButton = (
+      <div
+        className="log-tag-button"
+        onClick={() =>
+          appendToQuery('metadata.emulator.name', metadata.emulator?.name)
+        }
+      >
+        {metadata.emulator.name}
+      </div>
+    );
+  }
+
+  return <div className="log-tag">{tagButton}</div>;
+};
+
 interface PropsFromAttributes {
   parsedQuery: ParsedQuery;
   setQuery: (query: string) => void;
@@ -96,7 +130,7 @@ export const History: React.FC<Props> = ({
             >
               {log.level[0].toUpperCase()}
             </span>
-
+            <FilterTag appendToQuery={appendToQuery} log={log} />
             {getUserData(log) ? (
               <HighlightedJSON
                 data={log.data.user}

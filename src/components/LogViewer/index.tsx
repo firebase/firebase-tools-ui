@@ -70,11 +70,6 @@ export const LogViewer: React.FC<Props> = ({
     logReset();
     const webSocket = new ReconnectingWebSocket(config);
     webSocket.listener = (log: LogEntry) => {
-      //todo: remove hack to cut off icon
-      log.message = log.message
-        .split(' ')
-        .slice(2)
-        .join(' ');
       logReceived(log);
     };
     return () => webSocket.cleanup();
@@ -88,7 +83,6 @@ export const LogViewer: React.FC<Props> = ({
         <Card className="LogViewer">
           <QueryBar
             query={query}
-            parsedQuery={parsedQuery}
             setQuery={setQuery}
             compiledGetters={compiledGetters}
           />
