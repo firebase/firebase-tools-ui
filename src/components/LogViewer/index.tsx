@@ -19,8 +19,9 @@ import './index.scss';
 import { Card } from '@rmwc/card';
 import { Elevation } from '@rmwc/elevation';
 import { GridCell } from '@rmwc/grid';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { connect } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 
 import { AppState } from '../../store';
 import { LoggingConfig } from '../../store/config';
@@ -50,12 +51,18 @@ export type Props = PropsFromState & PropsFromDispatch;
 
 const compiledGetters = new CompiledGetterCache();
 
+function useQuery() {
+  const { search } = useLocation();
+  return useMemo(() => new URLSearchParams(search), [search]);
+}
+
 export const LogViewer: React.FC<Props> = ({
   logReceived,
   logReset,
   config,
 }) => {
-  const [query, setQuery] = useState('');
+  const qs = useQuery();
+  const [query, setQuery] = useState(qs.get('q') || '');
 
   useEffect(() => {
     if (!config) return;
