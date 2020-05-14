@@ -20,7 +20,6 @@ import React, { useEffect, useState } from 'react';
 
 import { LogEntry } from '../../store/logviewer';
 import { CompiledGetterCache } from './CompiledGetterCache';
-import { ReconnectingWebSocket } from './ReconnectingWebSocket';
 
 export const filtersToQueryString = (filters: {
   [key: string]: string | number;
