@@ -18,7 +18,7 @@ import './NodeLink.scss';
 
 import { Typography } from '@rmwc/typography';
 import * as React from 'react';
-import { Link, useRouteMatch } from 'react-router-dom';
+import { Link, matchPath, useRouteMatch } from 'react-router-dom';
 
 import { getDbRootUrl } from './common/view_model';
 
@@ -29,10 +29,7 @@ export interface Props {
 export const NodeLink = React.memo<Props>(function NodeLink$({ dbRef }) {
   const key = dbRef.parent === null ? getDbRootUrl(dbRef) : dbRef.key;
   const path = new URL(dbRef.toString()).pathname;
-  const match = useRouteMatch();
-  const baseUrl = getBaseUrl(match.url);
-
-  const href = `${baseUrl}${path}`;
+  const href = useHrefWithinSameRoute(path);
   return (
     <Typography
       className="NodeLink"
@@ -47,11 +44,17 @@ export const NodeLink = React.memo<Props>(function NodeLink$({ dbRef }) {
 });
 
 /**
- * Extracts the base route and instance name from the current url
+ * Creates a href that replaces the `/:path*` part of the current `<Route>`
  *
- * e.g. `/database/sample/data/a/b/c` -> `/database/sample/data`
+ * e.g. `/database/sample/data/a/b/c` -> `/database/sample/data/x/y/z`
  */
-function getBaseUrl(url: string) {
-  const [baseRoute] = url.slice(1).split('/data');
-  return `/${baseRoute}/data`;
+function useHrefWithinSameRoute(absolutePath: string) {
+  const match = useRouteMatch();
+
+  // remove the wildcard :path param, so we can append it manually
+  const withoutPath = match.path.replace('/:path*', '');
+
+  const result = matchPath(match.url, { path: withoutPath, strict: true });
+  const baseUrl = result?.url || '';
+  return `${baseUrl}${absolutePath}`;
 }

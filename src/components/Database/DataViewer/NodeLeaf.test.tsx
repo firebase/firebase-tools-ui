@@ -28,9 +28,6 @@ const REF = fakeReference({
   path: 'my_key',
   data: 'my_value',
 });
-(ROOT_REF as any).database = {
-  app: { options: { databaseURL: 'http://localhost:9000/' } },
-};
 
 beforeEach(() => {
   REF.toString.mockReturnValue('http://localhost:9000/my_key');
