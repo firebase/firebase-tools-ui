@@ -28,7 +28,6 @@
 .log-entry {
   align-items: center;
   display: grid;
-  //grid-column-gap: 5px;
   grid-template-areas: 'timestamp level tag message';
   grid-template-columns: fit-content(100%) fit-content(100%) fit-content(100%) 1fr;
   padding-left: 8px;
@@ -82,9 +81,7 @@
 
     .log-tag-button {
       padding: 1px 3px;
-      //margin: 1px 0px 1px 1px;
       align-self: stretch;
-      //border: 1px solid #ccc;
       color: rgba(0, 0, 0, 0.5);
       border-radius: 2px;
 
