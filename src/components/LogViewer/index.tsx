@@ -21,7 +21,7 @@ import { Elevation } from '@rmwc/elevation';
 import { GridCell } from '@rmwc/grid';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { useLocation, useRouteMatch } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 import { AppState } from '../../store';
 import { LoggingConfig } from '../../store/config';
