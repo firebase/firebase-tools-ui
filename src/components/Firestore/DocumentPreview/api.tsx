@@ -84,6 +84,9 @@ function adjustPayloadForArray(
       // than needed, but is always correct.
       const pathToUpdate = new firestore.FieldPath(...parentPath);
       const childPath = fieldPath.slice(parentPath.length);
+
+      // Note: FieldValue sentinels are not guaranteed to be
+      // `instanceof FieldValue`, so let's just use type casting here.
       if (value === DELETE_FIELD || (value as any)?.isEqual?.(DELETE_FIELD)) {
         return [pathToUpdate, withFieldRemoved(cur, childPath)];
       } else {
