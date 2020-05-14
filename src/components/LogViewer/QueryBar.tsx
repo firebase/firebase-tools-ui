@@ -50,9 +50,9 @@ export const isQueryMatch = (
       let fieldPath = originalFieldPath;
       if (
         fieldPath.startsWith('user.') ||
-        fieldPath.startsWith('system.') ||
+        fieldPath.startsWith('metadata.') ||
         fieldPath.startsWith('user[') ||
-        fieldPath.startsWith('system[')
+        fieldPath.startsWith('metadata[')
       ) {
         fieldPath = `data.${fieldPath}`;
       }
@@ -78,7 +78,14 @@ export interface ParsedQuery {
   filters: { [key: string]: string };
 }
 
-const queryFields = ['level', 'search'];
+const queryFields = [
+  'level',
+  'search',
+  'metadata.emulator',
+  'metadata.emulator.name',
+  'metadata.function',
+  'metadata.function.name',
+];
 export function parseQuery(query: string): ParsedQuery {
   let escapedQuery = '';
   let isEscaped = false;

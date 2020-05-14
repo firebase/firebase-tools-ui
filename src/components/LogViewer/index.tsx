@@ -64,10 +64,10 @@ export const LogViewer: React.FC<Props> = ({
     const webSocket = new ReconnectingWebSocket(config);
     webSocket.listener = (log: LogEntry) => {
       //todo: remove hack to cut off icon
-      log.message = log.message
-        .split(' ')
-        .slice(2)
-        .join(' ');
+      // log.message = log.message
+      //   .split(' ')
+      //   .slice(2)
+      //   .join(' ');
       logReceived(log);
     };
     return () => webSocket.cleanup();

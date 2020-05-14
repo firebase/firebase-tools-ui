@@ -28,9 +28,9 @@
 .log-entry {
   align-items: center;
   display: grid;
-  grid-column-gap: 5px;
-  grid-template-areas: 'timestamp level message';
-  grid-template-columns: fit-content(100%) fit-content(100%) 1fr;
+  //grid-column-gap: 5px;
+  grid-template-areas: 'timestamp level tag message';
+  grid-template-columns: fit-content(100%) fit-content(100%) fit-content(100%) 1fr;
   padding-left: 8px;
   background-color: var(--mdc-theme-surface);
 
@@ -46,6 +46,7 @@
     grid-area: timestamp;
     opacity: 0.5;
     align-self: start;
+    margin-right: 4px;
   }
 
   .log-level {
@@ -55,6 +56,7 @@
     font-weight: bold;
     grid-area: level;
     padding: 0px 3px;
+    margin-right: 4px;
 
     align-self: start;
     text-align: center;
@@ -72,16 +74,36 @@
     }
   }
 
+  .log-tag {
+    border-left: 1px solid #ccc;
+    background-color: white;
+    align-self: stretch;
+    padding: 0px 0px 0px 2px;
+
+    .log-tag-button {
+      padding: 1px 3px;
+      //margin: 1px 0px 1px 1px;
+      align-self: stretch;
+      //border: 1px solid #ccc;
+      color: rgba(0, 0, 0, 0.5);
+      border-radius: 2px;
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+      }
+    }
+  }
+
   .log-message-single {
-    grid-column: 3 / span 1;
+    grid-column: 4 / span 1;
     grid-row: 1;
     line-height: 1.2em;
     word-break: break-all;
     white-space: pre-wrap;
-    border-left: 1px solid #ccc;
     align-self: stretch;
     background-color: white;
-    padding: 2px 8px;
+    padding: 1px 3px;
   }
 
   .log-message-multi {

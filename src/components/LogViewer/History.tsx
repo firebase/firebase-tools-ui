@@ -3,7 +3,9 @@
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * You may obtain a copy of the License at    &:hover {
+      background-color: rgba(0, 0, 0, 0.15);
+    }
  *
  *      http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -39,6 +41,38 @@ const formatTimestamp = (timestamp: number) => {
       else return `0${number}`;
     })
     .join(':');
+};
+
+const getFilterTag = (appendToQuery: Function, log: LogEntry) => {
+  const metadata = log.data.metadata;
+  let tagButton;
+
+  console.log(metadata);
+  if (metadata.function?.name) {
+    tagButton = (
+      <div
+        className="log-tag-button"
+        onClick={() =>
+          appendToQuery('metadata.function.name', metadata.function?.name)
+        }
+      >
+        function[{metadata.function.name}]
+      </div>
+    );
+  } else if (metadata.emulator?.name) {
+    tagButton = (
+      <div
+        className="log-tag-button"
+        onClick={() =>
+          appendToQuery('metadata.emulator.name', metadata.emulator?.name)
+        }
+      >
+        {metadata.emulator.name}
+      </div>
+    );
+  }
+
+  return <div className="log-tag">{tagButton}</div>;
 };
 
 interface PropsFromAttributes {
@@ -96,7 +130,7 @@ export const History: React.FC<Props> = ({
             >
               {log.level[0].toUpperCase()}
             </span>
-
+            {getFilterTag(appendToQuery, log)}
             {getUserData(log) ? (
               <HighlightedJSON
                 data={log.data.user}
