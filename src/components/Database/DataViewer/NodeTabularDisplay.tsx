@@ -87,7 +87,7 @@ export const NodeTabularDisplay = React.memo<Props>(
             {table.rows.map((row, idx) => (
               <DataTableRow key={idx}>
                 {table.headers.map((header, i) =>
-                  getColumnValue(table, row, header, i, realtimeRef)
+                  getColumnValue(table, row, header, i, query.ref)
                 )}
               </DataTableRow>
             ))}
