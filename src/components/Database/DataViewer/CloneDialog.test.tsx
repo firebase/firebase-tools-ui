@@ -25,9 +25,6 @@ const setup = async () => {
   const onComplete = jest.fn();
   const parent = fakeReference({ key: 'parent', path: 'parent' });
   const ROOT_REF = fakeReference({ key: null, parent: null });
-  (ROOT_REF as any).database = {
-    app: { options: { databaseURL: 'http://localhost:9000/' } },
-  };
   const ref = fakeReference({
     parent,
     key: 'to_clone',

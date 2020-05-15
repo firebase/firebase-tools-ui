@@ -40,7 +40,6 @@ export interface Props {
    * db root). It will show breadcrumbs of all hidden parent nodes to the root.
    */
   isViewRoot?: boolean;
-  baseUrl: string;
   updateQuery?: (params: QueryParams) => void;
   query?: firebase.database.Query;
 }
@@ -51,7 +50,6 @@ export const NodeParent = React.memo<Props>(function NodeParent$({
   queryParams,
   updateQuery,
   isViewRoot,
-  baseUrl,
   query,
 }) {
   const isRoot = realtimeRef.parent === null;
@@ -103,7 +101,7 @@ export const NodeParent = React.memo<Props>(function NodeParent$({
             arrow_right
           </button>
         )}
-        <NodeLink dbRef={realtimeRef} baseUrl={baseUrl} />
+        <NodeLink dbRef={realtimeRef} />
         <NodeActions
           realtimeRef={realtimeRef}
           displayType={displayType}
@@ -129,10 +127,7 @@ export const NodeParent = React.memo<Props>(function NodeParent$({
             <ul className="NodeParent__children">
               {children.map(key => (
                 <li key={key}>
-                  <NodeContainer
-                    realtimeRef={realtimeRef.child(key)}
-                    baseUrl={baseUrl}
-                  />
+                  <NodeContainer realtimeRef={realtimeRef.child(key)} />
                 </li>
               ))}
               {hasMore && (

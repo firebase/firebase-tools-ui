@@ -37,7 +37,9 @@ export function fakeReference({
     remove: jest.fn(),
     once: jest.fn((event: string) => fakeSnapshot({ key, data })),
     toString: jest.fn(() => `${domain}/${path}`),
-    root: jest.fn(),
+    database: {
+      app: { options: { databaseURL: 'http://localhost:9000/' } },
+    },
   } as unknown) as database.Reference;
 }
 
