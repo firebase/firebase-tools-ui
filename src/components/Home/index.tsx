@@ -42,6 +42,7 @@ import {
 } from '../common/icons';
 import { Spinner } from '../common/Spinner';
 import { LocalWarningCallout } from './LocalWarningCallout';
+import { StatusLabel } from './StatusLabel';
 
 export const mapStateToProps = createStructuredSelector({
   configRemote: getConfig,
@@ -133,9 +134,7 @@ export const EmulatorCard: React.FC<{
         <Typography use="body2" tag="h4" theme="secondary">
           Status
         </Typography>
-        <Typography use="headline6" tag="div">
-          {config ? 'On' : 'Off'}
-        </Typography>
+        <StatusLabel isActive={!!config} />
         <Typography use="body2" tag="h4" theme="secondary">
           Port number
         </Typography>
