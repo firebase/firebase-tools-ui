@@ -46,7 +46,7 @@ export interface Props {
  * @param ref
  */
 const getAbsoluteRefPath = (ref: firebase.database.Reference) => {
-  return `/${ref.toString().replace(ref.root.toString(), '')}`;
+  return new URL(ref.toString()).pathname;
 };
 
 /**
@@ -68,7 +68,7 @@ export const CloneDialog = React.memo<Props>(function CloneDialog$({
   ok(realtimeRef.parent, 'Cannot clone the root node!');
 
   const originalKey = realtimeRef.key!;
-  const [newKey, setNewKey] = useState('');
+  const [newDestinationPath, setNewDestinationPath] = useState('');
 
   const [form, setForm] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(true);
@@ -82,11 +82,11 @@ export const CloneDialog = React.memo<Props>(function CloneDialog$({
         data[key] = JSON.stringify(val);
       });
       setForm(data);
-      setNewKey(cloneKey(originalKey, realtimeRef));
+      setNewDestinationPath(cloneKey(originalKey, realtimeRef));
       setIsLoading(false);
     };
     loadData();
-  }, [setIsLoading, setForm, setNewKey, originalKey, realtimeRef]);
+  }, [setIsLoading, setForm, setNewDestinationPath, originalKey, realtimeRef]);
 
   const updateField = (e: React.FormEvent<HTMLInputElement>) => {
     const target = e.target as HTMLInputElement;
@@ -102,8 +102,8 @@ export const CloneDialog = React.memo<Props>(function CloneDialog$({
     Object.entries(form).forEach(([key, value]) => {
       data[key] = JSON.parse(value);
     });
-    realtimeRef.root.child(newKey).set(data);
-    onComplete(newKey);
+    realtimeRef.root.child(newDestinationPath).set(data);
+    onComplete(newDestinationPath);
   };
 
   return (
@@ -112,9 +112,11 @@ export const CloneDialog = React.memo<Props>(function CloneDialog$({
         <DialogTitle>Clone "{originalKey}"</DialogTitle>
         <DialogContent>
           <Field
-            label="New key:"
-            value={newKey}
-            onChange={e => setNewKey((e.target as HTMLInputElement).value)}
+            label="New destination path:"
+            value={newDestinationPath}
+            onChange={e =>
+              setNewDestinationPath((e.target as HTMLInputElement).value)
+            }
             type="text"
           />
 

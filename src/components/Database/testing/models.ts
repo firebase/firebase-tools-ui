@@ -21,6 +21,7 @@ export function fakeReference({
   path = '',
   data = null as any,
   parent = null as firebase.database.Reference | null,
+  domain = 'http://localhost:9000',
 } = {}): database.Reference {
   return ({
     key,
@@ -35,7 +36,8 @@ export function fakeReference({
     set: jest.fn(),
     remove: jest.fn(),
     once: jest.fn((event: string) => fakeSnapshot({ key, data })),
-    toString: jest.fn(() => path),
+    toString: jest.fn(() => `${domain}/${path}`),
+    root: jest.fn(),
   } as unknown) as database.Reference;
 }
 
