@@ -18,22 +18,18 @@ import './NodeLink.scss';
 
 import { Typography } from '@rmwc/typography';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, matchPath, useRouteMatch } from 'react-router-dom';
 
 import { getDbRootUrl } from './common/view_model';
 
 export interface Props {
   dbRef: firebase.database.Reference;
-  baseUrl: string;
 }
 
-export const NodeLink = React.memo<Props>(function NodeLink$({
-  dbRef,
-  baseUrl,
-}) {
+export const NodeLink = React.memo<Props>(function NodeLink$({ dbRef }) {
   const key = dbRef.parent === null ? getDbRootUrl(dbRef) : dbRef.key;
   const path = new URL(dbRef.toString()).pathname;
-  const href = `${baseUrl}${path}`;
+  const href = useHrefWithinSameRoute(path);
   return (
     <Typography
       className="NodeLink"
@@ -46,3 +42,19 @@ export const NodeLink = React.memo<Props>(function NodeLink$({
     </Typography>
   );
 });
+
+/**
+ * Creates a href that replaces the `/:path*` part of the current `<Route>`
+ *
+ * e.g. `/database/sample/data/a/b/c` -> `/database/sample/data/x/y/z`
+ */
+function useHrefWithinSameRoute(absolutePath: string) {
+  const match = useRouteMatch();
+
+  // remove the wildcard :path param, so we can append it manually
+  const withoutPath = match.path.replace('/:path*', '');
+
+  const result = matchPath(match.url, { path: withoutPath, strict: true });
+  const baseUrl = result?.url || '';
+  return baseUrl === '/' ? absolutePath : `${baseUrl}${absolutePath}`;
+}
