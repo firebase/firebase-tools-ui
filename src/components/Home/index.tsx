@@ -74,18 +74,18 @@ const Overview: React.FC<{
           <Typography use="headline5">Emulator overview</Typography>
         </GridCell>
         <EmulatorCard
-          name="Realtime Database emulator"
-          icon={<DatabaseIcon theme="secondary" />}
-          config={config.database}
-          linkTo="/database"
-          testId="emulator-info-database"
-        />
-        <EmulatorCard
           name="Firestore emulator"
           icon={<FirestoreIcon theme="secondary" />}
           config={config.firestore}
           linkTo="/firestore"
           testId="emulator-info-firestore"
+        />
+        <EmulatorCard
+          name="Realtime Database emulator"
+          icon={<DatabaseIcon theme="secondary" />}
+          config={config.database}
+          linkTo="/database"
+          testId="emulator-info-database"
         />
         <EmulatorCard
           name="Functions emulator"
