@@ -39,8 +39,26 @@ export interface Props {
   onComplete: (string?: string) => void;
 }
 
+/**
+ * Strips protocol and domain name (usually http://localhost:9000/)
+ * from the ref's path
+ * @example "localhost:9000/todos/one" -> "/todos/one"
+ * @param ref
+ */
+const getAbsoluteRefPath = (ref: firebase.database.Reference) => {
+  return new URL(ref.toString()).pathname;
+};
+
+/**
+ * Returns a key value that is either a new push id if the current
+ * ref's key is a push id or a "copy" key if not.
+ * @param key
+ * @param ref
+ */
 const cloneKey = (key: string, ref: firebase.database.Reference) => {
-  return key.startsWith('-') ? ref.push().key! : `${key}_copy`;
+  return key.startsWith('-')
+    ? `${getAbsoluteRefPath(ref.parent!)}/${ref.push().key!}`
+    : `${getAbsoluteRefPath(ref)}_copy`;
 };
 
 export const CloneDialog = React.memo<Props>(function CloneDialog$({
@@ -50,7 +68,7 @@ export const CloneDialog = React.memo<Props>(function CloneDialog$({
   ok(realtimeRef.parent, 'Cannot clone the root node!');
 
   const originalKey = realtimeRef.key!;
-  const [newKey, setNewKey] = useState('');
+  const [newDestinationPath, setNewDestinationPath] = useState('');
 
   const [form, setForm] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(true);
@@ -58,16 +76,17 @@ export const CloneDialog = React.memo<Props>(function CloneDialog$({
   useEffect(() => {
     const loadData = async () => {
       const snapshot = await realtimeRef.once('value');
+
       const data: Record<string, string> = {};
       Object.entries(snapshot.val() || {}).forEach(([key, val]) => {
         data[key] = JSON.stringify(val);
       });
       setForm(data);
-      setNewKey(cloneKey(originalKey, realtimeRef));
+      setNewDestinationPath(cloneKey(originalKey, realtimeRef));
       setIsLoading(false);
     };
     loadData();
-  }, [setIsLoading, setForm, setNewKey, originalKey, realtimeRef]);
+  }, [setIsLoading, setForm, setNewDestinationPath, originalKey, realtimeRef]);
 
   const updateField = (e: React.FormEvent<HTMLInputElement>) => {
     const target = e.target as HTMLInputElement;
@@ -83,8 +102,8 @@ export const CloneDialog = React.memo<Props>(function CloneDialog$({
     Object.entries(form).forEach(([key, value]) => {
       data[key] = JSON.parse(value);
     });
-    realtimeRef.parent!.child(newKey).set(data);
-    onComplete(newKey);
+    realtimeRef.root.child(newDestinationPath).set(data);
+    onComplete(newDestinationPath);
   };
 
   return (
@@ -93,9 +112,11 @@ export const CloneDialog = React.memo<Props>(function CloneDialog$({
         <DialogTitle>Clone "{originalKey}"</DialogTitle>
         <DialogContent>
           <Field
-            label="New key:"
-            value={newKey}
-            onChange={e => setNewKey((e.target as HTMLInputElement).value)}
+            label="New destination path:"
+            value={newDestinationPath}
+            onChange={e =>
+              setNewDestinationPath((e.target as HTMLInputElement).value)
+            }
             type="text"
           />
 
