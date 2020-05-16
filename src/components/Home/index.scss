@@ -24,7 +24,8 @@
   .title {
     align-items: center;
     display: flex;
-    margin-top: 8px;
+    margin-top: 0;
+    line-height: 1rem;
 
     > span {
       @include ellipsis();
@@ -37,5 +38,5 @@
 }
 
 .Home-EmulatorCard-Info {
-  margin: 16px;
+  margin: 16px 24px;
 }
