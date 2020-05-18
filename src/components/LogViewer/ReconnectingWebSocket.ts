@@ -30,7 +30,10 @@ export class ReconnectingWebSocket {
 
   constructor(config: EmulatorConfig) {
     this.connect(config);
-    this.interval = setInterval(this.connect.bind(this), 1000);
+    // XXX: The Node.js typings for setInterval is leaking in, which causes the
+    // function to be typed to return NodeJS.Timeout and thus the as-any cast.
+    // TODO: Remove Node.js typings from source files for the web.
+    this.interval = setInterval(() => this.connect(config), 1000) as any;
   }
 
   private connect(config: EmulatorConfig) {
