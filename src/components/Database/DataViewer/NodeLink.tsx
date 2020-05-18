@@ -27,7 +27,7 @@ export interface Props {
 }
 
 export const NodeLink = React.memo<Props>(function NodeLink$({ dbRef }) {
-  const key = dbRef.parent === null ? getDbRootUrl(dbRef) : dbRef.key;
+  const key = dbRef.key || getDbRootUrl(dbRef);
   const path = new URL(dbRef.toString()).pathname;
   const href = useHrefWithinSameRoute(path);
   return (
