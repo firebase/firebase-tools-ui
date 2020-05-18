@@ -115,9 +115,7 @@ it('links root nodes to the route root: /database/:id/data/', () => {
     </MemoryRouter>
   );
 
-  expect(
-    getByText(ROOT_REF.toString(), { collapseWhitespace: true }).getAttribute(
-      'href'
-    )
-  ).toEqual('/database/test/data/');
+  expect(getByText(ROOT_REF.toString()).getAttribute('href')).toEqual(
+    '/database/test/data/'
+  );
 });
