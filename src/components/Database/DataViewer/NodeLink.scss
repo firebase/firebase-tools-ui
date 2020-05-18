@@ -1,6 +1,7 @@
 .NodeLink {
   font-family: 'Roboto Mono', monospace;
   cursor: pointer;
+  white-space: pre;
 
   &:link,
   &:visited {
@@ -10,10 +11,6 @@
     &:hover {
       text-decoration: underline;
     }
-  }
-
-  .key {
-    white-space: pre;
   }
 
   .material-icons {

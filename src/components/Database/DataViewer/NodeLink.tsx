@@ -38,7 +38,7 @@ export const NodeLink = React.memo<Props>(function NodeLink$({ dbRef }) {
       tag={Link}
       to={href}
     >
-      <span className="key">{key}</span>
+      {key}
     </Typography>
   );
 });
