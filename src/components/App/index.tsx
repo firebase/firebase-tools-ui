@@ -47,8 +47,10 @@ const App: React.FC = () => {
                   exact={r.exact}
                 />
               ))}
-              {/* TODO: Better query once filter by component is possible. */}
-              <Redirect from="/functions" to="/logs?q=functions" />
+              <Redirect
+                from="/functions"
+                to="/logs?q=metadata.emulator.name%3D%22functions%22"
+              />
               <Redirect to="/" /> {/* Fallback to redirect to overview. */}
             </Switch>
           </Grid>
