@@ -1,6 +1,9 @@
 @import '../../common/color';
 
 .NodeTabularDisplay {
+  overflow-x: auto;
+  width: 100%;
+
   .NodeTabularDisplay__key {
     background-color: $COLOR_BACKGROUND_KEY;
     border-radius: 4px;
