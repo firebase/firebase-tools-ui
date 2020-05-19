@@ -135,7 +135,7 @@ export const Collection: React.FC<Props> = ({ collection }) => {
               key={doc.ref.id}
               className="Firestore-List-Item"
               tag={NavLink}
-              to={`${url}/${doc.ref.id}`}
+              to={`${url}/${encodeURIComponent(doc.ref.id)}`}
               activeClassName="mdc-list-item--activated"
             >
               {doc.ref.id}
@@ -146,7 +146,8 @@ export const Collection: React.FC<Props> = ({ collection }) => {
       <Route
         path={`${url}/:id`}
         render={({ match }: any) => {
-          const docRef = collection.doc(match.params.id);
+          const docId = decodeURIComponent(match.params.id);
+          const docRef = collection.doc(docId);
           return <Document reference={docRef} />;
         }}
       ></Route>

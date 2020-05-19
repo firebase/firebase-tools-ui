@@ -58,7 +58,10 @@ export default class DatabaseApi extends RestApi implements FirestoreApi {
   private async getSubCollections(
     docRef: firestore.DocumentReference
   ): Promise<firestore.CollectionReference[]> {
-    const encodedPath = docRef.path; // TODO: Encode each segment.
+    const encodedPath = docRef.path
+      .split('/')
+      .map(uri => encodeURIComponent(uri))
+      .join('/');
     const { json } = await this.jsonRequest(
       `${this.baseUrl}/documents/${encodedPath}:listCollectionIds`,
       {},
