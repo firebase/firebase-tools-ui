@@ -144,7 +144,7 @@ export function applyQuery(
   params: QueryParams
 ): firebase.database.Query {
   const { key, operator, value, limit } = params;
-  if (key != undefined && operator != undefined && value != undefined) {
+  if (key != null && operator != null && value != null) {
     let query = ref.orderByChild(key).limitToFirst(limit || DEFAULT_PAGE_SIZE);
     switch (operator) {
       case '==':

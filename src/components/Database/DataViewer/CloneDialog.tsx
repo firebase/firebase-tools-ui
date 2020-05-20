@@ -111,6 +111,7 @@ export const CloneDialog = React.memo<Props>(function CloneDialog$({
     originalKey,
     realtimeRef,
     cloneFiltered,
+    query,
   ]);
 
   const updateField = (e: React.FormEvent<HTMLInputElement>) => {
