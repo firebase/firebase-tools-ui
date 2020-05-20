@@ -10,6 +10,7 @@
     "@rmwc/base": "^6.0.14",
     "@rmwc/button": "^6.0.14",
     "@rmwc/card": "^6.0.14",
+    "@rmwc/checkbox": "^6.0.14",
     "@rmwc/circular-progress": "^6.0.14",
     "@rmwc/data-table": "^6.0.14",
     "@rmwc/dialog": "^6.0.14",

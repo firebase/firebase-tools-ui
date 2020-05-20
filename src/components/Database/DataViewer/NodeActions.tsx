@@ -182,6 +182,7 @@ export const NodeActions = React.memo<Props>(function NodeActions$({
         {cloneDialogIsOpen && (
           <CloneDialog
             realtimeRef={realtimeRef}
+            queryParams={queryParams}
             onComplete={() => setCloneDialogIsOpen(false)}
           />
         )}

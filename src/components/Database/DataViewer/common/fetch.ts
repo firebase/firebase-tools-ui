@@ -139,12 +139,12 @@ function toObservable(query: firebase.database.Query) {
   });
 }
 
-function applyQuery(
+export function applyQuery(
   ref: firebase.database.Reference,
   params: QueryParams
 ): firebase.database.Query {
   const { key, operator, value, limit } = params;
-  if (key && operator && value) {
+  if (key != undefined && operator != undefined && value != undefined) {
     let query = ref.orderByChild(key).limitToFirst(limit || DEFAULT_PAGE_SIZE);
     switch (operator) {
       case '==':
