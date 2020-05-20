@@ -42,6 +42,7 @@ import {
 } from '../common/icons';
 import { Spinner } from '../common/Spinner';
 import { LocalWarningCallout } from './LocalWarningCallout';
+import { StatusLabel } from './StatusLabel';
 
 export const mapStateToProps = createStructuredSelector({
   configRemote: getConfig,
@@ -73,18 +74,18 @@ const Overview: React.FC<{
           <Typography use="headline5">Emulator overview</Typography>
         </GridCell>
         <EmulatorCard
-          name="Realtime Database emulator"
-          icon={<DatabaseIcon theme="secondary" />}
-          config={config.database}
-          linkTo="/database"
-          testId="emulator-info-database"
-        />
-        <EmulatorCard
           name="Firestore emulator"
           icon={<FirestoreIcon theme="secondary" />}
           config={config.firestore}
           linkTo="/firestore"
           testId="emulator-info-firestore"
+        />
+        <EmulatorCard
+          name="Realtime Database emulator"
+          icon={<DatabaseIcon theme="secondary" />}
+          config={config.database}
+          linkTo="/database"
+          testId="emulator-info-database"
         />
         <EmulatorCard
           name="Functions emulator"
@@ -133,9 +134,7 @@ export const EmulatorCard: React.FC<{
         <Typography use="body2" tag="h4" theme="secondary">
           Status
         </Typography>
-        <Typography use="headline6" tag="div">
-          {config ? 'On' : 'Off'}
-        </Typography>
+        <StatusLabel isActive={!!config} />
         <Typography use="body2" tag="h4" theme="secondary">
           Port number
         </Typography>

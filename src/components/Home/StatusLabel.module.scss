@@ -14,29 +14,11 @@
  * limitations under the License.
  */
 
-@import '../common/utils';
-
-.Home-EmulatorCard {
-  h4 {
-    margin-bottom: 0;
-  }
-
-  .title {
-    align-items: center;
-    display: flex;
-    margin-top: 0;
-    line-height: 1rem;
-
-    > span {
-      @include ellipsis();
-    }
-
-    .rmwc-icon {
-      margin-right: 8px;
-    }
-  }
+.container {
+  display: flex;
+  align-items: center;
 }
 
-.Home-EmulatorCard-Info {
-  margin: 16px 24px;
+.icon {
+  margin-left: 4px;
 }
