@@ -27,13 +27,7 @@ const GeoPointEditor: React.FC<{
 }> = ({ name, value, onChange }) => {
   const [latitude, setLatitude] = useState(String(value.latitude));
   const [longitude, setLongitude] = useState(String(value.longitude));
-  const {
-    errors,
-    formState: { touched },
-    register,
-    unregister,
-    setValue,
-  } = useFormContext();
+  const { errors, register, unregister, setValue } = useFormContext();
 
   const latitudeName = `${name}-lat`;
   const longitudeName = `${name}-long`;
@@ -91,7 +85,7 @@ const GeoPointEditor: React.FC<{
           setValue(latitudeName, e.currentTarget.value, true);
           setLatitude(e.currentTarget.value);
         }}
-        error={touched[latitudeName] && errors[latitudeName]?.message}
+        error={errors[latitudeName]?.message}
       />
 
       <Field
@@ -103,7 +97,7 @@ const GeoPointEditor: React.FC<{
           setValue(longitudeName, e.currentTarget.value, true);
           setLongitude(e.currentTarget.value);
         }}
-        error={touched[longitudeName] && errors[longitudeName]?.message}
+        error={errors[longitudeName]?.message}
       />
     </div>
   );

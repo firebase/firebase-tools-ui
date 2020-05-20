@@ -42,59 +42,134 @@ it('renders an editor for a geo-point', () => {
   expect(getByLabelText('Longitude').value).toBe('42');
 });
 
-it('updates the latitude', async () => {
-  const onChange = jest.fn();
-  const { getByText, getByLabelText } = render(
-    <TestForm>
-      <GeoPointEditor
-        value={new firestore.GeoPoint(12, 42)}
-        onChange={onChange}
-      />
-    </TestForm>
-  );
+describe('latitude', () => {
+  it('is required', async () => {
+    const onChange = jest.fn();
+    const { getByText, getByLabelText } = render(
+      <TestForm>
+        <GeoPointEditor
+          name="test"
+          value={new firestore.GeoPoint(12, 42)}
+          onChange={onChange}
+        />
+      </TestForm>
+    );
 
-  await act(async () => {
-    fireEvent.change(getByLabelText(/Latitude/), {
-      target: { value: '' },
+    await act(async () => {
+      fireEvent.change(getByLabelText(/Latitude/), {
+        target: { value: '' },
+      });
     });
-  });
-  expect(getByText(/Required/)).not.toBeNull();
 
-  await act(async () => {
-    fireEvent.change(getByLabelText(/Latitude/), {
-      target: { value: '-13.2' },
-    });
+    await expect(getByText(/Required/)).not.toBeNull();
   });
 
-  expect(getByLabelText('Latitude').value).toBe('-13.2');
-  expect(onChange).toHaveBeenCalledWith(new firestore.GeoPoint(-13.2, 42));
-});
+  it('must be between certain values', async () => {
+    const onChange = jest.fn();
+    const { getByLabelText, getByText } = render(
+      <TestForm>
+        <GeoPointEditor
+          name="test"
+          value={new firestore.GeoPoint(12, 42)}
+          onChange={onChange}
+        />
+      </TestForm>
+    );
 
-it('updates the longitude', async () => {
-  const onChange = jest.fn();
-  const { getByLabelText, getByText } = render(
-    <TestForm>
-      <GeoPointEditor
-        value={new firestore.GeoPoint(12, 42)}
-        onChange={onChange}
-      />
-    </TestForm>
-  );
-
-  await act(async () => {
-    fireEvent.change(getByLabelText(/Longitude/), {
-      target: { value: '-181' },
+    await act(async () => {
+      fireEvent.change(getByLabelText(/Latitude/), {
+        target: { value: '-91' },
+      });
     });
-  });
-  expect(onChange).not.toHaveBeenCalled();
-  expect(getByText(/Must be >= -180/)).not.toBeNull();
-
-  await act(async () => {
-    fireEvent.change(getByLabelText(/Longitude/), {
-      target: { value: '-43' },
-    });
+    expect(onChange).not.toHaveBeenCalled();
+    expect(getByText(/Must be >= -90/)).not.toBeNull();
   });
 
-  expect(getByLabelText('Longitude').value).toBe('-43');
-  expect(onChange).toHaveBeenCalledWith(new firestore.GeoPoint(12, -43));
-});
+  it('can be updated', async () => {
+    const onChange = jest.fn();
+    const { getByText, getByLabelText } = render(
+      <TestForm>
+        <GeoPointEditor
+          name="test"
+          value={new firestore.GeoPoint(12, 42)}
+          onChange={onChange}
+        />
+      </TestForm>
+    );
+
+    await act(async () => {
+      fireEvent.change(getByLabelText(/Latitude/), {
+        target: { value: '-13.2' },
+      });
+    });
+
+    expect(getByLabelText('Latitude').value).toBe('-13.2');
+    expect(onChange).toHaveBeenCalledWith(new firestore.GeoPoint(-13.2, 42));
+  });
+}); // latitude
+
+describe('longitude', () => {
+  it('is required', async () => {
+    const onChange = jest.fn();
+    const { getByText, getByLabelText } = render(
+      <TestForm>
+        <GeoPointEditor
+          name="test"
+          value={new firestore.GeoPoint(12, 42)}
+          onChange={onChange}
+        />
+      </TestForm>
+    );
+
+    await act(async () => {
+      fireEvent.change(getByLabelText(/Longitude/), {
+        target: { value: '' },
+      });
+    });
+
+    await expect(getByText(/Required/)).not.toBeNull();
+  });
+
+  it('must be between certain values', async () => {
+    const onChange = jest.fn();
+    const { getByLabelText, getByText } = render(
+      <TestForm>
+        <GeoPointEditor
+          name="test"
+          value={new firestore.GeoPoint(12, 42)}
+          onChange={onChange}
+        />
+      </TestForm>
+    );
+
+    await act(async () => {
+      fireEvent.change(getByLabelText(/Longitude/), {
+        target: { value: '-181' },
+      });
+    });
+    expect(onChange).not.toHaveBeenCalled();
+    expect(getByText(/Must be >= -180/)).not.toBeNull();
+  });
+
+  it('can be updated', async () => {
+    const onChange = jest.fn();
+    const { getByLabelText, getByText } = render(
+      <TestForm>
+        <GeoPointEditor
+          name="test"
+          value={new firestore.GeoPoint(12, 42)}
+          onChange={onChange}
+        />
+      </TestForm>
+    );
+
+    await act(async () => {
+      fireEvent.change(getByLabelText(/Longitude/), {
+        target: { value: '-43' },
+      });
+    });
+
+    expect(getByLabelText('Longitude').value).toBe('-43');
+    expect(onChange).toHaveBeenCalledWith(new firestore.GeoPoint(12, -43));
+  });
+}); // longitude
