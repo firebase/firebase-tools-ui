@@ -80,7 +80,7 @@ export const Collection: React.FC<Props> = ({ collection }) => {
   return (
     <>
       {!loading && redirectIfAutoSelectable}
-      {newDocumentId && <Redirect to={`./${newDocumentId}`} />}
+      {newDocumentId && <Redirect to={`${url}/${newDocumentId}`} />}
       <div className="Firestore-Collection">
         <PanelHeader
           id={collection.id}

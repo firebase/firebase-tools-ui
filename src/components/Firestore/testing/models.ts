@@ -5,7 +5,8 @@ import { FirestoreApi } from '../models';
 export function fakeDocumentReference({
   id = '',
   path = '',
-  collectionDoc = () => {},
+  collectionDoc = (id: string) =>
+    (undefined as unknown) as firestore.DocumentReference,
 } = {}): firestore.DocumentReference {
   return ({
     id,
@@ -35,17 +36,17 @@ export function fakeDocumentSnapshot({
 }
 
 export type FakeCollectionReference = firestore.CollectionReference & {
-  setSnapshot: (snapshot: firestore.DocumentSnapshot) => void;
+  setSnapshot: (snapshot: firestore.QuerySnapshot) => void;
 };
 
 export function fakeCollectionReference({
   id = '',
-  doc = () => {},
+  doc = (id: string) => (undefined as unknown) as firestore.DocumentReference,
   path = '',
   where = jest.fn(),
   orderBy = jest.fn(),
 } = {}): FakeCollectionReference {
-  let thisObserver = (snapshot: firestore.DocumentSnapshot) => {};
+  let thisObserver = (snapshot: firestore.QuerySnapshot) => {};
 
   return ({
     id,
@@ -55,11 +56,10 @@ export function fakeCollectionReference({
       thisObserver = observer;
       return () => {};
     },
-    setSnapshot: (snapshot: firestore.DocumentSnapshot) =>
-      thisObserver(snapshot),
+    setSnapshot: (snapshot: firestore.QuerySnapshot) => thisObserver(snapshot),
     where,
     orderBy,
-  } as unknown) as FakeCollectionReference;
+  } as Partial<FakeCollectionReference>) as FakeCollectionReference;
 }
 
 export type FakeFirestoreApi = FirestoreApi & {

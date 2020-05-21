@@ -160,19 +160,66 @@ it('shows the selected sub-document', () => {
 
 it('redirects to a newly created document', async () => {
   useCollection.mockReturnValue([{ id: 'my-stuff', docs: [] }]);
+  useDocumentData.mockReturnValue([{}]);
 
   const collectionReference = fakeCollectionReference({
     id: 'my-stuff',
     doc: () => fakeDocumentReference(),
   });
   const { getByLabelText, getByText } = render(
-    <MemoryRouter>
-      <Collection collection={collectionReference} />
-      <Route path="/new-document-id">_redirected_to_foo_</Route>
-    </MemoryRouter>
+    <ApiProvider value={fakeFirestoreApi()}>
+      <MemoryRouter>
+        <Collection collection={collectionReference} />
+        <Route path="//new-document-id">_redirected_to_foo_</Route>
+      </MemoryRouter>
+    </ApiProvider>
   );
 
   act(() => collectionReference.setSnapshot({ id: 'my-stuff', docs: [] }));
+
+  act(() => getByText('Add document').click());
+
+  await act(async () => {
+    fireEvent.change(getByLabelText('Document ID'), {
+      target: { value: 'new-document-id' },
+    });
+  });
+
+  await act(async () => getByText('Save').click());
+
+  expect(getByText(/_redirected_to_foo_/)).not.toBeNull();
+});
+
+it('redirects to a newly created document when a child is active', async () => {
+  const nestedStuff = fakeDocumentSnapshot({
+    id: 'nested-stuff',
+    ref: fakeDocumentReference({
+      id: 'nested-stuff',
+      path: 'myColl/my-stuff/nested-stuff',
+    }),
+  });
+  useDocumentData.mockReturnValue([{}]);
+  useCollection.mockReturnValue([
+    {
+      id: 'my-stuff',
+      docs: [nestedStuff],
+    },
+  ]);
+
+  const collectionReference = fakeCollectionReference({
+    id: 'my-stuff',
+    doc: () => fakeDocumentReference(),
+  });
+  const { getByLabelText, getByText } = render(
+    <ApiProvider value={fakeFirestoreApi()}>
+      <MemoryRouter>
+        <Collection collection={collectionReference} />
+        <Route path="//new-document-id">_redirected_to_foo_</Route>
+      </MemoryRouter>
+    </ApiProvider>
+  );
+
+  act(() => getByText('nested-stuff').click());
 
   act(() => getByText('Add document').click());
 
