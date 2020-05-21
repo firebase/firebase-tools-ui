@@ -49,44 +49,48 @@ export interface Props {
   collection: firestore.CollectionReference;
 }
 
-export const Collection: React.FC<Props> = ({ collection }) => {
-  const [newDocumentId, setNewDocumentId] = useState<string>();
-  const collectionFilter = useCollectionFilter(collection.path);
-  const filteredCollection = applyCollectionFilter(
-    collection,
-    collectionFilter
-  );
-  const [collectionSnapshot, loading, error] = useCollection(
-    filteredCollection
-  );
+export function withCollectionState(
+  Presentation: React.ComponentType<CollectionPresentationProps>
+): React.ComponentType<Props> {
+  return ({ collection }) => {
+    const [newDocumentId, setNewDocumentId] = useState<string>();
+    const collectionFilter = useCollectionFilter(collection.path);
+    const filteredCollection = applyCollectionFilter(
+      collection,
+      collectionFilter
+    );
+    const [collectionSnapshot, loading, error] = useCollection(
+      filteredCollection
+    );
 
-  const { url } = useRouteMatch()!;
-  // TODO: Fetch missing documents (i.e. nonexistent docs with subcollections).
-  const docs = collectionSnapshot ? collectionSnapshot.docs : NO_DOCS;
-  const redirectIfAutoSelectable = useAutoSelect(docs);
+    const { url } = useRouteMatch()!;
+    // TODO: Fetch missing documents (i.e. nonexistent docs with subcollections).
+    const docs = collectionSnapshot ? collectionSnapshot.docs : NO_DOCS;
+    const redirectIfAutoSelectable = useAutoSelect(docs);
 
-  const addDocument = async (value: AddDocumentDialogValue | null) => {
-    if (value && value.id) {
-      await collection.doc(value.id).set(value.data);
-      setNewDocumentId(value.id);
-    }
+    const addDocument = async (value: AddDocumentDialogValue | null) => {
+      if (value && value.id) {
+        await collection.doc(value.id).set(value.data);
+        setNewDocumentId(value.id);
+      }
+    };
+
+    if (error) return <></>;
+    if (!loading && redirectIfAutoSelectable)
+      return <>{redirectIfAutoSelectable}</>;
+    if (newDocumentId) return <Redirect to={`${url}/${newDocumentId}`} />;
+
+    return (
+      <Presentation
+        collection={collection}
+        collectionFilter={collectionFilter}
+        addDocument={addDocument}
+        docs={docs}
+        url={url}
+      />
+    );
   };
-
-  if (error) return <></>;
-  if (!loading && redirectIfAutoSelectable)
-    return <>{redirectIfAutoSelectable}</>;
-  if (newDocumentId) return <Redirect to={`${url}/${newDocumentId}`} />;
-
-  return (
-    <CollectionPresentation
-      collection={collection}
-      collectionFilter={collectionFilter}
-      addDocument={addDocument}
-      docs={docs}
-      url={url}
-    />
-  );
-};
+}
 
 interface CollectionPresentationProps {
   collection: firestore.CollectionReference<firestore.DocumentData>;
@@ -207,5 +211,7 @@ function applyCollectionFilter(
   }
   return filteredCollection;
 }
+
+export const Collection = withCollectionState(CollectionPresentation);
 
 export default Collection;
