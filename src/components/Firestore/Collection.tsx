@@ -60,9 +60,6 @@ export const Collection: React.FC<Props> = ({ collection }) => {
     filteredCollection
   );
 
-  const [isAddDocumentDialogOpen, setAddDocumentDialogOpen] = useState(false);
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
-
   const { url } = useRouteMatch()!;
   // TODO: Fetch missing documents (i.e. nonexistent docs with subcollections).
   const docs = collectionSnapshot ? collectionSnapshot.docs : NO_DOCS;
@@ -76,11 +73,41 @@ export const Collection: React.FC<Props> = ({ collection }) => {
   };
 
   if (error) return <></>;
+  if (!loading && redirectIfAutoSelectable)
+    return <>{redirectIfAutoSelectable}</>;
+  if (newDocumentId) return <Redirect to={`${url}/${newDocumentId}`} />;
+
+  return (
+    <CollectionPresentation
+      collection={collection}
+      collectionFilter={collectionFilter}
+      addDocument={addDocument}
+      docs={docs}
+      url={url}
+    />
+  );
+};
+
+interface CollectionPresentationProps {
+  collection: firestore.CollectionReference<firestore.DocumentData>;
+  collectionFilter: ReturnType<typeof useCollectionFilter>;
+  addDocument: (value: AddDocumentDialogValue | null) => Promise<void>;
+  docs: firestore.QueryDocumentSnapshot<firestore.DocumentData>[];
+  url: string;
+}
+
+export const CollectionPresentation: React.FC<CollectionPresentationProps> = ({
+  collection,
+  collectionFilter,
+  addDocument,
+  docs,
+  url,
+}) => {
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isAddDocumentDialogOpen, setAddDocumentDialogOpen] = useState(false);
 
   return (
     <>
-      {!loading && redirectIfAutoSelectable}
-      {newDocumentId && <Redirect to={`${url}/${newDocumentId}`} />}
       <div className="Firestore-Collection">
         <PanelHeader
           id={collection.id}
@@ -91,7 +118,7 @@ export const Collection: React.FC<Props> = ({ collection }) => {
               open={isFilterOpen}
               onClose={() => setIsFilterOpen(false)}
             >
-              {!loading && isFilterOpen && (
+              {isFilterOpen && (
                 <CollectionFilter
                   className={styles['query-panel']}
                   path={collection.path}
@@ -110,7 +137,6 @@ export const Collection: React.FC<Props> = ({ collection }) => {
           </MenuSurfaceAnchor>
         </PanelHeader>
 
-        {/* Actions */}
         {isAddDocumentDialogOpen && (
           <AddDocumentDialog
             collectionRef={collection}

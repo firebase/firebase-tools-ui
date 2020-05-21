@@ -20,8 +20,9 @@ import React from 'react';
 import { useCollection, useDocumentData } from 'react-firebase-hooks/firestore';
 import { MemoryRouter, Route } from 'react-router-dom';
 
+import { delay } from '../../test_utils';
 import { ApiProvider } from './ApiContext';
-import Collection from './Collection';
+import Collection, { CollectionPresentation } from './Collection';
 import { useCollectionFilter } from './store';
 import {
   fakeCollectionReference,
@@ -33,34 +34,46 @@ import {
 jest.mock('react-firebase-hooks/firestore');
 jest.mock('./store');
 
-it('shows the list of documents in the collection', () => {
-  useCollection.mockReturnValue([
-    {
-      docs: [{ ref: fakeDocumentSnapshot({ id: 'cool-doc-1' }) }],
-    },
-  ]);
+describe('CollectionPanel', () => {
+  it('shows the list of documents in the collection', () => {
+    const collectionReference = fakeCollectionReference({ id: 'my-stuff' });
+    const { getByText } = render(
+      <MemoryRouter>
+        <CollectionPresentation
+          collection={collectionReference}
+          collectionFilter={undefined}
+          addDocument={async () => {}}
+          docs={[{ ref: fakeDocumentSnapshot({ id: 'cool-doc-1' }) } as any]}
+          url={'/foo'}
+        />
+      </MemoryRouter>
+    );
 
-  const collectionReference = fakeCollectionReference({ id: 'my-stuff' });
-  const { getByText, queryByText } = render(
-    <MemoryRouter>
-      <Portal />
-      <Collection collection={collectionReference} />
-    </MemoryRouter>
-  );
+    expect(getByText(/my-stuff/)).not.toBeNull();
+    expect(getByText(/cool-doc-1/)).not.toBeNull();
+  });
 
-  act(() =>
-    collectionReference.setSnapshot({
-      docs: [
-        fakeDocumentSnapshot({
-          ref: fakeDocumentReference({ id: 'cool-doc-1' }),
-        }),
-      ],
-    })
-  );
+  it('shows filter when filter button is clicked', async () => {
+    const collectionReference = fakeCollectionReference({ id: 'my-stuff' });
+    const { getByText } = render(
+      <MemoryRouter>
+        <CollectionPresentation
+          collection={collectionReference}
+          collectionFilter={undefined}
+          addDocument={async () => {}}
+          docs={[{ ref: fakeDocumentSnapshot({ id: 'cool-doc-1' }) } as any]}
+          url={'/foo'}
+        />
+      </MemoryRouter>
+    );
 
-  expect(getByText(/my-stuff/)).not.toBeNull();
-  expect(queryByText(/Loading documents/)).toBeNull();
-  expect(getByText(/cool-doc-1/)).not.toBeNull();
+    await act(async () => {
+      getByText('filter_list').click();
+      await delay(200);
+    });
+
+    expect(getByText(/Filter by field/)).not.toBeNull();
+  });
 });
 
 it('filters documents for single-value filters', () => {
@@ -168,6 +181,7 @@ it('redirects to a newly created document', async () => {
   });
   const { getByLabelText, getByText } = render(
     <ApiProvider value={fakeFirestoreApi()}>
+      <Portal />
       <MemoryRouter>
         <Collection collection={collectionReference} />
         <Route path="//new-document-id">_redirected_to_foo_</Route>
@@ -212,6 +226,7 @@ it('redirects to a newly created document when a child is active', async () => {
   });
   const { getByLabelText, getByText } = render(
     <ApiProvider value={fakeFirestoreApi()}>
+      <Portal />
       <MemoryRouter>
         <Collection collection={collectionReference} />
         <Route path="//new-document-id">_redirected_to_foo_</Route>
