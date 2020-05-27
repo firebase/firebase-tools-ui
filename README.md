@@ -15,7 +15,7 @@ If you want to use the Emulator UI in your project, just simply follow the guide
 
 Make sure you have Firebase CLI `>= 8.4.0`. (You may want to [update](https://firebase.google.com/docs/cli#update-cli) if you already have Firebase CLI installed.) The Emulator UI will automatically start when you start the Emulator Suite.
 
-## Development
+## Contributing
 
 We welcome any issues and Pull Requests to improve the Emulator UI. The following instructions cover how to set up your dev environment for iterating on the Emulator UI itself.
 
@@ -93,5 +93,3 @@ the server as described above.
 ## License
 
 Apache 2.0
-
-This is not an official Google product.
