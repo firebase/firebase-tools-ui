@@ -2,6 +2,7 @@
 // https://docs.renovatebot.com/configuration-options/
 // This is a JSON5 (json5.org) file which supports comments and unquoted keys.
 {
+  timezone: "America/Los_Angeles",
   extends: [
     "config:base",
   ],
@@ -32,6 +33,21 @@
       allowedVersions: '<2',
     },
     // END version constraints for Node.js 8 support.
+    
+    // Schedule PRs once a week for non-critical packages with frequent updates.
+    {
+      packageNames: ["@types/jest", "@types/node"],
+      packagePatterns: ["^@types/react", "eslint"],
+      extends: ["schedule:earlyMondays"],
+    },
+
+    // Group all Firebase packages together in at most one PR once a week.
+    {
+      packageNames: ["firebase"],
+      packagePatterns: ["^@firebase/"],
+      groupName: "firebase packages",
+      extends: ["schedule:earlyMondays"],
+    },
   ],
   // Update package-lock.json when in-range updates are available, otherwise replace
   // the range in package.json for updates out of range.
