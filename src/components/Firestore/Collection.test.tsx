@@ -15,13 +15,17 @@
  */
 
 import { Portal } from '@rmwc/base';
-import { act, fireEvent, render } from '@testing-library/react';
+import { act, render } from '@testing-library/react';
 import React from 'react';
 import { useCollection, useDocumentData } from 'react-firebase-hooks/firestore';
 import { MemoryRouter, Route } from 'react-router-dom';
 
+import { delay } from '../../test_utils';
 import { ApiProvider } from './ApiContext';
-import Collection from './Collection';
+import Collection, {
+  CollectionPresentation,
+  withCollectionState,
+} from './Collection';
 import { useCollectionFilter } from './store';
 import {
   fakeCollectionReference,
@@ -33,34 +37,46 @@ import {
 jest.mock('react-firebase-hooks/firestore');
 jest.mock('./store');
 
-it('shows the list of documents in the collection', () => {
-  useCollection.mockReturnValue([
-    {
-      docs: [{ ref: fakeDocumentSnapshot({ id: 'cool-doc-1' }) }],
-    },
-  ]);
+describe('CollectionPanel', () => {
+  it('shows the list of documents in the collection', () => {
+    const collectionReference = fakeCollectionReference({ id: 'my-stuff' });
+    const { getByText } = render(
+      <MemoryRouter>
+        <CollectionPresentation
+          collection={collectionReference}
+          collectionFilter={undefined}
+          addDocument={async () => {}}
+          docs={[{ ref: fakeDocumentSnapshot({ id: 'cool-doc-1' }) } as any]}
+          url={'/foo'}
+        />
+      </MemoryRouter>
+    );
 
-  const collectionReference = fakeCollectionReference({ id: 'my-stuff' });
-  const { getByText, queryByText } = render(
-    <MemoryRouter>
-      <Portal />
-      <Collection collection={collectionReference} />
-    </MemoryRouter>
-  );
+    expect(getByText(/my-stuff/)).not.toBeNull();
+    expect(getByText(/cool-doc-1/)).not.toBeNull();
+  });
 
-  act(() =>
-    collectionReference.setSnapshot({
-      docs: [
-        fakeDocumentSnapshot({
-          ref: fakeDocumentReference({ id: 'cool-doc-1' }),
-        }),
-      ],
-    })
-  );
+  it('shows filter when filter button is clicked', async () => {
+    const collectionReference = fakeCollectionReference({ id: 'my-stuff' });
+    const { getByText } = render(
+      <MemoryRouter>
+        <CollectionPresentation
+          collection={collectionReference}
+          collectionFilter={undefined}
+          addDocument={async () => {}}
+          docs={[{ ref: fakeDocumentSnapshot({ id: 'cool-doc-1' }) } as any]}
+          url={'/foo'}
+        />
+      </MemoryRouter>
+    );
 
-  expect(getByText(/my-stuff/)).not.toBeNull();
-  expect(queryByText(/Loading documents/)).toBeNull();
-  expect(getByText(/cool-doc-1/)).not.toBeNull();
+    await act(async () => {
+      getByText('filter_list').click();
+      await delay(200);
+    });
+
+    expect(getByText(/Filter by field/)).not.toBeNull();
+  });
 });
 
 it('filters documents for single-value filters', () => {
@@ -158,78 +174,47 @@ it('shows the selected sub-document', () => {
   expect(queryAllByText(/cool-doc-1/).length).toBe(2);
 });
 
-it('redirects to a newly created document', async () => {
-  useCollection.mockReturnValue([{ id: 'my-stuff', docs: [] }]);
-  useDocumentData.mockReturnValue([{}]);
-
-  const collectionReference = fakeCollectionReference({
-    id: 'my-stuff',
-    doc: () => fakeDocumentReference(),
+describe('withCollectionState', () => {
+  let performAddDocument: () => Promise<void>;
+  const MyCollection = withCollectionState(({ addDocument }) => {
+    performAddDocument = () => addDocument({ id: 'new-document-id', data: {} });
+    return null;
   });
-  const { getByLabelText, getByText } = render(
-    <ApiProvider value={fakeFirestoreApi()}>
-      <MemoryRouter>
-        <Collection collection={collectionReference} />
-        <Route path="//new-document-id">_redirected_to_foo_</Route>
-      </MemoryRouter>
-    </ApiProvider>
-  );
-
-  act(() => collectionReference.setSnapshot({ id: 'my-stuff', docs: [] }));
-
-  act(() => getByText('Add document').click());
-
-  await act(async () => {
-    fireEvent.change(getByLabelText('Document ID'), {
-      target: { value: 'new-document-id' },
-    });
-  });
-
-  await act(async () => getByText('Save').click());
-
-  expect(getByText(/_redirected_to_foo_/)).not.toBeNull();
-});
-
-it('redirects to a newly created document when a child is active', async () => {
-  const nestedStuff = fakeDocumentSnapshot({
-    id: 'nested-stuff',
-    ref: fakeDocumentReference({
-      id: 'nested-stuff',
-      path: 'myColl/my-stuff/nested-stuff',
-    }),
-  });
-  useDocumentData.mockReturnValue([{}]);
-  useCollection.mockReturnValue([
-    {
+  it('redirects to a newly created document', async () => {
+    useCollection.mockReturnValue([{ id: 'my-stuff', docs: [] }]);
+    const collectionReference = fakeCollectionReference({
       id: 'my-stuff',
-      docs: [nestedStuff],
-    },
-  ]);
-
-  const collectionReference = fakeCollectionReference({
-    id: 'my-stuff',
-    doc: () => fakeDocumentReference(),
-  });
-  const { getByLabelText, getByText } = render(
-    <ApiProvider value={fakeFirestoreApi()}>
+      doc: () => fakeDocumentReference(),
+    });
+    const { getByText } = render(
       <MemoryRouter>
-        <Collection collection={collectionReference} />
+        <MyCollection collection={collectionReference} />
         <Route path="//new-document-id">_redirected_to_foo_</Route>
       </MemoryRouter>
-    </ApiProvider>
-  );
+    );
 
-  act(() => getByText('nested-stuff').click());
+    await act(performAddDocument);
 
-  act(() => getByText('Add document').click());
-
-  await act(async () => {
-    fireEvent.change(getByLabelText('Document ID'), {
-      target: { value: 'new-document-id' },
-    });
+    expect(getByText(/_redirected_to_foo_/)).not.toBeNull();
   });
 
-  await act(async () => getByText('Save').click());
+  it('redirects to a newly created document when a child is active', async () => {
+    useCollection.mockReturnValue([{ id: 'my-stuff', docs: [] }]);
+    const collectionReference = fakeCollectionReference({
+      id: 'my-stuff',
+      doc: () => fakeDocumentReference(),
+    });
+    const { getByText } = render(
+      <MemoryRouter initialEntries={['/my-stuff/my-doc/sub-coll']}>
+        <Route path="/my-stuff">
+          <MyCollection collection={collectionReference} />
+        </Route>
+        <Route path="/my-stuff/new-document-id">_redirected_to_foo_</Route>
+      </MemoryRouter>
+    );
 
-  expect(getByText(/_redirected_to_foo_/)).not.toBeNull();
+    await act(performAddDocument);
+
+    expect(getByText(/_redirected_to_foo_/)).not.toBeNull();
+  });
 });

@@ -49,38 +49,69 @@ export interface Props {
   collection: firestore.CollectionReference;
 }
 
-export const Collection: React.FC<Props> = ({ collection }) => {
-  const [newDocumentId, setNewDocumentId] = useState<string>();
-  const collectionFilter = useCollectionFilter(collection.path);
-  const filteredCollection = applyCollectionFilter(
-    collection,
-    collectionFilter
-  );
-  const [collectionSnapshot, loading, error] = useCollection(
-    filteredCollection
-  );
+export function withCollectionState(
+  Presentation: React.ComponentType<CollectionPresentationProps>
+): React.ComponentType<Props> {
+  return ({ collection }) => {
+    const [newDocumentId, setNewDocumentId] = useState<string>();
+    const collectionFilter = useCollectionFilter(collection.path);
+    const filteredCollection = applyCollectionFilter(
+      collection,
+      collectionFilter
+    );
+    const [collectionSnapshot, loading, error] = useCollection(
+      filteredCollection
+    );
 
-  const [isAddDocumentDialogOpen, setAddDocumentDialogOpen] = useState(false);
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
+    const { url } = useRouteMatch()!;
+    // TODO: Fetch missing documents (i.e. nonexistent docs with subcollections).
+    const docs = collectionSnapshot ? collectionSnapshot.docs : NO_DOCS;
+    const redirectIfAutoSelectable = useAutoSelect(docs);
 
-  const { url } = useRouteMatch()!;
-  // TODO: Fetch missing documents (i.e. nonexistent docs with subcollections).
-  const docs = collectionSnapshot ? collectionSnapshot.docs : NO_DOCS;
-  const redirectIfAutoSelectable = useAutoSelect(docs);
+    const addDocument = async (value: AddDocumentDialogValue | null) => {
+      if (value && value.id) {
+        await collection.doc(value.id).set(value.data);
+        setNewDocumentId(value.id);
+      }
+    };
 
-  const addDocument = async (value: AddDocumentDialogValue | null) => {
-    if (value && value.id) {
-      await collection.doc(value.id).set(value.data);
-      setNewDocumentId(value.id);
-    }
+    if (error) return <></>;
+    if (!loading && redirectIfAutoSelectable)
+      return <>{redirectIfAutoSelectable}</>;
+    if (newDocumentId) return <Redirect to={`${url}/${newDocumentId}`} />;
+
+    return (
+      <Presentation
+        collection={collection}
+        collectionFilter={collectionFilter}
+        addDocument={addDocument}
+        docs={docs}
+        url={url}
+      />
+    );
   };
+}
 
-  if (error) return <></>;
+interface CollectionPresentationProps {
+  collection: firestore.CollectionReference<firestore.DocumentData>;
+  collectionFilter: ReturnType<typeof useCollectionFilter>;
+  addDocument: (value: AddDocumentDialogValue | null) => Promise<void>;
+  docs: firestore.QueryDocumentSnapshot<firestore.DocumentData>[];
+  url: string;
+}
+
+export const CollectionPresentation: React.FC<CollectionPresentationProps> = ({
+  collection,
+  collectionFilter,
+  addDocument,
+  docs,
+  url,
+}) => {
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isAddDocumentDialogOpen, setAddDocumentDialogOpen] = useState(false);
 
   return (
     <>
-      {!loading && redirectIfAutoSelectable}
-      {newDocumentId && <Redirect to={`${url}/${newDocumentId}`} />}
       <div className="Firestore-Collection">
         <PanelHeader
           id={collection.id}
@@ -91,7 +122,7 @@ export const Collection: React.FC<Props> = ({ collection }) => {
               open={isFilterOpen}
               onClose={() => setIsFilterOpen(false)}
             >
-              {!loading && isFilterOpen && (
+              {isFilterOpen && (
                 <CollectionFilter
                   className={styles['query-panel']}
                   path={collection.path}
@@ -110,7 +141,6 @@ export const Collection: React.FC<Props> = ({ collection }) => {
           </MenuSurfaceAnchor>
         </PanelHeader>
 
-        {/* Actions */}
         {isAddDocumentDialogOpen && (
           <AddDocumentDialog
             collectionRef={collection}
@@ -181,5 +211,7 @@ function applyCollectionFilter(
   }
   return filteredCollection;
 }
+
+export const Collection = withCollectionState(CollectionPresentation);
 
 export default Collection;
