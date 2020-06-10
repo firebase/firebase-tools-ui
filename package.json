@@ -40,7 +40,7 @@
     "express": "^4.17.1",
     "firebase": "^7.12.0",
     "font-awesome": "^4.7.0",
-    "immer": "^6.0.2",
+    "immer": "^7.0.0",
     "keycode": "^2.2.0",
     "lodash.get": "^4.4.2",
     "lodash.isequal": "^4.5.0",
