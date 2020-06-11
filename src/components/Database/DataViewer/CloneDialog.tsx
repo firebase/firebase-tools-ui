@@ -16,6 +16,7 @@
 
 import { ok } from 'assert';
 
+import { Checkbox } from '@rmwc/checkbox';
 import {
   Dialog,
   DialogActions,
@@ -32,6 +33,7 @@ import { Field } from '../../common/Field';
 
 export interface Props {
   realtimeRef: firebase.database.Reference;
+  query?: firebase.database.Query;
   /**
    * Called when complete, if the data was cloned the key is returned, else
    * undefined.
@@ -63,20 +65,31 @@ const cloneKey = (key: string, ref: firebase.database.Reference) => {
 
 export const CloneDialog = React.memo<Props>(function CloneDialog$({
   realtimeRef,
+  query,
   onComplete,
 }) {
   ok(realtimeRef.parent, 'Cannot clone the root node!');
+
+  // queries only exist if queryParams are passed into the dialog
+  let hasQuery = query != null;
 
   const originalKey = realtimeRef.key!;
   const [newDestinationPath, setNewDestinationPath] = useState('');
 
   const [form, setForm] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(true);
+  const [isCloningWithFiltered, setCloningFiltered] = useState(hasQuery);
 
   useEffect(() => {
     const loadData = async () => {
-      const snapshot = await realtimeRef.once('value');
-
+      let snapshot = null;
+      // only apply the query if the user has selected the checkbox
+      // and the query has been passed as a prop
+      if (query != null && isCloningWithFiltered) {
+        snapshot = await query.once('value');
+      } else {
+        snapshot = await realtimeRef.once('value');
+      }
       const data: Record<string, string> = {};
       Object.entries(snapshot.val() || {}).forEach(([key, val]) => {
         data[key] = JSON.stringify(val);
@@ -86,7 +99,15 @@ export const CloneDialog = React.memo<Props>(function CloneDialog$({
       setIsLoading(false);
     };
     loadData();
-  }, [setIsLoading, setForm, setNewDestinationPath, originalKey, realtimeRef]);
+  }, [
+    setIsLoading,
+    setForm,
+    setNewDestinationPath,
+    originalKey,
+    realtimeRef,
+    isCloningWithFiltered,
+    query,
+  ]);
 
   const updateField = (e: React.FormEvent<HTMLInputElement>) => {
     const target = e.target as HTMLInputElement;
@@ -103,6 +124,7 @@ export const CloneDialog = React.memo<Props>(function CloneDialog$({
       data[key] = JSON.parse(value);
     });
     realtimeRef.root.child(newDestinationPath).set(data);
+
     onComplete(newDestinationPath);
   };
 
@@ -119,6 +141,18 @@ export const CloneDialog = React.memo<Props>(function CloneDialog$({
             }
             type="text"
           />
+
+          {hasQuery ? (
+            <div>
+              <Checkbox
+                label="Clone filtered data set"
+                checked={isCloningWithFiltered}
+                onChange={event => {
+                  setCloningFiltered(!!event.currentTarget.checked);
+                }}
+              />
+            </div>
+          ) : null}
 
           <Typography use="headline6">Data</Typography>
           {isLoading
