@@ -111,7 +111,10 @@ export const NodeActions = React.memo<Props>(function NodeActions$({
     onDisplayTypeChange(getNextDisplayType(displayType));
   };
 
-  const potentialQuery = applyQuery(realtimeRef, queryParams || {});
+  const potentialQuery = React.useMemo(
+    () => applyQuery(realtimeRef, queryParams || {}),
+    [realtimeRef, queryParams]
+  );
 
   return (
     <aside className={'NodeActions' + (isActive ? ' NodeActions--active' : '')}>
