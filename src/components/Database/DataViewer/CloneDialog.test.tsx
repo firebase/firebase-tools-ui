@@ -20,6 +20,7 @@ import React from 'react';
 import { delay, renderDialog } from '../../../test_utils';
 import { fakeReference } from '../testing/models';
 import { CloneDialog } from './CloneDialog';
+import { QueryParams } from './common/view_model';
 
 const setup = async () => {
   const onComplete = jest.fn();
@@ -40,6 +41,45 @@ const setup = async () => {
   );
   return { ref, onComplete, getByLabelText, getByText, getByTestId };
 };
+
+it('uses a filtered data set when query params are provided', async () => {
+  const rootRef = fakeReference({
+    parent: null,
+    key: null,
+    path: '/',
+    data: {},
+  });
+
+  const todosRef = fakeReference({
+    parent: rootRef,
+    key: 'todos',
+    path: '/todos',
+    data: {
+      one: { title: 'Not done', completed: false },
+      two: { title: 'Totally done', completed: true },
+    },
+  });
+
+  const todosQuery = fakeReference({
+    parent: rootRef,
+    key: 'todos',
+    path: '/todos',
+    data: {
+      one: { title: 'Not done', completed: false },
+    },
+  });
+
+  const { getByLabelText } = await renderDialog(
+    <CloneDialog
+      onComplete={jest.fn()}
+      realtimeRef={todosRef}
+      query={todosQuery}
+    />
+  );
+
+  expect(() => getByLabelText(/two:/)).toThrowError();
+  expect(getByLabelText(/one:/)).toBeDefined();
+});
 
 it('fails when trying to clone the root', async () => {
   spyOn(console, 'error'); // hide expected errors

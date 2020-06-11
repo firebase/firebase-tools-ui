@@ -24,6 +24,7 @@ import { useState } from 'react';
 import InlineEditor from '../../Firestore/DocumentPreview/InlineEditor';
 import { FirestoreAny } from '../../Firestore/models';
 import { CloneDialog } from './CloneDialog';
+import { applyQuery } from './common/fetch';
 import {
   ChildrenDisplayType,
   DEFAULT_QUERY_PARAMS,
@@ -110,6 +111,8 @@ export const NodeActions = React.memo<Props>(function NodeActions$({
     onDisplayTypeChange(getNextDisplayType(displayType));
   };
 
+  const potentialQuery = applyQuery(realtimeRef, queryParams || {});
+
   return (
     <aside className={'NodeActions' + (isActive ? ' NodeActions--active' : '')}>
       <Tooltip content="Filter children">
@@ -182,7 +185,7 @@ export const NodeActions = React.memo<Props>(function NodeActions$({
         {cloneDialogIsOpen && (
           <CloneDialog
             realtimeRef={realtimeRef}
-            queryParams={queryParams}
+            query={potentialQuery}
             onComplete={() => setCloneDialogIsOpen(false)}
           />
         )}
