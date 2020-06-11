@@ -144,6 +144,9 @@ export function applyQuery(
   params: QueryParams
 ): firebase.database.Query {
   const { key, operator, value, limit } = params;
+  // Check the existence value instead of it being falsy. This prevents bugs
+  // where the "value" is actually false.
+  // ex: { key: "completed", operator: "==", value: "false" }
   if (key != null && operator != null && value != null) {
     let query = ref.orderByChild(key).limitToFirst(limit || DEFAULT_PAGE_SIZE);
     switch (operator) {
