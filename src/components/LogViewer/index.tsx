@@ -23,6 +23,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { connect } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 
+import useOnModifierKey from '../../hooks/use-on-modifier-key';
 import { AppState } from '../../store';
 import { LoggingConfig } from '../../store/config';
 import {
@@ -76,6 +77,8 @@ export const LogViewer: React.FC<Props> = ({
   }, [config, logReceived, logReset]);
 
   const parsedQuery = parseQuery(query);
+
+  useOnModifierKey('k', logReset);
 
   return (
     <GridCell span={12}>
