@@ -52,7 +52,7 @@
     // Group all @rmwc/* packages together in at most one PR once a week.
     {
       packagePatterns: ["^@rmwc/"],
-      excludePackageNames: ["@rmwc/select"]
+      excludePackageNames: ["@rmwc/select"],
       groupName: "@rmwc packages",
       extends: ["schedule:earlyMondays"],
     },
