@@ -48,6 +48,14 @@
       groupName: "firebase packages",
       extends: ["schedule:earlyMondays"],
     },
+    
+    // Group all @rmwc/* packages together in at most one PR once a week.
+    {
+      packagePatterns: ["^@rmwc/"],
+      excludePackageNames: ["@rmwc/select"],
+      groupName: "@rmwc packages",
+      extends: ["schedule:earlyMondays"],
+    },
   ],
   // Update package-lock.json when in-range updates are available, otherwise replace
   // the range in package.json for updates out of range.
