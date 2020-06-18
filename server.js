@@ -72,8 +72,12 @@ exports.registerApis = function (app) {
 
     const json = { projectId };
     Object.entries(emulators).forEach(([name, info]) => {
+      const host =
+        info.host === '0.0.0.0' || info.host === '::'
+          ? 'localhost'
+          : info.host;
       json[name] = {
-        hostAndPort: hostAndPort(info.host, info.port),
+        hostAndPort: hostAndPort(host, info.port),
         ...info,
       }
     });
