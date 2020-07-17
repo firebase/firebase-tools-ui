@@ -18,6 +18,7 @@ import Database from './components/Database';
 import Firestore from './components/Firestore';
 import Home from './components/Home';
 import LogsViewer from './components/LogViewer';
+import QuickStart from './components/QuickStart';
 
 export interface Route {
   path: string;
@@ -53,6 +54,13 @@ export const routes: ReadonlyArray<Route> = [
     path: '/logs',
     component: LogsViewer as any,
     label: 'Logs',
+    exact: true,
+    showInNav: true,
+  },
+  {
+    path: '/quickstart',
+    component: QuickStart,
+    label: 'QuickStart Guide',
     exact: true,
     showInNav: true,
   },
