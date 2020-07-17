@@ -64,14 +64,14 @@ entryPoints.forEach(entryPoint => {
 
 function preProcess(source, filePath) {
   source = source.replace(
-    /^(Note): ((.|[\r\n][^\r\n])+)/g,
+    /^(Note): ((.+|\r?\n[^\r\n])+)/gm,
     (_, name, content) => {
       return `
 <aside class="${name.toLowerCase()}">
   <strong>${name}:</strong>
-  ${content}
+  ${md.renderInline(content)}
 </aside>
-    `;
+`;
     }
   );
   return source.replace(/<<([^>]+)>>/g, (_, relPath) => {
