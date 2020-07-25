@@ -23,6 +23,7 @@ import { GridCell } from '@rmwc/grid';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
+import { useFirestore } from 'reactfire';
 
 import { createStructuredSelector } from '../../store';
 import { FirestoreConfig } from '../../store/config';
@@ -39,8 +40,13 @@ import DatabaseApi from './api';
 import { ApiProvider } from './ApiContext';
 import { promptClearAll } from './dialogs/clearAll';
 import { Root } from './Document';
+import { FirestoreEmulatedApiProvider } from './FirestoreEmulatedApiProvider.ts';
 import PanelHeader from './PanelHeader';
 import { FirestoreStore } from './store';
+
+interface WindowWithFirestoreDb extends Window {
+  firestore?: firebase.firestore.Firestore;
+}
 
 export const mapStateToProps = createStructuredSelector({
   projectIdResult: getProjectIdResult,
@@ -60,7 +66,9 @@ export const FirestoreRoute: React.FC<PropsFromState> = ({
       config === undefined ? (
         <FirestoreRouteDisabled />
       ) : (
-        <Firestore projectId={projectId} config={config} />
+        <FirestoreEmulatedApiProvider projectId={projectId} config={config}>
+          <Firestore projectId={projectId} config={config} />
+        </FirestoreEmulatedApiProvider>
       ),
   });
 };
@@ -74,6 +82,7 @@ export interface FirestoreProps {
 
 export const Firestore: React.FC<FirestoreProps> = ({ config, projectId }) => {
   const [api, setApi] = useState<DatabaseApi | undefined>(undefined);
+  const firestore = useFirestore();
   const databaseId = '(default)';
   const location = useLocation();
   const history = useHistory();
@@ -83,6 +92,11 @@ export const Firestore: React.FC<FirestoreProps> = ({ config, projectId }) => {
   const path = location.pathname.replace(/^\/firestore/, '');
   const showCollectionShell = path.split('/').length < 2;
   const showDocumentShell = path.split('/').length < 3;
+
+  useEffect(() => {
+    (window as WindowWithFirestoreDb).firestore = firestore;
+    return () => ((window as WindowWithFirestoreDb).firestore = undefined);
+  }, [firestore]);
 
   useEffect(() => {
     const api = new DatabaseApi(projectId, databaseId, config);
