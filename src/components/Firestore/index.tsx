@@ -41,7 +41,7 @@ import { Root } from './Document';
 import {
   FirestoreEmulatedApiProvider,
   useEjector,
-} from './FirestoreEmulatedApiProvider.ts';
+} from './FirestoreEmulatedApiProvider';
 import PanelHeader from './PanelHeader';
 import { FirestoreStore } from './store';
 
@@ -68,7 +68,7 @@ export const FirestoreRoute: React.FC<PropsFromState> = ({
         <FirestoreRouteDisabled />
       ) : (
         <FirestoreEmulatedApiProvider>
-          <Firestore projectId={projectId} config={config} />
+          <Firestore />
         </FirestoreEmulatedApiProvider>
       ),
   });
@@ -76,12 +76,7 @@ export const FirestoreRoute: React.FC<PropsFromState> = ({
 
 export default connect(mapStateToProps)(FirestoreRoute);
 
-export interface FirestoreProps {
-  config: FirestoreConfig;
-  projectId: string;
-}
-
-export const Firestore: React.FC<FirestoreProps> = ({ config, projectId }) => {
+export const Firestore: React.FC = React.memo(() => {
   const firestore = useFirestore();
   const location = useLocation();
   const history = useHistory();
@@ -166,7 +161,7 @@ export const Firestore: React.FC<FirestoreProps> = ({ config, projectId }) => {
       </GridCell>
     </FirestoreStore>
   );
-};
+});
 
 export const FirestoreRouteDisabled: React.FC = () => (
   <EmulatorDisabled productName="Firestore" />

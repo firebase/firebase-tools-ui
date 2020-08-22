@@ -14,22 +14,24 @@
  * limitations under the License.
  */
 
-import { RenderResult, act, render, wait } from '@testing-library/react';
+import { act, render, wait } from '@testing-library/react';
 import React from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 
 import { FirestoreConfig } from '../../store/config';
 import { makeDeferred } from '../../test_utils';
 import { confirm } from '../common/DialogQueue';
-import DatabaseApi from './api';
+import * as emulatedApi from './FirestoreEmulatedApiProvider';
 import { Firestore, FirestoreRoute } from './index';
-import {
-  FakeCollectionReference,
-  fakeCollectionReference,
-} from './testing/models';
+import { FirestoreProviders } from './testing/FirestoreProviders';
+import { fakeCollectionReference } from './testing/models';
 
-jest.mock('./api');
 jest.mock('../common/DialogQueue');
+
+jest.mock('reactfire', () => ({
+  ...jest.requireActual('reactfire'),
+  useFirestore: () => ({}),
+}));
 
 const sampleConfig: FirestoreConfig = {
   host: 'localhost',
@@ -81,18 +83,14 @@ describe('FirestoreRoute', () => {
 
 describe('Firestore', () => {
   it('shows the top-level collections', async () => {
-    let getCollections = makeDeferred<FakeCollectionReference[]>();
-    DatabaseApi.prototype.getCollections.mockReturnValue(
-      getCollections.promise
-    );
-    const { getByText, queryByText } = render(
-      <MemoryRouter>
-        <Firestore config={sampleConfig} projectId={'foo'} />
-      </MemoryRouter>
-    );
+    jest
+      .spyOn(emulatedApi, 'useRootCollections')
+      .mockReturnValue([fakeCollectionReference({ id: 'cool-coll' })]);
 
-    await act(() =>
-      getCollections.resolve([fakeCollectionReference({ id: 'cool-coll' })])
+    const { getByText, queryByText } = render(
+      <FirestoreProviders>
+        <Firestore />
+      </FirestoreProviders>
     );
 
     expect(queryByText(/Connecting to Firestore/)).toBeNull();
@@ -100,14 +98,12 @@ describe('Firestore', () => {
   });
 
   it('shows a collection-shell if at the root', async () => {
-    let getCollections = makeDeferred<FakeCollectionReference[]>();
-    DatabaseApi.prototype.getCollections.mockReturnValue(
-      getCollections.promise
-    );
+    jest.spyOn(emulatedApi, 'useRootCollections').mockReturnValue([]);
+
     const { getByTestId } = render(
-      <MemoryRouter initialEntries={['/firestore']}>
-        <Firestore config={sampleConfig} projectId={'foo'} />
-      </MemoryRouter>
+      <FirestoreProviders initialEntries={['/firestore']}>
+        <Firestore />
+      </FirestoreProviders>
     );
 
     expect(getByTestId(/collection-shell/)).not.toBeNull();
@@ -115,14 +111,12 @@ describe('Firestore', () => {
   });
 
   it('shows a document-shell if 1-level deep', async () => {
-    let getCollections = makeDeferred<FakeCollectionReference[]>();
-    DatabaseApi.prototype.getCollections.mockReturnValue(
-      getCollections.promise
-    );
+    jest.spyOn(emulatedApi, 'useRootCollections').mockReturnValue([]);
+
     const { getByTestId, queryByTestId } = render(
-      <MemoryRouter initialEntries={['/firestore/coll']}>
-        <Firestore config={sampleConfig} projectId={'foo'} />
-      </MemoryRouter>
+      <FirestoreProviders initialEntries={['/firestore/coll']}>
+        <Firestore />
+      </FirestoreProviders>
     );
 
     expect(queryByTestId(/collection-shell/)).toBeNull();
@@ -130,14 +124,12 @@ describe('Firestore', () => {
   });
 
   it('shows no shells if 2-levels deep', async () => {
-    let getCollections = makeDeferred<FakeCollectionReference[]>();
-    DatabaseApi.prototype.getCollections.mockReturnValue(
-      getCollections.promise
-    );
+    jest.spyOn(emulatedApi, 'useRootCollections').mockReturnValue([]);
+
     const { queryByTestId } = render(
-      <MemoryRouter initialEntries={['/firestore/coll/doc']}>
-        <Firestore config={sampleConfig} projectId={'foo'} />
-      </MemoryRouter>
+      <FirestoreProviders initialEntries={['/firestore/coll/doc']}>
+        <Firestore />
+      </FirestoreProviders>
     );
 
     expect(queryByTestId(/collection-shell/)).toBeNull();
@@ -145,60 +137,48 @@ describe('Firestore', () => {
   });
 
   it('triggers clearing all data', async () => {
-    confirm.mockResolvedValueOnce(true);
+    jest.spyOn(emulatedApi, 'useRootCollections').mockReturnValue([]);
+
     const nuke = makeDeferred<void>();
     const nukeSpy = jest.fn().mockReturnValueOnce(nuke.promise);
-
-    DatabaseApi.mockImplementationOnce(() => ({
-      getCollections: jest.fn(),
-      delete: jest.fn(),
-      nukeDocuments: nukeSpy,
-    }));
+    jest.spyOn(emulatedApi, 'useEjector').mockReturnValue(nukeSpy);
+    confirm.mockResolvedValueOnce(true);
 
     const { getByTestId, getByText, queryByTestId } = render(
-      <MemoryRouter>
-        <Firestore config={sampleConfig} projectId={'foo'} />
+      <FirestoreProviders>
+        <Firestore />
         <Route
           path="/firestore"
           exact
           render={() => <div data-testid="ROOT"></div>}
         />
-      </MemoryRouter>
+      </FirestoreProviders>
     );
-
     act(() => getByText('Clear all data').click());
-
     await wait(() => expect(nukeSpy).toHaveBeenCalled());
     expect(getByTestId('firestore-loading')).not.toBeNull();
-
     await act(() => nuke.resolve());
-
     expect(queryByTestId('firestore-loading')).toBeNull();
     expect(getByTestId('ROOT')).not.toBeNull();
   });
 
   it('does not trigger clearing all data if dialog is not confirmed', async () => {
+    jest.spyOn(emulatedApi, 'useRootCollections').mockReturnValue([]);
+
+    const nukeSpy = jest.fn();
+    jest.spyOn(emulatedApi, 'useEjector').mockReturnValue(nukeSpy);
+
     const confirmDeferred = makeDeferred<boolean>();
     confirm.mockReturnValueOnce(confirmDeferred.promise);
-    const nukeSpy = jest.fn();
-
-    DatabaseApi.mockImplementationOnce(() => ({
-      getCollections: jest.fn(),
-      delete: jest.fn(),
-      nukeDocuments: nukeSpy,
-    }));
 
     const { getByText } = render(
-      <MemoryRouter>
-        <Firestore config={sampleConfig} projectId={'foo'} />
-      </MemoryRouter>
+      <FirestoreProviders>
+        <Firestore />
+      </FirestoreProviders>
     );
-
     act(() => getByText('Clear all data').click());
-
     // Simulate the case where user clicked on Cancel in the confirm dialog.
     await act(() => confirmDeferred.resolve(false));
-
     expect(nukeSpy).not.toHaveBeenCalled();
   });
 });
