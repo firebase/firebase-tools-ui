@@ -2,37 +2,27 @@ import { _FirebaseApp } from '@firebase/app-types/private';
 import { FirebaseAuthInternal } from '@firebase/auth-interop-types';
 import { Component, ComponentType } from '@firebase/component';
 import * as firebase from 'firebase/app';
-import React from 'react';
-import { useUnmount } from 'react-use';
-import { FirebaseAppProvider } from 'reactfire';
+import { useEffect } from 'react';
 
-interface Props {
-  config: any;
-  name: string;
-  projectId: string;
-}
+import { useProjectId } from '../../store/config/selectors';
 
-export const FirebaseEmulatedAppProvider: React.FC<Props> = ({
-  children,
-  config,
-  name,
-  projectId,
-}) => {
-  // const baseUrl = `http://${config.hostAndPort}/v1/projects/${projectId}/databases/${databaseId}`;
-  // const baseEmulatorUrl = `http://${config.hostAndPort}/emulator/v1/projects/${projectId}/databases/${databaseId}`;
+export function useEmulatedFirebaseApp(name: string, config: any) {
+  const projectId = useProjectId();
   const app = firebase.initializeApp(
     { ...config, projectId },
     `${name} component::${JSON.stringify(config)}::${Math.random()}`
   );
 
-  useUnmount(() => app.delete());
+  useEffect(() => {
+    return () => {
+      app.delete();
+    };
+  }, [app]);
 
   applyAdminAuth(app);
 
-  return (
-    <FirebaseAppProvider firebaseApp={app}>{children}</FirebaseAppProvider>
-  );
-};
+  return app;
+}
 
 function applyAdminAuth(app: firebase.app.App): void {
   const accessToken = 'owner'; // Accepted as admin by emulators.

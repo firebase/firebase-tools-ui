@@ -19,9 +19,9 @@ import './index.scss';
 import { IconButton } from '@rmwc/icon-button';
 import React, { useEffect } from 'react';
 import { FormContext, useForm, useFormContext } from 'react-hook-form';
+import { useFirestore } from 'reactfire';
 
 import { Field, SelectField } from '../../common/Field';
-import { useOptionalApi } from '../ApiContext';
 import { FieldType, FirestoreAny, FirestoreMap } from '../models';
 import {
   getFieldType,
@@ -116,14 +116,14 @@ const DocumentEditor: React.FC<{
   startingIndex,
   supportNestedArrays,
 }) => {
+  const firestore = useFirestore();
   const initialState = normalize(value);
   const [store, dispatch] = React.useReducer(storeReducer, initialState);
   const methods = useForm({ mode: 'onChange' });
-  const api = useOptionalApi();
 
-  const denormalizedStore = React.useMemo(() => denormalize(store, api), [
+  const denormalizedStore = React.useMemo(() => denormalize(store, firestore), [
     store,
-    api,
+    firestore,
   ]);
 
   const errorCount = React.useMemo(() => Object.keys(methods.errors).length, [

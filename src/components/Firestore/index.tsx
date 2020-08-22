@@ -36,11 +36,12 @@ import { CustomThemeProvider } from '../../themes';
 import { EmulatorDisabled } from '../common/EmulatorDisabled';
 import { InteractiveBreadCrumbBar } from '../common/InteractiveBreadCrumbBar';
 import { Spinner } from '../common/Spinner';
-import DatabaseApi from './api';
-import { ApiProvider } from './ApiContext';
 import { promptClearAll } from './dialogs/clearAll';
 import { Root } from './Document';
-import { FirestoreEmulatedApiProvider } from './FirestoreEmulatedApiProvider.ts';
+import {
+  FirestoreEmulatedApiProvider,
+  useEjector,
+} from './FirestoreEmulatedApiProvider.ts';
 import PanelHeader from './PanelHeader';
 import { FirestoreStore } from './store';
 
@@ -66,7 +67,7 @@ export const FirestoreRoute: React.FC<PropsFromState> = ({
       config === undefined ? (
         <FirestoreRouteDisabled />
       ) : (
-        <FirestoreEmulatedApiProvider projectId={projectId} config={config}>
+        <FirestoreEmulatedApiProvider>
           <Firestore projectId={projectId} config={config} />
         </FirestoreEmulatedApiProvider>
       ),
@@ -81,12 +82,11 @@ export interface FirestoreProps {
 }
 
 export const Firestore: React.FC<FirestoreProps> = ({ config, projectId }) => {
-  const [api, setApi] = useState<DatabaseApi | undefined>(undefined);
   const firestore = useFirestore();
-  const databaseId = '(default)';
   const location = useLocation();
   const history = useHistory();
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const eject = useEjector();
 
   // TODO: do something better here!
   const path = location.pathname.replace(/^\/firestore/, '');
@@ -98,24 +98,11 @@ export const Firestore: React.FC<FirestoreProps> = ({ config, projectId }) => {
     return () => ((window as WindowWithFirestoreDb).firestore = undefined);
   }, [firestore]);
 
-  useEffect(() => {
-    const api = new DatabaseApi(projectId, databaseId, config);
-    setApi(api);
-
-    return function cleanup() {
-      api.delete();
-    };
-  }, [projectId, config, setApi]);
-
-  if (!api) {
-    return null;
-  }
-
-  async function handleClearData(api: DatabaseApi) {
+  async function handleClearData() {
     const shouldNuke = await promptClearAll();
     if (!shouldNuke) return;
     setIsRefreshing(true);
-    await api.nukeDocuments();
+    await eject();
     handleNavigate();
     setIsRefreshing(false);
   }
@@ -134,51 +121,49 @@ export const Firestore: React.FC<FirestoreProps> = ({ config, projectId }) => {
     <Spinner span={12} data-testid="firestore-loading" />
   ) : (
     <FirestoreStore>
-      <ApiProvider value={api}>
-        <GridCell span={12} className="Firestore">
-          <div className="Firestore-actions">
-            <CustomThemeProvider use="warning" wrap>
-              <Button unelevated onClick={() => handleClearData(api)}>
-                Clear all data
-              </Button>
-            </CustomThemeProvider>
-          </div>
-          <Elevation z="2" wrap>
-            <Card className="Firestore-panels-wrapper">
-              <InteractiveBreadCrumbBar
-                base="/firestore"
-                path={path}
-                onNavigate={handleNavigate}
-              />
-              <div className="Firestore-panels">
-                <Root />
-                {/*
-                 * TODO: This should really be handled by the constituent Document/Collection components,
-                 * where those components can conditionally show their nested-child. Doing so will be
-                 * easiest once we move to a Suspense-ful render, where we can always show the
-                 * Document/Collection-skeletons, but lazy-render the lists wihin those components.
-                 */}
-                {showCollectionShell && (
-                  <div
-                    className="Firestore-Collection"
-                    data-testid="collection-shell"
-                  >
-                    <PanelHeader id="" icon={null} />
-                  </div>
-                )}
-                {showDocumentShell && (
-                  <div
-                    className="Firestore-Document"
-                    data-testid="document-shell"
-                  >
-                    <PanelHeader id="" icon={null} />
-                  </div>
-                )}
-              </div>
-            </Card>
-          </Elevation>
-        </GridCell>
-      </ApiProvider>
+      <GridCell span={12} className="Firestore">
+        <div className="Firestore-actions">
+          <CustomThemeProvider use="warning" wrap>
+            <Button unelevated onClick={() => handleClearData()}>
+              Clear all data
+            </Button>
+          </CustomThemeProvider>
+        </div>
+        <Elevation z="2" wrap>
+          <Card className="Firestore-panels-wrapper">
+            <InteractiveBreadCrumbBar
+              base="/firestore"
+              path={path}
+              onNavigate={handleNavigate}
+            />
+            <div className="Firestore-panels">
+              <Root />
+              {/*
+               * TODO: This should really be handled by the constituent Document/Collection components,
+               * where those components can conditionally show their nested-child. Doing so will be
+               * easiest once we move to a Suspense-ful render, where we can always show the
+               * Document/Collection-skeletons, but lazy-render the lists wihin those components.
+               */}
+              {showCollectionShell && (
+                <div
+                  className="Firestore-Collection"
+                  data-testid="collection-shell"
+                >
+                  <PanelHeader id="" icon={null} />
+                </div>
+              )}
+              {showDocumentShell && (
+                <div
+                  className="Firestore-Document"
+                  data-testid="document-shell"
+                >
+                  <PanelHeader id="" icon={null} />
+                </div>
+              )}
+            </div>
+          </Card>
+        </Elevation>
+      </GridCell>
     </FirestoreStore>
   );
 };

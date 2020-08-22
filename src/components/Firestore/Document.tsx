@@ -23,11 +23,11 @@ import { MenuItem, SimpleMenu } from '@rmwc/menu';
 import { firestore } from 'firebase';
 import React from 'react';
 import { Route, useRouteMatch } from 'react-router-dom';
+import { useFirestore } from 'reactfire';
 
 import { FirestoreIcon } from '../common/icons';
-import { useApi } from './ApiContext';
 import Collection from './Collection';
-import CollectionList from './CollectionList';
+import { RootCollectionList, SubCollectionList } from './CollectionList';
 import { promptDeleteDocument } from './dialogs/deleteDocument';
 import { promptDeleteDocumentFields } from './dialogs/deleteDocumentFields';
 import DocumentPreview from './DocumentPreview';
@@ -56,15 +56,14 @@ const Doc: React.FC<{
 
 /** Root node */
 export const Root: React.FC = () => {
-  const api = useApi();
+  const firestore = useFirestore();
 
   return (
-    <Doc
-      id={'Root'}
-      collectionById={(id: string) => api.database.collection(id)}
-    >
+    <Doc id={'Root'} collectionById={(id: string) => firestore.collection(id)}>
       <PanelHeader id="Root" icon={<FirestoreIcon />} />
-      <CollectionList />
+      <React.Suspense fallback={<div>Loading root-collections</div>}>
+        <RootCollectionList />
+      </React.Suspense>
     </Doc>
   );
 };
@@ -99,7 +98,9 @@ export const Document: React.FC<{ reference: firestore.DocumentReference }> = ({
         </SimpleMenu>
       </PanelHeader>
 
-      <CollectionList reference={reference} />
+      <React.Suspense fallback={<div>Loading sub-collections</div>}>
+        <SubCollectionList reference={reference} />
+      </React.Suspense>
       <ListDivider tag="div" />
       <DocumentPreview reference={reference} />
     </Doc>

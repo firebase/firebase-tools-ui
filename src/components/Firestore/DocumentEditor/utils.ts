@@ -1,6 +1,5 @@
 import { firestore } from 'firebase';
 
-import DatabaseApi from '../api';
 import {
   FieldType,
   FirestoreAny,
@@ -113,7 +112,7 @@ export function normalize(data: FirestoreAny): Store {
 
 export function denormalize(
   store: Store,
-  api: DatabaseApi | null
+  firestore: firebase.firestore.Firestore
 ): FirestoreAny {
   assertStoreHasRoot(store);
   const field = store.fields[store.uuid];
@@ -124,24 +123,21 @@ export function denormalize(
           uuid: curr.valueId,
           fields: store.fields,
         },
-        api
+        firestore
       );
       return acc;
     }, {} as any);
   } else if (isArrayField(field)) {
     return field.arrayChildren.reduce((acc, curr) => {
-      acc.push(denormalize({ uuid: curr.valueId, fields: store.fields }, api));
+      acc.push(
+        denormalize({ uuid: curr.valueId, fields: store.fields }, firestore)
+      );
       return acc;
     }, [] as any);
   } else {
     if (field.value instanceof DocumentPath) {
-      if (!api) {
-        throw new Error(
-          'Tried to denormalize a DocumentRef without the FirestoreAPI'
-        );
-      }
       try {
-        return api.database.doc(field.value.path);
+        return firestore.doc(field.value.path);
       } catch {
         // TODO: The store does not always have a valid DocRef, reconsider.
         return '';
