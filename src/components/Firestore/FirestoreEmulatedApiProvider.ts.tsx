@@ -3,8 +3,8 @@ import React, { Suspense, useEffect } from 'react';
 import { FirebaseAppProvider, useFirestore } from 'reactfire';
 import useSwr from 'swr';
 
+import { useEmulatedFirebaseApp } from '../../firebase';
 import { useFirestoreConfig, useProjectId } from '../../store/config/selectors';
-import { useEmulatedFirebaseApp } from '../Firebase/FirebaseEmulatedAppProvider';
 
 interface WindowWithFirestore extends Window {
   firestore?: firebase.firestore.Firestore;

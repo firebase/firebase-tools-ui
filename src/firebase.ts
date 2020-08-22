@@ -22,8 +22,10 @@ import { _FirebaseApp } from '@firebase/app-types/private';
 import { FirebaseAuthInternal } from '@firebase/auth-interop-types';
 import { Component, ComponentType } from '@firebase/component';
 import * as firebase from 'firebase/app';
+import { useEffect } from 'react';
 
 import { DatabaseConfig, FirestoreConfig } from './store/config';
+import { useProjectId } from './store/config/selectors';
 
 interface WindowWithDb extends Window {
   database?: firebase.database.Database;
@@ -53,30 +55,22 @@ export function initDatabase(
   return [db, { cleanup: () => app.delete() }];
 }
 
-export function initFirestore(
-  projectId: string,
-  config: FirestoreConfig
-): [firebase.firestore.Firestore, { cleanup: () => Promise<void> }] {
+export function useEmulatedFirebaseApp(name: string, config: any) {
+  const projectId = useProjectId();
   const app = firebase.initializeApp(
-    { projectId },
-    `Firestore Component: ${Math.random()}`
+    { ...config, projectId },
+    `${name} component::${JSON.stringify(config)}::${Math.random()}`
   );
-  applyAdminAuth(app);
-  const firestore = app.firestore();
-  firestore.settings({
-    host: config.hostAndPort,
-    ssl: false,
-  });
-  // only log the first time
-  if (!(window as WindowWithDb).firestore) {
-    console.log(`🔥 Firestore is available at window.firestore.
 
-    Try:
-    firestore.doc('hello/world').set({hello: 'world!'});
-    firestore.doc('hello/world').get().then( snap => console.log(snap.data()) );`);
-  }
-  (window as WindowWithDb).firestore = firestore;
-  return [firestore, { cleanup: () => app.delete() }];
+  useEffect(() => {
+    return () => {
+      app.delete();
+    };
+  }, [app]);
+
+  applyAdminAuth(app);
+
+  return app;
 }
 
 function applyAdminAuth(app: firebase.app.App): void {
