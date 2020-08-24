@@ -30,7 +30,7 @@ import {
 import {
   useRootCollections,
   useSubCollections,
-} from './FirestoreEmulatedApiProvider.ts';
+} from './FirestoreEmulatedApiProvider';
 import { useAutoSelect } from './useAutoSelect';
 
 export interface Props {
@@ -50,7 +50,7 @@ export const SubCollectionList: React.FC<{
   return <CollectionList collections={subCollections} reference={reference} />;
 };
 
-export const CollectionList: React.FC<Props> = ({ collections, reference }) => {
+const CollectionList: React.FC<Props> = ({ collections, reference }) => {
   const { url } = useRouteMatch()!;
   const firestore = useFirestore();
   const history = useHistory();

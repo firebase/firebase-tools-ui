@@ -1,4 +1,4 @@
-import { firestore } from 'firebase/app';
+import firebase from 'firebase';
 import React, { Suspense, useEffect } from 'react';
 import { FirebaseAppProvider, useFirestore } from 'reactfire';
 import useSwr from 'swr';
@@ -13,6 +13,8 @@ interface WindowWithFirestore extends Window {
 /**
  * Provide a local-FirebaseApp with a FirestoreSDK connected to
  * the Emulator Hub.
+ *
+ * TODO(tlavelle): need loading indicator for FirestoreSDK
  */
 export const FirestoreEmulatedApiProvider: React.FC = React.memo(props => {
   const config = useFirestoreConfig();

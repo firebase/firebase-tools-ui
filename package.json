@@ -68,7 +68,7 @@
     "build": "npm run build:web && npm run build:server",
     "build:web": "react-scripts build",
     "build:server": "webpack --target=node server.js -o server.bundle.js",
-    "test": "react-scripts test",
+    "test": "react-scripts test -i",
     "test:coverage": "react-scripts test --coverage --watchAll=false",
     "eject": "react-scripts eject",
     "fmt": "prettier --write 'src/**'"
@@ -98,6 +98,7 @@
   "devDependencies": {
     "@firebase/auth-interop-types": "^0.1.4",
     "@firebase/component": "^0.1.8",
+    "@firebase/testing": "^0.20.11",
     "@testing-library/react": "^9.5.0",
     "@types/classnames": "^2.2.10",
     "@types/lodash.get": "^4.4.6",

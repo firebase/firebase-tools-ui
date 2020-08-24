@@ -14,9 +14,20 @@
  * limitations under the License.
  */
 
-import { act, render, wait } from '@testing-library/react';
+// import 'firebase/firestore';
+
+import * as firebaseTesting from '@firebase/testing';
+import {
+  act,
+  render,
+  wait,
+  waitForElement,
+  waitForElementToBeRemoved,
+} from '@testing-library/react';
+import firebase from 'firebase';
 import React from 'react';
 import { Route } from 'react-router-dom';
+import { FirebaseAppProvider, preloadFirestore, useFirestore } from 'reactfire';
 
 import { FirestoreConfig } from '../../store/config';
 import { makeDeferred } from '../../test_utils';
@@ -28,10 +39,10 @@ import { fakeCollectionReference } from './testing/models';
 
 jest.mock('../common/DialogQueue');
 
-jest.mock('reactfire', () => ({
-  ...jest.requireActual('reactfire'),
-  useFirestore: () => ({}),
-}));
+// jest.mock('reactfire', () => ({
+//   ...jest.requireActual('reactfire'),
+//   // useFirestore: () => ({}),
+// }));
 
 const sampleConfig: FirestoreConfig = {
   host: 'localhost',
@@ -82,63 +93,112 @@ describe('FirestoreRoute', () => {
 });
 
 describe('Firestore', () => {
-  it('shows the top-level collections', async () => {
-    jest
-      .spyOn(emulatedApi, 'useRootCollections')
-      .mockReturnValue([fakeCollectionReference({ id: 'cool-coll' })]);
+  // beforeEach(async () => {
+  //   await firebaseTesting.clearFirestoreData({
+  //     projectId: process.env.GCLOUD_PROJECT!,
+  //   });
+  // });
+  // afterEach(async () => {
+  //   await firebaseTesting.clearFirestoreData({
+  //     projectId: process.env.GCLOUD_PROJECT!,
+  //   });
+  // });
+
+  it('does stuff', async () => {
+    jest.setTimeout(10000); // 10 second
+    const seedData = {
+      'cool-coll-one/cool-doc': { a: 1 },
+    };
 
     const { getByText, queryByText } = render(
-      <FirestoreProviders>
+      <FirestoreProviders data={seedData}>
         <Firestore />
       </FirestoreProviders>
     );
+
+    await waitForElement(() => getByText(/cool-coll-one/), { timeout: 10000 });
+
+    expect(queryByText(/Connecting to Firestore/)).toBeNull();
+    expect(getByText(/cool-coll-one/)).not.toBeNull();
+    expect(queryByText(/cool-coll-two/)).toBeNull();
+  });
+
+  it('does stuff independently', async () => {
+    jest.setTimeout(10000); // 10 second
+    const seedData = {
+      'cool-coll-two/cool-doc': { a: 1 },
+    };
+
+    const { getByText, queryByText } = render(
+      <FirestoreProviders data={seedData}>
+        <Firestore />
+      </FirestoreProviders>
+    );
+
+    await waitForElement(() => getByText(/cool-coll-two/), { timeout: 10000 });
+
+    expect(queryByText(/Connecting to Firestore/)).toBeNull();
+    expect(queryByText(/cool-coll-one/)).toBeNull();
+    expect(getByText(/cool-coll-two/)).not.toBeNull();
+  });
+
+  it('shows the top-level collections', async () => {
+    const mockData = {
+      'cool-coll/bar': { a: 1 },
+    };
+
+    const { getByText, queryByText } = render(
+      <FirestoreProviders data={mockData}>
+        <Firestore />
+      </FirestoreProviders>
+    );
+
+    await waitForElement(() => getByText(/cool-coll/));
 
     expect(queryByText(/Connecting to Firestore/)).toBeNull();
     expect(getByText(/cool-coll/)).not.toBeNull();
   });
 
   it('shows a collection-shell if at the root', async () => {
-    jest.spyOn(emulatedApi, 'useRootCollections').mockReturnValue([]);
-
     const { getByTestId } = render(
       <FirestoreProviders initialEntries={['/firestore']}>
         <Firestore />
       </FirestoreProviders>
     );
 
+    await waitForElement(() => getByTestId(/collection-shell/));
+
     expect(getByTestId(/collection-shell/)).not.toBeNull();
     expect(getByTestId(/document-shell/)).not.toBeNull();
   });
 
   it('shows a document-shell if 1-level deep', async () => {
-    jest.spyOn(emulatedApi, 'useRootCollections').mockReturnValue([]);
-
     const { getByTestId, queryByTestId } = render(
       <FirestoreProviders initialEntries={['/firestore/coll']}>
         <Firestore />
       </FirestoreProviders>
     );
 
+    await waitForElement(() => getByTestId(/document-shell/));
+
     expect(queryByTestId(/collection-shell/)).toBeNull();
     expect(getByTestId(/document-shell/)).not.toBeNull();
   });
 
   it('shows no shells if 2-levels deep', async () => {
-    jest.spyOn(emulatedApi, 'useRootCollections').mockReturnValue([]);
-
-    const { queryByTestId } = render(
+    const { getByTestId, queryByTestId } = render(
       <FirestoreProviders initialEntries={['/firestore/coll/doc']}>
         <Firestore />
       </FirestoreProviders>
     );
+
+    await waitForElementToBeRemoved(() => getByTestId('fallback'));
 
     expect(queryByTestId(/collection-shell/)).toBeNull();
     expect(queryByTestId(/document-shell/)).toBeNull();
   });
 
   it('triggers clearing all data', async () => {
-    jest.spyOn(emulatedApi, 'useRootCollections').mockReturnValue([]);
-
     const nuke = makeDeferred<void>();
     const nukeSpy = jest.fn().mockReturnValueOnce(nuke.promise);
     jest.spyOn(emulatedApi, 'useEjector').mockReturnValue(nukeSpy);
@@ -163,8 +223,6 @@ describe('Firestore', () => {
   });
 
   it('does not trigger clearing all data if dialog is not confirmed', async () => {
-    jest.spyOn(emulatedApi, 'useRootCollections').mockReturnValue([]);
-
     const nukeSpy = jest.fn();
     jest.spyOn(emulatedApi, 'useEjector').mockReturnValue(nukeSpy);
 

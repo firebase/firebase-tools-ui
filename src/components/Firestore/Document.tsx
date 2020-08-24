@@ -47,7 +47,9 @@ const Doc: React.FC<{
       <Route
         path={`${url}/:id`}
         render={({ match }: any) => (
-          <Collection collection={collectionById(match.params.id)} />
+          <React.Suspense fallback={<div>Loading collection</div>}>
+            <Collection collection={collectionById(match.params.id)} />
+          </React.Suspense>
         )}
       ></Route>
     </>
@@ -102,7 +104,9 @@ export const Document: React.FC<{ reference: firestore.DocumentReference }> = ({
         <SubCollectionList reference={reference} />
       </React.Suspense>
       <ListDivider tag="div" />
-      <DocumentPreview reference={reference} />
+      <React.Suspense fallback={<div>Loading document preview</div>}>
+        <DocumentPreview reference={reference} />
+      </React.Suspense>
     </Doc>
   );
 };

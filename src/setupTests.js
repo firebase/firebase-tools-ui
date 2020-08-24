@@ -1,4 +1,3 @@
-require('jest-fetch-mock').enableMocks();
 require('mutationobserver-shim');
 
 import * as base from '@rmwc/base';

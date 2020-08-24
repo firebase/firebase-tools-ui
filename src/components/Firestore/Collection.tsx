@@ -23,8 +23,8 @@ import { List, ListItem } from '@rmwc/list';
 import { MenuSurface, MenuSurfaceAnchor } from '@rmwc/menu';
 import { firestore } from 'firebase';
 import React, { useState } from 'react';
-import { useCollection } from 'react-firebase-hooks/firestore';
 import { NavLink, Redirect, Route, useRouteMatch } from 'react-router-dom';
+import { useFirestoreCollection, useFirestoreCollectionData } from 'reactfire';
 
 import styles from './Collection.module.scss';
 import { CollectionFilter } from './CollectionFilter';
@@ -59,13 +59,15 @@ export function withCollectionState(
       collection,
       collectionFilter
     );
-    const [collectionSnapshot, loading, error] = useCollection(
+    const collectionSnapshot = useFirestoreCollection<unknown>(
       filteredCollection
     );
 
     const { url } = useRouteMatch()!;
     // TODO: Fetch missing documents (i.e. nonexistent docs with subcollections).
-    const docs = collectionSnapshot ? collectionSnapshot.docs : NO_DOCS;
+    const docs = collectionSnapshot.docs.length
+      ? collectionSnapshot.docs
+      : NO_DOCS;
     const redirectIfAutoSelectable = useAutoSelect(docs);
 
     const addDocument = async (value: AddDocumentDialogValue | null) => {
@@ -75,10 +77,12 @@ export function withCollectionState(
       }
     };
 
-    if (error) return <></>;
-    if (!loading && redirectIfAutoSelectable)
+    if (redirectIfAutoSelectable) {
       return <>{redirectIfAutoSelectable}</>;
-    if (newDocumentId) return <Redirect to={`${url}/${newDocumentId}`} />;
+    }
+    if (newDocumentId) {
+      return <Redirect to={`${url}/${newDocumentId}`} />;
+    }
 
     return (
       <Presentation
