@@ -130,7 +130,6 @@ it('triggers a redirect to a new collection at the root', async () => {
 });
 
 it('triggers a redirect to a new collection in a document', async () => {
-  debugger;
   const fakeApi = new DatabaseApi();
   const wantDoc = fakeDocumentReference({ id: 'abc' });
   const parentDocumentRef = fakeDocumentReference({

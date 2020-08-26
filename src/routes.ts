@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import Auth from './components/Auth';
 import Database from './components/Database';
 import Firestore from './components/Firestore';
 import Home from './components/Home';
@@ -46,6 +47,13 @@ export const routes: ReadonlyArray<Route> = [
     path: '/database',
     component: Database,
     label: 'Realtime Database',
+    exact: false,
+    showInNav: true,
+  },
+  {
+    path: '/auth',
+    component: Auth,
+    label: 'Authentification',
     exact: false,
     showInNav: true,
   },

@@ -34,6 +34,7 @@ import { Config, EmulatorConfig } from '../../store/config';
 import { getConfig } from '../../store/config/selectors';
 import { squash } from '../../store/utils';
 import {
+  AuthIcon,
   DatabaseIcon,
   FirestoreIcon,
   FunctionsIcon,
@@ -73,6 +74,13 @@ const Overview: React.FC<{
         <GridCell span={12}>
           <Typography use="headline5">Emulator overview</Typography>
         </GridCell>
+        <EmulatorCard
+          name="Authentification emulator"
+          icon={<AuthIcon theme="secondary" />}
+          config={config.auth}
+          linkTo="/auth"
+          testId="emulator-info-auth"
+        />
         <EmulatorCard
           name="Firestore emulator"
           icon={<FirestoreIcon theme="secondary" />}
