@@ -15,102 +15,124 @@
  */
 
 import { Portal } from '@rmwc/base';
-import { render } from '@testing-library/react';
+import { waitForElement } from '@testing-library/react';
 import React from 'react';
-import { useCollection, useDocumentData } from 'react-firebase-hooks/firestore';
-import { MemoryRouter } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 
-import { ApiProvider } from './ApiContext';
 import { Document, Root } from './Document';
-import { fakeDocumentReference, fakeFirestoreApi } from './testing/models';
+import { renderWithFirestore } from './testing/FirestoreTestProviders';
 
-jest.mock('react-firebase-hooks/firestore');
+it('shows the root-id', async () => {
+  const { getByText } = await renderWithFirestore(async () => <Root />);
 
-it('shows the root-id', () => {
-  useDocumentData.mockReturnValueOnce([]);
-
-  const { getByText } = render(
-    <MemoryRouter>
-      <Portal />
-      <ApiProvider value={fakeFirestoreApi()}>
-        <Root />
-      </ApiProvider>
-    </MemoryRouter>
-  );
+  await waitForElement(() => getByText(/Root/));
 
   expect(getByText(/Root/)).not.toBeNull();
 });
 
-it('shows the document-id', () => {
-  useDocumentData.mockReturnValueOnce([]);
-  const { getByText } = render(
-    <MemoryRouter>
-      <Portal />
-      <ApiProvider value={fakeFirestoreApi()}>
-        <Document reference={fakeDocumentReference({ id: 'my-stuff' })} />
-      </ApiProvider>
-    </MemoryRouter>
-  );
+it('shows the document-id', async () => {
+  const { getByText } = await renderWithFirestore(async firestore => {
+    const docRef = firestore.doc('my-stuff/foo');
+    await docRef.set({ a: 1 });
+    return (
+      <>
+        <Document reference={firestore.doc('my-stuff/foo')} />
+        <Portal />
+      </>
+    );
+  });
 
-  expect(getByText(/my-stuff/)).not.toBeNull();
+  await waitForElement(() => getByText(/foo/));
+
+  expect(getByText(/foo/)).not.toBeNull();
 });
 
-it('shows the root collection-list', () => {
-  const { getByTestId } = render(
-    <MemoryRouter>
-      <Portal />
-      <ApiProvider value={fakeFirestoreApi()}>
-        <Root />
-      </ApiProvider>
-    </MemoryRouter>
+it('shows the root collection-list', async () => {
+  const { getByText, getByTestId } = await renderWithFirestore(
+    async firestore => {
+      await firestore.doc('foo/bar').set({ a: 1 });
+      return (
+        <>
+          <Root />
+          <Portal />
+        </>
+      );
+    }
   );
+
+  await waitForElement(() => getByTestId('collection-list'));
 
   expect(getByTestId('collection-list')).not.toBeNull();
+  expect(getByText('foo')).not.toBeNull();
 });
 
-it('shows the document collection-list', () => {
-  useDocumentData.mockReturnValueOnce([]);
-
-  const { getByTestId } = render(
-    <MemoryRouter>
-      <Portal />
-      <ApiProvider value={fakeFirestoreApi()}>
-        <Document reference={fakeDocumentReference()} />
-      </ApiProvider>
-    </MemoryRouter>
+it('shows the document collection-list', async () => {
+  const { getByText, getByTestId } = await renderWithFirestore(
+    async firestore => {
+      const documentRef = firestore.doc('foo/bar');
+      await documentRef
+        .collection('sub')
+        .doc('spam')
+        .set({ a: 1 });
+      return (
+        <>
+          <Document reference={documentRef} />
+          <Portal />
+        </>
+      );
+    }
   );
+
+  await waitForElement(() => getByTestId('collection-list'));
 
   expect(getByTestId('collection-list')).not.toBeNull();
+  expect(getByText('sub')).not.toBeNull();
 });
 
-it('shows the selected root-collection', () => {
-  useDocumentData.mockReturnValueOnce([]);
-  useCollection.mockReturnValueOnce([]);
-
-  const { getByText, queryAllByText } = render(
-    <MemoryRouter initialEntries={['//cool-coll-1']}>
-      <Portal />
-      <ApiProvider value={fakeFirestoreApi()}>
-        <Root />
-      </ApiProvider>
-    </MemoryRouter>
+it('shows the selected root-collection', async () => {
+  const { getAllByText, getByTestId } = await renderWithFirestore(
+    async firestore => {
+      await firestore.doc('foo/bar').set({ a: 1 });
+      return (
+        <Route path="/firestore">
+          <Root />
+          <Portal />
+        </Route>
+      );
+    },
+    {
+      path: '/firestore/foo',
+    }
   );
 
-  expect(getByText(/cool-coll-1/)).not.toBeNull();
+  await waitForElement(() => getByTestId('collection-list'));
+
+  expect(getByTestId('collection-list')).not.toBeNull();
+  expect(getAllByText('bar').length).toBeGreaterThan(0);
 });
 
-it('shows the selected document-collection', () => {
-  useDocumentData.mockReturnValueOnce([]);
-  useCollection.mockReturnValueOnce([]);
-
-  const { getByText, queryAllByText } = render(
-    <MemoryRouter initialEntries={['//cool-coll-1']}>
-      <Portal />
-      <ApiProvider value={fakeFirestoreApi()}>
-        <Document reference={fakeDocumentReference()} />
-      </ApiProvider>
-    </MemoryRouter>
+it('shows the selected document-collection', async () => {
+  const { getAllByTestId, getByText } = await renderWithFirestore(
+    async firestore => {
+      const documentRef = firestore.doc('foo/bar');
+      await documentRef
+        .collection('sub')
+        .doc('doc')
+        .set({ spam: 'eggs' });
+      return (
+        <Route path="/firestore/foo/bar">
+          <Document reference={documentRef} />
+          <Portal />
+        </Route>
+      );
+    },
+    {
+      path: '/firestore/foo/bar/sub/doc',
+    }
   );
 
-  expect(getByText(/cool-coll-1/)).not.toBeNull();
+  await waitForElement(() => getAllByTestId('collection-list').length > 1);
+
+  expect(getAllByTestId('collection-list').length).toBe(2);
+  expect(getByText(/eggs/)).not.toBeNull();
 });
