@@ -98,7 +98,9 @@ export function useRootCollections() {
   return collectionIds.map(id => firestore.collection(id));
 }
 
-export function useSubCollections(docRef: firestore.DocumentReference) {
+export function useSubCollections(
+  docRef: firebase.firestore.DocumentReference
+) {
   const { baseUrl } = useFirestoreRestApi();
   const encodedPath = docRef.path; // TODO: Encode each segment
   const endpoint = `${baseUrl}/documents/${encodedPath}:listCollectionIds`;

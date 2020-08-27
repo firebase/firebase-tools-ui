@@ -22,7 +22,7 @@ import { _FirebaseApp } from '@firebase/app-types/private';
 import { FirebaseAuthInternal } from '@firebase/auth-interop-types';
 import { Component, ComponentType } from '@firebase/component';
 import * as firebase from 'firebase/app';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 
 import { DatabaseConfig, FirestoreConfig } from './store/config';
 import { useProjectId } from './store/config/selectors';
@@ -57,18 +57,21 @@ export function initDatabase(
 
 export function useEmulatedFirebaseApp(name: string, config: any) {
   const projectId = useProjectId();
-  const app = firebase.initializeApp(
-    { ...config, projectId },
-    `${name} component::${JSON.stringify(config)}::${Math.random()}`
-  );
+
+  const app = useMemo(() => {
+    const app = firebase.initializeApp(
+      { ...config, projectId },
+      `${name} component::${JSON.stringify(config)}::${Math.random()}`
+    );
+    applyAdminAuth(app);
+    return app;
+  }, [name, config]);
 
   useEffect(() => {
     return () => {
       app.delete();
     };
   }, [app]);
-
-  applyAdminAuth(app);
 
   return app;
 }
