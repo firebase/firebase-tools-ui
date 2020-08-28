@@ -19,7 +19,6 @@ import './index.scss';
 import { IconButton } from '@rmwc/icon-button';
 import React, { useEffect } from 'react';
 import { FormContext, useForm, useFormContext } from 'react-hook-form';
-import { useFirestore } from 'reactfire';
 
 import { Field, SelectField } from '../../common/Field';
 import { FieldType, FirestoreAny, FirestoreMap } from '../models';
@@ -107,6 +106,7 @@ const DocumentEditor: React.FC<{
   rtdb?: boolean;
   startingIndex?: number;
   supportNestedArrays?: boolean;
+  firestore?: firebase.firestore.Firestore;
 }> = ({
   value,
   onChange,
@@ -115,8 +115,8 @@ const DocumentEditor: React.FC<{
   rtdb = false,
   startingIndex,
   supportNestedArrays,
+  firestore,
 }) => {
-  const firestore = useFirestore();
   const initialState = normalize(value);
   const [store, dispatch] = React.useReducer(storeReducer, initialState);
   const methods = useForm({ mode: 'onChange' });

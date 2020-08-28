@@ -39,6 +39,7 @@ const DocumentPreview: React.FC<Props> = ({
 }) => {
   const data = useFirestoreDocData<{}>(reference);
   const [isAddingField, setIsAddingField] = useState(false);
+  const docExists = Object.keys(data).length > 0;
 
   return (
     <>
@@ -64,7 +65,7 @@ const DocumentPreview: React.FC<Props> = ({
                 setIsAddingField(false);
               }}
               onSave={async (key, value) => {
-                if (!data) {
+                if (!docExists) {
                   await addFieldToMissingDocument(reference, key, value);
                 } else {
                   updateField(reference, data, [key], value);
@@ -75,7 +76,7 @@ const DocumentPreview: React.FC<Props> = ({
             />
           )}
 
-          {data && isMap(data) ? (
+          {docExists && isMap(data) ? (
             <div className="Firestore-Field-List">
               {Object.keys(data).map(name => (
                 <FieldPreview

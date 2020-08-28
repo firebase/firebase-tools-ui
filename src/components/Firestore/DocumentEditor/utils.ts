@@ -112,7 +112,7 @@ export function normalize(data: FirestoreAny): Store {
 
 export function denormalize(
   store: Store,
-  firestore: firebase.firestore.Firestore
+  firestore?: firebase.firestore.Firestore
 ): FirestoreAny {
   assertStoreHasRoot(store);
   const field = store.fields[store.uuid];
@@ -136,6 +136,10 @@ export function denormalize(
     }, [] as any);
   } else {
     if (field.value instanceof DocumentPath) {
+      if (!firestore) {
+        // TODO: Trying to reference a Firestore Document without a Firestore instancej
+        return '';
+      }
       try {
         return firestore.doc(field.value.path);
       } catch {
