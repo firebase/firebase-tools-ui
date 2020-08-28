@@ -14,26 +14,12 @@
  * limitations under the License.
  */
 
-import {
-  act,
-  fireEvent,
-  render,
-  wait,
-  waitForElement,
-} from '@testing-library/react';
+import { act, fireEvent, waitForElement } from '@testing-library/react';
 import React from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 
-import { delay, makeDeferred } from '../../test_utils';
 import { RootCollectionList, SubCollectionList } from './CollectionList';
 import { renderWithFirestore } from './testing/FirestoreTestProviders';
-import {
-  FakeCollectionReference,
-  fakeCollectionReference,
-  fakeDocumentReference,
-  fakeDocumentSnapshot,
-  fakeFirestoreApi,
-} from './testing/models';
 
 it('shows the root-collection list', async () => {
   const { getByText } = await renderWithFirestore(async firestore => {
