@@ -24,6 +24,8 @@ import {
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 
+import { renderWithFirestore } from './components/Firestore/testing/FirestoreTestProviders';
+
 export function delay(timeoutMs: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, timeoutMs));
 }
@@ -64,13 +66,13 @@ export async function waitForDialogsToClose(container: ParentNode = document) {
  *
  * This is syntatic sugar for render() and then waitForDialogsToOpen().
  */
-export async function renderDialog(
-  ui: React.ReactElement,
-  options?: Omit<RenderOptions, 'queries'>
+export async function renderDialogWithFirestore(
+  ui: (firestore: firebase.firestore.Firestore) => Promise<React.ReactElement>
+  // options?: Omit<RenderOptions, 'queries'>
 ): Promise<RenderResult> {
   let renderResult: RenderResult;
   await act(async () => {
-    renderResult = render(ui, options);
+    renderResult = await renderWithFirestore(ui); // , options);
     await waitForDialogsToOpen(renderResult.container);
   });
   return renderResult!;

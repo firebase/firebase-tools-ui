@@ -20,71 +20,56 @@ import { act } from 'react-dom/test-utils';
 
 import {
   delay,
-  renderDialog,
+  renderDialogWithFirestore,
   waitForDialogsToClose,
 } from '../../../test_utils';
-import DatabaseApi from '../api';
-import {
-  fakeCollectionReference,
-  fakeDocumentReference,
-} from '../testing/models';
+import { renderWithFirestore } from '../testing/FirestoreTestProviders';
 import { AddCollectionDialog } from './AddCollectionDialog';
 
-jest.mock('../api');
+// const docRef = fakeDocumentReference({
+//   id: 'my-doc',
+//   path: 'docs/my-doc',
+// });
+// docRef.collection = jest.fn();
+// const collectionReference = fakeCollectionReference({
+//   id: 'my-col',
+//   path: 'docs/my-doc/my-col',
+//   doc: jest.fn(),
+// });
+// const autoGenDocRef = fakeDocumentReference({
+//   id: 'random-id',
+// });
 
-const rootRef = fakeDocumentReference({
-  id: undefined,
-  path: '',
-});
-
-const api = new DatabaseApi();
-api.database = rootRef;
-
-const docRef = fakeDocumentReference({
-  id: 'my-doc',
-  path: 'docs/my-doc',
-});
-docRef.collection = jest.fn();
-const collectionReference = fakeCollectionReference({
-  id: 'my-col',
-  path: 'docs/my-doc/my-col',
-  doc: jest.fn(),
-});
-const autoGenDocRef = fakeDocumentReference({
-  id: 'random-id',
-});
-
-beforeEach(() => {
-  docRef.collection.mockReturnValue(collectionReference);
-  collectionReference.doc.mockReturnValue(autoGenDocRef);
-});
-
-it('shows correct title', () => {
-  const { getByText } = render(
-    <AddCollectionDialog open={true} api={api} onValue={() => {}} />
-  );
+it('shows correct title', async () => {
+  const { getByText } = await renderWithFirestore(async () => (
+    <AddCollectionDialog open={true} onValue={() => {}} />
+  ));
 
   expect(getByText(/Start a collection/)).not.toBeNull();
 });
 
 describe('step 1', () => {
   it('displays the parent document path', async () => {
-    const { getByLabelText } = await renderDialog(
-      <AddCollectionDialog
-        open={true}
-        api={api}
-        documentRef={docRef}
-        onValue={() => {}}
-      />
+    const { getByLabelText } = await renderDialogWithFirestore(
+      async firestore => {
+        const docRef = firestore.doc('docs/my-doc');
+        return (
+          <AddCollectionDialog
+            open={true}
+            documentRef={docRef}
+            onValue={() => {}}
+          />
+        );
+      }
     );
 
     expect(getByLabelText(/Parent path/).value).toBe('docs/my-doc');
   });
 
   it('contains a collection id input', async () => {
-    const { getByLabelText } = await renderDialog(
-      <AddCollectionDialog open={true} api={api} onValue={() => {}} />
-    );
+    const { getByLabelText } = await renderDialogWithFirestore(async () => (
+      <AddCollectionDialog open={true} onValue={() => {}} />
+    ));
 
     expect(getByLabelText(/Collection ID/)).not.toBeNull();
   });
@@ -96,14 +81,16 @@ describe('step 2', () => {
 
   beforeEach(async () => {
     onValue = jest.fn();
-    result = await renderDialog(
-      <AddCollectionDialog
-        open={true}
-        api={api}
-        documentRef={docRef}
-        onValue={onValue}
-      />
-    );
+    result = await renderDialogWithFirestore(async firestore => {
+      const docRef = firestore.doc('docs/my-doc');
+      return (
+        <AddCollectionDialog
+          open={true}
+          documentRef={docRef}
+          onValue={onValue}
+        />
+      );
+    });
     const { getByText, getByLabelText } = result;
 
     fireEvent.change(getByLabelText(/Collection ID/), {
@@ -126,7 +113,7 @@ describe('step 2', () => {
   it('contains a document id with random id', () => {
     const { getByLabelText } = result;
 
-    expect(getByLabelText(/Document ID/).value).toBe('random-id');
+    expect(getByLabelText(/Document ID/).value).toMatch(/\w+/);
   });
 
   it('contains a data input', () => {
@@ -150,6 +137,7 @@ describe('step 2', () => {
 
   it('emits doc data when clicking [Save]', async () => {
     const { getByLabelText, getByText } = result;
+    const randomId = getByLabelText(/Document ID/).value;
 
     await act(async () => {
       fireEvent.change(getByLabelText('Field'), {
@@ -163,7 +151,7 @@ describe('step 2', () => {
     expect(onValue).toHaveBeenCalledWith({
       collectionId: 'my-col',
       document: {
-        id: 'random-id',
+        id: randomId,
         data: { valid: '' },
       },
     });
@@ -181,9 +169,9 @@ describe('step 2', () => {
 
 describe('at the root of the db', () => {
   it('shows the correct parent path', async () => {
-    const { getByLabelText } = await renderDialog(
-      <AddCollectionDialog open={true} api={api} onValue={() => {}} />
-    );
+    const { getByLabelText } = await renderDialogWithFirestore(async () => (
+      <AddCollectionDialog open={true} onValue={() => {}} />
+    ));
 
     expect(getByLabelText(/Parent path/).value).toBe('/');
   });
