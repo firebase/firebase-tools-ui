@@ -41,7 +41,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - run: curl -sL https://firebase.tools | bash
+      # - run: curl -sL https://firebase.tools | bash
       - run: npm ci
       - name: Run tests against emulator
         run: |
