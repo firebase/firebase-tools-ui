@@ -1,5 +1,7 @@
 require('mutationobserver-shim');
 
+global.globalThis = require('globalthis')();
+
 import * as base from '@rmwc/base';
 
 // <AppBar> calls window.scrollTo which jsdom does not implement. Let's mock it
