@@ -34,15 +34,10 @@ import { makeDeferred } from '../../test_utils';
 import { confirm } from '../common/DialogQueue';
 import * as emulatedApi from './FirestoreEmulatedApiProvider';
 import { Firestore, FirestoreRoute } from './index';
-import { FirestoreProviders } from './testing/FirestoreProviders';
+import { renderWithFirestore } from './testing/FirestoreTestProviders';
 import { fakeCollectionReference } from './testing/models';
 
 jest.mock('../common/DialogQueue');
-
-// jest.mock('reactfire', () => ({
-//   ...jest.requireActual('reactfire'),
-//   // useFirestore: () => ({}),
-// }));
 
 const sampleConfig: FirestoreConfig = {
   host: 'localhost',
@@ -93,64 +88,14 @@ describe('FirestoreRoute', () => {
 });
 
 describe('Firestore', () => {
-  // beforeEach(async () => {
-  //   await firebaseTesting.clearFirestoreData({
-  //     projectId: process.env.GCLOUD_PROJECT!,
-  //   });
-  // });
-  // afterEach(async () => {
-  //   await firebaseTesting.clearFirestoreData({
-  //     projectId: process.env.GCLOUD_PROJECT!,
-  //   });
-  // });
-
-  it('does stuff', async () => {
-    jest.setTimeout(10000); // 10 second
-    const seedData = {
-      'cool-coll-one/cool-doc': { a: 1 },
-    };
-
-    const { getByText, queryByText } = render(
-      <FirestoreProviders data={seedData}>
-        <Firestore />
-      </FirestoreProviders>
-    );
-
-    await waitForElement(() => getByText(/cool-coll-one/), { timeout: 10000 });
-
-    expect(queryByText(/Connecting to Firestore/)).toBeNull();
-    expect(getByText(/cool-coll-one/)).not.toBeNull();
-    expect(queryByText(/cool-coll-two/)).toBeNull();
-  });
-
-  it('does stuff independently', async () => {
-    jest.setTimeout(10000); // 10 second
-    const seedData = {
-      'cool-coll-two/cool-doc': { a: 1 },
-    };
-
-    const { getByText, queryByText } = render(
-      <FirestoreProviders data={seedData}>
-        <Firestore />
-      </FirestoreProviders>
-    );
-
-    await waitForElement(() => getByText(/cool-coll-two/), { timeout: 10000 });
-
-    expect(queryByText(/Connecting to Firestore/)).toBeNull();
-    expect(queryByText(/cool-coll-one/)).toBeNull();
-    expect(getByText(/cool-coll-two/)).not.toBeNull();
-  });
-
   it('shows the top-level collections', async () => {
-    const mockData = {
-      'cool-coll/bar': { a: 1 },
-    };
+    const { getByText, queryByText } = await renderWithFirestore(
+      async firestore => {
+        const collectionRef = firestore.collection('cool-coll');
+        await collectionRef.doc('bar').set({ a: 1 });
 
-    const { getByText, queryByText } = render(
-      <FirestoreProviders data={mockData}>
-        <Firestore />
-      </FirestoreProviders>
+        return <Firestore />;
+      }
     );
 
     await waitForElement(() => getByText(/cool-coll/));
@@ -160,10 +105,9 @@ describe('Firestore', () => {
   });
 
   it('shows a collection-shell if at the root', async () => {
-    const { getByTestId } = render(
-      <FirestoreProviders initialEntries={['/firestore']}>
-        <Firestore />
-      </FirestoreProviders>
+    const { getByTestId } = await renderWithFirestore(
+      async () => <Firestore />,
+      { path: '/firestore' }
     );
 
     await waitForElement(() => getByTestId(/collection-shell/));
@@ -173,10 +117,11 @@ describe('Firestore', () => {
   });
 
   it('shows a document-shell if 1-level deep', async () => {
-    const { getByTestId, queryByTestId } = render(
-      <FirestoreProviders initialEntries={['/firestore/coll']}>
-        <Firestore />
-      </FirestoreProviders>
+    const { getByTestId, queryByTestId } = await renderWithFirestore(
+      async () => <Firestore />,
+      {
+        path: '/firestore/coll',
+      }
     );
 
     await waitForElement(() => getByTestId(/document-shell/));
@@ -186,13 +131,18 @@ describe('Firestore', () => {
   });
 
   it('shows no shells if 2-levels deep', async () => {
-    const { getByTestId, queryByTestId } = render(
-      <FirestoreProviders initialEntries={['/firestore/coll/doc']}>
-        <Firestore />
-      </FirestoreProviders>
+    const { getByText, getByTestId, queryByTestId } = await renderWithFirestore(
+      async firestore => {
+        const collectionRef = firestore.collection('coll');
+        await collectionRef.doc('doc').set({ a: 1 });
+        return <Firestore />;
+      },
+      {
+        path: '/firestore/coll/doc',
+      }
     );
 
-    await waitForElementToBeRemoved(() => getByTestId('fallback'));
+    await waitForElement(() => getByText(/doc/));
 
     expect(queryByTestId(/collection-shell/)).toBeNull();
     expect(queryByTestId(/document-shell/)).toBeNull();
@@ -204,15 +154,17 @@ describe('Firestore', () => {
     jest.spyOn(emulatedApi, 'useEjector').mockReturnValue(nukeSpy);
     confirm.mockResolvedValueOnce(true);
 
-    const { getByTestId, getByText, queryByTestId } = render(
-      <FirestoreProviders>
-        <Firestore />
-        <Route
-          path="/firestore"
-          exact
-          render={() => <div data-testid="ROOT"></div>}
-        />
-      </FirestoreProviders>
+    const { getByTestId, getByText, queryByTestId } = await renderWithFirestore(
+      async () => (
+        <>
+          <Firestore />
+          <Route
+            path="/firestore"
+            exact
+            render={() => <div data-testid="ROOT"></div>}
+          />
+        </>
+      )
     );
     act(() => getByText('Clear all data').click());
     await wait(() => expect(nukeSpy).toHaveBeenCalled());
@@ -229,11 +181,7 @@ describe('Firestore', () => {
     const confirmDeferred = makeDeferred<boolean>();
     confirm.mockReturnValueOnce(confirmDeferred.promise);
 
-    const { getByText } = render(
-      <FirestoreProviders>
-        <Firestore />
-      </FirestoreProviders>
-    );
+    const { getByText } = await renderWithFirestore(async () => <Firestore />);
     act(() => getByText('Clear all data').click());
     // Simulate the case where user clicked on Cancel in the confirm dialog.
     await act(() => confirmDeferred.resolve(false));

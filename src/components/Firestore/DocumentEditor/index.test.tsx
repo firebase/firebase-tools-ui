@@ -17,8 +17,8 @@
 import { act, fireEvent, render, wait } from '@testing-library/react';
 import React from 'react';
 
-import { ApiProvider } from '../ApiContext';
 import { FieldType } from '../models';
+import { renderWithFirestore } from '../testing/FirestoreTestProviders';
 import DocumentEditor from './index';
 
 describe('with basic root fields', () => {
@@ -210,11 +210,9 @@ describe('changing types', () => {
 
   beforeEach(async () => {
     await act(async () => {
-      result = render(
-        <ApiProvider value={{}}>
-          <DocumentEditor value={{ hello: 'world' }} />
-        </ApiProvider>
-      );
+      result = await renderWithFirestore(async () => (
+        <DocumentEditor value={{ hello: 'world' }} />
+      ));
     });
 
     const { getByLabelText } = result;

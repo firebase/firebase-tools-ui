@@ -61,7 +61,7 @@ const CollectionList: React.FC<Props> = ({ collections, reference }) => {
   );
 
   const addCollection = async (value: AddCollectionDialogValue | null) => {
-    if (value && value.collectionId && value.document.id) {
+    if (value?.collectionId && value?.document.id) {
       const ref = reference || firestore;
       const newCollection = ref.collection(value.collectionId);
       await newCollection.doc(value.document.id).set(value.document.data);
@@ -114,5 +114,3 @@ const CollectionList: React.FC<Props> = ({ collections, reference }) => {
     </div>
   );
 };
-
-export default CollectionList;

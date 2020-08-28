@@ -14,14 +14,19 @@
  * limitations under the License.
  */
 
-import { act, fireEvent, render, wait } from '@testing-library/react';
+import {
+  act,
+  fireEvent,
+  render,
+  wait,
+  waitForElement,
+} from '@testing-library/react';
 import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 
 import { delay, makeDeferred } from '../../test_utils';
-import DatabaseApi from './api';
-import { ApiProvider } from './ApiContext';
-import CollectionList from './CollectionList';
+import { RootCollectionList, SubCollectionList } from './CollectionList';
+import { renderWithFirestore } from './testing/FirestoreTestProviders';
 import {
   FakeCollectionReference,
   fakeCollectionReference,
@@ -30,84 +35,59 @@ import {
   fakeFirestoreApi,
 } from './testing/models';
 
-jest.mock('./api');
+it('shows the root-collection list', async () => {
+  const { getByText } = await renderWithFirestore(async firestore => {
+    await firestore.doc('coll-1/thing').set({ a: 1 });
+    await firestore.doc('coll-2/thing').set({ a: 1 });
+    return <RootCollectionList />;
+  });
 
-it('shows the list of collections', async () => {
-  const fakeApi = new DatabaseApi();
-  const getCollections = makeDeferred<FakeCollectionReference[]>();
-  fakeApi.getCollections.mockReturnValueOnce(getCollections.promise);
+  await waitForElement(() => getByText(/coll-1/));
 
-  const { getByText } = render(
-    <MemoryRouter>
-      <ApiProvider value={fakeApi}>
-        <CollectionList />
-      </ApiProvider>
-    </MemoryRouter>
-  );
-
-  await act(() =>
-    getCollections.resolve([
-      fakeCollectionReference({ id: 'coll-1' }),
-      fakeCollectionReference({ id: 'coll-2' }),
-    ])
-  );
   expect(getByText(/coll-1/)).not.toBeNull();
   expect(getByText(/coll-2/)).not.toBeNull();
 });
 
-it('requests root-collections with no docRef', async () => {
-  const fakeApi = new DatabaseApi();
+it('shows the sub-collection list', async () => {
+  const { getByText } = await renderWithFirestore(async firestore => {
+    const docRef = firestore.doc('top/thing');
+    await docRef
+      .collection('coll-1')
+      .doc('other')
+      .set({ a: 1 });
+    await docRef
+      .collection('coll-2')
+      .doc('other')
+      .set({ a: 1 });
+    return <SubCollectionList reference={docRef} />;
+  });
 
-  render(
-    <MemoryRouter>
-      <ApiProvider value={fakeApi}>
-        <CollectionList />
-      </ApiProvider>
-    </MemoryRouter>
-  );
+  await waitForElement(() => getByText(/coll-1/));
 
-  await act(() => delay(100)); // Give it some time to call getCollections.
-
-  expect(fakeApi.getCollections).toHaveBeenCalledWith(undefined);
-});
-
-it('requests sub-collections with docRef', async () => {
-  const fakeApi = new DatabaseApi();
-  const fakeDocRef = fakeDocumentReference();
-
-  render(
-    <MemoryRouter>
-      <ApiProvider value={fakeApi}>
-        <CollectionList reference={fakeDocRef} />
-      </ApiProvider>
-    </MemoryRouter>
-  );
-
-  await act(() => delay(100)); // Give it some time to call getCollections.
-
-  expect(fakeApi.getCollections).toHaveBeenCalledWith(fakeDocRef);
+  expect(getByText(/coll-1/)).not.toBeNull();
+  expect(getByText(/coll-2/)).not.toBeNull();
 });
 
 it('triggers a redirect to a new collection at the root', async () => {
-  const fakeApi = new DatabaseApi();
-  const documentRef = fakeDocumentReference({ id: 'foo' });
-  const collectionRef = fakeCollectionReference({
-    id: 'abc',
-    doc: () => documentRef,
-  });
-  fakeApi.getCollections.mockReturnValueOnce([]);
-  fakeApi.database = {
-    collection: () => collectionRef,
-  };
+  const { getByLabelText, getByText } = await renderWithFirestore(
+    async firestore => {
+      await firestore.doc('coll-1/thing').set({ a: 1 });
+      return (
+        <>
+          <Route path="/firestore/coll-1">
+            <RootCollectionList />
+          </Route>
 
-  const { getByText, getByLabelText } = render(
-    <MemoryRouter initialEntries={['/firestore/parent']}>
-      <ApiProvider value={fakeApi}>
-        <CollectionList />
-        <Route path="/firestore/abc">_redirected_to_foo_</Route>
-      </ApiProvider>
-    </MemoryRouter>
+          <Route path="/firestore/abc">_redirected_to_foo_</Route>
+        </>
+      );
+    },
+    {
+      path: '/firestore/coll-1',
+    }
   );
+
+  await waitForElement(() => getByText(/coll-1/));
 
   act(() => getByText(/Start collection/).click());
 
@@ -120,51 +100,66 @@ it('triggers a redirect to a new collection at the root', async () => {
   act(() => getByText(/Next/).click());
 
   await act(async () => {
-    getByText(/delete/).click();
+    fireEvent.change(getByLabelText(/Field/), {
+      target: { value: 'foo' },
+    });
+  });
 
+  await act(async () => {
     getByText(/Save/).click();
   });
 
-  expect(getByText(/abc/)).not.toBeNull();
+  await waitForElement(() => getByText(/_redirected_to_foo/));
+
   expect(getByText(/_redirected_to_foo/)).not.toBeNull();
 });
 
 it('triggers a redirect to a new collection in a document', async () => {
-  debugger;
-  const fakeApi = new DatabaseApi();
-  const wantDoc = fakeDocumentReference({ id: 'abc' });
-  const parentDocumentRef = fakeDocumentReference({
-    id: 'parent',
-    path: 'parent',
-    collectionDoc: () => wantDoc,
-  });
-  fakeApi.getCollections.mockReturnValueOnce([]);
+  const { getByLabelText, getByText } = await renderWithFirestore(
+    async firestore => {
+      const docRef = firestore.doc('top/thing');
+      await docRef
+        .collection('coll-1')
+        .doc('other')
+        .set({ a: 1 });
+      return (
+        <>
+          <Route path="/firestore/top/thing">
+            <SubCollectionList reference={docRef} />
+          </Route>
 
-  const { getByText, getByLabelText } = render(
-    <MemoryRouter>
-      <ApiProvider value={fakeApi}>
-        <CollectionList reference={parentDocumentRef} />
-      </ApiProvider>
-      <Route path="/firestore/parent/abc">_redirected_to_foo_</Route>
-    </MemoryRouter>
+          <Route path="/firestore/top/thing/abc">_redirected_to_foo_</Route>
+        </>
+      );
+    },
+    {
+      path: '/firestore/top/thing',
+    }
   );
+
+  await waitForElement(() => getByText(/coll-1/));
 
   act(() => getByText(/Start collection/).click());
 
   await act(async () => {
     fireEvent.change(getByLabelText(/Collection ID/), {
-      target: { value: wantDoc.id },
+      target: { value: 'abc' },
     });
   });
 
   act(() => getByText(/Next/).click());
 
   await act(async () => {
-    getByText(/delete/).click();
+    fireEvent.change(getByLabelText(/Field/), {
+      target: { value: 'foo' },
+    });
+  });
 
+  await act(async () => {
     getByText(/Save/).click();
   });
 
-  expect(getByText(/abc/)).not.toBeNull();
+  await waitForElement(() => getByText(/_redirected_to_foo/));
+
   expect(getByText(/_redirected_to_foo/)).not.toBeNull();
 });
