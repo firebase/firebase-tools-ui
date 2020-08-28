@@ -106,6 +106,7 @@ it('shows the selected root-collection', async () => {
   );
 
   await waitForElement(() => getByTestId('collection-list'));
+  await waitForElement(() => getAllByText('bar').length > 0);
 
   expect(getByTestId('collection-list')).not.toBeNull();
   expect(getAllByText('bar').length).toBeGreaterThan(0);

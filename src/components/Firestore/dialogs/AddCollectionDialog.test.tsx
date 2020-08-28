@@ -14,7 +14,13 @@
  * limitations under the License.
  */
 
-import { RenderResult, fireEvent, render, wait } from '@testing-library/react';
+import {
+  RenderResult,
+  fireEvent,
+  render,
+  wait,
+  waitForElement,
+} from '@testing-library/react';
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 
@@ -27,11 +33,18 @@ import { renderWithFirestore } from '../testing/FirestoreTestProviders';
 import { AddCollectionDialog } from './AddCollectionDialog';
 
 it('shows correct title', async () => {
+  const promise = Promise.resolve();
+  const onValue = jest.fn(() => promise);
+
   const { getByText } = await renderWithFirestore(async () => (
-    <AddCollectionDialog open={true} onValue={() => {}} />
+    <AddCollectionDialog open={true} onValue={onValue} />
   ));
 
+  await waitForElement(() => getByText(/Start a collection/));
+
   expect(getByText(/Start a collection/)).not.toBeNull();
+
+  await act(() => promise);
 });
 
 describe('step 1', () => {
