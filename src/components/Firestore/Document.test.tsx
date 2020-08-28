@@ -90,7 +90,7 @@ it('shows the document collection-list', async () => {
 });
 
 it('shows the selected root-collection', async () => {
-  const { getAllByText, getByTestId } = await renderWithFirestore(
+  const { getAllByText, getAllByTestId } = await renderWithFirestore(
     async firestore => {
       await firestore.doc('foo/bar').set({ a: 1 });
       return (
@@ -105,10 +105,10 @@ it('shows the selected root-collection', async () => {
     }
   );
 
-  await waitForElement(() => getByTestId('collection-list'));
+  await waitForElement(() => getAllByTestId('collection-list').length > 0);
   await waitForElement(() => getAllByText('bar').length > 0);
 
-  expect(getByTestId('collection-list')).not.toBeNull();
+  expect(getAllByTestId('collection-list').length).toBeGreaterThan(0);
   expect(getAllByText('bar').length).toBeGreaterThan(0);
 });
 
