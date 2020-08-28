@@ -26,7 +26,6 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { useFirestore } from 'reactfire';
 
 import { createStructuredSelector } from '../../store';
-import { FirestoreConfig } from '../../store/config';
 import {
   getFirestoreConfigResult,
   getProjectIdResult,

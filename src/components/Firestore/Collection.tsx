@@ -24,7 +24,7 @@ import { MenuSurface, MenuSurfaceAnchor } from '@rmwc/menu';
 import { firestore } from 'firebase';
 import React, { useState } from 'react';
 import { NavLink, Redirect, Route, useRouteMatch } from 'react-router-dom';
-import { useFirestoreCollection, useFirestoreCollectionData } from 'reactfire';
+import { useFirestoreCollection } from 'reactfire';
 
 import styles from './Collection.module.scss';
 import { CollectionFilter } from './CollectionFilter';

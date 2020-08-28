@@ -25,7 +25,6 @@ import {
 import { Elevation } from '@rmwc/elevation';
 import React, { useState } from 'react';
 import { FocusOn } from 'react-focus-on';
-import { useFirestore } from 'reactfire';
 
 import DocumentEditor from '../DocumentEditor';
 import { FirestoreAny } from '../models';

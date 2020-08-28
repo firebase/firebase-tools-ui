@@ -21,7 +21,6 @@ import { firestore } from 'firebase';
 import React, { useState } from 'react';
 import { useFirestoreDocData } from 'reactfire';
 
-import { FirestoreMap } from '../models';
 import { isMap } from '../utils';
 import { addFieldToMissingDocument, updateField } from './api';
 import FieldPreview from './FieldPreview';
