@@ -7,7 +7,7 @@ on:
   push:
     branches: [master]
   pull_request:
-    branches: "*"
+    branches: '*'
 
 jobs:
   build:
@@ -41,8 +41,9 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
+      - run: curl -sL https://firebase.tools | bash
       - run: npm ci
-      - run: npm run test:coverage
+      - run: firebase emulators:exec --project sample --only database,firestore 'npm run test:coverage'
         env:
           CI: true
 
