@@ -70,7 +70,8 @@
     "build:server": "webpack --target=node server.js -o server.bundle.js",
     "test": "firebase emulators:exec --only database,firestore --project sample 'npm run test:dev'",
     "test:dev": "react-scripts test",
-    "test:coverage": "react-scripts test --coverage --watchAll=false",
+    "test:coverage:dev": "react-scripts test --coverage --watchAll=false",
+    "test:coverage": "firebase emulators:exec --only database,firestore --project sample 'npm run test:coverage'",
     "eject": "react-scripts eject",
     "fmt": "prettier --write 'src/**'"
   },
