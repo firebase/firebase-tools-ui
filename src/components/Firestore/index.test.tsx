@@ -35,7 +35,6 @@ import { confirm } from '../common/DialogQueue';
 import * as emulatedApi from './FirestoreEmulatedApiProvider';
 import { Firestore, FirestoreRoute } from './index';
 import { renderWithFirestore } from './testing/FirestoreTestProviders';
-import { fakeCollectionReference } from './testing/models';
 
 jest.mock('../common/DialogQueue');
 

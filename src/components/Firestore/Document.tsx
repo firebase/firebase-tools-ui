@@ -74,7 +74,6 @@ export const Root: React.FC = () => {
 export const Document: React.FC<{ reference: firestore.DocumentReference }> = ({
   reference,
 }) => {
-  const firestore = useFirestore();
   const handleDeleteDocument = async () => {
     const shouldDelete = await promptDeleteDocument(reference);
     // TODO: recursively delete sub documents
@@ -106,7 +105,7 @@ export const Document: React.FC<{ reference: firestore.DocumentReference }> = ({
       </React.Suspense>
       <ListDivider tag="div" />
       <React.Suspense fallback={<div>Loading document preview</div>}>
-        <DocumentPreview reference={reference} firestore={firestore} />
+        <DocumentPreview reference={reference} />
       </React.Suspense>
     </Doc>
   );

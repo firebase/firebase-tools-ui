@@ -14,7 +14,13 @@
  * limitations under the License.
  */
 
-import { act, fireEvent, render, wait } from '@testing-library/react';
+import {
+  RenderResult,
+  act,
+  fireEvent,
+  render,
+  wait,
+} from '@testing-library/react';
 import React from 'react';
 
 import { FieldType } from '../models';
@@ -22,8 +28,8 @@ import { renderWithFirestore } from '../testing/FirestoreTestProviders';
 import DocumentEditor from './index';
 
 describe('with basic root fields', () => {
-  let onChange;
-  let result;
+  let onChange: () => {};
+  let result: RenderResult;
   beforeEach(async () => {
     onChange = jest.fn();
     await act(async () => {
@@ -205,8 +211,8 @@ it('renders an editable key-field', async () => {
 });
 
 describe('changing types', () => {
-  let result;
-  let setType;
+  let result: RenderResult;
+  let setType: (fieldType: FieldType) => void;
 
   beforeEach(async () => {
     await act(async () => {

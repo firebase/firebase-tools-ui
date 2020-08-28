@@ -26,20 +26,6 @@ import {
 import { renderWithFirestore } from '../testing/FirestoreTestProviders';
 import { AddCollectionDialog } from './AddCollectionDialog';
 
-// const docRef = fakeDocumentReference({
-//   id: 'my-doc',
-//   path: 'docs/my-doc',
-// });
-// docRef.collection = jest.fn();
-// const collectionReference = fakeCollectionReference({
-//   id: 'my-col',
-//   path: 'docs/my-doc/my-col',
-//   doc: jest.fn(),
-// });
-// const autoGenDocRef = fakeDocumentReference({
-//   id: 'random-id',
-// });
-
 it('shows correct title', async () => {
   const { getByText } = await renderWithFirestore(async () => (
     <AddCollectionDialog open={true} onValue={() => {}} />
