@@ -6,9 +6,8 @@ import { Field } from '../../../common/Field';
 import { AddAuthUserPayload } from '../../types';
 import styles from './controls.module.scss';
 
-// Whatwg recommended email regex. see https://html.spec.whatwg.org/multipage/input.html#valid-e-mail-address
-// While input type=email does validation, we have to also do it to show proper error message.
-const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+// Consistent with the Auth JS SDK and the Auth Emulator.
+const EMAIL_REGEX = /^[^@]+@[^@]+$/;
 
 function getErrorText(errors: any) {
   if (errors) {

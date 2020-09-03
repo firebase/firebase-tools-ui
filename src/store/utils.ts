@@ -1,6 +1,5 @@
 import { isDraft, original } from 'immer';
 import deepEquals from 'lodash.isequal';
-import { ReactElement } from 'react';
 
 export interface ErrorInfo {
   message: string;
@@ -124,14 +123,14 @@ export function combineData<
 }
 
 // Handle missing / data / error cases of a result and return a single value.
-export function handle<T, E>(
+export function handle<T, E, R>(
   result: Result<T, E> | undefined,
   mappers: {
-    onNone: () => ReactElement;
-    onData: (data: T) => ReactElement;
-    onError: (error: E) => ReactElement;
+    onNone: () => R;
+    onData: (data: T) => R;
+    onError: (error: E) => R;
   }
-): ReactElement {
+): R {
   if (result === undefined) {
     return mappers.onNone();
   } else {
@@ -144,14 +143,14 @@ export function handle<T, E>(
 }
 
 // Handle all loading / data cases of a remote and return a single value.
-export function squash<T, E>(
+export function squash<T, E, R>(
   remoteResult: RemoteResult<T, E>,
   mappers: {
-    onNone: (loading: boolean) => ReactElement;
-    onData: (data: T, loading: boolean) => ReactElement;
-    onError: (error: E, loading: boolean) => ReactElement;
+    onNone: (loading: boolean) => R;
+    onData: (data: T, loading: boolean) => R;
+    onError: (error: E, loading: boolean) => R;
   }
-): ReactElement {
+): R {
   return handle(remoteResult.result, {
     onNone: () => mappers.onNone(remoteResult.loading),
     onData: data => mappers.onData(data, remoteResult.loading),
