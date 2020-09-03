@@ -4,6 +4,8 @@ import { addUser } from './actions';
 
 export function* authSaga() {
   yield all([
+    // TODO(kirjs): This is only needed for testing.
+    // Remove before merging.
     put(
       addUser({
         user: {
