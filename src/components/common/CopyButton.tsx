@@ -1,5 +1,5 @@
 import { IconButton } from '@rmwc/icon-button';
-import React, { useState } from 'react';
+import React from 'react';
 
 interface CopyButtonProps {
   text: string;
