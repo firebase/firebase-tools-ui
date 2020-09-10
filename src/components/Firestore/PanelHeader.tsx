@@ -21,6 +21,7 @@ import { Typography } from '@rmwc/typography';
 import React from 'react';
 
 import { CardActionBar, CardActionBarActions } from '../common/CardActionBar';
+import { CopyButton } from '../common/CopyButton';
 
 export const PanelHeader: React.FC<{ id: string; icon: React.ReactNode }> = ({
   id,
@@ -34,7 +35,10 @@ export const PanelHeader: React.FC<{ id: string; icon: React.ReactNode }> = ({
         <Typography use="body2" className="Firestore-PanelHeader-title">
           {id}
         </Typography>
-        <CardActionBarActions>{children}</CardActionBarActions>
+        <CardActionBarActions>
+          {children}
+          <CopyButton text={id} label="Copy ID" />
+        </CardActionBarActions>
       </CardActionBar>
     </div>
   );
