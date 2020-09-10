@@ -1,33 +1,26 @@
 import { IconButton } from '@rmwc/icon-button';
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 
 interface CopyButtonProps {
   text: string;
   label?: string;
 }
 
-// TODO(davideast): Depend on pkg https://github.com/jaredLunde/react-hook/tree/master/packages/copy#readme
-function useCopy(text: string) {
-  const [copied, setCopied] = React.useState(false);
-  const reset = React.useRef(() => setCopied(false));
-  React.useEffect(() => reset.current, [text]);
-
+function useClipboard(text: string) {
+  const [isTextCopied, setIsTextCopied] = useState(false);
   return {
-    copied,
-    copy: React.useCallback(
-      () =>
-        navigator.clipboard
-          .writeText(text)
-          .then(() => setCopied(true))
-          .catch(() => setCopied(copied => copied)),
-      [text]
-    ),
-    reset: reset.current,
+    isTextCopied,
+    writeText: useCallback(() => {
+      return navigator.clipboard
+        .writeText(text)
+        .then(() => setIsTextCopied(true))
+        .catch(() => setIsTextCopied(isTextCopied => isTextCopied));
+    }, [text]),
   };
 }
 
 export function CopyButton({ text, label }: CopyButtonProps) {
   label = label || 'Copy';
-  const { copy } = useCopy(text);
-  return <IconButton icon="content_copy" label={label} onClick={copy} />;
+  const { writeText } = useClipboard(text);
+  return <IconButton icon="content_copy" label={label} onClick={writeText} />;
 }

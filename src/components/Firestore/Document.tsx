@@ -24,6 +24,7 @@ import { firestore } from 'firebase';
 import React from 'react';
 import { Route, useRouteMatch } from 'react-router-dom';
 
+import { CopyButton } from '../common/CopyButton';
 import { FirestoreIcon } from '../common/icons';
 import { useApi } from './ApiContext';
 import Collection from './Collection';
@@ -93,6 +94,7 @@ export const Document: React.FC<{ reference: firestore.DocumentReference }> = ({
         id={reference.id}
         icon={<Icon icon={{ icon: 'insert_drive_file', size: 'small' }} />}
       >
+        <CopyButton text={reference.id} label="Copy document ID" />
         <SimpleMenu handle={<IconButton icon="more_vert" />} renderToPortal>
           <MenuItem onClick={handleDeleteDocument}>Delete document</MenuItem>
           <MenuItem onClick={handleDeleteFields}>Delete all fields</MenuItem>
