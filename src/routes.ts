@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import React from 'react';
+
 import Auth from './components/Auth';
 import Database from './components/Database';
 import Firestore from './components/Firestore';

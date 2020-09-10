@@ -89,7 +89,7 @@ describe('AuthTable text', () => {
 
       // Keeps displaying header
       expect(getAllByRole('row').length).toBe(1);
-      getByText('No users');
+      getByText(/No users/);
     });
   });
 

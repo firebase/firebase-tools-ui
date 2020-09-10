@@ -45,15 +45,29 @@ describe('EditUserDialog', () => {
   }
 
   it('calls onClose on form submit', async () => {
-    const { triggerValidation, onClose } = await setup();
+    const { triggerValidation, onClose, getByLabelText } = await setup();
+
+    const input = getByLabelText(/Phone authentication/) as HTMLInputElement;
+
+    fireEvent.change(input, {
+      target: { value: '689-6896896' },
+    });
+    fireEvent.blur(input);
 
     expect(onClose).not.toHaveBeenCalled();
     await triggerValidation();
     expect(onClose).toHaveBeenCalled();
   });
 
-  it('calls addUser on form submit', async () => {
-    const { triggerValidation, updateUser } = await setup();
+  it('calls updateUser on form submit', async () => {
+    const { triggerValidation, updateUser, getByLabelText } = await setup();
+
+    const input = getByLabelText(/Phone authentication/) as HTMLInputElement;
+
+    fireEvent.change(input, {
+      target: { value: '689-6896896' },
+    });
+    fireEvent.blur(input);
 
     expect(updateUser).not.toHaveBeenCalled();
     await triggerValidation();

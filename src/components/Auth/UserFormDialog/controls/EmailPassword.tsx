@@ -8,6 +8,7 @@ import styles from './controls.module.scss';
 
 // Consistent with the Auth JS SDK and the Auth Emulator.
 const EMAIL_REGEX = /^[^@]+@[^@]+$/;
+const PASSWORD_MIN_LENGTH = 6;
 
 function getErrorText(errors: any) {
   if (errors) {
@@ -17,10 +18,17 @@ function getErrorText(errors: any) {
     if (errors.emailpassword) {
       return 'Both email and password should be present';
     }
+    if (errors.password) {
+      return `Password should be at least ${PASSWORD_MIN_LENGTH} characters`;
+    }
   }
 }
 
-export const EmailPassword: React.FC<FormContextValues<AddAuthUserPayload>> = ({
+export type EmailPasswordProps = FormContextValues<AddAuthUserPayload> & {
+  isEditing: boolean;
+};
+export const EmailPassword: React.FC<EmailPasswordProps> = ({
+  isEditing,
   register,
   watch,
   setError,
@@ -33,20 +41,22 @@ export const EmailPassword: React.FC<FormContextValues<AddAuthUserPayload>> = ({
   useEffect(() => {
     if (
       (email === '' && password === '') ||
-      (email !== '' && password !== '')
+      (email !== '' && password !== '') ||
+      isEditing
     ) {
       clearError('emailpassword');
     } else {
       setError('emailpassword', 'both');
     }
-  }, [email, password, clearError, setError]);
+  }, [email, password, clearError, setError, isEditing]);
 
   return (
     <>
       <div className={styles.emailWrapper}>
         <Field
           name="email"
-          label="Email/Password (optional)"
+          placeholder="Enter email"
+          label="Email/Password"
           aria-label="Email"
           type="text"
           inputRef={register({ pattern: EMAIL_REGEX })}
@@ -54,11 +64,17 @@ export const EmailPassword: React.FC<FormContextValues<AddAuthUserPayload>> = ({
         <Field
           name="password"
           type="text"
+          placeholder="Enter password"
           aria-label="Password"
-          inputRef={register}
+          inputRef={register({ minLength: PASSWORD_MIN_LENGTH })}
         />
       </div>
-      <Typography className={styles.error} use="body2" theme="error">
+      <Typography
+        className={styles.error}
+        use="body2"
+        role="alert"
+        theme="error"
+      >
         {getErrorText(errors)}
       </Typography>
     </>

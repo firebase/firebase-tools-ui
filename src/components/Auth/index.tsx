@@ -26,6 +26,7 @@ import { getProjectIdResult } from '../../store/config/selectors';
 import { handle } from '../../store/utils';
 import { EmulatorDisabled } from '../common/EmulatorDisabled';
 import { Spinner } from '../common/Spinner';
+import { OneAccountPerEmailCard } from './OneAccountPerEmailCard/OneAccountPerEmailCard';
 import ClearAll from './UsersCard/ClearAll';
 import UsersCard from './UsersCard/UsersCard';
 
@@ -52,6 +53,9 @@ export const Auth: React.FC<AuthProps> = () => (
     <ClearAll />
     <Elevation z="2" wrap>
       <UsersCard />
+    </Elevation>
+    <Elevation z="2" wrap>
+      <OneAccountPerEmailCard />
     </Elevation>
   </GridCell>
 );

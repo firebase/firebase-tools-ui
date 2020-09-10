@@ -7,6 +7,7 @@ import {
 } from '../../../common/CardActionBar';
 import AuthFilter from './AuthFilter';
 import styles from './AuthHeader.module.scss';
+import RefreshButton from './RefreshButton';
 
 export interface AuthHeaderProps {
   onOpenNewUserDialog: () => void;
@@ -21,6 +22,7 @@ export const AuthHeader: React.FC<AuthHeaderProps> = ({
         <AuthFilter />
         <div className={styles.barActions}>
           <CardActionBarActions>
+            <RefreshButton />
             <Button unelevated onClick={() => onOpenNewUserDialog()}>
               Add user
             </Button>

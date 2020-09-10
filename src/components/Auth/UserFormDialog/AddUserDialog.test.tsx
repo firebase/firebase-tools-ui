@@ -8,19 +8,15 @@ import { AddUserDialog } from './AddUserDialog';
 describe('AddUserDialog', () => {
   async function setup() {
     const onClose = jest.fn();
-    const addUser = jest.fn();
+    const createUser = jest.fn();
     const methods = render(
       <>
         <Portal />
-        <AddUserDialog onClose={onClose} addUser={addUser} />
+        <AddUserDialog onClose={onClose} createUser={createUser} />
       </>
     );
 
     const triggerValidation = async () => {
-      fireEvent.change(methods.getByLabelText('Display name'), {
-        target: { value: 'display value' },
-      });
-
       await act(async () => {
         fireEvent.submit(methods.getByTestId('user-form'));
       });
@@ -31,30 +27,39 @@ describe('AddUserDialog', () => {
     return {
       triggerValidation,
       onClose,
-      addUser,
+      createUser,
       ...methods,
     };
   }
 
   it('calls onClose on form submit', async () => {
-    const { triggerValidation, onClose } = await setup();
+    const { triggerValidation, onClose, getByLabelText } = await setup();
     await waitForDialogsToOpen();
+
+    const input = getByLabelText(/Phone authentication/) as HTMLInputElement;
+
+    fireEvent.change(input, {
+      target: { value: '123-4566896' },
+    });
+    fireEvent.blur(input);
+
     expect(onClose).not.toHaveBeenCalled();
     await triggerValidation();
     expect(onClose).toHaveBeenCalled();
   });
 
-  it('calls addUser on form submit', async () => {
-    const { triggerValidation, addUser } = await setup();
+  it('calls createUser on form submit', async () => {
+    const { triggerValidation, createUser, getByLabelText } = await setup();
 
-    expect(addUser).not.toHaveBeenCalled();
+    const input = getByLabelText(/Phone authentication/) as HTMLInputElement;
+
+    fireEvent.change(input, {
+      target: { value: '123-4566896' },
+    });
+    fireEvent.blur(input);
+
+    expect(createUser).not.toHaveBeenCalled();
     await triggerValidation();
-    expect(addUser).toHaveBeenCalled();
-  });
-
-  it('pre-populates custom claims', async () => {
-    const { getByPlaceholderText } = await setup();
-    getByPlaceholderText('Role');
-    getByPlaceholderText('Value');
+    expect(createUser).toHaveBeenCalled();
   });
 });

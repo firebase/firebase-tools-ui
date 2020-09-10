@@ -19,14 +19,14 @@ export const CustomAttributes: React.FC<FormContextValues<
 
   return (
     <fieldset className={styles.customAttributesWrapper}>
-      <Typography
-        className="Field-label"
-        use="body2"
-        theme="secondary"
-        tag="label"
-      >
-        <legend>Custom Claims</legend>
+      <Typography use="subtitle2" tag="legend">
+        Custom Claims
       </Typography>
+      <Typography use="body2">
+        These custom key:value attributes can be used with Rules to implement
+        various access control strategies (e.g. based on roles). Learn more
+      </Typography>
+
       {fields.map((item, index) => (
         <div role="group" key={item.id}>
           <Field
@@ -43,7 +43,7 @@ export const CustomAttributes: React.FC<FormContextValues<
             inputRef={register({})}
             defaultValue={item.role}
           />
-          {fields.length > 1 && (
+          {
             <IconButton
               label="Add field"
               type="button"
@@ -53,7 +53,7 @@ export const CustomAttributes: React.FC<FormContextValues<
                 remove(index);
               }}
             />
-          )}
+          }
         </div>
       ))}
       <Button
@@ -62,7 +62,7 @@ export const CustomAttributes: React.FC<FormContextValues<
           append({});
         }}
       >
-        Add another
+        {fields.length === 0 ? 'Add claim' : 'Add another'}
       </Button>
     </fieldset>
   );

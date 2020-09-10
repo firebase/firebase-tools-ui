@@ -170,6 +170,7 @@ export const wrapWithForm = <S, T = {}>(
   const submit = jest.fn();
   const FormWrapper = () => {
     const form = useForm<T>(options);
+
     return (
       <form data-testid="form" onSubmit={form.handleSubmit(submit)}>
         <Control {...form} {...props} />

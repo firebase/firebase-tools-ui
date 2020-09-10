@@ -1,22 +1,27 @@
 import { Button } from '@rmwc/button';
 import { DialogActions, DialogButton, DialogContent } from '@rmwc/dialog';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { Field } from '../../common/Field';
 import { AddAuthUserPayload } from '../types';
 import { CustomAttributes } from './controls/CustomAttributes';
-import { EmailPassword } from './controls/EmailPassword';
 import { ImageUrlInput } from './controls/ImageUrlInput';
-import { PhoneControl } from './controls/PhoneControl';
+import { SignInMethod } from './controls/SignInMethod';
 
 export interface UserFormProps {
   user?: AddAuthUserPayload;
   onSave: (user: AddAuthUserPayload, localId?: string) => void;
   onClose: () => void;
+  isEditing: boolean;
 }
 
-const UserForm: React.FC<UserFormProps> = ({ user, onSave, onClose }) => {
+const UserForm: React.FC<UserFormProps> = ({
+  user,
+  onSave,
+  onClose,
+  isEditing,
+}) => {
   const form = useForm<AddAuthUserPayload>({
     defaultValues: user,
     mode: 'onChange',
@@ -25,31 +30,38 @@ const UserForm: React.FC<UserFormProps> = ({ user, onSave, onClose }) => {
   const canSubmit =
     formState.isValid && Object.values(formState.touched).length > 0;
 
-  const submit = (user: AddAuthUserPayload) => {
-    onSave(user);
-    onClose();
-  };
+  const submit = useCallback(
+    (user: AddAuthUserPayload) => {
+      // Take into account multi-field errors.
+      if (Object.values(errors).length === 0) {
+        onSave(user);
+        onClose();
+      }
+    },
+    [errors]
+  );
+
   return (
     <form onSubmit={handleSubmit(submit)} data-testid="user-form">
       <DialogContent>
         <Field
           name="displayName"
-          label="Display name"
+          label="Display name (Optional)"
           type="text"
+          placeholder="Enter display name"
           error={errors?.displayName && 'Display name is required'}
-          inputRef={register({ required: true })}
+          inputRef={register({})}
         />
 
         <ImageUrlInput {...form} />
-        <EmailPassword {...form} />
-        <PhoneControl {...form} />
+        <SignInMethod {...form} isEditing={isEditing}></SignInMethod>
         <CustomAttributes {...form} />
       </DialogContent>
       <DialogActions>
         <DialogButton action="close" type="button" theme="secondary">
           Cancel
         </DialogButton>
-        {!user?.displayName && (
+        {!isEditing && (
           <Button
             onClick={handleSubmit(result => {
               onSave(result);

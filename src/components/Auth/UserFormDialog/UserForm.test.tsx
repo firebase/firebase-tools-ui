@@ -6,12 +6,18 @@ import UserForm from './UserForm';
 
 describe('UserForm', () => {
   const displayName = 'pirojok';
+  const phone = '689-6896896';
 
   function setup(user?: AddAuthUserPayload) {
     const onSave = jest.fn();
     const onClose = jest.fn();
     const methods = render(
-      <UserForm onSave={onSave} user={user} onClose={onClose} />
+      <UserForm
+        onSave={onSave}
+        user={user}
+        onClose={onClose}
+        isEditing={false}
+      />
     );
 
     const triggerValidation = async () => {
@@ -28,7 +34,10 @@ describe('UserForm', () => {
   }
 
   it('calls onSave on form submit', async () => {
-    const { triggerValidation, onSave, onClose } = setup({ displayName });
+    const { triggerValidation, onSave, onClose } = setup({
+      displayName,
+      phone,
+    });
 
     expect(onSave).not.toHaveBeenCalled();
 
@@ -36,20 +45,22 @@ describe('UserForm', () => {
     expect(onClose).toHaveBeenCalled();
     expect(onSave).toHaveBeenCalledWith(
       jasmine.objectContaining({
-        displayName: 'pirojok',
+        displayName,
+        phone,
       })
     );
   });
 
   it('calls onSave, but does not close the form when "create and new" clicked.', async () => {
+    const phoneNumber = '123-45678890';
     const { getByText, getByLabelText, onSave, onClose } = setup({
       displayName: '',
     });
 
-    const input = getByLabelText('Display name') as HTMLInputElement;
+    const input = getByLabelText(/Phone authentication/) as HTMLInputElement;
 
     fireEvent.change(input, {
-      target: { value: displayName },
+      target: { value: phoneNumber },
     });
 
     await act(async () => {
@@ -61,7 +72,7 @@ describe('UserForm', () => {
     // Create user
     expect(onSave).toHaveBeenCalledWith(
       jasmine.objectContaining({
-        displayName: 'pirojok',
+        phone: phoneNumber,
       })
     );
 
@@ -77,19 +88,22 @@ describe('UserForm', () => {
       email,
       password,
     });
-    expect((getByLabelText('Display name') as HTMLInputElement).value).toBe(
+    expect((getByLabelText(/Display name/) as HTMLInputElement).value).toBe(
       displayName
     );
-    expect(
-      (queryByLabelText('Email/Password (optional)') as HTMLInputElement).value
-    ).toBe(email);
+    expect((queryByLabelText('Email/Password') as HTMLInputElement).value).toBe(
+      email
+    );
     expect((queryByLabelText('Password') as HTMLInputElement).value).toBe(
       password
     );
   });
 
   it('does not call onSave on form submit if there are errors', async () => {
-    const { triggerValidation, onSave, onClose } = setup({ displayName: '' });
+    const { triggerValidation, onSave, onClose } = setup({
+      displayName: '',
+      phone: '',
+    });
 
     await triggerValidation();
 

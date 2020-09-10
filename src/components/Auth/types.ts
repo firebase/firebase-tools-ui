@@ -44,4 +44,5 @@ export interface AuthUser extends AddAuthUserPayload {
 export interface AuthState {
   users: AuthUser[];
   filter: string;
+  allowDuplicateEmails: boolean;
 }

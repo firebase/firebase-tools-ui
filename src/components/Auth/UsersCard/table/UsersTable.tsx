@@ -13,7 +13,10 @@ import React, { useState } from 'react';
 import { MapDispatchToPropsFunction, connect } from 'react-redux';
 
 import { createStructuredSelector } from '../../../../store';
-import { deleteUser, setUserDisabled } from '../../../../store/auth/actions';
+import {
+  deleteUserRequest,
+  setUserDisabledRequest,
+} from '../../../../store/auth/actions';
 import {
   getFilteredUsers,
   getShowTable,
@@ -24,43 +27,77 @@ import { AuthUser } from '../../types';
 import EditUserDialog from '../../UserFormDialog/EditUserDialog';
 import { AuthZeroState } from './AuthZeroState';
 import { NoResults } from './NoResults';
+import { ProviderCell } from './ProviderCell';
 
 export type UsersTableProps = PropsFromDispatch & PropsFromStore;
 
 interface UserTableRowProps {
   user: AuthUser;
   onEditUser: () => void;
-  onSetUserEnabled: () => void;
+  setUserDisabled: () => void;
   onDeleteUser: () => void;
 }
 
-function UsersTableRow(props: UserTableRowProps) {
+function UsersTableRow({
+  user,
+  onEditUser,
+  setUserDisabled,
+  onDeleteUser,
+}: UserTableRowProps) {
+  /*
+   * Simple menu is broken when rendered in portal (it doesn't close)
+   *
+   * So here we're opening and closing it manually. see:
+   * https://github.com/jamesmfriedman/rmwc/issues/627#issuecomment-643238936
+   */
+  const [menuOpen, setMenuOpen] = useState(false);
+  const formattedCreatedAt = new Date(
+    Number(user.createdAt)
+  ).toLocaleDateString();
+  const formattedSignedIn =
+    user.signedIn && new Date(Number(user.signedIn)).toLocaleDateString();
+
   return (
     <DataTableRow>
-      <DataTableCell>{props.user.displayName}</DataTableCell>
-      <DataTableCell>Value</DataTableCell>
       <DataTableCell>
-        {props.user.createdAt.toString().substr(0, 10)}
+        {user.displayName || user.email || user.phone}
       </DataTableCell>
-      <DataTableCell>
-        {props.user.signedIn && props.user.signedIn.toString()}
-      </DataTableCell>
-      <DataTableCell>{props.user.localId}</DataTableCell>
-      <DataTableCell>
-        {/*
-         * TODO(kirjs): This menu doesn't close.
-         * I'm going to fix this last moment if it doesn't fix itself.
-         * See https://github.com/jamesmfriedman/rmwc/issues/627
-         */}
+      <DataTableCell>{<ProviderCell user={user} />}</DataTableCell>
+      <DataTableCell>{formattedCreatedAt}</DataTableCell>
+      <DataTableCell>{formattedSignedIn}</DataTableCell>
+      <DataTableCell>{user.localId}</DataTableCell>
+      <DataTableCell style={{ width: '20px' }}>
         <SimpleMenu
+          open={menuOpen}
+          onOpen={() => setMenuOpen(true)}
+          onClose={() => setMenuOpen(false)}
           handle={<IconButton icon="more_vert" label="Open menu" />}
           renderToPortal
         >
-          <MenuItem onClick={props.onEditUser}>Edit user</MenuItem>
-          <MenuItem onClick={props.onSetUserEnabled}>
-            {props.user.disabled ? 'Enable user' : 'Disable user'}
+          <MenuItem
+            onClick={() => {
+              setMenuOpen(false);
+              onEditUser();
+            }}
+          >
+            Edit user
           </MenuItem>
-          <MenuItem onClick={props.onDeleteUser}>Delete user</MenuItem>
+          <MenuItem
+            onClick={() => {
+              setMenuOpen(false);
+              setUserDisabled();
+            }}
+          >
+            {user.disabled ? 'Enable user' : 'Disable user'}
+          </MenuItem>
+          <MenuItem
+            onClick={() => {
+              setMenuOpen(false);
+              onDeleteUser();
+            }}
+          >
+            Delete user
+          </MenuItem>
         </SimpleMenu>
       </DataTableCell>
     </DataTableRow>
@@ -99,7 +136,7 @@ export const UsersTable: React.FC<UsersTableProps> = ({
                   onEditUser={() => {
                     setUserToEdit(user);
                   }}
-                  onSetUserEnabled={() => {
+                  setUserDisabled={() => {
                     setUserDisabled({
                       localId: user.localId,
                       disabled: !user.disabled,
@@ -136,8 +173,8 @@ export const mapStateToProps = createStructuredSelector({
 export type PropsFromStore = ReturnType<typeof mapStateToProps>;
 
 export interface PropsFromDispatch {
-  setUserDisabled: typeof setUserDisabled;
-  deleteUser: typeof deleteUser;
+  setUserDisabled: typeof setUserDisabledRequest;
+  deleteUser: typeof deleteUserRequest;
 }
 
 export const mapDispatchToProps: MapDispatchToPropsFunction<
@@ -145,8 +182,8 @@ export const mapDispatchToProps: MapDispatchToPropsFunction<
   {}
 > = dispatch => {
   return {
-    setUserDisabled: d => dispatch(setUserDisabled(d)),
-    deleteUser: d => dispatch(deleteUser(d)),
+    setUserDisabled: d => dispatch(setUserDisabledRequest(d)),
+    deleteUser: d => dispatch(deleteUserRequest(d)),
   };
 };
 

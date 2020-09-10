@@ -14,7 +14,7 @@ describe('PhoneControl', () => {
     const { getByPlaceholderText, triggerValidation, submit } = setup();
     const phone = '+1 777 77777777';
 
-    fireEvent.change(getByPlaceholderText('Phone number'), {
+    fireEvent.change(getByPlaceholderText('Enter phone number'), {
       target: { value: phone },
     });
 

@@ -2,7 +2,7 @@ import { Dialog, DialogTitle } from '@rmwc/dialog';
 import React from 'react';
 import { MapDispatchToPropsFunction, connect } from 'react-redux';
 
-import { updateUser } from '../../../store/auth/actions';
+import { updateUserRequest } from '../../../store/auth/actions';
 import { AuthUser } from '../types';
 import UserForm from './UserForm';
 
@@ -25,6 +25,7 @@ export const EditUserDialog: React.FC<Props> = ({
       <Dialog renderToPortal open onClose={onClose}>
         <DialogTitle>Edit User {user.displayName}</DialogTitle>
         <UserForm
+          isEditing={true}
           onClose={onClose}
           onSave={user => {
             updateUser({ user, localId });
@@ -37,7 +38,7 @@ export const EditUserDialog: React.FC<Props> = ({
 };
 
 export interface PropsFromDispatch {
-  updateUser: typeof updateUser;
+  updateUser: typeof updateUserRequest;
 }
 
 export const mapDispatchToProps: MapDispatchToPropsFunction<
@@ -45,7 +46,7 @@ export const mapDispatchToProps: MapDispatchToPropsFunction<
   {}
 > = dispatch => {
   return {
-    updateUser: p => dispatch(updateUser(p)),
+    updateUser: p => dispatch(updateUserRequest(p)),
   };
 };
 
