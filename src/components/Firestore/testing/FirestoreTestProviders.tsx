@@ -1,13 +1,13 @@
 import * as firebaseTesting from '@firebase/testing';
 import { render, waitForElement } from '@testing-library/react';
-import * as firebase from 'firebase';
+import firebase from 'firebase';
 import React, { Suspense, useEffect, useState } from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
-import { FirebaseAppProvider, preloadFirestore, useFirestore } from 'reactfire';
+import { FirebaseAppProvider, useFirestore } from 'reactfire';
+import configureStore from 'redux-mock-store';
 
-import configureStore from '../../../configureStore';
-import { fetchSuccess } from '../../../store/config/actions';
+import { AppState } from '../../../store';
 
 interface RenderOptions {
   path?: string;
@@ -41,17 +41,17 @@ export const FirestoreTestProviders: React.FC<RenderOptions> = React.memo(
     }
     const [host, port] = hostAndPort.split(':');
 
-    const store = configureStore();
-    store.dispatch(
-      fetchSuccess({
-        projectId,
-        firestore: {
-          hostAndPort,
-          host,
-          port: Number(port),
+    const store = configureStore<Pick<AppState, 'config'>>()({
+      config: {
+        loading: false,
+        result: {
+          data: {
+            projectId,
+            firestore: { hostAndPort, host, port: Number(port) },
+          },
         },
-      })
-    );
+      },
+    });
 
     const testingApp = firebaseTesting.initializeTestApp({
       projectId,
