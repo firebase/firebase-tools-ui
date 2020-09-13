@@ -1,7 +1,7 @@
 import * as firebaseTesting from '@firebase/testing';
 import { render, waitForElement } from '@testing-library/react';
 import * as firebase from 'firebase';
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import { FirebaseAppProvider, preloadFirestore, useFirestore } from 'reactfire';
@@ -67,9 +67,9 @@ export const FirestoreTestProviders: React.FC<RenderOptions> = React.memo(
       <Provider store={store}>
         <FirebaseAppProvider firebaseApp={testingApp}>
           <MemoryRouter initialEntries={[path]}>
-            <React.Suspense fallback={<h1 data-testid="fallback">Fallback</h1>}>
+            <Suspense fallback={<h1 data-testid="fallback">Fallback</h1>}>
               {children}
-            </React.Suspense>
+            </Suspense>
           </MemoryRouter>
         </FirebaseAppProvider>
       </Provider>
@@ -83,15 +83,16 @@ const AsyncFirestore: React.FC<{
   ) => Promise<React.ReactElement>;
 }> = React.memo(({ children }) => {
   const firestore = useFirestore();
-  const [childrenFoo, setChildrenFoo] = useState<React.ReactElement | null>(
-    null
-  );
+  const [
+    firestoreChildren,
+    setFirestoreChildren,
+  ] = useState<React.ReactElement | null>(null);
 
   useEffect(() => {
-    children(firestore).then(c => setChildrenFoo(c));
-  }, [children, firestore, setChildrenFoo]);
+    children(firestore).then(c => setFirestoreChildren(c));
+  }, [children, firestore, setFirestoreChildren]);
 
-  return childrenFoo ? (
-    <div data-testid="firestore-foo">{childrenFoo}</div>
+  return firestoreChildren ? (
+    <div data-testid="firestore-foo">{firestoreChildren}</div>
   ) : null;
 });

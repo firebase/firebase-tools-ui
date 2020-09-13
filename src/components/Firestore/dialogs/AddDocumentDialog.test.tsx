@@ -42,18 +42,18 @@ it('shows correct title', async () => {
 it('shows the (disabled) creation path', async () => {
   const { getByLabelText } = await renderDialogWithFirestore(
     async firestore => {
-      const collectionRef = firestore.collection('things');
+      const nestedCollectionRef = firestore.collection('things/1/objects');
       return (
         <AddDocumentDialog
           open={true}
-          collectionRef={collectionRef}
+          collectionRef={nestedCollectionRef}
           onValue={() => {}}
         />
       );
     }
   );
 
-  expect(getByLabelText('Parent path').value).toBe('things');
+  expect(getByLabelText('Parent path').value).toBe('things/1/objects');
   expect(getByLabelText('Parent path').disabled).toBe(true);
 });
 

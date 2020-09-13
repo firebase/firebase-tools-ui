@@ -16,12 +16,13 @@
 
 import './index.scss';
 
+import { CircularProgress } from '@rmwc/circular-progress';
 import { Icon } from '@rmwc/icon';
 import { IconButton } from '@rmwc/icon-button';
 import { ListDivider } from '@rmwc/list';
 import { MenuItem, SimpleMenu } from '@rmwc/menu';
 import { firestore } from 'firebase';
-import React from 'react';
+import React, { Suspense } from 'react';
 import { Route, useRouteMatch } from 'react-router-dom';
 import { useFirestore } from 'reactfire';
 
@@ -47,9 +48,9 @@ const Doc: React.FC<{
       <Route
         path={`${url}/:id`}
         render={({ match }: any) => (
-          <React.Suspense fallback={<div>Loading collection</div>}>
+          <Suspense fallback={<CircularProgress />}>
             <Collection collection={collectionById(match.params.id)} />
-          </React.Suspense>
+          </Suspense>
         )}
       ></Route>
     </>
@@ -63,9 +64,9 @@ export const Root: React.FC = () => {
   return (
     <Doc id={'Root'} collectionById={(id: string) => firestore.collection(id)}>
       <PanelHeader id="Root" icon={<FirestoreIcon />} />
-      <React.Suspense fallback={<div>Loading root-collections</div>}>
+      <Suspense fallback={<CircularProgress />}>
         <RootCollectionList />
-      </React.Suspense>
+      </Suspense>
     </Doc>
   );
 };
@@ -100,13 +101,13 @@ export const Document: React.FC<{ reference: firestore.DocumentReference }> = ({
         </SimpleMenu>
       </PanelHeader>
 
-      <React.Suspense fallback={<div>Loading sub-collections</div>}>
+      <Suspense fallback={<CircularProgress />}>
         <SubCollectionList reference={reference} />
-      </React.Suspense>
+      </Suspense>
       <ListDivider tag="div" />
-      <React.Suspense fallback={<div>Loading document preview</div>}>
+      <Suspense fallback={<CircularProgress />}>
         <DocumentPreview reference={reference} />
-      </React.Suspense>
+      </Suspense>
     </Doc>
   );
 };

@@ -14,20 +14,9 @@
  * limitations under the License.
  */
 
-// import 'firebase/firestore';
-
-import * as firebaseTesting from '@firebase/testing';
-import {
-  act,
-  render,
-  wait,
-  waitForElement,
-  waitForElementToBeRemoved,
-} from '@testing-library/react';
-import firebase from 'firebase';
+import { act, render, wait, waitForElement } from '@testing-library/react';
 import React from 'react';
 import { Route } from 'react-router-dom';
-import { FirebaseAppProvider, preloadFirestore, useFirestore } from 'reactfire';
 
 import { FirestoreConfig } from '../../store/config';
 import { makeDeferred } from '../../test_utils';

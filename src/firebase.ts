@@ -59,7 +59,7 @@ export function useEmulatedFirebaseApp(name: string, config: any) {
   const app = useMemo(() => {
     const app = firebase.initializeApp(
       { ...config, projectId },
-      `${name} component::${JSON.stringify(config)}::${Math.random()}`
+      `${name} component::${Math.random()}`
     );
     applyAdminAuth(app);
     return app;

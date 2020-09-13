@@ -17,8 +17,6 @@
 import {
   RenderResult,
   fireEvent,
-  render,
-  wait,
   waitForElement,
 } from '@testing-library/react';
 import React from 'react';
@@ -41,10 +39,6 @@ it('shows correct title', async () => {
   ));
 
   await waitForElement(() => getByText(/Start a collection/));
-
-  expect(getByText(/Start a collection/)).not.toBeNull();
-
-  await act(() => promise);
 });
 
 describe('step 1', () => {
@@ -112,7 +106,7 @@ describe('step 2', () => {
   it('contains a document id with random id', () => {
     const { getByLabelText } = result;
 
-    expect(getByLabelText(/Document ID/).value).toMatch(/\w+/);
+    expect(getByLabelText(/Document ID/).value).toMatch(/^\w{20}$/);
   });
 
   it('contains a data input', () => {

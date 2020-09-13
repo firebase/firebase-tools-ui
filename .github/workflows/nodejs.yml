@@ -34,7 +34,6 @@ jobs:
     strategy:
       matrix:
         node-version: [8.x, 10.x, 12.x]
-        # node-version: [12.x]
 
     steps:
       - uses: actions/checkout@v2
@@ -50,9 +49,6 @@ jobs:
           firebase emulators:exec --only database,firestore --project sample 'npm run test:coverage'
         env:
           CI: true
-      # - run: firebase emulators:exec --project sample --only database,firestore 'npm run test:coverage'
-      #   env:
-      #     CI: true
 
   check-package-lock:
     runs-on: ubuntu-latest

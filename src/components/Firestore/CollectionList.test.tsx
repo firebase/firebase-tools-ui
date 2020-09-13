@@ -114,7 +114,9 @@ it('triggers a redirect to a new collection in a document', async () => {
             <SubCollectionList reference={docRef} />
           </Route>
 
-          <Route path="/firestore/top/thing/abc">_redirected_to_foo_</Route>
+          <Route path="/firestore/top/thing/abc">
+            _redirected_to_sub_document_
+          </Route>
         </>
       );
     },
@@ -145,7 +147,7 @@ it('triggers a redirect to a new collection in a document', async () => {
     getByText(/Save/).click();
   });
 
-  await waitForElement(() => getByText(/_redirected_to_foo/));
+  await waitForElement(() => getByText(/_redirected_to_sub_document_/));
 
-  expect(getByText(/_redirected_to_foo/)).not.toBeNull();
+  expect(getByText(/_redirected_to_sub_document_/)).not.toBeNull();
 });

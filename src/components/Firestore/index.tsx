@@ -132,12 +132,6 @@ export const Firestore: React.FC = React.memo(() => {
             />
             <div className="Firestore-panels">
               <Root />
-              {/*
-               * TODO: This should really be handled by the constituent Document/Collection components,
-               * where those components can conditionally show their nested-child. Doing so will be
-               * easiest once we move to a Suspense-ful render, where we can always show the
-               * Document/Collection-skeletons, but lazy-render the lists wihin those components.
-               */}
               {showCollectionShell && (
                 <div
                   className="Firestore-Collection"

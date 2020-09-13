@@ -15,7 +15,7 @@ import {
 } from './FirestoreEmulatedApiProvider';
 import { renderWithFirestore } from './testing/FirestoreTestProviders';
 
-test('should get root-collections', async () => {
+it('should get root-collections', async () => {
   const TestResults = () => {
     const collections = useRootCollections();
     return (
@@ -36,7 +36,7 @@ test('should get root-collections', async () => {
   expect(getByTestId(/collections/).textContent).toBe('others,things');
 });
 
-test('should get sub-collections', async () => {
+it('should get sub-collections', async () => {
   const TestResults = ({ docRef }: { docRef: firestore.DocumentReference }) => {
     const collections = useSubCollections(docRef);
     return (
@@ -64,7 +64,7 @@ test('should get sub-collections', async () => {
   expect(getByTestId(/collections/).textContent).toBe('others,things');
 });
 
-test('should clear the database', async () => {
+it('should clear the database', async () => {
   const TestResults = ({ docRef }: { docRef: firestore.DocumentReference }) => {
     const data = useFirestoreDocData(docRef);
     const eject = useEjector();

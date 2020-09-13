@@ -137,7 +137,7 @@ export function denormalize(
   } else {
     if (field.value instanceof DocumentPath) {
       if (!firestore) {
-        // TODO: Trying to reference a Firestore Document without a Firestore instancej
+        // TODO: Trying to reference a Firestore Document without a Firestore instance.
         return '';
       }
       try {
