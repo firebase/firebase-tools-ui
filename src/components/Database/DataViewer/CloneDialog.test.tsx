@@ -17,7 +17,8 @@
 import { act, fireEvent, render } from '@testing-library/react';
 import React from 'react';
 
-import { delay, renderDialogWithFirestore } from '../../../test_utils';
+import { delay } from '../../../test_utils';
+import { renderDialogWithFirestore } from '../../Firestore/testing/test_utils';
 import { fakeReference } from '../testing/models';
 import { CloneDialog } from './CloneDialog';
 import { QueryParams } from './common/view_model';

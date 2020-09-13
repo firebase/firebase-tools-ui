@@ -77,10 +77,10 @@ function useFirestoreRestApi() {
 export function useRootCollections() {
   const { baseUrl } = useFirestoreRestApi();
   const firestore = useFirestore();
-  const endpoint = `${baseUrl}/documents:listCollectionIds`;
+  const url = `${baseUrl}/documents:listCollectionIds`;
 
   const fetcher = (url: string) =>
-    fetch(endpoint, {
+    fetch(url, {
       method: 'POST',
       body: JSON.stringify({}),
       headers: {
@@ -89,7 +89,7 @@ export function useRootCollections() {
       },
     }).then(r => r.json());
 
-  const { data } = useSwr<{ collectionIds: string[] }>(endpoint, fetcher, {
+  const { data } = useSwr<{ collectionIds: string[] }>(url, fetcher, {
     refreshInterval: 10000,
     suspense: true,
   });
@@ -103,7 +103,7 @@ export function useSubCollections(
 ) {
   const { baseUrl } = useFirestoreRestApi();
   const encodedPath = docRef.path; // TODO: Encode each segment
-  const endpoint = `${baseUrl}/documents/${encodedPath}:listCollectionIds`;
+  const url = `${baseUrl}/documents/${encodedPath}:listCollectionIds`;
 
   const fetcher = (url: string) =>
     fetch(url, {
@@ -115,7 +115,7 @@ export function useSubCollections(
       },
     }).then(r => r.json());
 
-  const { data } = useSwr<{ collectionIds: string[] }>(endpoint, fetcher, {
+  const { data } = useSwr<{ collectionIds: string[] }>(url, fetcher, {
     refreshInterval: 10000,
     suspense: true,
   });

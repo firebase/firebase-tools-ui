@@ -18,10 +18,8 @@ import { fireEvent } from '@testing-library/react';
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 
-import {
-  renderDialogWithFirestore,
-  waitForDialogsToClose,
-} from '../../../test_utils';
+import { waitForDialogsToClose } from '../../../test_utils';
+import { renderDialogWithFirestore } from '../testing/test_utils';
 import { AddDocumentDialog } from './AddDocumentDialog';
 
 it('shows correct title', async () => {

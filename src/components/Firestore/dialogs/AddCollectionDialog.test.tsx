@@ -22,12 +22,9 @@ import {
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 
-import {
-  delay,
-  renderDialogWithFirestore,
-  waitForDialogsToClose,
-} from '../../../test_utils';
+import { delay, waitForDialogsToClose } from '../../../test_utils';
 import { renderWithFirestore } from '../testing/FirestoreTestProviders';
+import { renderDialogWithFirestore } from '../testing/test_utils';
 import { AddCollectionDialog } from './AddCollectionDialog';
 
 it('shows correct title', async () => {
