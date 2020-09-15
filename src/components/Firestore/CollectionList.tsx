@@ -38,17 +38,17 @@ export interface Props {
   reference?: firestore.DocumentReference;
 }
 
-export const RootCollectionList: React.FC = React.memo(() => {
+export const RootCollectionList: React.FC = () => {
   const rootCollections = useRootCollections();
   return <CollectionList collections={rootCollections} />;
-});
+};
 
 export const SubCollectionList: React.FC<{
   reference: firestore.DocumentReference;
-}> = React.memo(({ reference }) => {
+}> = ({ reference }) => {
   const subCollections = useSubCollections(reference);
   return <CollectionList collections={subCollections} reference={reference} />;
-});
+};
 
 const CollectionList: React.FC<Props> = ({ collections, reference }) => {
   const { url } = useRouteMatch()!;
