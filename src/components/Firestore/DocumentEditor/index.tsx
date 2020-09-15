@@ -21,7 +21,6 @@ import React, { useEffect } from 'react';
 import { FormContext, useForm, useFormContext } from 'react-hook-form';
 
 import { Field, SelectField } from '../../common/Field';
-import { useOptionalApi } from '../ApiContext';
 import { FieldType, FirestoreAny, FirestoreMap } from '../models';
 import {
   getFieldType,
@@ -107,6 +106,7 @@ const DocumentEditor: React.FC<{
   rtdb?: boolean;
   startingIndex?: number;
   supportNestedArrays?: boolean;
+  firestore?: firebase.firestore.Firestore;
 }> = ({
   value,
   onChange,
@@ -115,15 +115,15 @@ const DocumentEditor: React.FC<{
   rtdb = false,
   startingIndex,
   supportNestedArrays,
+  firestore,
 }) => {
   const initialState = normalize(value);
   const [store, dispatch] = React.useReducer(storeReducer, initialState);
   const methods = useForm({ mode: 'onChange' });
-  const api = useOptionalApi();
 
-  const denormalizedStore = React.useMemo(() => denormalize(store, api), [
+  const denormalizedStore = React.useMemo(() => denormalize(store, firestore), [
     store,
-    api,
+    firestore,
   ]);
 
   const errorCount = React.useMemo(() => Object.keys(methods.errors).length, [

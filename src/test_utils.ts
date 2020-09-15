@@ -19,10 +19,11 @@ import {
   RenderResult,
   act,
   render,
-  waitForDomChange,
   waitForElement,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
+
+import { renderWithFirestore } from './components/Firestore/testing/FirestoreTestProviders';
 
 export function delay(timeoutMs: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, timeoutMs));
@@ -57,23 +58,6 @@ export async function waitForDialogsToClose(container: ParentNode = document) {
   await waitForElementToBeRemoved(() =>
     document.querySelector('.mdc-dialog--closing')
   );
-}
-
-/* Render a component containing a MDC dialog, and wait for the dialog to be
- * fully open. Silences act(...) warnings from RMWC <Dialog>s.
- *
- * This is syntatic sugar for render() and then waitForDialogsToOpen().
- */
-export async function renderDialog(
-  ui: React.ReactElement,
-  options?: Omit<RenderOptions, 'queries'>
-): Promise<RenderResult> {
-  let renderResult: RenderResult;
-  await act(async () => {
-    renderResult = render(ui, options);
-    await waitForDialogsToOpen(renderResult.container);
-  });
-  return renderResult!;
 }
 
 /**
