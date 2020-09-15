@@ -1,5 +1,6 @@
 .filterTextField {
   :global {
+    // Get rid of material line in the bottom of the input.
     .mdc-line-ripple {
       display: none;
     }
