@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-import { firestore } from 'firebase';
+import firebase from 'firebase';
 
 import { FirestoreAny, FirestoreMap } from '../models';
 import { isArray, isMap, withFieldRemoved, withFieldSet } from '../utils';
 
-const DELETE_FIELD = firestore.FieldValue.delete();
+const DELETE_FIELD = firebase.firestore.FieldValue.delete();
 
 export function deleteField(
-  documentRef: firestore.DocumentReference,
+  documentRef: firebase.firestore.DocumentReference,
   documentData: FirestoreMap,
   path: string[]
 ) {
@@ -31,7 +31,7 @@ export function deleteField(
 }
 
 export function updateField(
-  documentRef: firestore.DocumentReference,
+  documentRef: firebase.firestore.DocumentReference,
   documentData: FirestoreMap,
   path: string[],
   value: FirestoreAny
@@ -41,7 +41,7 @@ export function updateField(
 }
 
 export async function addFieldToMissingDocument(
-  reference: firestore.DocumentReference,
+  reference: firebase.firestore.DocumentReference,
   key: string,
   value: FirestoreAny
 ) {
@@ -65,8 +65,8 @@ export async function addFieldToMissingDocument(
 function adjustPayloadForArray(
   doc: FirestoreMap,
   fieldPath: string[],
-  value: FirestoreAny | firestore.FieldValue
-): [firestore.FieldPath, FirestoreAny] {
+  value: FirestoreAny | firebase.firestore.FieldValue
+): [firebase.firestore.FieldPath, FirestoreAny] {
   let cur: FirestoreAny | undefined = doc;
   let parentPath: string[] = [];
   for (const key of fieldPath) {
@@ -82,7 +82,7 @@ function adjustPayloadForArray(
       // beyond the scope of this function and hard to keep in sync.
       // Instead, just overwrite the whole array, which may touch more data
       // than needed, but is always correct.
-      const pathToUpdate = new firestore.FieldPath(...parentPath);
+      const pathToUpdate = new firebase.firestore.FieldPath(...parentPath);
       const childPath = fieldPath.slice(parentPath.length);
 
       // Note: FieldValue sentinels are not guaranteed to be
@@ -94,5 +94,5 @@ function adjustPayloadForArray(
       }
     }
   }
-  return [new firestore.FieldPath(...fieldPath), value];
+  return [new firebase.firestore.FieldPath(...fieldPath), value];
 }
