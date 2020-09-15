@@ -94,7 +94,7 @@ export const Document: React.FC<{ reference: firestore.DocumentReference }> = ({
         id={reference.id}
         icon={<Icon icon={{ icon: 'insert_drive_file', size: 'small' }} />}
       >
-        <CopyButton text={reference.id} label="Copy document ID" />
+        <CopyButton textToCopy={reference.id} label="Copy document ID" />
         <SimpleMenu handle={<IconButton icon="more_vert" />} renderToPortal>
           <MenuItem onClick={handleDeleteDocument}>Delete document</MenuItem>
           <MenuItem onClick={handleDeleteFields}>Delete all fields</MenuItem>

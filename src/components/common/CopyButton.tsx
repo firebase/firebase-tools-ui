@@ -1,9 +1,9 @@
-import { IconButton } from '@rmwc/icon-button';
+import { IconButton, IconButtonProps } from '@rmwc/icon-button';
+import { HTMLProps } from '@rmwc/types';
 import React, { useCallback, useState } from 'react';
 
-interface CopyButtonProps {
-  text: string;
-  label?: string;
+interface CopyButtonProps extends HTMLProps<IconButtonProps> {
+  textToCopy: string;
 }
 
 function useClipboard(text: string) {
@@ -19,8 +19,20 @@ function useClipboard(text: string) {
   };
 }
 
-export function CopyButton({ text, label }: CopyButtonProps) {
+export function CopyButton({
+  textToCopy: text,
+  label,
+  theme,
+}: CopyButtonProps) {
   label = label || 'Copy';
+  theme = theme || 'textPrimaryOnBackground';
   const { writeText } = useClipboard(text);
-  return <IconButton icon="content_copy" label={label} onClick={writeText} />;
+  return (
+    <IconButton
+      theme={theme}
+      icon="content_copy"
+      label={label}
+      onClick={writeText}
+    />
+  );
 }

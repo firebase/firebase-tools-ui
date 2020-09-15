@@ -133,7 +133,10 @@ export const CollectionPresentation: React.FC<CollectionPresentationProps> = ({
             </MenuSurface>
 
             <div className={collectionFilter && styles.badge}>
-              <CopyButton text={collection.id} label="Copy collection ID" />
+              <CopyButton
+                textToCopy={collection.id}
+                label="Copy collection ID"
+              />
               <IconButton
                 icon="filter_list"
                 label="Filter documents in this collection"
