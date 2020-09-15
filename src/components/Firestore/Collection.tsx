@@ -26,6 +26,7 @@ import React, { useState } from 'react';
 import { NavLink, Route, useHistory, useRouteMatch } from 'react-router-dom';
 import { useFirestoreCollection } from 'reactfire';
 
+import { CopyButton } from '../common/CopyButton';
 import { Spinner } from '../common/Spinner';
 import styles from './Collection.module.scss';
 import { CollectionFilter } from './CollectionFilter';
@@ -154,6 +155,10 @@ export const CollectionPresentation: React.FC<CollectionPresentationProps> = ({
             </MenuSurface>
 
             <div className={collectionFilter && styles.badge}>
+              <CopyButton
+                textToCopy={collection.id}
+                label="Copy collection ID"
+              />
               <IconButton
                 icon="filter_list"
                 label="Filter documents in this collection"
