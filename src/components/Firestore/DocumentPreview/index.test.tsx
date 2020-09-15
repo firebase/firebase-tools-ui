@@ -18,55 +18,50 @@ import {
   RenderResult,
   act,
   fireEvent,
-  render,
   wait,
+  waitForElement,
 } from '@testing-library/react';
 import { firestore } from 'firebase';
 import React from 'react';
-import { useDocumentData } from 'react-firebase-hooks/firestore';
 
-import { fakeDocumentReference } from '../testing/models';
+import { renderWithFirestore } from '../testing/FirestoreTestProviders';
 import DocumentPreview from './index';
-
-jest.mock('react-firebase-hooks/firestore');
-
-it('renders loading text', () => {
-  useDocumentData.mockReturnValueOnce([{}, true]);
-
-  const { getByText } = render(
-    <DocumentPreview reference={fakeDocumentReference()} />
-  );
-
-  expect(getByText('Loading document...')).not.toBe(null);
-});
 
 describe('loaded document', () => {
   let result: RenderResult;
   let documentReference: firestore.DocumentReference;
 
   beforeEach(async () => {
-    useDocumentData.mockReturnValue([
-      {
-        foo: 'bar',
-      },
-    ]);
-    documentReference = fakeDocumentReference();
+    result = await renderWithFirestore(async firestore => {
+      documentReference = firestore.doc('my-stuff/an-item');
+      await documentReference.set({ foo: 'bar' });
+      documentReference.update = jest.fn();
+      return <DocumentPreview reference={documentReference} />;
+    });
 
-    result = render(<DocumentPreview reference={documentReference} />);
+    await waitForElement(() => result.getByText(/foo/));
   });
 
-  it('adds a new field', () => {
+  it('adds a new field', async () => {
     const { getByText, getByLabelText } = result;
 
-    getByText('Add field').click();
-    fireEvent.change(getByLabelText('Field'), {
-      target: { value: 'new' },
+    await act(async () => getByText('Add field').click());
+
+    act(() => {
+      fireEvent.change(getByLabelText('Field'), {
+        target: { value: 'new' },
+      });
     });
-    fireEvent.blur(getByLabelText('Field'));
-    fireEvent.change(getByLabelText('Value'), {
-      target: { value: '42' },
+
+    act(() => {
+      fireEvent.change(getByLabelText('Value'), {
+        target: { value: '42' },
+      });
     });
-    fireEvent.submit(getByText('Save'));
+
+    act(() => {
+      fireEvent.submit(getByText('Save'));
+    });
 
     expect(documentReference.update).toHaveBeenCalledWith(
       new firestore.FieldPath('new'),
@@ -85,7 +80,9 @@ describe('loaded document', () => {
   it('deletes a field', () => {
     const { getByText } = result;
 
-    getByText('delete').click();
+    act(() => {
+      getByText('delete').click();
+    });
 
     expect(documentReference.update).toHaveBeenCalledWith(
       new firestore.FieldPath('foo'),
@@ -132,35 +129,43 @@ describe('missing document', () => {
   let documentReference: firestore.DocumentReference;
 
   beforeEach(async () => {
-    useDocumentData.mockReturnValue([undefined]);
-    documentReference = fakeDocumentReference();
-    documentReference.get.mockResolvedValue({});
+    result = await renderWithFirestore(async firestore => {
+      documentReference = firestore.doc('not/here');
+      documentReference.set = jest.fn();
+      return <DocumentPreview reference={documentReference} />;
+    });
 
-    result = render(<DocumentPreview reference={documentReference} />);
+    await waitForElement(() => result.getByText(/Add field/));
   });
 
-  it('shows a warning', () => {
+  it('shows a warning', async () => {
     const { getByText } = result;
 
     expect(getByText(/This document does not exist/)).not.toBeNull();
   });
 
   it('calls ref.set() when adding a field', async () => {
-    const { getByText, getByLabelText } = result;
+    const { queryByText, getByText, getByLabelText } = result;
 
-    getByText('Add field').click();
+    await act(async () => getByText('Add field').click());
 
-    fireEvent.change(getByLabelText('Field'), {
-      target: { value: 'meaningOfLife' },
+    act(() => {
+      fireEvent.change(getByLabelText('Field'), {
+        target: { value: 'meaningOfLife' },
+      });
     });
-    fireEvent.blur(getByLabelText('Field'));
-    fireEvent.change(getByLabelText('Value'), {
-      target: { value: '42' },
+
+    act(() => {
+      fireEvent.change(getByLabelText('Value'), {
+        target: { value: '42' },
+      });
     });
 
     await act(async () => {
       fireEvent.submit(getByText('Save'));
     });
+
+    await wait(() => !queryByText('Save'));
 
     expect(documentReference.set).toHaveBeenCalledWith({ meaningOfLife: '42' });
   });
@@ -170,23 +175,25 @@ describe('loaded array', () => {
   let result: RenderResult;
   let documentReference: firestore.DocumentReference;
 
-  beforeEach(() => {
-    useDocumentData.mockReturnValueOnce([
-      {
-        foo: ['alpha', 'bravo', 'bravo', ['wowah']],
-      },
-    ]);
-    documentReference = fakeDocumentReference();
+  beforeEach(async () => {
+    result = await renderWithFirestore(async firestore => {
+      documentReference = firestore.doc('foo/bar');
+      documentReference.update = jest.fn();
+      await documentReference.set({
+        foo: ['alpha', 'bravo', 'bravo'],
+      });
+      return (
+        <DocumentPreview reference={documentReference} maxSummaryLen={1000} />
+      );
+    });
 
-    result = render(
-      <DocumentPreview reference={documentReference} maxSummaryLen={1000} />
-    );
+    await waitForElement(() => result.getByText(/foo/));
   });
 
   it('renders a field', () => {
     const { getByText, findByText } = result;
 
-    expect(getByText('["alpha", "bravo", "bravo", ["wowah"]]')).not.toBe(null);
+    expect(getByText('["alpha", "bravo", "bravo"]')).not.toBe(null);
     expect(findByText('(array)')).not.toBe(null);
   });
 
@@ -196,7 +203,9 @@ describe('loaded array', () => {
     expect(getByText('"alpha"')).not.toBe(null);
     expect(getByText('1')).not.toBe(null);
 
-    getByText('["alpha", "bravo", "bravo", ["wowah"]]').click();
+    act(() => {
+      getByText('["alpha", "bravo", "bravo"]').click();
+    });
 
     expect(queryByText('"alpha"')).toBe(null);
     expect(queryByText('"bravo"')).toBe(null);
@@ -205,14 +214,13 @@ describe('loaded array', () => {
   it('deletes a top-level array element', () => {
     const { queryAllByText } = result;
     // delete the alpha-element
-    queryAllByText('delete')[1].click();
+    act(() => {
+      queryAllByText('delete')[1].click();
+    });
+
     expect(
       documentReference.update
-    ).toHaveBeenCalledWith(new firestore.FieldPath('foo'), [
-      'bravo',
-      'bravo',
-      ['wowah'],
-    ]);
+    ).toHaveBeenCalledWith(new firestore.FieldPath('foo'), ['bravo', 'bravo']);
   });
 
   it('array elements keys are immutable', async () => {
@@ -236,25 +244,6 @@ describe('loaded array', () => {
       'alpha',
       'new',
       'bravo',
-      ['wowah'],
-    ]);
-  });
-
-  it('updates a nested array element', () => {
-    const { getByLabelText, getByText, queryAllByText } = result;
-    // update the wowah-element
-    queryAllByText('edit')[3].click();
-    fireEvent.change(getByLabelText('Value'), {
-      target: { value: 'new' },
-    });
-    fireEvent.submit(getByText('Save'));
-    expect(
-      documentReference.update
-    ).toHaveBeenCalledWith(new firestore.FieldPath('foo'), [
-      'alpha',
-      'bravo',
-      'bravo',
-      ['new'],
     ]);
   });
 
@@ -263,7 +252,7 @@ describe('loaded array', () => {
     // ignore top-level add
     queryAllByText('add')[1].click();
 
-    expect(getByLabelText('Index').value).toBe('4');
+    expect(getByLabelText('Index').value).toBe('3');
 
     fireEvent.change(getByLabelText('Value'), {
       target: { value: 'new' },
@@ -275,26 +264,7 @@ describe('loaded array', () => {
       'alpha',
       'bravo',
       'bravo',
-      ['wowah'],
       'new',
-    ]);
-  });
-
-  it('adds a nested array element', () => {
-    const { getByLabelText, getByText, queryAllByText } = result;
-    // ignore top-level add
-    queryAllByText('add')[2].click();
-    fireEvent.change(getByLabelText('Value'), {
-      target: { value: 'new' },
-    });
-    fireEvent.submit(getByText('Save'));
-    expect(
-      documentReference.update
-    ).toHaveBeenCalledWith(new firestore.FieldPath('foo'), [
-      'alpha',
-      'bravo',
-      'bravo',
-      ['wowah', 'new'],
     ]);
   });
 });
@@ -304,24 +274,27 @@ describe('loaded map', () => {
   let documentReference: firestore.DocumentReference;
 
   beforeEach(async () => {
-    useDocumentData.mockReturnValueOnce([
-      {
-        foo: { first_name: 'harry', last_name: 'potter' },
-      },
-    ]);
-    documentReference = fakeDocumentReference();
-
-    await act(async () => {
-      result = render(
+    result = await renderWithFirestore(async firestore => {
+      documentReference = firestore.doc('foo/bar');
+      documentReference.update = jest.fn();
+      await documentReference.set({
+        foo: {
+          first_name: 'harry',
+          last_name: 'potter',
+        },
+      });
+      return (
         <DocumentPreview reference={documentReference} maxSummaryLen={1000} />
       );
     });
+
+    await waitForElement(() => result.getAllByText(/harry/).length > 0);
   });
 
   it('renders a field', () => {
     const { getByText } = result;
 
-    expect(getByText('{first_name: "harry", last_name: "potter"}')).not.toBe(
+    expect(getByText('{last_name: "potter", first_name: "harry"}')).not.toBe(
       null
     );
     expect(getByText('(map)')).not.toBe(null);
@@ -333,14 +306,14 @@ describe('loaded map', () => {
     expect(getByText('first_name')).not.toBe(null);
     expect(getByText('last_name')).not.toBe(null);
 
-    getByText('{first_name: "harry", last_name: "potter"}').click();
+    getByText('{last_name: "potter", first_name: "harry"}').click();
 
     expect(queryByText('first_name')).toBe(null);
     expect(queryByText('last_name')).toBe(null);
   });
 
   it('map elements keys are immutable', async () => {
-    const { getByLabelText, getByText, queryAllByText } = result;
+    const { getByLabelText, queryAllByText } = result;
     await act(async () => {
       queryAllByText('edit')[1].click();
     });
@@ -351,6 +324,7 @@ describe('loaded map', () => {
     const { getByLabelText, getByText, queryAllByText } = result;
 
     await act(async () => {
+      // Edit first-name
       queryAllByText('edit')[1].click();
     });
     await act(async () => {
@@ -362,7 +336,7 @@ describe('loaded map', () => {
       fireEvent.submit(getByText('Save'));
     });
     expect(documentReference.update).toHaveBeenCalledWith(
-      new firestore.FieldPath('foo', 'last_name'),
+      new firestore.FieldPath('foo', 'first_name'),
       'new'
     );
   });
