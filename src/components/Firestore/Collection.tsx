@@ -23,9 +23,10 @@ import { List, ListItem } from '@rmwc/list';
 import { MenuSurface, MenuSurfaceAnchor } from '@rmwc/menu';
 import { firestore } from 'firebase';
 import React, { useState } from 'react';
-import { NavLink, Redirect, Route, useRouteMatch } from 'react-router-dom';
+import { NavLink, Route, useHistory, useRouteMatch } from 'react-router-dom';
 import { useFirestoreCollection } from 'reactfire';
 
+import { Spinner } from '../common/Spinner';
 import styles from './Collection.module.scss';
 import { CollectionFilter } from './CollectionFilter';
 import {
@@ -62,6 +63,7 @@ export function withCollectionState(
     const collectionSnapshot = useFirestoreCollection<unknown>(
       filteredCollection
     );
+    const history = useHistory();
 
     const { url } = useRouteMatch()!;
     // TODO: Fetch missing documents (i.e. nonexistent docs with subcollections).
@@ -77,11 +79,14 @@ export function withCollectionState(
       }
     };
 
+    if (newDocumentId) {
+      history.push(`${url}/${newDocumentId}`);
+      setNewDocumentId('');
+      return null;
+    }
+
     if (redirectIfAutoSelectable) {
       return <>{redirectIfAutoSelectable}</>;
-    }
-    if (newDocumentId) {
-      return <Redirect to={`${url}/${newDocumentId}`} />;
     }
 
     return (
@@ -95,6 +100,19 @@ export function withCollectionState(
     );
   };
 }
+
+// TODO: create a CollectionSkeleton that the loading+loaded state can utilize
+export const CollectionLoading: React.FC<{
+  collection: firestore.CollectionReference<firestore.DocumentData>;
+}> = ({ collection }) => (
+  <div className="Firestore-Collection">
+    <PanelHeader
+      id={collection.id}
+      icon={<Icon icon={{ icon: 'collections_bookmark', size: 'small' }} />}
+    />
+    <Spinner message="Loading collection" />
+  </div>
+);
 
 interface CollectionPresentationProps {
   collection: firestore.CollectionReference<firestore.DocumentData>;

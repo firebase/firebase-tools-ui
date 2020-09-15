@@ -16,7 +16,6 @@
 
 import './index.scss';
 
-import { CircularProgress } from '@rmwc/circular-progress';
 import { Icon } from '@rmwc/icon';
 import { IconButton } from '@rmwc/icon-button';
 import { ListDivider } from '@rmwc/list';
@@ -27,7 +26,8 @@ import { Route, useRouteMatch } from 'react-router-dom';
 import { useFirestore } from 'reactfire';
 
 import { FirestoreIcon } from '../common/icons';
-import Collection from './Collection';
+import { Spinner } from '../common/Spinner';
+import Collection, { CollectionLoading } from './Collection';
 import { RootCollectionList, SubCollectionList } from './CollectionList';
 import { promptDeleteDocument } from './dialogs/deleteDocument';
 import { promptDeleteDocumentFields } from './dialogs/deleteDocumentFields';
@@ -47,11 +47,19 @@ const Doc: React.FC<{
 
       <Route
         path={`${url}/:id`}
-        render={({ match }: any) => (
-          <Suspense fallback={<CircularProgress />}>
-            <Collection collection={collectionById(match.params.id)} />
-          </Suspense>
-        )}
+        render={({ match }: any) => {
+          return (
+            <Suspense
+              fallback={
+                <CollectionLoading
+                  collection={collectionById(match.params.id)}
+                />
+              }
+            >
+              <Collection collection={collectionById(match.params.id)} />
+            </Suspense>
+          );
+        }}
       ></Route>
     </>
   );
@@ -64,7 +72,7 @@ export const Root: React.FC = () => {
   return (
     <Doc id={'Root'} collectionById={(id: string) => firestore.collection(id)}>
       <PanelHeader id="Root" icon={<FirestoreIcon />} />
-      <Suspense fallback={<CircularProgress />}>
+      <Suspense fallback={<Spinner message="Loading collections" />}>
         <RootCollectionList />
       </Suspense>
     </Doc>
@@ -101,11 +109,11 @@ export const Document: React.FC<{ reference: firestore.DocumentReference }> = ({
         </SimpleMenu>
       </PanelHeader>
 
-      <Suspense fallback={<CircularProgress />}>
+      <Suspense fallback={<Spinner message="Loading collections" />}>
         <SubCollectionList reference={reference} />
       </Suspense>
       <ListDivider tag="div" />
-      <Suspense fallback={<CircularProgress />}>
+      <Suspense fallback={<Spinner message="Loading document" />}>
         <DocumentPreview reference={reference} />
       </Suspense>
     </Doc>

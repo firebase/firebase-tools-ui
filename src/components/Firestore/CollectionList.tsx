@@ -38,22 +38,22 @@ export interface Props {
   reference?: firestore.DocumentReference;
 }
 
-export const RootCollectionList: React.FC = () => {
+export const RootCollectionList: React.FC = React.memo(() => {
   const rootCollections = useRootCollections();
   return <CollectionList collections={rootCollections} />;
-};
+});
 
 export const SubCollectionList: React.FC<{
   reference: firestore.DocumentReference;
-}> = ({ reference }) => {
+}> = React.memo(({ reference }) => {
   const subCollections = useSubCollections(reference);
   return <CollectionList collections={subCollections} reference={reference} />;
-};
+});
 
 const CollectionList: React.FC<Props> = ({ collections, reference }) => {
   const { url } = useRouteMatch()!;
-  const firestore = useFirestore();
   const history = useHistory();
+  const firestore = useFirestore();
   const redirectIfAutoSelectable = useAutoSelect(collections);
 
   const [isAddCollectionDialogOpen, setAddCollectionDialogOpen] = useState(

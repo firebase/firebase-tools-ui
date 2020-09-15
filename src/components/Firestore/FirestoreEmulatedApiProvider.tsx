@@ -1,10 +1,28 @@
+/**
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import firebase from 'firebase';
 import React, { Suspense, useEffect } from 'react';
 import { FirebaseAppProvider, useFirestore } from 'reactfire';
-import useSwr from 'swr';
+import { mutate } from 'swr';
 
 import { useEmulatedFirebaseApp } from '../../firebase';
 import { useFirestoreConfig, useProjectId } from '../../store/config/selectors';
+import { Spinner } from '../common/Spinner';
+import { useFetcher, useRequest } from '../common/useRequest';
 
 interface WindowWithFirestore extends Window {
   firestore?: firebase.firestore.Firestore;
@@ -13,8 +31,6 @@ interface WindowWithFirestore extends Window {
 /**
  * Provide a local-FirebaseApp with a FirestoreSDK connected to
  * the Emulator Hub.
- *
- * TODO(tlavelle): need loading indicator for FirestoreSDK
  */
 export const FirestoreEmulatedApiProvider: React.FC = React.memo(props => {
   const config = useFirestoreConfig();
@@ -22,7 +38,9 @@ export const FirestoreEmulatedApiProvider: React.FC = React.memo(props => {
 
   return (
     <FirebaseAppProvider firebaseApp={app}>
-      <Suspense fallback={<div>Loading Firestore SDK</div>}>
+      <Suspense
+        fallback={<Spinner message="Loading Firestore SDK" span={12} />}
+      >
         <FirestoreEmulatorSettings {...props} />
         <FirestoreDevTools />
       </Suspense>
@@ -33,7 +51,8 @@ export const FirestoreEmulatedApiProvider: React.FC = React.memo(props => {
 // Connect FirestoreSDK to Emulator Hub
 const FirestoreEmulatorSettings: React.FC = React.memo(({ children }) => {
   const firestore = useFirestore();
-  const config = useFirestoreConfig();
+  // TODO: update config to always have a firestore-config obj
+  const config = useFirestoreConfig()!;
 
   firestore.settings({
     host: config.hostAndPort,
@@ -64,7 +83,8 @@ const FirestoreDevTools: React.FC = React.memo(() => {
 });
 
 function useFirestoreRestApi() {
-  const config = useFirestoreConfig();
+  // TODO: update config to always have a firestore-config obj
+  const config = useFirestoreConfig()!;
   const projectId = useProjectId();
   const databaseId = '(default)';
 
@@ -79,20 +99,15 @@ export function useRootCollections() {
   const firestore = useFirestore();
   const url = `${baseUrl}/documents:listCollectionIds`;
 
-  const fetcher = (url: string) =>
-    fetch(url, {
+  const { data } = useRequest<{ collectionIds: string[] }>(
+    url,
+    {
       method: 'POST',
-      body: JSON.stringify({}),
-      headers: {
-        Authorization: 'Bearer owner',
-        'Content-Type': 'application/json',
-      },
-    }).then(r => r.json());
-
-  const { data } = useSwr<{ collectionIds: string[] }>(url, fetcher, {
-    refreshInterval: 10000,
-    suspense: true,
-  });
+    },
+    {
+      refreshInterval: 10_000,
+    }
+  );
 
   const collectionIds = data?.collectionIds || [];
   return collectionIds.map(id => firestore.collection(id));
@@ -105,20 +120,15 @@ export function useSubCollections(
   const encodedPath = docRef.path; // TODO: Encode each segment
   const url = `${baseUrl}/documents/${encodedPath}:listCollectionIds`;
 
-  const fetcher = (url: string) =>
-    fetch(url, {
+  const { data } = useRequest<{ collectionIds: string[] }>(
+    url,
+    {
       method: 'POST',
-      body: JSON.stringify({}),
-      headers: {
-        Authorization: 'Bearer owner',
-        'Content-Type': 'application/json',
-      },
-    }).then(r => r.json());
-
-  const { data } = useSwr<{ collectionIds: string[] }>(url, fetcher, {
-    refreshInterval: 10000,
-    suspense: true,
-  });
+    },
+    {
+      refreshInterval: 10_000,
+    }
+  );
 
   const collectionIds = data?.collectionIds || [];
   return collectionIds.map(id => docRef.collection(id));
@@ -126,16 +136,14 @@ export function useSubCollections(
 
 export function useEjector() {
   const { baseEmulatorUrl } = useFirestoreRestApi();
-  const endpoint = `${baseEmulatorUrl}/documents`;
+  const url = `${baseEmulatorUrl}/documents`;
+
+  const fetcher = useFetcher({
+    method: 'DELETE',
+  });
 
   return async () => {
-    await fetch(endpoint, {
-      method: 'DELETE',
-      body: JSON.stringify({}),
-      headers: {
-        Authorization: 'Bearer owner',
-        'Content-Type': 'application/json',
-      },
-    });
+    mutate('*');
+    return await fetcher(url);
   };
 }

@@ -1,7 +1,8 @@
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 
-import { hasError, map } from '../utils';
+import { Result, hasError, map } from '../utils';
+import { FirestoreConfig } from './types';
 import { AppState } from '..';
 
 // Get the RemoteResult wrapper for config. If you only care about result,
@@ -27,24 +28,22 @@ export const getFirestoreConfigResult = createSelector(
   result => map(result, config => config.firestore)
 );
 
+function useRemoteResultData<T = {}>(result: Result<T> | undefined) {
+  if (!result) {
+    throw new Error('Result data requested that is not yet populated');
+  }
+  if (hasError(result)) {
+    throw new Error(result.error.message);
+  }
+  return result.data;
+}
+
 export function useProjectId() {
   const projectId = useSelector(getProjectIdResult);
-  if (hasError(projectId)) {
-    throw new Error('ProjectId erred');
-  }
-  if (!projectId?.data) {
-    throw new Error('ProjectId is not yet defined');
-  }
-  return projectId.data;
+  return useRemoteResultData(projectId);
 }
 
 export function useFirestoreConfig() {
   const config = useSelector(getFirestoreConfigResult);
-  if (hasError(config)) {
-    throw new Error('FirestoreConfig erred');
-  }
-  if (!config?.data) {
-    throw new Error('FirestoreConfig is not yet defined');
-  }
-  return config.data;
+  return useRemoteResultData<FirestoreConfig | undefined>(config);
 }
