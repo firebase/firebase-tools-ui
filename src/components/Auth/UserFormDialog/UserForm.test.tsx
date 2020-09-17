@@ -6,7 +6,7 @@ import UserForm from './UserForm';
 
 describe('UserForm', () => {
   const displayName = 'pirojok';
-  const phone = '689-6896896';
+  const phoneNumber = '689-6896896';
 
   function setup(user?: AddAuthUserPayload) {
     const onSave = jest.fn();
@@ -36,7 +36,7 @@ describe('UserForm', () => {
   it('calls onSave on form submit', async () => {
     const { triggerValidation, onSave, onClose } = setup({
       displayName,
-      phone,
+      phoneNumber,
     });
 
     expect(onSave).not.toHaveBeenCalled();
@@ -46,7 +46,7 @@ describe('UserForm', () => {
     expect(onSave).toHaveBeenCalledWith(
       jasmine.objectContaining({
         displayName,
-        phone,
+        phoneNumber,
       })
     );
   });
@@ -72,7 +72,7 @@ describe('UserForm', () => {
     // Create user
     expect(onSave).toHaveBeenCalledWith(
       jasmine.objectContaining({
-        phone: phoneNumber,
+        phoneNumber: phoneNumber,
       })
     );
 
@@ -102,7 +102,7 @@ describe('UserForm', () => {
   it('does not call onSave on form submit if there are errors', async () => {
     const { triggerValidation, onSave, onClose } = setup({
       displayName: '',
-      phone: '',
+      phoneNumber: '',
     });
 
     await triggerValidation();

@@ -38,7 +38,7 @@ const UserForm: React.FC<UserFormProps> = ({
         onClose();
       }
     },
-    [errors]
+    [errors, onSave, onClose]
   );
 
   return (

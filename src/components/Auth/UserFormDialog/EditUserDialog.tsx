@@ -46,7 +46,9 @@ export const mapDispatchToProps: MapDispatchToPropsFunction<
   {}
 > = dispatch => {
   return {
-    updateUser: p => dispatch(updateUserRequest(p)),
+    updateUser: p => {
+      return dispatch(updateUserRequest(p));
+    },
   };
 };
 

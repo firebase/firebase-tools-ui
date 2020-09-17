@@ -12,16 +12,16 @@ describe('PhoneControl', () => {
 
   it('maps to the appropriate form value', async () => {
     const { getByPlaceholderText, triggerValidation, submit } = setup();
-    const phone = '+1 777 77777777';
+    const phoneNumber = '+1 777 77777777';
 
     fireEvent.change(getByPlaceholderText('Enter phone number'), {
-      target: { value: phone },
+      target: { value: phoneNumber },
     });
 
     await triggerValidation();
     expect(submit).toHaveBeenCalledWith(
       {
-        phone,
+        phoneNumber,
       },
       jasmine.any(Object)
     );

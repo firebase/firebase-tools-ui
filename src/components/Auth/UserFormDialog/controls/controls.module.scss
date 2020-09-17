@@ -30,25 +30,11 @@
 }
 
 .customAttributesWrapper {
-  padding: 0;
-  border: none;
-  margin: 0;
-  display: flex;
-
-  legend {
-    color: $COLOR_TEXT_PRIMARY;
-    padding: 0;
-    padding-inline-start: 0;
-  }
-
-  :global .Field {
-    &:first-child {
-      margin-right: 8px;
+  :global {
+    label.mdc-text-field--textarea,
+    textarea {
+      height: 100px;
     }
-  }
-
-  [role='group'] {
-    display: flex;
   }
 }
 

@@ -35,7 +35,7 @@ export const getFilteredUsers = createSelector(
       return users;
     }
     return users.filter(u => {
-      return [u.localId, u.displayName, u.email || '', u.phone || '']
+      return [u.localId, u.displayName, u.email || '', u.phoneNumber || '']
         .join('\n')
         .includes(filter);
     });

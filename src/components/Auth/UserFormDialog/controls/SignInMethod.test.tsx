@@ -37,11 +37,11 @@ describe('SignInMethod', () => {
   describe('requiring at least one value', () => {
     const errorText = /One method is required./;
 
-    it('is valid when phone present', async () => {
+    it('is valid when phoneNumber present', async () => {
       const { queryByText } = await setup({
         email: '',
         password: '',
-        phone: '1 689 689 6899',
+        phoneNumber: '1 689 689 6899',
       });
       expect(queryByText(errorText)).toBeNull();
     });
@@ -50,7 +50,7 @@ describe('SignInMethod', () => {
       const { queryByText } = await setup({
         email: validEmail,
         password: validPassword,
-        phone: '',
+        phoneNumber: '',
       });
       expect(queryByText(errorText)).toBeNull();
     });
@@ -59,7 +59,7 @@ describe('SignInMethod', () => {
       const { queryByText } = await setup({
         email: validEmail,
         password: validPassword,
-        phone: '1 689 689 6899',
+        phoneNumber: '1 689 689 6899',
       });
       expect(queryByText(errorText)).toBeNull();
     });
@@ -68,13 +68,17 @@ describe('SignInMethod', () => {
       const { queryByText } = await setup({
         email: validEmail,
         password: '',
-        phone: '1 689 689 6899',
+        phoneNumber: '1 689 689 6899',
       });
       expect(queryByText(errorText)).toBeNull();
     });
 
     it('shows error, if nothing is present', async () => {
-      const { getByText } = await setup({ email: '', password: '', phone: '' });
+      const { getByText } = await setup({
+        email: '',
+        password: '',
+        phoneNumber: '',
+      });
 
       expect(getByText(errorText)).not.toBeNull();
     });

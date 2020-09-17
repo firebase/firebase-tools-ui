@@ -26,6 +26,12 @@ import { AddAuthUserPayload, AuthUser } from './types';
 // "/emulator/v1/projects/{targetProjectId}/accounts"
 // allowDuplicateEmails
 
+export interface ApiAuthUserFields {
+  passwordHash: string;
+}
+
+const PASSWORD_HASH_REGEX = /^fakeHash:salt=[\w\d]+:password=(.*?)$/;
+
 export default class AuthApi extends RestApi {
   readonly baseUrl = `http://${this.hostAndPort}/identitytoolkit.googleapis.com/v1/`;
   readonly baseUrlWithProject =
@@ -53,8 +59,13 @@ export default class AuthApi extends RestApi {
       },
       'POST'
     );
-    return json.userInfo.map((u: any) => {
-      return u;
+    return json.userInfo.map((user: AuthUser & ApiAuthUserFields) => {
+      const match = user.passwordHash?.match(PASSWORD_HASH_REGEX);
+
+      return {
+        password: match ? match[1] : '',
+        ...user,
+      };
     });
   }
 

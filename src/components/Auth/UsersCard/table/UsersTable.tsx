@@ -61,7 +61,7 @@ function UsersTableRow({
   return (
     <DataTableRow className={user.disabled ? styles.disabled : ''}>
       <DataTableCell>
-        {user.displayName || user.email || user.phone}
+        {user.displayName || user.email || user.phoneNumber}
       </DataTableCell>
       <DataTableCell>{<ProviderCell user={user} />}</DataTableCell>
       <DataTableCell>{formattedCreatedAt}</DataTableCell>

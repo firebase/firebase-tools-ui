@@ -25,13 +25,13 @@ export interface CustomAttribute {
  * https://github.com/FirebasePrivate/firebase-tools/blob/d6b584da9f852313064d32dd219a6f23b7800d66/src/emulator/auth/schema.ts#L1670-L1779
  */
 export interface AddAuthUserPayload {
-  customAttributes?: CustomAttribute[];
+  customAttributes?: string;
   displayName: string;
   photoUrl?: string;
   screenName?: string;
   email?: string;
   password?: string;
-  phone?: string;
+  phoneNumber?: string;
 }
 
 export interface AuthUser extends AddAuthUserPayload {

@@ -16,7 +16,6 @@ export const AddUserDialog: React.FC<Props> = ({ onClose, createUser }) => {
   // Pre-populate custom attributes to always have one field displayed.
   const user: AddAuthUserPayload = {
     displayName: '',
-    customAttributes: [],
   };
 
   return (

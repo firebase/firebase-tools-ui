@@ -16,23 +16,26 @@ export const SignInMethod: React.FC<SignInMethodProps> = form => {
   const { watch, setError, clearError, formState, errors, isEditing } = form;
   const email = watch('email');
   const password = watch('password');
-  const phone = watch('phone');
+  const phoneNumber = watch('phoneNumber');
 
   useEffect(() => {
     const hasEmailPassword = email !== '' && (password !== '' || isEditing);
-    const hasPhone = !!phone;
+    const hasPhone = !!phoneNumber;
 
     if (hasEmailPassword || hasPhone) {
-      clearError(ERROR_CODE);
+      // TODO(kirjs): according to docs ClearError should accept arbitrary key
+      // to allow cross-field validation, but it's not the case here for some
+      // reason.
+      clearError(ERROR_CODE as any);
     } else {
-      setError(ERROR_CODE, 'both');
+      setError(ERROR_CODE as any);
     }
-  }, [email, password, clearError, setError, phone, isEditing]);
+  }, [email, password, clearError, setError, phoneNumber, isEditing]);
 
   const isTouched =
     formState.touched['email'] ||
     formState.touched['password'] ||
-    formState.touched['phone'];
+    formState.touched['phoneNumber'];
   const isOnlyError =
     ERROR_CODE in errors && Object.values(errors).length === 1;
 

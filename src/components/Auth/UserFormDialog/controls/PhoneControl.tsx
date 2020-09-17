@@ -10,10 +10,10 @@ export const PhoneControl: React.FC<FormContextValues<AddAuthUserPayload>> = ({
   return (
     <>
       <Field
-        name="phone"
+        name="phoneNumber"
         label="Phone authentication"
         placeholder="Enter phone number"
-        type="phone"
+        type="phoneNumber"
         inputRef={register()}
       />
     </>

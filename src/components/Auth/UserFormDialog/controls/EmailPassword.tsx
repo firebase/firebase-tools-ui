@@ -44,9 +44,10 @@ export const EmailPassword: React.FC<EmailPasswordProps> = ({
       (email !== '' && password !== '') ||
       isEditing
     ) {
-      clearError('emailpassword');
+      // TODO(kirjs):
+      clearError('emailpassword' as any);
     } else {
-      setError('emailpassword', 'both');
+      setError('emailpassword' as any, 'both');
     }
   }, [email, password, clearError, setError, isEditing]);
 

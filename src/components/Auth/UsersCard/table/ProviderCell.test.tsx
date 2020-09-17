@@ -5,11 +5,11 @@ import { AuthUser } from '../../types';
 import { ProviderCell } from './ProviderCell';
 
 describe('ProviderCell', () => {
-  const phone = '689';
+  const phoneNumber = '689';
   const email = '6@8.9';
 
-  it('renders only phone icon', () => {
-    const user = { phone } as AuthUser;
+  it('renders only phoneNumber icon', () => {
+    const user = { phoneNumber } as AuthUser;
     const { queryByLabelText } = render(<ProviderCell user={user} />);
     expect(queryByLabelText('Phone')).not.toBeNull();
     expect(queryByLabelText('Email')).toBeNull();
@@ -23,7 +23,7 @@ describe('ProviderCell', () => {
   });
 
   it('renders both icons', () => {
-    const user = { phone, email } as AuthUser;
+    const user = { phoneNumber, email } as AuthUser;
     const { queryByLabelText } = render(<ProviderCell user={user} />);
     expect(queryByLabelText('Phone')).not.toBeNull();
     expect(queryByLabelText('Email')).not.toBeNull();

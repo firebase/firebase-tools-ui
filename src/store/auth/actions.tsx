@@ -15,7 +15,7 @@ export const updateUserRequest = createAction('@auth/UPDATE_USER_REQUEST')<{
   localId: string;
 }>();
 
-export const updateUserSuccess = createAction('@auth/UPDATE_USER_REQUEST')<{
+export const updateUserSuccess = createAction('@auth/UPDATE_USER_SUCCESS')<{
   user: AuthUser;
 }>();
 
