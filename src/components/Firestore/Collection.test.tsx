@@ -15,7 +15,7 @@
  */
 
 import { Portal } from '@rmwc/base';
-import { act, waitForElement } from '@testing-library/react';
+import { act, queryAllByText, waitForElement } from '@testing-library/react';
 import React from 'react';
 import { Route } from 'react-router-dom';
 
