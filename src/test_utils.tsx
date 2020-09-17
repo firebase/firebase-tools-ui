@@ -15,15 +15,14 @@
  */
 
 import {
-  RenderOptions,
-  RenderResult,
   act,
+  fireEvent,
   render,
   waitForElement,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
-
-import { renderWithFirestore } from './components/Firestore/testing/FirestoreTestProviders';
+import React from 'react';
+import { FormContextValues, UseFormOptions, useForm } from 'react-hook-form';
 
 export function delay(timeoutMs: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, timeoutMs));
@@ -50,10 +49,20 @@ export async function waitForDialogsToOpen(container: ParentNode = document) {
 }
 
 /**
+ * Wait for MDC Menu to be fully open, so no DOM changes happen outside
+ * our control and trigger warnings of not wrapped in act(...) etc.
+ */
+export async function waitForMenuToOpen(container: ParentNode = document) {
+  await waitForElementToBeRemoved(() =>
+    container.querySelector('.mdc-menu-surface--animating-open')
+  );
+}
+
+/**
  * Wait for MDC dialogs to be fully closed, so no DOM changes happen outside
  * our control and trigger warnings of not wrapped in act(...) etc.
  */
-export async function waitForDialogsToClose(container: ParentNode = document) {
+export async function waitForDialogsToClose() {
   // TODO: Change to waitFor once we migrate to react-testing-library@10.
   await waitForElementToBeRemoved(() =>
     document.querySelector('.mdc-dialog--closing')
@@ -128,3 +137,35 @@ export function makeDeferred<T>(): Deferred<T> {
     },
   };
 }
+
+/**
+ * Renders a component wrapped with react hook form, and expose helpers that simplify testing.
+ *
+ * Component is expected to receive resulting form methods as props.
+ */
+export const wrapWithForm = <S, T = {}>(
+  Control: React.FC<FormContextValues<T>>,
+  options: UseFormOptions<T>,
+  props: Partial<S> = {}
+) => {
+  const submit = jest.fn();
+  const FormWrapper = () => {
+    const form = useForm<T>(options);
+
+    return (
+      <form data-testid="form" onSubmit={form.handleSubmit(submit)}>
+        <Control {...form} {...props} />
+      </form>
+    );
+  };
+
+  const methods = render(<FormWrapper />);
+
+  const triggerValidation = async () => {
+    await act(async () => {
+      fireEvent.submit(methods.getByTestId('form'));
+    });
+  };
+
+  return { ...methods, triggerValidation, submit };
+};
