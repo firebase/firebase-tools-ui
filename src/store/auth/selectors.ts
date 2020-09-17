@@ -6,10 +6,11 @@ import { AppState } from '../index';
 import { map } from '../utils';
 
 export const getAuth = (state: AppState) => state.auth;
-export const getUsers = createSelector(
-  getAuth,
-  (state: AuthState) => state.users
-);
+export const getUsers = createSelector(getAuth, (state: AuthState) => {
+  return [...state.users].sort(
+    (a, b) => Number(new Date(b.createdAt)) - Number(new Date(a.createdAt || 0))
+  );
+});
 
 export const hasUsers = createSelector(
   getUsers,
