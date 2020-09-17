@@ -49,14 +49,18 @@ export function* deleteUser({ payload }: ReturnType<typeof deleteUserRequest>) {
 
 export function* createUser({ payload }: ReturnType<typeof createUserRequest>) {
   const authApi = yield call(configureAuthSaga);
-  const user: AuthUser = yield call([authApi, 'createUser'], payload.user);
+  const newUser: AuthUser = yield call([authApi, 'createUser'], payload.user);
+  const user = {
+    ...newUser,
+    ...payload.user,
+  };
 
+  if (payload.user.customAttributes) {
+    yield call([authApi, 'updateUser'], user);
+  }
   yield put(
     createUserSuccess({
-      user: {
-        ...user,
-        ...payload.user,
-      },
+      user,
     })
   );
 }
@@ -76,7 +80,7 @@ export function* setUserDisabled({
 }: ReturnType<typeof setUserDisabledRequest>) {
   const authApi = yield call(configureAuthSaga);
   yield call([authApi, 'updateUser'], {
-    userDisabled: payload.disabled,
+    disableUser: payload.disabled,
     localId: payload.localId,
   });
   yield put(setUserDisabledSuccess(payload));

@@ -1,3 +1,5 @@
+@import '../../../common/color';
+
 .zeroStateWrapper {
   height: 200px;
   display: flex;
@@ -10,4 +12,23 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.disabled {
+  background: $COLOR_WHITE_DISABLED;
+
+  &:hover {
+    // Override RMWC styles.
+    background-color: $COLOR_WHITE_DISABLED !important;
+  }
+
+  :global {
+    .mdc-data-table__cell {
+      color: $COLOR_BLACK_DISABLED;
+    }
+
+    .rmwc-icon {
+      color: $COLOR_BLACK_DISABLED;
+    }
+  }
 }

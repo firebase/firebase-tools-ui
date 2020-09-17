@@ -28,6 +28,7 @@ import EditUserDialog from '../../UserFormDialog/EditUserDialog';
 import { AuthZeroState } from './AuthZeroState';
 import { NoResults } from './NoResults';
 import { ProviderCell } from './ProviderCell';
+import styles from './UsersTable.module.scss';
 
 export type UsersTableProps = PropsFromDispatch & PropsFromStore;
 
@@ -58,7 +59,7 @@ function UsersTableRow({
     user.signedIn && new Date(Number(user.signedIn)).toLocaleDateString();
 
   return (
-    <DataTableRow>
+    <DataTableRow className={user.disabled ? styles.disabled : ''}>
       <DataTableCell>
         {user.displayName || user.email || user.phone}
       </DataTableCell>
@@ -71,7 +72,9 @@ function UsersTableRow({
           open={menuOpen}
           onOpen={() => setMenuOpen(true)}
           onClose={() => setMenuOpen(false)}
-          handle={<IconButton icon="more_vert" label="Open menu" />}
+          handle={
+            <IconButton theme="secondary" icon="more_vert" label="Open menu" />
+          }
           renderToPortal
         >
           <MenuItem

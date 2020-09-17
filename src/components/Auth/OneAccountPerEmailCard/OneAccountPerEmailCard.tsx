@@ -12,17 +12,19 @@ export const OneAccountPerEmailCard: React.FC = () => {
     <>
       <Card className={styles.wrapper}>
         <div>
-          <Typography use="body1" tag="div">
+          <Typography use="headline6" tag="div">
             One account per email address
           </Typography>
-          <Typography use="body2">
+          <Typography use="body1">
             Preventing users from creating multiple accounts using the same
             email address with different authentication providers.
           </Typography>
         </div>
 
         <div>
-          <Button onClick={() => setOpen(true)}>Change</Button>
+          <Button outlined={true} onClick={() => setOpen(true)}>
+            Change
+          </Button>
         </div>
       </Card>
       {open && <OneAccountPerEmailDialog onClose={() => setOpen(false)} />}

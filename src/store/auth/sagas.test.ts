@@ -138,7 +138,7 @@ describe('Auth sagas', () => {
       expect(gen.next(fakeAuthApi)).toEqual({
         done: false,
         value: call([fakeAuthApi, 'updateUser'], {
-          userDisabled: isDisabled,
+          disableUser: isDisabled,
           localId,
         }),
       });

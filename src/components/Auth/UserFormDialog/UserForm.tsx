@@ -67,6 +67,7 @@ const UserForm: React.FC<UserFormProps> = ({
               onSave(result);
               reset(user);
             })}
+            disabled={!canSubmit}
             type="button"
           >
             Save and create another
