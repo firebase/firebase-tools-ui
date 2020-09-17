@@ -15,8 +15,6 @@
  */
 
 import {
-  RenderOptions,
-  RenderResult,
   act,
   fireEvent,
   render,
@@ -69,23 +67,6 @@ export async function waitForDialogsToClose() {
   await waitForElementToBeRemoved(() =>
     document.querySelector('.mdc-dialog--closing')
   );
-}
-
-/* Render a component containing a MDC dialog, and wait for the dialog to be
- * fully open. Silences act(...) warnings from RMWC <Dialog>s.
- *
- * This is syntatic sugar for render() and then waitForDialogsToOpen().
- */
-export async function renderDialog(
-  ui: React.ReactElement,
-  options?: Omit<RenderOptions, 'queries'>
-): Promise<RenderResult> {
-  let renderResult: RenderResult;
-  await act(async () => {
-    renderResult = render(ui, options);
-    await waitForDialogsToOpen(renderResult.container);
-  });
-  return renderResult!;
 }
 
 /**

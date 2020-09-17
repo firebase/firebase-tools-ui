@@ -1,9 +1,11 @@
 import { Portal } from '@rmwc/base';
 import { fireEvent, render } from '@testing-library/react';
 import React from 'react';
+import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
+import configureStore from 'redux-mock-store';
 
-import configureStore from '../../../../configureStore';
+import { AppState } from '../../../../store';
 import {
   waitForDialogsToOpen,
   waitForMenuToOpen,
@@ -26,7 +28,12 @@ const fakeUser2 = {
 
 describe('AuthTable text', () => {
   function setup(customProps?: Partial<UsersTableProps>) {
-    const store = configureStore();
+    const store = configureStore<Pick<AppState, 'auth'>>()({
+      auth: {
+        users: [],
+        filter: '',
+      },
+    });
 
     const props = {
       filteredUsers: [],
@@ -89,7 +96,7 @@ describe('AuthTable text', () => {
 
       // Keeps displaying header
       expect(getAllByRole('row').length).toBe(1);
-      getByText(/No users/);
+      getByText('No users');
     });
   });
 
@@ -100,7 +107,10 @@ describe('AuthTable text', () => {
       });
 
       const menu = result.getAllByLabelText('Open menu')[0];
-      fireEvent.click(menu);
+
+      await act(async () => {
+        fireEvent.click(menu);
+      });
 
       await waitForMenuToOpen();
 
@@ -115,7 +125,9 @@ describe('AuthTable text', () => {
       const { button, queryByRole, getByText } = await getMenuItemByText(
         'Edit user'
       );
-      fireEvent.click(button);
+      await act(async () => {
+        fireEvent.click(button);
+      });
 
       await waitForDialogsToOpen();
 
@@ -139,7 +151,9 @@ describe('AuthTable text', () => {
         'Disable user'
       );
 
-      fireEvent.click(button);
+      await act(async () => {
+        fireEvent.click(button);
+      });
 
       expect(setUserDisabled).toHaveBeenCalledWith({
         disabled: true,

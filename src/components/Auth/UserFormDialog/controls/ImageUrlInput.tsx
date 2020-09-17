@@ -7,10 +7,10 @@ import { AddAuthUserPayload } from '../../types';
 import styles from '../UserFormDialog.module.scss';
 
 enum ImagePreviewStatus {
-  NONE = 1,
-  LOADING,
-  LOADED,
-  ERROR,
+  NONE = 'NONE',
+  LOADING = 'LOADING',
+  LOADED = 'LOADED',
+  ERROR = 'ERROR',
 }
 
 export interface ImageUrlInput {

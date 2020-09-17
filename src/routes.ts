@@ -55,7 +55,7 @@ export const routes: ReadonlyArray<Route> = [
   {
     path: '/auth',
     component: Auth,
-    label: 'Authentification',
+    label: 'Authentication',
     exact: false,
     showInNav: true,
   },

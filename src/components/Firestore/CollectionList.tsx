@@ -19,49 +19,52 @@ import './index.scss';
 import { Button } from '@rmwc/button';
 import { List, ListItem } from '@rmwc/list';
 import { firestore } from 'firebase';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { NavLink, useHistory, useRouteMatch } from 'react-router-dom';
+import { useFirestore } from 'reactfire';
 
-import DatabaseApi from './api';
-import { useApi } from './ApiContext';
 import {
   AddCollectionDialog,
   AddCollectionDialogValue,
 } from './dialogs/AddCollectionDialog';
+import {
+  useRootCollections,
+  useSubCollections,
+} from './FirestoreEmulatedApiProvider';
 import { useAutoSelect } from './useAutoSelect';
 
 export interface Props {
+  collections: firestore.CollectionReference[];
   reference?: firestore.DocumentReference;
 }
 
-export const CollectionList: React.FC<Props> = ({ reference }) => {
-  const { url } = useRouteMatch()!;
-  const api = useApi();
-  const history = useHistory();
-  const restCollections = useCollections(api, reference);
-  const [collections, setCollections] = useState(restCollections);
-  const redirectIfAutoSelectable = useAutoSelect(collections);
+export const RootCollectionList: React.FC = () => {
+  const rootCollections = useRootCollections();
+  return <CollectionList collections={rootCollections} />;
+};
 
-  useEffect(() => {
-    // Update the current list of collections whenever the rest-query resolves
-    // with CollectionRefs
-    setCollections(restCollections);
-  }, [restCollections]);
+export const SubCollectionList: React.FC<{
+  reference: firestore.DocumentReference;
+}> = ({ reference }) => {
+  const subCollections = useSubCollections(reference);
+  return <CollectionList collections={subCollections} reference={reference} />;
+};
+
+const CollectionList: React.FC<Props> = ({ collections, reference }) => {
+  const { url } = useRouteMatch()!;
+  const history = useHistory();
+  const firestore = useFirestore();
+  const redirectIfAutoSelectable = useAutoSelect(collections);
 
   const [isAddCollectionDialogOpen, setAddCollectionDialogOpen] = useState(
     false
   );
 
   const addCollection = async (value: AddCollectionDialogValue | null) => {
-    if (value && value.collectionId && value.document.id) {
-      const ref = reference || api.database;
+    if (value?.collectionId && value?.document.id) {
+      const ref = reference || firestore;
       const newCollection = ref.collection(value.collectionId);
-
       await newCollection.doc(value.document.id).set(value.document.data);
-
-      // Append to the current collection-list because the hook is not triggered
-      setCollections([...collections, newCollection]);
-
       // Redirect to the new collection
       if (reference) {
         history.push(`/firestore/${reference.path}/${value.collectionId}`);
@@ -78,7 +81,6 @@ export const CollectionList: React.FC<Props> = ({ reference }) => {
       {isAddCollectionDialogOpen && (
         <AddCollectionDialog
           documentRef={reference}
-          api={api}
           open={isAddCollectionDialogOpen}
           onValue={addCollection}
           onClose={() => setAddCollectionDialogOpen(false)}
@@ -112,24 +114,3 @@ export const CollectionList: React.FC<Props> = ({ reference }) => {
     </div>
   );
 };
-
-function useCollections(
-  api: DatabaseApi,
-  documentRef?: firestore.DocumentReference
-): firestore.CollectionReference[] | null {
-  const [collections, setCollections] = useState<
-    firestore.CollectionReference[] | null
-  >(null);
-
-  useEffect(() => {
-    async function fetchCollections() {
-      const collections = await api.getCollections(documentRef);
-      setCollections(collections);
-    }
-    fetchCollections();
-  }, [api, documentRef]);
-
-  return collections;
-}
-
-export default CollectionList;

@@ -23,9 +23,11 @@ import { List, ListItem } from '@rmwc/list';
 import { MenuSurface, MenuSurfaceAnchor } from '@rmwc/menu';
 import { firestore } from 'firebase';
 import React, { useState } from 'react';
-import { useCollection } from 'react-firebase-hooks/firestore';
-import { NavLink, Redirect, Route, useRouteMatch } from 'react-router-dom';
+import { NavLink, Route, useHistory, useRouteMatch } from 'react-router-dom';
+import { useFirestoreCollection } from 'reactfire';
 
+import { CopyButton } from '../common/CopyButton';
+import { Spinner } from '../common/Spinner';
 import styles from './Collection.module.scss';
 import { CollectionFilter } from './CollectionFilter';
 import {
@@ -59,13 +61,16 @@ export function withCollectionState(
       collection,
       collectionFilter
     );
-    const [collectionSnapshot, loading, error] = useCollection(
+    const collectionSnapshot = useFirestoreCollection<unknown>(
       filteredCollection
     );
+    const history = useHistory();
 
     const { url } = useRouteMatch()!;
     // TODO: Fetch missing documents (i.e. nonexistent docs with subcollections).
-    const docs = collectionSnapshot ? collectionSnapshot.docs : NO_DOCS;
+    const docs = collectionSnapshot.docs.length
+      ? collectionSnapshot.docs
+      : NO_DOCS;
     const redirectIfAutoSelectable = useAutoSelect(docs);
 
     const addDocument = async (value: AddDocumentDialogValue | null) => {
@@ -75,10 +80,15 @@ export function withCollectionState(
       }
     };
 
-    if (error) return <></>;
-    if (!loading && redirectIfAutoSelectable)
+    if (newDocumentId) {
+      history.push(`${url}/${newDocumentId}`);
+      setNewDocumentId('');
+      return null;
+    }
+
+    if (redirectIfAutoSelectable) {
       return <>{redirectIfAutoSelectable}</>;
-    if (newDocumentId) return <Redirect to={`${url}/${newDocumentId}`} />;
+    }
 
     return (
       <Presentation
@@ -91,6 +101,19 @@ export function withCollectionState(
     );
   };
 }
+
+// TODO: create a CollectionSkeleton that the loading+loaded state can utilize
+export const CollectionLoading: React.FC<{
+  collection: firestore.CollectionReference<firestore.DocumentData>;
+}> = ({ collection }) => (
+  <div className="Firestore-Collection">
+    <PanelHeader
+      id={collection.id}
+      icon={<Icon icon={{ icon: 'collections_bookmark', size: 'small' }} />}
+    />
+    <Spinner message="Loading collection" />
+  </div>
+);
 
 interface CollectionPresentationProps {
   collection: firestore.CollectionReference<firestore.DocumentData>;
@@ -132,6 +155,10 @@ export const CollectionPresentation: React.FC<CollectionPresentationProps> = ({
             </MenuSurface>
 
             <div className={collectionFilter && styles.badge}>
+              <CopyButton
+                textToCopy={collection.id}
+                label="Copy collection ID"
+              />
               <IconButton
                 icon="filter_list"
                 label="Filter documents in this collection"

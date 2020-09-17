@@ -75,7 +75,7 @@ const Overview: React.FC<{
           <Typography use="headline5">Emulator overview</Typography>
         </GridCell>
         <EmulatorCard
-          name="Authentification emulator"
+          name="Authentication emulator"
           icon={<AuthIcon theme="secondary" />}
           config={config.auth}
           linkTo="/auth"
