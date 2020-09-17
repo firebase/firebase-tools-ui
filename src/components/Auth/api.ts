@@ -14,10 +14,6 @@
  * limitations under the License.
  */
 
-import { useSelector } from 'react-redux';
-
-import { getAuthConfigResult } from '../../store/auth/selectors';
-import { getProjectIdResult } from '../../store/config/selectors';
 import { RestApi } from '../common/rest_api';
 import { AddAuthUserPayload, AuthUser } from './types';
 

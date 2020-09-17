@@ -56,7 +56,7 @@ function UsersTableRow({
     Number(user.createdAt)
   ).toLocaleDateString();
   const formattedSignedIn =
-    user.signedIn && new Date(Number(user.signedIn)).toLocaleDateString();
+    user.lastLoginAt && new Date(Number(user.lastLoginAt)).toLocaleDateString();
 
   return (
     <DataTableRow className={user.disabled ? styles.disabled : ''}>
