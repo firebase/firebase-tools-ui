@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { RMWCProvider } from '@rmwc/provider';
 import {
   act,
   fireEvent,
@@ -153,9 +154,12 @@ export const wrapWithForm = <S, T = {}>(
     const form = useForm<T>(options);
 
     return (
-      <form data-testid="form" onSubmit={form.handleSubmit(submit)}>
-        <Control {...form} {...props} />
-      </form>
+      // Ripples cause "not wrapped in act()" warning.
+      <RMWCProvider ripple={false}>
+        <form data-testid="form" onSubmit={form.handleSubmit(submit)}>
+          <Control {...form} {...props} />
+        </form>
+      </RMWCProvider>
     );
   };
 

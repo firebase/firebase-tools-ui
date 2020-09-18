@@ -37,6 +37,23 @@ describe('OneAccountPerEmailDialog', () => {
     expect(onClose).toHaveBeenCalled();
   });
 
+  it('calls setAllowDuplicateEmails on hitting "save" button', async () => {
+    const { getByText, setAllowDuplicateEmails } = setup();
+    fireEvent.submit(getByText('Save'));
+    expect(setAllowDuplicateEmails).toHaveBeenCalledWith(false);
+  });
+
+  it('updates value', async () => {
+    const { getByText, setAllowDuplicateEmails, getByLabelText } = setup(true);
+
+    const radio = getByLabelText(/Allow creation of multiple accounts/);
+
+    fireEvent.click(radio);
+
+    fireEvent.submit(getByText('Save'));
+    expect(setAllowDuplicateEmails).toHaveBeenCalledWith(false);
+  });
+
   it('calls onClose on hitting "cancel" button', async () => {
     const { getByText, onClose } = setup();
     fireEvent.click(getByText('Cancel'));

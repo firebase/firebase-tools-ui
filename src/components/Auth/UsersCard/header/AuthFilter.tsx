@@ -86,10 +86,8 @@ export interface PropsFromDispatch {
 export const mapDispatchToProps: MapDispatchToPropsFunction<
   PropsFromDispatch,
   {}
-> = dispatch => {
-  return {
-    updateFilter: f => dispatch(updateFilter(f)),
-  };
-};
+> = dispatch => ({
+  updateFilter: f => dispatch(updateFilter(f)),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(AuthFilter);

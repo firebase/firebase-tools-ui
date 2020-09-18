@@ -57,9 +57,7 @@ export const OneAccountPerEmailDialog: React.FC<Props> = ({
             value="true"
             checked={value}
             onChange={() => setValue(true)}
-            onClick={() => {
-              setValue(true);
-            }}
+            onClick={() => setValue(true)}
           >
             Allow creation of multiple accounts with the same email address
           </Radio>

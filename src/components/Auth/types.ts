@@ -26,7 +26,7 @@ export interface CustomAttribute {
  */
 export interface AddAuthUserPayload {
   customAttributes?: string;
-  displayName: string;
+  displayName?: string;
   photoUrl?: string;
   screenName?: string;
   email?: string;

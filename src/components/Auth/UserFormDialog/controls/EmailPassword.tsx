@@ -11,16 +11,14 @@ const EMAIL_REGEX = /^[^@]+@[^@]+$/;
 const PASSWORD_MIN_LENGTH = 6;
 
 function getErrorText(errors: any) {
-  if (errors) {
-    if (errors.email) {
-      return 'Invalid email';
-    }
-    if (errors.emailpassword) {
-      return 'Both email and password should be present';
-    }
-    if (errors.password) {
-      return `Password should be at least ${PASSWORD_MIN_LENGTH} characters`;
-    }
+  if (errors.email) {
+    return 'Invalid email';
+  }
+  if (errors.emailpassword) {
+    return 'Both email and password should be present';
+  }
+  if (errors.password) {
+    return `Password should be at least ${PASSWORD_MIN_LENGTH} characters`;
   }
 }
 

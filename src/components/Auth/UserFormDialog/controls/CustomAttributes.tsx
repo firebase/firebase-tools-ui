@@ -24,9 +24,7 @@ function validate(attributes: string) {
     }
     const forbiddenClaim = e.message.match(/FORBIDDEN_CLAIM : (\w+)$/);
     if (forbiddenClaim && forbiddenClaim[1]) {
-      return (
-        'Custom claims length must not have forbidden key: ' + forbiddenClaim[1]
-      );
+      return 'Custom claims must not have forbidden key: ' + forbiddenClaim[1];
     }
   }
 }

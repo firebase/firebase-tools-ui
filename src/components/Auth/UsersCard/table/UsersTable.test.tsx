@@ -32,6 +32,7 @@ describe('AuthTable text', () => {
       auth: {
         users: [],
         filter: '',
+        allowDuplicateEmails: false,
       },
     });
 

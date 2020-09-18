@@ -30,18 +30,16 @@ export interface ApiAuthUserFields {
   passwordHash: string;
 }
 
-const PASSWORD_HASH_REGEX = /^fakeHash:salt=[\w\d]+:password=(.*?)$/;
-
 export default class AuthApi extends RestApi {
-  readonly baseUrl = `http://${this.hostAndPort}/identitytoolkit.googleapis.com/v1/`;
-  readonly baseUrlWithProject =
+  private readonly baseUrl = `http://${this.hostAndPort}/identitytoolkit.googleapis.com/v1/`;
+  private readonly baseUrlWithProject =
     this.baseUrl + `projects/${this.projectId}/accounts:`;
-  readonly baseUrlWithoutProject = this.baseUrl + `accounts:`;
-  readonly baseEmulatorUrl = `http://${this.hostAndPort}/emulator/v1/projects/${this.projectId}`;
+  private readonly baseUrlWithoutProject = this.baseUrl + `accounts:`;
+  private readonly baseEmulatorUrl = `http://${this.hostAndPort}/emulator/v1/projects/${this.projectId}`;
 
   constructor(
-    public readonly hostAndPort: string,
-    public readonly projectId: string
+    private readonly hostAndPort: string,
+    private readonly projectId: string
   ) {
     super();
   }
@@ -51,12 +49,10 @@ export default class AuthApi extends RestApi {
     return [];
   }
 
-  private async fetchUsers(): Promise<AuthUser[]> {
+  async fetchUsers(): Promise<AuthUser[]> {
     const { json } = await this.jsonRequest(
       `${this.baseUrlWithProject}query`,
-      {
-        fields: ['displayName'],
-      },
+      {},
       'POST'
     );
     return json.userInfo.map((user: AuthUser & ApiAuthUserFields) => {
@@ -69,7 +65,7 @@ export default class AuthApi extends RestApi {
     });
   }
 
-  private async createUser(user: AddAuthUserPayload): Promise<AuthUser> {
+  async createUser(user: AddAuthUserPayload): Promise<AuthUser> {
     const { json } = await this.jsonRequest(
       `${this.baseUrlWithoutProject}signUp`,
       { ...user },
@@ -79,7 +75,9 @@ export default class AuthApi extends RestApi {
     return json;
   }
 
-  private async updateConfig(allowDuplicateEmails: boolean): Promise<AuthUser> {
+  async updateConfig(
+    allowDuplicateEmails: boolean
+  ): Promise<{ signIn: { allowDuplicateEmails: boolean } }> {
     const { json } = await this.patchRequest(`${this.baseEmulatorUrl}/config`, {
       signIn: { allowDuplicateEmails },
     });
@@ -87,7 +85,7 @@ export default class AuthApi extends RestApi {
     return json;
   }
 
-  private async getConfig(allowDuplicateEmails: boolean): Promise<AuthUser> {
+  async getConfig(): Promise<AuthUser> {
     const { signIn } = await (
       await fetch(`${this.baseEmulatorUrl}/config`)
     ).json();
@@ -95,7 +93,7 @@ export default class AuthApi extends RestApi {
     return signIn.allowDuplicateEmails;
   }
 
-  private async updateUser(user: AddAuthUserPayload): Promise<AuthUser> {
+  async updateUser(user: AddAuthUserPayload): Promise<AuthUser> {
     const { json } = await this.jsonRequest(
       `${this.baseUrlWithoutProject}update`,
       user,
@@ -105,13 +103,9 @@ export default class AuthApi extends RestApi {
     return json;
   }
 
-  private async deleteUser(user: AddAuthUserPayload): Promise<AuthUser> {
-    const { json } = await this.jsonRequest(
-      `${this.baseUrlWithoutProject}delete`,
-      user,
-      'POST'
-    );
-
-    return json;
+  async deleteUser(user: AuthUser): Promise<void> {
+    await this.jsonRequest(`${this.baseUrlWithoutProject}delete`, user, 'POST');
   }
 }
+
+const PASSWORD_HASH_REGEX = /^fakeHash:salt=[\w\d]+:password=(.*?)$/;
