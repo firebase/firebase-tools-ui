@@ -37,7 +37,7 @@ export const CustomAttributes: React.FC<FormContextValues<
   const label = (
     <label>
       <Typography use="subtitle2" tag="div" className={styles.customClaims}>
-        Custom Claims
+        Custom Claims (optional)
       </Typography>
       <Typography use="body2">
         These custom key:value attributes can be used with Rules to implement
