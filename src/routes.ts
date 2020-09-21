@@ -39,6 +39,13 @@ export const routes: ReadonlyArray<Route> = [
     showInNav: true,
   },
   {
+    path: '/auth',
+    component: Auth,
+    label: 'Authentication',
+    exact: false,
+    showInNav: true,
+  },
+  {
     path: '/firestore',
     component: Firestore,
     label: 'Firestore',
@@ -49,13 +56,6 @@ export const routes: ReadonlyArray<Route> = [
     path: '/database',
     component: Database,
     label: 'Realtime Database',
-    exact: false,
-    showInNav: true,
-  },
-  {
-    path: '/auth',
-    component: Auth,
-    label: 'Authentication',
     exact: false,
     showInNav: true,
   },
