@@ -49,20 +49,10 @@ export async function waitForDialogsToOpen(container: ParentNode = document) {
 }
 
 /**
- * Wait for MDC Menu to be fully open, so no DOM changes happen outside
- * our control and trigger warnings of not wrapped in act(...) etc.
- */
-export async function waitForMenuToOpen(container: ParentNode = document) {
-  await waitForElementToBeRemoved(() =>
-    container.querySelector('.mdc-menu-surface--animating-open')
-  );
-}
-
-/**
  * Wait for MDC dialogs to be fully closed, so no DOM changes happen outside
  * our control and trigger warnings of not wrapped in act(...) etc.
  */
-export async function waitForDialogsToClose() {
+export async function waitForDialogsToClose(container: ParentNode = document) {
   // TODO: Change to waitFor once we migrate to react-testing-library@10.
   await waitForElementToBeRemoved(() =>
     document.querySelector('.mdc-dialog--closing')
@@ -168,3 +158,13 @@ export const wrapWithForm = <S, T = {}>(
 
   return { ...methods, triggerValidation, submit };
 };
+
+/**
+ * Wait for MDC Menu to be fully open, so no DOM changes happen outside
+ * our control and trigger warnings of not wrapped in act(...) etc.
+ */
+export async function waitForMenuToOpen(container: ParentNode = document) {
+  await waitForElementToBeRemoved(() =>
+    container.querySelector('.mdc-menu-surface--animating-open')
+  );
+}
