@@ -142,7 +142,9 @@ describe('AuthTable text', () => {
     it('deletes user', async () => {
       const { button, deleteUser } = await getMenuItemByText('Delete user');
 
-      fireEvent.click(button);
+      await act(async () => {
+        fireEvent.click(button);
+      });
 
       expect(deleteUser).toHaveBeenCalledWith(fakeUser1);
     });

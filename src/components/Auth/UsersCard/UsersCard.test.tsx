@@ -2,8 +2,9 @@ import { Portal } from '@rmwc/base';
 import { fireEvent, render } from '@testing-library/react';
 import React from 'react';
 import { Provider } from 'react-redux';
+import configureStore from 'redux-mock-store';
 
-import configureStore from '../../../configureStore';
+import { AppState } from '../../../store';
 import { waitForDialogsToOpen } from '../../../test_utils';
 import UsersCard from './UsersCard';
 
@@ -11,7 +12,12 @@ jest.mock('./table/UsersTable');
 jest.mock('./header/AuthFilter');
 
 function setup() {
-  const store = configureStore();
+  const store = configureStore<Pick<AppState, 'auth'>>()({
+    auth: {
+      users: [],
+      filter: '',
+    },
+  });
 
   return render(
     <>
