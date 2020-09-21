@@ -37,7 +37,7 @@ export interface AddAuthUserPayload {
 export interface AuthUser extends AddAuthUserPayload {
   localId: string;
   createdAt: string;
-  lastLoginAt?: Date;
+  lastLoginAt: Date;
   disabled: boolean;
 }
 

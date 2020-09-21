@@ -34,6 +34,7 @@ const generateUser = (user: Partial<AuthUser> = {}) => {
   return {
     displayName,
     createdAt: new Date(),
+    lastLoginAt: new Date(),
     disabled: false,
     localId,
     ...user,

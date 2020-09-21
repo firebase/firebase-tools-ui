@@ -17,6 +17,7 @@ export const authReducer = createReducer<AuthState, Action>(INIT_STATE)
     produce((draft, { payload }) => {
       draft.users.push({
         createdAt: new Date().getTime().toString(),
+        lastLoginAt: new Date().getTime().toString(),
         localId: getUniqueId().toString(),
         disabled: false,
         ...payload.user,
