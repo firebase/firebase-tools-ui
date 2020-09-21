@@ -8,7 +8,10 @@ import * as base from '@rmwc/base';
 
 // <AppBar> calls window.scrollTo which jsdom does not implement. Let's mock it
 // out to silence warnings -- we don't actually need to test it.
-Object.defineProperty(window, 'scrollTo', { value: () => {}, writable: true });
+Object.defineProperty(window, 'scrollTo', {
+  value: () => {},
+  writable: true,
+});
 
 // RMWC's randomId is rewritten when NODE_ENV=='test' for Storybook reasons.
 // Our tests require that this randomId method is not overwritten. For example,

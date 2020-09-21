@@ -15,15 +15,14 @@
  */
 
 import {
-  RenderOptions,
-  RenderResult,
   act,
+  fireEvent,
   render,
   waitForElement,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
-
-import { renderWithFirestore } from './components/Firestore/testing/FirestoreTestProviders';
+import React from 'react';
+import { FormContextValues, UseFormOptions, useForm } from 'react-hook-form';
 
 export function delay(timeoutMs: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, timeoutMs));
@@ -127,4 +126,45 @@ export function makeDeferred<T>(): Deferred<T> {
       return this.resolve(Promise.reject(error));
     },
   };
+}
+
+/**
+ * Renders a component wrapped with react hook form, and expose helpers that simplify testing.
+ *
+ * Component is expected to receive resulting form methods as props.
+ */
+export const wrapWithForm = <S, T = {}>(
+  Control: React.FC<FormContextValues<T>>,
+  options: UseFormOptions<T>,
+  props: Partial<S> = {}
+) => {
+  const submit = jest.fn();
+  const FormWrapper = () => {
+    const form = useForm<T>(options);
+    return (
+      <form data-testid="form" onSubmit={form.handleSubmit(submit)}>
+        <Control {...form} {...props} />
+      </form>
+    );
+  };
+
+  const methods = render(<FormWrapper />);
+
+  const triggerValidation = async () => {
+    await act(async () => {
+      fireEvent.submit(methods.getByTestId('form'));
+    });
+  };
+
+  return { ...methods, triggerValidation, submit };
+};
+
+/**
+ * Wait for MDC Menu to be fully open, so no DOM changes happen outside
+ * our control and trigger warnings of not wrapped in act(...) etc.
+ */
+export async function waitForMenuToOpen(container: ParentNode = document) {
+  await waitForElementToBeRemoved(() =>
+    container.querySelector('.mdc-menu-surface--animating-open')
+  );
 }
