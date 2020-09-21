@@ -46,7 +46,7 @@ const UserForm: React.FC<UserFormProps> = ({
       <DialogContent>
         <Field
           name="displayName"
-          label="Display name (Optional)"
+          label="Display name (optional)"
           type="text"
           placeholder="Enter display name"
           error={errors?.displayName && 'Display name is required'}
