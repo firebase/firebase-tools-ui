@@ -51,6 +51,17 @@
   padding: 20px 24px;
 }
 
+.mdc-radio
+  .mdc-radio__native-control:enabled
+  + .mdc-radio__background
+  .mdc-radio__inner-circle,
+.mdc-radio
+  .mdc-radio__native-control:enabled:checked
+  + .mdc-radio__background
+  .mdc-radio__outer-circle {
+  border-color: var(--mdc-theme-primary);
+}
+
 :not(.mdc-list--non-interactive) {
   > .mdc-list-item:not(.mdc-list-item--disabled) {
     &::before,
