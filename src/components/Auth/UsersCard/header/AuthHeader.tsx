@@ -23,7 +23,11 @@ export const AuthHeader: React.FC<AuthHeaderProps> = ({
         <div className={styles.barActions}>
           <CardActionBarActions>
             <RefreshButton />
-            <Button unelevated onClick={() => onOpenNewUserDialog()}>
+            <Button
+              className={styles.addUserButton}
+              unelevated
+              onClick={() => onOpenNewUserDialog()}
+            >
               Add user
             </Button>
           </CardActionBarActions>

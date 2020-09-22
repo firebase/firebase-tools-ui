@@ -15,7 +15,7 @@ export const OneAccountPerEmailCard: React.FC = () => {
           <Typography use="headline6" tag="div">
             One account per email address
           </Typography>
-          <Typography use="body1">
+          <Typography use="body2">
             Preventing users from creating multiple accounts using the same
             email address with different authentication providers.
           </Typography>
