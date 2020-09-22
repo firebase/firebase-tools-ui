@@ -6,6 +6,7 @@ import { createStructuredSelector } from '../../../store';
 import { nukeUsersRequest } from '../../../store/auth/actions';
 import { hasUsers } from '../../../store/auth/selectors';
 import { CustomThemeProvider } from '../../../themes';
+import { confirmClearAll } from './confirmClearAllData';
 import styles from './UsersCard.module.scss';
 
 export type Props = PropsFromState & PropsFromDispatch;
@@ -15,7 +16,14 @@ export const ClearAll: React.FC<Props> = ({ hasUsers, clearAllData }) => {
       {hasUsers && (
         <div className={styles.clearAllButton}>
           <CustomThemeProvider use="warning" wrap>
-            <Button unelevated onClick={() => clearAllData()}>
+            <Button
+              unelevated
+              onClick={async () => {
+                if (await confirmClearAll()) {
+                  clearAllData();
+                }
+              }}
+            >
               Clear all data
             </Button>
           </CustomThemeProvider>

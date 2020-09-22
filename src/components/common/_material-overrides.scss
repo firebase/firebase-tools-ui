@@ -46,6 +46,11 @@
   @include dialog.shape-radius($BORDER_RADIUS_DIALOG);
 }
 
+.mdc-dialog__actions {
+  // Dialog actions assume using unfilled button, but we always fill them.
+  padding: 20px 24px;
+}
+
 :not(.mdc-list--non-interactive) {
   > .mdc-list-item:not(.mdc-list-item--disabled) {
     &::before,
