@@ -86,7 +86,7 @@ describe('AuthTable text', () => {
         shouldShowZeroResults: true,
       });
 
-      // Keeps displaying header
+      // Keeps the header
       expect(getAllByRole('row').length).toBe(1);
       getByText('No results');
     });
@@ -98,7 +98,7 @@ describe('AuthTable text', () => {
         shouldShowZeroState: true,
       });
 
-      // Keeps displaying header
+      // Keeps the header
       expect(getAllByRole('row').length).toBe(1);
       getByText(/No users/);
     });

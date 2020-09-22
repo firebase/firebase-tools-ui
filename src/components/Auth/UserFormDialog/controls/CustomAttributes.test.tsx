@@ -6,7 +6,7 @@ import { CustomAttributes } from './CustomAttributes';
 describe('CustomAttributes', () => {
   function setup(customAttributes: string) {
     const defaultValues = {
-      customAttributes: customAttributes,
+      customAttributes,
     };
 
     return wrapWithForm(CustomAttributes, { defaultValues });
@@ -26,6 +26,7 @@ describe('CustomAttributes', () => {
       /must be a valid JSON object/
     );
   });
+
   it('displays an error for an array', async () => {
     const { triggerValidation, getByRole } = setup('[]');
     await triggerValidation();

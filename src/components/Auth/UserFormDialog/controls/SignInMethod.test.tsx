@@ -46,7 +46,7 @@ describe('SignInMethod', () => {
       expect(queryByText(errorText)).toBeNull();
     });
 
-    it('is valid when email/validPassword present', async () => {
+    it('is valid when email and valid password are present', async () => {
       const { queryByText } = await setup({
         email: validEmail,
         password: validPassword,

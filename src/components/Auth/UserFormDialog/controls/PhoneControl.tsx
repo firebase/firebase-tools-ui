@@ -13,7 +13,7 @@ export const PhoneControl: React.FC<FormContextValues<AddAuthUserPayload>> = ({
         name="phoneNumber"
         label="Phone authentication"
         placeholder="Enter phone number"
-        type="phoneNumber"
+        type="tel"
         inputRef={register()}
       />
     </>

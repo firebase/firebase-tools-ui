@@ -7,7 +7,7 @@ import { authFetchUsersRequest } from '../../../../store/auth/actions';
 export const RefreshButton: React.FC<PropsFromDispatch> = ({ refresh }) => {
   return (
     <IconButton
-      onClick={() => refresh()}
+      onClick={refresh}
       icon="refresh"
       label="Refresh"
       theme="secondary"

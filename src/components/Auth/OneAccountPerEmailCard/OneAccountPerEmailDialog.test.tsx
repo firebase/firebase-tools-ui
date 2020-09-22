@@ -2,26 +2,32 @@ import { Portal } from '@rmwc/base';
 import { fireEvent, render } from '@testing-library/react';
 import React from 'react';
 import { Provider } from 'react-redux';
+import configureStore from 'redux-mock-store';
 
-import configureStore from '../../../configureStore';
+import { AppState } from '../../../store';
 import { OneAccountPerEmailDialog } from './OneAccountPerEmailDialog';
 
 describe('OneAccountPerEmailDialog', () => {
   function setup(allowDuplicateEmails = false) {
     const onClose = jest.fn();
     const setAllowDuplicateEmails = jest.fn();
-    const store = configureStore();
+    const store = configureStore<Pick<AppState, 'auth'>>()({
+      auth: {
+        users: [],
+        filter: '',
+        allowDuplicateEmails: false,
+      },
+    });
+
     const methods = render(
-      <>
-        <Provider store={store}>
-          <Portal />
-          <OneAccountPerEmailDialog
-            allowDuplicateEmails={allowDuplicateEmails}
-            onClose={onClose}
-            setAllowDuplicateEmails={setAllowDuplicateEmails}
-          />
-        </Provider>
-      </>
+      <Provider store={store}>
+        <Portal />
+        <OneAccountPerEmailDialog
+          allowDuplicateEmails={allowDuplicateEmails}
+          onClose={onClose}
+          setAllowDuplicateEmails={setAllowDuplicateEmails}
+        />
+      </Provider>
     );
 
     return {

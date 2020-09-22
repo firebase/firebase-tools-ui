@@ -17,15 +17,6 @@
 import { RestApi } from '../common/rest_api';
 import { AddAuthUserPayload, AuthUser } from './types';
 
-// curl -X POST http://localhost:5002/identitytoolkit.googleapis.com/v1/projects/sample/accounts:query -H 'Authorization: Bearer owner' -d "{}" -H 'Content-Type: application/json'
-// curl -X POST http://localhost:5002/identitytoolkit.googleapis.com/v1/projects/sample/config:update -H 'Authorization: Bearer owner' -d "{}" -H 'Content-Type: application/json'
-// curl -X PATCH http://localhost:5002/emulator/v1/projects/sample/config -H 'Authorization: Bearer owner' -d "{}" -H 'Content-Type: application/json'
-// "/v1/accounts:signUp"
-// "/v1/accounts:update"
-// "/v1/projects/{targetProjectId}/accounts:delete"
-// "/emulator/v1/projects/{targetProjectId}/accounts"
-// allowDuplicateEmails
-
 export interface ApiAuthUserFields {
   passwordHash: string;
 }

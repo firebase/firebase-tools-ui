@@ -70,21 +70,21 @@ describe('UserForm', () => {
     });
     fireEvent.blur(input);
 
+    await triggerValidation();
     await act(async () => {
-      fireEvent.click(getByText('Save and create another'));
+      debugger;
+      await fireEvent.click(getByText('Save and create another'));
     });
+    await triggerValidation();
 
-    // // Resets the form
-    // expect(input.value).toBe('');
-    // // Create user
-    // expect(onSave).toHaveBeenCalledWith(
-    //   jasmine.objectContaining({
-    //     phoneNumber: phoneNumber,
-    //   }),
-    // );
-    //
-    // // But doesn't close the dialog.
-    // expect(onClose).not.toHaveBeenCalled();
+    // Resets the form
+    expect(input.value).toBe('');
+    // Creates user
+    expect(onSave).toHaveBeenCalledWith(
+      jasmine.objectContaining({
+        phoneNumber: phoneNumber,
+      })
+    );
   });
 
   it('sets input values based on passed user value', async () => {

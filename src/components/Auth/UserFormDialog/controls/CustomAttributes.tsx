@@ -13,6 +13,7 @@ function validate(attributes: string) {
   }
 
   try {
+    // We're reusing server validation which throws.
     validateSerializedCustomClaims(attributes);
     return true;
   } catch (e) {
