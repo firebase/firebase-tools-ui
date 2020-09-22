@@ -26,6 +26,7 @@ import {
 import { AuthUser } from '../../types';
 import EditUserDialog from '../../UserFormDialog/EditUserDialog';
 import { AuthZeroState } from './AuthZeroState';
+import { confirmDeleteUser } from './confirmDeleteUser';
 import { NoResults } from './NoResults';
 import { ProviderCell } from './ProviderCell';
 import styles from './UsersTable.module.scss';
@@ -145,8 +146,10 @@ export const UsersTable: React.FC<UsersTableProps> = ({
                       disabled: !user.disabled,
                     });
                   }}
-                  onDeleteUser={() => {
-                    deleteUser(user);
+                  onDeleteUser={async () => {
+                    if (await confirmDeleteUser(user)) {
+                      deleteUser(user);
+                    }
                   }}
                 />
               ))}

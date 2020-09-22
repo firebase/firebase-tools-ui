@@ -10,7 +10,10 @@ import {
   waitForDialogsToOpen,
   waitForMenuToOpen,
 } from '../../../../test_utils';
+import { confirmDeleteUser } from './confirmDeleteUser';
 import { UsersTable, UsersTableProps } from './UsersTable';
+
+jest.mock('./confirmDeleteUser');
 
 const fakeUser1 = {
   localId: 'pirojok',
@@ -141,6 +144,10 @@ describe('AuthTable text', () => {
 
     it('deletes user', async () => {
       const { button, deleteUser } = await getMenuItemByText('Delete user');
+
+      (confirmDeleteUser as jest.Mock).mockImplementation(() =>
+        Promise.resolve(true)
+      );
 
       await act(async () => {
         fireEvent.click(button);
