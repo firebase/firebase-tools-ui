@@ -119,7 +119,7 @@ export const UsersTable: React.FC<UsersTableProps> = ({
 
   return (
     <>
-      <DataTable>
+      <DataTable className={styles.tableWrapper}>
         <DataTableContent>
           <DataTableHead>
             <DataTableRow>
