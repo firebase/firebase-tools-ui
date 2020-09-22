@@ -98,9 +98,10 @@ describe('UserForm', () => {
     expect((getByLabelText(/Display name/) as HTMLInputElement).value).toBe(
       displayName
     );
-    expect((queryByLabelText('Email/Password') as HTMLInputElement).value).toBe(
-      email
-    );
+    expect(
+      (queryByLabelText('Email/Password authentication') as HTMLInputElement)
+        .value
+    ).toBe(email);
     expect((queryByLabelText('Password') as HTMLInputElement).value).toBe(
       password
     );

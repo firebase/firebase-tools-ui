@@ -55,7 +55,7 @@ export const EmailPassword: React.FC<EmailPasswordProps> = ({
         <Field
           name="email"
           placeholder="Enter email"
-          label="Email/Password"
+          label="Email/Password authentication"
           aria-label="Email"
           type="text"
           inputRef={register({ pattern: EMAIL_REGEX })}

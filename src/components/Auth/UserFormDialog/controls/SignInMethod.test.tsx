@@ -16,7 +16,7 @@ describe('SignInMethod', () => {
       { isEditing: false }
     );
 
-    const email = methods.getByLabelText('Email/Password');
+    const email = methods.getByLabelText('Email/Password authentication');
 
     fireEvent.change(email, {
       target: { value: 'just need to make this dirty' },
