@@ -60,7 +60,7 @@ export const CustomAttributes: React.FC<FormContextValues<
         name={CUSTOM_ATTRIBUTES_CONTROL_NAME}
         label={label}
         textarea
-        placeholder="Enter valid JSON object"
+        placeholder={`{"role":"admin"}`}
       />
     </div>
   );
