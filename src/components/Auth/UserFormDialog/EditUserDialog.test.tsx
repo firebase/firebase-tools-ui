@@ -10,15 +10,19 @@ describe('EditUserDialog', () => {
   const displayName = 'pirojok';
   const localId = 'pelmeni';
   const disabled = false;
-  const createdAt = new Date();
+  const createdAt = new Date().toLocaleDateString();
+  const lastLoginAt = new Date();
 
   async function setup(user?: AuthUser) {
-    user = user || {
-      displayName,
-      localId,
-      disabled,
-      createdAt,
-    };
+    user =
+      user ||
+      ({
+        displayName,
+        localId,
+        disabled,
+        createdAt,
+        lastLoginAt,
+      } as AuthUser);
     const onClose = jest.fn();
     const updateUser = jest.fn();
     const methods = render(
@@ -50,7 +54,7 @@ describe('EditUserDialog', () => {
     const input = getByLabelText(/Phone authentication/) as HTMLInputElement;
 
     fireEvent.change(input, {
-      target: { value: '689-6896896' },
+      target: { value: '+1 689-689-6896' },
     });
     fireEvent.blur(input);
 
@@ -65,7 +69,7 @@ describe('EditUserDialog', () => {
     const input = getByLabelText(/Phone authentication/) as HTMLInputElement;
 
     fireEvent.change(input, {
-      target: { value: '689-6896896' },
+      target: { value: '+1 689-689-6896' },
     });
     fireEvent.blur(input);
 

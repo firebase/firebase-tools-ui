@@ -6,7 +6,7 @@ import UserForm from './UserForm';
 
 describe('UserForm', () => {
   const displayName = 'pirojok';
-  const phoneNumber = '689-6896896';
+  const phoneNumber = '+1 689-689-6896';
 
   function setup(user?: AddAuthUserPayload) {
     const onSave = jest.fn();
@@ -52,7 +52,7 @@ describe('UserForm', () => {
   });
 
   it('calls onSave, but does not close the form when "create and new" clicked.', async () => {
-    const phoneNumber = '123-45678890';
+    const phoneNumber = '+1 689-689-6896';
     const {
       getByText,
       getByLabelText,

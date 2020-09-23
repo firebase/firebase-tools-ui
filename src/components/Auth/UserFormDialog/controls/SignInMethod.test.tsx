@@ -41,7 +41,7 @@ describe('SignInMethod', () => {
       const { queryByText } = await setup({
         email: '',
         password: '',
-        phoneNumber: '1 689 689 6899',
+        phoneNumber: '+1 689 689 6899',
       });
       expect(queryByText(errorText)).toBeNull();
     });
@@ -59,7 +59,7 @@ describe('SignInMethod', () => {
       const { queryByText } = await setup({
         email: validEmail,
         password: validPassword,
-        phoneNumber: '1 689 689 6899',
+        phoneNumber: '+1 689 689 6899',
       });
       expect(queryByText(errorText)).toBeNull();
     });
@@ -68,7 +68,7 @@ describe('SignInMethod', () => {
       const { queryByText } = await setup({
         email: validEmail,
         password: '',
-        phoneNumber: '1 689 689 6899',
+        phoneNumber: '+1 689 689 6899',
       });
       expect(queryByText(errorText)).toBeNull();
     });

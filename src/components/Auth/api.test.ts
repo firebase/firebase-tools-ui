@@ -52,7 +52,7 @@ describe('API', () => {
   });
 
   it('createUser', async () => {
-    const user = { phoneNumber: '123456' };
+    const user = { phoneNumber: '+1 689-689-6896' };
     const response = { localId: 'pirojok' };
     const api = setup(response);
     const result = await api.createUser(user);
@@ -92,7 +92,7 @@ describe('API', () => {
   });
 
   it('updateUser', async () => {
-    const user = { phoneNumber: '123456' };
+    const user = { phoneNumber: '+1 689-689-6896' };
     const response = { localId: 'pirojok' };
     const api = setup(response);
     const result = await api.updateUser(user);

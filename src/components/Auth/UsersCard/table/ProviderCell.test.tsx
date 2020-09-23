@@ -5,7 +5,7 @@ import { AuthUser } from '../../types';
 import { ProviderCell } from './ProviderCell';
 
 describe('ProviderCell', () => {
-  const phoneNumber = '689';
+  const phoneNumber = '+689';
   const email = '6@8.9';
 
   it('renders only phoneNumber icon', () => {

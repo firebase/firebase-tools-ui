@@ -39,7 +39,7 @@ describe('AddUserDialog', () => {
     const input = getByLabelText(/Phone authentication/) as HTMLInputElement;
 
     fireEvent.change(input, {
-      target: { value: '123-4566896' },
+      target: { value: '+1 689-689-6896' },
     });
     fireEvent.blur(input);
 
@@ -54,7 +54,7 @@ describe('AddUserDialog', () => {
     const input = getByLabelText(/Phone authentication/) as HTMLInputElement;
 
     fireEvent.change(input, {
-      target: { value: '123-4566896' },
+      target: { value: '+1 689-689-6896' },
     });
     fireEvent.blur(input);
 
