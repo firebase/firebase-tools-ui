@@ -17,10 +17,11 @@
 @import '../../common/color';
 
 .wrapper {
-  margin-top: 20px;
-  padding: 32px 24px;
+  align-items: center;
+  color: $COLOR_TEXT_PRIMARY;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  color: $COLOR_TEXT_PRIMARY;
+  margin-top: 20px;
+  padding: 32px 24px;
 }
