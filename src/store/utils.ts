@@ -39,6 +39,7 @@ export function hasData<T, E>(
 ): result is DataResult<T> {
   return result !== undefined && 'data' in result;
 }
+
 export function hasError<T, E>(
   result: Result<T, E> | undefined
 ): result is ErrorResult<E> {
@@ -83,6 +84,16 @@ export function mapResult<T, E, R>(
   return {
     loading: remoteResult.loading,
     result: map(remoteResult.result, dataMapper),
+  };
+}
+
+export function createRemoteResult<T>(
+  data: T,
+  loading: boolean = false
+): RemoteResult<T> {
+  return {
+    loading,
+    result: { data },
   };
 }
 
@@ -142,7 +153,7 @@ export function handle<T, E, R>(
   }
 }
 
-// Handle all loading / data cases of a remote and return a single value.
+// Same as handle, but for remote result, also passes loading state to the callbacks.
 export function squash<T, E, R>(
   remoteResult: RemoteResult<T, E>,
   mappers: {
@@ -155,6 +166,17 @@ export function squash<T, E, R>(
     onNone: () => mappers.onNone(remoteResult.loading),
     onData: data => mappers.onData(data, remoteResult.loading),
     onError: error => mappers.onError(error, remoteResult.loading),
+  });
+}
+
+export function squashOrDefaut<T>(
+  remoteResult: RemoteResult<T, unknown>,
+  defaultValue: T
+) {
+  return squash(remoteResult, {
+    onNone: () => defaultValue,
+    onData: a => a,
+    onError: () => defaultValue,
   });
 }
 

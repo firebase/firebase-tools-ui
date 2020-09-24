@@ -23,6 +23,7 @@ import configureStore from 'redux-mock-store';
 import { AppState } from '../../store';
 import { AuthConfig } from '../../store/config';
 import { AuthRoute } from './index';
+import { getMockAuthStore } from './test_utils';
 
 const host = 'localhost';
 const port = 5002;
@@ -36,6 +37,7 @@ describe('AuthRoute', () => {
   it('renders loading when projectId is not ready', () => {
     const { getByText } = render(
       <AuthRoute
+        authUsersResult={{ data: [] }}
         projectIdResult={undefined}
         authConfigResult={{ data: sampleConfig }}
       />
@@ -46,6 +48,7 @@ describe('AuthRoute', () => {
   it('renders loading when config is not ready', () => {
     const { getByText } = render(
       <AuthRoute
+        authUsersResult={{ data: [] }}
         projectIdResult={{ data: 'pirojok' }}
         authConfigResult={undefined}
       />
@@ -58,25 +61,21 @@ describe('AuthRoute', () => {
       <AuthRoute
         projectIdResult={{ data: 'pirojok' }}
         authConfigResult={{ error: { message: 'Oh, snap!' } }}
+        authUsersResult={{ data: [] }}
       />
     );
     expect(getByText(/not running/)).not.toBeNull();
   });
 
   it('displays auth', async () => {
-    const store = configureStore<Pick<AppState, 'auth'>>()({
-      auth: {
-        users: [],
-        filter: '',
-        allowDuplicateEmails: false,
-      },
-    });
+    const store = getMockAuthStore();
 
     const { getByText } = render(
       <Provider store={store}>
         // Ripples cause "not wrapped in act()" warning.
         <RMWCProvider ripple={false}>
           <AuthRoute
+            authUsersResult={{ data: [] }}
             projectIdResult={{ data: 'pirojok' }}
             authConfigResult={{ data: sampleConfig }}
           />

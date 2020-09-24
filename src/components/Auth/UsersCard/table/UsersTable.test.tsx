@@ -3,41 +3,30 @@ import { fireEvent, render } from '@testing-library/react';
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
-import configureStore from 'redux-mock-store';
 
-import { AppState } from '../../../../store';
 import {
   waitForDialogsToOpen,
   waitForMenuToOpen,
 } from '../../../../test_utils';
+import { createFakeUser, getMockAuthStore } from '../../test_utils';
 import { confirmDeleteUser } from './confirmDeleteUser';
 import { UsersTable, UsersTableProps } from './UsersTable';
 
 jest.mock('./confirmDeleteUser');
 
-const fakeUser1 = {
+const fakeUser1 = createFakeUser({
   localId: 'pirojok',
-  disabled: false,
   displayName: 'Pirojok',
-  createdAt: new Date(),
-};
+});
 
-const fakeUser2 = {
+const fakeUser2 = createFakeUser({
   localId: 'pelmeni',
-  disabled: false,
   displayName: 'Pelmeni',
-  createdAt: new Date(),
-};
+});
 
-describe('AuthTable text', () => {
+describe('UserTable', () => {
   function setup(customProps?: Partial<UsersTableProps>) {
-    const store = configureStore<Pick<AppState, 'auth'>>()({
-      auth: {
-        users: [],
-        filter: '',
-        allowDuplicateEmails: false,
-      },
-    });
+    const store = getMockAuthStore();
 
     const props = {
       filteredUsers: [],

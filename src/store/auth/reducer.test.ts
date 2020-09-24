@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 
-import { AuthUser } from '../../components/Auth/types';
+import { createFakeUser } from '../../components/Auth/test_utils';
+import { AuthState, AuthUser } from '../../components/Auth/types';
+import { createRemoteResult, squashOrDefaut } from '../utils';
 import {
+  authFetchUsersError,
   authFetchUsersSuccess,
   createUserSuccess,
   deleteUserSuccess,
@@ -28,93 +31,94 @@ import {
 import { authReducer } from './reducer';
 
 const displayName = 'pirojok';
-const localId = '0';
+const localId = 'pirojok-the-id';
 
-const generateUser = (user: Partial<AuthUser> = {}) => {
+function createFakeState(state: Partial<AuthState>): AuthState {
   return {
-    displayName,
-    createdAt: new Date(),
-    lastLoginAt: new Date(),
-    disabled: false,
-    localId,
-    ...user,
+    filter: '',
+    allowDuplicateEmails: true,
+    users: createRemoteResult([]),
+    ...state,
   };
-};
+}
+
+function createFakeStateWithUsers(users: AuthUser[]) {
+  return createFakeState({ users: createRemoteResult(users) });
+}
 
 describe('auth reducers', () => {
   describe('user reducers', () => {
     it(`${createUserSuccess} => adds a user`, () => {
-      const state = { users: [], filter: '' };
-      const payload = generateUser({ displayName });
+      const state = createFakeStateWithUsers([]);
+      const payload = createFakeUser({ displayName });
 
-      const user = generateUser({
+      const user = createFakeUser({
         ...payload,
       });
 
       const action = createUserSuccess({ user });
 
-      const expected = { users: [user], filter: '' };
+      const expected = createFakeStateWithUsers([user]);
       expect(authReducer(state, action)).toEqual(expected);
     });
 
     it(`${nukeUsersSuccess} => clears the data`, () => {
-      const user = generateUser({ displayName });
-      const user2 = generateUser({ displayName: 'pelmeni' });
-      const state = { users: [user, user2], filter: '' };
+      const user = createFakeUser({ displayName });
+      const user2 = createFakeUser({ displayName: 'pelmeni' });
+      const state = createFakeStateWithUsers([user, user2]);
       const action = nukeUsersSuccess();
 
-      const expected = { users: [], filter: '' };
+      const expected = createFakeStateWithUsers([]);
       expect(authReducer(state, action)).toEqual(expected);
     });
 
     it(`${deleteUserSuccess} => removes the user`, () => {
-      const user = generateUser({ displayName });
-      const user2 = generateUser({ displayName: 'pelmeni', localId: 'id2' });
-      const state = { users: [user, user2], filter: '' };
+      const user = createFakeUser({ displayName, localId });
+      const user2 = createFakeUser({ displayName: 'pelmeni', localId: 'id2' });
+      const state = createFakeStateWithUsers([user, user2]);
       const action = deleteUserSuccess({ localId });
 
-      const expected = { users: [user2], filter: '' };
+      const expected = createFakeStateWithUsers([user2]);
       expect(authReducer(state, action)).toEqual(expected);
     });
 
     it(`${updateUserSuccess} => updates the user`, () => {
       const newDisplayName = 'New display name';
-      const user = generateUser({ displayName });
-      const user2 = generateUser({ displayName: 'pelmeni', localId: 'id2' });
-      const state = { users: [user, user2], filter: '' };
+      const user = createFakeUser({ displayName, localId });
+      const user2 = createFakeUser({ displayName: 'pelmeni', localId: 'id2' });
+      const state = createFakeStateWithUsers([user, user2]);
       const action = updateUserSuccess({
-        user: { displayName: newDisplayName, localId } as AuthUser,
+        user: createFakeUser({ displayName: newDisplayName, localId }),
       });
 
-      const updatedUser = generateUser({
+      const updatedUser = createFakeUser({
         ...user,
         localId,
         displayName: newDisplayName,
-        createdAt: expect.any(Date),
       });
 
-      const expected = { users: [updatedUser, user2], filter: '' };
+      const expected = createFakeStateWithUsers([updatedUser, user2]);
 
       expect(authReducer(state, action)).toEqual(expected);
     });
 
     describe(`${setUserDisabledSuccess}`, () => {
       it(`${setUserDisabledSuccess} => disabled the user`, () => {
-        const user = generateUser({ displayName });
-        const state = { users: [user], filter: '' };
+        const user = createFakeUser({ displayName, localId });
+        const state = createFakeStateWithUsers([user]);
         const action = setUserDisabledSuccess({ localId, disabled: true });
 
         const result = authReducer(state, action);
-        expect(result.users[0].disabled).toEqual(true);
+        expect(squashOrDefaut(result.users, [])[0].disabled).toEqual(true);
       });
 
       it(`${setUserDisabledSuccess} => enables the user`, () => {
-        const user = generateUser({ displayName });
-        const state = { users: [user], filter: '' };
+        const user = createFakeUser({ displayName, localId });
+        const state = createFakeStateWithUsers([user]);
         const action = setUserDisabledSuccess({ localId, disabled: false });
 
         const result = authReducer(state, action);
-        expect(result.users[0].disabled).toEqual(false);
+        expect(squashOrDefaut(result.users, [])[0].disabled).toEqual(false);
       });
     });
   });
@@ -122,7 +126,7 @@ describe('auth reducers', () => {
   describe('filtering', () => {
     it(`${updateFilter} => sets the filter value`, () => {
       const filter = 'filter value';
-      const state = { users: [], filter: '' };
+      const state = createFakeStateWithUsers([]);
       const action = updateFilter({ filter });
 
       const result = authReducer(state, action);
@@ -133,7 +137,7 @@ describe('auth reducers', () => {
   describe('config', () => {
     it(`${setAllowDuplicateEmailsSuccess} => sets the filter value`, () => {
       const allowDuplicateEmails = true;
-      const state = { users: [], filter: '', allowDuplicateEmails: false };
+      const state = createFakeState({ allowDuplicateEmails: false });
       const action = setAllowDuplicateEmailsSuccess(allowDuplicateEmails);
 
       const result = authReducer(state, action);
@@ -143,12 +147,30 @@ describe('auth reducers', () => {
 
   describe('authFetchUsersSuccess', () => {
     it(`${authFetchUsersSuccess} => updates users`, () => {
-      const users: AuthUser[] = [generateUser({ localId: 'pirojok' })];
-      const state = { users: [], filter: '', allowDuplicateEmails: false };
+      const state = createFakeStateWithUsers([]);
+
+      const users: AuthUser[] = [createFakeUser({ localId })];
       const action = authFetchUsersSuccess(users);
 
       const result = authReducer(state, action);
-      expect(result.users).toEqual(users);
+      expect(result).toEqual(createFakeStateWithUsers(users));
+    });
+  });
+
+  describe('authFetchUsersError', () => {
+    it(`${authFetchUsersError} => sets an error`, () => {
+      const state = createFakeStateWithUsers([]);
+
+      const message = 'ayayay!!!';
+      const users: AuthUser[] = [createFakeUser({ localId })];
+      const action = authFetchUsersError({ message });
+
+      const result = authReducer(state, action);
+      expect(result).toEqual(
+        createFakeState({
+          users: { loading: false, result: { error: { message } } },
+        })
+      );
     });
   });
 });

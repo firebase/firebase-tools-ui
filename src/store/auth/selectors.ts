@@ -3,11 +3,20 @@ import { createSelector } from 'reselect';
 import { AuthState, AuthUser } from '../../components/Auth/types';
 import { getConfigResult } from '../config/selectors';
 import { AppState } from '../index';
-import { map } from '../utils';
+import { map, squashOrDefaut } from '../utils';
 
 export const getAuth = (state: AppState) => state.auth;
-export const getUsers = createSelector(getAuth, (state: AuthState) => {
-  return [...state.users].sort(
+
+export const getAuthUsers = createSelector(getAuth, (state: AuthState) => {
+  return state.users;
+});
+
+export const getAuthUsersResult = createSelector(getAuthUsers, users => {
+  return users.result;
+});
+
+export const getUsers = createSelector(getAuthUsers, users => {
+  return [...squashOrDefaut(users, [])].sort(
     (a, b) => Number(new Date(b.createdAt)) - Number(new Date(a.createdAt || 0))
   );
 });

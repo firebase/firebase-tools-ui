@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import React from 'react';
 
-import { AuthUser } from '../../types';
+import { createFakeUser } from '../../test_utils';
 import { ProviderCell } from './ProviderCell';
 
 describe('ProviderCell', () => {
@@ -9,23 +9,60 @@ describe('ProviderCell', () => {
   const email = '6@8.9';
 
   it('renders only phoneNumber icon', () => {
-    const user = { phoneNumber } as AuthUser;
-    const { queryByLabelText } = render(<ProviderCell user={user} />);
-    expect(queryByLabelText('Phone')).not.toBeNull();
-    expect(queryByLabelText('Email')).toBeNull();
+    const user = createFakeUser({
+      phoneNumber,
+      providerUserInfo: [{ providerId: 'phone' }],
+    });
+    const { queryByLabelText, getByLabelText } = render(
+      <ProviderCell user={user} />
+    );
+    expect(getByLabelText('phone')).not.toBeNull();
+    expect(queryByLabelText('password')).toBeNull();
   });
 
   it('renders only email icon', () => {
-    const user = { email } as AuthUser;
+    const user = createFakeUser({
+      email,
+      providerUserInfo: [{ providerId: 'password' }],
+    });
+
     const { queryByLabelText } = render(<ProviderCell user={user} />);
-    expect(queryByLabelText('Phone')).toBeNull();
-    expect(queryByLabelText('Email')).not.toBeNull();
+    expect(queryByLabelText('phone')).toBeNull();
+    expect(queryByLabelText('password')).not.toBeNull();
   });
 
   it('renders both icons', () => {
-    const user = { phoneNumber, email } as AuthUser;
+    const user = createFakeUser({
+      phoneNumber,
+      email,
+      providerUserInfo: [{ providerId: 'password' }, { providerId: 'phone' }],
+    });
     const { queryByLabelText } = render(<ProviderCell user={user} />);
-    expect(queryByLabelText('Phone')).not.toBeNull();
-    expect(queryByLabelText('Email')).not.toBeNull();
+    expect(queryByLabelText('phone')).not.toBeNull();
+    expect(queryByLabelText('password')).not.toBeNull();
+  });
+
+  it('supports other providers', () => {
+    const user = createFakeUser({
+      phoneNumber,
+      email,
+      providerUserInfo: [
+        { providerId: 'twitter.com' },
+        { providerId: 'microsoft.com' },
+      ],
+    });
+    const { queryByLabelText } = render(<ProviderCell user={user} />);
+    expect(queryByLabelText('twitter.com')).not.toBeNull();
+    expect(queryByLabelText('microsoft.com')).not.toBeNull();
+  });
+
+  it('ignores unsupported providers', () => {
+    const user = createFakeUser({
+      phoneNumber,
+      email,
+      providerUserInfo: [{ providerId: 'piroj.ok' as any }],
+    });
+    const { queryByLabelText } = render(<ProviderCell user={user} />);
+    expect(queryByLabelText('piroj.ok')).toBeNull();
   });
 });

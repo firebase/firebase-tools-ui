@@ -143,7 +143,7 @@ export const HintIcon = svgIcon(
   </svg>
 );
 
-function svgIcon(
+export function svgIcon(
   svgElement: JSX.Element
 ): React.FC<
   { size?: string } & ComponentProps<Omit<IconProps, 'size'>, {}, 'svg'>

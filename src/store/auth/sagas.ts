@@ -15,6 +15,7 @@ import { AuthUser } from '../../components/Auth/types';
 import { fetchSuccess } from '../config';
 import { getProjectIdResult } from '../config/selectors';
 import {
+  authFetchUsersError,
   authFetchUsersRequest,
   authFetchUsersSuccess,
   createUserRequest,
@@ -37,8 +38,12 @@ const AUTH_API_CONTEXT_KEY = 'authApi';
 
 export function* fetchAuthUsers() {
   const authApi = yield call(configureAuthSaga);
-  const users = yield call([authApi, 'fetchUsers']);
-  yield put(authFetchUsersSuccess(users));
+  try {
+    const users = yield call([authApi, 'fetchUsers']);
+    yield put(authFetchUsersSuccess(users));
+  } catch (e) {
+    yield put(authFetchUsersError({ message: 'Error when fetching users' }));
+  }
 }
 
 export function* deleteUser({ payload }: ReturnType<typeof deleteUserRequest>) {

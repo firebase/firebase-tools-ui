@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { RemoteResult } from '../../store/utils';
+
 /** View model for Auth custom attributes */
 export interface CustomAttribute {
   role: string;
@@ -34,15 +36,34 @@ export interface AddAuthUserPayload {
   phoneNumber?: string;
 }
 
+export const providerToIconMap = {
+  'gc.apple.com': 'assets/provider-icons/auth_service_game_center.svg',
+  'apple.com': 'assets/provider-icons/auth_service_apple.svg',
+  'facebook.com': 'assets/provider-icons/auth_service_facebook.svg',
+  'github.com': 'assets/provider-icons/auth_service_github.svg',
+  'google.com': 'assets/provider-icons/auth_service_google.svg',
+  'microsoft.com': 'assets/provider-icons/auth_service_mslive.svg',
+  'playgames.google.com': 'assets/provider-icons/auth_service_play_games.svg',
+  'twitter.com': 'assets/provider-icons/auth_service_twitter.svg',
+  'yahoo.com': 'assets/provider-icons/auth_service_yahoo.svg',
+  phone: 'assets/provider-icons/auth_service_phone.svg',
+  password: 'assets/provider-icons/auth_service_email.svg',
+};
+
+export interface AuthProviderInfo {
+  providerId: keyof typeof providerToIconMap;
+}
+
 export interface AuthUser extends AddAuthUserPayload {
   localId: string;
   createdAt: string;
-  lastLoginAt: Date;
+  lastLoginAt: string;
   disabled: boolean;
+  providerUserInfo: AuthProviderInfo[];
 }
 
 export interface AuthState {
-  users: AuthUser[];
+  users: RemoteResult<AuthUser[]>;
   filter: string;
   allowDuplicateEmails: boolean;
 }

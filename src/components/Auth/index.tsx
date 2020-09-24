@@ -22,7 +22,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { createStructuredSelector } from '../../store';
-import { getAuthConfigResult } from '../../store/auth/selectors';
+import {
+  getAuthConfigResult,
+  getAuthUsersResult,
+} from '../../store/auth/selectors';
 import { getProjectIdResult } from '../../store/config/selectors';
 import { combineData, handle } from '../../store/utils';
 import { EmulatorDisabled } from '../common/EmulatorDisabled';
@@ -34,6 +37,7 @@ import UsersCard from './UsersCard/UsersCard';
 export const mapStateToProps = createStructuredSelector({
   projectIdResult: getProjectIdResult,
   authConfigResult: getAuthConfigResult,
+  authUsersResult: getAuthUsersResult,
 });
 
 export type PropsFromState = ReturnType<typeof mapStateToProps>;
@@ -41,12 +45,16 @@ export type PropsFromState = ReturnType<typeof mapStateToProps>;
 export const AuthRoute: React.FC<PropsFromState> = ({
   projectIdResult,
   authConfigResult,
+  authUsersResult,
 }) => {
-  return handle(combineData(projectIdResult, authConfigResult), {
-    onNone: () => <Spinner span={12} message="Auth Emulator Loading..." />,
-    onError: () => <AuthRouteDisabled />,
-    onData: () => <Auth />,
-  });
+  return handle(
+    combineData(projectIdResult, authConfigResult, authUsersResult),
+    {
+      onNone: () => <Spinner span={12} message="Auth Emulator Loading..." />,
+      onError: () => <AuthRouteDisabled />,
+      onData: () => <Auth />,
+    }
+  );
 };
 
 export const Auth: React.FC = () => (
