@@ -33,7 +33,7 @@
   :global {
     label.mdc-text-field--textarea,
     textarea {
-      height: 100px;
+      height: 66px;
     }
   }
 }
@@ -42,12 +42,32 @@
   display: flex;
 }
 
+.signInWrapper {
+  :global .mdc-list-divider {
+    // Negative margin to take full size
+    margin: 24px -24px;
+
+    &.bottom-divider {
+      margin: -12px -24px;
+    }
+  }
+}
+
 .signInHeader {
   margin-bottom: 20px;
 
-  :global .mdc-typography--subtitle2 {
+  :global .mdc-typography--body1 {
     color: $COLOR_TEXT_PRIMARY;
+    font-size: 16px;
+    font-weight: 500;
   }
+}
+
+.authKindLabel {
+  color: $COLOR_TEXT_PRIMARY;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 8px;
 }
 
 .customClaims {

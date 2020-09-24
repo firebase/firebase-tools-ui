@@ -42,7 +42,6 @@ export const EmailPassword: React.FC<EmailPasswordProps> = ({
       (email !== '' && password !== '') ||
       isEditing
     ) {
-      // TODO(kirjs):
       clearError('emailpassword' as any);
     } else {
       setError('emailpassword' as any, 'both');
@@ -51,20 +50,22 @@ export const EmailPassword: React.FC<EmailPasswordProps> = ({
 
   return (
     <>
+      <Typography use="body1" tag="div" className={styles.authKindLabel}>
+        Email authentication
+      </Typography>
       <div className={styles.emailWrapper}>
         <Field
           name="email"
           placeholder="Enter email"
-          label="Email/Password authentication"
-          aria-label="Email"
+          label="Email"
           type="text"
           inputRef={register({ pattern: EMAIL_REGEX })}
         />
         <Field
           name="password"
           type="text"
+          label="Password"
           placeholder="Enter password"
-          aria-label="Password"
           inputRef={register({ minLength: PASSWORD_MIN_LENGTH })}
         />
       </div>

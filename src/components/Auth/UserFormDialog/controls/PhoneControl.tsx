@@ -16,9 +16,12 @@ export const PhoneControl: React.FC<FormContextValues<AddAuthUserPayload>> = ({
 }) => {
   return (
     <>
+      <Typography use="body1" tag="div" className={styles.authKindLabel}>
+        Phone authentication
+      </Typography>
       <Field
         name="phoneNumber"
-        label="Phone authentication"
+        label="Phone"
         placeholder="Enter phone number"
         type="tel"
         inputRef={register({ pattern: PHONE_REGEX })}

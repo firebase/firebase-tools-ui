@@ -21,7 +21,7 @@ export const AddUserDialog: React.FC<Props> = ({ onClose, createUser }) => {
   return (
     <>
       <Dialog renderToPortal open onClose={onClose}>
-        <DialogTitle>Add user</DialogTitle>
+        <DialogTitle>Add a user</DialogTitle>
         <UserForm
           isEditing={false}
           onClose={onClose}

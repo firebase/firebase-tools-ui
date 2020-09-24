@@ -40,6 +40,18 @@ export const CustomAttributes: React.FC<FormContextValues<
       <Typography use="subtitle2" tag="div" className={styles.customClaims}>
         Custom Claims (optional)
       </Typography>
+    </label>
+  );
+  return (
+    <div className={styles.customAttributesWrapper}>
+      <Field
+        inputRef={register({ validate })}
+        error={errors[CUSTOM_ATTRIBUTES_CONTROL_NAME]?.message}
+        name={CUSTOM_ATTRIBUTES_CONTROL_NAME}
+        label={label}
+        textarea
+        placeholder={`Enter valid json, e.g. {"role":"admin"}`}
+      />
       <Typography use="body2">
         These custom key:value attributes can be used with Rules to implement
         various access control strategies (e.g. based on roles){' '}
@@ -51,18 +63,6 @@ export const CustomAttributes: React.FC<FormContextValues<
           Learn more
         </a>
       </Typography>
-    </label>
-  );
-  return (
-    <div className={styles.customAttributesWrapper}>
-      <Field
-        inputRef={register({ validate })}
-        error={errors[CUSTOM_ATTRIBUTES_CONTROL_NAME]?.message}
-        name={CUSTOM_ATTRIBUTES_CONTROL_NAME}
-        label={label}
-        textarea
-        placeholder={`{"role":"admin"}`}
-      />
     </div>
   );
 };

@@ -1,3 +1,4 @@
+import { ListDivider } from '@rmwc/list';
 import { Typography } from '@rmwc/typography';
 import React, { useEffect } from 'react';
 import { FormContextValues } from 'react-hook-form/dist/contextTypes';
@@ -23,7 +24,7 @@ export const SignInMethod: React.FC<SignInMethodProps> = form => {
     const hasPhone = !!phoneNumber;
 
     if (hasEmailPassword || hasPhone) {
-      // TODO(kirjs): according to docs ClearError should accept arbitrary key
+      // According to docs ClearError should accept arbitrary key
       // to allow cross-field validation, but it's not the case here for some
       // reason.
       clearError(ERROR_CODE as any);
@@ -40,22 +41,24 @@ export const SignInMethod: React.FC<SignInMethodProps> = form => {
     ERROR_CODE in errors && Object.values(errors).length === 1;
 
   return (
-    <>
+    <div className={styles.signInWrapper}>
+      <ListDivider tag="div" />
       <div className={styles.signInHeader}>
-        <Typography use="subtitle2">Sign-in method</Typography>
+        <Typography use="body1">Authentication method</Typography>
         {isTouched && isOnlyError ? (
           <Typography use="body2" theme="error" tag="div" role="alert">
-            One method is required. Please enter either a email/password or
+            One method is required. Please enter either an email/password or
             phone number.
           </Typography>
         ) : (
           <Typography use="body2" tag="div">
-            Choose at least one method
+            Enter details for at least one of the following methods:
           </Typography>
         )}
       </div>
       <EmailPassword {...form} isEditing={isEditing} />
       <PhoneControl {...form} />
-    </>
+      <ListDivider className="bottom-divider" tag="div" />
+    </div>
   );
 };
