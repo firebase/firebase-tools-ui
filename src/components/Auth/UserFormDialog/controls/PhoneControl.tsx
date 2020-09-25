@@ -28,6 +28,17 @@ export const PhoneControl: React.FC<PhoneControlProps &
     return editedUserPhoneNumber === value || !allPhoneNumbers.has(value);
   }
 
+  function getErrorText() {
+    if (errors.phoneNumber) {
+      if (errors.phoneNumber.type === 'pattern') {
+        return 'Phone number must start with a "+"';
+      }
+      if (errors.phoneNumber.type === 'validate') {
+        return 'User with this phone number already exists';
+      }
+    }
+  }
+
   return (
     <>
       <Typography use="body1" tag="div" className={styles.authKindLabel}>
@@ -38,21 +49,9 @@ export const PhoneControl: React.FC<PhoneControlProps &
         label="Phone"
         placeholder="Enter phone number"
         type="tel"
+        error={getErrorText()}
         inputRef={register({ pattern: PHONE_REGEX, validate })}
       />
-      <Typography
-        className={styles.error}
-        use="body2"
-        role="alert"
-        theme="error"
-      >
-        {errors.phoneNumber &&
-          errors.phoneNumber.type === 'pattern' &&
-          'Phone number must start with a "+"'}
-        {errors.phoneNumber &&
-          errors.phoneNumber.type === 'validate' &&
-          'User with this phone number already exists'}
-      </Typography>
     </>
   );
 };

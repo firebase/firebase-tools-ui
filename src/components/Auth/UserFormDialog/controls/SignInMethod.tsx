@@ -59,7 +59,6 @@ export const SignInMethod: React.FC<SignInMethodProps &
       </div>
       <EmailPassword {...form} editedUserEmail={user?.email} />
       <PhoneControl {...form} editedUserPhoneNumber={user?.phoneNumber} />
-      <ListDivider tag="div" className="bottom-divider" />
     </div>
   );
 };
