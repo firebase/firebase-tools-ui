@@ -6,6 +6,7 @@ import configureStore from 'redux-mock-store';
 
 import { AppState } from '../../../store';
 import { waitForDialogsToOpen } from '../../../test_utils';
+import { createFakeAuthStateWithUsers } from '../test_utils';
 import UsersCard from './UsersCard';
 
 jest.mock('./table/UsersTable');
@@ -13,10 +14,7 @@ jest.mock('./header/AuthFilter');
 
 function setup() {
   const store = configureStore<Pick<AppState, 'auth'>>()({
-    auth: {
-      users: [],
-      filter: '',
-    },
+    auth: createFakeAuthStateWithUsers([]),
   });
 
   return render(

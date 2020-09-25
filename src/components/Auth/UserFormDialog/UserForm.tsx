@@ -55,7 +55,7 @@ const UserForm: React.FC<UserFormProps> = ({
 
         <ImageUrlInput {...form} />
         <CustomAttributes {...form} />
-        <SignInMethod {...form} isEditing={isEditing}></SignInMethod>
+        <SignInMethod {...form} user={user}></SignInMethod>
       </DialogContent>
       <DialogActions>
         <DialogButton action="close" type="button" theme="secondary">

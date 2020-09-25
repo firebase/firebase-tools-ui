@@ -2,14 +2,17 @@ import React from 'react';
 
 import { wrapWithForm } from '../../../../test_utils';
 import { AddAuthUserPayload } from '../../types';
-import { EmailPassword } from './EmailPassword';
+import { EmailPassword, EmailPasswordProps } from './EmailPassword';
 
 describe('EmailPassword', () => {
   const validEmail = 'pir@j.k';
 
   function setup(
     defaultValues: Partial<AddAuthUserPayload>,
-    props = { allEmails: new Set() }
+    props: EmailPasswordProps = {
+      allEmails: new Set(),
+      editedUserEmail: undefined,
+    }
   ) {
     return wrapWithForm(EmailPassword, { defaultValues }, props);
   }
@@ -65,6 +68,18 @@ describe('EmailPassword', () => {
       );
       await triggerValidation();
       expect(getByText('User with this email already exists')).not.toBeNull();
+    });
+
+    it('valid for email that is being edited edited email', async () => {
+      const { queryByText, triggerValidation } = setup(
+        {
+          email: validEmail,
+          password: 'lollol',
+        },
+        { allEmails: new Set([validEmail]), editedUserEmail: validEmail }
+      );
+      await triggerValidation();
+      expect(queryByText('User with this email already exists')).toBeNull();
     });
   });
 

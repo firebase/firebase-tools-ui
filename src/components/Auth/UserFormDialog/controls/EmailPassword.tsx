@@ -31,15 +31,16 @@ function getErrorText(errors: any) {
   }
 }
 
-export type EmailPasswordProps = FormContextValues<AddAuthUserPayload> &
-  PropsFromState;
-export const EmailPassword: React.FC<EmailPasswordProps> = ({
+export type EmailPasswordProps = PropsFromState & { editedUserEmail?: string };
+export const EmailPassword: React.FC<EmailPasswordProps &
+  FormContextValues<AddAuthUserPayload>> = ({
   register,
   watch,
   setError,
   clearError,
   errors,
   allEmails,
+  editedUserEmail,
 }) => {
   const email = watch('email');
   const password = watch('password');
@@ -56,7 +57,7 @@ export const EmailPassword: React.FC<EmailPasswordProps> = ({
   }, [email, password, clearError, setError]);
 
   function validate(value: string) {
-    return !allEmails.has(value);
+    return value === editedUserEmail || !allEmails.has(value);
   }
 
   return (

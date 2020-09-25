@@ -13,10 +13,19 @@ import styles from './controls.module.scss';
 // the emulator to avoid false negatives.
 const PHONE_REGEX = /^\+/;
 
-export const PhoneControl: React.FC<FormContextValues<AddAuthUserPayload> &
-  PropsFromState> = ({ register, errors, allPhoneNumbers }) => {
+export type PhoneControlProps = PropsFromState & {
+  editedUserPhoneNumber?: string;
+};
+
+export const PhoneControl: React.FC<PhoneControlProps &
+  FormContextValues<AddAuthUserPayload>> = ({
+  register,
+  errors,
+  allPhoneNumbers,
+  editedUserPhoneNumber,
+}) => {
   function validate(value: string) {
-    return !allPhoneNumbers.has(value);
+    return editedUserPhoneNumber === value || !allPhoneNumbers.has(value);
   }
 
   return (
@@ -42,7 +51,7 @@ export const PhoneControl: React.FC<FormContextValues<AddAuthUserPayload> &
           'Phone number must start with a "+"'}
         {errors.phoneNumber &&
           errors.phoneNumber.type === 'validate' &&
-          'User with this phone number already exists]'}
+          'User with this phone number already exists'}
       </Typography>
     </>
   );

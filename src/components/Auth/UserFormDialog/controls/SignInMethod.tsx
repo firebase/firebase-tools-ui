@@ -10,9 +10,12 @@ import PhoneControl from './PhoneControl';
 
 const ERROR_CODE = 'atLeastOneMethodRequired';
 
-export type SignInMethodProps = FormContextValues<AddAuthUserPayload>;
-export const SignInMethod: React.FC<SignInMethodProps> = form => {
-  const { watch, setError, clearError, formState, errors } = form;
+export type SignInMethodProps = {
+  user?: AddAuthUserPayload;
+};
+export const SignInMethod: React.FC<SignInMethodProps &
+  FormContextValues<AddAuthUserPayload>> = form => {
+  const { watch, setError, clearError, formState, errors, user } = form;
   const email = watch('email');
   const password = watch('password');
   const phoneNumber = watch('phoneNumber');
@@ -54,8 +57,8 @@ export const SignInMethod: React.FC<SignInMethodProps> = form => {
           </Typography>
         )}
       </div>
-      <EmailPassword {...form} />
-      <PhoneControl {...form} />
+      <EmailPassword {...form} editedUserEmail={user?.email} />
+      <PhoneControl {...form} editedUserPhoneNumber={user?.phoneNumber} />
       <ListDivider tag="div" className="bottom-divider" />
     </div>
   );
