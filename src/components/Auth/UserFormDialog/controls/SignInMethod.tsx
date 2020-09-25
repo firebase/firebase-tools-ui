@@ -32,7 +32,7 @@ export const SignInMethod: React.FC<SignInMethodProps &
     } else {
       setError(ERROR_CODE as any);
     }
-  }, [email, password, clearError, setError, phoneNumber]);
+  }, [email, password, clearError, setError, phoneNumber, errors]);
 
   const isTouched =
     formState.touched['email'] ||
