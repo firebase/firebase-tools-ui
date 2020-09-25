@@ -21,6 +21,14 @@ export const getUsers = createSelector(getAuthUsers, users => {
   );
 });
 
+export const getAllEmails = createSelector(getUsers, users => {
+  return new Set(users.map(u => u.email).filter(e => !!e));
+});
+
+export const getAllPhoneNumbers = createSelector(getUsers, users => {
+  return new Set(users.map(u => u.phoneNumber).filter(e => !!e));
+});
+
 export const hasUsers = createSelector(
   getUsers,
   (users: unknown[]) => users.length > 0

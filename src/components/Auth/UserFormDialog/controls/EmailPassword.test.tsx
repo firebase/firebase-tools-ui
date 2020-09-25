@@ -9,7 +9,7 @@ describe('EmailPassword', () => {
 
   function setup(
     defaultValues: Partial<AddAuthUserPayload>,
-    props = { isEditing: true }
+    props = { allEmails: new Set() }
   ) {
     return wrapWithForm(EmailPassword, { defaultValues }, props);
   }
@@ -18,42 +18,22 @@ describe('EmailPassword', () => {
     const errorText = 'Both email and password should be present';
 
     it('is valid when both empty', () => {
-      const { queryByText } = setup(
-        { email: '', password: '' },
-        { isEditing: true }
-      );
+      const { queryByText } = setup({ email: '', password: '' });
       expect(queryByText(errorText)).toBeNull();
     });
 
     it('is valid when both present', () => {
-      const { queryByText } = setup(
-        { email: validEmail, password: 'pelmeni' },
-        { isEditing: true }
-      );
-      expect(queryByText(errorText)).toBeNull();
-    });
-
-    it('ignores empty password for the edit mode', () => {
-      const { queryByText } = setup(
-        { email: validEmail, password: '' },
-        { isEditing: true }
-      );
+      const { queryByText } = setup({ email: validEmail, password: 'pelmeni' });
       expect(queryByText(errorText)).toBeNull();
     });
 
     it('is invalid if just password is present', () => {
-      const { getByText } = setup(
-        { email: '', password: 'pelmeni' },
-        { isEditing: false }
-      );
+      const { getByText } = setup({ email: '', password: 'pelmeni' });
       getByText(errorText);
     });
 
     it('is invalid if just email is present', () => {
-      const { getByText } = setup(
-        { email: validEmail, password: '' },
-        { isEditing: false }
-      );
+      const { getByText } = setup({ email: validEmail, password: '' });
       getByText(errorText);
     });
   });
@@ -74,9 +54,21 @@ describe('EmailPassword', () => {
       await triggerValidation();
       expect(queryByText(errorText)).not.toBeNull();
     });
+
+    it('invalid for duplicate email', async () => {
+      const { getByText, triggerValidation } = setup(
+        {
+          email: validEmail,
+          password: 'lollol',
+        },
+        { allEmails: new Set([validEmail]) }
+      );
+      await triggerValidation();
+      expect(getByText('User with this email already exists')).not.toBeNull();
+    });
   });
 
-  describe('passoword validation', () => {
+  describe('password validation', () => {
     const errorText = /Password should be at least/;
 
     it('valid for password longer than 6 characters', () => {

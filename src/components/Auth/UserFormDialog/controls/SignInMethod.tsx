@@ -5,22 +5,20 @@ import { FormContextValues } from 'react-hook-form/dist/contextTypes';
 
 import { AddAuthUserPayload } from '../../types';
 import styles from './controls.module.scss';
-import { EmailPassword } from './EmailPassword';
-import { PhoneControl } from './PhoneControl';
+import EmailPassword from './EmailPassword';
+import PhoneControl from './PhoneControl';
 
 const ERROR_CODE = 'atLeastOneMethodRequired';
 
-export type SignInMethodProps = FormContextValues<AddAuthUserPayload> & {
-  isEditing: boolean;
-};
+export type SignInMethodProps = FormContextValues<AddAuthUserPayload>;
 export const SignInMethod: React.FC<SignInMethodProps> = form => {
-  const { watch, setError, clearError, formState, errors, isEditing } = form;
+  const { watch, setError, clearError, formState, errors } = form;
   const email = watch('email');
   const password = watch('password');
   const phoneNumber = watch('phoneNumber');
 
   useEffect(() => {
-    const hasEmailPassword = email !== '' && (password !== '' || isEditing);
+    const hasEmailPassword = email !== '' && password !== '';
     const hasPhone = !!phoneNumber;
 
     if (hasEmailPassword || hasPhone) {
@@ -31,7 +29,7 @@ export const SignInMethod: React.FC<SignInMethodProps> = form => {
     } else {
       setError(ERROR_CODE as any);
     }
-  }, [email, password, clearError, setError, phoneNumber, isEditing]);
+  }, [email, password, clearError, setError, phoneNumber]);
 
   const isTouched =
     formState.touched['email'] ||
@@ -56,9 +54,9 @@ export const SignInMethod: React.FC<SignInMethodProps> = form => {
           </Typography>
         )}
       </div>
-      <EmailPassword {...form} isEditing={isEditing} />
+      <EmailPassword {...form} />
       <PhoneControl {...form} />
-      <ListDivider className="bottom-divider" tag="div" />
+      <ListDivider tag="div" className="bottom-divider" />
     </div>
   );
 };

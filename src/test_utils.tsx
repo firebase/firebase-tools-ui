@@ -135,9 +135,9 @@ export function makeDeferred<T>(): Deferred<T> {
  * Component is expected to receive resulting form methods as props.
  */
 export const wrapWithForm = <S, T = {}>(
-  Control: React.FC<FormContextValues<T>>,
+  Control: React.FC<FormContextValues<T> & S>,
   options: UseFormOptions<T>,
-  props: Partial<S> = {}
+  props: S
 ) => {
   const submit = jest.fn();
   const FormWrapper = () => {

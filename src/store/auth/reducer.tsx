@@ -50,15 +50,13 @@ export const authReducer = createReducer<AuthState, Action>(INIT_STATE)
   .handleAction(
     authActions.updateUserSuccess,
     produce((draft: AuthState, { payload }) => {
-      const re = mapResult(draft.users, users =>
+      draft.users = mapResult(draft.users, users =>
         users.map((user: AuthUser) => {
           return user.localId === payload.user.localId
             ? populateProviderUserInfo({ ...user, ...payload.user })
             : user;
         })
       );
-      debugger;
-      draft.users = re;
     })
   )
   .handleAction(

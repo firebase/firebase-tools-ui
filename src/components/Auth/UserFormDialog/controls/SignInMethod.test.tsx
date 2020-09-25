@@ -1,7 +1,9 @@
 import { fireEvent } from '@testing-library/react';
 import React from 'react';
+import { Provider } from 'react-redux';
 
 import { wrapWithForm } from '../../../../test_utils';
+import { getMockAuthStore } from '../../test_utils';
 import { AddAuthUserPayload } from '../../types';
 import { SignInMethod } from './SignInMethod';
 
@@ -10,13 +12,18 @@ describe('SignInMethod', () => {
   const validPassword = 'pelmeni';
 
   async function setup(defaultValues: Partial<AddAuthUserPayload>) {
+    const store = getMockAuthStore();
     const methods = wrapWithForm(
-      SignInMethod,
+      props => (
+        <Provider store={store}>
+          <SignInMethod {...props}></SignInMethod>
+        </Provider>
+      ),
       { defaultValues },
       { isEditing: false }
     );
 
-    const email = methods.getByLabelText('Email/Password authentication');
+    const email = methods.getByLabelText('Email');
 
     fireEvent.change(email, {
       target: { value: 'just need to make this dirty' },

@@ -1,6 +1,8 @@
 import { act, fireEvent, render } from '@testing-library/react';
 import React from 'react';
+import { Provider } from 'react-redux';
 
+import { getMockAuthStore } from '../test_utils';
 import { AddAuthUserPayload } from '../types';
 import UserForm from './UserForm';
 
@@ -11,13 +13,16 @@ describe('UserForm', () => {
   function setup(user?: AddAuthUserPayload) {
     const onSave = jest.fn();
     const onClose = jest.fn();
+    const store = getMockAuthStore();
     const methods = render(
-      <UserForm
-        onSave={onSave}
-        user={user}
-        onClose={onClose}
-        isEditing={false}
-      />
+      <Provider store={store}>
+        <UserForm
+          onSave={onSave}
+          user={user}
+          onClose={onClose}
+          isEditing={false}
+        />
+      </Provider>
     );
 
     const triggerValidation = async () => {
@@ -63,7 +68,7 @@ describe('UserForm', () => {
       displayName: '',
     });
 
-    const input = getByLabelText(/Phone authentication/) as HTMLInputElement;
+    const input = getByLabelText(/Phone/) as HTMLInputElement;
 
     fireEvent.change(input, {
       target: { value: phoneNumber },
@@ -98,10 +103,7 @@ describe('UserForm', () => {
     expect((getByLabelText(/Display name/) as HTMLInputElement).value).toBe(
       displayName
     );
-    expect(
-      (queryByLabelText('Email/Password authentication') as HTMLInputElement)
-        .value
-    ).toBe(email);
+    expect((queryByLabelText('Email') as HTMLInputElement).value).toBe(email);
     expect((queryByLabelText('Password') as HTMLInputElement).value).toBe(
       password
     );

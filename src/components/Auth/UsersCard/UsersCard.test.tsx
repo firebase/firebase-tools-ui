@@ -43,7 +43,7 @@ describe('UsersCard test', () => {
     expect(queryByRole('alertdialog')).not.toBeNull();
 
     // And has appropriate title
-    getByText('Add user', { selector: '.mdc-dialog__title' });
+    getByText('Add a user', { selector: '.mdc-dialog__title' });
   });
 
   it('closes "add user" dialog when it calles onclose callback', async () => {

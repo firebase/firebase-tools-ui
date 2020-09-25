@@ -7,7 +7,11 @@ import { PhoneControl } from './PhoneControl';
 
 describe('PhoneControl', () => {
   function setup(defaultValues?: Partial<AddAuthUserPayload>) {
-    return wrapWithForm(PhoneControl, { defaultValues });
+    return wrapWithForm(
+      PhoneControl,
+      { defaultValues },
+      { allPhoneNumbers: new Set('123') }
+    );
   }
 
   it('maps to the appropriate form value', async () => {

@@ -5,6 +5,10 @@ import React from 'react';
 import { waitForDialogsToOpen } from '../../../test_utils';
 import { AddUserDialog } from './AddUserDialog';
 
+// Those components require store and add extra validations.
+jest.mock('./controls/EmailPassword');
+jest.mock('./controls/PhoneControl');
+
 describe('AddUserDialog', () => {
   async function setup() {
     const onClose = jest.fn();
@@ -33,15 +37,8 @@ describe('AddUserDialog', () => {
   }
 
   it('calls onClose on form submit', async () => {
-    const { triggerValidation, onClose, getByLabelText } = await setup();
+    const { triggerValidation, onClose } = await setup();
     await waitForDialogsToOpen();
-
-    const input = getByLabelText(/Phone authentication/) as HTMLInputElement;
-
-    fireEvent.change(input, {
-      target: { value: '+1 689-689-6896' },
-    });
-    fireEvent.blur(input);
 
     expect(onClose).not.toHaveBeenCalled();
     await triggerValidation();
@@ -49,14 +46,7 @@ describe('AddUserDialog', () => {
   });
 
   it('calls createUser on form submit', async () => {
-    const { triggerValidation, createUser, getByLabelText } = await setup();
-
-    const input = getByLabelText(/Phone authentication/) as HTMLInputElement;
-
-    fireEvent.change(input, {
-      target: { value: '+1 689-689-6896' },
-    });
-    fireEvent.blur(input);
+    const { triggerValidation, createUser } = await setup();
 
     expect(createUser).not.toHaveBeenCalled();
     await triggerValidation();
