@@ -41,8 +41,6 @@ describe('PhoneControl', () => {
       triggerValidation,
       submit,
     } = setup({ allPhoneNumbers: new Set([dupePhoneNumber]) });
-    // Leading "+" missing.
-
     const input = getByPlaceholderText('Enter phone number');
     fireEvent.change(input, {
       target: { value: dupePhoneNumber },
@@ -65,7 +63,6 @@ describe('PhoneControl', () => {
       editedUserPhoneNumber: dupePhoneNumber,
       allPhoneNumbers: new Set([dupePhoneNumber]),
     });
-    // Leading "+" missing.
 
     const input = getByPlaceholderText('Enter phone number');
     fireEvent.change(input, {
@@ -97,7 +94,7 @@ describe('PhoneControl', () => {
     fireEvent.blur(input);
 
     await triggerValidation();
-    getByText(/Phone number must start/);
+    getByText(/Phone number must be in international format/);
     expect(submit).not.toHaveBeenCalled();
   });
 });

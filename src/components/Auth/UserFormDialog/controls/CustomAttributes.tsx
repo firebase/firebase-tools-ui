@@ -13,7 +13,7 @@ function validate(attributes: string) {
   }
 
   try {
-    // We're reusing server validation which throws.
+    // We're reusing server validation.
     validateSerializedCustomClaims(attributes);
     return true;
   } catch (e) {
@@ -37,7 +37,7 @@ export const CustomAttributes: React.FC<FormContextValues<
 >> = ({ errors, register }) => {
   const label = (
     <label>
-      <Typography use="subtitle2" tag="div" className={styles.customClaims}>
+      <Typography use="subtitle2" tag="div" theme="textPrimaryOnBackground">
         Custom Claims (optional)
       </Typography>
     </label>

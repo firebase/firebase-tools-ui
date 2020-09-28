@@ -62,7 +62,12 @@ export const EmailPassword: React.FC<EmailPasswordProps &
 
   return (
     <>
-      <Typography use="body1" tag="div" className={styles.authKindLabel}>
+      <Typography
+        use="body1"
+        tag="div"
+        className={styles.authKindLabel}
+        theme="textPrimaryOnBackground"
+      >
         Email authentication
       </Typography>
       <div className={styles.emailWrapper}>

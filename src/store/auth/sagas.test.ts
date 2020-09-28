@@ -214,43 +214,18 @@ describe('Auth sagas', () => {
   describe('configureAuthSaga', () => {
     it('returns api', () => {
       const gen = configureAuthSaga();
-      const CONTEXT_KEY = 'authApi';
 
-      expect(gen.next()).toEqual({
-        done: false,
-        value: getContext(CONTEXT_KEY),
-      });
       expect(gen.next()).toEqual({
         done: false,
         value: select(getAuthConfigResult),
       });
+
       expect(gen.next({ data: { hostAndPort: 'htto://lo.l' } })).toEqual({
         done: false,
         value: select(getProjectIdResult),
       });
-      expect(gen.next({ data: 'project' })).toEqual({
-        done: false,
-        value: setContext({ [CONTEXT_KEY]: jasmine.any(AuthApi) }),
-      });
 
-      expect(gen.next().done).toBe(true);
-    });
-
-    it('returns existing API if present in the context', () => {
-      const gen = configureAuthSaga();
-      const CONTEXT_KEY = 'authApi';
-
-      const fakeAuthService = {
-        fetchUsers: jest.fn(),
-      };
-      expect(gen.next()).toEqual({
-        done: false,
-        value: getContext(CONTEXT_KEY),
-      });
-      expect(gen.next(fakeAuthService as AuthApi)).toEqual({
-        done: true,
-        value: fakeAuthService,
-      });
+      expect(gen.next({ data: 'project' }).done).toBe(true);
     });
   });
 });

@@ -1,13 +1,4 @@
-import {
-  all,
-  call,
-  getContext,
-  put,
-  select,
-  setContext,
-  take,
-  takeLatest,
-} from 'redux-saga/effects';
+import { all, call, put, select, take, takeLatest } from 'redux-saga/effects';
 import { getType } from 'typesafe-actions';
 
 import AuthApi from '../../components/Auth/api';
@@ -33,8 +24,6 @@ import {
   updateUserSuccess,
 } from './actions';
 import { getAuthConfigResult } from './selectors';
-
-const AUTH_API_CONTEXT_KEY = 'authApi';
 
 export function* fetchAuthUsers() {
   const authApi = yield call(configureAuthSaga);
@@ -112,19 +101,13 @@ export function* nukeUsers() {
 }
 
 export function* configureAuthSaga() {
-  let authApi = yield getContext(AUTH_API_CONTEXT_KEY);
-  if (!authApi) {
-    const {
-      data: { hostAndPort },
-    } = yield select(getAuthConfigResult);
+  const {
+    data: { hostAndPort },
+  } = yield select(getAuthConfigResult);
 
-    const { data: projectId } = yield select(getProjectIdResult);
+  const { data: projectId } = yield select(getProjectIdResult);
 
-    authApi = new AuthApi(hostAndPort, projectId);
-    yield setContext({ [AUTH_API_CONTEXT_KEY]: authApi });
-  }
-
-  return authApi;
+  return new AuthApi(hostAndPort, projectId);
 }
 
 export function* authSaga() {

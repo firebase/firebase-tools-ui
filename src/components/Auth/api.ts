@@ -99,4 +99,4 @@ export default class AuthApi extends RestApi {
   }
 }
 
-const PASSWORD_HASH_REGEX = /^fakeHash:salt=[\w\d]+:password=(.*?)$/;
+const PASSWORD_HASH_REGEX = /^fakeHash:salt=[\w\d]+:password=(.*)$/;

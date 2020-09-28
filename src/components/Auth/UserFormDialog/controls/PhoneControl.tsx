@@ -31,7 +31,7 @@ export const PhoneControl: React.FC<PhoneControlProps &
   function getErrorText() {
     if (errors.phoneNumber) {
       if (errors.phoneNumber.type === 'pattern') {
-        return 'Phone number must start with a "+"';
+        return 'Phone number must be in international format and start with a "+"';
       }
       if (errors.phoneNumber.type === 'validate') {
         return 'User with this phone number already exists';
@@ -41,7 +41,12 @@ export const PhoneControl: React.FC<PhoneControlProps &
 
   return (
     <>
-      <Typography use="body1" tag="div" className={styles.authKindLabel}>
+      <Typography
+        use="body1"
+        tag="div"
+        className={styles.authKindLabel}
+        theme="textPrimaryOnBackground"
+      >
         Phone authentication
       </Typography>
       <Field

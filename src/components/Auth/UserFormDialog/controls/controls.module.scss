@@ -57,19 +57,12 @@
   margin-bottom: 20px;
 
   :global .mdc-typography--body1 {
-    color: $COLOR_TEXT_PRIMARY;
     font-size: 16px;
     font-weight: 500;
   }
 }
 
 .authKindLabel {
-  color: $COLOR_TEXT_PRIMARY;
-  font-size: 14px;
   font-weight: 500;
   margin-bottom: 8px;
-}
-
-.customClaims {
-  color: $COLOR_TEXT_PRIMARY;
 }

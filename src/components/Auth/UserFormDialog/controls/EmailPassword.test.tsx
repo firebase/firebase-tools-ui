@@ -70,7 +70,7 @@ describe('EmailPassword', () => {
       expect(getByText('User with this email already exists')).not.toBeNull();
     });
 
-    it('valid for email that is being edited edited email', async () => {
+    it('valid for email that is being edited', async () => {
       const { queryByText, triggerValidation } = setup(
         {
           email: validEmail,

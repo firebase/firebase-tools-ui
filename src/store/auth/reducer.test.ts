@@ -126,7 +126,7 @@ describe('auth reducers', () => {
   });
 
   describe('config', () => {
-    it(`${setAllowDuplicateEmailsSuccess} => sets the filter value`, () => {
+    it(`${setAllowDuplicateEmailsSuccess} => sets the config value`, () => {
       const allowDuplicateEmails = true;
       const state = createFakeState({ allowDuplicateEmails: false });
       const action = setAllowDuplicateEmailsSuccess(allowDuplicateEmails);

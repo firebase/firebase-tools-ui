@@ -87,12 +87,9 @@ export function mapResult<T, E, R>(
   };
 }
 
-export function createRemoteResult<T>(
-  data: T,
-  loading: boolean = false
-): RemoteResult<T> {
+export function createRemoteDataLoaded<T>(data: T): RemoteResult<T> {
   return {
-    loading,
+    loading: false,
     result: { data },
   };
 }

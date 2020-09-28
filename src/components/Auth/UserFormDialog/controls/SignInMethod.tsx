@@ -8,7 +8,7 @@ import styles from './controls.module.scss';
 import EmailPassword from './EmailPassword';
 import PhoneControl from './PhoneControl';
 
-const ERROR_CODE = 'atLeastOneMethodRequired';
+const ERROR_AT_LEAST_ONE_METHOD_REQUIRED = 'atLeastOneMethodRequired';
 
 export type SignInMethodProps = {
   user?: AddAuthUserPayload;
@@ -28,9 +28,9 @@ export const SignInMethod: React.FC<SignInMethodProps &
       // According to docs ClearError should accept arbitrary key
       // to allow cross-field validation, but it's not the case here for some
       // reason.
-      clearError(ERROR_CODE as any);
+      clearError(ERROR_AT_LEAST_ONE_METHOD_REQUIRED as any);
     } else {
-      setError(ERROR_CODE as any);
+      setError(ERROR_AT_LEAST_ONE_METHOD_REQUIRED as any);
     }
   }, [email, password, clearError, setError, phoneNumber, errors]);
 
@@ -39,13 +39,16 @@ export const SignInMethod: React.FC<SignInMethodProps &
     formState.touched['password'] ||
     formState.touched['phoneNumber'];
   const isOnlyError =
-    ERROR_CODE in errors && Object.values(errors).length === 1;
+    ERROR_AT_LEAST_ONE_METHOD_REQUIRED in errors &&
+    Object.values(errors).length === 1;
 
   return (
     <div className={styles.signInWrapper}>
       <ListDivider tag="div" />
       <div className={styles.signInHeader}>
-        <Typography use="body1">Authentication method</Typography>
+        <Typography use="body1" theme="textPrimaryOnBackground">
+          Authentication method
+        </Typography>
         {isTouched && isOnlyError ? (
           <Typography use="body2" theme="error" tag="div" role="alert">
             One method is required. Please enter either an email/password or

@@ -60,9 +60,9 @@ describe('ProviderCell', () => {
     const user = createFakeUser({
       phoneNumber,
       email,
-      providerUserInfo: [{ providerId: 'piroj.ok' as any }],
+      providerUserInfo: [{ providerId: 'foo.example.com' as any }],
     });
     const { queryByLabelText } = render(<ProviderCell user={user} />);
-    expect(queryByLabelText('piroj.ok')).toBeNull();
+    expect(queryByLabelText('foo.example.com')).toBeNull();
   });
 });

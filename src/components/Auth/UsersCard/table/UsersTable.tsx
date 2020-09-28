@@ -36,16 +36,16 @@ export type UsersTableProps = PropsFromDispatch & PropsFromStore;
 interface UserTableRowProps {
   user: AuthUser;
   onEditUser: () => void;
-  setUserDisabled: () => void;
+  toggleUserDisabled: () => void;
   onDeleteUser: () => void;
 }
 
-function UsersTableRow({
+export const UsersTableRow: React.FC<UserTableRowProps> = ({
   user,
   onEditUser,
-  setUserDisabled,
+  toggleUserDisabled,
   onDeleteUser,
-}: UserTableRowProps) {
+}) => {
   /*
    * Simple menu is broken when rendered in portal (it doesn't close)
    *
@@ -89,7 +89,7 @@ function UsersTableRow({
           <MenuItem
             onClick={() => {
               setMenuOpen(false);
-              setUserDisabled();
+              toggleUserDisabled();
             }}
           >
             {user.disabled ? 'Enable user' : 'Disable user'}
@@ -106,7 +106,7 @@ function UsersTableRow({
       </DataTableCell>
     </DataTableRow>
   );
-}
+};
 
 export const UsersTable: React.FC<UsersTableProps> = ({
   filteredUsers,
@@ -140,7 +140,7 @@ export const UsersTable: React.FC<UsersTableProps> = ({
                   onEditUser={() => {
                     setUserToEdit(user);
                   }}
-                  setUserDisabled={() => {
+                  toggleUserDisabled={() => {
                     setUserDisabled({
                       localId: user.localId,
                       disabled: !user.disabled,

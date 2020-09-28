@@ -6,7 +6,7 @@ export const createUserRequest = createAction('@auth/CREATE_USER_REQUEST')<{
   user: AddAuthUserPayload;
 }>();
 
-export const createUserSuccess = createAction('@auth/ADD_USER_SUCCESS')<{
+export const createUserSuccess = createAction('@auth/CREATE_USER_SUCCESS')<{
   user: AuthUser;
 }>();
 
