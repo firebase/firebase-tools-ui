@@ -15,8 +15,9 @@ describe('EditUserDialog', () => {
   const displayName = 'pirojok';
   const localId = 'pelmeni';
   const disabled = false;
-  const createdAt = new Date().toLocaleDateString();
-  const lastLoginAt = new Date().toLocaleDateString();
+  // September 28 2020
+  const createdAt = '1601310006686';
+  const lastLoginAt = '1601310006686';
 
   async function setup(user?: AuthUser) {
     user =

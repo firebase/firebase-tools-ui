@@ -8,6 +8,7 @@ export const NoResults: React.FC = () => {
     <Typography
       use="body2"
       aria-live="polite"
+      theme="textSecondaryOnBackground"
       className={styles.noResultsWrapper}
     >
       No results

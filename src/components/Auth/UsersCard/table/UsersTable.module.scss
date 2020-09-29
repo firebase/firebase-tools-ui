@@ -1,16 +1,7 @@
 @import '../../../common/color';
 
-.zeroStateWrapper {
-  height: 100px;
-  display: flex;
-  color: $COLOR_TEXT_SECONDARY;
-  justify-content: center;
-  align-items: center;
-}
-
 .noResultsWrapper {
   height: 100px;
-  color: $COLOR_TEXT_SECONDARY;
   display: flex;
   justify-content: center;
   align-items: center;

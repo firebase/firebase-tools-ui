@@ -20,8 +20,9 @@ export function createFakeUser(user: Partial<AuthUser>): AuthUser {
     disabled: false,
     displayName: 'Pirojok',
     providerUserInfo: [],
-    createdAt: '2020-20-20',
-    lastLoginAt: '2020-20-20',
+    // September 28 2020
+    createdAt: '"1601310006686"',
+    lastLoginAt: '"1601310006686"',
     ...user,
   };
 }

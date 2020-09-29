@@ -17,6 +17,15 @@
 import { RestApi } from '../common/rest_api';
 import { AddAuthUserPayload, AuthUser } from './types';
 
+const importUser = (user: AuthUser & ApiAuthUserFields) => {
+  const match = user.passwordHash?.match(PASSWORD_HASH_REGEX);
+
+  return {
+    password: match ? match[1] : '',
+    ...user,
+  };
+};
+
 export interface ApiAuthUserFields {
   passwordHash: string;
 }
@@ -25,7 +34,7 @@ export default class AuthApi extends RestApi {
   private readonly baseUrl = `http://${this.hostAndPort}/identitytoolkit.googleapis.com/v1/`;
   private readonly baseUrlWithProject =
     this.baseUrl + `projects/${this.projectId}/accounts:`;
-  private readonly baseUrlWithoutProject = this.baseUrl + `accounts:`;
+
   private readonly baseEmulatorUrl = `http://${this.hostAndPort}/emulator/v1/projects/${this.projectId}`;
 
   constructor(
@@ -46,24 +55,28 @@ export default class AuthApi extends RestApi {
       {},
       'POST'
     );
-    return json.userInfo.map((user: AuthUser & ApiAuthUserFields) => {
-      const match = user.passwordHash?.match(PASSWORD_HASH_REGEX);
 
-      return {
-        password: match ? match[1] : '',
-        ...user,
-      };
-    });
+    return json.userInfo.map(importUser);
+  }
+
+  async fetchUser(localId: string): Promise<AuthUser> {
+    const { json } = await this.jsonRequest(
+      `${this.baseUrlWithProject}lookup`,
+      { localId: [localId] },
+      'POST'
+    );
+
+    return importUser(json.users[0]);
   }
 
   async createUser(user: AddAuthUserPayload): Promise<AuthUser> {
     const { json } = await this.jsonRequest(
-      `${this.baseUrlWithoutProject}signUp`,
+      `${this.baseUrl}accounts:signUp`,
       { ...user },
       'POST'
     );
 
-    return json;
+    return this.fetchUser(json.localId);
   }
 
   async updateConfig(
@@ -86,16 +99,16 @@ export default class AuthApi extends RestApi {
 
   async updateUser(user: AddAuthUserPayload): Promise<AuthUser> {
     const { json } = await this.jsonRequest(
-      `${this.baseUrlWithoutProject}update`,
+      `${this.baseUrl}accounts:update`,
       user,
       'POST'
     );
 
-    return json;
+    return this.fetchUser(json.localId);
   }
 
   async deleteUser(user: AuthUser): Promise<void> {
-    await this.jsonRequest(`${this.baseUrlWithoutProject}delete`, user, 'POST');
+    await this.jsonRequest(`${this.baseUrl}accounts:delete`, user, 'POST');
   }
 }
 

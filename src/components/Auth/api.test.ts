@@ -1,16 +1,29 @@
 import AuthApi from './api';
-import { AuthUser } from './types';
+import { createFakeUser } from './test_utils';
 
 describe('API', () => {
   const hostAndPort = 'foo.example.com:9002';
   const projectId = 'pelmen-the-project';
 
-  function setup({ mockFetchResult }: { mockFetchResult: unknown }) {
-    jest.spyOn(global, 'fetch').mockImplementation(() =>
-      Promise.resolve(({
+  function setup({
+    mockFetchResult,
+    secondFetchResult,
+  }: {
+    mockFetchResult: unknown;
+    secondFetchResult?: unknown;
+  }) {
+    const fetchSpy = jest.spyOn(global, 'fetch').mockReturnValueOnce(
+      Promise.resolve({
         json: () => mockFetchResult,
-      } as unknown) as Response)
+      } as Response)
     );
+    if (secondFetchResult) {
+      fetchSpy.mockReturnValueOnce(
+        Promise.resolve({
+          json: () => secondFetchResult,
+        } as Response)
+      );
+    }
     return new AuthApi(hostAndPort, projectId);
   }
 
@@ -38,6 +51,7 @@ describe('API', () => {
       },
     });
     const result = await api.fetchUsers();
+
     expect(global.fetch).toHaveBeenCalledWith(
       'http://foo.example.com:9002/identitytoolkit.googleapis.com/v1/projects/pelmen-the-project/accounts:query',
       {
@@ -54,10 +68,15 @@ describe('API', () => {
   });
 
   it('createUser', async () => {
-    const user = { phoneNumber: '+1 689-689-6896' };
+    const user = { phoneNumber: '+1 555-555-0100' };
     const mockFetchResult = { localId: 'pirojok' };
-    const api = setup({ mockFetchResult });
+    const serverUser = { localId: 'pirojok' };
+    const api = setup({
+      mockFetchResult,
+      secondFetchResult: { users: [serverUser] },
+    });
     const result = await api.createUser(user);
+
     expect(global.fetch).toHaveBeenCalledWith(
       'http://foo.example.com:9002/identitytoolkit.googleapis.com/v1/accounts:signUp',
       {
@@ -70,12 +89,12 @@ describe('API', () => {
       }
     );
 
-    expect(result).toEqual(mockFetchResult);
+    expect(result).toEqual({ ...serverUser, password: '' });
   });
 
   it('deleteUser', async () => {
-    const user = { localid: 'pelmeni-the-id' };
-    const mockFetchResult = { localId: 'pirojok' } as AuthUser;
+    const user = createFakeUser({ localId: 'pelmeni-the-id' });
+    const mockFetchResult = { users: [{ localId: 'pirojok' }] };
     const api = setup({ mockFetchResult });
     const result = await api.deleteUser(user);
     expect(global.fetch).toHaveBeenCalledWith(
@@ -94,10 +113,15 @@ describe('API', () => {
   });
 
   it('updateUser', async () => {
-    const user = { phoneNumber: '+1 689-689-6896' };
+    const user = { phoneNumber: '+1 555-555-0100' };
     const mockFetchResult = { localId: 'pirojok' };
-    const api = setup({ mockFetchResult });
+
+    const api = setup({
+      mockFetchResult,
+      secondFetchResult: { users: [mockFetchResult] },
+    });
     const result = await api.updateUser(user);
+
     expect(global.fetch).toHaveBeenCalledWith(
       'http://foo.example.com:9002/identitytoolkit.googleapis.com/v1/accounts:update',
       {
@@ -110,7 +134,7 @@ describe('API', () => {
       }
     );
 
-    expect(result).toEqual(mockFetchResult);
+    expect(result).toEqual({ ...mockFetchResult, password: '' });
   });
 
   it('updateConfig', async () => {

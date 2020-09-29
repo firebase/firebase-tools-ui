@@ -17,7 +17,7 @@ describe('PhoneControl', () => {
 
   it('maps to the appropriate form value', async () => {
     const { getByPlaceholderText, triggerValidation, submit } = setup();
-    const phoneNumber = '+1 689-689-6896';
+    const phoneNumber = '+1 555-555-0100';
 
     const input = getByPlaceholderText('Enter phone number');
     fireEvent.change(input, {
@@ -84,7 +84,7 @@ describe('PhoneControl', () => {
       submit,
     } = setup();
     // Leading "+" missing.
-    const phoneNumber = '1 689-689-6896';
+    const phoneNumber = '1 555-555-0100';
 
     const input = getByPlaceholderText('Enter phone number');
     fireEvent.change(input, {

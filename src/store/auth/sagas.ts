@@ -54,7 +54,7 @@ export function* createUser({ payload }: ReturnType<typeof createUserRequest>) {
   }
   yield put(
     createUserSuccess({
-      user,
+      user: newUser,
     })
   );
 }

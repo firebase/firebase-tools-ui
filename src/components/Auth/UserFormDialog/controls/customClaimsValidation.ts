@@ -9,6 +9,7 @@ const BadRequestError = Error;
 
 /**
  * The code below has been copy-pasted from firebase-tools repo as is.
+ * https://github.com/firebase/firebase-tools/blob/14977a2df4f046c6439167e9037373363db648a2/src/emulator/auth/operations.ts#L1350
  */
 const CUSTOM_ATTRIBUTES_MAX_LENGTH = 1000;
 
