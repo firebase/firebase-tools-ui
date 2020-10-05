@@ -1,56 +1,93 @@
 import produce from 'immer';
 import { Action, createReducer } from 'typesafe-actions';
 
-import { AuthState, AuthUser } from '../../components/Auth/types';
+import {
+  AuthProviderInfo,
+  AuthState,
+  AuthUser,
+} from '../../components/Auth/types';
 import { getUniqueId } from '../../components/Firestore/DocumentEditor/utils';
+import { mapResult } from '../utils';
 import * as authActions from './actions';
 
-const INIT_STATE = { users: [], filter: '' };
+const INIT_STATE = {
+  users: { loading: true },
+  filter: '',
+  allowDuplicateEmails: false,
+};
+
+function populateProviderUserInfo(user: AuthUser): AuthUser {
+  const providerUserInfo: AuthProviderInfo[] = [];
+
+  if (user.phoneNumber) {
+    providerUserInfo.push({ providerId: 'phone' });
+  }
+  if (user.password) {
+    providerUserInfo.push({ providerId: 'password' });
+  }
+  return {
+    ...user,
+    providerUserInfo,
+  };
+}
 
 export const authReducer = createReducer<AuthState, Action>(INIT_STATE)
   .handleAction(
-    authActions.addUser,
+    authActions.createUserSuccess,
     produce((draft, { payload }) => {
-      draft.users.push({
-        createdAt: new Date(),
-        localId: getUniqueId().toString(),
-        disabled: false,
-        ...payload.user,
-      });
+      draft.users = mapResult(draft.users, (users: AuthUser[]) => [
+        ...users,
+        populateProviderUserInfo({
+          createdAt: new Date().getTime().toString(),
+          lastLoginAt: new Date().getTime().toString(),
+          localId: getUniqueId().toString(),
+          disabled: false,
+          ...payload.user,
+        }),
+      ]);
     })
   )
   .handleAction(
-    authActions.updateUser,
-    produce((draft, { payload }) => {
-      draft.users = draft.users.map((user: AuthUser) => {
-        return user.localId === payload.localId
-          ? { ...user, ...payload.user }
-          : user;
-      });
-    })
-  )
-  .handleAction(
-    authActions.clearAllData,
-    produce(draft => {
-      draft.users = [];
-    })
-  )
-  .handleAction(
-    authActions.setUserDisabled,
-    produce((draft, { payload }) => {
-      const user = draft.users.find(
-        (u: AuthUser) => u.localId === payload.localId
+    authActions.updateUserSuccess,
+    produce((draft: AuthState, { payload }) => {
+      draft.users = mapResult(draft.users, users =>
+        users.map((user: AuthUser) => {
+          return user.localId === payload.user.localId
+            ? populateProviderUserInfo({ ...user, ...payload.user })
+            : user;
+        })
       );
-      if (user) {
-        user.disabled = payload.disabled;
-      }
     })
   )
   .handleAction(
-    authActions.deleteUser,
+    authActions.nukeUsersSuccess,
+    produce(draft => {
+      draft.users = mapResult(draft.users, () => []);
+    })
+  )
+  .handleAction(
+    authActions.setAllowDuplicateEmailsSuccess,
     produce((draft, { payload }) => {
-      draft.users = draft.users.filter(
-        (u: AuthUser) => u.localId !== payload.localId
+      draft.allowDuplicateEmails = payload;
+    })
+  )
+  .handleAction(
+    authActions.setUserDisabledSuccess,
+    produce((draft, { payload }) => {
+      draft.users = mapResult(draft.users, (users: AuthUser[]) => {
+        return users.map((u: AuthUser) =>
+          u.localId === payload.localId
+            ? { ...u, disabled: payload.disabled }
+            : u
+        );
+      });
+    })
+  )
+  .handleAction(
+    authActions.deleteUserSuccess,
+    produce((draft, { payload }) => {
+      draft.users = mapResult(draft.users, (users: AuthUser[]) =>
+        users.filter((u: AuthUser) => u.localId !== payload.localId)
       );
     })
   )
@@ -58,5 +95,23 @@ export const authReducer = createReducer<AuthState, Action>(INIT_STATE)
     authActions.updateFilter,
     produce((draft, { payload: { filter } }) => {
       draft.filter = filter;
+    })
+  )
+  .handleAction(
+    authActions.authFetchUsersSuccess,
+    produce((draft: AuthState, { payload }) => {
+      draft.users = {
+        loading: false,
+        result: { data: payload },
+      };
+    })
+  )
+  .handleAction(
+    authActions.authFetchUsersError,
+    produce((draft: AuthState, { payload }) => {
+      draft.users = {
+        loading: false,
+        result: { error: payload },
+      };
     })
   );

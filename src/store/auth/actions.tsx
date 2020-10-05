@@ -1,27 +1,78 @@
 import { createAction } from 'typesafe-actions';
 
-import { AddAuthUserPayload } from '../../components/Auth/types';
+import { AddAuthUserPayload, AuthUser } from '../../components/Auth/types';
 
-export const addUser = createAction('@auth/addUser')<{
+export const createUserRequest = createAction('@auth/CREATE_USER_REQUEST')<{
   user: AddAuthUserPayload;
 }>();
 
-export const updateUser = createAction('@auth/updateUser')<{
+export const createUserSuccess = createAction('@auth/CREATE_USER_SUCCESS')<{
+  user: AuthUser;
+}>();
+
+export const updateUserRequest = createAction('@auth/UPDATE_USER_REQUEST')<{
   user: AddAuthUserPayload;
   localId: string;
 }>();
 
-export const setUserDisabled = createAction('@auth/setUserDisabled')<{
+export const updateUserSuccess = createAction('@auth/UPDATE_USER_SUCCESS')<{
+  user: AuthUser;
+}>();
+
+export const setUserDisabledRequest = createAction(
+  '@auth/SET_USER_DISABLED_REQUEST'
+)<{
   localId: string;
   disabled: boolean;
 }>();
 
-export const deleteUser = createAction('@auth/deleteUser')<{
+export const setUserDisabledSuccess = createAction(
+  '@auth/SET_USER_DISABLED_SUCCESS'
+)<{
+  localId: string;
+  disabled: boolean;
+}>();
+
+export const deleteUserRequest = createAction('@auth/DELETE_USER_REQUEST')<{
   localId: string;
 }>();
 
-export const updateFilter = createAction('@auth/updateFilter')<{
+export const deleteUserSuccess = createAction('@auth/DELETE_USER_SUCCESS')<{
+  localId: string;
+}>();
+
+export const updateFilter = createAction('@auth/UPDATE_FILTER')<{
   filter: string;
 }>();
 
-export const clearAllData = createAction('@auth/clearAll')();
+export const nukeUsersRequest = createAction('@auth/NUKE_USERS_REQUEST')();
+
+export const nukeUsersSuccess = createAction('@auth/NUKE_USERS_SUCCESS')();
+
+export const authFetchUsersRequest = createAction(
+  '@auth/AUTH_FETCH_USERS_REQUEST'
+)();
+
+export const authFetchUsersSuccess = createAction(
+  '@auth/AUTH_FETCH_USERS_SUCCESS'
+)<AuthUser[]>();
+
+export const authFetchUsersError = createAction(
+  '@auth/AUTH_FETCH_USERS_ERROR'
+)<{ message: string }>();
+
+export const setAllowDuplicateEmailsRequest = createAction(
+  '@auth/SET_ALLOW_DUPLICATE_EMAILS_REQUEST'
+)<boolean>();
+
+export const setAllowDuplicateEmailsSuccess = createAction(
+  '@auth/SET_ALLOW_DUPLICATE_EMAILS_SUCCESS'
+)<boolean>();
+
+export const getAllowDuplicateEmailsRequest = createAction(
+  '@auth/GET_ALLOW_DUPLICATE_EMAILS_REQUEST'
+)();
+
+export const getAllowDuplicateEmailsSuccess = createAction(
+  '@auth/GET_ALLOW_DUPLICATE_EMAILS_SUCCESS'
+)<boolean>();

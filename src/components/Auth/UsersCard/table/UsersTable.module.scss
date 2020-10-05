@@ -1,13 +1,35 @@
-.zeroStateWrapper {
-  height: 200px;
+@import '../../../common/color';
+
+.noResultsWrapper {
+  height: 100px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.noResultsWrapper {
-  height: 50px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+// Double selector - for higher specificity to Override rmwc styles.
+.tableWrapper.tableWrapper {
+  // Avoid double borders.
+  margin: -1px;
+  border-radius: 0 0 4px 4px;
+}
+
+// TODO(kirjs): Consider using ThemeProvider instead.
+.disabled {
+  background: $COLOR_WHITE_DISABLED;
+
+  &:hover {
+    // Override RMWC styles.
+    background-color: $COLOR_WHITE_DISABLED !important;
+  }
+
+  :global {
+    .mdc-data-table__cell {
+      color: $COLOR_BLACK_DISABLED;
+    }
+
+    .rmwc-icon {
+      color: $COLOR_BLACK_DISABLED;
+    }
+  }
 }

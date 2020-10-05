@@ -67,7 +67,12 @@ export const FileField: React.FC<FileFieldProps> = ({
       </div>
       <div className="Field-subtext">
         {error ? (
-          <Typography className="Field-tip" use="body2" theme="error">
+          <Typography
+            className="Field-tip"
+            use="body2"
+            theme="error"
+            role="alert"
+          >
             {error}
           </Typography>
         ) : (

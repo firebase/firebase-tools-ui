@@ -1,32 +1,46 @@
 import { Typography } from '@rmwc/typography';
 import React, { useEffect } from 'react';
 import { FormContextValues } from 'react-hook-form/dist/contextTypes';
+import { connect } from 'react-redux';
 
+import { createStructuredSelector } from '../../../../store';
+import { getAllEmails } from '../../../../store/auth/selectors';
 import { Field } from '../../../common/Field';
 import { AddAuthUserPayload } from '../../types';
 import styles from './controls.module.scss';
 
-// Whatwg recommended email regex. see https://html.spec.whatwg.org/multipage/input.html#valid-e-mail-address
-// While input type=email does validation, we have to also do it to show proper error message.
-const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+// Consistent with the Auth JS SDK and the Auth Emulator.
+const EMAIL_REGEX = /^[^@]+@[^@]+$/;
+const PASSWORD_MIN_LENGTH = 6;
 
 function getErrorText(errors: any) {
-  if (errors) {
-    if (errors.email) {
+  if (errors.email) {
+    if (errors.email.type === 'pattern') {
       return 'Invalid email';
     }
-    if (errors.emailpassword) {
-      return 'Both email and password should be present';
+    if (errors.email.type === 'validate') {
+      return 'User with this email already exists';
     }
+  }
+
+  if (errors.emailpassword) {
+    return 'Both email and password should be present';
+  }
+  if (errors.password) {
+    return `Password should be at least ${PASSWORD_MIN_LENGTH} characters`;
   }
 }
 
-export const EmailPassword: React.FC<FormContextValues<AddAuthUserPayload>> = ({
+export type EmailPasswordProps = PropsFromState & { editedUserEmail?: string };
+export const EmailPassword: React.FC<EmailPasswordProps &
+  FormContextValues<AddAuthUserPayload>> = ({
   register,
   watch,
   setError,
   clearError,
   errors,
+  allEmails,
+  editedUserEmail,
 }) => {
   const email = watch('email');
   const password = watch('password');
@@ -36,32 +50,57 @@ export const EmailPassword: React.FC<FormContextValues<AddAuthUserPayload>> = ({
       (email === '' && password === '') ||
       (email !== '' && password !== '')
     ) {
-      clearError('emailpassword');
+      clearError('emailpassword' as any);
     } else {
-      setError('emailpassword', 'both');
+      setError('emailpassword' as any, 'both');
     }
   }, [email, password, clearError, setError]);
 
+  function validate(value: string) {
+    return value === editedUserEmail || !allEmails.has(value);
+  }
+
   return (
     <>
+      <Typography
+        use="body1"
+        tag="div"
+        className={styles.authKindLabel}
+        theme="textPrimaryOnBackground"
+      >
+        Email authentication
+      </Typography>
       <div className={styles.emailWrapper}>
         <Field
           name="email"
-          label="Email/Password (optional)"
-          aria-label="Email"
+          placeholder="Enter email"
+          label="Email"
           type="text"
-          inputRef={register({ pattern: EMAIL_REGEX })}
+          inputRef={register({ validate, pattern: EMAIL_REGEX })}
         />
         <Field
           name="password"
           type="text"
-          aria-label="Password"
-          inputRef={register}
+          label="Password"
+          placeholder="Enter password"
+          inputRef={register({ minLength: PASSWORD_MIN_LENGTH })}
         />
       </div>
-      <Typography className={styles.error} use="body2" theme="error">
+      <Typography
+        className={styles.error}
+        use="body2"
+        role="alert"
+        theme="error"
+      >
         {getErrorText(errors)}
       </Typography>
     </>
   );
 };
+
+export const mapStateToProps = createStructuredSelector({
+  allEmails: getAllEmails,
+});
+export type PropsFromState = ReturnType<typeof mapStateToProps>;
+
+export default connect(mapStateToProps)(EmailPassword);

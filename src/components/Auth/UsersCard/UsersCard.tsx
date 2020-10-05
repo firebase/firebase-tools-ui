@@ -9,7 +9,7 @@ export const UsersCard: React.FC = () => {
   const [showInputUserDialog, setShowInputUserDialog] = useState(false);
 
   return (
-    <Card className="Auth-panels-wrapper">
+    <Card>
       <AuthHeader onOpenNewUserDialog={() => setShowInputUserDialog(true)} />
 
       <UsersTable />

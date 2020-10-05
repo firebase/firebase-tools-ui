@@ -48,7 +48,6 @@ export const AuthFilter: React.FC<AuthFilterProps> = ({
           trailingIcon={
             filter && {
               icon: 'close',
-              tabIndex: 0,
               role: 'button',
               'aria-label': 'clear',
               onClick: clear,
@@ -58,8 +57,8 @@ export const AuthFilter: React.FC<AuthFilterProps> = ({
                   e.keyCode === keycode('enter')
                 ) {
                   clear();
+                  e.preventDefault();
                 }
-                e.preventDefault();
               },
             }
           }
@@ -86,10 +85,8 @@ export interface PropsFromDispatch {
 export const mapDispatchToProps: MapDispatchToPropsFunction<
   PropsFromDispatch,
   {}
-> = dispatch => {
-  return {
-    updateFilter: f => dispatch(updateFilter(f)),
-  };
-};
+> = dispatch => ({
+  updateFilter: f => dispatch(updateFilter(f)),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(AuthFilter);

@@ -2,7 +2,7 @@ import { Dialog, DialogTitle } from '@rmwc/dialog';
 import React from 'react';
 import { MapDispatchToPropsFunction, connect } from 'react-redux';
 
-import { addUser } from '../../../store/auth/actions';
+import { createUserRequest } from '../../../store/auth/actions';
 import { AddAuthUserPayload } from '../types';
 import UserForm from './UserForm';
 
@@ -12,22 +12,22 @@ export interface AddUserDialogProps {
 
 type Props = AddUserDialogProps & PropsFromDispatch;
 
-export const AddUserDialog: React.FC<Props> = ({ onClose, addUser }) => {
+export const AddUserDialog: React.FC<Props> = ({ onClose, createUser }) => {
   // Pre-populate custom attributes to always have one field displayed.
   const user: AddAuthUserPayload = {
     displayName: '',
-    customAttributes: [{ role: '', value: '' }],
   };
 
   return (
     <>
       <Dialog renderToPortal open onClose={onClose}>
-        <DialogTitle>Add user</DialogTitle>
+        <DialogTitle>Add a user</DialogTitle>
         <UserForm
+          isEditing={false}
           onClose={onClose}
           user={user}
           onSave={user => {
-            addUser({ user });
+            createUser({ user });
           }}
         />
       </Dialog>
@@ -36,7 +36,7 @@ export const AddUserDialog: React.FC<Props> = ({ onClose, addUser }) => {
 };
 
 export interface PropsFromDispatch {
-  addUser: typeof addUser;
+  createUser: typeof createUserRequest;
 }
 
 export const mapDispatchToProps: MapDispatchToPropsFunction<
@@ -44,7 +44,7 @@ export const mapDispatchToProps: MapDispatchToPropsFunction<
   {}
 > = dispatch => {
   return {
-    addUser: p => dispatch(addUser(p)),
+    createUser: p => dispatch(createUserRequest(p)),
   };
 };
 

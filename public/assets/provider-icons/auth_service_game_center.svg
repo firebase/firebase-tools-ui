@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="316" height="316" viewBox="9 8 300 300">
+  <defs>
+    <radialGradient id="blueGrad" cx="45%" cy="0%" r="100%">
+      <stop offset="0%" style="stop-color:#4d9afd;stop-opacity:1"/>
+      <stop offset="50%" style="stop-color:#4d9afd;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#64ccfe;stop-opacity:1"/>
+    </radialGradient>
+    <radialGradient id="greenGrad" cx="40%" cy="0%" r="70%">
+      <stop offset="30%" style="stop-color:#95c05c;stop-opacity:1"/>
+      <stop offset="80%" style="stop-color:#47ac62;stop-opacity:1"/>
+    </radialGradient>
+    <radialGradient id="yellowGrad" cx="85%" cy="5%" r="100%" fx="50%" fy="50%">
+      <stop offset="0%" style="stop-color:#f9df00;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#fee925;stop-opacity:1"/>
+    </radialGradient>
+    <radialGradient id="redGrad" cx="50%" cy="0%" r="95%">
+      <stop offset="0%" stop-color="#fe51c0"/>
+      <stop offset="65%" stop-color="#ff3d9b"/>
+      <stop offset="100%" stop-color="#feb33f"/>
+    </radialGradient>
+    <radialGradient id="purpleGrad" cx="50%" cy="40%" r="70%">
+      <stop offset="0%" stop-color="#e82dfe"/>
+      <stop offset="60%" stop-color="#ae45f4"/>
+      <stop offset="100%" stop-color="#b25bf5"/>
+    </radialGradient>
+    <radialGradient id="hiliteGrad" cx="50%" cy="100%" r="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0"/>
+      <stop offset="35%" style="stop-color:#ffffff;stop-opacity:0"/>
+      <stop offset="70%" style="stop-color:#ffffff;stop-opacity:.4"/>
+      <stop offset="90%" style="stop-color:#ffffff;stop-opacity:.9"/>
+      <stop offset="100%" style="stop-color:#ffffff;stop-opacity:1"/>
+    </radialGradient>
+  </defs>
+  <circle stroke="#7525f9" stroke-width="2" fill="url(#purpleGrad)" cx="120" cy="247" r="60" />
+  <circle stroke="#e3c908" stroke-width="2" fill="url(#yellowGrad)" cx="208" cy="101" r="92" />
+  <ellipse cx="208" cy="36" rx="50" ry="25" style="fill:url(#hiliteGrad)"/>
+  <circle stroke="#6280bd" stroke-width="2" fill="url(#blueGrad)" cx="128" cy="129" r="117"/>
+  <path d="M167,19A92,92,0,0,0,149,171,A85,85,0,0,1,245,134,A117,117,0,0,0,167,19Z" fill="url(#greenGrad)"/>
+  <path d="M167,19A92,92,0,0,0,149,171" stroke="#60af91" stroke-width="2" fill="none"/>
+  <circle stroke="#f95183" stroke-width="2" fill="url(#redGrad)" cx="221" cy="216" r="85" />
+  <path d="M140,190A60,60,0,0,1,179,234A117,117,0,0,0,227,191A92,92,0,0,1,149,171A85,85,0,0,0,140,190Z" stroke="#e63e98" stroke-width="2" fill="#e63e98" />
+  <path d="M64,227A117,117,0,0,0,141,245A85,85,0,0,1,140,190A60,60,0,0,0,64,227Z" stroke="#6699f9" stroke-width="2" fill="#9293f8" />
+  <path d="M64 227 A117 117,0,0,0,141 245" stroke="#427cd7" stroke-width="2" fill="none"/>
+  <path d="M87 201 A50 50 0,0,1,152 201 A70 25,0,0,1,151 213 A90 90 0,0,1,87 213 A70 25,0,0,1,87 201 Z"  fill="url(#hiliteGrad)"/>
+  <path d="M140 190 A85 85,0,0,0,141 245 A117 117,0,0,0,179 234 A60 60,0,0,0,140 190 Z" stroke="#f95183" stroke-width="2" fill="#d74285" />
+  <path d="M141 245 A85 85,0,0,0,168 283 A60 60,0,0,0,179 234 A117 117,0,0,1,141 245 Z" stroke="#c9466b" stroke-width="2" fill="#cc4d64" />
+  <path d="M140 190 A60 60,0,0,1,168 283" stroke="#98418c" stroke-width="2" fill="none"/>
+  <path d="M149 171 A92 92,0,0,0,227 191 A117 117,0,0,0,245 134 A85 85,0,0,0,149 171 Z" stroke="#f14e7b" stroke-width="2" fill="#f44f82" />
+  <path d="M 245 134 A 117 117 0,0,1,227 191 A 92 92 0,0,0,282 156 A 85 85 0,0,0,245 134 Z" stroke="#f14e7b" stroke-width="2" fill="#fb5a8f" />
+  <circle stroke="#f95183" stroke-width="2" fill="none" cx="221" cy="216" r="85" />
+  <path d="M60 38 A107 107 0,0,1,196 38 A70 25,0,0,1,195 58 A180 180 0,0,1,61 58 A70 25,0,0,1,60 38 Z" fill="url(#hiliteGrad)"/>
+  <path d="M176 146 A75 75 0,0,1,266 146 A70 25,0,0,1,265 166 A140 140 0,0,1,177 166 A70 25,0,0,1,176 146 Z" fill="url(#hiliteGrad)"/>
+</svg>
+

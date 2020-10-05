@@ -22,36 +22,49 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { createStructuredSelector } from '../../store';
+import {
+  getAuthConfigResult,
+  getAuthUsersResult,
+} from '../../store/auth/selectors';
 import { getProjectIdResult } from '../../store/config/selectors';
-import { handle } from '../../store/utils';
+import { combineData, handle } from '../../store/utils';
 import { EmulatorDisabled } from '../common/EmulatorDisabled';
 import { Spinner } from '../common/Spinner';
+import { OneAccountPerEmailCard } from './OneAccountPerEmailCard/OneAccountPerEmailCard';
 import ClearAll from './UsersCard/ClearAll';
 import UsersCard from './UsersCard/UsersCard';
 
 export const mapStateToProps = createStructuredSelector({
   projectIdResult: getProjectIdResult,
+  authConfigResult: getAuthConfigResult,
+  authUsersResult: getAuthUsersResult,
 });
 
 export type PropsFromState = ReturnType<typeof mapStateToProps>;
 
-export const AuthRoute: React.FC<PropsFromState> = ({ projectIdResult }) => {
-  return handle(projectIdResult, {
-    onNone: () => <Spinner span={12} message="Auth Emulator Loading..." />,
-    onError: () => <AuthRouteDisabled />,
-    onData: ([projectId]) => <Auth projectId={projectId} />,
-  });
+export const AuthRoute: React.FC<PropsFromState> = ({
+  projectIdResult,
+  authConfigResult,
+  authUsersResult,
+}) => {
+  return handle(
+    combineData(projectIdResult, authConfigResult, authUsersResult),
+    {
+      onNone: () => <Spinner span={12} message="Auth Emulator Loading..." />,
+      onError: () => <AuthRouteDisabled />,
+      onData: () => <Auth />,
+    }
+  );
 };
 
-export interface AuthProps {
-  projectId: string;
-}
-
-export const Auth: React.FC<AuthProps> = () => (
+export const Auth: React.FC = () => (
   <GridCell span={12} className="Auth">
     <ClearAll />
     <Elevation z="2" wrap>
       <UsersCard />
+    </Elevation>
+    <Elevation z="2" wrap>
+      <OneAccountPerEmailCard />
     </Elevation>
   </GridCell>
 );

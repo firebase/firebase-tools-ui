@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { RMWCProvider } from '@rmwc/provider';
 import {
   act,
   fireEvent,
@@ -133,18 +134,22 @@ export function makeDeferred<T>(): Deferred<T> {
  *
  * Component is expected to receive resulting form methods as props.
  */
-export const wrapWithForm = <S, T = {}>(
-  Control: React.FC<FormContextValues<T>>,
-  options: UseFormOptions<T>,
-  props: Partial<S> = {}
+export const wrapWithForm = <P, T, F = UseFormOptions<T>>(
+  Control: React.FC<FormContextValues<T> & P>,
+  options: F,
+  props: P
 ) => {
   const submit = jest.fn();
   const FormWrapper = () => {
     const form = useForm<T>(options);
+
     return (
-      <form data-testid="form" onSubmit={form.handleSubmit(submit)}>
-        <Control {...form} {...props} />
-      </form>
+      // Ripples cause "not wrapped in act()" warning.
+      <RMWCProvider ripple={false}>
+        <form data-testid="form" onSubmit={form.handleSubmit(submit)}>
+          <Control {...form} {...props} />
+        </form>
+      </RMWCProvider>
     );
   };
 

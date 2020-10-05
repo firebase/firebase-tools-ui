@@ -1,69 +1,68 @@
-import { Button } from '@rmwc/button';
-import { IconButton } from '@rmwc/icon-button';
 import { Typography } from '@rmwc/typography';
 import React from 'react';
-import { useFieldArray } from 'react-hook-form';
 import { FormContextValues } from 'react-hook-form/dist/contextTypes';
 
 import { Field } from '../../../common/Field';
 import { AddAuthUserPayload } from '../../types';
 import styles from './controls.module.scss';
+import { validateSerializedCustomClaims } from './customClaimsValidation';
+
+function validate(attributes: string) {
+  if (attributes === '') {
+    return true;
+  }
+
+  try {
+    // We're reusing server validation.
+    validateSerializedCustomClaims(attributes);
+    return true;
+  } catch (e) {
+    if (e.message === 'INVALID_CLAIMS') {
+      return 'Custom claims must be a valid JSON object';
+    }
+    if (e.message === 'CLAIMS_TOO_LARGE') {
+      return 'Custom claims length must not exceed 1000 characters';
+    }
+    const forbiddenClaim = e.message.match(/FORBIDDEN_CLAIM : (\w+)$/);
+    if (forbiddenClaim && forbiddenClaim[1]) {
+      return 'Custom claims must not have forbidden key: ' + forbiddenClaim[1];
+    }
+  }
+}
+
+const CUSTOM_ATTRIBUTES_CONTROL_NAME = 'customAttributes';
 
 export const CustomAttributes: React.FC<FormContextValues<
   AddAuthUserPayload
->> = ({ control, register }) => {
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: 'customAttributes',
-  });
-
-  return (
-    <fieldset className={styles.customAttributesWrapper}>
-      <Typography
-        className="Field-label"
-        use="body2"
-        theme="secondary"
-        tag="label"
-      >
-        <legend>Custom Claims</legend>
+>> = ({ errors, register }) => {
+  const label = (
+    <label>
+      <Typography use="subtitle2" tag="div" theme="textPrimaryOnBackground">
+        Custom Claims (optional)
       </Typography>
-      {fields.map((item, index) => (
-        <div role="group" key={item.id}>
-          <Field
-            name={`customAttributes[${index}].role`}
-            inputRef={register({})}
-            placeholder="Role"
-            aria-label="Role"
-            defaultValue={item.role}
-          />
-          <Field
-            name={`customAttributes[${index}].value`}
-            placeholder="Value"
-            aria-label="Value"
-            inputRef={register({})}
-            defaultValue={item.role}
-          />
-          {fields.length > 1 && (
-            <IconButton
-              label="Add field"
-              type="button"
-              aria-label="Remove custom claim"
-              icon="close"
-              onClick={() => {
-                remove(index);
-              }}
-            />
-          )}
-        </div>
-      ))}
-      <Button
-        type="button"
-        onClick={() => {
-          append({});
-        }}
-      >
-        Add another
-      </Button>
-    </fieldset>
+    </label>
+  );
+  return (
+    <div className={styles.customAttributesWrapper}>
+      <Field
+        inputRef={register({ validate })}
+        error={errors[CUSTOM_ATTRIBUTES_CONTROL_NAME]?.message}
+        name={CUSTOM_ATTRIBUTES_CONTROL_NAME}
+        label={label}
+        textarea
+        placeholder={`Enter valid json, e.g. {"role":"admin"}`}
+      />
+      <Typography use="body2">
+        These custom key:value attributes can be used with Rules to implement
+        various access control strategies (e.g. based on roles){' '}
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://firebase.google.com/docs/auth/admin/custom-claims"
+        >
+          Learn more
+        </a>
+      </Typography>
+    </div>
   );
 };

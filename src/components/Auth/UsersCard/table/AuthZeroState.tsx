@@ -1,8 +1,16 @@
+import { Typography } from '@rmwc/typography';
 import React from 'react';
 
 import styles from './UsersTable.module.scss';
 
 export const AuthZeroState: React.FC = () => {
-  // TODO(kirjs): implement the actual zero state.
-  return <div className={styles.zeroStateWrapper}>No users</div>;
+  return (
+    <Typography
+      use="body2"
+      className={styles.noResultsWrapper}
+      theme="textSecondaryOnBackground"
+    >
+      No users for this project yet
+    </Typography>
+  );
 };
