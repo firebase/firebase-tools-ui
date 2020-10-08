@@ -69,7 +69,7 @@ export const UserForm: React.FC<UserFormProps> = ({
         clearAuthUserDialogData();
       }
     },
-    [errors, save]
+    [errors, save, clearAuthUserDialogData]
   );
 
   return (
