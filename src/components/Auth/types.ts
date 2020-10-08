@@ -63,6 +63,7 @@ export interface AuthUser extends AddAuthUserPayload {
 }
 
 export interface AuthState {
+  authUserDialogData?: RemoteResult<AuthUser | undefined>;
   users: RemoteResult<AuthUser[]>;
   filter: string;
   allowDuplicateEmails: boolean;

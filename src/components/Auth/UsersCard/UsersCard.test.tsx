@@ -5,36 +5,46 @@ import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 
 import { AppState } from '../../../store';
+import { setAuthUserDialogData } from '../../../store/auth/actions';
+import { createRemoteDataLoaded } from '../../../store/utils';
 import { waitForDialogsToOpen } from '../../../test_utils';
 import { createFakeAuthStateWithUsers } from '../test_utils';
-import UsersCard from './UsersCard';
+import { UserCardProps, UsersCard } from './UsersCard';
 
 jest.mock('./table/UsersTable');
 jest.mock('./header/AuthFilter');
 
-function setup() {
+function setup(props: Partial<UserCardProps>) {
   const store = configureStore<Pick<AppState, 'auth'>>()({
     auth: createFakeAuthStateWithUsers([]),
   });
 
-  return render(
-    <>
-      <Provider store={store}>
-        <Portal />
-        <UsersCard />
-      </Provider>
-    </>
-  );
+  const setAuthUserDialogData = jest.fn();
+  const allProps = {
+    setAuthUserDialogData,
+    authUserDialogData: undefined,
+    ...props,
+  };
+
+  return {
+    setAuthUserDialogData,
+    ...render(
+      <>
+        <Provider store={store}>
+          <Portal />
+          <UsersCard {...allProps} />
+        </Provider>
+      </>
+    ),
+  };
 }
 
 describe('UsersCard test', () => {
   it('opens "add user" dialog', async () => {
-    const { getByText, queryByRole } = setup();
+    const { getByText, queryByRole } = setup({
+      authUserDialogData: createRemoteDataLoaded(undefined),
+    });
 
-    // Dialog is closed initially
-    expect(queryByRole('alertdialog')).toBeNull();
-
-    fireEvent.click(getByText('Add user'));
     await waitForDialogsToOpen();
 
     // Dialog is open
@@ -44,13 +54,21 @@ describe('UsersCard test', () => {
     getByText('Add a user', { selector: '.mdc-dialog__title' });
   });
 
-  it('closes "add user" dialog when it calles onclose callback', async () => {
-    const { getByText, queryByRole } = setup();
+  it('Triggers appropriate action on "add user" click', async () => {
+    const { getByText, setAuthUserDialogData } = setup({
+      authUserDialogData: undefined,
+    });
 
     fireEvent.click(getByText('Add user'));
-    await waitForDialogsToOpen();
 
-    fireEvent.click(getByText('Cancel'));
+    expect(setAuthUserDialogData).toHaveBeenCalled();
+  });
+
+  it('closes "add user" dialog when it calls onclose callback', async () => {
+    const { queryByRole } = setup({
+      authUserDialogData: undefined,
+    });
+
     // Dialog is closed
     expect(queryByRole('alertdialog')).toBeNull();
   });

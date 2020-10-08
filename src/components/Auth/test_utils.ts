@@ -4,12 +4,13 @@ import { AppState } from '../../store';
 import { createRemoteDataLoaded } from '../../store/utils';
 import { AuthState, AuthUser } from './types';
 
-export function getMockAuthStore() {
+export function getMockAuthStore(state?: Partial<AppState>) {
   return configureStore<Pick<AppState, 'auth'>>()({
     auth: {
       users: { loading: false, result: { data: [] } },
       filter: '',
       allowDuplicateEmails: false,
+      ...state,
     },
   });
 }

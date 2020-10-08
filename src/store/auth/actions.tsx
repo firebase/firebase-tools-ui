@@ -1,6 +1,7 @@
 import { createAction } from 'typesafe-actions';
 
 import { AddAuthUserPayload, AuthUser } from '../../components/Auth/types';
+import { RemoteResult } from '../utils';
 
 export const createUserRequest = createAction('@auth/CREATE_USER_REQUEST')<{
   user: AddAuthUserPayload;
@@ -76,3 +77,19 @@ export const getAllowDuplicateEmailsRequest = createAction(
 export const getAllowDuplicateEmailsSuccess = createAction(
   '@auth/GET_ALLOW_DUPLICATE_EMAILS_SUCCESS'
 )<boolean>();
+
+export const setAuthUserDialogData = createAction(
+  '@auth/SET_AUTH_USER_DIALOG_DATA'
+)<RemoteResult<AuthUser | undefined>>();
+
+export const setAuthUserDialogDataLoading = createAction(
+  '@auth/SET_AUTH_USER_DIALOG_DATA_LOADING'
+)<boolean>();
+
+export const setAuthUserDialogDataError = createAction(
+  '@auth/SET_AUTH_USER_DIALOG_DATA_ERRORS'
+)<string | undefined>();
+
+export const clearAuthUserDialogData = createAction(
+  '@auth/CLEAR_AUTH_USER_DIALOG_DATA'
+)();

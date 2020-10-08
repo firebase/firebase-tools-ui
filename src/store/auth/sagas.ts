@@ -9,6 +9,7 @@ import {
   authFetchUsersError,
   authFetchUsersRequest,
   authFetchUsersSuccess,
+  clearAuthUserDialogData,
   createUserRequest,
   createUserSuccess,
   deleteUserRequest,
@@ -18,6 +19,8 @@ import {
   nukeUsersSuccess,
   setAllowDuplicateEmailsRequest,
   setAllowDuplicateEmailsSuccess,
+  setAuthUserDialogDataError,
+  setAuthUserDialogDataLoading,
   setUserDisabledRequest,
   setUserDisabledSuccess,
   updateUserRequest,
@@ -43,30 +46,51 @@ export function* deleteUser({ payload }: ReturnType<typeof deleteUserRequest>) {
 
 export function* createUser({ payload }: ReturnType<typeof createUserRequest>) {
   const authApi = yield call(configureAuthSaga);
-  const newUser: AuthUser = yield call([authApi, 'createUser'], payload.user);
-  const user = {
-    ...newUser,
-    ...payload.user,
-  };
 
-  if (payload.user.customAttributes) {
-    yield call([authApi, 'updateUser'], user);
+  try {
+    yield put(setAuthUserDialogDataLoading(true));
+
+    const newUser: AuthUser = yield call([authApi, 'createUser'], payload.user);
+
+    const user = {
+      ...newUser,
+      ...payload.user,
+    };
+
+    if (payload.user.customAttributes) {
+      yield call([authApi, 'updateUser'], user);
+    }
+
+    yield put(
+      createUserSuccess({
+        user: newUser,
+      })
+    );
+
+    yield put(clearAuthUserDialogData());
+  } catch (e) {
+    yield put(setAuthUserDialogDataError(e.message));
+  } finally {
+    yield put(setAuthUserDialogDataLoading(false));
   }
-  yield put(
-    createUserSuccess({
-      user: newUser,
-    })
-  );
 }
 
 export function* updateUser({ payload }: ReturnType<typeof updateUserRequest>) {
   const authApi = yield call(configureAuthSaga);
+  try {
+    yield put(setAuthUserDialogDataLoading(true));
+    const user: AuthUser = yield call([authApi, 'updateUser'], {
+      ...payload.user,
+      localId: payload.localId,
+    });
+    yield put(updateUserSuccess({ user: { ...user, ...payload.user } }));
 
-  const user: AuthUser = yield call([authApi, 'updateUser'], {
-    ...payload.user,
-    localId: payload.localId,
-  });
-  yield put(updateUserSuccess({ user: { ...user, ...payload.user } }));
+    yield put(clearAuthUserDialogData());
+  } catch (e) {
+    yield put(setAuthUserDialogDataError(e.message));
+  } finally {
+    yield put(setAuthUserDialogDataLoading(false));
+  }
 }
 
 export function* setUserDisabled({

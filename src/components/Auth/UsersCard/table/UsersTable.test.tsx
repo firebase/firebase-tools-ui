@@ -4,10 +4,8 @@ import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
 
-import {
-  waitForDialogsToOpen,
-  waitForMenuToOpen,
-} from '../../../../test_utils';
+import { createRemoteDataLoaded } from '../../../../store/utils';
+import { waitForMenuToOpen } from '../../../../test_utils';
 import { createFakeUser, getMockAuthStore } from '../../test_utils';
 import { confirmDeleteUser } from './confirmDeleteUser';
 import { UsersTable, UsersTableProps } from './UsersTable';
@@ -34,6 +32,7 @@ describe('UserTable', () => {
       shouldShowZeroResults: false,
       shouldShowZeroState: false,
       setUserDisabled: jest.fn(),
+      setAuthUserDialogData: jest.fn(),
       deleteUser: jest.fn(),
       ...customProps,
     };
@@ -115,20 +114,16 @@ describe('UserTable', () => {
     }
 
     it('edits user', async () => {
-      const { button, queryByRole, getByText } = await getMenuItemByText(
+      const { button, setAuthUserDialogData } = await getMenuItemByText(
         'Edit user'
       );
       await act(async () => {
         fireEvent.click(button);
       });
 
-      await waitForDialogsToOpen();
-
-      // Dialog is open
-      expect(queryByRole('alertdialog')).not.toBeNull();
-
-      // And has appropriate title
-      getByText('Edit User Pirojok', { selector: '.mdc-dialog__title' });
+      expect(setAuthUserDialogData).toHaveBeenCalledWith(
+        createRemoteDataLoaded(fakeUser1)
+      );
     });
 
     it('deletes user', async () => {

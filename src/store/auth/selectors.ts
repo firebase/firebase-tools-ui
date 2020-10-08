@@ -11,6 +11,9 @@ export const getAuthUsers = createSelector(getAuth, (state: AuthState) => {
   return state.users;
 });
 
+export const getAuthUserDialog = createSelector(getAuth, (state: AuthState) => {
+  return state.authUserDialogData;
+});
 export const getAuthUsersResult = createSelector(getAuthUsers, users => {
   return users.result;
 });
