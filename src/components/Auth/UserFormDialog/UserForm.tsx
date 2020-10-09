@@ -16,8 +16,11 @@ import {
   createUserRequest,
   updateUserRequest,
 } from '../../../store/auth/actions';
-import { getAuthUserDialog } from '../../../store/auth/selectors';
-import { hasData, hasError } from '../../../store/utils';
+import {
+  getAuthUserDialog,
+  getCurrentEditedUser,
+} from '../../../store/auth/selectors';
+import { hasError } from '../../../store/utils';
 import { Callout } from '../../common/Callout';
 import { Field } from '../../common/Field';
 import { AddAuthUserPayload } from '../types';
@@ -31,11 +34,8 @@ export const UserForm: React.FC<UserFormProps> = ({
   clearAuthUserDialogData,
   updateUser,
   createUser,
+  user,
 }) => {
-  const user =
-    authUserDialogData && hasData(authUserDialogData!.result)
-      ? authUserDialogData!.result.data
-      : undefined;
   const isEditing = !!user;
 
   const form = useForm<AddAuthUserPayload>({
@@ -56,10 +56,7 @@ export const UserForm: React.FC<UserFormProps> = ({
 
   const { register, handleSubmit, formState, reset, errors } = form;
 
-  const canSubmit =
-    !authUserDialogData?.loading &&
-    formState.isValid &&
-    Object.values(formState.touched).length > 0;
+  const canSubmit = !authUserDialogData?.loading && formState.isValid;
 
   const submit = useCallback(
     (user: AddAuthUserPayload) => {
@@ -130,6 +127,7 @@ export interface PropsFromDispatch {
 
 export const mapStateToProps = createStructuredSelector({
   authUserDialogData: getAuthUserDialog,
+  user: getCurrentEditedUser,
 });
 export type PropsFromState = ReturnType<typeof mapStateToProps>;
 

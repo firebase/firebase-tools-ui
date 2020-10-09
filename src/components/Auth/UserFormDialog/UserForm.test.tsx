@@ -19,6 +19,7 @@ describe('UserForm', () => {
     const clearAuthUserDialogData = jest.fn();
     const props = {
       authUserDialogData: undefined,
+      user: undefined,
       updateUser,
       createUser: createUser,
       clearAuthUserDialogData,
@@ -60,6 +61,7 @@ describe('UserForm', () => {
       clearAuthUserDialogData,
     } = setup({
       authUserDialogData: createRemoteDataLoaded(user),
+      user: user,
     });
 
     // Appropriate title is set
@@ -79,7 +81,7 @@ describe('UserForm', () => {
     expect(clearAuthUserDialogData).toHaveBeenCalled();
   });
 
-  it('calls onCreate on form submit if user is provided', async () => {
+  it('calls onCreate on form submit if user is not provided', async () => {
     const {
       triggerValidation,
       getByText,

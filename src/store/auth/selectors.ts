@@ -3,7 +3,7 @@ import { createSelector } from 'reselect';
 import { AuthState, AuthUser } from '../../components/Auth/types';
 import { getConfigResult } from '../config/selectors';
 import { AppState } from '../index';
-import { map, squashOrDefaut } from '../utils';
+import { hasData, map, squashOrDefaut } from '../utils';
 
 export const getAuth = (state: AppState) => state.auth;
 
@@ -14,6 +14,20 @@ export const getAuthUsers = createSelector(getAuth, (state: AuthState) => {
 export const getAuthUserDialog = createSelector(getAuth, (state: AuthState) => {
   return state.authUserDialogData;
 });
+
+export const getCurrentEditedUser = createSelector(
+  getAuthUserDialog,
+  authUserDialogData => {
+    return authUserDialogData && hasData(authUserDialogData!.result)
+      ? authUserDialogData!.result.data
+      : undefined;
+  }
+);
+
+export const isEditingUser = createSelector(getCurrentEditedUser, user => {
+  return !!user;
+});
+
 export const getAuthUsersResult = createSelector(getAuthUsers, users => {
   return users.result;
 });

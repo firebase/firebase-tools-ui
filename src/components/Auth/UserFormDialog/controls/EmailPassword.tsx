@@ -4,7 +4,7 @@ import { FormContextValues } from 'react-hook-form/dist/contextTypes';
 import { connect } from 'react-redux';
 
 import { createStructuredSelector } from '../../../../store';
-import { getAllEmails } from '../../../../store/auth/selectors';
+import { getAllEmails, isEditingUser } from '../../../../store/auth/selectors';
 import { Field } from '../../../common/Field';
 import { AddAuthUserPayload } from '../../types';
 import styles from './controls.module.scss';
@@ -41,6 +41,7 @@ export const EmailPassword: React.FC<EmailPasswordProps &
   errors,
   allEmails,
   editedUserEmail,
+  isEditing,
 }) => {
   const email = watch('email');
   const password = watch('password');
@@ -48,13 +49,13 @@ export const EmailPassword: React.FC<EmailPasswordProps &
   useEffect(() => {
     if (
       (email === '' && password === '') ||
-      (email !== '' && password !== '')
+      (email !== '' && (password !== '' || isEditing))
     ) {
       clearError('emailpassword' as any);
     } else {
       setError('emailpassword' as any, 'both');
     }
-  }, [email, password, clearError, setError]);
+  }, [email, password, clearError, setError, isEditing]);
 
   function validate(value: string) {
     return value === editedUserEmail || !allEmails.has(value);
@@ -100,6 +101,7 @@ export const EmailPassword: React.FC<EmailPasswordProps &
 
 export const mapStateToProps = createStructuredSelector({
   allEmails: getAllEmails,
+  isEditing: isEditingUser,
 });
 export type PropsFromState = ReturnType<typeof mapStateToProps>;
 
