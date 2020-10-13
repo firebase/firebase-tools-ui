@@ -71,8 +71,8 @@ export const getFilteredUsers = createSelector(
     return users.filter(u => {
       return [u.localId, u.displayName, u.email || '', u.phoneNumber || '']
         .join('\n')
-        .toLocaleLowerCase()
-        .includes(filter.toLocaleLowerCase());
+        .toLocaleUpperCase()
+        .includes(filter.toLocaleUpperCase());
     });
   }
 );
