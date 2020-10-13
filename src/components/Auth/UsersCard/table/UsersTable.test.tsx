@@ -32,7 +32,7 @@ describe('UserTable', () => {
       shouldShowZeroResults: false,
       shouldShowZeroState: false,
       setUserDisabled: jest.fn(),
-      setAuthUserDialogData: jest.fn(),
+      openAuthUserDialog: jest.fn(),
       deleteUser: jest.fn(),
       ...customProps,
     };
@@ -114,14 +114,14 @@ describe('UserTable', () => {
     }
 
     it('edits user', async () => {
-      const { button, setAuthUserDialogData } = await getMenuItemByText(
+      const { button, openAuthUserDialog } = await getMenuItemByText(
         'Edit user'
       );
       await act(async () => {
         fireEvent.click(button);
       });
 
-      expect(setAuthUserDialogData).toHaveBeenCalledWith(
+      expect(openAuthUserDialog).toHaveBeenCalledWith(
         createRemoteDataLoaded(fakeUser1)
       );
     });

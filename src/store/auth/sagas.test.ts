@@ -13,8 +13,7 @@ import {
   nukeUsersSuccess,
   setAllowDuplicateEmailsRequest,
   setAllowDuplicateEmailsSuccess,
-  setAuthUserDialogDataError,
-  setAuthUserDialogDataLoading,
+  setAuthUserDialogLoading,
   setUserDisabledRequest,
   setUserDisabledSuccess,
   updateUserRequest,
@@ -68,7 +67,7 @@ describe('Auth sagas', () => {
 
       expect(gen.next(fakeAuthApi)).toEqual({
         done: false,
-        value: put(setAuthUserDialogDataLoading(true)),
+        value: put(setAuthUserDialogLoading(true)),
       });
 
       expect(gen.next()).toEqual({
@@ -88,13 +87,13 @@ describe('Auth sagas', () => {
 
       expect(gen.next()).toEqual({
         done: false,
-        value: put(setAuthUserDialogDataLoading(false)),
+        value: put(setAuthUserDialogLoading(false)),
       });
 
       expect(gen.next().done).toBe(true);
     });
 
-    it.only('makes a separate ', () => {
+    it('makes a separate ', () => {
       const user = {
         displayName: 'lol',
         customAttributes: '{"a": 1}',
@@ -113,7 +112,7 @@ describe('Auth sagas', () => {
 
       expect(gen.next(fakeAuthApi)).toEqual({
         done: false,
-        value: put(setAuthUserDialogDataLoading(true)),
+        value: put(setAuthUserDialogLoading(true)),
       });
 
       expect(gen.next()).toEqual({
@@ -140,13 +139,13 @@ describe('Auth sagas', () => {
 
       expect(gen.next()).toEqual({
         done: false,
-        value: put(setAuthUserDialogDataLoading(false)),
+        value: put(setAuthUserDialogLoading(false)),
       });
 
       expect(gen.next().done).toBe(true);
     });
 
-    it.only('handles errors', () => {
+    it('handles errors', () => {
       const user = { displayName: 'lol' } as AddAuthUserPayload;
       const errorMessage = 'ops';
       const fakeAuthApi = {
@@ -162,7 +161,7 @@ describe('Auth sagas', () => {
 
       expect(gen.next(fakeAuthApi)).toEqual({
         done: false,
-        value: put(setAuthUserDialogDataLoading(true)),
+        value: put(setAuthUserDialogLoading(true)),
       });
 
       expect(gen.next()).toEqual({
@@ -174,7 +173,41 @@ describe('Auth sagas', () => {
 
       expect(gen.next()).toEqual({
         done: false,
-        value: put(setAuthUserDialogDataLoading(false)),
+        value: put(setAuthUserDialogLoading(false)),
+      });
+
+      expect(gen.next().done).toBe(true);
+    });
+
+    it('does not close the dialog', () => {
+      const user = { displayName: 'lol' } as AddAuthUserPayload;
+      const errorMessage = 'ops';
+      const fakeAuthApi = {
+        createUser: jest.fn(),
+      };
+
+      const gen = createUser(createUserRequest({ user, keepDialogOpen: true }));
+
+      expect(gen.next()).toEqual({
+        done: false,
+        value: call(configureAuthSaga),
+      });
+
+      expect(gen.next(fakeAuthApi)).toEqual({
+        done: false,
+        value: put(setAuthUserDialogLoading(true)),
+      });
+
+      expect(gen.next()).toEqual({
+        done: false,
+        value: call([fakeAuthApi, 'createUser'], user),
+      });
+
+      gen.throw(new Error(errorMessage));
+
+      expect(gen.next()).toEqual({
+        done: false,
+        value: put(setAuthUserDialogLoading(false)),
       });
 
       expect(gen.next().done).toBe(true);
@@ -219,7 +252,7 @@ describe('Auth sagas', () => {
 
       expect(gen.next(fakeAuthApi)).toEqual({
         done: false,
-        value: put(setAuthUserDialogDataLoading(true)),
+        value: put(setAuthUserDialogLoading(true)),
       });
 
       expect(gen.next()).toEqual({
@@ -238,7 +271,7 @@ describe('Auth sagas', () => {
 
       expect(gen.next(fakeAuthApi)).toEqual({
         done: false,
-        value: put(setAuthUserDialogDataLoading(false)),
+        value: put(setAuthUserDialogLoading(false)),
       });
 
       expect(gen.next().done).toBe(true);

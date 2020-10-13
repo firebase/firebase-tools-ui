@@ -15,7 +15,7 @@ import { MapDispatchToPropsFunction, connect } from 'react-redux';
 import { createStructuredSelector } from '../../../../store';
 import {
   deleteUserRequest,
-  setAuthUserDialogData,
+  openAuthUserDialog,
   setUserDisabledRequest,
 } from '../../../../store/auth/actions';
 import {
@@ -114,7 +114,7 @@ export const UsersTable: React.FC<UsersTableProps> = ({
   setUserDisabled,
   deleteUser,
   shouldShowTable,
-  setAuthUserDialogData,
+  openAuthUserDialog,
   shouldShowZeroResults,
   shouldShowZeroState,
 }) => {
@@ -138,7 +138,7 @@ export const UsersTable: React.FC<UsersTableProps> = ({
                   key={user.localId}
                   user={user}
                   onEditUser={() => {
-                    setAuthUserDialogData(createRemoteDataLoaded(user));
+                    openAuthUserDialog(createRemoteDataLoaded(user));
                   }}
                   toggleUserDisabled={() => {
                     setUserDisabled({
@@ -174,7 +174,7 @@ export type PropsFromStore = ReturnType<typeof mapStateToProps>;
 export interface PropsFromDispatch {
   setUserDisabled: typeof setUserDisabledRequest;
   deleteUser: typeof deleteUserRequest;
-  setAuthUserDialogData: typeof setAuthUserDialogData;
+  openAuthUserDialog: typeof openAuthUserDialog;
 }
 
 export const mapDispatchToProps: MapDispatchToPropsFunction<
@@ -184,8 +184,8 @@ export const mapDispatchToProps: MapDispatchToPropsFunction<
   return {
     setUserDisabled: d => dispatch(setUserDisabledRequest(d)),
     deleteUser: d => dispatch(deleteUserRequest(d)),
-    setAuthUserDialogData: (data: RemoteResult<AuthUser | undefined>) =>
-      dispatch(setAuthUserDialogData(data)),
+    openAuthUserDialog: (data: RemoteResult<AuthUser | undefined>) =>
+      dispatch(openAuthUserDialog(data)),
   };
 };
 

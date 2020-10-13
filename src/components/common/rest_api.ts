@@ -52,7 +52,7 @@ export abstract class RestApi {
     const json = await res.json();
 
     if (res.status >= 400 && res.status < 600) {
-      throw new ResponseError(await res.text(), res, json);
+      throw new ResponseError(await json.error.message, res, json);
     }
 
     return { res, json };
@@ -71,7 +71,7 @@ export abstract class RestApi {
     const json = await res.json();
 
     if (res.status >= 400 && res.status < 600) {
-      throw new ResponseError(await res.text(), res, json);
+      throw new ResponseError(await json.error.message, res, json);
     }
 
     return { res, json };

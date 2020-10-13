@@ -3,7 +3,7 @@ import React from 'react';
 import { MapDispatchToPropsFunction, connect } from 'react-redux';
 
 import { createStructuredSelector } from '../../../store';
-import { setAuthUserDialogData } from '../../../store/auth/actions';
+import { openAuthUserDialog } from '../../../store/auth/actions';
 import { getAuthUserDialog } from '../../../store/auth/selectors';
 import { RemoteResult, createRemoteDataLoaded } from '../../../store/utils';
 import { AuthUser } from '../types';
@@ -13,14 +13,14 @@ import UsersTable from './table/UsersTable';
 
 export type UserCardProps = PropsFromDispatch & PropsFromState;
 export const UsersCard: React.FC<UserCardProps> = ({
-  setAuthUserDialogData,
+  openAuthUserDialog,
   authUserDialogData,
 }) => {
   return (
     <Card>
       <AuthHeader
         onOpenNewUserDialog={() =>
-          setAuthUserDialogData(createRemoteDataLoaded(undefined))
+          openAuthUserDialog(createRemoteDataLoaded(undefined))
         }
       />
       <UsersTable />
@@ -30,7 +30,7 @@ export const UsersCard: React.FC<UserCardProps> = ({
 };
 
 export interface PropsFromDispatch {
-  setAuthUserDialogData: typeof setAuthUserDialogData;
+  openAuthUserDialog: typeof openAuthUserDialog;
 }
 
 export const mapStateToProps = createStructuredSelector({
@@ -43,8 +43,8 @@ export const mapDispatchToProps: MapDispatchToPropsFunction<
   {}
 > = dispatch => {
   return {
-    setAuthUserDialogData: (data: RemoteResult<AuthUser | undefined>) =>
-      dispatch(setAuthUserDialogData(data)),
+    openAuthUserDialog: (data: RemoteResult<AuthUser | undefined>) =>
+      dispatch(openAuthUserDialog(data)),
   };
 };
 

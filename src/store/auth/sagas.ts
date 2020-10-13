@@ -19,8 +19,8 @@ import {
   nukeUsersSuccess,
   setAllowDuplicateEmailsRequest,
   setAllowDuplicateEmailsSuccess,
-  setAuthUserDialogDataError,
-  setAuthUserDialogDataLoading,
+  setAuthUserDialogError,
+  setAuthUserDialogLoading,
   setUserDisabledRequest,
   setUserDisabledSuccess,
   updateUserRequest,
@@ -48,7 +48,7 @@ export function* createUser({ payload }: ReturnType<typeof createUserRequest>) {
   const authApi = yield call(configureAuthSaga);
 
   try {
-    yield put(setAuthUserDialogDataLoading(true));
+    yield put(setAuthUserDialogLoading(true));
 
     const newUser: AuthUser = yield call([authApi, 'createUser'], payload.user);
 
@@ -67,29 +67,30 @@ export function* createUser({ payload }: ReturnType<typeof createUserRequest>) {
       })
     );
 
-    yield put(clearAuthUserDialogData());
+    if (!payload.keepDialogOpen) {
+      yield put(clearAuthUserDialogData());
+    }
   } catch (e) {
-    yield put(setAuthUserDialogDataError(e.message));
+    yield put(setAuthUserDialogError(e.message));
   } finally {
-    yield put(setAuthUserDialogDataLoading(false));
+    yield put(setAuthUserDialogLoading(false));
   }
 }
 
 export function* updateUser({ payload }: ReturnType<typeof updateUserRequest>) {
   const authApi = yield call(configureAuthSaga);
   try {
-    yield put(setAuthUserDialogDataLoading(true));
+    yield put(setAuthUserDialogLoading(true));
     const user: AuthUser = yield call([authApi, 'updateUser'], {
       ...payload.user,
       localId: payload.localId,
     });
     yield put(updateUserSuccess({ user: { ...user, ...payload.user } }));
-
     yield put(clearAuthUserDialogData());
   } catch (e) {
-    yield put(setAuthUserDialogDataError(e.message));
+    yield put(setAuthUserDialogError(e.message));
   } finally {
-    yield put(setAuthUserDialogDataLoading(false));
+    yield put(setAuthUserDialogLoading(false));
   }
 }
 

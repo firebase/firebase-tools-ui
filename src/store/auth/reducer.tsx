@@ -79,13 +79,13 @@ export const authReducer = createReducer<AuthState, Action>(INIT_STATE)
     })
   )
   .handleAction(
-    authActions.setAuthUserDialogData,
+    authActions.openAuthUserDialog,
     produce((draft, { payload: authUserDialogData }) => {
       draft.authUserDialogData = authUserDialogData;
     })
   )
   .handleAction(
-    authActions.setAuthUserDialogDataLoading,
+    authActions.setAuthUserDialogLoading,
     produce((draft, { payload: loading }) => {
       if (draft.authUserDialogData) {
         draft.authUserDialogData.loading = loading;
@@ -93,7 +93,7 @@ export const authReducer = createReducer<AuthState, Action>(INIT_STATE)
     })
   )
   .handleAction(
-    authActions.setAuthUserDialogDataError,
+    authActions.setAuthUserDialogError,
     produce((draft, { payload: error }) => {
       if (draft.authUserDialogData && draft.authUserDialogData.result) {
         draft.authUserDialogData.result.error = error;

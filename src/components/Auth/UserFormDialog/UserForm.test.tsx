@@ -22,7 +22,7 @@ describe('UserForm', () => {
       user: undefined,
       updateUser,
       createUser: createUser,
-      clearAuthUserDialogData,
+      clearAuthUserDialogData: jest.fn(),
       ...testProps,
     };
     const methods = render(
@@ -53,13 +53,7 @@ describe('UserForm', () => {
       phoneNumber,
     });
 
-    const {
-      triggerValidation,
-      getByText,
-      updateUser,
-      queryByText,
-      clearAuthUserDialogData,
-    } = setup({
+    const { triggerValidation, getByText, updateUser, queryByText } = setup({
       authUserDialogData: createRemoteDataLoaded(user),
       user: user,
     });
@@ -78,17 +72,12 @@ describe('UserForm', () => {
         phoneNumber,
       }),
     });
-    expect(clearAuthUserDialogData).toHaveBeenCalled();
   });
 
   it('calls onCreate on form submit if user is not provided', async () => {
-    const {
-      triggerValidation,
-      getByText,
-      getByLabelText,
-      createUser,
-      clearAuthUserDialogData,
-    } = setup({});
+    const { triggerValidation, getByText, getByLabelText, createUser } = setup(
+      {}
+    );
 
     expect(createUser).not.toHaveBeenCalled();
 
@@ -105,18 +94,16 @@ describe('UserForm', () => {
 
     await triggerValidation();
 
-    expect(createUser).toHaveBeenCalled();
-    expect(clearAuthUserDialogData).toHaveBeenCalled();
+    expect(createUser).toHaveBeenCalledWith({
+      keepDialogOpen: undefined,
+      user: jasmine.objectContaining({ phoneNumber: '+1 555-555-0100' }),
+    });
   });
 
   it('calls onCreate, but does not close the form when "create and new" clicked', async () => {
-    const {
-      triggerValidation,
-      getByLabelText,
-      getByText,
-      createUser,
-      clearAuthUserDialogData,
-    } = setup({});
+    const { triggerValidation, getByLabelText, getByText, createUser } = setup(
+      {}
+    );
 
     expect(createUser).not.toHaveBeenCalled();
 
@@ -135,8 +122,10 @@ describe('UserForm', () => {
       await fireEvent.click(getByText('Save and create another'));
     });
 
-    expect(createUser).toHaveBeenCalled();
-    expect(clearAuthUserDialogData).toHaveBeenCalled();
+    expect(createUser).toHaveBeenCalledWith({
+      keepDialogOpen: true,
+      user: jasmine.objectContaining({ phoneNumber: '+1 555-555-0100' }),
+    });
   });
 
   it('does not call onSave on form submit if there are errors', async () => {

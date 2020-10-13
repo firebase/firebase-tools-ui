@@ -5,6 +5,7 @@ import { RemoteResult } from '../utils';
 
 export const createUserRequest = createAction('@auth/CREATE_USER_REQUEST')<{
   user: AddAuthUserPayload;
+  keepDialogOpen?: boolean;
 }>();
 
 export const createUserSuccess = createAction('@auth/CREATE_USER_SUCCESS')<{
@@ -78,15 +79,15 @@ export const getAllowDuplicateEmailsSuccess = createAction(
   '@auth/GET_ALLOW_DUPLICATE_EMAILS_SUCCESS'
 )<boolean>();
 
-export const setAuthUserDialogData = createAction(
+export const openAuthUserDialog = createAction(
   '@auth/SET_AUTH_USER_DIALOG_DATA'
 )<RemoteResult<AuthUser | undefined>>();
 
-export const setAuthUserDialogDataLoading = createAction(
+export const setAuthUserDialogLoading = createAction(
   '@auth/SET_AUTH_USER_DIALOG_DATA_LOADING'
 )<boolean>();
 
-export const setAuthUserDialogDataError = createAction(
+export const setAuthUserDialogError = createAction(
   '@auth/SET_AUTH_USER_DIALOG_DATA_ERRORS'
 )<string | undefined>();
 

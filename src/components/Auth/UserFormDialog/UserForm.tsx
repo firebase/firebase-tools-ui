@@ -37,6 +37,7 @@ export const UserForm: React.FC<UserFormProps> = ({
   user,
 }) => {
   const isEditing = !!user;
+  const localId = user?.localId!;
 
   const form = useForm<AddAuthUserPayload>({
     defaultValues: user,
@@ -44,14 +45,14 @@ export const UserForm: React.FC<UserFormProps> = ({
   });
 
   const save = useCallback(
-    (newUser: AddAuthUserPayload) => {
+    (user: AddAuthUserPayload, keepDialogOpen?: boolean) => {
       if (isEditing) {
-        updateUser({ user: newUser, localId: user?.localId! });
+        updateUser({ user, localId });
       } else {
-        createUser({ user: newUser });
+        createUser({ user, keepDialogOpen });
       }
     },
-    [isEditing, updateUser, createUser, user]
+    [isEditing, updateUser, createUser, localId]
   );
 
   const { register, handleSubmit, formState, reset, errors } = form;
@@ -63,10 +64,9 @@ export const UserForm: React.FC<UserFormProps> = ({
       // Take into account multi-field errors.
       if (Object.values(errors).length === 0) {
         save(user);
-        clearAuthUserDialogData();
       }
     },
-    [errors, save, clearAuthUserDialogData]
+    [errors, save]
   );
 
   return (
@@ -90,7 +90,9 @@ export const UserForm: React.FC<UserFormProps> = ({
           <CustomAttributes {...form} />
           <SignInMethod {...form} user={user} />
           {hasError(authUserDialogData?.result) && (
-            <Callout type="warning">Unknown server error</Callout>
+            <Callout type="warning">
+              Error: {authUserDialogData?.result.error}
+            </Callout>
           )}
         </DialogContent>
         <DialogActions>
@@ -100,7 +102,7 @@ export const UserForm: React.FC<UserFormProps> = ({
           {!isEditing && (
             <Button
               onClick={handleSubmit(result => {
-                save(result);
+                save(result, /* keepDialogOpen */ true);
                 reset(user);
               })}
               disabled={!canSubmit}

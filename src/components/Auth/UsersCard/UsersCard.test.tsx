@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 
 import { AppState } from '../../../store';
-import { setAuthUserDialogData } from '../../../store/auth/actions';
+import { openAuthUserDialog } from '../../../store/auth/actions';
 import { createRemoteDataLoaded } from '../../../store/utils';
 import { waitForDialogsToOpen } from '../../../test_utils';
 import { createFakeAuthStateWithUsers } from '../test_utils';
@@ -19,15 +19,15 @@ function setup(props: Partial<UserCardProps>) {
     auth: createFakeAuthStateWithUsers([]),
   });
 
-  const setAuthUserDialogData = jest.fn();
+  const openAuthUserDialog = jest.fn();
   const allProps = {
-    setAuthUserDialogData,
+    openAuthUserDialog,
     authUserDialogData: undefined,
     ...props,
   };
 
   return {
-    setAuthUserDialogData,
+    openAuthUserDialog,
     ...render(
       <>
         <Provider store={store}>
@@ -55,13 +55,13 @@ describe('UsersCard test', () => {
   });
 
   it('Triggers appropriate action on "add user" click', async () => {
-    const { getByText, setAuthUserDialogData } = setup({
+    const { getByText, openAuthUserDialog } = setup({
       authUserDialogData: undefined,
     });
 
     fireEvent.click(getByText('Add user'));
 
-    expect(setAuthUserDialogData).toHaveBeenCalled();
+    expect(openAuthUserDialog).toHaveBeenCalled();
   });
 
   it('closes "add user" dialog when it calls onclose callback', async () => {

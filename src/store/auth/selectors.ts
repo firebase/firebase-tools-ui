@@ -18,8 +18,8 @@ export const getAuthUserDialog = createSelector(getAuth, (state: AuthState) => {
 export const getCurrentEditedUser = createSelector(
   getAuthUserDialog,
   authUserDialogData => {
-    return authUserDialogData && hasData(authUserDialogData!.result)
-      ? authUserDialogData!.result.data
+    return authUserDialogData && hasData(authUserDialogData.result)
+      ? authUserDialogData.result.data
       : undefined;
   }
 );
@@ -71,7 +71,8 @@ export const getFilteredUsers = createSelector(
     return users.filter(u => {
       return [u.localId, u.displayName, u.email || '', u.phoneNumber || '']
         .join('\n')
-        .includes(filter);
+        .toLocaleLowerCase()
+        .includes(filter.toLocaleLowerCase());
     });
   }
 );
