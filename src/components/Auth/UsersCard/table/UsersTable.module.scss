@@ -17,19 +17,10 @@
 // TODO(kirjs): Consider using ThemeProvider instead.
 .disabled {
   background: $COLOR_WHITE_DISABLED;
+  opacity: 0.3;
 
   &:hover {
     // Override RMWC styles.
-    background-color: $COLOR_WHITE_DISABLED !important;
-  }
-
-  :global {
-    .mdc-data-table__cell {
-      color: $COLOR_BLACK_DISABLED;
-    }
-
-    .rmwc-icon {
-      color: $COLOR_BLACK_DISABLED;
-    }
+    background-color: transparent !important;
   }
 }
