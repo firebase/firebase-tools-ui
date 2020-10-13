@@ -12,6 +12,7 @@ describe('EmailPassword', () => {
     props: EmailPasswordProps = {
       allEmails: new Set(),
       editedUserEmail: undefined,
+      isEditing: false,
     }
   ) {
     return wrapWithForm(EmailPassword, { defaultValues }, props);
@@ -38,6 +39,18 @@ describe('EmailPassword', () => {
     it('is invalid if just email is present', () => {
       const { getByText } = setup({ email: validEmail, password: '' });
       getByText(errorText);
+    });
+
+    it('is valid if just email is present in editing mode', () => {
+      const { queryByText } = setup(
+        { email: validEmail, password: '' },
+        {
+          allEmails: new Set(),
+          editedUserEmail: undefined,
+          isEditing: true,
+        }
+      );
+      expect(queryByText(errorText)).toBeNull();
     });
   });
 

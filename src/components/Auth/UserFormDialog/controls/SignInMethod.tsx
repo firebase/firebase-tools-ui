@@ -21,10 +21,10 @@ export const SignInMethod: React.FC<SignInMethodProps &
   const phoneNumber = watch('phoneNumber');
 
   useEffect(() => {
-    const hasEmailPassword = email !== '' && password !== '';
+    const hasEmail = email !== '';
     const hasPhone = !!phoneNumber;
 
-    if (hasEmailPassword || hasPhone) {
+    if (hasEmail || hasPhone) {
       // According to docs ClearError should accept arbitrary key
       // to allow cross-field validation, but it's not the case here for some
       // reason.
@@ -35,9 +35,7 @@ export const SignInMethod: React.FC<SignInMethodProps &
   }, [email, password, clearError, setError, phoneNumber, errors]);
 
   const isTouched =
-    formState.touched['email'] ||
-    formState.touched['password'] ||
-    formState.touched['phoneNumber'];
+    formState.touched['email'] || formState.touched['phoneNumber'];
   const isOnlyError =
     ERROR_AT_LEAST_ONE_METHOD_REQUIRED in errors &&
     Object.values(errors).length === 1;

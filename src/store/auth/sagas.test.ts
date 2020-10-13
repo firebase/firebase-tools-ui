@@ -1,10 +1,10 @@
-import { call, getContext, put, select, setContext } from 'redux-saga/effects';
+import { call, put, select } from 'redux-saga/effects';
 
-import AuthApi from '../../components/Auth/api';
 import { AddAuthUserPayload, AuthUser } from '../../components/Auth/types';
 import { getProjectIdResult } from '../config/selectors';
 import {
   authFetchUsersSuccess,
+  clearAuthUserDialogData,
   createUserRequest,
   createUserSuccess,
   deleteUserRequest,
@@ -13,6 +13,7 @@ import {
   nukeUsersSuccess,
   setAllowDuplicateEmailsRequest,
   setAllowDuplicateEmailsSuccess,
+  setAuthUserDialogLoading,
   setUserDisabledRequest,
   setUserDisabledSuccess,
   updateUserRequest,
@@ -58,17 +59,155 @@ describe('Auth sagas', () => {
       const user = { displayName: 'lol' } as AddAuthUserPayload;
       const fakeAuthApi = { createUser: jest.fn() };
       const gen = createUser(createUserRequest({ user }));
+
       expect(gen.next()).toEqual({
         done: false,
         value: call(configureAuthSaga),
       });
+
       expect(gen.next(fakeAuthApi)).toEqual({
+        done: false,
+        value: put(setAuthUserDialogLoading(true)),
+      });
+
+      expect(gen.next()).toEqual({
         done: false,
         value: call([fakeAuthApi, 'createUser'], user),
       });
+
       expect(gen.next(user)).toEqual({
         done: false,
         value: put(createUserSuccess({ user })),
+      });
+
+      expect(gen.next()).toEqual({
+        done: false,
+        value: put(clearAuthUserDialogData()),
+      });
+
+      expect(gen.next()).toEqual({
+        done: false,
+        value: put(setAuthUserDialogLoading(false)),
+      });
+
+      expect(gen.next().done).toBe(true);
+    });
+
+    it('makes a separate ', () => {
+      const user = {
+        displayName: 'lol',
+        customAttributes: '{"a": 1}',
+      } as AddAuthUserPayload;
+      const fakeAuthApi = {
+        createUser: jest.fn(),
+        updateUser: jest.fn(),
+      };
+
+      const gen = createUser(createUserRequest({ user }));
+
+      expect(gen.next()).toEqual({
+        done: false,
+        value: call(configureAuthSaga),
+      });
+
+      expect(gen.next(fakeAuthApi)).toEqual({
+        done: false,
+        value: put(setAuthUserDialogLoading(true)),
+      });
+
+      expect(gen.next()).toEqual({
+        done: false,
+        value: call([fakeAuthApi, 'createUser'], user),
+      });
+
+      const newUser = { localId: 'lol' } as AuthUser;
+
+      expect(gen.next(newUser)).toEqual({
+        done: false,
+        value: call([fakeAuthApi, 'updateUser'], { ...user, ...newUser }),
+      });
+
+      expect(gen.next()).toEqual({
+        done: false,
+        value: put(createUserSuccess({ user: newUser })),
+      });
+
+      expect(gen.next()).toEqual({
+        done: false,
+        value: put(clearAuthUserDialogData()),
+      });
+
+      expect(gen.next()).toEqual({
+        done: false,
+        value: put(setAuthUserDialogLoading(false)),
+      });
+
+      expect(gen.next().done).toBe(true);
+    });
+
+    it('handles errors', () => {
+      const user = { displayName: 'lol' } as AddAuthUserPayload;
+      const errorMessage = 'ops';
+      const fakeAuthApi = {
+        createUser: jest.fn(),
+      };
+
+      const gen = createUser(createUserRequest({ user }));
+
+      expect(gen.next()).toEqual({
+        done: false,
+        value: call(configureAuthSaga),
+      });
+
+      expect(gen.next(fakeAuthApi)).toEqual({
+        done: false,
+        value: put(setAuthUserDialogLoading(true)),
+      });
+
+      expect(gen.next()).toEqual({
+        done: false,
+        value: call([fakeAuthApi, 'createUser'], user),
+      });
+
+      gen.throw(new Error(errorMessage));
+
+      expect(gen.next()).toEqual({
+        done: false,
+        value: put(setAuthUserDialogLoading(false)),
+      });
+
+      expect(gen.next().done).toBe(true);
+    });
+
+    it('does not close the dialog', () => {
+      const user = { displayName: 'lol' } as AddAuthUserPayload;
+      const errorMessage = 'ops';
+      const fakeAuthApi = {
+        createUser: jest.fn(),
+      };
+
+      const gen = createUser(createUserRequest({ user, keepDialogOpen: true }));
+
+      expect(gen.next()).toEqual({
+        done: false,
+        value: call(configureAuthSaga),
+      });
+
+      expect(gen.next(fakeAuthApi)).toEqual({
+        done: false,
+        value: put(setAuthUserDialogLoading(true)),
+      });
+
+      expect(gen.next()).toEqual({
+        done: false,
+        value: call([fakeAuthApi, 'createUser'], user),
+      });
+
+      gen.throw(new Error(errorMessage));
+
+      expect(gen.next()).toEqual({
+        done: false,
+        value: put(setAuthUserDialogLoading(false)),
       });
 
       expect(gen.next().done).toBe(true);
@@ -110,13 +249,29 @@ describe('Auth sagas', () => {
         done: false,
         value: call(configureAuthSaga),
       });
+
       expect(gen.next(fakeAuthApi)).toEqual({
+        done: false,
+        value: put(setAuthUserDialogLoading(true)),
+      });
+
+      expect(gen.next()).toEqual({
         done: false,
         value: call([fakeAuthApi, 'updateUser'], newUser),
       });
       expect(gen.next(newUser)).toEqual({
         done: false,
         value: put(updateUserSuccess({ user: newUser })),
+      });
+
+      expect(gen.next()).toEqual({
+        done: false,
+        value: put(clearAuthUserDialogData()),
+      });
+
+      expect(gen.next(fakeAuthApi)).toEqual({
+        done: false,
+        value: put(setAuthUserDialogLoading(false)),
       });
 
       expect(gen.next().done).toBe(true);

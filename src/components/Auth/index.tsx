@@ -30,7 +30,7 @@ import { getProjectIdResult } from '../../store/config/selectors';
 import { combineData, handle } from '../../store/utils';
 import { EmulatorDisabled } from '../common/EmulatorDisabled';
 import { Spinner } from '../common/Spinner';
-import { OneAccountPerEmailCard } from './OneAccountPerEmailCard/OneAccountPerEmailCard';
+import OneAccountPerEmailCard from './OneAccountPerEmailCard/OneAccountPerEmailCard';
 import ClearAll from './UsersCard/ClearAll';
 import UsersCard from './UsersCard/UsersCard';
 

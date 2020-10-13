@@ -1,11 +1,7 @@
 import produce from 'immer';
 import { Action, createReducer } from 'typesafe-actions';
 
-import {
-  AuthProviderInfo,
-  AuthState,
-  AuthUser,
-} from '../../components/Auth/types';
+import { AuthState, AuthUser } from '../../components/Auth/types';
 import { getUniqueId } from '../../components/Firestore/DocumentEditor/utils';
 import { mapResult } from '../utils';
 import * as authActions from './actions';
@@ -16,34 +12,19 @@ const INIT_STATE = {
   allowDuplicateEmails: false,
 };
 
-function populateProviderUserInfo(user: AuthUser): AuthUser {
-  const providerUserInfo: AuthProviderInfo[] = [];
-
-  if (user.phoneNumber) {
-    providerUserInfo.push({ providerId: 'phone' });
-  }
-  if (user.password) {
-    providerUserInfo.push({ providerId: 'password' });
-  }
-  return {
-    ...user,
-    providerUserInfo,
-  };
-}
-
 export const authReducer = createReducer<AuthState, Action>(INIT_STATE)
   .handleAction(
     authActions.createUserSuccess,
     produce((draft, { payload }) => {
       draft.users = mapResult(draft.users, (users: AuthUser[]) => [
         ...users,
-        populateProviderUserInfo({
+        {
           createdAt: new Date().getTime().toString(),
           lastLoginAt: new Date().getTime().toString(),
           localId: getUniqueId().toString(),
           disabled: false,
           ...payload.user,
-        }),
+        },
       ]);
     })
   )
@@ -53,7 +34,7 @@ export const authReducer = createReducer<AuthState, Action>(INIT_STATE)
       draft.users = mapResult(draft.users, users =>
         users.map((user: AuthUser) => {
           return user.localId === payload.user.localId
-            ? populateProviderUserInfo({ ...user, ...payload.user })
+            ? { ...user, ...payload.user }
             : user;
         })
       );
@@ -95,6 +76,34 @@ export const authReducer = createReducer<AuthState, Action>(INIT_STATE)
     authActions.updateFilter,
     produce((draft, { payload: { filter } }) => {
       draft.filter = filter;
+    })
+  )
+  .handleAction(
+    authActions.openAuthUserDialog,
+    produce((draft, { payload: authUserDialogData }) => {
+      draft.authUserDialogData = authUserDialogData;
+    })
+  )
+  .handleAction(
+    authActions.setAuthUserDialogLoading,
+    produce((draft, { payload: loading }) => {
+      if (draft.authUserDialogData) {
+        draft.authUserDialogData.loading = loading;
+      }
+    })
+  )
+  .handleAction(
+    authActions.setAuthUserDialogError,
+    produce((draft, { payload: error }) => {
+      if (draft.authUserDialogData && draft.authUserDialogData.result) {
+        draft.authUserDialogData.result.error = error;
+      }
+    })
+  )
+  .handleAction(
+    authActions.clearAuthUserDialogData,
+    produce(draft => {
+      draft.authUserDialogData = undefined;
     })
   )
   .handleAction(
