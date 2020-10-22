@@ -23,6 +23,7 @@ const importUser = (user: AuthUser & ApiAuthUserFields) => {
   return {
     password: match ? match[1] : '',
     ...user,
+    providerUserInfo: user.providerUserInfo || [],
   };
 };
 

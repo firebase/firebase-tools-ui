@@ -64,7 +64,13 @@ describe('API', () => {
       }
     );
 
-    expect(result).toEqual([{ ...fakeUserInfo, password }]);
+    expect(result).toEqual([
+      {
+        ...fakeUserInfo,
+        password,
+        providerUserInfo: [],
+      },
+    ]);
   });
 
   it('createUser', async () => {
@@ -89,7 +95,11 @@ describe('API', () => {
       }
     );
 
-    expect(result).toEqual({ ...serverUser, password: '' });
+    expect(result).toEqual({
+      ...serverUser,
+      password: '',
+      providerUserInfo: [],
+    });
   });
 
   it('deleteUser', async () => {
@@ -134,7 +144,11 @@ describe('API', () => {
       }
     );
 
-    expect(result).toEqual({ ...mockFetchResult, password: '' });
+    expect(result).toEqual({
+      ...mockFetchResult,
+      password: '',
+      providerUserInfo: [],
+    });
   });
 
   it('updateConfig', async () => {
