@@ -91,3 +91,20 @@
     @include elevation.elevation(9);
   }
 }
+
+/**
+ * The hack below is needed to track autofill event on inputs.
+ * Having empty animation for autofill triggers onAnimationStart event
+ * at the appropriate time to handle the result.
+ *
+ * See also: FieldWithAutocompleteHack.
+ */
+input:-webkit-autofill {
+  animation-duration: 9999s;
+  animation-name: input-a;
+}
+
+@keyframes input-a {
+  from {
+  }
+}
