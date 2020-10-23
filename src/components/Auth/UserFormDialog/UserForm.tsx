@@ -82,7 +82,6 @@ export const UserForm: React.FC<UserFormProps> = ({
             label="Display name (optional)"
             type="text"
             setValue={form.setValue}
-            onChange={e => {}}
             placeholder="Enter display name"
             error={errors?.displayName && 'Display name is required'}
             inputRef={register({})}
