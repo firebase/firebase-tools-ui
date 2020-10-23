@@ -2,7 +2,7 @@ import { Typography } from '@rmwc/typography';
 import React from 'react';
 import { FormContextValues } from 'react-hook-form/dist/contextTypes';
 
-import { FieldWithAutocompleteHack } from '../../../common/Field';
+import { Field } from '../../../common/Field';
 import { AddAuthUserPayload } from '../../types';
 import styles from './controls.module.scss';
 import { validateSerializedCustomClaims } from './customClaimsValidation';
@@ -34,7 +34,7 @@ const CUSTOM_ATTRIBUTES_CONTROL_NAME = 'customAttributes';
 
 export const CustomAttributes: React.FC<FormContextValues<
   AddAuthUserPayload
->> = ({ errors, register, setValue }) => {
+>> = ({ errors, register }) => {
   const label = (
     <label>
       <Typography use="subtitle2" tag="div" theme="textPrimaryOnBackground">
@@ -44,8 +44,7 @@ export const CustomAttributes: React.FC<FormContextValues<
   );
   return (
     <div className={styles.customAttributesWrapper}>
-      <FieldWithAutocompleteHack
-        setValue={setValue}
+      <Field
         inputRef={register({ validate })}
         error={errors[CUSTOM_ATTRIBUTES_CONTROL_NAME]?.message}
         name={CUSTOM_ATTRIBUTES_CONTROL_NAME}

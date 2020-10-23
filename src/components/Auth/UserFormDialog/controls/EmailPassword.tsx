@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 
 import { createStructuredSelector } from '../../../../store';
 import { getAllEmails, isEditingUser } from '../../../../store/auth/selectors';
-import { FieldWithAutocompleteHack } from '../../../common/Field';
+import { Field } from '../../../common/Field';
 import { AddAuthUserPayload } from '../../types';
 import styles from './controls.module.scss';
 
@@ -39,7 +39,6 @@ export const EmailPassword: React.FC<EmailPasswordProps &
   setError,
   clearError,
   errors,
-  setValue,
   allEmails,
   editedUserEmail,
   isEditing,
@@ -73,16 +72,14 @@ export const EmailPassword: React.FC<EmailPasswordProps &
         Email authentication
       </Typography>
       <div className={styles.emailWrapper}>
-        <FieldWithAutocompleteHack
-          setValue={setValue}
+        <Field
           name="email"
           placeholder="Enter email"
           label="Email"
           type="text"
           inputRef={register({ validate, pattern: EMAIL_REGEX })}
         />
-        <FieldWithAutocompleteHack
-          setValue={setValue}
+        <Field
           name="password"
           type="text"
           label="Password"
