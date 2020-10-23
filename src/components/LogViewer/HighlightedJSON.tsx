@@ -106,7 +106,9 @@ export const HighlightedJSON: React.FC<Props> = ({
       !line.endsWith('}') &&
       !line.endsWith('},');
     const isObjEnd = line.endsWith('}') || line.endsWith('},');
-    const isArrayStart = quote_count >= 2 && line.endsWith('[');
+    const isArrayStart =
+      quote_count >= 2 &&
+      (line.endsWith('[') || line.endsWith('[]') || line.endsWith('[],'));
     const isArrayEnd = line.endsWith(']') || line.endsWith('],');
 
     if (isStart) {
