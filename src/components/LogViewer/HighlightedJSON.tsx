@@ -97,18 +97,27 @@ export const HighlightedJSON: React.FC<Props> = ({
 
     const isStart = index === 0 && line.startsWith('{');
     const isEnd = index === lines.length - 1 && line.endsWith('}');
-    const isKeylessArrayStart = line.trim().length === 1 && line.endsWith('[');
-    const isKeylessObjStart = line.trim().length === 1 && line.endsWith('{');
-    const isKeyedObjStart = quote_count >= 2 && line.endsWith('{');
+
+    const isEmptyArray = line.endsWith('[]') || line.endsWith('[],');
+    const isEmptyObj = line.endsWith('{}') || line.endsWith('{},');
+
+    const isKeyedObjStart =
+      quote_count >= 2 && (line.endsWith('{') || isEmptyObj);
+    const isKeyedArrayStart =
+      quote_count >= 2 && (line.endsWith('[') || isEmptyArray);
+
+    const isKeylessArrayStart =
+      !isKeyedArrayStart && (line.endsWith('[') || isEmptyArray);
+    const isKeylessObjStart =
+      !isKeylessArrayStart && (line.endsWith('{') || isEmptyObj);
+
     const isLiteral =
       !line.endsWith('[') &&
       !line.endsWith('{') &&
       !line.endsWith('}') &&
       !line.endsWith('},');
+
     const isObjEnd = line.endsWith('}') || line.endsWith('},');
-    const isArrayStart =
-      quote_count >= 2 &&
-      (line.endsWith('[') || line.endsWith('[]') || line.endsWith('[],'));
     const isArrayEnd = line.endsWith(']') || line.endsWith('],');
 
     if (isStart) {
@@ -144,7 +153,7 @@ export const HighlightedJSON: React.FC<Props> = ({
       hierarchy.push({ mode: HierarchyReferenceMode.INCREMENT, key: -1 });
     }
 
-    if (isKeyedObjStart || isArrayStart) {
+    if (isKeyedObjStart || isKeyedArrayStart) {
       const [start, ...splat] = line.split(':');
       const [indent, ...key_chunks] = start.split('"');
       const key = key_chunks.filter((v: string) => v).join('"');
@@ -153,8 +162,17 @@ export const HighlightedJSON: React.FC<Props> = ({
       hierarchy.push(toHierarchyStep(key));
       const hierarchy_chain = toHierarchyJS(hierarchy);
 
-      if (isArrayStart) {
+      if (isKeyedArrayStart) {
         hierarchy.push({ mode: HierarchyReferenceMode.INCREMENT, key: -1 });
+      }
+
+      if (isArrayEnd) {
+        hierarchy.pop(); // Remove reference with array name (i.e. "users")
+        hierarchy.pop(); // Remove reference with array index (i.e. 3)
+      }
+
+      if (isObjEnd) {
+        hierarchy.pop();
       }
 
       return (
