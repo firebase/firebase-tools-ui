@@ -87,7 +87,7 @@ function adjustPayloadForArray(
 
       // Note: FieldValue sentinels are not guaranteed to be
       // `instanceof FieldValue`, so let's just use type casting here.
-      if (value === DELETE_FIELD || (value as any)?.isEqual?.(DELETE_FIELD)) {
+      if (value === DELETE_FIELD || DELETE_FIELD.isEqual(value as any)) {
         return [pathToUpdate, withFieldRemoved(cur, childPath)];
       } else {
         return [pathToUpdate, withFieldSet(cur, childPath, value)];

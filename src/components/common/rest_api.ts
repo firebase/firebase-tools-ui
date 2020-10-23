@@ -92,7 +92,11 @@ export abstract class RestApi {
     const { accessToken } = this.getToken();
     body.append('auth', accessToken);
 
-    // headers are NOT allowed or it breaks the multipart/form-data payload
+    // We cannot set the Content-Type header here, since that will
+    // break multipart/form-data payload.
+    // Furthermore, setting non-simple headers may cause a CORS pre-flight
+    // request. RTDB Emulator, for one, doesn't handle those correctly.
+    // See: https://fetch.spec.whatwg.org/#simple-header
     const res = await fetch(url, { method, body });
 
     const text = await res.text();
