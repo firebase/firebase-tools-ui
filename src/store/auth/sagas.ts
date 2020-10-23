@@ -38,6 +38,14 @@ export function* fetchAuthUsers() {
   }
 }
 
+export function* initAuth() {
+  const result = yield select(getAuthConfigResult);
+  if (result.data) {
+    yield put(authFetchUsersRequest());
+    yield put(getAllowDuplicateEmailsRequest());
+  }
+}
+
 export function* deleteUser({ payload }: ReturnType<typeof deleteUserRequest>) {
   const authApi = yield call(configureAuthSaga);
   yield call([authApi, 'deleteUser'], { localId: payload.localId });
@@ -126,13 +134,11 @@ export function* nukeUsers() {
 }
 
 export function* configureAuthSaga() {
-  const {
-    data: { hostAndPort },
-  } = yield select(getAuthConfigResult);
+  const result = yield select(getAuthConfigResult);
 
   const { data: projectId } = yield select(getProjectIdResult);
 
-  return new AuthApi(hostAndPort, projectId);
+  return new AuthApi(result.data.hostAndPort, projectId);
 }
 
 export function* authSaga() {
@@ -153,7 +159,6 @@ export function* authSaga() {
       getType(getAllowDuplicateEmailsRequest),
       getAllowDuplicateEmails
     ),
-    put(authFetchUsersRequest()),
-    put(getAllowDuplicateEmailsRequest()),
+    call(initAuth),
   ]);
 }

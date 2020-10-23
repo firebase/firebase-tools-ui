@@ -3,6 +3,7 @@ import { call, put, select } from 'redux-saga/effects';
 import { AddAuthUserPayload, AuthUser } from '../../components/Auth/types';
 import { getProjectIdResult } from '../config/selectors';
 import {
+  authFetchUsersRequest,
   authFetchUsersSuccess,
   clearAuthUserDialogData,
   createUserRequest,
@@ -25,6 +26,7 @@ import {
   deleteUser,
   fetchAuthUsers,
   getAllowDuplicateEmails,
+  initAuth,
   nukeUsers,
   setAllowDuplicateEmails,
   setUserDisabled,
@@ -211,6 +213,42 @@ describe('Auth sagas', () => {
       });
 
       expect(gen.next().done).toBe(true);
+    });
+  });
+
+  describe('initAuth', () => {
+    it('does nothing if auth is disabled', () => {
+      const gen = initAuth();
+      expect(gen.next()).toEqual({
+        done: false,
+        value: select(getAuthConfigResult),
+      });
+
+      expect(gen.next({})).toEqual({
+        done: true,
+      });
+    });
+
+    it('dispatches appropriate actions if auth is enabled', () => {
+      const gen = initAuth();
+      expect(gen.next()).toEqual({
+        done: false,
+        value: select(getAuthConfigResult),
+      });
+
+      expect(gen.next({ data: { hostAndPort: 'htto://lo.l' } })).toEqual({
+        done: false,
+        value: put(authFetchUsersRequest()),
+      });
+
+      expect(gen.next()).toEqual({
+        done: false,
+        value: put(getAllowDuplicateEmailsRequest()),
+      });
+
+      expect(gen.next()).toEqual({
+        done: true,
+      });
     });
   });
 
