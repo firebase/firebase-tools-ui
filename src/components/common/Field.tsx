@@ -24,14 +24,14 @@ import { Typography } from '@rmwc/typography';
 import classnames from 'classnames';
 import React, { useState } from 'react';
 
-type Props = {
+type FieldProps = {
   fieldClassName?: string;
   tip?: string;
   error?: React.ReactNode | string;
 } & TextFieldProps &
   TextFieldHTMLProps;
 
-export const Field: React.FC<Props> = ({
+export const Field: React.FC<FieldProps> = ({
   fieldClassName,
   label,
   // strip fullwidth or outlined, always use outlined
@@ -129,5 +129,35 @@ export const SelectField: React.FC<SelectFieldProps> = ({
         )}
       </div>
     </div>
+  );
+};
+
+export type FieldWithAutocompleteHackProps = FieldProps & {
+  setValue: (name: string, value: string) => void;
+};
+
+/**
+ * The hack below is needed to track autofill event on inputs.
+ *
+ * If you click on an input, and it becomes empty, use it!
+ *
+ * When the autofill is triggered, empty animation starts playing which
+ * allows us to handle the result appropriately.
+ *
+ * Note that this also comes with an empty animation for all inputs in
+ * _material-overrides.scss
+ */
+export const FieldWithAutocompleteHack: React.FC<FieldWithAutocompleteHackProps> = ({
+  setValue,
+  ...props
+}) => {
+  return (
+    <Field
+      onAnimationStart={e => {
+        const target = e.target as HTMLInputElement;
+        setValue(target.name, target.value);
+      }}
+      {...props}
+    />
   );
 };

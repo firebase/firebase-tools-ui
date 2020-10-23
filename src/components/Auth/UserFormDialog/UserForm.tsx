@@ -22,7 +22,7 @@ import {
 } from '../../../store/auth/selectors';
 import { hasError } from '../../../store/utils';
 import { Callout } from '../../common/Callout';
-import { Field } from '../../common/Field';
+import { FieldWithAutocompleteHack } from '../../common/Field';
 import { AddAuthUserPayload } from '../types';
 import { CustomAttributes } from './controls/CustomAttributes';
 import { ImageUrlInput } from './controls/ImageUrlInput';
@@ -77,10 +77,12 @@ export const UserForm: React.FC<UserFormProps> = ({
 
       <form onSubmit={handleSubmit(submit)} data-testid="user-form">
         <DialogContent>
-          <Field
+          <FieldWithAutocompleteHack
             name="displayName"
             label="Display name (optional)"
             type="text"
+            setValue={form.setValue}
+            onChange={e => {}}
             placeholder="Enter display name"
             error={errors?.displayName && 'Display name is required'}
             inputRef={register({})}
