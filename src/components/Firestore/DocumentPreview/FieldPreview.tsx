@@ -92,6 +92,7 @@ const FieldPreview: React.FC<{
             setIsEditing(false);
           }}
           areRootKeysMutable={false}
+          firestore={documentRef.firestore}
         />
       )}
       {isMap(parentState) && (
@@ -110,6 +111,7 @@ const FieldPreview: React.FC<{
             setIsEditing(false);
           }}
           areRootKeysMutable={false}
+          firestore={documentRef.firestore}
         />
       )}
     </>
@@ -181,6 +183,7 @@ const FieldPreview: React.FC<{
             setIsAddingField(false);
           }}
           areRootKeysMutable={!isArray(state)}
+          firestore={documentRef.firestore}
         />
       )}
 
@@ -196,6 +199,7 @@ const FieldPreview: React.FC<{
             setIsAddingField(false);
           }}
           areRootKeysMutable={!isArray(state)}
+          firestore={documentRef.firestore}
         />
       )}
 
