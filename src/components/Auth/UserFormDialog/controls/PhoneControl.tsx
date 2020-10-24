@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 
 import { createStructuredSelector } from '../../../../store';
 import { getAllPhoneNumbers } from '../../../../store/auth/selectors';
-import { FieldWithAutocompleteHack } from '../../../common/Field';
+import { Field } from '../../../common/Field';
 import { AddAuthUserPayload } from '../../types';
 import styles from './controls.module.scss';
 
@@ -23,7 +23,6 @@ export const PhoneControl: React.FC<PhoneControlProps &
   errors,
   allPhoneNumbers,
   editedUserPhoneNumber,
-  setValue,
 }) => {
   function validate(value: string) {
     return editedUserPhoneNumber === value || !allPhoneNumbers.has(value);
@@ -50,8 +49,7 @@ export const PhoneControl: React.FC<PhoneControlProps &
       >
         Phone authentication
       </Typography>
-      <FieldWithAutocompleteHack
-        setValue={setValue}
+      <Field
         name="phoneNumber"
         label="Phone"
         placeholder="Enter phone number"

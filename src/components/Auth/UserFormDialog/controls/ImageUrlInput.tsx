@@ -2,7 +2,7 @@ import { CircularProgress } from '@rmwc/circular-progress';
 import React, { useEffect, useRef, useState } from 'react';
 import { FormContextValues } from 'react-hook-form/dist/contextTypes';
 
-import { FieldWithAutocompleteHack } from '../../../common/Field';
+import { Field } from '../../../common/Field';
 import { AddAuthUserPayload } from '../../types';
 import styles from '../UserFormDialog.module.scss';
 
@@ -20,7 +20,6 @@ export interface ImageUrlInput {
 export type ImageUrlInputProps = ImageUrlInput &
   FormContextValues<AddAuthUserPayload>;
 export const ImageUrlInput: React.FC<ImageUrlInputProps> = ({
-  setValue,
   register,
   watch,
   triggerValidation,
@@ -77,8 +76,7 @@ export const ImageUrlInput: React.FC<ImageUrlInputProps> = ({
 
   return (
     <>
-      <FieldWithAutocompleteHack
-        setValue={setValue}
+      <Field
         name="photoUrl"
         label="User Photo URL (optional)"
         placeholder="Enter URL"
