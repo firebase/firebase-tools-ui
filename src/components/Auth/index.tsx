@@ -45,16 +45,16 @@ export type PropsFromState = ReturnType<typeof mapStateToProps>;
 export const AuthRoute: React.FC<PropsFromState> = ({
   projectIdResult,
   authConfigResult,
-  authUsersResult,
 }) => {
-  return handle(
-    combineData(projectIdResult, authConfigResult, authUsersResult),
-    {
-      onNone: () => <Spinner span={12} message="Auth Emulator Loading..." />,
-      onError: () => <AuthRouteDisabled />,
-      onData: () => <Auth />,
-    }
-  );
+  // HACK(yuchenshi): We do not switch on authUsersResult to make sure Auth
+  // Emulator correctly shows up as disabled (instead of forever loading).
+  // TODO(yuchenshi): Fix forever loading in store when auth is disabled.
+  return handle(combineData(projectIdResult, authConfigResult), {
+    onNone: () => <Spinner span={12} message="Auth Emulator Loading..." />,
+    onError: () => <AuthRouteDisabled />,
+    onData: ([projectId, config]) =>
+      config === undefined ? <AuthRouteDisabled /> : <Auth />,
+  });
 };
 
 export const Auth: React.FC = () => (
