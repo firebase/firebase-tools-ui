@@ -150,7 +150,12 @@ it('sorts documents when filtered', async () => {
 });
 
 it('shows the selected sub-document', async () => {
-  const { queryAllByText, getByText, queryByText } = await renderWithFirestore(
+  const {
+    queryAllByText,
+    getByText,
+    queryByText,
+    container,
+  } = await renderWithFirestore(
     async firestore => {
       const collectionRef = firestore.collection('my-stuff');
       await collectionRef.doc('cool-doc-1').set({ a: 1 });
@@ -167,10 +172,13 @@ it('shows the selected sub-document', async () => {
     }
   );
 
-  await waitForElement(() => queryAllByText(/cool-doc-1/).length);
+  const expectedDocIds = 2; // One in CollectionList, one for doc panel header.
+  await waitForElement(
+    () => queryAllByText(/cool-doc-1/).length >= expectedDocIds
+  );
 
   expect(getByText(/my-stuff/)).not.toBeNull();
-  expect(queryAllByText(/cool-doc-1/).length).toBe(2);
+  expect(queryAllByText(/cool-doc-1/).length).toBe(expectedDocIds);
 });
 
 describe('withCollectionState', () => {
