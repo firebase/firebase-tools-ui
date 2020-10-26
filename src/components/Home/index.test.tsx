@@ -123,7 +123,9 @@ it('links to the hosting website externally', () => {
 
   const card = getByTestId(`emulator-info-hosting`);
   expect(getByText(card, '5000')).not.toBeNull();
-  const link = getByRole(card, 'link', { name: 'View website' });
+  const link = getByRole(card, 'link', {
+    name: 'View website',
+  }) as HTMLAnchorElement;
   expect(link.href).toBe('http://localhost:5000/');
   expect(link.target).toBe('_blank');
 });

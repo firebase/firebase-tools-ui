@@ -20,10 +20,9 @@ import {
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import { firestore } from 'firebase';
-import React, { useState } from 'react';
+import React from 'react';
 import { useFirestoreDocData } from 'reactfire';
 
-import { jsonIshValue } from '../Database/DataViewer/common/view_model';
 import {
   useEjector,
   useRootCollections,

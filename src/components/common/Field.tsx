@@ -41,7 +41,8 @@ export const Field: React.FC<Props> = ({
   error,
   ...textFieldProps
 }) => {
-  const [id] = useState(randomId());
+  const [id] = useState(randomId('field'));
+  const [subtextId] = useState(randomId('field-subtext'));
   return (
     <div className={classnames('Field', fieldClassName)}>
       <Typography
@@ -55,14 +56,21 @@ export const Field: React.FC<Props> = ({
       </Typography>
       <TextField
         outlined
+        aria-describedby={subtextId}
         invalid={!!error}
+        aria-invalid={!!error}
         {...textFieldProps}
         tag="div"
         id={id}
       />
-      <div className="Field-subtext">
+      <div className="Field-subtext" id={subtextId}>
         {error ? (
-          <Typography className="Field-tip" use="body2" theme="error">
+          <Typography
+            className="Field-tip"
+            role="alert"
+            use="body2"
+            theme="error"
+          >
             {error}
           </Typography>
         ) : (

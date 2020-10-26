@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-type RequestMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
+type RequestMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
 
 export class ResponseError extends Error {
   constructor(
@@ -28,33 +28,57 @@ export class ResponseError extends Error {
 
 /** Simple REST api helpers */
 export abstract class RestApi {
-  protected async getToken() {
+  protected getToken() {
     return { accessToken: 'owner' };
   }
 
   protected async jsonRequest(
     url: string,
     data: {},
-    method: RequestMethod = 'GET'
+    method: RequestMethod = 'GET',
+    headers: Record<string, string> = { 'Content-Type': 'application/json' }
   ) {
-    const { accessToken } = await this.getToken();
+    const { accessToken } = this.getToken();
 
     const res = await fetch(url, {
       method,
       body: JSON.stringify(data),
       headers: {
         Authorization: 'Bearer ' + accessToken,
-        'Content-Type': 'application/json',
+        ...headers,
       },
     });
 
     const json = await res.json();
 
     if (res.status >= 400 && res.status < 600) {
-      throw new ResponseError(await res.text(), res, json);
+      throw new ResponseError(json.error.message, res, json);
     }
 
     return { res, json };
+  }
+
+  protected async deleteRequest(url: string) {
+    const { accessToken } = this.getToken();
+
+    const res = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        Authorization: 'Bearer ' + accessToken,
+      },
+    });
+
+    const json = await res.json();
+
+    if (res.status >= 400 && res.status < 600) {
+      throw new ResponseError(json.error.message, res, json);
+    }
+
+    return { res, json };
+  }
+
+  protected async patchRequest(url: string, data: {}) {
+    return this.jsonRequest(url, data, 'PATCH');
   }
 
   /** Upload a file with multipart/form-data */
@@ -65,7 +89,7 @@ export abstract class RestApi {
   ) {
     const body = toFormData(file);
 
-    const { accessToken } = await this.getToken();
+    const { accessToken } = this.getToken();
     body.append('auth', accessToken);
 
     // We cannot set the Content-Type header here, since that will

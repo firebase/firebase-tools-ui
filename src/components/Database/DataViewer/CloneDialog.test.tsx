@@ -21,7 +21,6 @@ import { delay } from '../../../test_utils';
 import { renderDialogWithFirestore } from '../../Firestore/testing/test_utils';
 import { fakeReference } from '../testing/models';
 import { CloneDialog } from './CloneDialog';
-import { QueryParams } from './common/view_model';
 
 const setup = async () => {
   const onComplete = jest.fn();
