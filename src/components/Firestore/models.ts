@@ -65,3 +65,77 @@ export type FirestoreArray = Array<FirestorePrimitive | FirestoreMap>;
 export type FirestoreMap = {
   [field: string]: FirestoreAny;
 };
+
+/** Collection filter */
+export type CollectionFilterSort = 'ascending' | 'descending';
+
+interface Filter<T extends firestore.WhereFilterOp | undefined> {
+  field: string;
+  operator: T;
+}
+
+type ConditionValue = number | boolean | string;
+
+interface SingleValueCondition {
+  value: ConditionValue;
+}
+
+interface MultiValueCondition {
+  values: ConditionValue[];
+}
+
+interface SortableCondition {
+  sort?: 'asc' | 'desc';
+}
+
+type Unspecified = Filter<undefined> & SortableCondition;
+type Equal = Filter<'=='> & SingleValueCondition;
+type GreaterThan = Filter<'>'> & SingleValueCondition & SortableCondition;
+type GreaterThanEqual = Filter<'>='> & SingleValueCondition & SortableCondition;
+type LessThanEqual = Filter<'<='> & SingleValueCondition & SortableCondition;
+type LessThan = Filter<'<'> & SingleValueCondition & SortableCondition;
+type In = Filter<'in'> & MultiValueCondition;
+type ArrayContains = Filter<'array-contains'> & SingleValueCondition;
+type ArrayContainsAny = Filter<'array-contains-any'> & MultiValueCondition;
+
+export type CollectionFilter =
+  | Unspecified
+  | Equal
+  | GreaterThan
+  | GreaterThanEqual
+  | LessThanEqual
+  | LessThan
+  | In
+  | ArrayContains
+  | ArrayContainsAny;
+
+export function isSingleValueCollectionFilter(
+  cf: CollectionFilter
+): cf is Extract<CollectionFilter, SingleValueCondition> {
+  return (
+    cf.operator === '==' ||
+    cf.operator === '>' ||
+    cf.operator === '>=' ||
+    cf.operator === '<=' ||
+    cf.operator === '<' ||
+    cf.operator === 'array-contains'
+  );
+}
+
+export function isMultiValueCollectionFilter(
+  cf: CollectionFilter
+): cf is Extract<CollectionFilter, MultiValueCondition> {
+  return cf.operator === 'in' || cf.operator === 'array-contains-any';
+}
+
+export function isSortableCollectionFilter(
+  cf: CollectionFilter
+): cf is Extract<CollectionFilter, SortableCondition> {
+  return (
+    !cf.operator ||
+    cf.operator === '>' ||
+    cf.operator === '>=' ||
+    cf.operator === '<=' ||
+    cf.operator === '<'
+  );
+}

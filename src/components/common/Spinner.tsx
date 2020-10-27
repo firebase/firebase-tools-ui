@@ -19,12 +19,15 @@ import './Spinner.scss';
 import { CircularProgress } from '@rmwc/circular-progress';
 import { GridCell } from '@rmwc/grid';
 import { Typography } from '@rmwc/typography';
+import classnames from 'classnames';
 import React from 'react';
 
 export const Spinner: React.FC<{
   message?: string;
   span?: number;
-} & React.HTMLProps<any>> = ({ message, span, ...props }) => {
+  cover?: boolean;
+  scrim?: boolean;
+} & React.HTMLProps<any>> = ({ message, span, cover, scrim, ...props }) => {
   const children = (
     <>
       <CircularProgress size="xlarge" />
@@ -37,7 +40,7 @@ export const Spinner: React.FC<{
   );
   if (span === undefined) {
     return (
-      <div className="Spinner" {...props}>
+      <div className={classnames('Spinner', { cover, scrim })} {...props}>
         {children}
       </div>
     );

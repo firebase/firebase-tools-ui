@@ -14,71 +14,76 @@
  * limitations under the License.
  */
 
-import { fireEvent, wait } from '@testing-library/react';
+import { fireEvent } from '@testing-library/react';
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 
-import { renderDialog, waitForDialogsToClose } from '../../../test_utils';
-import {
-  fakeCollectionReference,
-  fakeDocumentReference,
-} from '../testing/models';
+import { waitForDialogsToClose } from '../../../test_utils';
+import { renderDialogWithFirestore } from '../testing/test_utils';
 import { AddDocumentDialog } from './AddDocumentDialog';
 
-const docRef = fakeDocumentReference({
-  id: 'random-identifier',
-});
-const collectionReference = fakeCollectionReference({
-  id: 'my-stuff',
-  path: 'users/bob/my-stuff',
-  doc: jest.fn(),
-});
-collectionReference.doc.mockReturnValue(docRef);
-
 it('shows correct title', async () => {
-  const { getByText } = await renderDialog(
-    <AddDocumentDialog
-      open={true}
-      collectionRef={collectionReference}
-      onValue={() => {}}
-    />
-  );
+  const { getByText } = await renderDialogWithFirestore(async firestore => {
+    const collectionRef = firestore.collection('things');
+    return (
+      <AddDocumentDialog
+        open={true}
+        collectionRef={collectionRef}
+        onValue={() => {}}
+      />
+    );
+  });
 
   expect(getByText(/Add a document/)).not.toBeNull();
 });
 
 it('shows the (disabled) creation path', async () => {
-  const { getByLabelText } = await renderDialog(
-    <AddDocumentDialog
-      open={true}
-      collectionRef={collectionReference}
-      onValue={() => {}}
-    />
+  const { getByLabelText } = await renderDialogWithFirestore(
+    async firestore => {
+      const nestedCollectionRef = firestore.collection('things/1/objects');
+      return (
+        <AddDocumentDialog
+          open={true}
+          collectionRef={nestedCollectionRef}
+          onValue={() => {}}
+        />
+      );
+    }
   );
 
-  expect(getByLabelText('Parent path').value).toBe('users/bob/my-stuff');
+  expect(getByLabelText('Parent path').value).toBe('things/1/objects');
   expect(getByLabelText('Parent path').disabled).toBe(true);
 });
 
 it('auto generates an id', async () => {
-  const { getByLabelText } = await renderDialog(
-    <AddDocumentDialog
-      open={true}
-      collectionRef={collectionReference}
-      onValue={() => {}}
-    />
+  const { getByLabelText } = await renderDialogWithFirestore(
+    async firestore => {
+      const collectionRef = firestore.collection('things');
+      return (
+        <AddDocumentDialog
+          open={true}
+          collectionRef={collectionRef}
+          onValue={() => {}}
+        />
+      );
+    }
   );
 
-  expect(getByLabelText('Document ID').value).toBe('random-identifier');
+  expect(getByLabelText('Document ID').value).toMatch(/\w+/);
 });
 
 it('provides a document-editor', async () => {
-  const { getByLabelText } = await renderDialog(
-    <AddDocumentDialog
-      open={true}
-      collectionRef={collectionReference}
-      onValue={() => {}}
-    />
+  const { getByLabelText } = await renderDialogWithFirestore(
+    async firestore => {
+      const collectionRef = firestore.collection('things');
+      return (
+        <AddDocumentDialog
+          open={true}
+          collectionRef={collectionRef}
+          onValue={() => {}}
+        />
+      );
+    }
   );
 
   expect(getByLabelText('Field')).not.toBe(null);
@@ -89,12 +94,17 @@ it('provides a document-editor', async () => {
 // reproducible in the actual GUI.
 it.skip('[Save] is disabled with invalid doc-data', async () => {
   const onValue = jest.fn();
-  const { getByText, getByLabelText } = await renderDialog(
-    <AddDocumentDialog
-      open={true}
-      collectionRef={collectionReference}
-      onValue={onValue}
-    />
+  const { getByText, getByLabelText } = await renderDialogWithFirestore(
+    async firestore => {
+      const collectionRef = firestore.collection('things');
+      return (
+        <AddDocumentDialog
+          open={true}
+          collectionRef={collectionRef}
+          onValue={onValue}
+        />
+      );
+    }
   );
 
   await act(async () => {
@@ -106,12 +116,17 @@ it.skip('[Save] is disabled with invalid doc-data', async () => {
 
 it('emits id and parsed data when [Save] is clicked', async () => {
   const onValue = jest.fn();
-  const { getByText, getByLabelText } = await renderDialog(
-    <AddDocumentDialog
-      open={true}
-      collectionRef={collectionReference}
-      onValue={onValue}
-    />
+  const { getByText, getByLabelText } = await renderDialogWithFirestore(
+    async firestore => {
+      const collectionRef = firestore.collection('things');
+      return (
+        <AddDocumentDialog
+          open={true}
+          collectionRef={collectionRef}
+          onValue={onValue}
+        />
+      );
+    }
   );
 
   await act(async () => {
@@ -138,12 +153,17 @@ it('emits id and parsed data when [Save] is clicked', async () => {
 
 it('emits null when [Cancel] is clicked', async () => {
   const onValue = jest.fn();
-  const { getByText, getByLabelText } = await renderDialog(
-    <AddDocumentDialog
-      open={true}
-      collectionRef={collectionReference}
-      onValue={onValue}
-    />
+  const { getByText, getByLabelText } = await renderDialogWithFirestore(
+    async firestore => {
+      const collectionRef = firestore.collection('things');
+      return (
+        <AddDocumentDialog
+          open={true}
+          collectionRef={collectionRef}
+          onValue={onValue}
+        />
+      );
+    }
   );
 
   await act(async () => {

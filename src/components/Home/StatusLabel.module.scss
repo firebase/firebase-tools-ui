@@ -14,22 +14,11 @@
  * limitations under the License.
  */
 
-import { createContext, useContext } from 'react';
+.container {
+  display: flex;
+  align-items: center;
+}
 
-import DatabaseApi from './api';
-
-const ApiContext = createContext<DatabaseApi | null>(null);
-
-export const ApiProvider = ApiContext.Provider;
-export const useApi = () => {
-  const api = useContext(ApiContext);
-  if (!api) {
-    throw new Error('You are missing a <ApiProvider>.');
-  }
-  return api;
-};
-
-// TODO: need a better strategy to handle missing API in RTDB-documentEditor
-export const useOptionalApi = () => {
-  return useContext(ApiContext);
-};
+.icon {
+  margin-left: 4px;
+}

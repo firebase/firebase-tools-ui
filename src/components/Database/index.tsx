@@ -93,7 +93,7 @@ export const DatabaseRouteContent: React.FC<ContentProps> = ({
             </DatabaseContainer>
           );
         }}
-      ></Route>
+      />
     </Switch>
   );
 };

@@ -16,6 +16,7 @@
 
 import { ok } from 'assert';
 
+import { Checkbox } from '@rmwc/checkbox';
 import {
   Dialog,
   DialogActions,
@@ -32,6 +33,7 @@ import { Field } from '../../common/Field';
 
 export interface Props {
   realtimeRef: firebase.database.Reference;
+  query?: firebase.database.Query;
   /**
    * Called when complete, if the data was cloned the key is returned, else
    * undefined.
@@ -39,35 +41,73 @@ export interface Props {
   onComplete: (string?: string) => void;
 }
 
+/**
+ * Strips protocol and domain name (usually http://localhost:9000/)
+ * from the ref's path
+ * @example "localhost:9000/todos/one" -> "/todos/one"
+ * @param ref
+ */
+const getAbsoluteRefPath = (ref: firebase.database.Reference) => {
+  return new URL(ref.toString()).pathname;
+};
+
+/**
+ * Returns a key value that is either a new push id if the current
+ * ref's key is a push id or a "copy" key if not.
+ * @param key
+ * @param ref
+ */
 const cloneKey = (key: string, ref: firebase.database.Reference) => {
-  return key.startsWith('-') ? ref.push().key! : `${key}_copy`;
+  return key.startsWith('-')
+    ? `${getAbsoluteRefPath(ref.parent!)}/${ref.push().key!}`
+    : `${getAbsoluteRefPath(ref)}_copy`;
 };
 
 export const CloneDialog = React.memo<Props>(function CloneDialog$({
   realtimeRef,
+  query,
   onComplete,
 }) {
   ok(realtimeRef.parent, 'Cannot clone the root node!');
 
+  // queries only exist if queryParams are passed into the dialog
+  let hasQuery = query != null;
+
   const originalKey = realtimeRef.key!;
-  const [newKey, setNewKey] = useState('');
+  const [newDestinationPath, setNewDestinationPath] = useState('');
 
   const [form, setForm] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(true);
+  const [isCloningWithFiltered, setCloningFiltered] = useState(hasQuery);
 
   useEffect(() => {
     const loadData = async () => {
-      const snapshot = await realtimeRef.once('value');
+      let snapshot = null;
+      // only apply the query if the user has selected the checkbox
+      // and the query has been passed as a prop
+      if (query != null && isCloningWithFiltered) {
+        snapshot = await query.once('value');
+      } else {
+        snapshot = await realtimeRef.once('value');
+      }
       const data: Record<string, string> = {};
       Object.entries(snapshot.val() || {}).forEach(([key, val]) => {
         data[key] = JSON.stringify(val);
       });
       setForm(data);
-      setNewKey(cloneKey(originalKey, realtimeRef));
+      setNewDestinationPath(cloneKey(originalKey, realtimeRef));
       setIsLoading(false);
     };
     loadData();
-  }, [setIsLoading, setForm, setNewKey, originalKey, realtimeRef]);
+  }, [
+    setIsLoading,
+    setForm,
+    setNewDestinationPath,
+    originalKey,
+    realtimeRef,
+    isCloningWithFiltered,
+    query,
+  ]);
 
   const updateField = (e: React.FormEvent<HTMLInputElement>) => {
     const target = e.target as HTMLInputElement;
@@ -83,8 +123,9 @@ export const CloneDialog = React.memo<Props>(function CloneDialog$({
     Object.entries(form).forEach(([key, value]) => {
       data[key] = JSON.parse(value);
     });
-    realtimeRef.parent!.child(newKey).set(data);
-    onComplete(newKey);
+    realtimeRef.root.child(newDestinationPath).set(data);
+
+    onComplete(newDestinationPath);
   };
 
   return (
@@ -93,11 +134,25 @@ export const CloneDialog = React.memo<Props>(function CloneDialog$({
         <DialogTitle>Clone "{originalKey}"</DialogTitle>
         <DialogContent>
           <Field
-            label="New key:"
-            value={newKey}
-            onChange={e => setNewKey((e.target as HTMLInputElement).value)}
+            label="New destination path:"
+            value={newDestinationPath}
+            onChange={e =>
+              setNewDestinationPath((e.target as HTMLInputElement).value)
+            }
             type="text"
           />
+
+          {hasQuery ? (
+            <div>
+              <Checkbox
+                label="Clone filtered data set"
+                checked={isCloningWithFiltered}
+                onChange={event => {
+                  setCloningFiltered(!!event.currentTarget.checked);
+                }}
+              />
+            </div>
+          ) : null}
 
           <Typography use="headline6">Data</Typography>
           {isLoading

@@ -17,27 +17,73 @@
 import { act, fireEvent, render } from '@testing-library/react';
 import React from 'react';
 
-import { delay, renderDialog } from '../../../test_utils';
+import { delay } from '../../../test_utils';
+import { renderDialogWithFirestore } from '../../Firestore/testing/test_utils';
 import { fakeReference } from '../testing/models';
 import { CloneDialog } from './CloneDialog';
 
 const setup = async () => {
   const onComplete = jest.fn();
   const parent = fakeReference({ key: 'parent', path: 'parent' });
+  const ROOT_REF = fakeReference({ key: null, parent: null });
   const ref = fakeReference({
     parent,
     key: 'to_clone',
     path: 'parent/to_clone',
     data: { bool: true, number: 1234, string: 'a string', json: { a: 'b' } },
   });
+  ROOT_REF.child.mockReturnValue(ref);
+  ref.root = ROOT_REF;
   ref.child.mockReturnValue(ref);
-  parent.child.mockReturnValue(ref);
 
-  const { getByText, getByLabelText, getByTestId } = await renderDialog(
+  const {
+    getByText,
+    getByLabelText,
+    getByTestId,
+  } = await renderDialogWithFirestore(async firestore => (
     <CloneDialog onComplete={onComplete} realtimeRef={ref} />
-  );
-  return { ref, parent, onComplete, getByLabelText, getByText, getByTestId };
+  ));
+  return { ref, onComplete, getByLabelText, getByText, getByTestId };
 };
+
+it('uses a filtered data set when query params are provided', async () => {
+  const rootRef = fakeReference({
+    parent: null,
+    key: null,
+    path: '/',
+    data: {},
+  });
+
+  const todosRef = fakeReference({
+    parent: rootRef,
+    key: 'todos',
+    path: '/todos',
+    data: {
+      one: { title: 'Not done', completed: false },
+      two: { title: 'Totally done', completed: true },
+    },
+  });
+
+  const todosQuery = fakeReference({
+    parent: rootRef,
+    key: 'todos',
+    path: '/todos',
+    data: {
+      one: { title: 'Not done', completed: false },
+    },
+  });
+
+  const { getByLabelText } = await renderDialogWithFirestore(async () => (
+    <CloneDialog
+      onComplete={jest.fn()}
+      realtimeRef={todosRef}
+      query={todosQuery}
+    />
+  ));
+
+  expect(() => getByLabelText(/two:/)).toThrowError();
+  expect(getByLabelText(/one:/)).toBeDefined();
+});
 
 it('fails when trying to clone the root', async () => {
   spyOn(console, 'error'); // hide expected errors
@@ -60,10 +106,12 @@ it('shows a title with the key to clone', async () => {
   expect(getByText(/Clone "to_clone"/)).not.toBeNull();
 });
 
-it('defaults the new key field to <key>_copy', async () => {
+it('defaults the new destination path to /parent/<key>_copy', async () => {
   const { getByLabelText } = await setup();
 
-  expect(getByLabelText(/New key:/).value).toBe('to_clone_copy');
+  expect(getByLabelText('New destination path:').value).toBe(
+    '/parent/to_clone_copy'
+  );
 });
 
 it('contains an input and json value for each field', async () => {
@@ -76,7 +124,7 @@ it('contains an input and json value for each field', async () => {
 });
 
 it('clones dialog data when the dialog is accepted', async () => {
-  const { ref, parent, getByText, getByLabelText } = await setup();
+  const { ref, getByText, getByLabelText } = await setup();
 
   act(() => {
     fireEvent.change(getByLabelText('string:'), {
@@ -107,7 +155,7 @@ it('clones dialog data when the dialog is accepted', async () => {
     await delay(100); // Wait for the dialog DOM changes to settle.
   });
 
-  expect(parent.child).toHaveBeenCalledWith('to_clone_copy');
+  expect(ref.root.child).toHaveBeenCalledWith('/parent/to_clone_copy');
   expect(ref.set).toHaveBeenCalledWith({
     bool: true,
     number: 12,
@@ -125,7 +173,7 @@ it('calls onComplete with new key value when accepted', async () => {
     fireEvent.submit(getByText('Clone'));
   });
 
-  expect(onComplete).toHaveBeenCalledWith('to_clone_copy');
+  expect(onComplete).toHaveBeenCalledWith('/parent/to_clone_copy');
 });
 
 it('does not set data when the dialog is cancelled', async () => {

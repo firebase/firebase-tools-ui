@@ -1,0 +1,68 @@
+@import '../../../common/color';
+
+.emailWrapper {
+  display: flex;
+  align-items: flex-end;
+
+  > {
+    flex-grow: 0;
+    flex-shrink: 0;
+  }
+
+  // Hiding error container, as we're using custom one for both fields
+  :global .Field {
+    flex-basis: 50%;
+    padding-bottom: 0;
+
+    &:first-child {
+      margin-right: 8px;
+    }
+
+    .Field-subtext {
+      display: none;
+    }
+  }
+}
+
+.error {
+  height: 16px;
+  display: inline-block;
+}
+
+.customAttributesWrapper {
+  :global {
+    label.mdc-text-field--textarea,
+    textarea {
+      height: 66px;
+    }
+  }
+}
+
+.customAttributeWrapper {
+  display: flex;
+}
+
+.signInWrapper {
+  :global .mdc-list-divider {
+    // Negative margin to take full size
+    margin: 24px -24px;
+
+    &.bottom-divider {
+      margin: -12px -24px;
+    }
+  }
+}
+
+.signInHeader {
+  margin-bottom: 20px;
+
+  :global .mdc-typography--body1 {
+    font-size: 16px;
+    font-weight: 500;
+  }
+}
+
+.authKindLabel {
+  font-weight: 500;
+  margin-bottom: 8px;
+}

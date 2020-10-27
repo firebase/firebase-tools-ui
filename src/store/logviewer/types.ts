@@ -22,5 +22,17 @@ export interface LogEntry {
   level: string;
   message: string;
   timestamp: number;
-  data: { user: { [key: string]: any } };
+  data: {
+    user: { [key: string]: any };
+    metadata?: {
+      level: string;
+      message: string;
+      function?: {
+        name: string;
+      };
+      emulator?: {
+        name: string;
+      };
+    };
+  };
 }

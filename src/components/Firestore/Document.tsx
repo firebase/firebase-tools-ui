@@ -21,13 +21,15 @@ import { IconButton } from '@rmwc/icon-button';
 import { ListDivider } from '@rmwc/list';
 import { MenuItem, SimpleMenu } from '@rmwc/menu';
 import { firestore } from 'firebase';
-import React from 'react';
+import React, { Suspense } from 'react';
 import { Route, useRouteMatch } from 'react-router-dom';
+import { useFirestore } from 'reactfire';
 
+import { CopyButton } from '../common/CopyButton';
 import { FirestoreIcon } from '../common/icons';
-import { useApi } from './ApiContext';
-import Collection from './Collection';
-import CollectionList from './CollectionList';
+import { Spinner } from '../common/Spinner';
+import Collection, { CollectionLoading } from './Collection';
+import { RootCollectionList, SubCollectionList } from './CollectionList';
 import { promptDeleteDocument } from './dialogs/deleteDocument';
 import { promptDeleteDocumentFields } from './dialogs/deleteDocumentFields';
 import DocumentPreview from './DocumentPreview';
@@ -46,9 +48,19 @@ const Doc: React.FC<{
 
       <Route
         path={`${url}/:id`}
-        render={({ match }: any) => (
-          <Collection collection={collectionById(match.params.id)} />
-        )}
+        render={({ match }: any) => {
+          return (
+            <Suspense
+              fallback={
+                <CollectionLoading
+                  collection={collectionById(match.params.id)}
+                />
+              }
+            >
+              <Collection collection={collectionById(match.params.id)} />
+            </Suspense>
+          );
+        }}
       ></Route>
     </>
   );
@@ -56,15 +68,14 @@ const Doc: React.FC<{
 
 /** Root node */
 export const Root: React.FC = () => {
-  const api = useApi();
+  const firestore = useFirestore();
 
   return (
-    <Doc
-      id={'Root'}
-      collectionById={(id: string) => api.database.collection(id)}
-    >
+    <Doc id={'Root'} collectionById={(id: string) => firestore.collection(id)}>
       <PanelHeader id="Root" icon={<FirestoreIcon />} />
-      <CollectionList />
+      <Suspense fallback={<Spinner message="Loading collections" />}>
+        <RootCollectionList />
+      </Suspense>
     </Doc>
   );
 };
@@ -93,15 +104,20 @@ export const Document: React.FC<{ reference: firestore.DocumentReference }> = ({
         id={reference.id}
         icon={<Icon icon={{ icon: 'insert_drive_file', size: 'small' }} />}
       >
+        <CopyButton textToCopy={reference.id} label="Copy document ID" />
         <SimpleMenu handle={<IconButton icon="more_vert" />} renderToPortal>
           <MenuItem onClick={handleDeleteDocument}>Delete document</MenuItem>
           <MenuItem onClick={handleDeleteFields}>Delete all fields</MenuItem>
         </SimpleMenu>
       </PanelHeader>
 
-      <CollectionList reference={reference} />
+      <Suspense fallback={<Spinner message="Loading collections" />}>
+        <SubCollectionList reference={reference} />
+      </Suspense>
       <ListDivider tag="div" />
-      <DocumentPreview reference={reference} />
+      <Suspense fallback={<Spinner message="Loading document" />}>
+        <DocumentPreview reference={reference} />
+      </Suspense>
     </Doc>
   );
 };

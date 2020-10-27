@@ -58,17 +58,16 @@ it('updates the latitude', async () => {
       target: { value: '' },
     });
   });
-  expect(onChange).not.toHaveBeenCalled();
   expect(getByText(/Required/)).not.toBeNull();
 
   await act(async () => {
     fireEvent.change(getByLabelText(/Latitude/), {
-      target: { value: '-13' },
+      target: { value: '-13.2' },
     });
   });
 
-  expect(getByLabelText('Latitude').value).toBe('-13');
-  expect(onChange).toHaveBeenCalledWith(new firestore.GeoPoint(-13, 42));
+  expect(getByLabelText('Latitude').value).toBe('-13.2');
+  expect(onChange).toHaveBeenCalledWith(new firestore.GeoPoint(-13.2, 42));
 });
 
 it('updates the longitude', async () => {

@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-// import-sort-ignore
 import 'firebase/database';
-import 'firebase/firestore';
 
 import { _FirebaseApp } from '@firebase/app-types/private';
 import { FirebaseAuthInternal } from '@firebase/auth-interop-types';
 import { Component, ComponentType } from '@firebase/component';
-import * as firebase from 'firebase/app';
+import firebase from 'firebase/app';
+import { useEffect, useMemo } from 'react';
 
-import { DatabaseConfig, FirestoreConfig } from './store/config';
+import { DatabaseConfig } from './store/config';
+import { useProjectId } from './store/config/selectors';
 
 interface WindowWithDb extends Window {
   database?: firebase.database.Database;
@@ -33,7 +33,7 @@ interface WindowWithDb extends Window {
 export function initDatabase(
   config: DatabaseConfig,
   namespace: string
-): [firebase.database.Database, { cleanup: () => void }] {
+): [firebase.database.Database, { cleanup: () => Promise<void> }] {
   const databaseURL = `http://${config.hostAndPort}/?ns=${namespace}`;
   const app = firebase.initializeApp(
     { databaseURL },
@@ -53,30 +53,25 @@ export function initDatabase(
   return [db, { cleanup: () => app.delete() }];
 }
 
-export function initFirestore(
-  projectId: string,
-  config: FirestoreConfig
-): [firebase.firestore.Firestore, { cleanup: () => Promise<void> }] {
-  const app = firebase.initializeApp(
-    { projectId },
-    `Firestore Component: ${Math.random()}`
-  );
-  applyAdminAuth(app);
-  const firestore = app.firestore();
-  firestore.settings({
-    host: config.hostAndPort,
-    ssl: false,
-  });
-  // only log the first time
-  if (!(window as WindowWithDb).firestore) {
-    console.log(`🔥 Firestore is available at window.firestore.
+export function useEmulatedFirebaseApp(name: string, config: any) {
+  const projectId = useProjectId();
 
-    Try:
-    firestore.doc('hello/world').set({hello: 'world!'});
-    firestore.doc('hello/world').get().then( snap => console.log(snap.data()) );`);
-  }
-  (window as WindowWithDb).firestore = firestore;
-  return [firestore, { cleanup: () => app.delete() }];
+  const app = useMemo(() => {
+    const app = firebase.initializeApp(
+      { ...config, projectId },
+      `${name} component::${Math.random()}`
+    );
+    applyAdminAuth(app);
+    return app;
+  }, [name, config, projectId]);
+
+  useEffect(() => {
+    return () => {
+      app.delete();
+    };
+  }, [app]);
+
+  return app;
 }
 
 function applyAdminAuth(app: firebase.app.App): void {

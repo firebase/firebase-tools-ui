@@ -28,19 +28,19 @@ const REF = fakeReference({
   path: 'my_key',
   data: 'my_value',
 });
-REF.toString.mockReturnValue('http://localhost:9000/my_key');
 
-ROOT_REF.child.mockReturnValue(REF);
-ROOT_REF.toString.mockReturnValue('http://localhost:9000/');
-(ROOT_REF as any).database = {
-  app: { options: { databaseURL: 'http://localhost:9000/' } },
-};
+beforeEach(() => {
+  REF.toString.mockReturnValue('http://localhost:9000/my_key');
+
+  ROOT_REF.child.mockReturnValue(REF);
+  ROOT_REF.toString.mockReturnValue('http://localhost:9000/');
+});
 
 describe('the node key', () => {
   it('shows options.databaseURL for root nodes', () => {
     const { getByLabelText } = render(
       <MemoryRouter>
-        <NodeLeaf realtimeRef={ROOT_REF} value={'my-value'} baseUrl="/base" />
+        <NodeLeaf realtimeRef={ROOT_REF} value={'my-value'} />
       </MemoryRouter>
     );
 
@@ -50,7 +50,7 @@ describe('the node key', () => {
   it('shows the key for other nodes', () => {
     const { getByLabelText } = render(
       <MemoryRouter>
-        <NodeLeaf realtimeRef={REF} value={'my-value'} baseUrl="/base" />
+        <NodeLeaf realtimeRef={REF} value={'my-value'} />
       </MemoryRouter>
     );
 
@@ -62,7 +62,7 @@ describe('the node value', () => {
   it('shows null for root nodes', () => {
     const { getByLabelText } = render(
       <MemoryRouter>
-        <NodeLeaf realtimeRef={ROOT_REF} value={null} baseUrl="/base" />
+        <NodeLeaf realtimeRef={ROOT_REF} value={null} />
       </MemoryRouter>
     );
 
@@ -72,7 +72,7 @@ describe('the node value', () => {
   it('shows the json wrapped value for other nodes', () => {
     const { getByLabelText } = render(
       <MemoryRouter>
-        <NodeLeaf realtimeRef={REF} value={'my-value'} baseUrl="/base" />
+        <NodeLeaf realtimeRef={REF} value={'my-value'} />
       </MemoryRouter>
     );
 
@@ -85,7 +85,7 @@ describe('editing the node', () => {
     it('shows url as the key, and is disabled', () => {
       const { getByLabelText } = render(
         <MemoryRouter>
-          <NodeLeaf realtimeRef={ROOT_REF} value={null} baseUrl="/base" />
+          <NodeLeaf realtimeRef={ROOT_REF} value={null} />
         </MemoryRouter>
       );
 
@@ -97,7 +97,7 @@ describe('editing the node', () => {
     it('has an empty value entry', () => {
       const { getByLabelText } = render(
         <MemoryRouter>
-          <NodeLeaf realtimeRef={ROOT_REF} value={null} baseUrl="/base" />
+          <NodeLeaf realtimeRef={ROOT_REF} value={null} />
         </MemoryRouter>
       );
 
@@ -111,7 +111,7 @@ describe('editing the node', () => {
     it('shows url as the key, and is disabled', () => {
       const { getByLabelText } = render(
         <MemoryRouter>
-          <NodeLeaf realtimeRef={ROOT_REF} value={null} baseUrl="/base" />
+          <NodeLeaf realtimeRef={ROOT_REF} value={null} />
         </MemoryRouter>
       );
 
@@ -123,7 +123,7 @@ describe('editing the node', () => {
     it('has a value entry box initially', () => {
       const { getByLabelText } = render(
         <MemoryRouter>
-          <NodeLeaf realtimeRef={REF} value={'my-value'} baseUrl="/base" />
+          <NodeLeaf realtimeRef={REF} value={'my-value'} />
         </MemoryRouter>
       );
 

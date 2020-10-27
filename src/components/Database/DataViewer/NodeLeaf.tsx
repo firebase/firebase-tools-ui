@@ -29,13 +29,11 @@ import { ValueDisplay } from './ValueDisplay';
 export interface Props {
   realtimeRef: firebase.database.Reference;
   value: string | boolean | number | null;
-  baseUrl: string;
 }
 
 export const NodeLeaf = React.memo<Props>(function NodeLeaf$({
   value,
   realtimeRef,
-  baseUrl,
 }) {
   const [isEditing, setIsEditing] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
@@ -69,7 +67,7 @@ export const NodeLeaf = React.memo<Props>(function NodeLeaf$({
   return (
     <div className="NodeLeaf">
       <div className="NodeLeaf__key">
-        <NodeLink dbRef={realtimeRef} baseUrl={baseUrl} />
+        <NodeLink dbRef={realtimeRef} />
         {': '}
         <ValueDisplay use="body1" value={value} onClick={handleEdit} />
       </div>

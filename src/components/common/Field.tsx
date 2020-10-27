@@ -21,12 +21,18 @@ import { Select, SelectProps } from '@rmwc/select';
 import { TextField, TextFieldHTMLProps, TextFieldProps } from '@rmwc/textfield';
 import { HTMLProps } from '@rmwc/types';
 import { Typography } from '@rmwc/typography';
+import classnames from 'classnames';
 import React, { useState } from 'react';
 
-type Props = { tip?: string; error?: string } & TextFieldProps &
+type Props = {
+  fieldClassName?: string;
+  tip?: string;
+  error?: React.ReactNode | string;
+} & TextFieldProps &
   TextFieldHTMLProps;
 
 export const Field: React.FC<Props> = ({
+  fieldClassName,
   label,
   // strip fullwidth or outlined, always use outlined
   fullwidth,
@@ -35,9 +41,10 @@ export const Field: React.FC<Props> = ({
   error,
   ...textFieldProps
 }) => {
-  const [id] = useState(randomId());
+  const [id] = useState(randomId('field'));
+  const [subtextId] = useState(randomId('field-subtext'));
   return (
-    <div className="Field">
+    <div className={classnames('Field', fieldClassName)}>
       <Typography
         className="Field-label"
         use="body2"
@@ -49,14 +56,21 @@ export const Field: React.FC<Props> = ({
       </Typography>
       <TextField
         outlined
+        aria-describedby={subtextId}
         invalid={!!error}
+        aria-invalid={!!error}
         {...textFieldProps}
         tag="div"
         id={id}
       />
-      <div className="Field-subtext">
+      <div className="Field-subtext" id={subtextId}>
         {error ? (
-          <Typography className="Field-tip" use="body2" theme="error">
+          <Typography
+            className="Field-tip"
+            role="alert"
+            use="body2"
+            theme="error"
+          >
             {error}
           </Typography>
         ) : (
@@ -71,10 +85,15 @@ export const Field: React.FC<Props> = ({
   );
 };
 
-type SelectFieldProps = { tip?: string; error?: string } & SelectProps &
+type SelectFieldProps = {
+  fieldClassName?: string;
+  tip?: string;
+  error?: string;
+} & SelectProps &
   HTMLProps<HTMLSelectElement>;
 
 export const SelectField: React.FC<SelectFieldProps> = ({
+  fieldClassName,
   label,
   // strip outlined bool, always use outlined
   outlined,
@@ -85,7 +104,7 @@ export const SelectField: React.FC<SelectFieldProps> = ({
 }) => {
   const [id] = useState(randomId());
   return (
-    <div className="Field">
+    <div className={classnames('Field', fieldClassName)}>
       <Typography
         className="Field-label"
         use="body2"

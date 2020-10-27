@@ -89,10 +89,17 @@ function realtimeToViewModel(
   ref: firebase.database.Reference,
   queryParams: QueryParams
 ) {
-  const query = applyQuery(ref, queryParams);
+  let query: firebase.database.Query;
   return once(ref).pipe(
     switchMap(snap => {
-      return snap.hasChildren() ? toObservable(query) : toObservable(ref);
+      // The "default" query contains limitToFirst(50), so we can not blindly
+      // apply the query to leaf nodes. leafNodeRef.limitToFirst(n) will yield
+      // null data.
+      if (snap.hasChildren()) {
+        query = applyQuery(ref, queryParams);
+        return toObservable(query);
+      }
+      return toObservable(ref);
     }),
     map(
       (snap): ViewModel => ({
@@ -100,6 +107,7 @@ function realtimeToViewModel(
         children: snap.hasChildren() ? Object.keys(snap.val()) : NO_CHILDREN,
         isRealtime: true,
         isLoading: false,
+        query,
       })
     )
   );
@@ -131,12 +139,15 @@ function toObservable(query: firebase.database.Query) {
   });
 }
 
-function applyQuery(
+export function applyQuery(
   ref: firebase.database.Reference,
   params: QueryParams
 ): firebase.database.Query {
   const { key, operator, value, limit } = params;
-  if (key && operator && value) {
+  // Check the existence value instead of it being falsy. This prevents bugs
+  // where the "value" is actually false.
+  // ex: { key: "completed", operator: "==", value: "false" }
+  if (key != null && operator != null && value != null) {
     let query = ref.orderByChild(key).limitToFirst(limit || DEFAULT_PAGE_SIZE);
     switch (operator) {
       case '==':

@@ -35,7 +35,6 @@ export interface Props {
    * db root). It will show breadcrumbs of all hidden parent nodes to the root.
    */
   isViewRoot?: boolean;
-  baseUrl: string;
 }
 
 const initialState: ViewModel = {
@@ -46,7 +45,6 @@ const initialState: ViewModel = {
 export const NodeContainer = React.memo<Props>(function NodeContainer$({
   realtimeRef,
   isViewRoot,
-  baseUrl,
 }) {
   const [viewModel, setViewModel] = useState<ViewModel>(initialState);
   const [querySubject, setQuerySubject] = useState<
@@ -68,23 +66,19 @@ export const NodeContainer = React.memo<Props>(function NodeContainer$({
 
   const [queryParams, setQueryParams] = useState(DEFAULT_QUERY_PARAMS);
 
-  const { children } = viewModel;
+  const { children, query } = viewModel;
   const hasChildren = !!children.length;
   const isFiltered = queryParams !== DEFAULT_QUERY_PARAMS;
   return !hasChildren && !isFiltered ? (
-    <NodeLeaf
-      realtimeRef={realtimeRef}
-      baseUrl={baseUrl}
-      value={viewModel.value!}
-    />
+    <NodeLeaf realtimeRef={realtimeRef} value={viewModel.value!} />
   ) : (
     <NodeParent
       realtimeRef={realtimeRef}
-      baseUrl={baseUrl}
       children={children}
       queryParams={queryParams}
       updateQuery={updateQuery}
       isViewRoot={isViewRoot}
+      query={query}
     />
   );
 });

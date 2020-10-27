@@ -14,26 +14,24 @@
  * limitations under the License.
  */
 
-import { firestore } from 'firebase';
+import firebase from 'firebase';
 
 import { FirestoreAny, FirestoreMap } from '../models';
 import { isArray, isMap, withFieldRemoved, withFieldSet } from '../utils';
 
+const DELETE_FIELD = firebase.firestore.FieldValue.delete();
+
 export function deleteField(
-  documentRef: firestore.DocumentReference,
+  documentRef: firebase.firestore.DocumentReference,
   documentData: FirestoreMap,
   path: string[]
 ) {
-  const payload = adjustPayloadForArray(
-    documentData,
-    path,
-    firestore.FieldValue.delete()
-  );
+  const payload = adjustPayloadForArray(documentData, path, DELETE_FIELD);
   documentRef.update(...payload);
 }
 
 export function updateField(
-  documentRef: firestore.DocumentReference,
+  documentRef: firebase.firestore.DocumentReference,
   documentData: FirestoreMap,
   path: string[],
   value: FirestoreAny
@@ -43,7 +41,7 @@ export function updateField(
 }
 
 export async function addFieldToMissingDocument(
-  reference: firestore.DocumentReference,
+  reference: firebase.firestore.DocumentReference,
   key: string,
   value: FirestoreAny
 ) {
@@ -67,8 +65,8 @@ export async function addFieldToMissingDocument(
 function adjustPayloadForArray(
   doc: FirestoreMap,
   fieldPath: string[],
-  value: FirestoreAny | firestore.FieldValue
-): [firestore.FieldPath, FirestoreAny] {
+  value: FirestoreAny | firebase.firestore.FieldValue
+): [firebase.firestore.FieldPath, FirestoreAny] {
   let cur: FirestoreAny | undefined = doc;
   let parentPath: string[] = [];
   for (const key of fieldPath) {
@@ -84,17 +82,17 @@ function adjustPayloadForArray(
       // beyond the scope of this function and hard to keep in sync.
       // Instead, just overwrite the whole array, which may touch more data
       // than needed, but is always correct.
-      const pathToUpdate = new firestore.FieldPath(...parentPath);
+      const pathToUpdate = new firebase.firestore.FieldPath(...parentPath);
       const childPath = fieldPath.slice(parentPath.length);
-      if (
-        value instanceof firestore.FieldValue &&
-        value.isEqual(firestore.FieldValue.delete())
-      ) {
+
+      // Note: FieldValue sentinels are not guaranteed to be
+      // `instanceof FieldValue`, so let's just use type casting here.
+      if (value === DELETE_FIELD || DELETE_FIELD.isEqual(value as any)) {
         return [pathToUpdate, withFieldRemoved(cur, childPath)];
       } else {
         return [pathToUpdate, withFieldSet(cur, childPath, value)];
       }
     }
   }
-  return [new firestore.FieldPath(...fieldPath), value];
+  return [new firebase.firestore.FieldPath(...fieldPath), value];
 }
