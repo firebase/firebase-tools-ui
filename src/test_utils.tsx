@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
+import { RMWCProvider } from '@rmwc/provider';
 import {
-  RenderOptions,
-  RenderResult,
   act,
+  fireEvent,
   render,
-  waitForDomChange,
   waitForElement,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
+import React from 'react';
+import { FormContextValues, UseFormOptions, useForm } from 'react-hook-form';
 
 export function delay(timeoutMs: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, timeoutMs));
@@ -57,23 +58,6 @@ export async function waitForDialogsToClose(container: ParentNode = document) {
   await waitForElementToBeRemoved(() =>
     document.querySelector('.mdc-dialog--closing')
   );
-}
-
-/* Render a component containing a MDC dialog, and wait for the dialog to be
- * fully open. Silences act(...) warnings from RMWC <Dialog>s.
- *
- * This is syntatic sugar for render() and then waitForDialogsToOpen().
- */
-export async function renderDialog(
-  ui: React.ReactElement,
-  options?: Omit<RenderOptions, 'queries'>
-): Promise<RenderResult> {
-  let renderResult: RenderResult;
-  await act(async () => {
-    renderResult = render(ui, options);
-    await waitForDialogsToOpen(renderResult.container);
-  });
-  return renderResult!;
 }
 
 /**
@@ -143,4 +127,49 @@ export function makeDeferred<T>(): Deferred<T> {
       return this.resolve(Promise.reject(error));
     },
   };
+}
+
+/**
+ * Renders a component wrapped with react hook form, and expose helpers that simplify testing.
+ *
+ * Component is expected to receive resulting form methods as props.
+ */
+export const wrapWithForm = <P, T, F = UseFormOptions<T>>(
+  Control: React.FC<FormContextValues<T> & P>,
+  options: F,
+  props: P
+) => {
+  const submit = jest.fn();
+  const FormWrapper = () => {
+    const form = useForm<T>(options);
+
+    return (
+      // Ripples cause "not wrapped in act()" warning.
+      <RMWCProvider ripple={false}>
+        <form data-testid="form" onSubmit={form.handleSubmit(submit)}>
+          <Control {...form} {...props} />
+        </form>
+      </RMWCProvider>
+    );
+  };
+
+  const methods = render(<FormWrapper />);
+
+  const triggerValidation = async () => {
+    await act(async () => {
+      fireEvent.submit(methods.getByTestId('form'));
+    });
+  };
+
+  return { ...methods, triggerValidation, submit };
+};
+
+/**
+ * Wait for MDC Menu to be fully open, so no DOM changes happen outside
+ * our control and trigger warnings of not wrapped in act(...) etc.
+ */
+export async function waitForMenuToOpen(container: ParentNode = document) {
+  await waitForElementToBeRemoved(() =>
+    container.querySelector('.mdc-menu-surface--animating-open')
+  );
 }

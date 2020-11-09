@@ -7,7 +7,19 @@ The web UI for Firebase Emulator Suite. Features include:
 - Cloud Firestore Data Viewer/Editor
 - Logs Viewer with powerful filters
 
-## Development
+More on the [blog post](https://firebase.googleblog.com/2020/05/local-firebase-emulator-ui.html)!
+
+## Usage
+
+If you want to use the Emulator UI in your project, just simply follow the guide for [installing and running the Emulator Suite](https://firebase.google.com/docs/emulator-suite/install_and_configure).
+
+Make sure you have Firebase CLI `>= 8.4.0`. (You may want to [update](https://firebase.google.com/docs/cli#update-cli) if you already have Firebase CLI installed.) The Emulator UI will automatically start when you start the Emulator Suite.
+
+## Contributing
+
+We welcome any issues and Pull Requests to improve the Emulator UI. The following instructions cover how to set up your dev environment for iterating on the Emulator UI itself.
+
+(If you're looking forward to use the Emulator UI as a user, please refer to the Usage section above.)
 
 ### Start the Development Server
 
@@ -45,7 +57,7 @@ cd firebase-tools-ui/
 GCLOUD_PROJECT=<project-id> FIREBASE_EMULATOR_HUB=localhost:4400 npm start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser. Note: The development server runs by default on port **3000**, so please make sure you are visiting that URL instead of the production Emulator UI (which defaults on port **4000**).
 
 ### Other Available Scripts
 
@@ -81,5 +93,3 @@ the server as described above.
 ## License
 
 Apache 2.0
-
-This is not an official Google product.

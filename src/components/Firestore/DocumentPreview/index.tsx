@@ -19,9 +19,8 @@ import { List, ListItem } from '@rmwc/list';
 import { Typography } from '@rmwc/typography';
 import { firestore } from 'firebase';
 import React, { useState } from 'react';
-import { useDocumentData } from 'react-firebase-hooks/firestore';
+import { useFirestoreDocData } from 'reactfire';
 
-import { FirestoreMap } from '../models';
 import { isMap } from '../utils';
 import { addFieldToMissingDocument, updateField } from './api';
 import FieldPreview from './FieldPreview';
@@ -37,11 +36,9 @@ const DocumentPreview: React.FC<Props> = ({
   reference,
   maxSummaryLen = 20,
 }) => {
-  const [data, loading, error] = useDocumentData<FirestoreMap>(reference);
+  const data = useFirestoreDocData<{}>(reference);
   const [isAddingField, setIsAddingField] = useState(false);
-
-  if (loading) return <div>Loading document...</div>;
-  if (error) return <div>Error retrieving document</div>;
+  const docExists = Object.keys(data).length > 0;
 
   return (
     <>
@@ -67,7 +64,7 @@ const DocumentPreview: React.FC<Props> = ({
                 setIsAddingField(false);
               }}
               onSave={async (key, value) => {
-                if (!data) {
+                if (!docExists) {
                   await addFieldToMissingDocument(reference, key, value);
                 } else {
                   updateField(reference, data, [key], value);
@@ -75,10 +72,11 @@ const DocumentPreview: React.FC<Props> = ({
                 setIsAddingField(false);
               }}
               areRootKeysMutable={true}
+              firestore={reference.firestore}
             />
           )}
 
-          {data && isMap(data) ? (
+          {docExists && isMap(data) ? (
             <div className="Firestore-Field-List">
               {Object.keys(data).map(name => (
                 <FieldPreview

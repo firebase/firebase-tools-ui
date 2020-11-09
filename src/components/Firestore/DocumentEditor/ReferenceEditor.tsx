@@ -16,9 +16,9 @@
 
 import React, { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
+import { useFirestore } from 'reactfire';
 
 import { Field } from '../../common/Field';
-import { useApi } from '../ApiContext';
 import { DocumentPath } from './types';
 
 const ReferenceEditor: React.FC<{
@@ -27,7 +27,7 @@ const ReferenceEditor: React.FC<{
   name: string;
 }> = ({ value, onChange, name }) => {
   const [path] = useState(value.path);
-  const api = useApi();
+  const firestore = useFirestore();
   const {
     errors,
     formState: { touched },
@@ -41,7 +41,7 @@ const ReferenceEditor: React.FC<{
     register(name, {
       validate: e => {
         try {
-          api.database.doc(e);
+          firestore.doc(e);
           return true;
         } catch {
           return 'Must point to a document';
@@ -50,7 +50,7 @@ const ReferenceEditor: React.FC<{
     });
 
     return () => unregister(name);
-  }, [register, unregister, name, api]);
+  }, [register, unregister, name, firestore]);
 
   async function handleChange(value: string) {
     if (await triggerValidation(name)) {

@@ -103,9 +103,20 @@ $mdc-select-outlined-hover-border: var(--fire-color-input-borders);
     }
   }
 }
-.mdc-select--outlined:not(.mdc-select--disabled),
-.mdc-text-field--outlined:not(.mdc-text-field--disabled) {
-  .mdc-notched-outline {
-    background-color: $COLOR_WHITE_PRIMARY;
-  }
+
+.mdc-select--outlined:not(.mdc-select--disabled) .mdc-select__native-control,
+.mdc-text-field--outlined:not(.mdc-text-field--disabled)
+  .mdc-text-field__input {
+  // Force white background (instead of transparent, e.g. in dialogs).
+  background-color: $COLOR_WHITE_PRIMARY;
+  border-radius: 4px; // To avoid "leaking" background color in corners.
+
+  // We also reset the z-index, causing the notched outline to ALWAYS come on
+  // top of the input (since the outline will go under otherwise.)
+  z-index: auto;
+
+  // Note: We tried and abandoned setting background on .mdc-notched-outline,
+  // because Material styles position it ABOVE the input on Chrome autofill,
+  // causing input content text to be covered. See b/170908531 (internal) and:
+  // https://github.com/material-components/material-components-web/pull/4232/files
 }

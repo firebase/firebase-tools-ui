@@ -1,0 +1,26 @@
+@import '../../../common/color';
+
+.noResultsWrapper {
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+// Double selector - for higher specificity to Override rmwc styles.
+.tableWrapper.tableWrapper {
+  // Avoid double borders.
+  margin: -1px;
+  border-radius: 0 0 4px 4px;
+}
+
+// TODO(kirjs): Consider using ThemeProvider instead.
+.disabled {
+  background: $COLOR_WHITE_DISABLED;
+  opacity: 0.3;
+
+  &:hover {
+    // Override RMWC styles.
+    background-color: transparent !important;
+  }
+}
