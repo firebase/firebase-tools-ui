@@ -32,7 +32,9 @@ interface WindowWithFirestore extends Window {
  * Provide a local-FirebaseApp with a FirestoreSDK connected to
  * the Emulator Hub.
  */
-export const FirestoreEmulatedApiProvider: React.FC = React.memo(props => {
+export const FirestoreEmulatedApiProvider: React.FC<{
+  disableDevTools?: boolean;
+}> = React.memo(({ children, disableDevTools }) => {
   const config = useFirestoreConfig();
   const app = useEmulatedFirebaseApp('firestore', config);
 
@@ -41,8 +43,8 @@ export const FirestoreEmulatedApiProvider: React.FC = React.memo(props => {
       <Suspense
         fallback={<Spinner message="Loading Firestore SDK" span={12} />}
       >
-        <FirestoreEmulatorSettings {...props} />
-        <FirestoreDevTools />
+        <FirestoreEmulatorSettings>{children}</FirestoreEmulatorSettings>
+        {disableDevTools || <FirestoreDevTools />}
       </Suspense>
     </FirebaseAppProvider>
   );
