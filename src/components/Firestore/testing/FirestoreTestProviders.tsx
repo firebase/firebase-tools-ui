@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-import * as firebaseTesting from '@firebase/testing';
 import { render, waitForElement } from '@testing-library/react';
 import firebase from 'firebase';
 import React, { Suspense, useEffect, useState } from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
-import { FirebaseAppProvider, useFirestore } from 'reactfire';
+import { useFirestore } from 'reactfire';
 import configureStore from 'redux-mock-store';
 
 import { AppState } from '../../../store';
+import { FirestoreEmulatedApiProvider } from '../FirestoreEmulatedApiProvider';
 
 interface RenderOptions {
   path?: string;
@@ -41,7 +41,9 @@ export const renderWithFirestore = async (
     </FirestoreTestProviders>
   );
 
-  await waitForElement(() => component.findByTestId('firestore-foo'));
+  await waitForElement(() =>
+    component.findByTestId(ASYNC_FIRESTORE_WRAPPER_TEST_ID)
+  );
 
   return component;
 };
@@ -56,7 +58,6 @@ export const FirestoreTestProviders: React.FC<RenderOptions> = React.memo(
       throw new Error('FirestoreTestProviders requires a running Emulator');
     }
     const [host, port] = hostAndPort.split(':');
-
     const store = configureStore<Pick<AppState, 'config'>>()({
       config: {
         loading: false,
@@ -69,29 +70,21 @@ export const FirestoreTestProviders: React.FC<RenderOptions> = React.memo(
       },
     });
 
-    const testingApp = firebaseTesting.initializeTestApp({
-      projectId,
-    });
-
-    useEffect(() => {
-      return () => {
-        testingApp.delete();
-      };
-    }, []);
-
     return (
       <Provider store={store}>
-        <FirebaseAppProvider firebaseApp={testingApp}>
+        <FirestoreEmulatedApiProvider disableDevTools>
           <MemoryRouter initialEntries={[path]}>
             <Suspense fallback={<h1 data-testid="fallback">Fallback</h1>}>
               {children}
             </Suspense>
           </MemoryRouter>
-        </FirebaseAppProvider>
+        </FirestoreEmulatedApiProvider>
       </Provider>
     );
   }
 );
+
+const ASYNC_FIRESTORE_WRAPPER_TEST_ID = 'AsyncFirestore-wrapper';
 
 const AsyncFirestore: React.FC<{
   children: (
@@ -109,6 +102,6 @@ const AsyncFirestore: React.FC<{
   }, [children, firestore, setFirestoreChildren]);
 
   return firestoreChildren ? (
-    <div data-testid="firestore-foo">{firestoreChildren}</div>
+    <div data-testid={ASYNC_FIRESTORE_WRAPPER_TEST_ID}>{firestoreChildren}</div>
   ) : null;
 });
