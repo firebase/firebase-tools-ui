@@ -20,6 +20,7 @@ import { Button } from '@rmwc/button';
 import { Card } from '@rmwc/card';
 import { Elevation } from '@rmwc/elevation';
 import { GridCell } from '@rmwc/grid';
+import { Tab, TabBar } from '@rmwc/tabs';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
@@ -80,6 +81,7 @@ export const Firestore: React.FC = React.memo(() => {
   const location = useLocation();
   const history = useHistory();
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [activeTabIndex, setActiveTabIndex] = useState(0);
   const eject = useEjector();
 
   // TODO: do something better here!
@@ -111,11 +113,9 @@ export const Firestore: React.FC = React.memo(() => {
     }
   }
 
-  return isRefreshing ? (
-    <Spinner span={12} data-testid="firestore-loading" />
-  ) : (
-    <FirestoreStore>
-      <GridCell span={12} className="Firestore">
+  function renderFirestoreData() {
+    return activeTabIndex !== 0 ? null : (
+      <>
         <div className="Firestore-actions">
           <CustomThemeProvider use="warning" wrap>
             <Button unelevated onClick={() => handleClearData()}>
@@ -151,6 +151,30 @@ export const Firestore: React.FC = React.memo(() => {
             </div>
           </Card>
         </Elevation>
+      </>
+    );
+  }
+
+  function renderFirestoreRules() {
+    return activeTabIndex !== 1 ? null : null;
+  }
+
+  return isRefreshing ? (
+    <Spinner span={12} data-testid="firestore-loading" />
+  ) : (
+    <FirestoreStore>
+      <GridCell span={12} className="Firestore">
+        <TabBar
+          theme="onSurface"
+          activeTabIndex={activeTabIndex}
+          onActivate={event => setActiveTabIndex(event.detail.index)}
+        >
+          <Tab className="mdc-tab--min-width">Data</Tab>
+          <Tab className="mdc-tab--min-width">Rules</Tab>
+        </TabBar>
+
+        {renderFirestoreData()}
+        {renderFirestoreRules()}
       </GridCell>
     </FirestoreStore>
   );
