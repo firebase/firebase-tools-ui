@@ -100,6 +100,29 @@ it('filters documents for single-value filters', async () => {
   expect(queryByText(/doc-without/)).toBeNull();
 });
 
+it('filters documents for single-value not operator filters', async () => {
+  useCollectionFilter.mockReturnValue({
+    field: 'foo',
+    operator: '!=',
+    value: 'bar',
+  });
+
+  const { getByText, queryByText } = await renderWithFirestore(
+    async firestore => {
+      const collectionRef = firestore.collection('my-stuff');
+      await collectionRef.doc('doc-with').set({ foo: 'not-bar' });
+      await collectionRef.doc('doc-without').set({ foo: 'bar' });
+
+      return <Collection collection={collectionRef} />;
+    }
+  );
+
+  await waitForElement(() => getByText(/doc-with/));
+
+  expect(getByText(/doc-with/)).not.toBeNull();
+  expect(queryByText(/doc-without/)).toBeNull();
+});
+
 it('filters documents for multi-value filters', async () => {
   useCollectionFilter.mockReturnValue({
     field: 'foo',
@@ -112,6 +135,30 @@ it('filters documents for multi-value filters', async () => {
       const collectionRef = firestore.collection('my-stuff');
       await collectionRef.doc('doc-with').set({ foo: 'eggs' });
       await collectionRef.doc('doc-without').set({ foo: 'not-eggs' });
+
+      return <Collection collection={collectionRef} />;
+    }
+  );
+
+  await waitForElement(() => getByText(/doc-with/));
+
+  expect(getByText(/doc-with/)).not.toBeNull();
+  expect(queryByText(/doc-without/)).toBeNull();
+});
+
+
+it('filters documents for multi-value not operator filters', async () => {
+  useCollectionFilter.mockReturnValue({
+    field: 'foo',
+    operator: 'not-in',
+    values: ['eggs', 'spam'],
+  });
+
+  const { getByText, queryByText } = await renderWithFirestore(
+    async firestore => {
+      const collectionRef = firestore.collection('my-stuff');
+      await collectionRef.doc('doc-with').set({ foo: 'not-eggs' });
+      await collectionRef.doc('doc-without').set({ foo: 'eggs' });
 
       return <Collection collection={collectionRef} />;
     }
