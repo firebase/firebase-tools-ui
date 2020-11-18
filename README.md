@@ -75,7 +75,7 @@ To run the test runner with emulators, use:
 firebase emulators:exec --project sample --only firestore 'npm test'
 ```
 
-Make sure the development server is not running, since both the development server and the test runner start the Firebase Emulator Suite. Running both at the same time would cause PORT conflicts.
+If you get port conflict errors, make sure to stop other instances of the Firebase Emulator Suite (e.g. the one you've started for the development server above) and try again.
 
 #### `npm run build`
 
