@@ -63,9 +63,14 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser. N
 
 In the project directory, you can run:
 
-#### `npm test`
+```bash
+firebase emulators:exec --project sample --only firestore 'npm test'
+```
 
-Launches the test runner in the interactive watch mode.<br />
+Launches the test runner in the interactive watch mode.
+
+Make sure the development server is not running, since both the development server and the test runner start the Firebase Emulator Suite. Running both at the same time would cause PORT conflicts.
+
 See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
 #### `npm run build`
