@@ -17,12 +17,32 @@
 import './RulesTable.scss';
 
 import { ThemeProvider } from '@rmwc/theme';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { grey100 } from '../../colors';
-import { CustomThemeProvider } from '../../themes';
+import { CustomThemeProvider, CustomThemeType } from '../../themes';
+import { FirestoreRulesEvaluation } from './rules/rules_evaluation_result_model';
+import { registerForRulesEvents } from './rules/rules_evaluations_listener';
 
-export const RulesTable: React.FC<{}> = ({}) => {
+interface RulesOutcomeData {
+  [outcome: string]: {
+    theme: CustomThemeType;
+    label: string;
+  };
+}
+
+export const RulesTable: React.FC<{}> = () => {
+  const [evaluations, setEvaluations] = useState<FirestoreRulesEvaluation[]>(
+    []
+  );
+
+  useEffect(() => {
+    const callbackFunction = (newEvaluation: FirestoreRulesEvaluation) =>
+      setEvaluations(evaluations => [...evaluations, newEvaluation]);
+    const unsubscribeFromRules = registerForRulesEvents(callbackFunction);
+    return () => unsubscribeFromRules();
+  }, []);
+
   return (
     <ThemeProvider
       options={{
@@ -39,20 +59,29 @@ export const RulesTable: React.FC<{}> = ({}) => {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>source/path1</td>
-              <CustomThemeProvider use="warning" wrap>
-                <td className="Firestore-RulesTable-Outcome">DENY</td>
-              </CustomThemeProvider>
-              <td>2:31:56 PM</td>
-            </tr>
-            <tr>
-              <td>source/path2</td>
-              <CustomThemeProvider use="success" wrap>
-                <td className="Firestore-RulesTable-Outcome">ALLOW</td>
-              </CustomThemeProvider>
-              <td>2:32:56 PM</td>
-            </tr>
+            {evaluations.map(
+              (evaluation: FirestoreRulesEvaluation, index: number) => {
+                const { rulesContext, outcome } = evaluation;
+                const resourcePath = rulesContext?.request?.path;
+                const requestTime = (rulesContext?.request?.time).toDateString();
+                const outcomeData: RulesOutcomeData = {
+                  allow: { theme: 'success', label: 'ALLOW' },
+                  deny: { theme: 'warning', label: 'DENY' },
+                  error: { theme: 'note', label: 'ERROR' },
+                };
+                return (
+                  <tr key={index}>
+                    <td>{resourcePath}</td>
+                    <CustomThemeProvider use={outcomeData[outcome]?.theme} wrap>
+                      <td className="Firestore-RulesTable-Outcome">
+                        {outcomeData[outcome]?.label}
+                      </td>
+                    </CustomThemeProvider>
+                    <td>{requestTime}</td>
+                  </tr>
+                );
+              }
+            )}
           </tbody>
         </table>
       </div>
