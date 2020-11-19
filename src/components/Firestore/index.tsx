@@ -43,6 +43,7 @@ import {
   useEjector,
 } from './FirestoreEmulatedApiProvider';
 import PanelHeader from './PanelHeader';
+import RulesTable from './RulesTable';
 import { FirestoreStore } from './store';
 
 interface WindowWithFirestoreDb extends Window {
@@ -113,50 +114,54 @@ export const Firestore: React.FC = React.memo(() => {
     }
   }
 
+  function renderClearDataAction() {
+    return activeTabIndex !== 0 ? null : (
+      <CustomThemeProvider use="warning" wrap>
+        <Button unelevated onClick={() => handleClearData()}>
+          Clear all data
+        </Button>
+      </CustomThemeProvider>
+    );
+  }
+
   function renderFirestoreData() {
     return activeTabIndex !== 0 ? null : (
-      <>
-        <div className="Firestore-actions">
-          <CustomThemeProvider use="warning" wrap>
-            <Button unelevated onClick={() => handleClearData()}>
-              Clear all data
-            </Button>
-          </CustomThemeProvider>
-        </div>
-        <Elevation z="2" wrap>
-          <Card className="Firestore-panels-wrapper">
-            <InteractiveBreadCrumbBar
-              base="/firestore"
-              path={path}
-              onNavigate={handleNavigate}
-            />
-            <div className="Firestore-panels">
-              <Root />
-              {showCollectionShell && (
-                <div
-                  className="Firestore-Collection"
-                  data-testid="collection-shell"
-                >
-                  <PanelHeader id="" icon={null} />
-                </div>
-              )}
-              {showDocumentShell && (
-                <div
-                  className="Firestore-Document"
-                  data-testid="document-shell"
-                >
-                  <PanelHeader id="" icon={null} />
-                </div>
-              )}
-            </div>
-          </Card>
-        </Elevation>
-      </>
+      <Elevation z="2" wrap>
+        <Card className="Firestore-panels-wrapper">
+          <InteractiveBreadCrumbBar
+            base="/firestore"
+            path={path}
+            onNavigate={handleNavigate}
+          />
+          <div className="Firestore-panels">
+            <Root />
+            {showCollectionShell && (
+              <div
+                className="Firestore-Collection"
+                data-testid="collection-shell"
+              >
+                <PanelHeader id="" icon={null} />
+              </div>
+            )}
+            {showDocumentShell && (
+              <div className="Firestore-Document" data-testid="document-shell">
+                <PanelHeader id="" icon={null} />
+              </div>
+            )}
+          </div>
+        </Card>
+      </Elevation>
     );
   }
 
   function renderFirestoreRules() {
-    return activeTabIndex !== 1 ? null : null;
+    return activeTabIndex !== 1 ? null : (
+      <Elevation z="2" wrap>
+        <Card className="Firestore-panels-wrapper">
+          <RulesTable />
+        </Card>
+      </Elevation>
+    );
   }
 
   return isRefreshing ? (
@@ -164,14 +169,18 @@ export const Firestore: React.FC = React.memo(() => {
   ) : (
     <FirestoreStore>
       <GridCell span={12} className="Firestore">
-        <TabBar
-          theme="onSurface"
-          activeTabIndex={activeTabIndex}
-          onActivate={event => setActiveTabIndex(event.detail.index)}
-        >
-          <Tab className="mdc-tab--min-width">Data</Tab>
-          <Tab className="mdc-tab--min-width">Rules</Tab>
-        </TabBar>
+        <div className="Firestore-actions">
+          <TabBar
+            className="Firestore-sub-tab-bar"
+            theme="onSurface"
+            activeTabIndex={activeTabIndex}
+            onActivate={event => setActiveTabIndex(event.detail.index)}
+          >
+            <Tab className="mdc-tab--min-width">Data</Tab>
+            <Tab className="mdc-tab--min-width">Rules</Tab>
+          </TabBar>
+          {renderClearDataAction()}
+        </div>
 
         {renderFirestoreData()}
         {renderFirestoreRules()}
