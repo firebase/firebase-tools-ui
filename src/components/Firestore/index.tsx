@@ -23,9 +23,10 @@ import { GridCell } from '@rmwc/grid';
 import { Tab, TabBar } from '@rmwc/tabs';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { useHistory, useLocation } from 'react-router-dom';
+import { Link, matchPath, useHistory, useLocation } from 'react-router-dom';
 import { useFirestore } from 'reactfire';
 
+import { Route, routes } from '../../routes';
 import { createStructuredSelector } from '../../store';
 import {
   getFirestoreConfigResult,
@@ -82,13 +83,31 @@ export const Firestore: React.FC = React.memo(() => {
   const location = useLocation();
   const history = useHistory();
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [activeTabIndex, setActiveTabIndex] = useState(0);
   const eject = useEjector();
 
   // TODO: do something better here!
   const path = location.pathname.replace(/^\/firestore/, '');
   const showCollectionShell = path.split('/').length < 2;
   const showDocumentShell = path.split('/').length < 3;
+
+  const subNavRoutes = routes.filter(r => r.showInFirestoreSubNav);
+
+  const subTabs = subNavRoutes.map(({ path, label }: Route) => (
+    <Tab
+      key={label}
+      className="mdc-tab--min-width"
+      {...{ tag: Link, to: path }}
+    >
+      {label}
+    </Tab>
+  ));
+
+  const activeTabIndex = subNavRoutes.findIndex(r =>
+    matchPath(location.pathname, {
+      path: r.path,
+      exact: r.exact,
+    })
+  );
 
   useEffect(() => {
     (window as WindowWithFirestoreDb).firestore = firestore;
@@ -174,10 +193,8 @@ export const Firestore: React.FC = React.memo(() => {
             className="Firestore-sub-tab-bar"
             theme="onSurface"
             activeTabIndex={activeTabIndex}
-            onActivate={event => setActiveTabIndex(event.detail.index)}
           >
-            <Tab className="mdc-tab--min-width">Data</Tab>
-            <Tab className="mdc-tab--min-width">Rules</Tab>
+            {subTabs}
           </TabBar>
           {renderClearDataAction()}
         </div>

@@ -28,6 +28,7 @@ export interface Route {
   label: string;
   exact: boolean;
   showInNav: boolean;
+  showInFirestoreSubNav?: boolean;
 }
 
 export const routes: ReadonlyArray<Route> = [
@@ -46,7 +47,7 @@ export const routes: ReadonlyArray<Route> = [
     showInNav: true,
   },
   {
-    path: '/firestore',
+    path: '/firestore/data',
     component: Firestore,
     label: 'Firestore',
     exact: false,
@@ -65,5 +66,23 @@ export const routes: ReadonlyArray<Route> = [
     label: 'Logs',
     exact: true,
     showInNav: true,
+  },
+
+  // Firestore SubNav tabs
+  {
+    path: '/firestore/data',
+    component: Firestore,
+    label: 'Data',
+    exact: false,
+    showInNav: false,
+    showInFirestoreSubNav: true,
+  },
+  {
+    path: '/firestore/rules',
+    component: Firestore,
+    label: 'Rules',
+    exact: true,
+    showInNav: false,
+    showInFirestoreSubNav: true,
   },
 ];
