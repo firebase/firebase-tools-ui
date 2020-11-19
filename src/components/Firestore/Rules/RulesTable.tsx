@@ -20,10 +20,10 @@ import { ThemeProvider } from '@rmwc/theme';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 
-import { grey100 } from '../../colors';
-import { CustomThemeProvider, CustomThemeType } from '../../themes';
-import { FirestoreRulesEvaluation } from './rules/rules_evaluation_result_model';
-import { registerForRulesEvents } from './rules/rules_evaluations_listener';
+import { grey100 } from '../../../colors';
+import { CustomThemeProvider, CustomThemeType } from '../../../themes';
+import { FirestoreRulesEvaluation } from './rules_evaluation_result_model';
+import { registerForRulesEvents } from './rules_evaluations_listener';
 
 interface RulesOutcomeData {
   [outcome: string]: {
@@ -50,8 +50,8 @@ export const RulesTable: React.FC<{}> = () => {
         surface: grey100,
       }}
     >
-      <div className="Firestore-RulesTable">
-        <table className="Firestore-rules-table">
+      <div className="Firestore-Rules-Table">
+        <table>
           <thead>
             <tr>
               <th>Resource name</th>
@@ -74,7 +74,7 @@ export const RulesTable: React.FC<{}> = () => {
                   <tr key={index}>
                     <td>{resourcePath}</td>
                     <CustomThemeProvider use={outcomeData[outcome]?.theme} wrap>
-                      <td className="Firestore-RulesTable-Outcome">
+                      <td className="Firestore-Rules-Table-Outcome">
                         {outcomeData[outcome]?.label}
                       </td>
                     </CustomThemeProvider>

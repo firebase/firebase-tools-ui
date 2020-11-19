@@ -44,7 +44,8 @@ import {
   useEjector,
 } from './FirestoreEmulatedApiProvider';
 import PanelHeader from './PanelHeader';
-import RulesTable from './RulesTable';
+// import RulesTable from './Rules/RulesTable';
+import FirestoreRules from './Rules';
 import { FirestoreStore } from './store';
 
 interface WindowWithFirestoreDb extends Window {
@@ -177,7 +178,8 @@ export const Firestore: React.FC = React.memo(() => {
     return activeTabIndex !== 1 ? null : (
       <Elevation z="2" wrap>
         <Card className="Firestore-panels-wrapper">
-          <RulesTable />
+          <FirestoreRules />
+          {/* <RulesTable /> */}
         </Card>
       </Elevation>
     );

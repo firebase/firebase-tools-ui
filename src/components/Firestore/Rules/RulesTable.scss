@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-@import '../common/utils';
-
-.Firestore-RulesTable {
+.Firestore-Rules-Table {
   table {
     border-collapse: collapse;
     width: 100%;
@@ -45,7 +43,7 @@
   }
 }
 
-.Firestore-RulesTable-Outcome {
+.Firestore-Rules-Table-Outcome {
   color: var(--mdc-theme-primary);
   font-weight: 500;
 }

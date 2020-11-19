@@ -36,7 +36,7 @@ export function registerForRulesEvents(callback: OnEvaluationFn): Unsubscribe {
         callback(DUMMY_EVALUATIONS[i]);
         scheduleOnce();
       }
-    }, Math.random() * 3_000);
+    }, Math.random() * 4_000);
   }
 
   scheduleOnce();
