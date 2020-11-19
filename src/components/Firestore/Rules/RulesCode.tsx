@@ -37,6 +37,7 @@ export const RulesCode: React.FC<{}> = () => {
           keyMap: 'sublime',
           mode: 'jsx',
           tabsize: 2,
+          readOnly: true,
         }}
       />
     </div>
