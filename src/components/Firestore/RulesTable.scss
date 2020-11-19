@@ -40,6 +40,9 @@
   th:last-of-type {
     border-top-right-radius: 8px;
   }
+  tbody tr:hover {
+    background-color: var(--mdc-theme-surface);
+  }
 }
 
 .Firestore-RulesTable-Outcome {
