@@ -17,6 +17,7 @@
 import './RulesTable.scss';
 
 import { ThemeProvider } from '@rmwc/theme';
+import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 
 import { grey100 } from '../../colors';
@@ -63,7 +64,7 @@ export const RulesTable: React.FC<{}> = () => {
               (evaluation: FirestoreRulesEvaluation, index: number) => {
                 const { rulesContext, outcome } = evaluation;
                 const resourcePath = rulesContext?.request?.path;
-                const requestTime = (rulesContext?.request?.time).toDateString();
+                const requestTime = rulesContext?.request?.time;
                 const outcomeData: RulesOutcomeData = {
                   allow: { theme: 'success', label: 'ALLOW' },
                   deny: { theme: 'warning', label: 'DENY' },
@@ -77,7 +78,9 @@ export const RulesTable: React.FC<{}> = () => {
                         {outcomeData[outcome]?.label}
                       </td>
                     </CustomThemeProvider>
-                    <td>{requestTime}</td>
+                    <td>
+                      {moment(requestTime).format('MMMM Do YYYY, h:mm:ss A')}
+                    </td>
                   </tr>
                 );
               }
