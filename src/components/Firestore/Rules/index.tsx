@@ -21,11 +21,15 @@ import React, { useState } from 'react';
 
 import { grey100 } from '../../../colors';
 import { noteTheme } from '../../../themes';
+import { FirestoreRulesIssue } from './rules_evaluation_result_model';
 import RulesCode, { LineOutcome } from './RulesCode';
 import RulesList from './RulesList';
+import { sampleRules } from './sample-rules';
 
 export const Rules: React.FC<{}> = () => {
   const [linesOutcome, setLinesOutcome] = useState<LineOutcome[]>([]);
+  const [firestoreRules, setFirestoreRules] = useState<string>(sampleRules);
+  const [rulesIssues, setRulesIssues] = useState<FirestoreRulesIssue[]>([]);
 
   return (
     <ThemeProvider
@@ -35,8 +39,16 @@ export const Rules: React.FC<{}> = () => {
       }}
     >
       <div className="Firestore-Rules">
-        <RulesList setLinesOutcome={setLinesOutcome} />
-        <RulesCode linesOutcome={linesOutcome} />
+        <RulesList
+          setLinesOutcome={setLinesOutcome}
+          setFirestoreRules={setFirestoreRules}
+          setRulesIssues={setRulesIssues}
+        />
+        <RulesCode
+          linesOutcome={linesOutcome}
+          firestoreRules={firestoreRules}
+          rulesIssues={rulesIssues}
+        />
       </div>
     </ThemeProvider>
   );

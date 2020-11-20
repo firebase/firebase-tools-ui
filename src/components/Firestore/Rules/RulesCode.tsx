@@ -24,8 +24,10 @@ import CodeMirror from '@uiw/react-codemirror';
 import React, { useEffect, useState } from 'react';
 import ReactDOMServer from 'react-dom/server';
 
-import { RulesOutcome } from './rules_evaluation_result_model';
-import { sampleRules } from './sample-rules';
+import {
+  FirestoreRulesIssue,
+  RulesOutcome,
+} from './rules_evaluation_result_model';
 
 export interface LineOutcome {
   line: number;
@@ -34,11 +36,11 @@ export interface LineOutcome {
 
 export const RulesCode: React.FC<{
   linesOutcome: LineOutcome[];
-}> = ({ linesOutcome }) => {
+  firestoreRules: string;
+  rulesIssues: FirestoreRulesIssue[];
+}> = ({ linesOutcome, firestoreRules, rulesIssues }) => {
   const [codeMirrorEditor, setCodeMirrorEditor] = useState<any>(null);
   const [prevLinesOutcome, setPrevLinesOutcome] = useState<LineOutcome[]>([]);
-
-  const rulesCode = sampleRules;
 
   // highlights and adds outcome icon to corresponding lines of rules code viewer
   useEffect(() => {
@@ -79,7 +81,7 @@ export const RulesCode: React.FC<{
     <div className="Firestore-Rules-Code">
       <div className="Firestore-Rules-Code-TopBar" />
       <CodeMirror
-        value={rulesCode}
+        value={firestoreRules}
         options={{
           theme: 'xq-light',
           keyMap: 'sublime',

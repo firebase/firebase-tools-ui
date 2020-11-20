@@ -20,7 +20,10 @@ import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 
 import { CustomThemeProvider, CustomThemeType } from '../../../themes';
-import { FirestoreRulesEvaluation } from './rules_evaluation_result_model';
+import {
+  FirestoreRulesEvaluation,
+  FirestoreRulesIssue,
+} from './rules_evaluation_result_model';
 import { registerForRulesEvents } from './rules_evaluations_listener';
 import { LineOutcome } from './RulesCode';
 
@@ -34,17 +37,34 @@ interface RulesOutcomeData {
 interface SetLinesOutcomeFn {
   (setLinesOutcome: LineOutcome[]): void;
 }
+interface SetFirestoreRulesFn {
+  (setFirestoreRules: string): void;
+}
+interface SetRulesIssuesFn {
+  (setRulesIssues: FirestoreRulesIssue[]): void;
+}
 
-export const RulesList: React.FC<{ setLinesOutcome: SetLinesOutcomeFn }> = ({
-  setLinesOutcome,
-}) => {
+export const RulesList: React.FC<{
+  setLinesOutcome: SetLinesOutcomeFn;
+  setFirestoreRules: SetFirestoreRulesFn;
+  setRulesIssues: SetRulesIssuesFn;
+}> = ({ setLinesOutcome, setFirestoreRules, setRulesIssues }) => {
   const [evaluations, setEvaluations] = useState<FirestoreRulesEvaluation[]>(
     []
   );
 
   useEffect(() => {
-    const callbackFunction = (newEvaluation: FirestoreRulesEvaluation) =>
-      setEvaluations(evaluations => [newEvaluation, ...evaluations]);
+    const callbackFunction = (newEvaluation: FirestoreRulesEvaluation) => {
+      console.log('dev: ', newEvaluation);
+      const { type, data } = newEvaluation;
+      if (type === 'RULES_UPDATE') {
+        const updatedRules = data?.rules;
+        setFirestoreRules(updatedRules || '');
+        data?.issues.length && setRulesIssues(data?.issues);
+      } else {
+        setEvaluations(evaluations => [newEvaluation, ...evaluations]);
+      }
+    };
     const unsubscribeFromRules = registerForRulesEvents(callbackFunction);
     return () => unsubscribeFromRules();
   }, []);

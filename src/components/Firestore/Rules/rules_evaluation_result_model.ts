@@ -63,6 +63,18 @@ export interface FirestoreRulesContext {
 
 export type RulesOutcome = 'allow' | 'deny' | 'error';
 
+export interface FirestoreRulesIssue {
+  description: string;
+  severity: string;
+  line: number;
+  col: number;
+}
+export interface FirestoreRulesUpdateData {
+  isCompilationSuccess: boolean;
+  issues: FirestoreRulesIssue[];
+  rules: string;
+}
+
 /** This captures everything about the evaluation, including the outcome */
 export interface FirestoreRulesEvaluation {
   rulesContext: FirestoreRulesContext;
@@ -73,4 +85,6 @@ export interface FirestoreRulesEvaluation {
     line: number;
     outcome: RulesOutcome;
   }>;
+  type: string;
+  data: FirestoreRulesUpdateData;
 }
