@@ -49,7 +49,7 @@ export const RulesList: React.FC<{}> = () => {
           (evaluation: FirestoreRulesEvaluation, index: number) => {
             const { rulesContext, outcome } = evaluation;
             const resourcePath = (rulesContext?.request?.path || '').replace(
-              'databases/(default)/documents',
+              '/databases/(default)/documents',
               ''
             );
             const requestTime = rulesContext?.request?.time;

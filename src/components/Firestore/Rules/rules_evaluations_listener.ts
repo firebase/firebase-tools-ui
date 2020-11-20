@@ -29,17 +29,9 @@ export function registerForRulesEvents(callback: OnEvaluationFn): Unsubscribe {
   // TODO: Actually wire this up to get results from the server.
   let unsubscribed = false;
 
-  function scheduleOnce(): void {
-    setTimeout(() => {
-      if (!unsubscribed) {
-        const i = Math.floor(Math.random() * 3);
-        callback(DUMMY_EVALUATIONS[i]);
-        scheduleOnce();
-      }
-    }, Math.random() * 4_000);
-  }
+  const ws = new WebSocket('ws://localhost:8888/rules/ws');
+  ws.onmessage = evt => callback(JSON.parse(evt.data));
 
-  scheduleOnce();
   return () => (unsubscribed = true);
 }
 
