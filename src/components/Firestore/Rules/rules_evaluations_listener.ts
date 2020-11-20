@@ -26,62 +26,61 @@ export interface Unsubscribe {
 
 /** Starts listening to a realtime feed of rule evaluations */
 export function registerForRulesEvents(callback: OnEvaluationFn): Unsubscribe {
-  // TODO: Actually wire this up to get results from the server.
-  let unsubscribed = false;
+  // TODO: Unsubscribe from socket on return function
 
   const ws = new WebSocket('ws://localhost:8888/rules/ws');
   ws.onmessage = evt => callback(JSON.parse(evt.data));
 
-  return () => (unsubscribed = true);
+  return () => {};
 }
 
-const DUMMY_EVALUATIONS: FirestoreRulesEvaluation[] = [
-  {
-    outcome: 'allow',
-    rulesContext: {
-      request: {
-        method: 'get',
-        path: 'databases/(default)/documents/users/foo',
-        time: new Date(),
-      },
-      resource: {
-        __name__: 'foo',
-        id: 'database/(default)/documents/users/foo',
-        data: {
-          name: 'Foo Bar',
-          accountAge: 94,
-        },
-      },
-    },
-    granularAllowOutcomes: [],
-  },
-  {
-    outcome: 'deny',
-    rulesContext: {
-      request: {
-        method: 'set',
-        path: 'databases/(default)/documents/users/bar',
-        time: new Date(),
-        resource: {
-          __name__: 'bar',
-          id: 'database/(default)/documents/users/bar',
-          data: {
-            name: 'Test',
-          },
-        },
-      },
-    },
-    granularAllowOutcomes: [],
-  },
-  {
-    outcome: 'error',
-    rulesContext: {
-      request: {
-        method: 'update',
-        path: 'databases/(default)/documents/users/bar',
-        time: new Date(),
-      },
-    },
-    granularAllowOutcomes: [],
-  },
-];
+// const DUMMY_EVALUATIONS: FirestoreRulesEvaluation[] = [
+//   {
+//     outcome: 'allow',
+//     rulesContext: {
+//       request: {
+//         method: 'get',
+//         path: 'databases/(default)/documents/users/foo',
+//         time: new Date(),
+//       },
+//       resource: {
+//         __name__: 'foo',
+//         id: 'database/(default)/documents/users/foo',
+//         data: {
+//           name: 'Foo Bar',
+//           accountAge: 94,
+//         },
+//       },
+//     },
+//     granularAllowOutcomes: [],
+//   },
+//   {
+//     outcome: 'deny',
+//     rulesContext: {
+//       request: {
+//         method: 'set',
+//         path: 'databases/(default)/documents/users/bar',
+//         time: new Date(),
+//         resource: {
+//           __name__: 'bar',
+//           id: 'database/(default)/documents/users/bar',
+//           data: {
+//             name: 'Test',
+//           },
+//         },
+//       },
+//     },
+//     granularAllowOutcomes: [],
+//   },
+//   {
+//     outcome: 'error',
+//     rulesContext: {
+//       request: {
+//         method: 'update',
+//         path: 'databases/(default)/documents/users/bar',
+//         time: new Date(),
+//       },
+//     },
+//     granularAllowOutcomes: [],
+//   },
+// ];

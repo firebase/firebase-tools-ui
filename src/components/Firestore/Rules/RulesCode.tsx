@@ -19,13 +19,61 @@ import 'codemirror/theme/xq-light.css';
 
 import './index.scss';
 
+import { IconButton } from '@rmwc/icon-button';
 import CodeMirror from '@uiw/react-codemirror';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import ReactDOMServer from 'react-dom/server';
 
+import { RulesOutcome } from './rules_evaluation_result_model';
 import { sampleRules } from './sample-rules';
 
-export const RulesCode: React.FC<{}> = () => {
+export interface LineOutcome {
+  line: number;
+  outcome: RulesOutcome;
+}
+
+export const RulesCode: React.FC<{
+  linesOutcome: LineOutcome[];
+}> = ({ linesOutcome }) => {
+  const [codeMirrorEditor, setCodeMirrorEditor] = useState<any>(null);
+  const [prevLinesOutcome, setPrevLinesOutcome] = useState<LineOutcome[]>([]);
+
   const rulesCode = sampleRules;
+
+  // highlights and adds outcome icon to corresponding lines of rules code viewer
+  useEffect(() => {
+    if (codeMirrorEditor) {
+      // if line actions were made before, undo them first
+      if (prevLinesOutcome.length) {
+        prevLinesOutcome.map(lineAction => {
+          const { line, outcome } = lineAction;
+          codeMirrorEditor.removeLineClass(line, '', outcome);
+          codeMirrorEditor.clearGutter('CodeMirror-gutter-elt');
+        });
+      }
+      // do new line actions
+      linesOutcome &&
+        linesOutcome.map(lineAction => {
+          const { line, outcome } = lineAction;
+          codeMirrorEditor.addLineClass(line, '', outcome);
+          // add gutter
+          const icons = {
+            allow: `✅`, // check icon
+            deny: `❌`, // close icon
+            error: `⚠️`, // error icon
+          };
+          const parser = new DOMParser();
+          const reactExcl = ReactDOMServer.renderToStaticMarkup(
+            // <IconButton icon={icons[outcome]} label={outcome} />
+            <span className={outcome}> {icons[outcome]} </span>
+          );
+          let excl: any = parser.parseFromString(reactExcl, 'image/svg+xml')
+            .firstChild;
+          codeMirrorEditor.setGutterMarker(line, 'CodeMirror-gutter-elt', excl);
+        });
+      setPrevLinesOutcome(linesOutcome || []);
+    }
+  }, [codeMirrorEditor, linesOutcome]);
 
   return (
     <div className="Firestore-Rules-Code">
@@ -38,7 +86,9 @@ export const RulesCode: React.FC<{}> = () => {
           mode: 'jsx',
           tabsize: 2,
           readOnly: true,
+          gutters: ['CodeMirror-gutter-elt'],
         }}
+        onChanges={editor => !codeMirrorEditor && setCodeMirrorEditor(editor)}
       />
     </div>
   );

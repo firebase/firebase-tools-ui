@@ -22,6 +22,7 @@ import React, { useEffect, useState } from 'react';
 import { CustomThemeProvider, CustomThemeType } from '../../../themes';
 import { FirestoreRulesEvaluation } from './rules_evaluation_result_model';
 import { registerForRulesEvents } from './rules_evaluations_listener';
+import { LineOutcome } from './RulesCode';
 
 interface RulesOutcomeData {
   [outcome: string]: {
@@ -30,7 +31,13 @@ interface RulesOutcomeData {
   };
 }
 
-export const RulesList: React.FC<{}> = () => {
+interface SetLinesOutcomeFn {
+  (setLinesOutcome: LineOutcome[]): void;
+}
+
+export const RulesList: React.FC<{ setLinesOutcome: SetLinesOutcomeFn }> = ({
+  setLinesOutcome,
+}) => {
   const [evaluations, setEvaluations] = useState<FirestoreRulesEvaluation[]>(
     []
   );
@@ -47,19 +54,33 @@ export const RulesList: React.FC<{}> = () => {
       <div className="Firestore-Rules-List-Container">
         {evaluations.map(
           (evaluation: FirestoreRulesEvaluation, index: number) => {
-            const { rulesContext, outcome } = evaluation;
+            const { rulesContext, outcome, granularAllowOutcomes } = evaluation;
             const resourcePath = (rulesContext?.request?.path || '').replace(
               '/databases/(default)/documents',
               ''
             );
             const requestTime = rulesContext?.request?.time;
+            // time * 1000 converts timestamp units from seconds to millis
+            const formatedRequestTime = moment(requestTime * 1000).format(
+              'MMMM Do YYYY, h:mm:ss A'
+            );
             const outcomeData: RulesOutcomeData = {
               allow: { theme: 'success', label: 'ALLOW' },
               deny: { theme: 'warning', label: 'DENY' },
               error: { theme: 'note', label: 'ERROR' },
             };
+            const linesOutcome = granularAllowOutcomes?.map(
+              granularAllowOutcome => {
+                const { line, outcome } = granularAllowOutcome;
+                return { line, outcome };
+              }
+            );
             return (
-              <div key={index} className="Firestore-Rules-List-Element">
+              <div
+                key={index}
+                className="Firestore-Rules-List-Element"
+                onClick={() => setLinesOutcome(linesOutcome)}
+              >
                 <CustomThemeProvider use={outcomeData[outcome]?.theme} wrap>
                   <div
                     className="Firestore-Rules-List-Circle"
@@ -71,7 +92,7 @@ export const RulesList: React.FC<{}> = () => {
                     {resourcePath}
                   </div>
                   <div className="Firestore-Rules-List-Date">
-                    {moment(requestTime).format('MMMM Do YYYY, h:mm:ss A')}
+                    {formatedRequestTime}
                   </div>
                 </div>
               </div>

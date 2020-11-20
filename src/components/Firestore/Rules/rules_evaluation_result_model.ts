@@ -35,7 +35,7 @@ export interface RulesRequest {
   auth?: RulesAuthObject;
   method: string;
   path: string;
-  time: Date;
+  time: number;
 }
 
 /** A Firestore resource that is pulled into the rules context */
@@ -61,7 +61,7 @@ export interface FirestoreRulesContext {
   resource?: FirestoreResource;
 }
 
-type RulesOutcome = 'allow' | 'deny' | 'error';
+export type RulesOutcome = 'allow' | 'deny' | 'error';
 
 /** This captures everything about the evaluation, including the outcome */
 export interface FirestoreRulesEvaluation {

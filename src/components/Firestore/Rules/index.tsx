@@ -17,14 +17,16 @@
 import './index.scss';
 
 import { ThemeProvider } from '@rmwc/theme';
-import React from 'react';
+import React, { useState } from 'react';
 
 import { grey100 } from '../../../colors';
 import { noteTheme } from '../../../themes';
-import RulesCode from './RulesCode';
+import RulesCode, { LineOutcome } from './RulesCode';
 import RulesList from './RulesList';
 
 export const Rules: React.FC<{}> = () => {
+  const [linesOutcome, setLinesOutcome] = useState<LineOutcome[]>([]);
+
   return (
     <ThemeProvider
       options={{
@@ -33,8 +35,8 @@ export const Rules: React.FC<{}> = () => {
       }}
     >
       <div className="Firestore-Rules">
-        <RulesList />
-        <RulesCode />
+        <RulesList setLinesOutcome={setLinesOutcome} />
+        <RulesCode linesOutcome={linesOutcome} />
       </div>
     </ThemeProvider>
   );

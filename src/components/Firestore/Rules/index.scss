@@ -32,7 +32,7 @@
     width: 60px;
     height: 100%;
     // animation
-    transition: all 0.2s;
+    transition: all 0.4s;
     &:hover {
       width: 280px;
       .Firestore-Rules-List-Info {
@@ -47,6 +47,7 @@
       justify-content: flex-start;
       align-items: flex-start;
       // animation
+      cursor: pointer;
       transition: all 0.2s;
       background-color: var(--mdc-theme-surface);
       &:hover {
@@ -93,6 +94,49 @@
   }
   .CodeMirror-scroll {
     min-height: calc(394px);
+  }
+  .CodeMirror-scroll,
+  .CodeMirror-sizer,
+  .CodeMirror-gutter,
+  .CodeMirror-gutters,
+  .CodeMirror-linenumber.CodeMirror-linenumber {
+    margin-right: 30px;
+  }
+  .CodeMirror-gutter-elt {
+    & > span {
+      left: 40px;
+      position: absolute;
+      padding: 1px 4px;
+    }
+    & > span.deny {
+      // TODO: get this color from a theme variable
+      background-color: rgb(255 82 82 / 25%);
+    }
+    & > span.allow {
+      // TODO: get this color from a theme variable
+      background-color: rgb(0 191 165 / 20%);
+    }
+    & > span.error {
+      // TODO: get this color from a theme variable
+      background-color: #1b3a5754;
+    }
+  }
+  .CodeMirror-code {
+    & > div:focus {
+      background-color: var(--mdc-theme-hover);
+    }
+    & > div.deny {
+      // TODO: get this color from a theme variable
+      background-color: rgb(255 82 82 / 25%);
+    }
+    & > div.allow {
+      // TODO: get this color from a theme variable
+      background-color: rgb(0 191 165 / 20%);
+    }
+    & > div.error {
+      // TODO: get this color from a theme variable
+      background-color: #1b3a5754;
+    }
   }
   .Firestore-Rules-Code-TopBar {
     box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12) inset;
