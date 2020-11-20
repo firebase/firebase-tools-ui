@@ -78,14 +78,14 @@ export const RulesList: React.FC<{
             if (outcome === 'allow') {
               evaluation.granularAllowOutcomes = [
                 {
-                  line: 12,
+                  line: 20,
                   outcome: 'allow',
                 },
               ];
             } else if (outcome === 'deny') {
               evaluation.granularAllowOutcomes = [
                 {
-                  line: 13,
+                  line: 11,
                   outcome: 'deny',
                 },
               ];
