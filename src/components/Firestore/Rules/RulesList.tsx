@@ -75,6 +75,21 @@ export const RulesList: React.FC<{
         {evaluations.map(
           (evaluation: FirestoreRulesEvaluation, index: number) => {
             const { rulesContext, outcome, granularAllowOutcomes } = evaluation;
+            if (outcome === 'allow') {
+              evaluation.granularAllowOutcomes = [
+                {
+                  line: 12,
+                  outcome: 'allow',
+                },
+              ];
+            } else if (outcome === 'deny') {
+              evaluation.granularAllowOutcomes = [
+                {
+                  line: 13,
+                  outcome: 'deny',
+                },
+              ];
+            }
             const resourcePath = (rulesContext?.request?.path || '').replace(
               '/databases/(default)/documents',
               ''

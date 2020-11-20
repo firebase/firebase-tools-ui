@@ -41,6 +41,9 @@ export const RulesCode: React.FC<{
 }> = ({ linesOutcome, firestoreRules, rulesIssues }) => {
   const [codeMirrorEditor, setCodeMirrorEditor] = useState<any>(null);
   const [prevLinesOutcome, setPrevLinesOutcome] = useState<LineOutcome[]>([]);
+  const [prevLinesIssues, setPrevLinesIssues] = useState<FirestoreRulesIssue[]>(
+    []
+  );
 
   // highlights and adds outcome icon to corresponding lines of rules code viewer
   useEffect(() => {
@@ -49,33 +52,66 @@ export const RulesCode: React.FC<{
       if (prevLinesOutcome.length) {
         prevLinesOutcome.map(lineAction => {
           const { line, outcome } = lineAction;
-          codeMirrorEditor.removeLineClass(line, '', outcome);
+          codeMirrorEditor.removeLineClass(line - 1, '', outcome);
           codeMirrorEditor.clearGutter('CodeMirror-gutter-elt');
         });
       }
       // do new line actions
-      linesOutcome &&
-        linesOutcome.map(lineAction => {
-          const { line, outcome } = lineAction;
-          codeMirrorEditor.addLineClass(line, '', outcome);
-          // add gutter
-          const icons = {
-            allow: `✅`, // check icon
-            deny: `❌`, // close icon
-            error: `⚠️`, // error icon
-          };
-          const parser = new DOMParser();
-          const reactExcl = ReactDOMServer.renderToStaticMarkup(
-            // <IconButton icon={icons[outcome]} label={outcome} />
-            <span className={outcome}> {icons[outcome]} </span>
-          );
-          let excl: any = parser.parseFromString(reactExcl, 'image/svg+xml')
-            .firstChild;
-          codeMirrorEditor.setGutterMarker(line, 'CodeMirror-gutter-elt', excl);
-        });
+      linesOutcome?.map(lineAction => {
+        const { line, outcome } = lineAction;
+        codeMirrorEditor.addLineClass(line - 1, '', outcome);
+        // add gutter
+        const icons = {
+          allow: `✅`, // check icon
+          deny: `❌`, // close icon
+          error: `⚠️`, // error icon
+        };
+        const parser = new DOMParser();
+        const reactExcl = ReactDOMServer.renderToStaticMarkup(
+          // <IconButton icon={icons[outcome]} label={outcome} />
+          <span className={outcome}> {icons[outcome]} </span>
+        );
+        let excl: any = parser.parseFromString(reactExcl, 'image/svg+xml')
+          .firstChild;
+        codeMirrorEditor.setGutterMarker(
+          line - 1,
+          'CodeMirror-gutter-elt',
+          excl
+        );
+      });
       setPrevLinesOutcome(linesOutcome || []);
     }
   }, [codeMirrorEditor, linesOutcome]);
+  useEffect(() => {
+    if (codeMirrorEditor) {
+      // if line actions were made before, undo them first
+      if (prevLinesIssues.length) {
+        prevLinesIssues.map(lineAction => {
+          const { line } = lineAction;
+          codeMirrorEditor.removeLineClass(line, '', 'error');
+          codeMirrorEditor.clearGutter('CodeMirror-gutter-elt');
+        });
+      }
+      // do new line actions
+      rulesIssues?.map(issue => {
+        const { line } = issue;
+        codeMirrorEditor.addLineClass(line - 1, '', 'error');
+        const parser = new DOMParser();
+        const reactExcl = ReactDOMServer.renderToStaticMarkup(
+          // <IconButton icon={icons[outcome]} label={outcome} />
+          <span className={'error'}> {`⚠️`} </span>
+        );
+        let excl: any = parser.parseFromString(reactExcl, 'image/svg+xml')
+          .firstChild;
+        codeMirrorEditor.setGutterMarker(
+          line - 1,
+          'CodeMirror-gutter-elt',
+          excl
+        );
+      });
+      setPrevLinesIssues(rulesIssues || []);
+    }
+  }, [codeMirrorEditor, rulesIssues]);
 
   return (
     <div className="Firestore-Rules-Code">
