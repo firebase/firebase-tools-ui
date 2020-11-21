@@ -54,9 +54,9 @@ service cloud.firestore {
     //////////////////////////////////////////////////////////////
     //                      DEFAULT CASE
     //////////////////////////////////////////////////////////////
-    match /{document=**} {
-      allow read, write: if false; // every non-considered case is blocked
-    }    
+    // match /{document=**} {
+    //   allow read, write: if false; // every non-considered case is blocked
+    // }    
     
     //////////////////////////////////////////////////////////////
     //                       FUNCTIONS
