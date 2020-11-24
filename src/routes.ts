@@ -47,7 +47,7 @@ export const routes: ReadonlyArray<Route> = [
     showInNav: true,
   },
   {
-    path: '/firestore/data',
+    path: '/firestore',
     component: Firestore,
     label: 'Firestore',
     exact: false,

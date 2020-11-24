@@ -55,7 +55,6 @@ export const RulesList: React.FC<{
 
   useEffect(() => {
     const callbackFunction = (newEvaluation: FirestoreRulesEvaluation) => {
-      console.log('dev: ', newEvaluation);
       const { type, data } = newEvaluation;
       if (type === 'RULES_UPDATE') {
         const updatedRules = data?.rules;

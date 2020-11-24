@@ -23,7 +23,13 @@ import { GridCell } from '@rmwc/grid';
 import { Tab, TabBar } from '@rmwc/tabs';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { Link, matchPath, useHistory, useLocation } from 'react-router-dom';
+import {
+  Link,
+  Redirect,
+  matchPath,
+  useHistory,
+  useLocation,
+} from 'react-router-dom';
 import { useFirestore } from 'reactfire';
 
 import { Route, routes } from '../../routes';
@@ -183,6 +189,10 @@ export const Firestore: React.FC = React.memo(() => {
         </Card>
       </Elevation>
     );
+  }
+
+  if (location.pathname === '/firestore') {
+    return <Redirect to="/firestore/data" />;
   }
 
   return isRefreshing ? (
