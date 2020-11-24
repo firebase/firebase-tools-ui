@@ -17,6 +17,7 @@
 .Firestore-Rules {
   border-radius: 8px 8px 8px 8px;
   overflow: hidden;
+  min-height: 473px;
   // flex
   display: flex;
   justify-content: flex-start;
@@ -67,7 +68,7 @@
 
         .Firestore-Rules-List-Path {
           font-size: 12px;
-          font-weight: 300;
+          font-weight: 500;
           margin-bottom: 4px;
           // truncate text
           white-space: nowrap;
@@ -76,7 +77,7 @@
         }
         .Firestore-Rules-List-Date {
           font-size: 10px;
-          font-weight: 500;
+          font-weight: 300;
         }
       }
     }
@@ -92,9 +93,9 @@
   .CodeMirror-vscrollbar {
     overflow: hidden;
   }
-  .CodeMirror-scroll {
-    min-height: calc(394px);
-  }
+  // .CodeMirror-scroll {
+  //   min-height: calc(200px);
+  // }
   .CodeMirror-scroll,
   .CodeMirror-sizer,
   .CodeMirror-gutter,

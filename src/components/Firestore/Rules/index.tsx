@@ -28,6 +28,7 @@ import { sampleRules } from './sample-rules';
 
 export const Rules: React.FC<{}> = () => {
   const [linesOutcome, setLinesOutcome] = useState<LineOutcome[]>([]);
+  // const [firestoreRules, setFirestoreRules] = useState<string>("");
   const [firestoreRules, setFirestoreRules] = useState<string>(sampleRules);
   const [rulesIssues, setRulesIssues] = useState<FirestoreRulesIssue[]>([]);
 

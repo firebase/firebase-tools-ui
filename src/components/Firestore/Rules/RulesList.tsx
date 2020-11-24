@@ -75,21 +75,6 @@ export const RulesList: React.FC<{
         {evaluations.map(
           (evaluation: FirestoreRulesEvaluation, index: number) => {
             const { rulesContext, outcome, granularAllowOutcomes } = evaluation;
-            // if (outcome === 'allow') {
-            //   evaluation.granularAllowOutcomes = [
-            //     {
-            //       line: 20,
-            //       outcome: 'allow',
-            //     },
-            //   ];
-            // } else if (outcome === 'deny') {
-            //   evaluation.granularAllowOutcomes = [
-            //     {
-            //       line: 11,
-            //       outcome: 'deny',
-            //     },
-            //   ];
-            // }
             const resourcePath = (rulesContext?.request?.path || '').replace(
               '/databases/(default)/documents',
               ''
@@ -123,7 +108,10 @@ export const RulesList: React.FC<{
                   />
                 </CustomThemeProvider>
                 <div className="Firestore-Rules-List-Info">
-                  <div className="Firestore-Rules-List-Path">
+                  <div
+                    className="Firestore-Rules-List-Path"
+                    title={resourcePath}
+                  >
                     {resourcePath}
                   </div>
                   <div className="Firestore-Rules-List-Date">

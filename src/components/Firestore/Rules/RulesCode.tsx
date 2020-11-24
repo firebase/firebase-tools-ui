@@ -88,7 +88,7 @@ export const RulesCode: React.FC<{
       if (prevLinesIssues.length) {
         prevLinesIssues.map(lineAction => {
           const { line } = lineAction;
-          codeMirrorEditor.removeLineClass(line, '', 'error');
+          codeMirrorEditor.removeLineClass(line - 1, '', 'error');
           codeMirrorEditor.clearGutter('CodeMirror-gutter-elt');
         });
       }
