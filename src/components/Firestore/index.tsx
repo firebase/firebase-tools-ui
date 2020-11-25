@@ -93,7 +93,7 @@ export const Firestore: React.FC = React.memo(() => {
   const eject = useEjector();
 
   // TODO: do something better here!
-  const path = location.pathname.replace(/^\/firestore/, '');
+  const path = location.pathname.replace(/^\/firestore\/data/, '');
   const showCollectionShell = path.split('/').length < 2;
   const showDocumentShell = path.split('/').length < 3;
 
