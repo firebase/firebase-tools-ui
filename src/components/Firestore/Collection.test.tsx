@@ -29,7 +29,7 @@ import { renderWithFirestore } from './testing/FirestoreTestProviders';
 jest.mock('./store');
 
 describe('CollectionPanel', () => {
-  it('shows the list of documents in the collection', async () => {
+  it('shows the collection name', async () => {
     const { getByText } = await renderWithFirestore(async firestore => {
       const collectionRef = firestore.collection('my-stuff');
       await collectionRef.doc('cool-doc-1').set({ a: 1 });
@@ -48,7 +48,6 @@ describe('CollectionPanel', () => {
     });
 
     expect(getByText(/my-stuff/)).not.toBeNull();
-    expect(getByText(/cool-doc-1/)).not.toBeNull();
   });
 
   it('shows filter when filter button is clicked', async () => {
@@ -145,7 +144,6 @@ it('filters documents for multi-value filters', async () => {
   expect(getByText(/doc-with/)).not.toBeNull();
   expect(queryByText(/doc-without/)).toBeNull();
 });
-
 
 it('filters documents for multi-value not operator filters', async () => {
   useCollectionFilter.mockReturnValue({
