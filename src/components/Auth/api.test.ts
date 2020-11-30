@@ -84,7 +84,7 @@ describe('API', () => {
     const result = await api.createUser(user);
 
     expect(global.fetch).toHaveBeenCalledWith(
-      'http://foo.example.com:9002/identitytoolkit.googleapis.com/v1/accounts:signUp',
+      'http://foo.example.com:9002/identitytoolkit.googleapis.com/v1/projects/pelmen-the-project/accounts',
       {
         body: JSON.stringify(user),
         headers: {
@@ -108,7 +108,7 @@ describe('API', () => {
     const api = setup({ mockFetchResult });
     const result = await api.deleteUser(user);
     expect(global.fetch).toHaveBeenCalledWith(
-      'http://foo.example.com:9002/identitytoolkit.googleapis.com/v1/accounts:delete',
+      'http://foo.example.com:9002/identitytoolkit.googleapis.com/v1/projects/pelmen-the-project/accounts:delete',
       {
         body: JSON.stringify(user),
         headers: {
@@ -133,7 +133,7 @@ describe('API', () => {
     const result = await api.updateUser(user);
 
     expect(global.fetch).toHaveBeenCalledWith(
-      'http://foo.example.com:9002/identitytoolkit.googleapis.com/v1/accounts:update',
+      'http://foo.example.com:9002/identitytoolkit.googleapis.com/v1/projects/pelmen-the-project/accounts:update',
       {
         body: JSON.stringify(user),
         headers: {
