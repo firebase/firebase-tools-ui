@@ -116,7 +116,7 @@
     "lint-staged": "^9.5.0",
     "mutationobserver-shim": "^0.3.3",
     "prettier": "^1.19.1",
-    "prettier-plugin-import-sort": "0.0.3",
+    "prettier-plugin-import-sort": "0.0.6",
     "redux-mock-store": "^1.5.4",
     "sass": "^1.26.3",
     "webpack-cli": "^3.3.11"
