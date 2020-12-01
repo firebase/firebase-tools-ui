@@ -23,13 +23,7 @@ import { GridCell } from '@rmwc/grid';
 import { Tab, TabBar } from '@rmwc/tabs';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import {
-  Link,
-  Redirect,
-  matchPath,
-  useHistory,
-  useLocation,
-} from 'react-router-dom';
+import { Link, matchPath, useHistory, useLocation } from 'react-router-dom';
 import { useFirestore } from 'reactfire';
 
 import { Route, routes } from '../../routes';
@@ -50,8 +44,7 @@ import {
   useEjector,
 } from './FirestoreEmulatedApiProvider';
 import PanelHeader from './PanelHeader';
-// import RulesTable from './Rules/RulesTable';
-import FirestoreRules from './Rules';
+import RulesTable from './Rules/RulesTable';
 import { FirestoreStore } from './store';
 
 interface WindowWithFirestoreDb extends Window {
@@ -184,15 +177,10 @@ export const Firestore: React.FC = React.memo(() => {
     return activeTabIndex !== 1 ? null : (
       <Elevation z="2" wrap>
         <Card className="Firestore-panels-wrapper">
-          <FirestoreRules />
-          {/* <RulesTable /> */}
+          <RulesTable />
         </Card>
       </Elevation>
     );
-  }
-
-  if (location.pathname === '/firestore') {
-    return <Redirect to="/firestore/data" />;
   }
 
   return isRefreshing ? (

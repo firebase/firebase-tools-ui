@@ -16,11 +16,14 @@
 
 import './RulesTable.scss';
 
+import { IconButton } from '@rmwc/icon-button';
 import { ThemeProvider } from '@rmwc/theme';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import { grey100 } from '../../../colors';
+import { noteTheme } from '../../../themes';
 import { CustomThemeProvider, CustomThemeType } from '../../../themes';
 import { FirestoreRulesEvaluation } from './rules_evaluation_result_model';
 import { registerForRulesEvents } from './rules_evaluations_listener';
@@ -28,6 +31,7 @@ import { registerForRulesEvents } from './rules_evaluations_listener';
 interface RulesOutcomeData {
   [outcome: string]: {
     theme: CustomThemeType;
+    icon: string;
     label: string;
   };
 }
@@ -38,8 +42,15 @@ export const RulesTable: React.FC<{}> = () => {
   );
 
   useEffect(() => {
-    const callbackFunction = (newEvaluation: FirestoreRulesEvaluation) =>
-      setEvaluations(evaluations => [...evaluations, newEvaluation]);
+    const callbackFunction = (newEvaluation: FirestoreRulesEvaluation) => {
+      console.log('dev: newEvaluation', newEvaluation);
+      const { type, data } = newEvaluation;
+      if (type === 'RULES_UPDATE') {
+        // TODO: UPDATE RULES
+      } else {
+        setEvaluations(evaluations => [newEvaluation, ...evaluations]);
+      }
+    };
     const unsubscribeFromRules = registerForRulesEvents(callbackFunction);
     return () => unsubscribeFromRules();
   }, []);
@@ -48,38 +59,84 @@ export const RulesTable: React.FC<{}> = () => {
     <ThemeProvider
       options={{
         surface: grey100,
+        hover: noteTheme.background,
       }}
     >
       <div className="Firestore-Rules-Table">
         <table>
           <thead>
             <tr>
-              <th>Resource name</th>
-              <th>Outcome</th>
-              <th>Time</th>
+              <th></th>
+              <th className="Firestore-Rules-Table-Method-Header">Method</th>
+              <th className="Firestore-Rules-Table-Path-Header">Path</th>
+              <th>Date</th>
             </tr>
           </thead>
           <tbody>
             {evaluations.map(
               (evaluation: FirestoreRulesEvaluation, index: number) => {
                 const { rulesContext, outcome } = evaluation;
-                const resourcePath = rulesContext?.request?.path;
-                const requestTime = rulesContext?.request?.time;
+                // time * 1000 converts timestamp units from seconds to millis
+                const requestTimeMoment = moment(
+                  rulesContext?.request?.time * 1000
+                );
+                const requestTimeComplete = requestTimeMoment.format(
+                  'MMMM Do YYYY, h:mm:ss A'
+                );
+                const requestTimeFromNow = requestTimeMoment.fromNow();
+                const requestMethod = rulesContext?.request?.method;
+                // replace root path, split every subpath and remove resulting empty elements
+                const resourceSubPaths = rulesContext?.request?.path
+                  ?.replace('/databases/(default)/documents', '')
+                  ?.split('/')
+                  ?.filter(i => i);
                 const outcomeData: RulesOutcomeData = {
-                  allow: { theme: 'success', label: 'ALLOW' },
-                  deny: { theme: 'warning', label: 'DENY' },
-                  error: { theme: 'note', label: 'ERROR' },
+                  allow: { theme: 'success', icon: 'check', label: 'ALLOW' },
+                  deny: { theme: 'warning', icon: 'close', label: 'DENY' },
+                  error: { theme: 'note', icon: 'error', label: 'ERROR' },
                 };
                 return (
                   <tr key={index}>
-                    <td>{resourcePath}</td>
                     <CustomThemeProvider use={outcomeData[outcome]?.theme} wrap>
-                      <td className="Firestore-Rules-Table-Outcome">
-                        {outcomeData[outcome]?.label}
+                      <td
+                        className="Firestore-Rules-Table-Outcome"
+                        title={outcomeData[outcome]?.label}
+                      >
+                        <IconButton
+                          icon={outcomeData[outcome]?.icon}
+                          tag={Link}
+                          to="/firestore/rules/"
+                        />
                       </td>
                     </CustomThemeProvider>
-                    <td>
-                      {moment(requestTime).format('MMMM Do YYYY, h:mm:ss A')}
+                    <td className="Firestore-Rules-Table-Method-Data">
+                      {requestMethod}
+                    </td>
+                    <td className="Firestore-Rules-Table-Path-Data">
+                      {resourceSubPaths?.map((subpath, index) => (
+                        <React.Fragment key={`${subpath}-${index}`}>
+                          <span className="Firestore-Rules-Table-Path-Slash">
+                            {' '}
+                            /{' '}
+                          </span>
+                          <span
+                            title="copy subpath"
+                            className="Firestore-Rules-Table-Path-Subpath"
+                            onClick={() => {
+                              navigator.clipboard.writeText(subpath);
+                            }}
+                          >
+                            {' '}
+                            {subpath}{' '}
+                          </span>
+                        </React.Fragment>
+                      ))}
+                    </td>
+                    <td
+                      className="Firestore-Rules-Table-Date-Data"
+                      title={requestTimeComplete}
+                    >
+                      {requestTimeFromNow}
                     </td>
                   </tr>
                 );
