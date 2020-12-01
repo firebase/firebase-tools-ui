@@ -30,9 +30,12 @@ export interface FunctionsConfig extends EmulatorConfig {}
 
 export interface LoggingConfig extends EmulatorConfig {}
 
+export interface AuthConfig extends EmulatorConfig {}
+
 export interface Config {
   projectId: string;
   database?: DatabaseConfig;
+  auth?: AuthConfig;
   firestore?: FirestoreConfig;
   functions?: FunctionsConfig;
   logging?: LoggingConfig;

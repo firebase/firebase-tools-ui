@@ -14,52 +14,33 @@
  * limitations under the License.
  */
 
-import { act, fireEvent, render } from '@testing-library/react';
+import { act, fireEvent } from '@testing-library/react';
 import React from 'react';
 import { FormContext, useForm } from 'react-hook-form';
 
-import { ApiProvider } from '../ApiContext';
-import { fakeDocumentReference } from '../testing/models';
+import { renderWithFirestore } from '../testing/FirestoreTestProviders';
 import ReferenceEditor from './ReferenceEditor';
-
-const GOOD_PATH = '/wow/cool';
-
-const API = {
-  database: {
-    doc: path => {
-      if (path !== GOOD_PATH) {
-        throw '';
-      }
-
-      return fakeDocumentReference({ path });
-    },
-  },
-};
 
 const TestForm: React.FC = ({ children }) => {
   const methods = useForm();
-  return (
-    <FormContext {...methods}>
-      <ApiProvider value={API}>{children}</ApiProvider>
-    </FormContext>
-  );
+  return <FormContext {...methods} children={children} />;
 };
 
 it('renders an editor for a document-ref', async () => {
   const onChange = jest.fn();
-  const { getByLabelText, getByText } = render(
-    <TestForm>
-      <ReferenceEditor
-        name="foo"
-        value={fakeDocumentReference({
-          path: '/foo/bar',
-        })}
-        onChange={onChange}
-      />
-    </TestForm>
+  const { getByLabelText, getByText } = await renderWithFirestore(
+    async firestore => (
+      <TestForm>
+        <ReferenceEditor
+          name="foo"
+          value={firestore.doc('foo/bar')}
+          onChange={onChange}
+        />
+      </TestForm>
+    )
   );
 
-  expect(getByLabelText(/Document path/).value).toBe('/foo/bar');
+  expect(getByLabelText(/Document path/).value).toBe('foo/bar');
 
   await act(async () => {
     fireEvent.change(getByLabelText(/Document path/), {
@@ -70,6 +51,7 @@ it('renders an editor for a document-ref', async () => {
   expect(onChange).not.toHaveBeenCalled();
   expect(getByText(/Must point to a document/)).not.toBeNull();
 
+  const GOOD_PATH = '/wow/cool';
   await act(async () => {
     fireEvent.change(getByLabelText(/Document path/), {
       target: { value: GOOD_PATH },

@@ -25,9 +25,9 @@ import {
 } from '@rmwc/dialog';
 import { firestore } from 'firebase';
 import React, { useState } from 'react';
+import { useFirestore } from 'reactfire';
 
 import { Field } from '../../common/Field';
-import DatabaseApi from '../api';
 import { AddDocumentDialogValue, AddDocumentStep } from './AddDocumentDialog';
 
 interface AddCollectionStepProps {
@@ -65,7 +65,6 @@ export interface AddCollectionDialogValue {
 
 interface Props extends DialogProps {
   documentRef?: firestore.DocumentReference;
-  api: DatabaseApi;
   onValue: (v: AddCollectionDialogValue | null) => void;
 }
 
@@ -76,11 +75,11 @@ enum Step {
 
 export const AddCollectionDialog: React.FC<Props> = ({
   documentRef,
-  api,
   onValue,
   onClose,
   ...dialogProps
 }) => {
+  const firestore = useFirestore();
   const [step, setStep] = useState(Step.COLLECTION);
   const [collectionId, setCollectionId] = useState('');
   const [document, setDocument] = useState<AddDocumentDialogValue>({
@@ -116,7 +115,7 @@ export const AddCollectionDialog: React.FC<Props> = ({
             collectionRef={
               documentRef
                 ? documentRef.collection(collectionId)
-                : api.database.collection(collectionId)
+                : firestore.collection(collectionId)
             }
             onChange={setDocument}
           />

@@ -1,0 +1,14 @@
+@import '../../../common/color';
+
+.iconWrapper {
+  :global {
+    i,
+    svg {
+      margin-right: 8px;
+      height: 20px;
+      min-height: 20px;
+      background-size: 20px;
+      display: inline-block;
+    }
+  }
+}

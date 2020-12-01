@@ -22,10 +22,13 @@ import { IconButton } from '@rmwc/icon-button';
 import { List, ListItem } from '@rmwc/list';
 import { MenuSurface, MenuSurfaceAnchor } from '@rmwc/menu';
 import { firestore } from 'firebase';
+import get from 'lodash.get';
 import React, { useState } from 'react';
-import { useCollection } from 'react-firebase-hooks/firestore';
-import { NavLink, Redirect, Route, useRouteMatch } from 'react-router-dom';
+import { Route, useHistory, useRouteMatch } from 'react-router-dom';
+import { useFirestoreCollection } from 'reactfire';
 
+import { CopyButton } from '../common/CopyButton';
+import { Spinner } from '../common/Spinner';
 import styles from './Collection.module.scss';
 import { CollectionFilter } from './CollectionFilter';
 import {
@@ -33,6 +36,7 @@ import {
   AddDocumentDialogValue,
 } from './dialogs/AddDocumentDialog';
 import { Document } from './Document';
+import DocumentListItem from './DocumentListItem';
 import {
   CollectionFilter as CollectionFilterType,
   isMultiValueCollectionFilter,
@@ -49,38 +53,98 @@ export interface Props {
   collection: firestore.CollectionReference;
 }
 
-export const Collection: React.FC<Props> = ({ collection }) => {
-  const [newDocumentId, setNewDocumentId] = useState<string>();
-  const collectionFilter = useCollectionFilter(collection.path);
-  const filteredCollection = applyCollectionFilter(
-    collection,
-    collectionFilter
-  );
-  const [collectionSnapshot, loading, error] = useCollection(
-    filteredCollection
-  );
+export function withCollectionState(
+  Presentation: React.ComponentType<CollectionPresentationProps>
+): React.ComponentType<Props> {
+  return ({ collection }) => {
+    const [newDocumentId, setNewDocumentId] = useState<string>();
+    const collectionFilter = useCollectionFilter(collection.path);
+    const filteredCollection = applyCollectionFilter(
+      collection,
+      collectionFilter
+    );
+    const collectionSnapshot = useFirestoreCollection<unknown>(
+      filteredCollection,
 
-  const [isAddDocumentDialogOpen, setAddDocumentDialogOpen] = useState(false);
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
+      // HACK(#387): HOT-FIX: Disable suspending for now by specifying default.
+      // This works around an issue in React legacy mode that causes filters to
+      // be ignored and listeners leaking.
+      // TODO(yuchenshi): remove after switching to blocking / concurrent mode.
+      { startWithValue: { docs: [] } as any }
+    );
+    const history = useHistory();
 
-  const { url } = useRouteMatch()!;
-  // TODO: Fetch missing documents (i.e. nonexistent docs with subcollections).
-  const docs = collectionSnapshot ? collectionSnapshot.docs : NO_DOCS;
-  const redirectIfAutoSelectable = useAutoSelect(docs);
+    const { url } = useRouteMatch()!;
+    // TODO: Fetch missing documents (i.e. nonexistent docs with subcollections).
+    const docs = collectionSnapshot.docs.length
+      ? collectionSnapshot.docs
+      : NO_DOCS;
+    const redirectIfAutoSelectable = useAutoSelect(docs);
 
-  const addDocument = async (value: AddDocumentDialogValue | null) => {
-    if (value && value.id) {
-      await collection.doc(value.id).set(value.data);
-      setNewDocumentId(value.id);
+    const addDocument = async (value: AddDocumentDialogValue | null) => {
+      if (value && value.id) {
+        await collection.doc(value.id).set(value.data);
+        setNewDocumentId(value.id);
+      }
+    };
+
+    if (newDocumentId) {
+      history.push(
+        `${url}/${encodeURIComponent(newDocumentId.replace(/%/g, ''))}`
+      );
+      setNewDocumentId('');
+      return null;
     }
-  };
 
-  if (error) return <></>;
+    if (redirectIfAutoSelectable) {
+      return <>{redirectIfAutoSelectable}</>;
+    }
+
+    return (
+      <Presentation
+        collection={collection}
+        collectionFilter={collectionFilter}
+        addDocument={addDocument}
+        docs={docs}
+        url={url}
+      />
+    );
+  };
+}
+
+// TODO: create a CollectionSkeleton that the loading+loaded state can utilize
+export const CollectionLoading: React.FC<{
+  collection: firestore.CollectionReference<firestore.DocumentData>;
+}> = ({ collection }) => (
+  <div className="Firestore-Collection">
+    <PanelHeader
+      id={collection.id}
+      icon={<Icon icon={{ icon: 'collections_bookmark', size: 'small' }} />}
+    />
+    <Spinner message="Loading collection" />
+  </div>
+);
+
+interface CollectionPresentationProps {
+  collection: firestore.CollectionReference<firestore.DocumentData>;
+  collectionFilter: ReturnType<typeof useCollectionFilter>;
+  addDocument: (value: AddDocumentDialogValue | null) => Promise<void>;
+  docs: firestore.QueryDocumentSnapshot<firestore.DocumentData>[];
+  url: string;
+}
+
+export const CollectionPresentation: React.FC<CollectionPresentationProps> = ({
+  collection,
+  collectionFilter,
+  addDocument,
+  docs,
+  url,
+}) => {
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isAddDocumentDialogOpen, setAddDocumentDialogOpen] = useState(false);
 
   return (
     <>
-      {!loading && redirectIfAutoSelectable}
-      {newDocumentId && <Redirect to={`./${newDocumentId}`} />}
       <div className="Firestore-Collection">
         <PanelHeader
           id={collection.id}
@@ -91,7 +155,7 @@ export const Collection: React.FC<Props> = ({ collection }) => {
               open={isFilterOpen}
               onClose={() => setIsFilterOpen(false)}
             >
-              {!loading && isFilterOpen && (
+              {isFilterOpen && (
                 <CollectionFilter
                   className={styles['query-panel']}
                   path={collection.path}
@@ -101,6 +165,10 @@ export const Collection: React.FC<Props> = ({ collection }) => {
             </MenuSurface>
 
             <div className={collectionFilter && styles.badge}>
+              <CopyButton
+                textToCopy={collection.id}
+                label="Copy collection ID"
+              />
               <IconButton
                 icon="filter_list"
                 label="Filter documents in this collection"
@@ -110,7 +178,6 @@ export const Collection: React.FC<Props> = ({ collection }) => {
           </MenuSurfaceAnchor>
         </PanelHeader>
 
-        {/* Actions */}
         {isAddDocumentDialogOpen && (
           <AddDocumentDialog
             collectionRef={collection}
@@ -129,17 +196,25 @@ export const Collection: React.FC<Props> = ({ collection }) => {
           ></ListItem>
         </List>
 
-        <List dense className="Firestore-Document-List" tag="div">
+        <List
+          dense
+          className="Firestore-Document-List"
+          tag="div"
+          twoLine={
+            collectionFilter && isSortableCollectionFilter(collectionFilter)
+          }
+        >
           {docs.map(doc => (
-            <ListItem
+            <DocumentListItem
               key={doc.ref.id}
-              className="Firestore-List-Item"
-              tag={NavLink}
-              to={`${url}/${encodeURIComponent(doc.ref.id)}`}
-              activeClassName="mdc-list-item--activated"
-            >
-              {doc.ref.id}
-            </ListItem>
+              url={url}
+              docId={doc.ref.id}
+              queryFieldValue={
+                collectionFilter && isSortableCollectionFilter(collectionFilter)
+                  ? get(doc.data(), collectionFilter.field)
+                  : undefined
+              }
+            />
           ))}
         </List>
       </div>
@@ -182,5 +257,7 @@ function applyCollectionFilter(
   }
   return filteredCollection;
 }
+
+export const Collection = withCollectionState(CollectionPresentation);
 
 export default Collection;

@@ -205,6 +205,10 @@ const ConditionSelect: React.FC = ({ children }) => {
       value: '==',
     },
     {
+      label: '(!=) not equal to',
+      value: '!=',
+    },
+    {
       label: '(>) greater than',
       value: '>',
     },
@@ -223,6 +227,10 @@ const ConditionSelect: React.FC = ({ children }) => {
     {
       label: '(in) equal to any of the following',
       value: 'in',
+    },
+    {
+      label: '(not-in) not equal to any of the following',
+      value: 'not-in',
     },
     {
       label: '(array-contains) an array containing',

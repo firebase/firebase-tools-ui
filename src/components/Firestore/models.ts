@@ -90,22 +90,26 @@ interface SortableCondition {
 
 type Unspecified = Filter<undefined> & SortableCondition;
 type Equal = Filter<'=='> & SingleValueCondition;
+type NotEqual = Filter<'!='> & SingleValueCondition;
 type GreaterThan = Filter<'>'> & SingleValueCondition & SortableCondition;
 type GreaterThanEqual = Filter<'>='> & SingleValueCondition & SortableCondition;
 type LessThanEqual = Filter<'<='> & SingleValueCondition & SortableCondition;
 type LessThan = Filter<'<'> & SingleValueCondition & SortableCondition;
 type In = Filter<'in'> & MultiValueCondition;
+type NotIn = Filter<'not-in'> & MultiValueCondition;
 type ArrayContains = Filter<'array-contains'> & SingleValueCondition;
 type ArrayContainsAny = Filter<'array-contains-any'> & MultiValueCondition;
 
 export type CollectionFilter =
   | Unspecified
   | Equal
+  | NotEqual
   | GreaterThan
   | GreaterThanEqual
   | LessThanEqual
   | LessThan
   | In
+  | NotIn
   | ArrayContains
   | ArrayContainsAny;
 
@@ -114,6 +118,7 @@ export function isSingleValueCollectionFilter(
 ): cf is Extract<CollectionFilter, SingleValueCondition> {
   return (
     cf.operator === '==' ||
+    cf.operator === '!=' ||
     cf.operator === '>' ||
     cf.operator === '>=' ||
     cf.operator === '<=' ||
@@ -125,7 +130,11 @@ export function isSingleValueCollectionFilter(
 export function isMultiValueCollectionFilter(
   cf: CollectionFilter
 ): cf is Extract<CollectionFilter, MultiValueCondition> {
-  return cf.operator === 'in' || cf.operator === 'array-contains-any';
+  return (
+    cf.operator === 'in' ||
+    cf.operator === 'not-in' ||
+    cf.operator === 'array-contains-any'
+  );
 }
 
 export function isSortableCollectionFilter(
