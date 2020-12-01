@@ -89,9 +89,7 @@ export function withCollectionState(
     };
 
     if (newDocumentId) {
-      history.push(
-        `${url}/${encodeURIComponent(newDocumentId.replace(/%/g, ''))}`
-      );
+      history.push(`${url}/${encodeURIComponent(newDocumentId)}`);
       setNewDocumentId('');
       return null;
     }

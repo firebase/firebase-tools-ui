@@ -41,9 +41,7 @@ export function useAutoSelect<T extends { id: string }>(list?: T[] | null) {
 
     setAutoSelect(
       shouldAutoSelect && firstChild ? (
-        <Redirect
-          to={`${url}/${encodeURIComponent(firstChild.id.replace(/%/g, ''))}`}
-        />
+        <Redirect to={`${url}/${encodeURIComponent(firstChild.id)}`} />
       ) : null
     );
   }, [pathname, url, list, setAutoSelect]);

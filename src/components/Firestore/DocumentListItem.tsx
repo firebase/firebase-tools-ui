@@ -36,7 +36,7 @@ const DocumentListItem: React.FC<{
     <ListItem
       className="Firestore-List-Item"
       tag={NavLink}
-      to={`${url}/${encodeURIComponent(docId.replace(/%/g, ''))}`}
+      to={`${url}/${encodeURIComponent(docId)}`}
       activeClassName="mdc-list-item--activated"
     >
       {queryFieldValue === undefined ? (

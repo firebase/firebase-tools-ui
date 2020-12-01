@@ -121,7 +121,7 @@ export function useSubCollections(
   const { baseUrl } = useFirestoreRestApi();
   const encodedPath = docRef.path
     .split('/')
-    .map(uri => encodeURIComponent(uri.replace(/%/g, '')))
+    .map(uri => encodeURIComponent(uri))
     .join('/');
   const url = `${baseUrl}/documents/${encodedPath}:listCollectionIds`;
 
