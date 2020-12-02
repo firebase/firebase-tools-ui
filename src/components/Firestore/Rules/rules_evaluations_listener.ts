@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { generateId } from '../utils';
 import { FirestoreRulesEvaluation } from './rules_evaluation_result_model';
 
 export interface OnEvaluationFn {
@@ -26,61 +27,11 @@ export interface Unsubscribe {
 
 /** Starts listening to a realtime feed of rule evaluations */
 export function registerForRulesEvents(callback: OnEvaluationFn): Unsubscribe {
-  // TODO: Unsubscribe from socket on return function
-
   const ws = new WebSocket('ws://localhost:8888/rules/ws');
-  ws.onmessage = evt => callback(JSON.parse(evt.data));
+  ws.onmessage = evt => {
+    const newEvaluation: FirestoreRulesEvaluation = JSON.parse(evt.data);
+    callback({ ...newEvaluation, requestId: generateId() });
+  };
 
-  return () => {};
+  return () => ws.close();
 }
-
-// const DUMMY_EVALUATIONS: FirestoreRulesEvaluation[] = [
-//   {
-//     outcome: 'allow',
-//     rulesContext: {
-//       request: {
-//         method: 'get',
-//         path: 'databases/(default)/documents/users/foo',
-//         time: new Date(),
-//       },
-//       resource: {
-//         __name__: 'foo',
-//         id: 'database/(default)/documents/users/foo',
-//         data: {
-//           name: 'Foo Bar',
-//           accountAge: 94,
-//         },
-//       },
-//     },
-//     granularAllowOutcomes: [],
-//   },
-//   {
-//     outcome: 'deny',
-//     rulesContext: {
-//       request: {
-//         method: 'set',
-//         path: 'databases/(default)/documents/users/bar',
-//         time: new Date(),
-//         resource: {
-//           __name__: 'bar',
-//           id: 'database/(default)/documents/users/bar',
-//           data: {
-//             name: 'Test',
-//           },
-//         },
-//       },
-//     },
-//     granularAllowOutcomes: [],
-//   },
-//   {
-//     outcome: 'error',
-//     rulesContext: {
-//       request: {
-//         method: 'update',
-//         path: 'databases/(default)/documents/users/bar',
-//         time: new Date(),
-//       },
-//     },
-//     granularAllowOutcomes: [],
-//   },
-// ];

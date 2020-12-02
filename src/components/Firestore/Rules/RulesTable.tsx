@@ -44,7 +44,7 @@ export const RulesTable: React.FC<{}> = () => {
   useEffect(() => {
     const callbackFunction = (newEvaluation: FirestoreRulesEvaluation) => {
       console.log('dev: newEvaluation', newEvaluation);
-      const { type, data } = newEvaluation;
+      const { type } = newEvaluation;
       if (type === 'RULES_UPDATE') {
         // TODO: UPDATE RULES
       } else {
@@ -75,7 +75,7 @@ export const RulesTable: React.FC<{}> = () => {
           <tbody>
             {evaluations.map(
               (evaluation: FirestoreRulesEvaluation, index: number) => {
-                const { rulesContext, outcome } = evaluation;
+                const { rulesContext, outcome, requestId } = evaluation;
                 // time * 1000 converts timestamp units from seconds to millis
                 const requestTimeMoment = moment(
                   rulesContext?.request?.time * 1000
@@ -105,7 +105,7 @@ export const RulesTable: React.FC<{}> = () => {
                         <IconButton
                           icon={outcomeData[outcome]?.icon}
                           tag={Link}
-                          to="/firestore/rules/"
+                          to={`/firestore/rules/${requestId}`}
                         />
                       </td>
                     </CustomThemeProvider>
