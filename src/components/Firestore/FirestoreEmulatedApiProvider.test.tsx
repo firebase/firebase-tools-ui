@@ -114,7 +114,7 @@ it('should clear the database', async () => {
     getByText(/Clear/).click();
   });
 
-  await waitForElementToBeRemoved(() => getByText(/{"a":1}/));
+  await waitForElementToBeRemoved(() => getByText(/"a":1/));
 
-  expect(getByTestId(/data/).textContent).toBe('{}');
+  expect(getByTestId(/data/).textContent).not.toContain('"a":1');
 });

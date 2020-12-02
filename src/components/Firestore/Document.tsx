@@ -69,10 +69,7 @@ const Doc: React.FC<{
 /** Root node */
 export const Root: React.FC = () => {
   const firestore = useFirestore();
-  console.log(firestore);
-  (window as any).f = firestore;
 
-  // return null;
   return (
     <Doc id={'Root'} collectionById={(id: string) => firestore.collection(id)}>
       <PanelHeader id="Root" icon={<FirestoreIcon />} />

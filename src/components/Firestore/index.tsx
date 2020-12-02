@@ -60,8 +60,6 @@ export const FirestoreRoute: React.FC<PropsFromState> = ({
   projectIdResult,
   configResult,
 }) => {
-  console.log('rendering firestore route');
-
   return handle(combineData(projectIdResult, configResult), {
     onNone: () => <Spinner span={12} message="Firestore Emulator Loading..." />,
     onError: () => <FirestoreRouteDisabled />,
