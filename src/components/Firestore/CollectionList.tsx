@@ -108,7 +108,11 @@ const CollectionList: React.FC<Props> = ({ collections, reference }) => {
       <List dense tag="div">
         {collections &&
           collections.map(coll => (
-            <CollectionListItem collectionId={coll.id} routeMatchUrl={url} />
+            <CollectionListItem
+              key={coll.id}
+              collectionId={coll.id}
+              routeMatchUrl={url}
+            />
           ))}
       </List>
     </div>
