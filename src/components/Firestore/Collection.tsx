@@ -22,8 +22,9 @@ import { IconButton } from '@rmwc/icon-button';
 import { List, ListItem } from '@rmwc/list';
 import { MenuSurface, MenuSurfaceAnchor } from '@rmwc/menu';
 import firebase from 'firebase';
+import get from 'lodash.get';
 import React, { useState } from 'react';
-import { NavLink, Route, useHistory, useRouteMatch } from 'react-router-dom';
+import { Route, useHistory, useRouteMatch } from 'react-router-dom';
 import { useFirestoreCollection } from 'reactfire';
 
 import { CopyButton } from '../common/CopyButton';
@@ -35,6 +36,7 @@ import {
   AddDocumentDialogValue,
 } from './dialogs/AddDocumentDialog';
 import { Document } from './Document';
+import DocumentListItem from './DocumentListItem';
 import {
   CollectionFilter as CollectionFilterType,
   isMultiValueCollectionFilter,
@@ -203,17 +205,25 @@ export const CollectionPresentation: React.FC<CollectionPresentationProps> = ({
           ></ListItem>
         </List>
 
-        <List dense className="Firestore-Document-List" tag="div">
+        <List
+          dense
+          className="Firestore-Document-List"
+          tag="div"
+          twoLine={
+            collectionFilter && isSortableCollectionFilter(collectionFilter)
+          }
+        >
           {docs.map(doc => (
-            <ListItem
+            <DocumentListItem
               key={doc.ref.id}
-              className="Firestore-List-Item"
-              tag={NavLink}
-              to={`${url}/${doc.ref.id}`}
-              activeClassName="mdc-list-item--activated"
-            >
-              {doc.ref.id}
-            </ListItem>
+              url={url}
+              docId={doc.ref.id}
+              queryFieldValue={
+                collectionFilter && isSortableCollectionFilter(collectionFilter)
+                  ? get(doc.data(), collectionFilter.field)
+                  : undefined
+              }
+            />
           ))}
         </List>
       </div>
