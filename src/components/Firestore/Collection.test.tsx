@@ -227,9 +227,13 @@ it('shows the selected sub-document', async () => {
 });
 
 describe('withCollectionState', () => {
-  let performAddDocument: () => Promise<void>;
+  let performAddDocument: (hasSpecialId?: boolean) => Promise<void>;
   const MyCollection = withCollectionState(({ addDocument }) => {
-    performAddDocument = () => addDocument({ id: 'new-document-id', data: {} });
+    performAddDocument = hasSpecialId =>
+      addDocument({
+        id: `new-document-id${hasSpecialId ? '-@#$' : ''}`,
+        data: {},
+      });
     return <div data-testid="withCollectionState" />;
   });
 
@@ -281,6 +285,34 @@ describe('withCollectionState', () => {
     await waitForElement(() => getByTestId('withCollectionState'));
 
     await act(performAddDocument);
+
+    expect(getByText(/_redirected_to_foo_/)).not.toBeNull();
+  });
+
+  it('redirects to a newly created document when a child is active and the document id has special characters', async () => {
+    const { getByTestId, getByText } = await renderWithFirestore(
+      async firestore => {
+        const collectionRef = firestore.collection('my-stuff');
+
+        return (
+          <>
+            <Route path="/my-stuff">
+              <MyCollection collection={collectionRef} />
+            </Route>
+            <Route path="/my-stuff/new-document-id-%40%23%24">
+              _redirected_to_foo_
+            </Route>
+          </>
+        );
+      },
+      {
+        path: '/my-stuff/my-doc/sub-coll',
+      }
+    );
+
+    await waitForElement(() => getByTestId('withCollectionState'));
+
+    await act(() => performAddDocument(true));
 
     expect(getByText(/_redirected_to_foo_/)).not.toBeNull();
   });

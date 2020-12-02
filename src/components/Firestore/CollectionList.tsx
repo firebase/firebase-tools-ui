@@ -108,17 +108,27 @@ const CollectionList: React.FC<Props> = ({ collections, reference }) => {
       <List dense tag="div">
         {collections &&
           collections.map(coll => (
-            <ListItem
-              key={coll.id}
-              className="Firestore-List-Item"
-              tag={NavLink}
-              to={`${url}/${encodeURIComponent(coll.id)}`}
-              activeClassName="mdc-list-item--activated"
-            >
-              {coll.id}
-            </ListItem>
+            <CollectionListItem collectionId={coll.id} routeMatchUrl={url} />
           ))}
       </List>
     </div>
+  );
+};
+
+export const CollectionListItem: React.FC<{
+  collectionId: string;
+  routeMatchUrl: string;
+}> = ({ collectionId, routeMatchUrl }) => {
+  return (
+    <ListItem
+      key={collectionId}
+      className="Firestore-List-Item"
+      tag={NavLink}
+      to={`${routeMatchUrl}/${encodeURIComponent(collectionId)}`}
+      activeClassName="mdc-list-item--activated"
+      data-testid="firestore-collection-list-item"
+    >
+      {collectionId}
+    </ListItem>
   );
 };

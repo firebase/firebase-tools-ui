@@ -29,7 +29,7 @@ import { summarize } from './utils';
 const DocumentListItem: React.FC<{
   docId: string;
   url: string;
-  queryFieldValue: FirestoreAny;
+  queryFieldValue: FirestoreAny | undefined;
 }> = ({ docId, url, queryFieldValue }) => {
   const maxSummaryLen = 20;
   return (
@@ -38,6 +38,7 @@ const DocumentListItem: React.FC<{
       tag={NavLink}
       to={`${url}/${encodeURIComponent(docId)}`}
       activeClassName="mdc-list-item--activated"
+      data-testid="firestore-document-list-item"
     >
       {queryFieldValue === undefined ? (
         docId

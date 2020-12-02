@@ -112,6 +112,29 @@ it('shows the selected root-collection', async () => {
   expect(getAllByText('bar').length).toBeGreaterThan(0);
 });
 
+it('shows the selected root-collection when the collection id has special characters', async () => {
+  const { getAllByText, getAllByTestId } = await renderWithFirestore(
+    async firestore => {
+      await firestore.doc('foo@#$/bar').set({ a: 1 });
+      return (
+        <Route path="/firestore">
+          <Root />
+          <Portal />
+        </Route>
+      );
+    },
+    {
+      path: '/firestore/foo%40%23%24',
+    }
+  );
+
+  await waitForElement(() => getAllByTestId('collection-list').length > 0);
+  await waitForElement(() => getAllByText('bar').length > 0);
+
+  expect(getAllByTestId('collection-list').length).toBeGreaterThan(0);
+  expect(getAllByText('bar').length).toBeGreaterThan(0);
+});
+
 it('shows the selected document-collection', async () => {
   const { getAllByTestId, getByText } = await renderWithFirestore(
     async firestore => {
@@ -129,6 +152,32 @@ it('shows the selected document-collection', async () => {
     },
     {
       path: '/firestore/foo/bar/sub/doc',
+    }
+  );
+
+  await waitForElement(() => getAllByTestId('collection-list').length > 1);
+
+  expect(getAllByTestId('collection-list').length).toBe(2);
+  expect(getByText(/eggs/)).not.toBeNull();
+});
+
+it('shows the selected document-collection when there are collection and document ids with special characters', async () => {
+  const { getAllByTestId, getByText } = await renderWithFirestore(
+    async firestore => {
+      const documentRef = firestore.doc('foo@#$/bar@#$');
+      await documentRef
+        .collection('sub@#$')
+        .doc('doc@#$')
+        .set({ spam: 'eggs' });
+      return (
+        <Route path="/firestore/foo%40%23%24/bar%40%23%24">
+          <Document reference={documentRef} />
+          <Portal />
+        </Route>
+      );
+    },
+    {
+      path: '/firestore/foo%40%23%24/bar%40%23%24/sub%40%23%24/doc%40%23%24',
     }
   );
 
