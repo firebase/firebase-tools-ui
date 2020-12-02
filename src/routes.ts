@@ -85,4 +85,12 @@ export const routes: ReadonlyArray<Route> = [
     showInNav: false,
     showInFirestoreSubNav: true,
   },
+  {
+    path: '/firestore/rules/:id',
+    component: Firestore,
+    label: 'Rules',
+    exact: true,
+    showInNav: false,
+    showInFirestoreSubNav: false,
+  },
 ];

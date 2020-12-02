@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-.Firestore-Rules-Table {
+.Firestore-Evaluations-Table {
   table {
     border-collapse: collapse;
     width: 100%;
@@ -43,33 +43,33 @@
     background-color: var(--mdc-theme-hover);
   }
 
-  .Firestore-Rules-Table-Outcome {
+  .Firestore-Evaluations-Table-Outcome {
     color: var(--mdc-theme-primary);
     font-weight: 500;
     // flex
     display: flex;
     justify-content: center;
   }
-  .Firestore-Rules-Table-Method-Header {
+  .Firestore-Evaluations-Table-Method-Header {
     width: 15%;
   }
-  .Firestore-Rules-Table-Path-Header {
+  .Firestore-Evaluations-Table-Path-Header {
     width: 55%;
   }
-  .Firestore-Rules-Table-Method-Data {
+  .Firestore-Evaluations-Table-Method-Data {
     text-transform: uppercase;
     font-weight: 600;
     font-size: 15px;
   }
-  .Firestore-Rules-Table-Date-Data {
+  .Firestore-Evaluations-Table-Date-Data {
     font-weight: 100;
     font-size: 14px;
   }
-  .Firestore-Rules-Table-Path-Slash {
+  .Firestore-Evaluations-Table-Path-Slash {
     font-size: 17px;
     font-weight: 900;
   }
-  .Firestore-Rules-Table-Path-Subpath {
+  .Firestore-Evaluations-Table-Path-Subpath {
     padding: 3px;
     margin: 1px;
     border-radius: 4px;

@@ -17,41 +17,47 @@
 import './index.scss';
 
 import { ThemeProvider } from '@rmwc/theme';
-import React, { useState } from 'react';
+import React from 'react';
+import { Route, useRouteMatch } from 'react-router-dom';
 
 import { grey100 } from '../../../colors';
 import { noteTheme } from '../../../themes';
-import { FirestoreRulesIssue } from './rules_evaluation_result_model';
-import RulesCode, { LineOutcome } from './RulesCode';
-import RulesList from './RulesList';
-import { sampleRules } from './sample-rules';
+import EvaluationDetails from './EvaluationDetails';
+import EvaluationsTable from './EvaluationsTable';
+
+const RulesComponentWrapper: React.FC = ({ children }) => (
+  <ThemeProvider
+    options={{
+      surface: grey100,
+      hover: noteTheme.background,
+    }}
+  >
+    {children}
+  </ThemeProvider>
+);
 
 export const Rules: React.FC<{}> = () => {
-  const [linesOutcome, setLinesOutcome] = useState<LineOutcome[]>([]);
-  // const [firestoreRules, setFirestoreRules] = useState<string>("");
-  const [firestoreRules, setFirestoreRules] = useState<string>(sampleRules);
-  const [rulesIssues, setRulesIssues] = useState<FirestoreRulesIssue[]>([]);
+  const { url } = useRouteMatch()!;
 
   return (
-    <ThemeProvider
-      options={{
-        surface: grey100,
-        hover: noteTheme.background,
-      }}
-    >
-      <div className="Firestore-Rules">
-        <RulesList
-          setLinesOutcome={setLinesOutcome}
-          setFirestoreRules={setFirestoreRules}
-          setRulesIssues={setRulesIssues}
-        />
-        <RulesCode
-          linesOutcome={linesOutcome}
-          firestoreRules={firestoreRules}
-          rulesIssues={rulesIssues}
-        />
-      </div>
-    </ThemeProvider>
+    <>
+      <Route
+        path={`${url}`}
+        render={() => (
+          <RulesComponentWrapper>
+            <EvaluationsTable />
+          </RulesComponentWrapper>
+        )}
+      ></Route>
+      <Route
+        path={`${url}/:id`}
+        render={({ match }: any) => (
+          <RulesComponentWrapper>
+            <EvaluationDetails evaluationId={match.params.id} />
+          </RulesComponentWrapper>
+        )}
+      ></Route>
+    </>
   );
 };
 
