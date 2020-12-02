@@ -21,6 +21,7 @@ import {
   DialogContent,
   DialogTitle,
 } from '@rmwc/dialog';
+import firebase from 'firebase';
 import * as React from 'react';
 import { useState } from 'react';
 

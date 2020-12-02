@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import * as firebase from 'firebase/app';
+import firebase from 'firebase';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { Subject } from 'rxjs';

@@ -18,7 +18,7 @@ import './index.scss';
 
 import { Button } from '@rmwc/button';
 import { List, ListItem } from '@rmwc/list';
-import { firestore } from 'firebase';
+import firebase from 'firebase';
 import React, { useState } from 'react';
 import { NavLink, useHistory, useRouteMatch } from 'react-router-dom';
 import { useFirestore } from 'reactfire';
@@ -34,8 +34,8 @@ import {
 import { useAutoSelect } from './useAutoSelect';
 
 export interface Props {
-  collections: firestore.CollectionReference[];
-  reference?: firestore.DocumentReference;
+  collections: firebase.firestore.CollectionReference[];
+  reference?: firebase.firestore.DocumentReference;
 }
 
 export const RootCollectionList: React.FC = () => {
@@ -44,7 +44,7 @@ export const RootCollectionList: React.FC = () => {
 };
 
 export const SubCollectionList: React.FC<{
-  reference: firestore.DocumentReference;
+  reference: firebase.firestore.DocumentReference;
 }> = ({ reference }) => {
   const subCollections = useSubCollections(reference);
   return <CollectionList collections={subCollections} reference={reference} />;

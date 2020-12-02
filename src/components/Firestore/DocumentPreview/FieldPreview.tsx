@@ -21,7 +21,7 @@ import { IconButton } from '@rmwc/icon-button';
 import { ListItem, ListItemMeta } from '@rmwc/list';
 import { Theme } from '@rmwc/theme';
 import classnames from 'classnames';
-import { firestore } from 'firebase';
+import firebase from 'firebase';
 import React, { useState } from 'react';
 
 import { supportsEditing } from '../DocumentEditor';
@@ -40,7 +40,7 @@ import { useDocumentState, useFieldState } from './store';
 
 const FieldPreview: React.FC<{
   path: string[];
-  documentRef: firestore.DocumentReference;
+  documentRef: firebase.firestore.DocumentReference;
   maxSummaryLen: number;
 }> = ({ path, documentRef, maxSummaryLen }) => {
   const documentData = useDocumentState();
@@ -219,26 +219,26 @@ function summarize(data: FirestoreAny, maxLen: number): string {
     case FieldType.MAP:
       return summarizeMap(data as Record<string, FirestoreAny>, maxLen);
     case FieldType.BLOB:
-      const base64 = (data as firestore.Blob).toBase64();
+      const base64 = (data as firebase.firestore.Blob).toBase64();
       if (base64.length < maxLen) return base64;
       else return base64.substr(0, maxLen) + '...';
     case FieldType.BOOLEAN:
       return (data as boolean).toString();
     case FieldType.GEOPOINT:
-      const value = data as firestore.GeoPoint;
+      const value = data as firebase.firestore.GeoPoint;
       return `[${latStr(value.latitude)}, ${longStr(value.longitude)}]`;
     case FieldType.NULL:
       return 'null';
     case FieldType.NUMBER:
       return (data as number).toString();
     case FieldType.REFERENCE:
-      return (data as firestore.DocumentReference).path;
+      return (data as firebase.firestore.DocumentReference).path;
     case FieldType.STRING:
       return `"${data as string}"`;
     case FieldType.TIMESTAMP:
       // TODO: Better date time formatting.
       // Note: Not using toLocaleString() since it does not stringify timezone.
-      return (data as firestore.Timestamp).toDate().toString();
+      return (data as firebase.firestore.Timestamp).toDate().toString();
     case FieldType.JSON:
       throw new Error('JSON field type is input only');
   }

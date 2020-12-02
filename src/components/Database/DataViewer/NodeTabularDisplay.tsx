@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import '@material/data-table/dist/mdc.data-table.css';
 import '@rmwc/data-table/styles';
 
@@ -30,6 +29,7 @@ import {
   DataTableRow,
 } from '@rmwc/data-table';
 import { Typography } from '@rmwc/typography';
+import firebase from 'firebase';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 

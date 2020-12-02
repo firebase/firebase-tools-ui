@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { database } from 'firebase';
+import firebase from 'firebase';
 
 export function fakeReference({
   key = null as string | null,
@@ -22,7 +22,7 @@ export function fakeReference({
   data = null as any,
   parent = null as firebase.database.Reference | null,
   domain = 'http://localhost:9000',
-} = {}): database.Reference {
+} = {}): firebase.database.Reference {
   return ({
     key,
     path,
@@ -40,17 +40,17 @@ export function fakeReference({
     database: {
       app: { options: { databaseURL: 'http://localhost:9000/' } },
     },
-  } as unknown) as database.Reference;
+  } as unknown) as firebase.database.Reference;
 }
 
 export function fakeSnapshot({
   key = null as string | null,
   data = undefined as any,
-  ref = {} as database.Reference,
-} = {}): database.DataSnapshot {
+  ref = {} as firebase.database.Reference,
+} = {}): firebase.database.DataSnapshot {
   return ({
     ref,
     key,
     val: () => data,
-  } as unknown) as database.DataSnapshot;
+  } as unknown) as firebase.database.DataSnapshot;
 }
