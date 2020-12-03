@@ -29,7 +29,6 @@ const EvaluationHeader: React.FC<{
   evaluation: FirestoreRulesEvaluation;
 }> = ({ evaluation }) => {
   const [
-    evaluationId,
     outcome,
     requestTimeComplete,
     requestTimeFromNow,

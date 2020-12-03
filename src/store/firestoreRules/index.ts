@@ -14,17 +14,5 @@
  * limitations under the License.
  */
 
-import { createAction } from 'typesafe-actions';
-
-import { FirestoreRulesEvaluation } from './rules_evaluation_result_model';
-
-export const addRequestEvaluation = createAction(
-  '@firestoreRules/addRequestEvaluation'
-)<{
-  newEvaluation: FirestoreRulesEvaluation;
-}>();
-export const removeRequestEvaluation = createAction(
-  '@firestoreRules/removeRequestEvaluation'
-)<{
-  evaluationId: string;
-}>();
+export * from './actions';
+export * from './reducer';
