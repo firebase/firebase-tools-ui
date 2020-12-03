@@ -30,7 +30,7 @@ export function registerForRulesEvents(callback: OnEvaluationFn): Unsubscribe {
   const ws = new WebSocket('ws://localhost:8888/rules/ws');
   ws.onmessage = evt => {
     const newEvaluation: FirestoreRulesEvaluation = JSON.parse(evt.data);
-    callback({ ...newEvaluation, requestId: generateId() });
+    callback({ ...newEvaluation, evaluationId: generateId() });
   };
 
   return () => ws.close();

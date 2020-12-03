@@ -28,7 +28,7 @@ interface RulesOutcomeData {
 }
 
 export function useEvaluationCleanData(evaluation: FirestoreRulesEvaluation) {
-  const { rulesContext, outcome, requestId } = evaluation;
+  const { rulesContext, outcome, evaluationId } = evaluation;
   // time * 1000 converts timestamp units from seconds to millis
   const requestTimeMoment = moment(rulesContext?.request?.time * 1000);
   const requestTimeComplete = requestTimeMoment.format(
@@ -48,7 +48,7 @@ export function useEvaluationCleanData(evaluation: FirestoreRulesEvaluation) {
   };
 
   return [
-    requestId,
+    evaluationId,
     outcome,
     requestTimeComplete,
     requestTimeFromNow,

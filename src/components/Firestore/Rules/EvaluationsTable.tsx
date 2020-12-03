@@ -29,7 +29,7 @@ const EvaluationRow: React.FC<{
   evaluation: FirestoreRulesEvaluation;
 }> = ({ evaluation }) => {
   const [
-    requestId,
+    evaluationId,
     outcome,
     requestTimeComplete,
     requestTimeFromNow,
@@ -48,7 +48,7 @@ const EvaluationRow: React.FC<{
           <IconButton
             icon={outcomeData[outcome]?.icon}
             tag={Link}
-            to={`/firestore/rules/${requestId}`}
+            to={`/firestore/rules/${evaluationId}`}
           />
         </td>
       </CustomThemeProvider>
