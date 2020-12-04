@@ -46,10 +46,7 @@ const EvaluationDetailsHeader: React.FC<Props> = ({
     >
       <IconButton icon="arrow_back_ios" tag={Link} to="/firestore/rules" />
     </div>
-    <div
-      className="Firestore-Evaluation-Details-Header-Info"
-      title={outcomeData?.label}
-    >
+    <div className="Firestore-Evaluation-Details-Header-Info">
       <CustomThemeProvider use={outcomeData?.theme || 'note'} wrap>
         <div
           className="Firestore-Evaluation-Outcome"
