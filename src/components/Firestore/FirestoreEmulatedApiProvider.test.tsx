@@ -83,6 +83,34 @@ it('should get sub-collections', async () => {
   expect(getByTestId(/collections/).textContent).toBe('others,things');
 });
 
+it('should get sub-collections with special characters inside URI', async () => {
+  const TestResults = ({ docRef }: { docRef: firestore.DocumentReference }) => {
+    const collections = useSubCollections(docRef);
+    return (
+      <div data-testid="collections">{collections.map(c => c.id).join()}</div>
+    );
+  };
+
+  const { getByText, getByTestId } = await renderWithFirestore(
+    async firestore => {
+      const docRef = firestore.doc('top/doc _!@#$_');
+      await docRef
+        .collection('things')
+        .doc('a')
+        .set({ a: 1 });
+      await docRef
+        .collection('others')
+        .doc('a')
+        .set({ a: 1 });
+      return <TestResults docRef={docRef} />;
+    }
+  );
+
+  await waitForElement(() => getByText(/others/));
+
+  expect(getByTestId(/collections/).textContent).toBe('others,things');
+});
+
 it('should clear the database', async () => {
   const TestResults = ({
     docRef,

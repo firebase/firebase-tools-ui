@@ -58,7 +58,7 @@ export const BreadCrumbs: React.FC<Props> = ({
             'BreadCrumbs-active': i === keys.length - 1,
           })}
         >
-          <Link to={hrefs[i]}>{key}</Link>
+          <Link to={hrefs[i]}>{decodeURIComponent(key)}</Link>
         </li>
       ))}
 

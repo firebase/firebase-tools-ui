@@ -65,11 +65,19 @@ const CollectionList: React.FC<Props> = ({ collections, reference }) => {
       const ref = reference || firestore;
       const newCollection = ref.collection(value.collectionId);
       await newCollection.doc(value.document.id).set(value.document.data);
+
       // Redirect to the new collection
+      const encodedCollectionId = encodeURIComponent(value.collectionId);
       if (reference) {
-        history.push(`/firestore/${reference.path}/${value.collectionId}`);
+        const encodedReferencePath = reference.path
+          .split('/')
+          .map(uri => encodeURIComponent(uri))
+          .join('/');
+        history.push(
+          `/firestore/${encodedReferencePath}/${encodedCollectionId}`
+        );
       } else {
-        history.push(`/firestore/${value.collectionId}`);
+        history.push(`/firestore/${encodedCollectionId}`);
       }
     }
   };
@@ -100,17 +108,31 @@ const CollectionList: React.FC<Props> = ({ collections, reference }) => {
       <List dense tag="div">
         {collections &&
           collections.map(coll => (
-            <ListItem
+            <CollectionListItem
               key={coll.id}
-              className="Firestore-List-Item"
-              tag={NavLink}
-              to={`${url}/${coll.id}`}
-              activeClassName="mdc-list-item--activated"
-            >
-              {coll.id}
-            </ListItem>
+              collectionId={coll.id}
+              routeMatchUrl={url}
+            />
           ))}
       </List>
     </div>
+  );
+};
+
+export const CollectionListItem: React.FC<{
+  collectionId: string;
+  routeMatchUrl: string;
+}> = ({ collectionId, routeMatchUrl }) => {
+  return (
+    <ListItem
+      key={collectionId}
+      className="Firestore-List-Item"
+      tag={NavLink}
+      to={`${routeMatchUrl}/${encodeURIComponent(collectionId)}`}
+      activeClassName="mdc-list-item--activated"
+      data-testid="firestore-collection-list-item"
+    >
+      {collectionId}
+    </ListItem>
   );
 };

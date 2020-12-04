@@ -94,7 +94,7 @@ export function withCollectionState(
     };
 
     if (newDocumentId) {
-      history.push(`${url}/${newDocumentId}`);
+      history.push(`${url}/${encodeURIComponent(newDocumentId)}`);
       setNewDocumentId('');
       return null;
     }
@@ -230,7 +230,8 @@ export const CollectionPresentation: React.FC<CollectionPresentationProps> = ({
       <Route
         path={`${url}/:id`}
         render={({ match }: any) => {
-          const docRef = collection.doc(match.params.id);
+          const docId = decodeURIComponent(match.params.id);
+          const docRef = collection.doc(docId);
           return <Document reference={docRef} />;
         }}
       ></Route>

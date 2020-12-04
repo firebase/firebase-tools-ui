@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { render } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Route, Router } from 'react-router-dom';
@@ -114,5 +114,41 @@ describe('DocumentListItem', () => {
 
     expect(queryByText('an-item')).not.toBeNull();
     expect(queryByTestId('twoLine')).toBeNull();
+  });
+
+  it('redirects to document path when clicking the document list item', async () => {
+    const history = createMemoryHistory({ initialEntries: ['/firestore'] });
+    const { getByTestId } = await render(
+      <Router history={history}>
+        <Route path="/firestore">
+          <DocumentListItem
+            docId="an-item"
+            url="/my-stuff"
+            queryFieldValue="foo"
+          />
+        </Route>
+      </Router>
+    );
+
+    fireEvent.click(getByTestId('firestore-document-list-item'));
+    expect(history.location.pathname).toBe('/my-stuff/an-item');
+  });
+
+  it('redirects to document path when clicking the document list item and the document id has special characters', async () => {
+    const history = createMemoryHistory({ initialEntries: ['/firestore'] });
+    const { getByTestId } = await render(
+      <Router history={history}>
+        <Route path="/firestore">
+          <DocumentListItem
+            docId="an-item@#$"
+            url="/my-stuff"
+            queryFieldValue="foo"
+          />
+        </Route>
+      </Router>
+    );
+
+    fireEvent.click(getByTestId('firestore-document-list-item'));
+    expect(history.location.pathname).toBe('/my-stuff/an-item%40%23%24');
   });
 });

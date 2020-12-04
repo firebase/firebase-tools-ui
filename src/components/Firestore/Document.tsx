@@ -53,11 +53,15 @@ const Doc: React.FC<{
             <Suspense
               fallback={
                 <CollectionLoading
-                  collection={collectionById(match.params.id)}
+                  collection={collectionById(
+                    decodeURIComponent(match.params.id)
+                  )}
                 />
               }
             >
-              <Collection collection={collectionById(match.params.id)} />
+              <Collection
+                collection={collectionById(decodeURIComponent(match.params.id))}
+              />
             </Suspense>
           );
         }}

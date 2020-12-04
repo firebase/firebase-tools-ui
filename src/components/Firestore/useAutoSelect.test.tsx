@@ -31,6 +31,7 @@ const Test: React.FC<{ list: TestData[] | null }> = ({ list }) => {
 };
 
 const WITH_CHILDREN = [{ id: 'first' }, { id: 'last' }];
+const WITH_CHILDREN_ENCODED = [{ id: 'first@#$' }, { id: 'last@#$' }];
 const EMPTY: Array<{ id: string }> = [];
 
 // TODO: Find some other way to test hooks (e.g. using
@@ -89,6 +90,19 @@ describe('useAutoSelect', () => {
       );
       await act(() => delay(100));
       expect(history.location.pathname).toBe('/firestore/first');
+    });
+
+    it('redirects to the first child with encoded special characters', async () => {
+      const history = createMemoryHistory({ initialEntries: ['/firestore'] });
+      render(
+        <Router history={history}>
+          <Route path="/firestore">
+            <Test list={WITH_CHILDREN_ENCODED} />
+          </Route>
+        </Router>
+      );
+      await act(() => delay(100));
+      expect(history.location.pathname).toBe('/firestore/first%40%23%24');
     });
   }); // at /firestore
 
@@ -151,6 +165,21 @@ describe('useAutoSelect', () => {
       );
       await act(() => delay(100));
       expect(history.location.pathname).toBe('/firestore/users/first');
+    });
+
+    it('redirects to the first child with encoded special characters', async () => {
+      const history = createMemoryHistory({
+        initialEntries: ['/firestore/users'],
+      });
+      render(
+        <Router history={history}>
+          <Route path="/firestore/users">
+            <Test list={WITH_CHILDREN_ENCODED} />
+          </Route>
+        </Router>
+      );
+      await act(() => delay(100));
+      expect(history.location.pathname).toBe('/firestore/users/first%40%23%24');
     });
   }); // at /firestore/:collectionId
 
