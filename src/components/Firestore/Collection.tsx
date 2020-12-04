@@ -67,14 +67,8 @@ export function withCollectionState(
     );
     const collectionSnapshot = useFirestoreCollection<unknown>(
       filteredCollection,
-
-      // HACK(#387): HOT-FIX: Disable suspending for now by specifying default.
-      // This works around an issue in React legacy mode that causes filters to
-      // be ignored and listeners leaking.
-      // TODO(yuchenshi): remove after switching to blocking / concurrent mode.
       {
         suspense: true,
-        initialData: { docs: [] } as any,
       }
     );
     const history = useHistory();

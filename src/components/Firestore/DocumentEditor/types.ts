@@ -46,7 +46,7 @@ export type Store = {
 export function isPrimitive(
   data: FirestoreAny | DocumentPath
 ): data is PrimitiveValue {
-  return (isNativePrimitive(data) as any) || data instanceof DocumentPath;
+  return isNativePrimitive(data) || data instanceof DocumentPath;
 }
 
 export function isFirestoreMap(data: FirestoreAny): data is FirestoreMap {
