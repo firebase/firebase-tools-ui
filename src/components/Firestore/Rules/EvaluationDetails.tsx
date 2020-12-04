@@ -23,8 +23,12 @@ import { useParams } from 'react-router-dom';
 import { createStructuredSelector } from '../../../store';
 import { getRequestEvaluationById } from '../../../store/firestoreRules';
 import { getSelectedRequestEvaluation } from '../../../store/firestoreRules/selectors';
+import EvaluationDetailsCode from './EvaluationDetailsCode';
 import EvaluationDetailsHeader from './EvaluationDetailsHeader';
 import { FirestoreRulesEvaluation } from './rules_evaluation_result_model';
+import { sampleRules } from './sample-rules';
+import { LineOutcome } from './types';
+import { useEvaluationCleanMainData } from './utils';
 
 export interface PropsFromState {
   selectedEvaluation: FirestoreRulesEvaluation | undefined;
@@ -41,6 +45,19 @@ export const EvaluationDetails: React.FC<Props> = ({
   getEvaluationById,
 }) => {
   const { evaluationId } = useParams<{ evaluationId: string }>();
+  const [
+    requestTimeComplete,
+    requestTimeFromNow,
+    requestMethod,
+    resourceSubPaths,
+    outcomeData,
+  ] = useEvaluationCleanMainData(selectedEvaluation);
+  const linesOutcome = selectedEvaluation?.granularAllowOutcomes?.map(
+    granularAllowOutcome => {
+      const { line, outcome } = granularAllowOutcome;
+      return { line, outcome } as LineOutcome;
+    }
+  );
 
   useEffect(() => {
     getEvaluationById(evaluationId);
@@ -48,7 +65,19 @@ export const EvaluationDetails: React.FC<Props> = ({
 
   return (
     <>
-      <EvaluationDetailsHeader evaluation={selectedEvaluation} />
+      <EvaluationDetailsHeader
+        requestTimeComplete={requestTimeComplete}
+        requestTimeFromNow={requestTimeFromNow}
+        requestMethod={requestMethod}
+        resourceSubPaths={resourceSubPaths}
+        outcomeData={outcomeData}
+      />
+      <div className="Firestore-Evaluation-Details-Content">
+        <EvaluationDetailsCode
+          linesOutcome={linesOutcome}
+          firestoreRules={sampleRules}
+        />
+      </div>
     </>
   );
 };

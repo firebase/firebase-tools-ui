@@ -16,18 +16,12 @@
 
 import moment from 'moment';
 
-import { CustomThemeType } from '../../../themes';
 import { FirestoreRulesEvaluation } from './rules_evaluation_result_model';
+import { RulesOutcomeData } from './types';
 
-interface RulesOutcomeData {
-  [outcome: string]: {
-    theme: CustomThemeType;
-    icon: string;
-    label: string;
-  };
-}
-
-export function useEvaluationCleanData(evaluation?: FirestoreRulesEvaluation) {
+export function useEvaluationCleanMainData(
+  evaluation?: FirestoreRulesEvaluation
+) {
   if (!evaluation) {
     return [undefined, undefined, undefined, undefined, undefined] as const;
   }

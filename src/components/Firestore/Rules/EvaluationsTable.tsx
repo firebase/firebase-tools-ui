@@ -22,7 +22,7 @@ import { MapDispatchToPropsFunction, connect } from 'react-redux';
 import { createStructuredSelector } from '../../../store';
 import { addRequestEvaluation } from '../../../store/firestoreRules';
 import { getAllRequestEvaluations } from '../../../store/firestoreRules/selectors';
-import EvaluationTableRow from './EvaluationTableRow';
+import EvaluationsTableRow from './EvaluationsTableRow';
 import { FirestoreRulesEvaluation } from './rules_evaluation_result_model';
 import { registerForRulesEvents } from './rules_evaluations_listener';
 
@@ -67,7 +67,7 @@ export const EvaluationsTable: React.FC<Props> = ({
         {evaluations?.map((evaluation: FirestoreRulesEvaluation) => {
           const { evaluationId } = evaluation;
           return (
-            <EvaluationTableRow
+            <EvaluationsTableRow
               key={evaluationId}
               evaluationId={evaluationId}
               evaluation={evaluation}

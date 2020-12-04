@@ -22,66 +22,67 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { CustomThemeProvider } from '../../../themes';
-import { FirestoreRulesEvaluation } from './rules_evaluation_result_model';
-import { useEvaluationCleanData } from './utils';
+import { OutcomeData } from './types';
 
-const EvaluationDetailsHeader: React.FC<{
-  evaluation?: FirestoreRulesEvaluation;
-}> = ({ evaluation }) => {
-  const [
-    requestTimeComplete,
-    requestTimeFromNow,
-    requestMethod,
-    resourceSubPaths,
-    outcomeData,
-  ] = useEvaluationCleanData(evaluation);
+interface Props {
+  requestTimeComplete: string | undefined;
+  requestTimeFromNow: string | undefined;
+  requestMethod: string | undefined;
+  resourceSubPaths: string[] | undefined;
+  outcomeData: OutcomeData | undefined;
+}
 
-  return (
-    <div className="Firestore-Evaluation-Details-Header">
-      <div
-        className="Firestore-Evaluation-Details-Header-Return"
-        title="Go back to Table"
-      >
-        <IconButton icon="arrow_back_ios" tag={Link} to="/firestore/rules" />
+const EvaluationDetailsHeader: React.FC<Props> = ({
+  requestTimeComplete,
+  requestTimeFromNow,
+  requestMethod,
+  resourceSubPaths,
+  outcomeData,
+}) => (
+  <div className="Firestore-Evaluation-Details-Header">
+    <div
+      className="Firestore-Evaluation-Details-Header-Return"
+      title="Go back to Table"
+    >
+      <IconButton icon="arrow_back_ios" tag={Link} to="/firestore/rules" />
+    </div>
+    <div
+      className="Firestore-Evaluation-Details-Header-Info"
+      title={outcomeData?.label}
+    >
+      <CustomThemeProvider use={outcomeData?.theme || 'note'} wrap>
+        <div
+          className="Firestore-Evaluation-Outcome"
+          title={outcomeData?.label}
+        >
+          {outcomeData?.icon && (
+            <Icon icon={{ icon: outcomeData?.icon, size: 'large' }} />
+          )}
+        </div>
+      </CustomThemeProvider>
+      <div className="Firestore-Evaluation-Method">{requestMethod}</div>
+      <div className="Firestore-Evaluations-Path-Container">
+        {resourceSubPaths?.map((subpath, index) => (
+          <React.Fragment key={`${subpath}-${index}`}>
+            <span className="Firestore-Evaluation-Path-Slash"> / </span>
+            <span
+              title="copy subpath"
+              className="Firestore-Evaluation-Path-Subpath"
+              onClick={() => {
+                navigator.clipboard.writeText(subpath);
+              }}
+            >
+              {' '}
+              {subpath}{' '}
+            </span>
+          </React.Fragment>
+        ))}
       </div>
-      <div
-        className="Firestore-Evaluation-Details-Header-Info"
-        title={outcomeData?.label}
-      >
-        <CustomThemeProvider use={outcomeData?.theme || 'note'} wrap>
-          <div
-            className="Firestore-Evaluation-Outcome"
-            title={outcomeData?.label}
-          >
-            {outcomeData?.icon && (
-              <Icon icon={{ icon: outcomeData?.icon, size: 'large' }} />
-            )}
-          </div>
-        </CustomThemeProvider>
-        <div className="Firestore-Evaluation-Method">{requestMethod}</div>
-        <div className="Firestore-Evaluations-Path-Container">
-          {resourceSubPaths?.map((subpath, index) => (
-            <React.Fragment key={`${subpath}-${index}`}>
-              <span className="Firestore-Evaluation-Path-Slash"> / </span>
-              <span
-                title="copy subpath"
-                className="Firestore-Evaluation-Path-Subpath"
-                onClick={() => {
-                  navigator.clipboard.writeText(subpath);
-                }}
-              >
-                {' '}
-                {subpath}{' '}
-              </span>
-            </React.Fragment>
-          ))}
-        </div>
-        <div className="Firestore-Evaluation-Date" title={requestTimeComplete}>
-          {requestTimeFromNow}
-        </div>
+      <div className="Firestore-Evaluation-Date" title={requestTimeComplete}>
+        {requestTimeFromNow}
       </div>
     </div>
-  );
-};
+  </div>
+);
 
 export default EvaluationDetailsHeader;

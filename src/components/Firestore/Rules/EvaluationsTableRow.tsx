@@ -22,7 +22,7 @@ import { Link } from 'react-router-dom';
 
 import { CustomThemeProvider } from '../../../themes';
 import { FirestoreRulesEvaluation } from './rules_evaluation_result_model';
-import { useEvaluationCleanData } from './utils';
+import { useEvaluationCleanMainData } from './utils';
 
 const EvaluationTableRow: React.FC<{
   evaluation: FirestoreRulesEvaluation;
@@ -34,7 +34,7 @@ const EvaluationTableRow: React.FC<{
     requestMethod,
     resourceSubPaths,
     outcomeData,
-  ] = useEvaluationCleanData(evaluation);
+  ] = useEvaluationCleanMainData(evaluation);
 
   return (
     <tr>
