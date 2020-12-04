@@ -18,8 +18,11 @@ import { createSelector } from 'reselect';
 
 import { AppState } from '..';
 
-export function getRequestEvaluations(state: AppState) {
+function getRequestEvaluations(state: AppState) {
   return state.firebaseRules.requestEvaluations;
+}
+function getSelectedRequestEvaluationId(state: AppState) {
+  return state.firebaseRules.selectedRequesEvaluationId;
 }
 
 export const getAllRequestEvaluations = createSelector(
@@ -27,9 +30,11 @@ export const getAllRequestEvaluations = createSelector(
   requestEvaluations => requestEvaluations
 );
 
-export const getRequestEvaluationById = (evaluationId: string) =>
-  createSelector(getRequestEvaluations, requestEvaluations =>
+export const getSelectedRequestEvaluation = createSelector(
+  getRequestEvaluations,
+  getSelectedRequestEvaluationId,
+  (requestEvaluations, selectedRequesEvaluationId) =>
     requestEvaluations?.find(
-      evaluation => evaluation.evaluationId === evaluationId
+      evaluation => evaluation.evaluationId === selectedRequesEvaluationId
     )
-  );
+);

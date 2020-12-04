@@ -49,15 +49,14 @@
 }
 
 .Firestore-Evaluations-Table {
-  table {
-    border-collapse: collapse;
-    width: 100%;
-    border-radius: 8px 8px 0 0;
-  }
+  border-collapse: collapse;
+  width: 100%;
+  border-radius: 8px;
+
   td,
   th {
     text-align: left;
-    padding: 12px;
+    padding: 11px;
     font-size: 14px;
   }
   th {
@@ -72,9 +71,12 @@
   th:last-of-type {
     border-top-right-radius: 8px;
   }
-  tbody tr:hover {
-    // background-color: var(--mdc-theme-surface);
-    background-color: var(--mdc-theme-hover);
+  tbody tr {
+    box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12) inset;
+
+    &:hover {
+      background-color: var(--mdc-theme-hover);
+    }
   }
 
   .Firestore-Evaluations-Table-Method-Header {
@@ -82,6 +84,54 @@
   }
   .Firestore-Evaluations-Table-Path-Header {
     width: 55%;
+  }
+}
+
+.Firestore-Evaluation-Details-Header {
+  border-radius: 8px 8px 0 0;
+  width: 100%;
+  box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12) inset;
+  background-color: var(--mdc-theme-surface);
+  padding: 12px 0;
+  height: 56px;
+  // flex
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.Firestore-Evaluation-Details-Header-Return {
+  width: 60px;
+  box-shadow: -1px 0 0 rgba(0, 0, 0, 0.12) inset;
+  // flex
+  display: flex;
+  justify-content: center;
+}
+.Firestore-Evaluation-Details-Header-Info {
+  width: 100%;
+  height: 100%;
+  padding: 0 12px;
+  position: relative;
+  // flex
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+
+  .Firestore-Evaluation-Outcome {
+    width: 5%;
+  }
+  .Firestore-Evaluation-Method {
+    width: 12%;
+    text-align: center;
+  }
+  .Firestore-Evaluations-Path-Container {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  .Firestore-Evaluation-Date {
+    width: 20%;
+    text-align: right;
   }
 }
 
@@ -93,66 +143,6 @@
 //   display: flex;
 //   justify-content: flex-start;
 //   align-items: stretch;
-// }
-
-// .Firestore-Rules-List {
-//   background-color: var(--mdc-theme-surface);
-//   box-shadow: -1px 0 0 rgba(0, 0, 0, 0.12) inset;
-//   padding-right: 1px;
-
-//   .Firestore-Rules-List-Container {
-//     width: 60px;
-//     height: 100%;
-//     // animation
-//     transition: all 0.4s;
-//     &:hover {
-//       width: 280px;
-//       .Firestore-Rules-List-Info {
-//         display: block !important;
-//       }
-//     }
-
-//     .Firestore-Rules-List-Element {
-//       padding: 20px;
-//       // flex
-//       display: flex;
-//       justify-content: flex-start;
-//       align-items: flex-start;
-//       // animation
-//       cursor: pointer;
-//       transition: all 0.2s;
-//       background-color: var(--mdc-theme-surface);
-//       &:hover {
-//         background-color: var(--mdc-theme-hover);
-//       }
-
-//       .Firestore-Rules-List-Circle {
-//         background-color: var(--mdc-theme-primary);
-//         border-radius: 16px;
-//         height: 16px;
-//         width: 16px;
-//         margin-right: 20px;
-//       }
-//       .Firestore-Rules-List-Info {
-//         display: none;
-//         width: calc(100% - 30px);
-
-//         .Firestore-Rules-List-Path {
-//           font-size: 12px;
-//           font-weight: 500;
-//           margin-bottom: 4px;
-//           // truncate text
-//           white-space: nowrap;
-//           overflow: hidden;
-//           text-overflow: ellipsis;
-//         }
-//         .Firestore-Rules-List-Date {
-//           font-size: 10px;
-//           font-weight: 300;
-//         }
-//       }
-//     }
-//   }
 // }
 
 // .Firestore-Rules-Code {

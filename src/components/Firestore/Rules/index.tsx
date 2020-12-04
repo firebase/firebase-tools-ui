@@ -18,7 +18,7 @@ import './index.scss';
 
 import { ThemeProvider } from '@rmwc/theme';
 import React from 'react';
-import { Route, useRouteMatch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 
 import { grey100 } from '../../../colors';
 import { noteTheme } from '../../../themes';
@@ -36,29 +36,19 @@ const RulesComponentWrapper: React.FC = ({ children }) => (
   </ThemeProvider>
 );
 
-export const Rules: React.FC<{}> = () => {
-  const { url } = useRouteMatch()!;
-
-  return (
-    <>
-      <Route
-        path={`${url}`}
-        render={() => (
-          <RulesComponentWrapper>
-            <EvaluationsTable />
-          </RulesComponentWrapper>
-        )}
-      ></Route>
-      <Route
-        path={`${url}/:id`}
-        render={({ match }: any) => (
-          <RulesComponentWrapper>
-            <EvaluationDetails evaluationId={match.params.id} />
-          </RulesComponentWrapper>
-        )}
-      ></Route>
-    </>
-  );
-};
+export const Rules: React.FC<{}> = () => (
+  <Switch>
+    <Route exact path="/firestore/rules">
+      <RulesComponentWrapper>
+        <EvaluationsTable />
+      </RulesComponentWrapper>
+    </Route>
+    <Route exact path="/firestore/rules/:evaluationId">
+      <RulesComponentWrapper>
+        <EvaluationDetails />
+      </RulesComponentWrapper>
+    </Route>
+  </Switch>
+);
 
 export default Rules;

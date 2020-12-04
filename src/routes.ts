@@ -28,7 +28,9 @@ export interface Route {
   label: string;
   exact: boolean;
   showInNav: boolean;
+  // Firestore Rules
   showInFirestoreSubNav?: boolean;
+  isFirestoreSubRoute?: boolean;
 }
 
 export const routes: ReadonlyArray<Route> = [
@@ -76,6 +78,7 @@ export const routes: ReadonlyArray<Route> = [
     exact: false,
     showInNav: false,
     showInFirestoreSubNav: true,
+    isFirestoreSubRoute: true,
   },
   {
     path: '/firestore/rules',
@@ -84,13 +87,15 @@ export const routes: ReadonlyArray<Route> = [
     exact: true,
     showInNav: false,
     showInFirestoreSubNav: true,
+    isFirestoreSubRoute: true,
   },
   {
-    path: '/firestore/rules/:id',
+    path: '/firestore/rules/:evaluationId',
     component: Firestore,
     label: 'Rules',
     exact: true,
     showInNav: false,
     showInFirestoreSubNav: false,
+    isFirestoreSubRoute: true,
   },
 ];

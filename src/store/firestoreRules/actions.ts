@@ -21,3 +21,7 @@ import { FirestoreRulesEvaluation } from '../../components/Firestore/Rules/rules
 export const addRequestEvaluation = createAction(
   '@firestoreRules/addRequestEvaluation'
 )<FirestoreRulesEvaluation>();
+
+export const getRequestEvaluationById = createAction(
+  '@firestoreRules/selectRequestEvaluation'
+)<string | null>();

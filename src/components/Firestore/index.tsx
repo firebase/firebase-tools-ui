@@ -90,9 +90,10 @@ export const Firestore: React.FC = React.memo(() => {
   const showCollectionShell = path.split('/').length < 2;
   const showDocumentShell = path.split('/').length < 3;
 
-  const subNavRoutes = routes.filter(r => r.showInFirestoreSubNav);
+  const subNavRoutesToShow = routes.filter(r => r.showInFirestoreSubNav);
+  const subNavRoutes = routes.filter(r => r.isFirestoreSubRoute);
 
-  const subTabs = subNavRoutes.map(({ path, label }: Route) => (
+  const subTabs = subNavRoutesToShow.map(({ path, label }: Route) => (
     <Tab
       key={label}
       className="mdc-tab--min-width"
@@ -174,7 +175,7 @@ export const Firestore: React.FC = React.memo(() => {
   }
 
   function renderFirestoreRules() {
-    return activeTabIndex !== 1 ? null : (
+    return activeTabIndex === 0 ? null : (
       <Elevation z="2" wrap>
         <Card className="Firestore-panels-wrapper">
           <FirestoreRules />

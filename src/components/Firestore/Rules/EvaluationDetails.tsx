@@ -18,18 +18,21 @@ import './index.scss';
 
 import { Icon } from '@rmwc/icon';
 import { IconButton } from '@rmwc/icon-button';
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { MapDispatchToPropsFunction, connect } from 'react-redux';
+import { Link, useParams } from 'react-router-dom';
 
+import { createStructuredSelector } from '../../../store';
+import { getRequestEvaluationById } from '../../../store/firestoreRules';
+import { getSelectedRequestEvaluation } from '../../../store/firestoreRules/selectors';
 import { CustomThemeProvider } from '../../../themes';
 import { FirestoreRulesEvaluation } from './rules_evaluation_result_model';
 import { useEvaluationCleanData } from './utils';
 
 const EvaluationHeader: React.FC<{
-  evaluation: FirestoreRulesEvaluation;
+  evaluation?: FirestoreRulesEvaluation;
 }> = ({ evaluation }) => {
   const [
-    outcome,
     requestTimeComplete,
     requestTimeFromNow,
     requestMethod,
@@ -47,32 +50,36 @@ const EvaluationHeader: React.FC<{
       </div>
       <div
         className="Firestore-Evaluation-Details-Header-Info"
-        title={outcomeData[outcome]?.label}
+        title={outcomeData?.label}
       >
-        <CustomThemeProvider use={outcomeData[outcome]?.theme} wrap>
+        <CustomThemeProvider use={outcomeData?.theme || 'note'} wrap>
           <div
             className="Firestore-Evaluation-Outcome"
-            title={outcomeData[outcome]?.label}
+            title={outcomeData?.label}
           >
-            <Icon icon={{ icon: outcomeData[outcome]?.icon, size: 'large' }} />
+            {outcomeData?.icon && (
+              <Icon icon={{ icon: outcomeData?.icon, size: 'large' }} />
+            )}
           </div>
         </CustomThemeProvider>
         <div className="Firestore-Evaluation-Method">{requestMethod}</div>
-        {resourceSubPaths?.map((subpath, index) => (
-          <React.Fragment key={`${subpath}-${index}`}>
-            <span className="Firestore-Evaluation-Path-Slash"> / </span>
-            <span
-              title="copy subpath"
-              className="Firestore-Evaluation-Path-Subpath"
-              onClick={() => {
-                navigator.clipboard.writeText(subpath);
-              }}
-            >
-              {' '}
-              {subpath}{' '}
-            </span>
-          </React.Fragment>
-        ))}
+        <div className="Firestore-Evaluations-Path-Container">
+          {resourceSubPaths?.map((subpath, index) => (
+            <React.Fragment key={`${subpath}-${index}`}>
+              <span className="Firestore-Evaluation-Path-Slash"> / </span>
+              <span
+                title="copy subpath"
+                className="Firestore-Evaluation-Path-Subpath"
+                onClick={() => {
+                  navigator.clipboard.writeText(subpath);
+                }}
+              >
+                {' '}
+                {subpath}{' '}
+              </span>
+            </React.Fragment>
+          ))}
+        </div>
         <div className="Firestore-Evaluation-Date" title={requestTimeComplete}>
           {requestTimeFromNow}
         </div>
@@ -81,10 +88,42 @@ const EvaluationHeader: React.FC<{
   );
 };
 
-export const EvaluationDetails: React.FC<{
-  evaluationId: string;
-}> = ({ evaluationId }) => {
-  return <>{/* <EvaluationHeader evaluation={}/> */}</>;
+export interface PropsFromState {
+  selectedEvaluation: FirestoreRulesEvaluation | undefined;
+}
+
+export interface PropsFromDispatch {
+  getEvaluationById: typeof getRequestEvaluationById;
+}
+
+export type Props = PropsFromState & PropsFromDispatch;
+
+export const EvaluationDetails: React.FC<Props> = ({
+  selectedEvaluation,
+  getEvaluationById,
+}) => {
+  const { evaluationId } = useParams<{ evaluationId: string }>();
+
+  useEffect(() => {
+    getEvaluationById(evaluationId);
+  }, [getEvaluationById, evaluationId, selectedEvaluation]);
+
+  return (
+    <>
+      <EvaluationHeader evaluation={selectedEvaluation} />
+    </>
+  );
 };
 
-export default EvaluationDetails;
+export const mapStateToProps = createStructuredSelector({
+  selectedEvaluation: getSelectedRequestEvaluation,
+});
+export const mapDispatchToProps: MapDispatchToPropsFunction<
+  PropsFromDispatch,
+  {}
+> = dispatch => ({
+  getEvaluationById: (selectedEvaluationId: string | null) =>
+    dispatch(getRequestEvaluationById(selectedEvaluationId)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(EvaluationDetails);

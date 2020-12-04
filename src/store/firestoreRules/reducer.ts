@@ -22,76 +22,24 @@ import * as actions from './actions';
 
 export interface FirestoreRulesState {
   requestEvaluations: FirestoreRulesEvaluation[];
+  selectedRequesEvaluationId: string | null;
 }
 
-const INIT_STATE: FirestoreRulesState = { requestEvaluations: [] };
-
-// const firestoreRulesStoreContext = React.createContext<{
-//   store: FirestoreRulesState;
-//   dispatch: React.Dispatch<any>;
-// }>({ store: INIT_STATE, dispatch: () => {} });
+const INIT_STATE: FirestoreRulesState = {
+  requestEvaluations: [],
+  selectedRequesEvaluationId: null,
+};
 
 export const firestoreRulesReducer = createReducer<FirestoreRulesState, Action>(
   INIT_STATE
-).handleAction(actions.addRequestEvaluation, (state, { payload }) =>
-  produce(state, draft => {
-    console.log('dev: store: ', payload, [
-      payload,
-      ...draft.requestEvaluations,
-    ]);
-    draft.requestEvaluations = [payload, ...draft.requestEvaluations];
-  })
-);
-
-// const storeReducer: React.Reducer<FirestoreRulesState, Action> = (state, action) => {
-//   return (firestoreRulesReducer.handlers as any)[action.type](state, action);
-// };
-
-// export const FirestoreRulesStore: React.FC<{ initState?: FirestoreRulesState }> = ({
-//   initState = INIT_STATE,
-//   children,
-// }) => {
-//   const [store, dispatch] = React.useReducer(storeReducer, initState);
-//   return (
-//     <firestoreRulesStoreContext.Provider value={{ store, dispatch }}>
-//       {children}
-//     </firestoreRulesStoreContext.Provider>
-//   );
-// };
-
-// export function useFirestoreRulesStore(): {
-//   store: FirestoreRulesState;
-//   dispatch: React.Dispatch<Action>;
-// } {
-//   const context = React.useContext(firestoreRulesStoreContext);
-//   if (context === undefined) {
-//     throw new Error(
-//       'useFirestoreRulesStore must be used within a <FirestoreRulesStore>'
-//     );
-//   }
-//   return context;
-// }
-
-// export function useStore(): FirestoreRulesState {
-//   const { store } = useFirestoreRulesStore();
-//   return React.useMemo(() => store, [store]);
-// }
-
-// export function useDispatch(): React.Dispatch<Action> {
-//   const { dispatch } = useFirestoreRulesStore();
-//   return React.useMemo(() => dispatch, [dispatch]);
-// }
-
-// export function useEvaluationRequests(): FirestoreRulesEvaluation[] {
-//   const { store } = useFirestoreRulesStore();
-//   return store.requestEvaluations;
-// }
-
-// export function useEvaluationRequest(
-//   evaluationId: string
-// ): FirestoreRulesEvaluation | undefined {
-//   const { store } = useFirestoreRulesStore();
-//   return store.requestEvaluations?.find(
-//     evaluation => evaluation.evaluationId === evaluationId
-//   );
-// }
+)
+  .handleAction(actions.addRequestEvaluation, (state, { payload }) =>
+    produce(state, draft => {
+      draft.requestEvaluations = [payload, ...draft.requestEvaluations];
+    })
+  )
+  .handleAction(actions.getRequestEvaluationById, (state, { payload }) =>
+    produce(state, draft => {
+      draft.selectedRequesEvaluationId = payload;
+    })
+  );

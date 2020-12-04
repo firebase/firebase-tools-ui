@@ -34,7 +34,6 @@ const EvaluationRow: React.FC<{
   evaluationId: string;
 }> = ({ evaluation, evaluationId }) => {
   const [
-    outcome,
     requestTimeComplete,
     requestTimeFromNow,
     requestMethod,
@@ -44,20 +43,19 @@ const EvaluationRow: React.FC<{
 
   return (
     <tr>
-      <CustomThemeProvider use={outcomeData[outcome]?.theme} wrap>
-        <td
-          className="Firestore-Evaluation-Outcome"
-          title={outcomeData[outcome]?.label}
-        >
-          <IconButton
-            icon={outcomeData[outcome]?.icon}
-            tag={Link}
-            to={`/firestore/rules/${evaluationId}`}
-          />
+      <CustomThemeProvider use={outcomeData?.theme || 'note'} wrap>
+        <td className="Firestore-Evaluation-Outcome" title={outcomeData?.label}>
+          {outcomeData?.icon && (
+            <IconButton
+              icon={outcomeData?.icon}
+              tag={Link}
+              to={`/firestore/rules/${evaluationId}`}
+            />
+          )}
         </td>
       </CustomThemeProvider>
       <td className="Firestore-Evaluation-Method">{requestMethod}</td>
-      <td className="Firestore-Evaluations-Table-Path-Data">
+      <td className="Firestore-Evaluations-Path-Container">
         {resourceSubPaths?.map((subpath, index) => (
           <React.Fragment key={`${subpath}-${index}`}>
             <span className="Firestore-Evaluation-Path-Slash"> / </span>
@@ -109,32 +107,28 @@ export const EvaluationsTable: React.FC<Props> = ({
   }, [addEvaluation]);
 
   return (
-    <div className="Firestore-Evaluations-Table">
-      <table>
-        <thead>
-          <tr>
-            <th></th>
-            <th className="Firestore-Evaluations-Table-Method-Header">
-              Method
-            </th>
-            <th className="Firestore-Evaluations-Table-Path-Header">Path</th>
-            <th>Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          {evaluations?.map((evaluation: FirestoreRulesEvaluation) => {
-            const { evaluationId } = evaluation;
-            return (
-              <EvaluationRow
-                key={evaluationId}
-                evaluationId={evaluationId}
-                evaluation={evaluation}
-              />
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
+    <table className="Firestore-Evaluations-Table">
+      <thead>
+        <tr>
+          <th></th>
+          <th className="Firestore-Evaluations-Table-Method-Header">Method</th>
+          <th className="Firestore-Evaluations-Table-Path-Header">Path</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {evaluations?.map((evaluation: FirestoreRulesEvaluation) => {
+          const { evaluationId } = evaluation;
+          return (
+            <EvaluationRow
+              key={evaluationId}
+              evaluationId={evaluationId}
+              evaluation={evaluation}
+            />
+          );
+        })}
+      </tbody>
+    </table>
   );
 };
 
