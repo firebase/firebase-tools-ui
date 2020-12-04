@@ -119,7 +119,10 @@ export function useSubCollections(
   docRef: firebase.firestore.DocumentReference
 ) {
   const { baseUrl } = useFirestoreRestApi();
-  const encodedPath = docRef.path; // TODO: Encode each segment
+  const encodedPath = docRef.path
+    .split('/')
+    .map(uri => encodeURIComponent(uri))
+    .join('/');
   const url = `${baseUrl}/documents/${encodedPath}:listCollectionIds`;
 
   const { data } = useRequest<{ collectionIds: string[] }>(

@@ -227,9 +227,10 @@ it('shows the selected sub-document', async () => {
 });
 
 describe('withCollectionState', () => {
-  let performAddDocument: () => Promise<void>;
+  let performAddDocument: (id?: string) => Promise<void>;
   const MyCollection = withCollectionState(({ addDocument }) => {
-    performAddDocument = () => addDocument({ id: 'new-document-id', data: {} });
+    performAddDocument = (id = 'new-document-id') =>
+      addDocument({ id, data: {} });
     return <div data-testid="withCollectionState" />;
   });
 
@@ -281,6 +282,64 @@ describe('withCollectionState', () => {
     await waitForElement(() => getByTestId('withCollectionState'));
 
     await act(performAddDocument);
+
+    expect(getByText(/_redirected_to_foo_/)).not.toBeNull();
+  });
+
+  it('redirects to a newly created document when a child is active and the document id has special characters', async () => {
+    const { getByTestId, getByText } = await renderWithFirestore(
+      async firestore => {
+        const collectionRef = firestore.collection('my-stuff');
+
+        return (
+          <>
+            <Route path="/my-stuff">
+              <MyCollection collection={collectionRef} />
+            </Route>
+            <Route path="/my-stuff/new-document-id-%40%23%24">
+              _redirected_to_foo_
+            </Route>
+          </>
+        );
+      },
+      {
+        path: '/my-stuff/my-doc/sub-coll',
+      }
+    );
+
+    await waitForElement(() => getByTestId('withCollectionState'));
+
+    await act(() => performAddDocument('new-document-id-@#$'));
+
+    expect(getByText(/_redirected_to_foo_/)).not.toBeNull();
+  });
+
+  // TODO: This test tracks the ideal behavior of the issue #442:
+  //          Error on the Firestore viewer when trying to decode URI containing the character '%'.
+  it.skip('redirects to a newly created document when a child is active and the document id has the special character %', async () => {
+    const { getByTestId, getByText } = await renderWithFirestore(
+      async firestore => {
+        const collectionRef = firestore.collection('my-stuff');
+
+        return (
+          <>
+            <Route path="/my-stuff">
+              <MyCollection collection={collectionRef} />
+            </Route>
+            <Route path="/my-stuff/new-document-id-%40%23%24%25">
+              _redirected_to_foo_
+            </Route>
+          </>
+        );
+      },
+      {
+        path: '/my-stuff/my-doc/sub-coll',
+      }
+    );
+
+    await waitForElement(() => getByTestId('withCollectionState'));
+
+    await act(() => performAddDocument('new-document-id-@#$%'));
 
     expect(getByText(/_redirected_to_foo_/)).not.toBeNull();
   });
