@@ -19,7 +19,7 @@ import {
   waitForElement,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
-import { firestore } from 'firebase';
+import firebase from 'firebase';
 import React from 'react';
 import { useFirestoreDocData } from 'reactfire';
 
@@ -52,7 +52,11 @@ it('should get root-collections', async () => {
 });
 
 it('should get sub-collections', async () => {
-  const TestResults = ({ docRef }: { docRef: firestore.DocumentReference }) => {
+  const TestResults = ({
+    docRef,
+  }: {
+    docRef: firebase.firestore.DocumentReference;
+  }) => {
     const collections = useSubCollections(docRef);
     return (
       <div data-testid="collections">{collections.map(c => c.id).join()}</div>
@@ -108,8 +112,12 @@ it('should get sub-collections with special characters inside URI', async () => 
 });
 
 it('should clear the database', async () => {
-  const TestResults = ({ docRef }: { docRef: firestore.DocumentReference }) => {
-    const data = useFirestoreDocData(docRef);
+  const TestResults = ({
+    docRef,
+  }: {
+    docRef: firebase.firestore.DocumentReference;
+  }) => {
+    const { data } = useFirestoreDocData(docRef);
     const eject = useEjector();
 
     return (
@@ -128,13 +136,13 @@ it('should clear the database', async () => {
     }
   );
 
-  await waitForElement(() => getByText(/{"a":1}/));
+  await waitForElement(() => getByText(/"a":1/));
 
   act(() => {
     getByText(/Clear/).click();
   });
 
-  await waitForElementToBeRemoved(() => getByText(/{"a":1}/));
+  await waitForElementToBeRemoved(() => getByText(/"a":1/));
 
-  expect(getByTestId(/data/).textContent).toBe('{}');
+  expect(getByTestId(/data/).textContent).not.toContain('"a":1');
 });

@@ -17,6 +17,7 @@
 import './NodeLink.scss';
 
 import { Typography } from '@rmwc/typography';
+import firebase from 'firebase';
 import * as React from 'react';
 import { Link, matchPath, useRouteMatch } from 'react-router-dom';
 

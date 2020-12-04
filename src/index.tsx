@@ -48,7 +48,7 @@ const RouterWithInit = () => {
   );
 };
 
-ReactDOM.render(
+ReactDOM.unstable_createBlockingRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <RMWCProvider
       // Globally disable ripples
@@ -68,6 +68,5 @@ ReactDOM.render(
         </Provider>
       </ThemeProvider>
     </RMWCProvider>
-  </React.StrictMode>,
-  document.getElementById('root')
+  </React.StrictMode>
 );

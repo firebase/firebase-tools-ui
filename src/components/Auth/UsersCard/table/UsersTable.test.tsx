@@ -1,5 +1,5 @@
 import { Portal } from '@rmwc/base';
-import { fireEvent, render } from '@testing-library/react';
+import { fireEvent, render, waitForElement } from '@testing-library/react';
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
@@ -105,6 +105,9 @@ describe('UserTable', () => {
       });
 
       await waitForMenuToOpen();
+
+      // Investigate: Menu was animating in still (flaky)
+      await waitForElement(() => '.mdc-menu-surface--open');
 
       const button = result.getByText(text, {
         selector: '.mdc-menu-surface--open .mdc-list-item',

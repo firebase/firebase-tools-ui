@@ -21,7 +21,7 @@ import { IconButton } from '@rmwc/icon-button';
 import { ListItem, ListItemMeta } from '@rmwc/list';
 import { Theme } from '@rmwc/theme';
 import classnames from 'classnames';
-import { firestore } from 'firebase';
+import firebase from 'firebase';
 import React, { useState } from 'react';
 
 import { supportsEditing } from '../DocumentEditor';
@@ -41,7 +41,7 @@ import { useDocumentState, useFieldState } from './store';
 
 const FieldPreview: React.FC<{
   path: string[];
-  documentRef: firestore.DocumentReference;
+  documentRef: firebase.firestore.DocumentReference;
   maxSummaryLen: number;
 }> = ({ path, documentRef, maxSummaryLen }) => {
   const documentData = useDocumentState();

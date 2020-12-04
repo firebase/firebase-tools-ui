@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import { ok } from 'assert';
 
 import { Checkbox } from '@rmwc/checkbox';
@@ -26,6 +25,7 @@ import {
 } from '@rmwc/dialog';
 import { TextField } from '@rmwc/textfield';
 import { Typography } from '@rmwc/typography';
+import firebase from 'firebase';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 

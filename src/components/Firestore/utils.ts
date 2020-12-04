@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { firestore } from 'firebase';
+import firebase from 'firebase';
 import produce from 'immer';
 import get from 'lodash.get';
 
@@ -44,7 +44,7 @@ export function getFieldType(value: FirestoreAny): FieldType {
     return FieldType.NULL;
   }
 
-  if (value instanceof firestore.Timestamp) {
+  if (value instanceof firebase.firestore.Timestamp) {
     return FieldType.TIMESTAMP;
   }
 
@@ -52,15 +52,15 @@ export function getFieldType(value: FirestoreAny): FieldType {
     return FieldType.ARRAY;
   }
 
-  if (value instanceof firestore.DocumentReference) {
+  if (value instanceof firebase.firestore.DocumentReference) {
     return FieldType.REFERENCE;
   }
 
-  if (value instanceof firestore.GeoPoint) {
+  if (value instanceof firebase.firestore.GeoPoint) {
     return FieldType.GEOPOINT;
   }
 
-  if (value instanceof firestore.Blob) {
+  if (value instanceof firebase.firestore.Blob) {
     return FieldType.BLOB;
   }
 
@@ -77,12 +77,14 @@ export function isBoolean(value: FirestoreAny): value is boolean {
 
 export function isReference(
   value: FirestoreAny
-): value is firestore.DocumentReference {
-  return value instanceof firestore.DocumentReference;
+): value is firebase.firestore.DocumentReference {
+  return value instanceof firebase.firestore.DocumentReference;
 }
 
-export function isTimestamp(value: FirestoreAny): value is firestore.Timestamp {
-  return value instanceof firestore.Timestamp;
+export function isTimestamp(
+  value: FirestoreAny
+): value is firebase.firestore.Timestamp {
+  return value instanceof firebase.firestore.Timestamp;
 }
 
 export function isString(value: FirestoreAny): value is string {
@@ -93,8 +95,10 @@ export function isNumber(value: FirestoreAny): value is number {
   return typeof value === 'number';
 }
 
-export function isGeoPoint(value: FirestoreAny): value is firestore.GeoPoint {
-  return value instanceof firestore.GeoPoint;
+export function isGeoPoint(
+  value: FirestoreAny
+): value is firebase.firestore.GeoPoint {
+  return value instanceof firebase.firestore.GeoPoint;
 }
 
 export function isMap(value: any): value is FirestoreMap {
@@ -146,26 +150,26 @@ export function summarize(data: FirestoreAny, maxLen: number): string {
     case FieldType.MAP:
       return summarizeMap(data as Record<string, FirestoreAny>, maxLen);
     case FieldType.BLOB:
-      const base64 = (data as firestore.Blob).toBase64();
+      const base64 = (data as firebase.firestore.Blob).toBase64();
       if (base64.length < maxLen) return base64;
       else return base64.substr(0, maxLen) + '...';
     case FieldType.BOOLEAN:
       return (data as boolean).toString();
     case FieldType.GEOPOINT:
-      const value = data as firestore.GeoPoint;
+      const value = data as firebase.firestore.GeoPoint;
       return `[${latStr(value.latitude)}, ${longStr(value.longitude)}]`;
     case FieldType.NULL:
       return 'null';
     case FieldType.NUMBER:
       return (data as number).toString();
     case FieldType.REFERENCE:
-      return (data as firestore.DocumentReference).path;
+      return (data as firebase.firestore.DocumentReference).path;
     case FieldType.STRING:
       return `"${data as string}"`;
     case FieldType.TIMESTAMP:
       // TODO: Better date time formatting.
       // Note: Not using toLocaleString() since it does not stringify timezone.
-      return (data as firestore.Timestamp).toDate().toString();
+      return (data as firebase.firestore.Timestamp).toDate().toString();
     case FieldType.JSON:
       throw new Error('JSON field type is input only');
   }

@@ -15,8 +15,13 @@
  */
 
 import firebase from 'firebase';
-import React, { Suspense, useEffect } from 'react';
-import { FirebaseAppProvider, useFirestore } from 'reactfire';
+import React, { Suspense, useEffect, useState } from 'react';
+import {
+  FirebaseAppProvider,
+  preloadFirestore,
+  useFirebaseApp,
+  useFirestore,
+} from 'reactfire';
 import { mutate } from 'swr';
 
 import { useEmulatedFirebaseApp } from '../../firebase';
@@ -43,8 +48,10 @@ export const FirestoreEmulatedApiProvider: React.FC<{
       <Suspense
         fallback={<Spinner message="Loading Firestore SDK" span={12} />}
       >
-        <FirestoreEmulatorSettings>{children}</FirestoreEmulatorSettings>
-        {disableDevTools || <FirestoreDevTools />}
+        <FirestoreEmulatorSettings>
+          {children}
+          {disableDevTools || <FirestoreDevTools />}
+        </FirestoreEmulatorSettings>
       </Suspense>
     </FirebaseAppProvider>
   );
@@ -52,16 +59,19 @@ export const FirestoreEmulatedApiProvider: React.FC<{
 
 // Connect FirestoreSDK to Emulator Hub
 const FirestoreEmulatorSettings: React.FC = React.memo(({ children }) => {
-  const firestore = useFirestore();
+  const [connected, setConnected] = useState(false);
+  const firebaseApp = useFirebaseApp();
   // TODO: update config to always have a firestore-config obj
   const config = useFirestoreConfig()!;
 
-  firestore.settings({
-    host: config.hostAndPort,
-    ssl: false,
-  });
+  useEffect(() => {
+    preloadFirestore({
+      firebaseApp,
+      setup: firestore => firestore().useEmulator(config.host, config.port),
+    }).then(() => setConnected(true));
+  }, [firebaseApp, config]);
 
-  return <>{children}</>;
+  return connected ? <>{children}</> : null;
 });
 
 const FirestoreDevTools: React.FC = React.memo(() => {

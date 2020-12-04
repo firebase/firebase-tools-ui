@@ -3,8 +3,8 @@ import React from 'react';
 
 import { AuthHeader } from './AuthHeader';
 
-jest.mock('./AuthFilter');
-jest.mock('./RefreshButton');
+jest.mock('./AuthFilter', () => () => null);
+jest.mock('./RefreshButton', () => () => null);
 
 describe('AuthHeader', () => {
   it('triggers onOpenNewUserDialog on button click', () => {
