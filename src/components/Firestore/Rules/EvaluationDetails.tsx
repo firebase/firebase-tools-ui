@@ -16,77 +16,15 @@
 
 import './index.scss';
 
-import { Icon } from '@rmwc/icon';
-import { IconButton } from '@rmwc/icon-button';
 import React, { useEffect } from 'react';
 import { MapDispatchToPropsFunction, connect } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import { createStructuredSelector } from '../../../store';
 import { getRequestEvaluationById } from '../../../store/firestoreRules';
 import { getSelectedRequestEvaluation } from '../../../store/firestoreRules/selectors';
-import { CustomThemeProvider } from '../../../themes';
+import EvaluationDetailsHeader from './EvaluationDetailsHeader';
 import { FirestoreRulesEvaluation } from './rules_evaluation_result_model';
-import { useEvaluationCleanData } from './utils';
-
-const EvaluationHeader: React.FC<{
-  evaluation?: FirestoreRulesEvaluation;
-}> = ({ evaluation }) => {
-  const [
-    requestTimeComplete,
-    requestTimeFromNow,
-    requestMethod,
-    resourceSubPaths,
-    outcomeData,
-  ] = useEvaluationCleanData(evaluation);
-
-  return (
-    <div className="Firestore-Evaluation-Details-Header">
-      <div
-        className="Firestore-Evaluation-Details-Header-Return"
-        title="Go back to Table"
-      >
-        <IconButton icon="arrow_back_ios" tag={Link} to="/firestore/rules" />
-      </div>
-      <div
-        className="Firestore-Evaluation-Details-Header-Info"
-        title={outcomeData?.label}
-      >
-        <CustomThemeProvider use={outcomeData?.theme || 'note'} wrap>
-          <div
-            className="Firestore-Evaluation-Outcome"
-            title={outcomeData?.label}
-          >
-            {outcomeData?.icon && (
-              <Icon icon={{ icon: outcomeData?.icon, size: 'large' }} />
-            )}
-          </div>
-        </CustomThemeProvider>
-        <div className="Firestore-Evaluation-Method">{requestMethod}</div>
-        <div className="Firestore-Evaluations-Path-Container">
-          {resourceSubPaths?.map((subpath, index) => (
-            <React.Fragment key={`${subpath}-${index}`}>
-              <span className="Firestore-Evaluation-Path-Slash"> / </span>
-              <span
-                title="copy subpath"
-                className="Firestore-Evaluation-Path-Subpath"
-                onClick={() => {
-                  navigator.clipboard.writeText(subpath);
-                }}
-              >
-                {' '}
-                {subpath}{' '}
-              </span>
-            </React.Fragment>
-          ))}
-        </div>
-        <div className="Firestore-Evaluation-Date" title={requestTimeComplete}>
-          {requestTimeFromNow}
-        </div>
-      </div>
-    </div>
-  );
-};
 
 export interface PropsFromState {
   selectedEvaluation: FirestoreRulesEvaluation | undefined;
@@ -110,7 +48,7 @@ export const EvaluationDetails: React.FC<Props> = ({
 
   return (
     <>
-      <EvaluationHeader evaluation={selectedEvaluation} />
+      <EvaluationDetailsHeader evaluation={selectedEvaluation} />
     </>
   );
 };
