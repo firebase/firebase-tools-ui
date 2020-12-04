@@ -17,16 +17,16 @@
 import 'codemirror/keymap/sublime';
 import 'codemirror/theme/xq-light.css';
 
-import './index.scss';
+import '../index.scss';
 
-import { Icon } from '@rmwc/icon';
+// import { Icon } from '@rmwc/icon';
 import CodeMirror from '@uiw/react-codemirror';
 import React, { useState } from 'react';
 import ReactDOMServer from 'react-dom/server';
 
-import { LineOutcome } from './types';
+import { LineOutcome } from '../types';
 
-export const RulesCode: React.FC<{
+const RulesCodeViewer: React.FC<{
   linesOutcome?: LineOutcome[];
   firestoreRules: string;
 }> = ({ linesOutcome, firestoreRules }) => {
@@ -76,4 +76,4 @@ export const RulesCode: React.FC<{
   );
 };
 
-export default RulesCode;
+export default RulesCodeViewer;

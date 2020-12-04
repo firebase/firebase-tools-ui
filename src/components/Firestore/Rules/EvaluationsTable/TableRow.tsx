@@ -14,54 +14,43 @@
  * limitations under the License.
  */
 
-import './index.scss';
+import '../index.scss';
 
-import { Icon } from '@rmwc/icon';
 import { IconButton } from '@rmwc/icon-button';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { CustomThemeProvider } from '../../../themes';
-import { OutcomeData } from './types';
+import { CustomThemeProvider } from '../../../../themes';
+import { FirestoreRulesEvaluation } from '../rules_evaluation_result_model';
+import { useEvaluationCleanMainData } from '../utils';
 
-interface Props {
-  requestTimeComplete: string | undefined;
-  requestTimeFromNow: string | undefined;
-  requestMethod: string | undefined;
-  resourceSubPaths: string[] | undefined;
-  outcomeData: OutcomeData | undefined;
-}
+const EvaluationTableRow: React.FC<{
+  evaluation: FirestoreRulesEvaluation;
+  evaluationId: string;
+}> = ({ evaluation, evaluationId }) => {
+  const [
+    requestTimeComplete,
+    requestTimeFromNow,
+    requestMethod,
+    resourceSubPaths,
+    outcomeData,
+  ] = useEvaluationCleanMainData(evaluation);
 
-const EvaluationDetailsHeader: React.FC<Props> = ({
-  requestTimeComplete,
-  requestTimeFromNow,
-  requestMethod,
-  resourceSubPaths,
-  outcomeData,
-}) => (
-  <div className="Firestore-Evaluation-Details-Header">
-    <div
-      className="Firestore-Evaluation-Details-Header-Return"
-      title="Go back to Table"
-    >
-      <IconButton icon="arrow_back_ios" tag={Link} to="/firestore/rules" />
-    </div>
-    <div
-      className="Firestore-Evaluation-Details-Header-Info"
-      title={outcomeData?.label}
-    >
+  return (
+    <tr>
       <CustomThemeProvider use={outcomeData?.theme || 'note'} wrap>
-        <div
-          className="Firestore-Evaluation-Outcome"
-          title={outcomeData?.label}
-        >
+        <td className="Firestore-Evaluation-Outcome" title={outcomeData?.label}>
           {outcomeData?.icon && (
-            <Icon icon={{ icon: outcomeData?.icon, size: 'large' }} />
+            <IconButton
+              icon={outcomeData?.icon}
+              tag={Link}
+              to={`/firestore/rules/${evaluationId}`}
+            />
           )}
-        </div>
+        </td>
       </CustomThemeProvider>
-      <div className="Firestore-Evaluation-Method">{requestMethod}</div>
-      <div className="Firestore-Evaluations-Path-Container">
+      <td className="Firestore-Evaluation-Method">{requestMethod}</td>
+      <td className="Firestore-Evaluations-Path-Container">
         {resourceSubPaths?.map((subpath, index) => (
           <React.Fragment key={`${subpath}-${index}`}>
             <span className="Firestore-Evaluation-Path-Slash"> / </span>
@@ -77,12 +66,12 @@ const EvaluationDetailsHeader: React.FC<Props> = ({
             </span>
           </React.Fragment>
         ))}
-      </div>
-      <div className="Firestore-Evaluation-Date" title={requestTimeComplete}>
+      </td>
+      <td className="Firestore-Evaluation-Date" title={requestTimeComplete}>
         {requestTimeFromNow}
-      </div>
-    </div>
-  </div>
-);
+      </td>
+    </tr>
+  );
+};
 
-export default EvaluationDetailsHeader;
+export default EvaluationTableRow;

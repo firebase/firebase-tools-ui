@@ -14,21 +14,22 @@
  * limitations under the License.
  */
 
-import './index.scss';
+import '../index.scss';
 
 import React, { useEffect } from 'react';
 import { MapDispatchToPropsFunction, connect } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
-import { createStructuredSelector } from '../../../store';
-import { getRequestEvaluationById } from '../../../store/firestoreRules';
-import { getSelectedRequestEvaluation } from '../../../store/firestoreRules/selectors';
-import EvaluationDetailsCode from './EvaluationDetailsCode';
-import EvaluationDetailsHeader from './EvaluationDetailsHeader';
-import { FirestoreRulesEvaluation } from './rules_evaluation_result_model';
-import { sampleRules } from './sample-rules';
-import { LineOutcome } from './types';
-import { useEvaluationCleanMainData } from './utils';
+import { createStructuredSelector } from '../../../../store';
+import { getRequestEvaluationById } from '../../../../store/firestoreRules';
+import { getSelectedRequestEvaluation } from '../../../../store/firestoreRules/selectors';
+import { FirestoreRulesEvaluation } from '../rules_evaluation_result_model';
+import { sampleRules } from '../sample-rules';
+import { LineOutcome } from '../types';
+import { useEvaluationCleanMainData } from '../utils';
+import EvaluationDetailsCode from './CodeViewer';
+import EvaluationDetailsHeader from './Header';
+import EvaluationDetailsInspectionSection from './InspectionSection';
 
 export interface PropsFromState {
   selectedEvaluation: FirestoreRulesEvaluation | undefined;
@@ -40,7 +41,7 @@ export interface PropsFromDispatch {
 
 export type Props = PropsFromState & PropsFromDispatch;
 
-export const EvaluationDetails: React.FC<Props> = ({
+const EvaluationDetails: React.FC<Props> = ({
   selectedEvaluation,
   getEvaluationById,
 }) => {
@@ -77,6 +78,7 @@ export const EvaluationDetails: React.FC<Props> = ({
           linesOutcome={linesOutcome}
           firestoreRules={sampleRules}
         />
+        <EvaluationDetailsInspectionSection />
       </div>
     </>
   );

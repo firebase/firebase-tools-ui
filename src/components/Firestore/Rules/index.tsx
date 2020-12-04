@@ -36,7 +36,7 @@ const RulesComponentWrapper: React.FC = ({ children }) => (
   </ThemeProvider>
 );
 
-export const Rules: React.FC<{}> = () => (
+const Rules: React.FC<{}> = () => (
   <Switch>
     <Route exact path="/firestore/rules">
       <RulesComponentWrapper>

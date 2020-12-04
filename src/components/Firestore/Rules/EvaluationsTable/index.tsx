@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-import './index.scss';
+import '../index.scss';
 
 import React, { useEffect } from 'react';
 import { MapDispatchToPropsFunction, connect } from 'react-redux';
 
-import { createStructuredSelector } from '../../../store';
-import { addRequestEvaluation } from '../../../store/firestoreRules';
-import { getAllRequestEvaluations } from '../../../store/firestoreRules/selectors';
-import EvaluationsTableRow from './EvaluationsTableRow';
-import { FirestoreRulesEvaluation } from './rules_evaluation_result_model';
-import { registerForRulesEvents } from './rules_evaluations_listener';
+import { createStructuredSelector } from '../../../../store';
+import { addRequestEvaluation } from '../../../../store/firestoreRules';
+import { getAllRequestEvaluations } from '../../../../store/firestoreRules/selectors';
+import { FirestoreRulesEvaluation } from '../rules_evaluation_result_model';
+import { registerForRulesEvents } from '../rules_evaluations_listener';
+import EvaluationsTableRow from './TableRow';
 
 export interface PropsFromState {
   evaluations: FirestoreRulesEvaluation[] | undefined;
@@ -35,13 +35,9 @@ export interface PropsFromDispatch {
 
 export type Props = PropsFromState & PropsFromDispatch;
 
-export const EvaluationsTable: React.FC<Props> = ({
-  evaluations,
-  addEvaluation,
-}) => {
+const EvaluationsTable: React.FC<Props> = ({ evaluations, addEvaluation }) => {
   useEffect(() => {
     const callbackFunction = (newEvaluation: FirestoreRulesEvaluation) => {
-      console.log('dev: newEvaluation', newEvaluation);
       const { type } = newEvaluation;
       if (type === 'RULES_UPDATE') {
         // TODO: UPDATE RULES
