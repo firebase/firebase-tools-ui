@@ -35,7 +35,7 @@ const EvaluationsTable: React.FC<Props> = ({ evaluations }) => (
   <table className="Firestore-Evaluations-Table">
     <thead>
       <tr>
-        <th></th>
+        <th className="Firestore-Evaluations-Table-Outcome-Header"></th>
         <th className="Firestore-Evaluations-Table-Method-Header">Method</th>
         <th className="Firestore-Evaluations-Table-Path-Header">Path</th>
         <th>Date</th>
