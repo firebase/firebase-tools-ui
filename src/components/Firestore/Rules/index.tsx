@@ -17,13 +17,17 @@
 import './index.scss';
 
 import { ThemeProvider } from '@rmwc/theme';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { MapDispatchToPropsFunction, connect } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 
 import { grey100 } from '../../../colors';
+import { addRequestEvaluation } from '../../../store/firestoreRules';
 import { noteTheme } from '../../../themes';
 import EvaluationDetails from './EvaluationDetails';
 import EvaluationsTable from './EvaluationsTable';
+import { FirestoreRulesEvaluation } from './rules_evaluation_result_model';
+import { registerForRulesEvents } from './rules_evaluations_listener';
 
 const RulesComponentWrapper: React.FC = ({ children }) => (
   <ThemeProvider
@@ -36,19 +40,48 @@ const RulesComponentWrapper: React.FC = ({ children }) => (
   </ThemeProvider>
 );
 
-const Rules: React.FC<{}> = () => (
-  <Switch>
-    <Route exact path="/firestore/rules">
-      <RulesComponentWrapper>
-        <EvaluationsTable />
-      </RulesComponentWrapper>
-    </Route>
-    <Route exact path="/firestore/rules/:evaluationId">
-      <RulesComponentWrapper>
-        <EvaluationDetails />
-      </RulesComponentWrapper>
-    </Route>
-  </Switch>
-);
+export interface PropsFromDispatch {
+  addEvaluation: typeof addRequestEvaluation;
+}
 
-export default Rules;
+export type Props = PropsFromDispatch;
+
+const Rules: React.FC<Props> = ({ addEvaluation }) => {
+  useEffect(() => {
+    const callbackFunction = (newEvaluation: FirestoreRulesEvaluation) => {
+      const { type } = newEvaluation;
+      if (type === 'RULES_UPDATE') {
+        // TODO: UPDATE RULES
+      } else {
+        addEvaluation(newEvaluation);
+      }
+    };
+    const unsubscribeFromRules = registerForRulesEvents(callbackFunction);
+    return () => unsubscribeFromRules();
+  }, [addEvaluation]);
+
+  return (
+    <Switch>
+      <Route exact path="/firestore/rules">
+        <RulesComponentWrapper>
+          <EvaluationsTable />
+        </RulesComponentWrapper>
+      </Route>
+      <Route exact path="/firestore/rules/:evaluationId">
+        <RulesComponentWrapper>
+          <EvaluationDetails />
+        </RulesComponentWrapper>
+      </Route>
+    </Switch>
+  );
+};
+
+export const mapDispatchToProps: MapDispatchToPropsFunction<
+  PropsFromDispatch,
+  {}
+> = dispatch => ({
+  addEvaluation: (newEvaluation: FirestoreRulesEvaluation) =>
+    dispatch(addRequestEvaluation(newEvaluation)),
+});
+
+export default connect(null, mapDispatchToProps)(Rules);

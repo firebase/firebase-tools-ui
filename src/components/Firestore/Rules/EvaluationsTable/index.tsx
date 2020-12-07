@@ -17,74 +17,47 @@
 import '../index.scss';
 import './index.scss';
 
-import React, { useEffect } from 'react';
-import { MapDispatchToPropsFunction, connect } from 'react-redux';
+import React from 'react';
+import { connect } from 'react-redux';
 
 import { createStructuredSelector } from '../../../../store';
-import { addRequestEvaluation } from '../../../../store/firestoreRules';
 import { getAllRequestEvaluations } from '../../../../store/firestoreRules/selectors';
 import { FirestoreRulesEvaluation } from '../rules_evaluation_result_model';
-import { registerForRulesEvents } from '../rules_evaluations_listener';
 import EvaluationsTableRow from './TableRow';
 
 export interface PropsFromState {
   evaluations: FirestoreRulesEvaluation[] | undefined;
 }
-export interface PropsFromDispatch {
-  addEvaluation: typeof addRequestEvaluation;
-}
 
-export type Props = PropsFromState & PropsFromDispatch;
+export type Props = PropsFromState;
 
-const EvaluationsTable: React.FC<Props> = ({ evaluations, addEvaluation }) => {
-  useEffect(() => {
-    const callbackFunction = (newEvaluation: FirestoreRulesEvaluation) => {
-      const { type } = newEvaluation;
-      if (type === 'RULES_UPDATE') {
-        // TODO: UPDATE RULES
-      } else {
-        addEvaluation(newEvaluation);
-      }
-    };
-    const unsubscribeFromRules = registerForRulesEvents(callbackFunction);
-    return () => unsubscribeFromRules();
-  }, [addEvaluation]);
-
-  return (
-    <table className="Firestore-Evaluations-Table">
-      <thead>
-        <tr>
-          <th></th>
-          <th className="Firestore-Evaluations-Table-Method-Header">Method</th>
-          <th className="Firestore-Evaluations-Table-Path-Header">Path</th>
-          <th>Date</th>
-        </tr>
-      </thead>
-      <tbody>
-        {evaluations?.map((evaluation: FirestoreRulesEvaluation) => {
-          const { evaluationId } = evaluation;
-          return (
-            <EvaluationsTableRow
-              key={evaluationId}
-              evaluationId={evaluationId}
-              evaluation={evaluation}
-            />
-          );
-        })}
-      </tbody>
-    </table>
-  );
-};
+const EvaluationsTable: React.FC<Props> = ({ evaluations }) => (
+  <table className="Firestore-Evaluations-Table">
+    <thead>
+      <tr>
+        <th></th>
+        <th className="Firestore-Evaluations-Table-Method-Header">Method</th>
+        <th className="Firestore-Evaluations-Table-Path-Header">Path</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      {evaluations?.map((evaluation: FirestoreRulesEvaluation) => {
+        const { evaluationId } = evaluation;
+        return (
+          <EvaluationsTableRow
+            key={evaluationId}
+            evaluationId={evaluationId}
+            evaluation={evaluation}
+          />
+        );
+      })}
+    </tbody>
+  </table>
+);
 
 export const mapStateToProps = createStructuredSelector({
   evaluations: getAllRequestEvaluations,
 });
-export const mapDispatchToProps: MapDispatchToPropsFunction<
-  PropsFromDispatch,
-  {}
-> = dispatch => ({
-  addEvaluation: (newEvaluation: FirestoreRulesEvaluation) =>
-    dispatch(addRequestEvaluation(newEvaluation)),
-});
 
-export default connect(mapStateToProps, mapDispatchToProps)(EvaluationsTable);
+export default connect(mapStateToProps)(EvaluationsTable);
