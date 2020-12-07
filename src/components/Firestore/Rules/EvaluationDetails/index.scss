@@ -1,0 +1,159 @@
+/**
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.Firestore-Evaluation-Details-Header {
+  border-radius: 8px 8px 0 0;
+  width: 100%;
+  box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12) inset;
+  background-color: var(--mdc-theme-surface);
+  padding: 12px 0;
+  height: 56px;
+  // flex
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.Firestore-Evaluation-Details-Header-Return {
+  width: 68px;
+  box-shadow: -1px 0 0 rgba(0, 0, 0, 0.12) inset;
+  // flex
+  display: flex;
+  justify-content: center;
+}
+.Firestore-Evaluation-Details-Header-Info {
+  width: 100%;
+  height: 100%;
+  padding: 0 12px;
+  position: relative;
+  // flex
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+
+  .Firestore-Evaluation-Outcome {
+    width: 5%;
+  }
+  .Firestore-Evaluation-Method {
+    width: 12%;
+    text-align: center;
+  }
+  .Firestore-Evaluations-Path-Container {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  .Firestore-Evaluation-Date {
+    width: 20%;
+    text-align: right;
+  }
+}
+
+.Firestore-Evaluation-Details-Content {
+  // overflow: hidden;
+  // min-height: 473px;
+  width: 100%;
+  position: relative;
+  // flex
+  display: flex;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+
+.Firestore-Evaluation-Details-Code {
+  width: 75%;
+
+  // hide bodering textarea coming from CodeMirror (visible for a second when loading)
+  & > textarea {
+    display: none;
+  }
+  .CodeMirror-vscrollbar,
+  .CodeMirror-scroll {
+    overflow: hidden !important;
+  }
+  // .CodeMirror-scroll {
+  //   min-height: calc(200px);
+  // }
+  .CodeMirror-sizer,
+  .CodeMirror-gutter,
+  .CodeMirror-gutters,
+  .CodeMirror-linenumber.CodeMirror-linenumber {
+    margin-right: 30px;
+  }
+  .CodeMirror-gutter-elt {
+    & > span {
+      left: 40px;
+      position: absolute;
+      padding: 1px 4px;
+    }
+    & > span.deny {
+      // TODO: get this color from a theme variable
+      background-color: rgb(255 82 82 / 25%);
+    }
+    & > span.allow {
+      // TODO: get this color from a theme variable
+      background-color: rgb(0 191 165 / 20%);
+    }
+    & > span.error {
+      // TODO: get this color from a theme variable
+      background-color: #1b3a5754;
+    }
+  }
+  .CodeMirror-code {
+    & > div:focus {
+      background-color: var(--mdc-theme-hover);
+    }
+    & > div.deny {
+      // TODO: get this color from a theme variable
+      background-color: rgb(255 82 82 / 25%);
+    }
+    & > div.allow {
+      // TODO: get this color from a theme variable
+      background-color: rgb(0 191 165 / 20%);
+    }
+    & > div.error {
+      // TODO: get this color from a theme variable
+      background-color: #1b3a5754;
+    }
+  }
+}
+
+.Firestore-Evaluation-Details-Inspection {
+  width: 25%;
+  min-width: 20%;
+  box-shadow: 1px 0 0 rgba(0, 0, 0, 0.12) inset;
+}
+
+.Firestore-Evaluation-Details-Inspection-Element {
+  background-color: var(--mdc-theme-surface);
+  box-shadow: 1px -1px 0 rgba(0, 0, 0, 0.12) inset;
+  padding: 10px;
+  cursor: pointer;
+  // flex
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.Firestore-Evaluation-Details-Inspection-Element.Firestore-Evaluation-Details-Inspection-Element--Main {
+  background-color: var(--mdc-theme-hover);
+  font-weight: 500;
+}
+.Firestore-Evaluation-Details-Inspection-Element-Value {
+  padding: 10px;
+  box-shadow: 1px -1px 0 rgba(0, 0, 0, 0.12) inset;
+  overflow: scroll;
+}

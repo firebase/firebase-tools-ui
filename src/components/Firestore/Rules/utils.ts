@@ -17,9 +17,10 @@
 import moment from 'moment';
 
 import { FirestoreRulesEvaluation } from './rules_evaluation_result_model';
-import { RulesOutcomeData } from './types';
+import { InspectionElement, LineOutcome, RulesOutcomeData } from './types';
 
-export function useEvaluationCleanMainData(
+// outputs the main data of the evaluation in a clean format
+export function useEvaluationMainInformation(
   evaluation?: FirestoreRulesEvaluation
 ) {
   if (!evaluation) {
@@ -52,4 +53,29 @@ export function useEvaluationCleanMainData(
     resourceSubPaths,
     outcomeData[outcome],
   ] as const;
+}
+
+// outputs the detailed data of the evaluation in a clean format
+export function useEvaluationDetailedInformation(
+  evaluation?: FirestoreRulesEvaluation
+) {
+  if (!evaluation) {
+    return [undefined, undefined] as const;
+  }
+
+  const { granularAllowOutcomes, rulesContext } = evaluation || {};
+  const linesOutcome = granularAllowOutcomes?.map(granularAllowOutcome => {
+    const { line, outcome } = granularAllowOutcome;
+    return { line, outcome } as LineOutcome;
+  });
+  const inspectionElements = Object.entries(rulesContext || {}).map(
+    ([key, value]) => {
+      return {
+        label: key,
+        value: JSON.stringify(value, null, '\t'),
+      } as InspectionElement;
+    }
+  );
+
+  return [linesOutcome, inspectionElements] as const;
 }

@@ -16,10 +16,75 @@
 
 import '../index.scss';
 
-import React from 'react';
+import { Icon } from '@rmwc/icon';
+import React, { useState } from 'react';
 
-const EvaluationDetailsInspectionSection: React.FC<{}> = () => (
-  <div className="Firestore-Evaluation-Details-Inspection"></div>
+import { InspectionElement } from '../types';
+
+export const InspectionBlock: React.FC<{
+  label: string;
+  value?: string;
+  isMainBlock?: boolean;
+}> = ({ label, value, isMainBlock, children }) => {
+  const [isExpanded, setIsExpanded] = useState<Boolean>(!!isMainBlock);
+  const elementClass = 'Firestore-Evaluation-Details-Inspection-Element';
+  const mainElementClass = elementClass + '--Main';
+
+  function displayContent() {
+    return children ? (
+      children
+    ) : (
+      <div className="Firestore-Evaluation-Details-Inspection-Element-Value">
+        {value}
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <div
+        className={`${elementClass} ${isMainBlock && mainElementClass}`}
+        onClick={() => setIsExpanded(!isExpanded)}
+      >
+        <span> {label} </span>
+        <Icon icon={{ icon: `expand_${isExpanded ? 'less' : 'more'}` }} />
+      </div>
+      {isExpanded && displayContent()}
+    </>
+  );
+};
+
+const EvaluationDetailsInspectionSection: React.FC<{
+  inspectionElements?: InspectionElement[];
+}> = ({ inspectionElements }) => (
+  <div className="Firestore-Evaluation-Details-Inspection">
+    <InspectionBlock isMainBlock label="Actions">
+      <div>Action 1</div>
+      <div>Action 2</div>
+      <div>Action 3</div>
+    </InspectionBlock>
+    <InspectionBlock isMainBlock label="Query Information">
+      <InspectionBlock label="limit" value="20" />
+      <InspectionBlock label="orderBy" value="total_reviews" />
+      <InspectionBlock label="where">
+        <>
+          <div>
+            <span>name</span> <span>`{'=='}`</span> <span>'Pozole'</span>
+          </div>
+          <div>
+            <span>avg_review_rate</span> <span>`{'>'}`</span> <span>4</span>
+          </div>
+        </>
+      </InspectionBlock>
+    </InspectionBlock>
+    <InspectionBlock isMainBlock label="Expressions Inspection">
+      <InspectionBlock label="isSignedIn()" value="false" />
+      {inspectionElements?.map((inspectionElement, index) => {
+        const { label, value } = inspectionElement;
+        return <InspectionBlock key={index} label={label} value={value} />;
+      })}
+    </InspectionBlock>
+  </div>
 );
 
 export default EvaluationDetailsInspectionSection;

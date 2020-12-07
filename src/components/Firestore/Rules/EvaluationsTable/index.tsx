@@ -15,6 +15,7 @@
  */
 
 import '../index.scss';
+import './index.scss';
 
 import React, { useEffect } from 'react';
 import { MapDispatchToPropsFunction, connect } from 'react-redux';

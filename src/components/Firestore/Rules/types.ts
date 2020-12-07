@@ -31,3 +31,8 @@ export interface LineOutcome {
   line: number;
   outcome: RulesOutcome;
 }
+
+export interface InspectionElement {
+  label: string;
+  value: string;
+}

@@ -15,6 +15,7 @@
  */
 
 import '../index.scss';
+import './index.scss';
 
 import React, { useEffect } from 'react';
 import { MapDispatchToPropsFunction, connect } from 'react-redux';
@@ -25,8 +26,10 @@ import { getRequestEvaluationById } from '../../../../store/firestoreRules';
 import { getSelectedRequestEvaluation } from '../../../../store/firestoreRules/selectors';
 import { FirestoreRulesEvaluation } from '../rules_evaluation_result_model';
 import { sampleRules } from '../sample-rules';
-import { LineOutcome } from '../types';
-import { useEvaluationCleanMainData } from '../utils';
+import {
+  useEvaluationDetailedInformation,
+  useEvaluationMainInformation,
+} from '../utils';
 import EvaluationDetailsCode from './CodeViewer';
 import EvaluationDetailsHeader from './Header';
 import EvaluationDetailsInspectionSection from './InspectionSection';
@@ -52,12 +55,10 @@ const EvaluationDetails: React.FC<Props> = ({
     requestMethod,
     resourceSubPaths,
     outcomeData,
-  ] = useEvaluationCleanMainData(selectedEvaluation);
-  const linesOutcome = selectedEvaluation?.granularAllowOutcomes?.map(
-    granularAllowOutcome => {
-      const { line, outcome } = granularAllowOutcome;
-      return { line, outcome } as LineOutcome;
-    }
+  ] = useEvaluationMainInformation(selectedEvaluation);
+
+  const [linesOutcome, inspectionElements] = useEvaluationDetailedInformation(
+    selectedEvaluation
   );
 
   useEffect(() => {
@@ -78,7 +79,9 @@ const EvaluationDetails: React.FC<Props> = ({
           linesOutcome={linesOutcome}
           firestoreRules={sampleRules}
         />
-        <EvaluationDetailsInspectionSection />
+        <EvaluationDetailsInspectionSection
+          inspectionElements={inspectionElements}
+        />
       </div>
     </>
   );
