@@ -18,6 +18,8 @@
   border-collapse: collapse;
   width: 100%;
   border-radius: 8px;
+  position: relative;
+  table-layout: fixed;
 
   td,
   th {

@@ -39,6 +39,7 @@
   margin: 1px;
   border-radius: 4px;
   background: lightblue;
+  max-width: 100%;
   // animation
   cursor: pointer;
   transition: all 0.05s;
@@ -46,4 +47,8 @@
   &:hover {
     transform: scale(1.01);
   }
+  // truncate text
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

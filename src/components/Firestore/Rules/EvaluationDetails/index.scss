@@ -34,7 +34,7 @@
   justify-content: center;
 }
 .Firestore-Evaluation-Details-Header-Info {
-  width: 100%;
+  width: calc(100% - 64px);
   height: 100%;
   padding: 0 12px;
   position: relative;
