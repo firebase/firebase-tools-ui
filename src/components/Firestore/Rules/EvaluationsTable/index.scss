@@ -27,8 +27,8 @@
   }
   th {
     font-weight: 500;
-    box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12) inset;
     background-color: var(--mdc-theme-surface);
+    box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12) inset;
     padding: 20px 12px;
   }
   th:first-of-type {
@@ -38,6 +38,7 @@
     border-top-right-radius: 8px;
   }
   tbody tr {
+    background-color: white;
     box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12) inset;
 
     &:hover {
