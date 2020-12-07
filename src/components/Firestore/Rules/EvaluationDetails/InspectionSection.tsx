@@ -16,10 +16,20 @@
 
 import '../index.scss';
 
+import { Button } from '@rmwc/button';
 import { Icon } from '@rmwc/icon';
 import React, { useState } from 'react';
 
 import { InspectionElement } from '../types';
+
+export const InspectionAction: React.FC<{
+  label: string;
+  onClick: () => void;
+}> = ({ label, onClick }) => (
+  <Button unelevated onClick={onClick}>
+    {label}
+  </Button>
+);
 
 export const InspectionBlock: React.FC<{
   label: string;
@@ -68,9 +78,13 @@ const EvaluationDetailsInspectionSection: React.FC<{
 }> = ({ inspectionElements }) => (
   <div className="Firestore-Evaluation-Details-Inspection">
     <InspectionBlock isMainBlock label="Actions">
-      <div>Action 1</div>
-      <div>Action 2</div>
-      <div>Action 3</div>
+      <div className="Firestore-Evaluation-Details-Inspection-Action">
+        <InspectionAction label="Retrigger Request" onClick={() => {}} />
+        <InspectionAction
+          label="Archive Request Evaluation"
+          onClick={() => {}}
+        />
+      </div>
     </InspectionBlock>
     <InspectionBlock isMainBlock label="Query Information">
       <InspectionBlock label="limit" value="20" />

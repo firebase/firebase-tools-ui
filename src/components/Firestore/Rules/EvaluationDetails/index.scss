@@ -157,7 +157,6 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
 .Firestore-Evaluation-Details-Inspection-Element.Firestore-Evaluation-Details-Inspection-Element--Main {
   background-color: var(--mdc-theme-hover);
   font-weight: 500;
@@ -169,4 +168,16 @@
   box-shadow: 1px -1px 0 rgba(0, 0, 0, 0.12) inset;
   overflow: scroll;
   font-size: 15px;
+}
+.Firestore-Evaluation-Details-Inspection-Action {
+  padding: 10px;
+  // flex
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+
+  button:not(:last-of-type) {
+    margin-bottom: 10px;
+  }
 }
