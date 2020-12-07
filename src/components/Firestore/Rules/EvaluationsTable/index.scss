@@ -54,4 +54,12 @@
   .Firestore-Evaluations-Table-Path-Header {
     width: 55%;
   }
+
+  .Firestore-Evaluations-Table-SubPaths-Container {
+    // flex
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+  }
 }

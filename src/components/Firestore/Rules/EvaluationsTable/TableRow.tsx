@@ -15,6 +15,7 @@
  */
 
 import '../index.scss';
+import './index.scss';
 
 import { IconButton } from '@rmwc/icon-button';
 import React from 'react';
@@ -50,22 +51,24 @@ const EvaluationTableRow: React.FC<{
         </td>
       </CustomThemeProvider>
       <td className="Firestore-Evaluation-Method">{requestMethod}</td>
-      <td className="Firestore-Evaluations-Path-Container">
-        {resourceSubPaths?.map((subpath, index) => (
-          <React.Fragment key={`${subpath}-${index}`}>
-            <span className="Firestore-Evaluation-Path-Slash"> / </span>
-            <span
-              title="copy subpath"
-              className="Firestore-Evaluation-Path-Subpath"
-              onClick={() => {
-                navigator.clipboard.writeText(subpath);
-              }}
-            >
-              {' '}
-              {subpath}{' '}
-            </span>
-          </React.Fragment>
-        ))}
+      <td className="Firestore-Evaluation-Path-Container">
+        <div className="Firestore-Evaluations-Table-SubPaths-Container">
+          {resourceSubPaths?.map((subpath, index) => (
+            <React.Fragment key={`${subpath}-${index}`}>
+              <span className="Firestore-Evaluation-Path-Slash"> / </span>
+              <span
+                title="copy subpath"
+                className="Firestore-Evaluation-Path-Subpath"
+                onClick={() => {
+                  navigator.clipboard.writeText(subpath);
+                }}
+              >
+                {' '}
+                {subpath}{' '}
+              </span>
+            </React.Fragment>
+          ))}
+        </div>
       </td>
       <td className="Firestore-Evaluation-Date" title={requestTimeComplete}>
         {requestTimeFromNow}

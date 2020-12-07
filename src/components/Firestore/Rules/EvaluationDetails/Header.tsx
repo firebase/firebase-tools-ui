@@ -15,6 +15,7 @@
  */
 
 import '../index.scss';
+import './index.scss';
 
 import { Icon } from '@rmwc/icon';
 import { IconButton } from '@rmwc/icon-button';
@@ -58,7 +59,7 @@ const EvaluationDetailsHeader: React.FC<Props> = ({
         </div>
       </CustomThemeProvider>
       <div className="Firestore-Evaluation-Method">{requestMethod}</div>
-      <div className="Firestore-Evaluations-Path-Container">
+      <div className="Firestore-Evaluation-Path-Container">
         {resourceSubPaths?.map((subpath, index) => (
           <React.Fragment key={`${subpath}-${index}`}>
             <span className="Firestore-Evaluation-Path-Slash"> / </span>
