@@ -147,6 +147,13 @@
   justify-content: space-between;
   align-items: center;
 }
+.Firestore-Evaluation-Details-Inspection-Element-Label {
+  width: 100%;
+  // truncate text
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 .Firestore-Evaluation-Details-Inspection-Element.Firestore-Evaluation-Details-Inspection-Element--Main {
   background-color: var(--mdc-theme-hover);
@@ -156,4 +163,5 @@
   padding: 10px;
   box-shadow: 1px -1px 0 rgba(0, 0, 0, 0.12) inset;
   overflow: scroll;
+  font-size: 15px;
 }

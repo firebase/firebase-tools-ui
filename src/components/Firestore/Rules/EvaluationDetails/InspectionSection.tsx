@@ -34,7 +34,10 @@ export const InspectionBlock: React.FC<{
     return children ? (
       children
     ) : (
-      <div className="Firestore-Evaluation-Details-Inspection-Element-Value">
+      <div
+        title={value}
+        className="Firestore-Evaluation-Details-Inspection-Element-Value"
+      >
         {value}
       </div>
     );
@@ -46,7 +49,13 @@ export const InspectionBlock: React.FC<{
         className={`${elementClass} ${isMainBlock && mainElementClass}`}
         onClick={() => setIsExpanded(!isExpanded)}
       >
-        <span> {label} </span>
+        <span
+          title={label}
+          className="Firestore-Evaluation-Details-Inspection-Element-Label"
+        >
+          {' '}
+          {label}{' '}
+        </span>
         <Icon icon={{ icon: `expand_${isExpanded ? 'less' : 'more'}` }} />
       </div>
       {isExpanded && displayContent()}
