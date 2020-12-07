@@ -21,7 +21,7 @@ import firebase from 'firebase';
 import React, { useState } from 'react';
 import { useFirestoreDocData } from 'reactfire';
 
-import { isMap } from '../utils';
+import { compareFirestoreKeys, isMap } from '../utils';
 import { addFieldToMissingDocument, updateField } from './api';
 import FieldPreview from './FieldPreview';
 import InlineEditor from './InlineEditor';
@@ -78,14 +78,16 @@ const DocumentPreview: React.FC<Props> = ({
 
           {docExists && isMap(data) ? (
             <div className="Firestore-Field-List">
-              {Object.keys(data).map(name => (
-                <FieldPreview
-                  key={name}
-                  path={[name]}
-                  documentRef={reference}
-                  maxSummaryLen={maxSummaryLen}
-                />
-              ))}
+              {Object.keys(data)
+                .sort(compareFirestoreKeys)
+                .map(name => (
+                  <FieldPreview
+                    key={name}
+                    path={[name]}
+                    documentRef={reference}
+                    maxSummaryLen={maxSummaryLen}
+                  />
+                ))}
             </div>
           ) : (
             <Typography
