@@ -17,9 +17,9 @@
 import '../index.scss';
 import './index.scss';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { MapDispatchToPropsFunction, connect } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { Redirect, useParams } from 'react-router-dom';
 
 import { createStructuredSelector } from '../../../../store';
 import { getRequestEvaluationById } from '../../../../store/firestoreRules';
@@ -35,7 +35,7 @@ import EvaluationDetailsHeader from './Header';
 import EvaluationDetailsInspectionSection from './InspectionSection';
 
 export interface PropsFromState {
-  selectedEvaluation: FirestoreRulesEvaluation | undefined;
+  selectedEvaluation?: FirestoreRulesEvaluation;
 }
 
 export interface PropsFromDispatch {
@@ -56,14 +56,21 @@ const EvaluationDetails: React.FC<Props> = ({
     resourceSubPaths,
     outcomeData,
   ] = useEvaluationMainInformation(selectedEvaluation);
-
   const [linesOutcome, inspectionElements] = useEvaluationDetailedInformation(
     selectedEvaluation
+  );
+  const [wasEvaluationSelected, setWasEvaluationSelected] = useState<Boolean>(
+    false
   );
 
   useEffect(() => {
     getEvaluationById(evaluationId);
+    setWasEvaluationSelected(true);
   }, [getEvaluationById, evaluationId, selectedEvaluation]);
+
+  if (wasEvaluationSelected && !selectedEvaluation) {
+    return <Redirect to="/firestore/rules" />;
+  }
 
   return (
     <>
