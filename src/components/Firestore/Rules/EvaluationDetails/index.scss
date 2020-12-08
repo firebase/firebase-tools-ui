@@ -66,29 +66,33 @@
 }
 
 .Firestore-Evaluation-Details-Content {
-  // overflow: hidden;
-  // min-height: 473px;
   width: 100%;
-  position: relative;
   // flex
   display: flex;
   justify-content: flex-start;
   align-items: stretch;
+  // overflow
+  position: relative;
+  overflow: hidden;
+  min-height: 67vh;
 }
 
 .Firestore-Evaluation-Details-Code {
+  // overflow
   width: 75%;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 100%;
+  overflow: scroll;
 
   // hide bodering textarea coming from CodeMirror (visible for a second when loading)
   & > textarea {
     display: none;
   }
-  .CodeMirror-vscrollbar,
-  .CodeMirror-scroll {
-    overflow: hidden !important;
-  }
+  // .CodeMirror-vscrollbar,
   // .CodeMirror-scroll {
-  //   min-height: calc(200px);
+  //   overflow: hidden !important;
   // }
   .CodeMirror-sizer,
   .CodeMirror-gutter,
@@ -135,9 +139,15 @@
 }
 
 .Firestore-Evaluation-Details-Inspection {
-  width: 25%;
-  min-width: 20%;
   box-shadow: 1px 0 0 rgba(0, 0, 0, 0.12) inset;
+  // overflow
+  width: 25%;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  min-width: 20%;
+  height: 100%;
+  overflow: scroll;
 }
 
 .Firestore-Evaluation-Details-Inspection-Element {
