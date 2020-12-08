@@ -19,7 +19,6 @@
   width: 100%;
   box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12) inset;
   background-color: var(--mdc-theme-surface);
-  padding: 12px 0;
   min-height: 56px;
   // flex
   display: flex;
@@ -74,7 +73,12 @@
   // overflow
   position: relative;
   overflow: hidden;
-  min-height: 67vh;
+  // min-height is the whole view height minus height of external components
+  min-height: calc(100vh - 136px - 72px - 56px);
+
+  @media screen and (max-height: 535px) {
+    min-height: calc(328px - 56px);
+  }
 }
 
 .Firestore-Evaluation-Details-Code {

@@ -17,9 +17,12 @@
 .Firestore-Evaluation-Outcome {
   color: var(--mdc-theme-primary);
   font-weight: 500;
-  // flex
-  display: flex;
-  justify-content: center;
+  // center
+  a,
+  i {
+    display: block;
+    margin: 0 auto;
+  }
 }
 .Firestore-Evaluation-Method {
   text-transform: uppercase;

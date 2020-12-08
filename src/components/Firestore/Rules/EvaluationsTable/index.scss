@@ -48,13 +48,16 @@
     }
   }
 
-  .Firestore-Evaluations-Table-Outcome-Header {
+  .Firestore-Evaluations-Table-Outcome-Header,
+  .Firestore-Evaluation-Outcome {
     width: 10%;
   }
-  .Firestore-Evaluations-Table-Method-Header {
+  .Firestore-Evaluations-Table-Method-Header,
+  .Firestore-Evaluation-Method {
     width: 10%;
   }
-  .Firestore-Evaluations-Table-Path-Header {
+  .Firestore-Evaluations-Table-Path-Header,
+  .Firestore-Evaluation-Path-Container {
     width: 55%;
   }
 
@@ -64,5 +67,24 @@
     justify-content: flex-start;
     align-items: center;
     flex-wrap: wrap;
+  }
+
+  // handle overflow scroll
+  thead,
+  tbody tr {
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+  }
+  tbody {
+    display: block;
+    overflow: auto;
+    border-radius: 8px;
+    // min-height is the whole view height minus height of external components
+    max-height: calc(100vh - 136px - 72px - 56px);
+
+    @media screen and (max-height: 535px) {
+      min-height: calc(328px - 56px);
+    }
   }
 }
