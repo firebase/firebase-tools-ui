@@ -225,12 +225,7 @@ it('shows the missing documents', async () => {
 });
 
 it('shows the selected sub-document', async () => {
-  const {
-    queryAllByText,
-    getByText,
-    queryByText,
-    container,
-  } = await renderWithFirestore(
+  const { queryAllByText, getByText } = await renderWithFirestore(
     async firestore => {
       const collectionRef = firestore.collection('my-stuff');
       await collectionRef.doc('cool-doc-1').set({ a: 1 });
