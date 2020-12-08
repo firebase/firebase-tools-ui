@@ -279,8 +279,8 @@ describe('loaded map', () => {
       documentReference.update = jest.fn();
       await documentReference.set({
         foo: {
-          first_name: 'harry',
           last_name: 'potter',
+          first_name: 'harry',
         },
       });
       return (
@@ -291,10 +291,10 @@ describe('loaded map', () => {
     await waitForElement(() => result.getAllByText(/harry/).length > 0);
   });
 
-  it('renders a field', () => {
+  it('renders a field, in the lexicographical order', () => {
     const { getByText } = result;
 
-    expect(getByText('{last_name: "potter", first_name: "harry"}')).not.toBe(
+    expect(getByText('{first_name: "harry", last_name: "potter"}')).not.toBe(
       null
     );
     expect(getByText('(map)')).not.toBe(null);
@@ -306,7 +306,7 @@ describe('loaded map', () => {
     expect(getByText('first_name')).not.toBe(null);
     expect(getByText('last_name')).not.toBe(null);
 
-    getByText('{last_name: "potter", first_name: "harry"}').click();
+    getByText('{first_name: "harry", last_name: "potter"}').click();
 
     expect(queryByText('first_name')).toBe(null);
     expect(queryByText('last_name')).toBe(null);
@@ -325,7 +325,7 @@ describe('loaded map', () => {
 
     await act(async () => {
       // Edit first-name
-      queryAllByText('edit')[1].click();
+      queryAllByText('edit')[0].click();
     });
     await act(async () => {
       fireEvent.change(getByLabelText('Value'), {

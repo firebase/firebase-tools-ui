@@ -21,7 +21,7 @@
 .eslintcache
 settings.json
 
-*-debug.log*
+*debug.log*
 yarn-error.log*
 
 .idea

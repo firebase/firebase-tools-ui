@@ -27,6 +27,7 @@ import React, { useState } from 'react';
 import { supportsEditing } from '../DocumentEditor';
 import { FirestoreArray } from '../models';
 import {
+  compareFirestoreKeys,
   getFieldType,
   getParentPath,
   isArray,
@@ -54,17 +55,19 @@ const FieldPreview: React.FC<{
   let childFields = null;
   if (isMap(state)) {
     // Inline editor for new field will default to key: ''
-    childFields = Object.keys(state).map(childLeaf => {
-      const childPath = [...path, childLeaf];
-      return (
-        <FieldPreview
-          key={childLeaf}
-          path={childPath}
-          documentRef={documentRef}
-          maxSummaryLen={maxSummaryLen}
-        />
-      );
-    });
+    childFields = Object.keys(state)
+      .sort(compareFirestoreKeys)
+      .map(childLeaf => {
+        const childPath = [...path, childLeaf];
+        return (
+          <FieldPreview
+            key={childLeaf}
+            path={childPath}
+            documentRef={documentRef}
+            maxSummaryLen={maxSummaryLen}
+          />
+        );
+      });
   } else if (isArray(state)) {
     // Inline editor for new field will default to key: '{index}'
     childFields = state.map((value, index) => {
