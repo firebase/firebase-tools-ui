@@ -79,7 +79,8 @@
   tbody {
     display: block;
     overflow: auto;
-    border-radius: 8px;
+    // border-radius on bottom left and bottom right
+    border-radius: 0 0 8px 8px;
     // min-height is the whole view height minus height of external components
     max-height: calc(100vh - 136px - 72px - 56px);
 
