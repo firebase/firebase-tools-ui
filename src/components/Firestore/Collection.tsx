@@ -37,6 +37,7 @@ import {
 } from './dialogs/AddDocumentDialog';
 import { Document } from './Document';
 import DocumentListItem from './DocumentListItem';
+import { useMissingDocuments } from './FirestoreEmulatedApiProvider';
 import {
   CollectionFilter as CollectionFilterType,
   isMultiValueCollectionFilter,
@@ -74,6 +75,9 @@ export function withCollectionState(
     const history = useHistory();
 
     const { url } = useRouteMatch()!;
+
+    const missingDocs = useMissingDocuments(collection);
+
     // TODO: Fetch missing documents (i.e. nonexistent docs with subcollections).
     const docs = collectionSnapshot.data.docs.length
       ? collectionSnapshot.data.docs
@@ -103,6 +107,7 @@ export function withCollectionState(
         collectionFilter={collectionFilter}
         addDocument={addDocument}
         docs={docs}
+        missingDocs={missingDocs}
         url={url}
       />
     );
@@ -133,6 +138,7 @@ interface CollectionPresentationProps {
   docs: firebase.firestore.QueryDocumentSnapshot<
     firebase.firestore.DocumentData
   >[];
+  missingDocs: any;
   url: string;
 }
 
@@ -141,6 +147,7 @@ export const CollectionPresentation: React.FC<CollectionPresentationProps> = ({
   collectionFilter,
   addDocument,
   docs,
+  missingDocs,
   url,
 }) => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -219,6 +226,20 @@ export const CollectionPresentation: React.FC<CollectionPresentationProps> = ({
               }
             />
           ))}
+
+          {missingDocs.map((doc: { path: string }) => {
+            const id = doc.path.replace(collection.path, '').split('/')[1];
+
+            return (
+              <DocumentListItem
+                hidden
+                key={id}
+                url={url}
+                docId={id}
+                queryFieldValue={undefined}
+              />
+            );
+          })}
         </List>
       </div>
       <Route

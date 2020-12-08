@@ -149,6 +149,37 @@ export function useSubCollections(
   return collectionIds.map(id => docRef.collection(id));
 }
 
+const DOCUMENT_PATH_RE = /projects\/(?<project>.*)\/databases\/(?<database>.*)\/documents\/(?<path>.*)/;
+
+export function useMissingDocuments(
+  collection: firebase.firestore.CollectionReference
+): { path: string }[] {
+  const { baseUrl } = useFirestoreRestApi();
+  const encodedPath = collection.path; // TODO: Encode each segment
+  const url = `${baseUrl}/documents/${encodedPath}?mask.fieldPaths=_none_&pageSize=300&showMissing=true`;
+
+  const { data } = useRequest<{
+    documents: { name: string; createTime?: string }[];
+  }>(
+    url,
+    {
+      method: 'GET',
+    },
+    {
+      refreshInterval: 10_000,
+    }
+  );
+
+  return (
+    data?.documents
+      ?.filter(d => !d.createTime)
+      .map(d => {
+        const [, , , path] = DOCUMENT_PATH_RE.exec(d.name);
+        return { path };
+      }) || []
+  );
+}
+
 export function useEjector() {
   const { baseEmulatorUrl } = useFirestoreRestApi();
   const url = `${baseEmulatorUrl}/documents`;
