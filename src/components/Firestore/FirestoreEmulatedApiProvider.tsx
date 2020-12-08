@@ -28,6 +28,7 @@ import { useEmulatedFirebaseApp } from '../../firebase';
 import { useFirestoreConfig, useProjectId } from '../../store/config/selectors';
 import { Spinner } from '../common/Spinner';
 import { useFetcher, useRequest } from '../common/useRequest';
+import { MissingDocument } from './models';
 
 interface WindowWithFirestore extends Window {
   firestore?: firebase.firestore.Firestore;
@@ -153,7 +154,7 @@ const DOCUMENT_PATH_RE = /projects\/(?<project>.*)\/databases\/(?<database>.*)\/
 
 export function useMissingDocuments(
   collection: firebase.firestore.CollectionReference
-): { path: string }[] {
+): MissingDocument[] {
   const { baseUrl } = useFirestoreRestApi();
   const encodedPath = collection.path; // TODO: Encode each segment
   const url = `${baseUrl}/documents/${encodedPath}?mask.fieldPaths=_none_&pageSize=300&showMissing=true`;

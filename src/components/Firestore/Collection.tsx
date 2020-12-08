@@ -40,6 +40,7 @@ import DocumentListItem from './DocumentListItem';
 import { useMissingDocuments } from './FirestoreEmulatedApiProvider';
 import {
   CollectionFilter as CollectionFilterType,
+  MissingDocument,
   isMultiValueCollectionFilter,
   isSingleValueCollectionFilter,
   isSortableCollectionFilter,
@@ -138,7 +139,7 @@ interface CollectionPresentationProps {
   docs: firebase.firestore.QueryDocumentSnapshot<
     firebase.firestore.DocumentData
   >[];
-  missingDocs: any;
+  missingDocs: MissingDocument[];
   url: string;
 }
 
