@@ -44,7 +44,7 @@
 
   .Firestore-Evaluation-Outcome {
     width: 5%;
-    margin-right: 10px;
+    margin-right: 15px;
   }
   .Firestore-Evaluation-Method {
     width: 10%;
@@ -52,7 +52,8 @@
     text-align: center;
   }
   .Firestore-Evaluation-Path-Container {
-    width: 100%;
+    width: 65%;
+    // flex
     display: flex;
     justify-content: flex-start;
     align-items: center;
