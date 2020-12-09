@@ -25,6 +25,7 @@ import { useFirestoreDocData } from 'reactfire';
 
 import {
   useEjector,
+  useMissingDocuments,
   useRootCollections,
   useSubCollections,
 } from './FirestoreEmulatedApiProvider';
@@ -109,6 +110,30 @@ it('should get sub-collections with special characters inside URI', async () => 
   await waitForElement(() => getByText(/others/));
 
   expect(getByTestId(/collections/).textContent).toBe('others,things');
+});
+
+it('should get missing-documents', async () => {
+  const TestResults: React.FC<{
+    collection: firebase.firestore.CollectionReference;
+  }> = ({ collection }) => {
+    const documents = useMissingDocuments(collection);
+    return (
+      <div data-testid="documents">{documents.map(d => d.path).join()}</div>
+    );
+  };
+
+  const { getByText, getByTestId } = await renderWithFirestore(
+    async firestore => {
+      await firestore.doc('foo/bar').set({ a: 1 });
+      await firestore.doc('foo/bar/deep/egg').set({ a: 1 });
+      await firestore.doc('foo/hidden/deep/egg').set({ a: 1 });
+      return <TestResults collection={firestore.collection('foo')} />;
+    }
+  );
+
+  await waitForElement(() => getByText(/hidden/));
+
+  expect(getByTestId(/documents/).textContent).toBe('foo/hidden');
 });
 
 it('should clear the database', async () => {

@@ -20,9 +20,12 @@ import {
   ListItemSecondaryText,
   ListItemText,
 } from '@rmwc/list';
+import { Theme } from '@rmwc/theme';
+import classNames from 'classnames';
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 
+import styles from './DocumentListItem.module.scss';
 import { FirestoreAny } from './models';
 import { summarize } from './utils';
 
@@ -30,27 +33,37 @@ const DocumentListItem: React.FC<{
   docId: string;
   url: string;
   queryFieldValue: FirestoreAny | undefined;
-}> = ({ docId, url, queryFieldValue }) => {
+  missing?: boolean;
+}> = ({ docId, url, queryFieldValue, missing }) => {
   const maxSummaryLen = 20;
+
+  const listItemClass = classNames('Firestore-List-Item', {
+    [styles.missing]: missing,
+  });
+
   return (
-    <ListItem
-      className="Firestore-List-Item"
-      tag={NavLink}
-      to={`${url}/${encodeURIComponent(docId)}`}
-      activeClassName="mdc-list-item--activated"
-      data-testid="firestore-document-list-item"
+    <Theme
+      use={[missing ? 'textSecondaryOnBackground' : 'textPrimaryOnBackground']}
     >
-      {queryFieldValue === undefined ? (
-        docId
-      ) : (
-        <ListItemText data-testid="twoLine">
-          <ListItemPrimaryText>
-            {summarize(queryFieldValue, maxSummaryLen)}
-          </ListItemPrimaryText>
-          <ListItemSecondaryText>{docId}</ListItemSecondaryText>
-        </ListItemText>
-      )}
-    </ListItem>
+      <ListItem
+        className={listItemClass}
+        tag={NavLink}
+        to={`${url}/${encodeURIComponent(docId)}`}
+        activeClassName="mdc-list-item--activated"
+        data-testid="firestore-document-list-item"
+      >
+        {queryFieldValue === undefined ? (
+          <ListItemText>{docId}</ListItemText>
+        ) : (
+          <ListItemText data-testid="twoLine">
+            <ListItemPrimaryText>
+              {summarize(queryFieldValue, maxSummaryLen)}
+            </ListItemPrimaryText>
+            <ListItemSecondaryText>{docId}</ListItemSecondaryText>
+          </ListItemText>
+        )}
+      </ListItem>
+    </Theme>
   );
 };
 

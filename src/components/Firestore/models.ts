@@ -148,3 +148,7 @@ export function isSortableCollectionFilter(
     cf.operator === '<'
   );
 }
+
+export interface MissingDocument {
+  path: string;
+}

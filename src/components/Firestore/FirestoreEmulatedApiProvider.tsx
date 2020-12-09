@@ -28,6 +28,7 @@ import { useEmulatedFirebaseApp } from '../../firebase';
 import { useFirestoreConfig, useProjectId } from '../../store/config/selectors';
 import { Spinner } from '../common/Spinner';
 import { useFetcher, useRequest } from '../common/useRequest';
+import { MissingDocument } from './models';
 
 interface WindowWithFirestore extends Window {
   firestore?: firebase.firestore.Firestore;
@@ -129,10 +130,7 @@ export function useSubCollections(
   docRef: firebase.firestore.DocumentReference
 ) {
   const { baseUrl } = useFirestoreRestApi();
-  const encodedPath = docRef.path
-    .split('/')
-    .map(uri => encodeURIComponent(uri))
-    .join('/');
+  const encodedPath = encodePath(docRef.path);
   const url = `${baseUrl}/documents/${encodedPath}:listCollectionIds`;
 
   const { data } = useRequest<{ collectionIds: string[] }>(
@@ -149,6 +147,37 @@ export function useSubCollections(
   return collectionIds.map(id => docRef.collection(id));
 }
 
+const DOCUMENT_PATH_RE = /projects\/(?<project>.*)\/databases\/(?<database>.*)\/documents\/(?<path>.*)/;
+
+export function useMissingDocuments(
+  collection: firebase.firestore.CollectionReference
+): MissingDocument[] {
+  const { baseUrl } = useFirestoreRestApi();
+  const encodedPath = encodePath(collection.path);
+  const url = `${baseUrl}/documents/${encodedPath}?mask.fieldPaths=_none_&pageSize=300&showMissing=true`;
+
+  const { data } = useRequest<{
+    documents: { name: string; createTime?: string }[];
+  }>(
+    url,
+    {
+      method: 'GET',
+    },
+    {
+      refreshInterval: 10_000,
+    }
+  );
+
+  return (
+    data?.documents
+      ?.filter(d => !d.createTime)
+      .map(d => {
+        const [, , , path] = DOCUMENT_PATH_RE.exec(d.name);
+        return { path };
+      }) || []
+  );
+}
+
 export function useEjector() {
   const { baseEmulatorUrl } = useFirestoreRestApi();
   const url = `${baseEmulatorUrl}/documents`;
@@ -161,4 +190,11 @@ export function useEjector() {
     mutate('*');
     return await fetcher(url);
   };
+}
+
+function encodePath(path: string): string {
+  return path
+    .split('/')
+    .map(uri => encodeURIComponent(uri))
+    .join('/');
 }

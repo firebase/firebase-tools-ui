@@ -15,7 +15,12 @@
  */
 
 import { Portal } from '@rmwc/base';
-import { act, queryAllByText, waitForElement } from '@testing-library/react';
+import {
+  act,
+  queryAllByText,
+  waitForElement,
+  waitForElementToBeRemoved,
+} from '@testing-library/react';
 import React from 'react';
 import { Route } from 'react-router-dom';
 
@@ -42,6 +47,7 @@ describe('CollectionPanel', () => {
           collectionFilter={undefined}
           addDocument={async () => {}}
           docs={docs}
+          missingDocs={[]}
           url={'/foo'}
         />
       );
@@ -63,6 +69,7 @@ describe('CollectionPanel', () => {
           collectionFilter={undefined}
           addDocument={async () => {}}
           docs={docs}
+          missingDocs={[]}
           url={'/foo'}
         />
       );
@@ -194,13 +201,31 @@ it('sorts documents when filtered', async () => {
   ]);
 });
 
+it('shows the missing documents', async () => {
+  const { getByText } = await renderWithFirestore(
+    async firestore => {
+      const collectionRef = firestore.collection('my-stuff');
+      await collectionRef.doc('hidden/deep/cool-doc-1').set({ a: 1 });
+
+      return (
+        <>
+          <Collection collection={collectionRef} />
+          <Portal />
+        </>
+      );
+    },
+    {
+      path: '/hidden',
+    }
+  );
+
+  await waitForElement(() => getByText(/hidden/));
+
+  expect(getByText(/hidden/)).not.toBeNull();
+});
+
 it('shows the selected sub-document', async () => {
-  const {
-    queryAllByText,
-    getByText,
-    queryByText,
-    container,
-  } = await renderWithFirestore(
+  const { queryAllByText, getByText } = await renderWithFirestore(
     async firestore => {
       const collectionRef = firestore.collection('my-stuff');
       await collectionRef.doc('cool-doc-1').set({ a: 1 });
