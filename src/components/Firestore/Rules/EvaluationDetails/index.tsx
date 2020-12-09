@@ -66,6 +66,9 @@ const EvaluationDetails: React.FC<Props> = ({
   useEffect(() => {
     getEvaluationById(evaluationId);
     setWasEvaluationSelected(true);
+    return () => {
+      getEvaluationById(null);
+    };
   }, [getEvaluationById, evaluationId, selectedEvaluation]);
 
   if (wasEvaluationSelected && !selectedEvaluation) {
