@@ -24,14 +24,14 @@
   td,
   th {
     text-align: left;
-    padding: 11px;
-    font-size: 14px;
+    padding: 5px;
   }
   th {
     font-weight: 500;
+    font-size: 14px;
     background-color: var(--mdc-theme-surface);
     box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12) inset;
-    padding: 20px 12px;
+    padding: 20px 5px;
   }
   th:first-of-type {
     border-top-left-radius: 8px;

@@ -95,10 +95,6 @@
   & > textarea {
     display: none;
   }
-  // .CodeMirror-vscrollbar,
-  // .CodeMirror-scroll {
-  //   overflow: hidden !important;
-  // }
   .CodeMirror-sizer,
   .CodeMirror-gutter,
   .CodeMirror-gutters,
@@ -169,24 +165,25 @@
   justify-content: space-between;
   align-items: center;
 }
+.Firestore-Evaluation-Details-Inspection-Element.Firestore-Evaluation-Details-Inspection-Element--Main {
+  background-color: var(--mdc-theme-hover);
+  font-weight: 500;
+  padding: 5px 10px;
+  font-size: 13px;
+}
 .Firestore-Evaluation-Details-Inspection-Element-Label {
   width: 100%;
+  font-size: 14px;
   // truncate text
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.Firestore-Evaluation-Details-Inspection-Element.Firestore-Evaluation-Details-Inspection-Element--Main {
-  background-color: var(--mdc-theme-hover);
-  font-weight: 500;
-  padding: 5px 10px;
-  font-size: 15px;
-}
 .Firestore-Evaluation-Details-Inspection-Element-Value {
   padding: 10px;
   box-shadow: 1px -1px 0 rgba(0, 0, 0, 0.12) inset;
   overflow: scroll;
-  font-size: 15px;
+  font-size: 14px;
   white-space: pre;
 }
 .Firestore-Evaluation-Details-Inspection-Action {
@@ -197,6 +194,9 @@
   justify-content: flex-start;
   align-items: center;
 
+  button {
+    font-size: 13px;
+  }
   button:not(:last-of-type) {
     margin-bottom: 10px;
   }
