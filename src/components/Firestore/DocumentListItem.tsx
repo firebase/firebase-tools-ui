@@ -33,17 +33,17 @@ const DocumentListItem: React.FC<{
   docId: string;
   url: string;
   queryFieldValue: FirestoreAny | undefined;
-  hidden?: boolean;
-}> = ({ docId, url, queryFieldValue, hidden }) => {
+  missing?: boolean;
+}> = ({ docId, url, queryFieldValue, missing }) => {
   const maxSummaryLen = 20;
 
   const listItemClass = classNames('Firestore-List-Item', {
-    [styles.hidden]: hidden,
+    [styles.missing]: missing,
   });
 
   return (
     <Theme
-      use={[hidden ? 'textSecondaryOnBackground' : 'textPrimaryOnBackground']}
+      use={[missing ? 'textSecondaryOnBackground' : 'textPrimaryOnBackground']}
     >
       <ListItem
         className={listItemClass}

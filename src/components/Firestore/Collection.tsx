@@ -79,7 +79,6 @@ export function withCollectionState(
 
     const missingDocs = useMissingDocuments(collection);
 
-    // TODO: Fetch missing documents (i.e. nonexistent docs with subcollections).
     const docs = collectionSnapshot.data.docs.length
       ? collectionSnapshot.data.docs
       : NO_DOCS;
@@ -233,7 +232,7 @@ export const CollectionPresentation: React.FC<CollectionPresentationProps> = ({
 
             return (
               <DocumentListItem
-                hidden
+                missing
                 key={id}
                 url={url}
                 docId={id}
