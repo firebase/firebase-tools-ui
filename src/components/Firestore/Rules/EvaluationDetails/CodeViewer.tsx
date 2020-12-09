@@ -19,10 +19,8 @@ import 'codemirror/theme/xq-light.css';
 
 import '../index.scss';
 
-// import { Icon } from '@rmwc/icon';
 import CodeMirror from '@uiw/react-codemirror';
 import React, { useEffect, useState } from 'react';
-import ReactDOMServer from 'react-dom/server';
 
 import { LineOutcome } from '../types';
 
@@ -36,21 +34,21 @@ const RulesCodeViewer: React.FC<{
   function highlightLineOutcomes() {
     linesOutcome?.map(lineAction => {
       const { line, outcome } = lineAction;
-      codeMirrorEditor.addLineClass(line - 1, '', outcome);
       // add gutter
       const icons = {
-        allow: `✅`, // check icon
-        deny: `❌`, // close icon
-        error: `⚠️`, // error icon
+        allow: `check`, // check icon
+        deny: `close`, // close icon
+        error: `error`, // error icon
       };
-      const parser = new DOMParser();
-      const reactExcl = ReactDOMServer.renderToStaticMarkup(
-        // <Icon icon={{ icon: icons[outcome] }} />
-        <span className={outcome}> {icons[outcome]} </span>
+      let marker = document.createElement('i');
+      marker.className = `${outcome} material-icons`;
+      marker.innerText = icons[outcome];
+      codeMirrorEditor.setGutterMarker(
+        line - 1,
+        'CodeMirror-gutter-elt',
+        marker
       );
-      let excl: any = parser.parseFromString(reactExcl, 'image/svg+xml')
-        .firstChild;
-      codeMirrorEditor.setGutterMarker(line - 1, 'CodeMirror-gutter-elt', excl);
+      codeMirrorEditor.addLineClass(line - 1, '', outcome);
     });
   }
 

@@ -106,22 +106,26 @@
     margin-right: 30px;
   }
   .CodeMirror-gutter-elt {
-    & > span {
+    & > i {
       left: 40px;
       position: absolute;
       padding: 1px 4px;
+      font-size: 15px;
     }
-    & > span.deny {
+    & > i.deny {
       // TODO: get this color from a theme variable
       background-color: rgb(255 82 82 / 25%);
+      color: #d32f2f;
     }
-    & > span.allow {
+    & > i.allow {
       // TODO: get this color from a theme variable
       background-color: rgb(0 191 165 / 20%);
+      color: #00796b;
     }
-    & > span.error {
+    & > i.error {
       // TODO: get this color from a theme variable
       background-color: #1b3a5754;
+      color: #476282;
     }
   }
   .CodeMirror-code {
