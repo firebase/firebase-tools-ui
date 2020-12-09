@@ -194,7 +194,9 @@ function summarizeMap(
   maxLen: number
 ): string {
   let output = '{';
-  for (const [key, value] of Object.entries(map)) {
+  for (const [key, value] of Object.entries(map).sort((a, b) =>
+    compareFirestoreKeys(a[0], b[0])
+  )) {
     if (output.length > 1) output += ', ';
     if (output.length > maxLen) {
       output += '...';
@@ -212,4 +214,9 @@ function latStr(lat: number): string {
 
 function longStr(long: number): string {
   return `${Math.abs(long)}° ${long >= 0 ? 'E' : 'W'}`;
+}
+
+export function compareFirestoreKeys(fieldA: string, fieldB: string): number {
+  // TODO: Use UTF-8 encoded byte order instead of localCompare to match Firestore production behavior https://firebase.google.com/docs/firestore/manage-data/data-types
+  return fieldA.localeCompare(fieldB);
 }
