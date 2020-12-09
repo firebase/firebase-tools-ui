@@ -21,7 +21,7 @@ import '../index.scss';
 
 // import { Icon } from '@rmwc/icon';
 import CodeMirror from '@uiw/react-codemirror';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactDOMServer from 'react-dom/server';
 
 import { LineOutcome } from '../types';
@@ -54,9 +54,11 @@ const RulesCodeViewer: React.FC<{
     });
   }
 
-  if (codeMirrorEditor) {
-    highlightLineOutcomes();
-  }
+  useEffect(() => {
+    if (codeMirrorEditor) {
+      highlightLineOutcomes();
+    }
+  }, [codeMirrorEditor]);
 
   return (
     <div className="Firestore-Evaluation-Details-Code">
