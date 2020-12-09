@@ -40,6 +40,8 @@ const RulesCodeViewer: React.FC<{
         deny: `close`, // close icon
         error: `error`, // error icon
       };
+      // TODO: Replace jQuery to a virtualDOM strategy if possible
+      // https://github.com/scniro/react-codemirror2/issues/57
       let marker = document.createElement('i');
       marker.className = `${outcome} material-icons`;
       marker.innerText = icons[outcome];
