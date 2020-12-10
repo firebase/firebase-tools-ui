@@ -38,7 +38,7 @@ export const firestoreRulesReducer = createReducer<FirestoreRulesState, Action>(
       draft.requestEvaluations = [payload, ...draft.requestEvaluations];
     })
   )
-  .handleAction(actions.getRequestEvaluationById, (state, { payload }) =>
+  .handleAction(actions.selectRequestEvaluationById, (state, { payload }) =>
     produce(state, draft => {
       draft.selectedRequesEvaluationId = payload;
     })

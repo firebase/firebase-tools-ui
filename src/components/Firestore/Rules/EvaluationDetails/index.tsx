@@ -22,7 +22,7 @@ import { MapDispatchToPropsFunction, connect } from 'react-redux';
 import { Redirect, useParams } from 'react-router-dom';
 
 import { createStructuredSelector } from '../../../../store';
-import { getRequestEvaluationById } from '../../../../store/firestoreRules';
+import { selectRequestEvaluationById } from '../../../../store/firestoreRules';
 import { getSelectedRequestEvaluation } from '../../../../store/firestoreRules/selectors';
 import { FirestoreRulesEvaluation } from '../rules_evaluation_result_model';
 import { sampleRules } from '../sample-rules';
@@ -39,14 +39,14 @@ export interface PropsFromState {
 }
 
 export interface PropsFromDispatch {
-  getEvaluationById: typeof getRequestEvaluationById;
+  selectEvaluationById: typeof selectRequestEvaluationById;
 }
 
 export type Props = PropsFromState & PropsFromDispatch;
 
 const EvaluationDetails: React.FC<Props> = ({
   selectedEvaluation,
-  getEvaluationById,
+  selectEvaluationById,
 }) => {
   const { evaluationId } = useParams<{ evaluationId: string }>();
   const [
@@ -64,12 +64,12 @@ const EvaluationDetails: React.FC<Props> = ({
   );
 
   useEffect(() => {
-    getEvaluationById(evaluationId);
+    selectEvaluationById(evaluationId);
     setWasEvaluationSelected(true);
     return () => {
-      getEvaluationById(null);
+      selectEvaluationById(null);
     };
-  }, [getEvaluationById, evaluationId, selectedEvaluation]);
+  }, [selectEvaluationById, evaluationId]);
 
   if (wasEvaluationSelected && !selectedEvaluation) {
     return <Redirect to="/firestore/rules" />;
@@ -104,8 +104,8 @@ export const mapDispatchToProps: MapDispatchToPropsFunction<
   PropsFromDispatch,
   {}
 > = dispatch => ({
-  getEvaluationById: (selectedEvaluationId: string | null) =>
-    dispatch(getRequestEvaluationById(selectedEvaluationId)),
+  selectEvaluationById: (selectedEvaluationId: string | null) =>
+    dispatch(selectRequestEvaluationById(selectedEvaluationId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(EvaluationDetails);

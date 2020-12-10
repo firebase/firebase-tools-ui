@@ -22,6 +22,6 @@ export const addRequestEvaluation = createAction(
   '@firestoreRules/addRequestEvaluation'
 )<FirestoreRulesEvaluation>();
 
-export const getRequestEvaluationById = createAction(
-  '@firestoreRules/selectRequestEvaluation'
+export const selectRequestEvaluationById = createAction(
+  '@firestoreRules/selectRequestEvaluationById'
 )<string | null>();
