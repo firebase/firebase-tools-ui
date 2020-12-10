@@ -86,6 +86,6 @@ export interface FirestoreRulesEvaluation {
     line: number;
     outcome: RulesOutcome;
   }>;
-  type: string;
-  data: FirestoreRulesUpdateData;
+  type?: string;
+  data?: FirestoreRulesUpdateData;
 }
