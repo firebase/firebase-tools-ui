@@ -31,34 +31,30 @@ const RulesCodeViewer: React.FC<{
   const [codeMirrorEditor, setCodeMirrorEditor] = useState<any>(null);
 
   // highlights and adds outcome icon to corresponding lines of rules code viewer
-  function highlightLineOutcomes() {
-    linesOutcome?.map(lineAction => {
-      const { line, outcome } = lineAction;
-      // add gutter
-      const icons = {
-        allow: `check`, // check icon
-        deny: `close`, // close icon
-        error: `error`, // error icon
-      };
-      // TODO: Replace jQuery to a virtualDOM strategy if possible
-      // https://github.com/scniro/react-codemirror2/issues/57
-      let marker = document.createElement('i');
-      marker.className = `${outcome} material-icons`;
-      marker.innerText = icons[outcome];
-      codeMirrorEditor.setGutterMarker(
-        line - 1,
-        'CodeMirror-gutter-elt',
-        marker
-      );
-      codeMirrorEditor.addLineClass(line - 1, '', outcome);
-    });
-  }
-
   useEffect(() => {
     if (codeMirrorEditor) {
-      highlightLineOutcomes();
+      linesOutcome?.map(lineAction => {
+        const { line, outcome } = lineAction;
+        // add gutter
+        const icons = {
+          allow: `check`, // check icon
+          deny: `close`, // close icon
+          error: `error`, // error icon
+        };
+        // TODO: Replace jQuery to a virtualDOM strategy if possible
+        // https://github.com/scniro/react-codemirror2/issues/57
+        let marker = document.createElement('i');
+        marker.className = `${outcome} material-icons`;
+        marker.innerText = icons[outcome];
+        codeMirrorEditor.setGutterMarker(
+          line - 1,
+          'CodeMirror-gutter-elt',
+          marker
+        );
+        codeMirrorEditor.addLineClass(line - 1, '', outcome);
+      });
     }
-  }, [codeMirrorEditor]);
+  }, [codeMirrorEditor, linesOutcome]);
 
   return (
     <div className="Firestore-Evaluation-Details-Code">

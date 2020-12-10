@@ -23,10 +23,16 @@ import { GridCell } from '@rmwc/grid';
 import { Tab, TabBar } from '@rmwc/tabs';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { Link, matchPath, useHistory, useLocation } from 'react-router-dom';
+import {
+  Link,
+  Route,
+  matchPath,
+  useHistory,
+  useLocation,
+} from 'react-router-dom';
 import { useFirestore } from 'reactfire';
 
-import { Route, routes } from '../../routes';
+import { Route as RouteType, routes } from '../../routes';
 import { createStructuredSelector } from '../../store';
 import {
   getFirestoreConfigResult,
@@ -90,10 +96,9 @@ export const Firestore: React.FC = React.memo(() => {
   const showCollectionShell = path.split('/').length < 2;
   const showDocumentShell = path.split('/').length < 3;
 
-  const subNavRoutesToShow = routes.filter(r => r.showInFirestoreSubNav);
-  const subNavRoutes = routes.filter(r => r.isFirestoreSubRoute);
+  const subNavRoutes = routes.filter(r => r.showInFirestoreSubNav);
 
-  const subTabs = subNavRoutesToShow.map(({ path, label }: Route) => (
+  const subTabs = subNavRoutes.map(({ path, label }: RouteType) => (
     <Tab
       key={label}
       className="mdc-tab--min-width"
@@ -105,7 +110,7 @@ export const Firestore: React.FC = React.memo(() => {
 
   const activeTabIndex = subNavRoutes.findIndex(r =>
     matchPath(location.pathname, {
-      path: r.path,
+      path: r.multiPath || r.path,
       exact: r.exact,
     })
   );
@@ -135,7 +140,7 @@ export const Firestore: React.FC = React.memo(() => {
   }
 
   function renderClearDataAction() {
-    return activeTabIndex !== 0 ? null : (
+    return (
       <CustomThemeProvider use="warning" wrap>
         <Button unelevated onClick={() => handleClearData()}>
           Clear all data
@@ -145,7 +150,7 @@ export const Firestore: React.FC = React.memo(() => {
   }
 
   function renderFirestoreData() {
-    return activeTabIndex !== 0 ? null : (
+    return (
       <Elevation z="2" wrap>
         <Card className="Firestore-panels-wrapper">
           <InteractiveBreadCrumbBar
@@ -175,7 +180,7 @@ export const Firestore: React.FC = React.memo(() => {
   }
 
   function renderFirestoreRules() {
-    return activeTabIndex === 0 ? null : (
+    return (
       <Elevation z="2" wrap>
         <Card className="Firestore-panels-wrapper">
           <FirestoreRules />
@@ -197,11 +202,11 @@ export const Firestore: React.FC = React.memo(() => {
           >
             {subTabs}
           </TabBar>
-          {renderClearDataAction()}
+          <Route path="/firestore/data">{renderClearDataAction()}</Route>
         </div>
 
-        {renderFirestoreData()}
-        {renderFirestoreRules()}
+        <Route path="/firestore/data">{renderFirestoreData()}</Route>
+        <Route path="/firestore/rules">{renderFirestoreRules()}</Route>
       </GridCell>
     </FirestoreStore>
   );

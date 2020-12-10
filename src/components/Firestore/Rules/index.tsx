@@ -19,7 +19,7 @@ import './index.scss';
 import { ThemeProvider } from '@rmwc/theme';
 import React, { useEffect } from 'react';
 import { MapDispatchToPropsFunction, connect } from 'react-redux';
-import { Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 
 import { grey100 } from '../../../colors';
 import { addRequestEvaluation } from '../../../store/firestoreRules';
@@ -72,6 +72,7 @@ const Rules: React.FC<Props> = ({ addEvaluation }) => {
           <EvaluationDetails />
         </RulesComponentWrapper>
       </Route>
+      <Redirect to="/firestore/rules" />
     </Switch>
   );
 };

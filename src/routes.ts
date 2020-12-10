@@ -24,13 +24,12 @@ import LogsViewer from './components/LogViewer';
 
 export interface Route {
   path: string;
+  multiPath?: string;
   component: React.FC;
   label: string;
   exact: boolean;
   showInNav: boolean;
-  // Firestore Rules
   showInFirestoreSubNav?: boolean;
-  isFirestoreSubRoute?: boolean;
 }
 
 export const routes: ReadonlyArray<Route> = [
@@ -50,6 +49,7 @@ export const routes: ReadonlyArray<Route> = [
   },
   {
     path: '/firestore/data',
+    multiPath: '/firestore/:tab(data|rules)',
     component: Firestore,
     label: 'Firestore',
     exact: false,
@@ -78,24 +78,14 @@ export const routes: ReadonlyArray<Route> = [
     exact: false,
     showInNav: false,
     showInFirestoreSubNav: true,
-    isFirestoreSubRoute: true,
   },
   {
     path: '/firestore/rules',
+    multiPath: '/firestore/:tab(rules|rules/:evaluationId)',
     component: Firestore,
     label: 'Rules',
-    exact: true,
+    exact: false,
     showInNav: false,
     showInFirestoreSubNav: true,
-    isFirestoreSubRoute: true,
-  },
-  {
-    path: '/firestore/rules/:evaluationId',
-    component: Firestore,
-    label: 'Rules',
-    exact: true,
-    showInNav: false,
-    showInFirestoreSubNav: false,
-    isFirestoreSubRoute: true,
   },
 ];
