@@ -136,14 +136,3 @@ export const withFieldRemoved = produce((draft, path: string[]) => {
     parent.splice(Number(lastFieldName(path)), 1);
   }
 });
-
-export function generateId(): string {
-  let newId = '';
-  let options = 'ABCDEFGHIJKLMNOPQRSTUVWYZabcdefghijklmnoqrstuvwyz0123456789';
-  const ID_SIZE = 20;
-
-  for (let i = 0; i < ID_SIZE; i++) {
-    newId += options.charAt(Math.floor(Math.random() * options.length));
-  }
-  return newId;
-}

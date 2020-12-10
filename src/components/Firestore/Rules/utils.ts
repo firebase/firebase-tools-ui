@@ -79,3 +79,15 @@ export function useEvaluationDetailedInformation(
 
   return [linesOutcome, inspectionElements] as const;
 }
+
+// returns an id made out of 20 random upper- and lower-case letters and numbers
+export function generateId(): string {
+  let newId = '';
+  let options = 'ABCDEFGHIJKLMNOPQRSTUVWYZabcdefghijklmnoqrstuvwyz0123456789';
+  const ID_SIZE = 20;
+
+  for (let i = 0; i < ID_SIZE; i++) {
+    newId += options.charAt(Math.floor(Math.random() * options.length));
+  }
+  return newId;
+}

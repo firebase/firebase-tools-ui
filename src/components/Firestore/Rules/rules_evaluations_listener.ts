@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { generateId } from '../utils';
 import { FirestoreRulesEvaluation } from './rules_evaluation_result_model';
+import { generateId } from './utils';
 
 export interface OnEvaluationFn {
   (evaluation: FirestoreRulesEvaluation): void;
