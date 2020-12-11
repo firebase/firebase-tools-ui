@@ -27,6 +27,8 @@ export interface Unsubscribe {
 
 /** Starts listening to a realtime feed of rule evaluations */
 export function registerForRulesEvents(callback: OnEvaluationFn): Unsubscribe {
+  // TODO: Replace hardcoded websocket URL (used for development purposes only)
+  //       with a function that somehow gets the proper URL
   const ws = new WebSocket('ws://localhost:8888/rules/ws');
   ws.onmessage = evt => {
     const newEvaluation: FirestoreRulesEvaluation = JSON.parse(evt.data);
