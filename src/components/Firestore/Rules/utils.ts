@@ -17,7 +17,7 @@
 import moment from 'moment';
 
 import { FirestoreRulesEvaluation } from './rules_evaluation_result_model';
-import { InspectionElement, LineOutcome, RulesOutcomeData } from './types';
+import { InspectionElement, RulesOutcomeData } from './types';
 
 // outputs the main data of the evaluation in a clean format
 export function useEvaluationMainInformation(
@@ -56,18 +56,14 @@ export function useEvaluationMainInformation(
 }
 
 // outputs the detailed data of the evaluation in a clean format
-export function useEvaluationDetailedInformation(
+export function useEvaluationInspectionElements(
   evaluation?: FirestoreRulesEvaluation
 ) {
   if (!evaluation) {
-    return [undefined, undefined] as const;
+    return undefined;
   }
 
-  const { granularAllowOutcomes, rulesContext } = evaluation || {};
-  const linesOutcome = granularAllowOutcomes?.map(granularAllowOutcome => {
-    const { line, outcome } = granularAllowOutcome;
-    return { line, outcome } as LineOutcome;
-  });
+  const { rulesContext } = evaluation;
   const inspectionElements = Object.entries(rulesContext || {}).map(
     ([key, value]) => {
       return {
@@ -77,10 +73,11 @@ export function useEvaluationDetailedInformation(
     }
   );
 
-  return [linesOutcome, inspectionElements] as const;
+  return inspectionElements;
 }
 
 // returns an id made out of 20 random upper- and lower-case letters and numbers
+// TODO: Remove generateId function once the backend itself generates a UID for each request
 export function generateId(): string {
   let newId = '';
   let options = 'ABCDEFGHIJKLMNOPQRSTUVWYZabcdefghijklmnoqrstuvwyz0123456789';

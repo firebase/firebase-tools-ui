@@ -27,7 +27,7 @@ import { getSelectedRequestEvaluation } from '../../../../store/firestoreRules/s
 import { FirestoreRulesEvaluation } from '../rules_evaluation_result_model';
 import { sampleRules } from '../sample-rules';
 import {
-  useEvaluationDetailedInformation,
+  useEvaluationInspectionElements,
   useEvaluationMainInformation,
 } from '../utils';
 import EvaluationDetailsCode from './CodeViewer';
@@ -56,9 +56,11 @@ const EvaluationDetails: React.FC<Props> = ({
     resourceSubPaths,
     outcomeData,
   ] = useEvaluationMainInformation(selectedEvaluation);
-  const [linesOutcome, inspectionElements] = useEvaluationDetailedInformation(
+  const { granularAllowOutcomes } = selectedEvaluation || {};
+  const inspectionElements = useEvaluationInspectionElements(
     selectedEvaluation
   );
+
   const [wasEvaluationSelected, setWasEvaluationSelected] = useState<Boolean>(
     false
   );
@@ -86,7 +88,7 @@ const EvaluationDetails: React.FC<Props> = ({
       />
       <div className="Firestore-Evaluation-Details-Content">
         <EvaluationDetailsCode
-          linesOutcome={linesOutcome}
+          linesOutcome={granularAllowOutcomes}
           firestoreRules={sampleRules}
         />
         <EvaluationDetailsInspectionSection

@@ -15,7 +15,6 @@
  */
 
 import { CustomThemeType } from '../../../themes';
-import { RulesOutcome } from './rules_evaluation_result_model';
 
 export interface OutcomeData {
   theme: CustomThemeType;
@@ -25,11 +24,6 @@ export interface OutcomeData {
 
 export interface RulesOutcomeData {
   [outcome: string]: OutcomeData;
-}
-
-export interface LineOutcome {
-  line: number;
-  outcome: RulesOutcome;
 }
 
 export interface InspectionElement {

@@ -22,10 +22,10 @@ import '../index.scss';
 import CodeMirror from '@uiw/react-codemirror';
 import React, { useEffect, useState } from 'react';
 
-import { LineOutcome } from '../types';
+import { OutcomeInfo } from '../rules_evaluation_result_model';
 
 const RulesCodeViewer: React.FC<{
-  linesOutcome?: LineOutcome[];
+  linesOutcome?: OutcomeInfo[];
   firestoreRules: string;
 }> = ({ linesOutcome, firestoreRules }) => {
   const [codeMirrorEditor, setCodeMirrorEditor] = useState<any>(null);

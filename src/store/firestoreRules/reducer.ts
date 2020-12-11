@@ -22,12 +22,12 @@ import * as actions from './actions';
 
 export interface FirestoreRulesState {
   requestEvaluations: FirestoreRulesEvaluation[];
-  selectedRequesEvaluationId: string | null;
+  selectedRequestEvaluationId: string | null;
 }
 
 const INIT_STATE: FirestoreRulesState = {
   requestEvaluations: [],
-  selectedRequesEvaluationId: null,
+  selectedRequestEvaluationId: null,
 };
 
 export const firestoreRulesReducer = createReducer<FirestoreRulesState, Action>(
@@ -40,6 +40,6 @@ export const firestoreRulesReducer = createReducer<FirestoreRulesState, Action>(
   )
   .handleAction(actions.selectRequestEvaluationById, (state, { payload }) =>
     produce(state, draft => {
-      draft.selectedRequesEvaluationId = payload;
+      draft.selectedRequestEvaluationId = payload;
     })
   );
