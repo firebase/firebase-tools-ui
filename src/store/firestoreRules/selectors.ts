@@ -22,7 +22,7 @@ function getAllRequestEvaluationsFromState(state: AppState) {
   return state.firebaseRules.requestEvaluations;
 }
 function getSelectedRequestEvaluationIdFromState(state: AppState) {
-  return state.firebaseRules.selectedRequesEvaluationId;
+  return state.firebaseRules.selectedRequestEvaluationId;
 }
 
 export const getAllRequestEvaluations = createSelector(
@@ -33,8 +33,8 @@ export const getAllRequestEvaluations = createSelector(
 export const getSelectedRequestEvaluation = createSelector(
   getAllRequestEvaluationsFromState,
   getSelectedRequestEvaluationIdFromState,
-  (requestEvaluations, selectedRequesEvaluationId) =>
+  (requestEvaluations, selectedRequestEvaluationId) =>
     requestEvaluations?.find(
-      evaluation => evaluation.evaluationId === selectedRequesEvaluationId
+      ({ evaluationId }) => evaluationId === selectedRequestEvaluationId
     )
 );
