@@ -77,25 +77,31 @@ describe('FirestoreRoute', () => {
 
 describe('Firestore', () => {
   it('shows the top-level collections', async () => {
-    const { getByText, queryByText } = await renderWithFirestore(
+    const {
+      getAllByText,
+      getAllByTestId,
+      queryByText,
+    } = await renderWithFirestore(
       async firestore => {
         const collectionRef = firestore.collection('cool-coll');
         await collectionRef.doc('bar').set({ a: 1 });
 
         return <Firestore />;
-      }
+      },
+      { path: '/firestore/data' }
     );
 
-    await waitForElement(() => getByText(/cool-coll/));
+    await waitForElement(() => getAllByTestId('collection-list').length > 0);
 
     expect(queryByText(/Connecting to Firestore/)).toBeNull();
-    expect(getByText(/cool-coll/)).not.toBeNull();
+    expect(getAllByTestId('collection-list').length).toEqual(1);
+    expect(getAllByText(/cool-coll/)).not.toBeNull();
   });
 
   it('shows a collection-shell if at the root', async () => {
     const { getByTestId } = await renderWithFirestore(
       async () => <Firestore />,
-      { path: '/firestore' }
+      { path: '/firestore/data' }
     );
 
     await waitForElement(() => getByTestId(/collection-shell/));
@@ -108,7 +114,7 @@ describe('Firestore', () => {
     const { getByTestId, queryByTestId } = await renderWithFirestore(
       async () => <Firestore />,
       {
-        path: '/firestore/coll',
+        path: '/firestore/data/coll',
       }
     );
 
@@ -119,14 +125,14 @@ describe('Firestore', () => {
   });
 
   it('shows no shells if 2-levels deep', async () => {
-    const { getByText, getByTestId, queryByTestId } = await renderWithFirestore(
+    const { getByText, queryByTestId } = await renderWithFirestore(
       async firestore => {
         const collectionRef = firestore.collection('coll');
         await collectionRef.doc('doc').set({ a: 1 });
         return <Firestore />;
       },
       {
-        path: '/firestore/coll/doc',
+        path: '/firestore/data/coll/doc',
       }
     );
 
@@ -147,14 +153,17 @@ describe('Firestore', () => {
         <>
           <Firestore />
           <Route
-            path="/firestore"
+            path="/firestore/data"
             exact
             render={() => <div data-testid="ROOT"></div>}
           />
         </>
-      )
+      ),
+      {
+        path: '/firestore/data',
+      }
     );
-    act(() => getByText('Clear all data').click());
+    await act(() => getByText('Clear all data').click());
     await wait(() => expect(nukeSpy).toHaveBeenCalled());
     expect(getByTestId('firestore-loading')).not.toBeNull();
     await act(() => nuke.resolve());
@@ -169,7 +178,9 @@ describe('Firestore', () => {
     const confirmDeferred = makeDeferred<boolean>();
     confirm.mockReturnValueOnce(confirmDeferred.promise);
 
-    const { getByText } = await renderWithFirestore(async () => <Firestore />);
+    const { getByText } = await renderWithFirestore(async () => <Firestore />, {
+      path: '/firestore/data',
+    });
     act(() => getByText('Clear all data').click());
     // Simulate the case where user clicked on Cancel in the confirm dialog.
     await act(() => confirmDeferred.resolve(false));

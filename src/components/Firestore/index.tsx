@@ -132,7 +132,7 @@ export const Firestore: React.FC = React.memo(() => {
 
   function handleNavigate(path?: string) {
     // TODO: move to routing constants
-    const root = '/firestore';
+    const root = '/firestore/data';
     if (path === undefined) {
       history.push(root);
     } else {

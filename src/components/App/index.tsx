@@ -51,6 +51,7 @@ const App: React.FC = () => {
                 from="/functions"
                 to="/logs?q=metadata.emulator.name%3D%22functions%22"
               />
+              <Redirect from="/firestore" to="/firestore/data" />
               <Redirect to="/" /> {/* Fallback to redirect to overview. */}
             </Switch>
           </Grid>
