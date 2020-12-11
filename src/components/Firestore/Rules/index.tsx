@@ -60,11 +60,13 @@ const Rules: React.FC<Props> = ({ addEvaluation }) => {
     <Switch>
       <Route exact path="/firestore/rules">
         <RulesComponentWrapper>
+          {/* NOTE: This will be an import to the actual Component on the next PR */}
           <div> Evaluations Table </div>
         </RulesComponentWrapper>
       </Route>
       <Route exact path="/firestore/rules/:evaluationId">
         <RulesComponentWrapper>
+          {/* NOTE: This will be an import to the actual Component on the next PR */}
           <div> Evaluation Details </div>
         </RulesComponentWrapper>
       </Route>
