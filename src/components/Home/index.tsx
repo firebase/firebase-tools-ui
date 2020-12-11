@@ -85,7 +85,7 @@ const Overview: React.FC<{
           name="Firestore emulator"
           icon={<FirestoreIcon theme="secondary" />}
           config={config.firestore}
-          linkTo="/firestore"
+          linkTo="/firestore/data"
           testId="emulator-info-firestore"
         />
         <EmulatorCard

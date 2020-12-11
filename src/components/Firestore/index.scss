@@ -32,6 +32,14 @@
 .Firestore-actions {
   text-align: end;
   margin-bottom: 24px;
+  // flex
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.Firestore-sub-tab-bar {
+  width: fit-content;
 }
 
 .Firestore-panels-wrapper {
