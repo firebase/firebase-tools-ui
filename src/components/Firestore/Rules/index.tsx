@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import './index.scss';
-
 import { ThemeProvider } from '@rmwc/theme';
 import React, { useEffect } from 'react';
 import { MapDispatchToPropsFunction, connect } from 'react-redux';
