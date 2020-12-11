@@ -69,6 +69,10 @@ export interface FirestoreRulesIssue {
   line: number;
   col: number;
 }
+export interface OutcomeInfo {
+  line: number;
+  outcome: RulesOutcome;
+}
 export interface FirestoreRulesUpdateData {
   isCompilationSuccess: boolean;
   issues: FirestoreRulesIssue[];
@@ -82,10 +86,7 @@ export interface FirestoreRulesEvaluation {
   evaluationId: string;
 
   // TODO: Add a more cleaned-up version of the detailed info
-  granularAllowOutcomes: Array<{
-    line: number;
-    outcome: RulesOutcome;
-  }>;
+  granularAllowOutcomes: OutcomeInfo[];
   type?: string;
   data?: FirestoreRulesUpdateData;
 }
