@@ -20,12 +20,20 @@ import { Button } from '@rmwc/button';
 import { Card } from '@rmwc/card';
 import { Elevation } from '@rmwc/elevation';
 import { GridCell } from '@rmwc/grid';
+import { Tab, TabBar } from '@rmwc/tabs';
 import firebase from 'firebase';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { useHistory, useLocation } from 'react-router-dom';
+import {
+  Link,
+  Route,
+  matchPath,
+  useHistory,
+  useLocation,
+} from 'react-router-dom';
 import { useFirestore } from 'reactfire';
 
+import { Route as RouteType, routes } from '../../routes';
 import { createStructuredSelector } from '../../store';
 import {
   getFirestoreConfigResult,
@@ -43,6 +51,7 @@ import {
   useEjector,
 } from './FirestoreEmulatedApiProvider';
 import PanelHeader from './PanelHeader';
+import FirestoreRules from './Rules';
 import { FirestoreStore } from './store';
 
 interface WindowWithFirestoreDb extends Window {
@@ -84,9 +93,28 @@ export const Firestore: React.FC = React.memo(() => {
   const eject = useEjector();
 
   // TODO: do something better here!
-  const path = location.pathname.replace(/^\/firestore/, '');
+  const path = location.pathname.replace(/^\/firestore\/data/, '');
   const showCollectionShell = path.split('/').length < 2;
   const showDocumentShell = path.split('/').length < 3;
+
+  const subNavRoutes = routes.filter(r => r.showInFirestoreSubNav);
+
+  const subTabs = subNavRoutes.map(({ path, label }: RouteType) => (
+    <Tab
+      key={label}
+      className="mdc-tab--min-width"
+      {...{ tag: Link, to: path }}
+    >
+      {label}
+    </Tab>
+  ));
+
+  const activeTabIndex = subNavRoutes.findIndex(r =>
+    matchPath(location.pathname, {
+      path: r.multiPath || r.path,
+      exact: r.exact,
+    })
+  );
 
   useEffect(() => {
     (window as WindowWithFirestoreDb).firestore = firestore;
@@ -112,46 +140,74 @@ export const Firestore: React.FC = React.memo(() => {
     }
   }
 
+  function renderClearDataAction() {
+    return (
+      <CustomThemeProvider use="warning" wrap>
+        <Button unelevated onClick={() => handleClearData()}>
+          Clear all data
+        </Button>
+      </CustomThemeProvider>
+    );
+  }
+
+  function renderFirestoreData() {
+    return (
+      <Elevation z="2" wrap>
+        <Card className="Firestore-panels-wrapper">
+          <InteractiveBreadCrumbBar
+            base="/firestore"
+            path={path}
+            onNavigate={handleNavigate}
+          />
+          <div className="Firestore-panels">
+            <Root />
+            {showCollectionShell && (
+              <div
+                className="Firestore-Collection"
+                data-testid="collection-shell"
+              >
+                <PanelHeader id="" icon={null} />
+              </div>
+            )}
+            {showDocumentShell && (
+              <div className="Firestore-Document" data-testid="document-shell">
+                <PanelHeader id="" icon={null} />
+              </div>
+            )}
+          </div>
+        </Card>
+      </Elevation>
+    );
+  }
+
+  function renderFirestoreRules() {
+    return (
+      <Elevation z="2" wrap>
+        <Card className="Firestore-panels-wrapper">
+          <FirestoreRules />
+        </Card>
+      </Elevation>
+    );
+  }
+
   return isRefreshing ? (
     <Spinner span={12} data-testid="firestore-loading" />
   ) : (
     <FirestoreStore>
       <GridCell span={12} className="Firestore">
         <div className="Firestore-actions">
-          <CustomThemeProvider use="warning" wrap>
-            <Button unelevated onClick={() => handleClearData()}>
-              Clear all data
-            </Button>
-          </CustomThemeProvider>
+          <TabBar
+            className="Firestore-sub-tab-bar"
+            theme="onSurface"
+            activeTabIndex={activeTabIndex}
+          >
+            {subTabs}
+          </TabBar>
+          <Route path="/firestore/data">{renderClearDataAction()}</Route>
         </div>
-        <Elevation z="2" wrap>
-          <Card className="Firestore-panels-wrapper">
-            <InteractiveBreadCrumbBar
-              base="/firestore"
-              path={path}
-              onNavigate={handleNavigate}
-            />
-            <div className="Firestore-panels">
-              <Root />
-              {showCollectionShell && (
-                <div
-                  className="Firestore-Collection"
-                  data-testid="collection-shell"
-                >
-                  <PanelHeader id="" icon={null} />
-                </div>
-              )}
-              {showDocumentShell && (
-                <div
-                  className="Firestore-Document"
-                  data-testid="document-shell"
-                >
-                  <PanelHeader id="" icon={null} />
-                </div>
-              )}
-            </div>
-          </Card>
-        </Elevation>
+
+        <Route path="/firestore/data">{renderFirestoreData()}</Route>
+        <Route path="/firestore/rules">{renderFirestoreRules()}</Route>
       </GridCell>
     </FirestoreStore>
   );
