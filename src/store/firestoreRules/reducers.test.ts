@@ -21,7 +21,7 @@ import { FirestoreRulesState, firestoreRulesReducer } from './reducer';
 describe('firestore rules reducer', () => {
   const INIT_STATE: FirestoreRulesState = {
     requestEvaluations: [],
-    selectedRequesEvaluationId: null,
+    selectedRequestEvaluationId: null,
   };
 
   it(`${addRequestEvaluation} => adds request evaluation to beginning of array`, () => {
@@ -44,19 +44,31 @@ describe('firestore rules reducer', () => {
         secondDummyRequestEvaluation,
         dummyRequestEvaluation,
       ],
-      selectedRequesEvaluationId: null,
+      selectedRequestEvaluationId: null,
     });
   });
 
-  it(`${selectRequestEvaluationById} => sets value of selectedRequesEvaluationId`, () => {
+  it(`${selectRequestEvaluationById} => sets value of selectedRequestEvaluationId to a string`, () => {
     expect(
       firestoreRulesReducer(
         INIT_STATE,
-        selectRequestEvaluationById('newRequestEvaluationId')
+        selectRequestEvaluationById('unique-request-id')
       )
     ).toEqual({
       requestEvaluations: [],
-      selectedRequesEvaluationId: 'newRequestEvaluationId',
+      selectedRequestEvaluationId: 'unique-request-id',
+    });
+  });
+
+  it(`${selectRequestEvaluationById} => sets value of selectedRequestEvaluationId to null`, () => {
+    expect(
+      firestoreRulesReducer(
+        { ...INIT_STATE, selectedRequestEvaluationId: 'unique-request-id' },
+        selectRequestEvaluationById(null)
+      )
+    ).toEqual({
+      requestEvaluations: [],
+      selectedRequestEvaluationId: null,
     });
   });
 });
