@@ -17,22 +17,23 @@
 import produce from 'immer';
 import { Action, createReducer } from 'typesafe-actions';
 
-import { FirestoreRulesEvaluation } from '../../components/Firestore/Rules/rules_evaluation_result_model';
+import { FirestoreRulesEvaluation } from '../../components/Firestore/Requests/rules_evaluation_result_model';
 import * as actions from './actions';
 
-export interface FirestoreRulesState {
+export interface FirestoreRequestEvaluationsState {
   requestEvaluations: FirestoreRulesEvaluation[];
   selectedRequestEvaluationId: string | null;
 }
 
-const INIT_STATE: FirestoreRulesState = {
+const INIT_STATE: FirestoreRequestEvaluationsState = {
   requestEvaluations: [],
   selectedRequestEvaluationId: null,
 };
 
-export const firestoreRulesReducer = createReducer<FirestoreRulesState, Action>(
-  INIT_STATE
-)
+export const firestoreRequestEvaluationsReducer = createReducer<
+  FirestoreRequestEvaluationsState,
+  Action
+>(INIT_STATE)
   .handleAction(actions.addRequestEvaluation, (state, { payload }) =>
     produce(state, draft => {
       draft.requestEvaluations = [payload, ...draft.requestEvaluations];

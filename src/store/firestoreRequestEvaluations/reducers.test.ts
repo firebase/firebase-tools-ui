@@ -14,28 +14,31 @@
  * limitations under the License.
  */
 
-import { dummyRequestEvaluation } from '../../components/Firestore/Rules/test_utils';
+import { dummyRequestEvaluation } from '../../components/Firestore/Requests/test_utils';
 import { addRequestEvaluation, selectRequestEvaluationById } from './actions';
-import { FirestoreRulesState, firestoreRulesReducer } from './reducer';
+import {
+  FirestoreRequestEvaluationsState,
+  firestoreRequestEvaluationsReducer,
+} from './reducer';
 
-describe('firestore rules reducer', () => {
-  const INIT_STATE: FirestoreRulesState = {
+describe('firestore request evaluations reducer', () => {
+  const INIT_STATE: FirestoreRequestEvaluationsState = {
     requestEvaluations: [],
     selectedRequestEvaluationId: null,
   };
 
   it(`${addRequestEvaluation} => adds request evaluation to beginning of array`, () => {
-    const updatedState = firestoreRulesReducer(
+    const updatedState = firestoreRequestEvaluationsReducer(
       INIT_STATE,
       addRequestEvaluation(dummyRequestEvaluation)
     );
     const secondDummyRequestEvaluation = {
       ...dummyRequestEvaluation,
-      evaluationId: 'second-dummy',
+      requestId: 'second-dummy',
     };
 
     expect(
-      firestoreRulesReducer(
+      firestoreRequestEvaluationsReducer(
         updatedState,
         addRequestEvaluation(secondDummyRequestEvaluation)
       )
@@ -50,7 +53,7 @@ describe('firestore rules reducer', () => {
 
   it(`${selectRequestEvaluationById} => sets value of selectedRequestEvaluationId to a string`, () => {
     expect(
-      firestoreRulesReducer(
+      firestoreRequestEvaluationsReducer(
         INIT_STATE,
         selectRequestEvaluationById('unique-request-id')
       )
@@ -62,7 +65,7 @@ describe('firestore rules reducer', () => {
 
   it(`${selectRequestEvaluationById} => sets value of selectedRequestEvaluationId to null`, () => {
     expect(
-      firestoreRulesReducer(
+      firestoreRequestEvaluationsReducer(
         { ...INIT_STATE, selectedRequestEvaluationId: 'unique-request-id' },
         selectRequestEvaluationById(null)
       )
