@@ -33,6 +33,6 @@ export const dummyRequestEvaluation: FirestoreRulesEvaluation = {
       },
     },
   },
-  evaluationId: 'unique_id',
+  requestId: 'unique_id',
   granularAllowOutcomes: [],
 };

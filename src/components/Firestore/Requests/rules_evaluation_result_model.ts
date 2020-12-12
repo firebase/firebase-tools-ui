@@ -83,7 +83,7 @@ export interface FirestoreRulesUpdateData {
 export interface FirestoreRulesEvaluation {
   rulesContext: FirestoreRulesContext;
   outcome: RulesOutcome;
-  evaluationId: string;
+  requestId: string;
 
   // TODO: Add a more cleaned-up version of the detailed info
   granularAllowOutcomes: OutcomeInfo[];
