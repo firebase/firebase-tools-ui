@@ -19,10 +19,10 @@ import { createSelector } from 'reselect';
 import { AppState } from '..';
 
 function getAllRequestEvaluationsFromState(state: AppState) {
-  return state.firebaseRules.requestEvaluations;
+  return state.firestoreRequestEvaluations.requestEvaluations;
 }
 function getSelectedRequestEvaluationIdFromState(state: AppState) {
-  return state.firebaseRules.selectedRequestEvaluationId;
+  return state.firestoreRequestEvaluations.selectedRequestEvaluationId;
 }
 
 export const getAllRequestEvaluations = createSelector(
@@ -35,6 +35,6 @@ export const getSelectedRequestEvaluation = createSelector(
   getSelectedRequestEvaluationIdFromState,
   (requestEvaluations, selectedRequestEvaluationId) =>
     requestEvaluations?.find(
-      ({ evaluationId }) => evaluationId === selectedRequestEvaluationId
+      ({ requestId }) => requestId === selectedRequestEvaluationId
     )
 );
