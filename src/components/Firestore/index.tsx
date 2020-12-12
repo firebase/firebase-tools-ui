@@ -51,7 +51,7 @@ import {
   useEjector,
 } from './FirestoreEmulatedApiProvider';
 import PanelHeader from './PanelHeader';
-import FirestoreRules from './Rules';
+import FirestoreRequests from './Requests';
 import { FirestoreStore } from './store';
 
 interface WindowWithFirestoreDb extends Window {
@@ -180,11 +180,11 @@ export const Firestore: React.FC = React.memo(() => {
     );
   }
 
-  function renderFirestoreRules() {
+  function renderFirestoreRequests() {
     return (
       <Elevation z="2" wrap>
         <Card className="Firestore-panels-wrapper">
-          <FirestoreRules />
+          <FirestoreRequests />
         </Card>
       </Elevation>
     );
@@ -207,7 +207,7 @@ export const Firestore: React.FC = React.memo(() => {
         </div>
 
         <Route path="/firestore/data">{renderFirestoreData()}</Route>
-        <Route path="/firestore/rules">{renderFirestoreRules()}</Route>
+        <Route path="/firestore/requests">{renderFirestoreRequests()}</Route>
       </GridCell>
     </FirestoreStore>
   );
