@@ -49,7 +49,7 @@ export const routes: ReadonlyArray<Route> = [
   },
   {
     path: '/firestore/data',
-    multiPath: '/firestore/:tab(data|rules)',
+    multiPath: '/firestore/:tab(data|requests)',
     component: Firestore,
     label: 'Firestore',
     exact: false,
@@ -80,10 +80,10 @@ export const routes: ReadonlyArray<Route> = [
     showInFirestoreSubNav: true,
   },
   {
-    path: '/firestore/rules',
-    multiPath: '/firestore/:tab(rules|rules/:evaluationId)',
+    path: '/firestore/requests',
+    multiPath: '/firestore/:tab(requests|requests/:requestId)',
     component: Firestore,
-    label: 'Rules',
+    label: 'Requests',
     exact: false,
     showInNav: false,
     showInFirestoreSubNav: true,
