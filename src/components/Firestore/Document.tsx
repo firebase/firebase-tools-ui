@@ -20,7 +20,7 @@ import { Icon } from '@rmwc/icon';
 import { IconButton } from '@rmwc/icon-button';
 import { ListDivider } from '@rmwc/list';
 import { MenuItem, SimpleMenu } from '@rmwc/menu';
-import { firestore } from 'firebase';
+import firebase from 'firebase';
 import React, { Suspense } from 'react';
 import { Route, useRouteMatch } from 'react-router-dom';
 import { useFirestore } from 'reactfire';
@@ -37,7 +37,7 @@ import PanelHeader from './PanelHeader';
 
 const Doc: React.FC<{
   id: string;
-  collectionById: (id: string) => firestore.CollectionReference;
+  collectionById: (id: string) => firebase.firestore.CollectionReference;
   children: React.ReactNode;
 }> = ({ collectionById, children }) => {
   const { url } = useRouteMatch()!;
@@ -53,11 +53,15 @@ const Doc: React.FC<{
             <Suspense
               fallback={
                 <CollectionLoading
-                  collection={collectionById(match.params.id)}
+                  collection={collectionById(
+                    decodeURIComponent(match.params.id)
+                  )}
                 />
               }
             >
-              <Collection collection={collectionById(match.params.id)} />
+              <Collection
+                collection={collectionById(decodeURIComponent(match.params.id))}
+              />
             </Suspense>
           );
         }}
@@ -81,9 +85,9 @@ export const Root: React.FC = () => {
 };
 
 /** Document node */
-export const Document: React.FC<{ reference: firestore.DocumentReference }> = ({
-  reference,
-}) => {
+export const Document: React.FC<{
+  reference: firebase.firestore.DocumentReference;
+}> = ({ reference }) => {
   const handleDeleteDocument = async () => {
     const shouldDelete = await promptDeleteDocument(reference);
     // TODO: recursively delete sub documents

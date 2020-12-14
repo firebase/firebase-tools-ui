@@ -16,12 +16,12 @@
 
 import { createAction } from 'typesafe-actions';
 
-import { FirestoreRulesEvaluation } from '../../components/Firestore/Rules/rules_evaluation_result_model';
+import { FirestoreRulesEvaluation } from '../../components/Firestore/Requests/rules_evaluation_result_model';
 
 export const addRequestEvaluation = createAction(
-  '@firestoreRules/addRequestEvaluation'
+  '@firestoreRequestEvaluations/addRequestEvaluation'
 )<FirestoreRulesEvaluation>();
 
 export const selectRequestEvaluationById = createAction(
-  '@firestoreRules/selectRequestEvaluationById'
+  '@firestoreRequestEvaluations/selectRequestEvaluationById'
 )<string | null>();

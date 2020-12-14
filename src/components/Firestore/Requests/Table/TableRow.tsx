@@ -23,42 +23,42 @@ import { Link } from 'react-router-dom';
 
 import { CustomThemeProvider } from '../../../../themes';
 import { FirestoreRulesEvaluation } from '../rules_evaluation_result_model';
-import { useEvaluationMainInformation } from '../utils';
+import { useRequestMainInformation } from '../utils';
 
-const EvaluationTableRow: React.FC<{
-  evaluation: FirestoreRulesEvaluation;
-  evaluationId: string;
-}> = ({ evaluation, evaluationId }) => {
+const RequestTableRow: React.FC<{
+  request: FirestoreRulesEvaluation;
+  requestId: string;
+}> = ({ request, requestId }) => {
   const [
     requestTimeComplete,
     requestTimeFromNow,
     requestMethod,
     resourceSubPaths,
     outcomeData,
-  ] = useEvaluationMainInformation(evaluation);
+  ] = useRequestMainInformation(request);
 
   return (
     <tr>
       <CustomThemeProvider use={outcomeData?.theme || 'note'} wrap>
-        <td className="Firestore-Evaluation-Outcome" title={outcomeData?.label}>
+        <td className="Firestore-Request-Outcome" title={outcomeData?.label}>
           {outcomeData?.icon && (
             <IconButton
               icon={outcomeData?.icon}
               tag={Link}
-              to={`/firestore/rules/${evaluationId}`}
+              to={`/firestore/requests/${requestId}`}
             />
           )}
         </td>
       </CustomThemeProvider>
-      <td className="Firestore-Evaluation-Method">{requestMethod}</td>
-      <td className="Firestore-Evaluation-Path-Container">
-        <div className="Firestore-Evaluations-Table-SubPaths-Container">
+      <td className="Firestore-Request-Method">{requestMethod}</td>
+      <td className="Firestore-Request-Path-Container">
+        <div className="Firestore-Requests-Table-SubPaths-Container">
           {resourceSubPaths?.map((subpath, index) => (
             <React.Fragment key={`${subpath}-${index}`}>
-              <span className="Firestore-Evaluation-Path-Slash"> / </span>
+              <span className="Firestore-Request-Path-Slash"> / </span>
               <span
                 title="copy subpath"
-                className="Firestore-Evaluation-Path-Subpath"
+                className="Firestore-Request-Path-Subpath"
                 onClick={() => {
                   navigator.clipboard.writeText(subpath);
                 }}
@@ -70,11 +70,11 @@ const EvaluationTableRow: React.FC<{
           ))}
         </div>
       </td>
-      <td className="Firestore-Evaluation-Date" title={requestTimeComplete}>
+      <td className="Firestore-Request-Date" title={requestTimeComplete}>
         {requestTimeFromNow}
       </td>
     </tr>
   );
 };
 
-export default EvaluationTableRow;
+export default RequestTableRow;

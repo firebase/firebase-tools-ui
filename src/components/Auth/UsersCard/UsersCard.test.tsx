@@ -11,8 +11,8 @@ import { waitForDialogsToOpen } from '../../../test_utils';
 import { createFakeAuthStateWithUsers } from '../test_utils';
 import { UserCardProps, UsersCard } from './UsersCard';
 
-jest.mock('./table/UsersTable');
-jest.mock('./header/AuthFilter');
+jest.mock('./table/UsersTable', () => () => null);
+jest.mock('./header/AuthFilter', () => () => null);
 
 function setup(props: Partial<UserCardProps>) {
   const store = configureStore<Pick<AppState, 'auth'>>()({

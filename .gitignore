@@ -18,9 +18,10 @@
 .env.development.local
 .env.test.local
 .env.production.local
+.eslintcache
 settings.json
 
-*-debug.log*
+*debug.log*
 yarn-error.log*
 
 .idea

@@ -37,7 +37,7 @@ export const InspectionBlock: React.FC<{
   isMainBlock?: boolean;
 }> = ({ label, value, isMainBlock, children }) => {
   const [isExpanded, setIsExpanded] = useState<Boolean>(!!isMainBlock);
-  const elementClass = 'Firestore-Evaluation-Details-Inspection-Element';
+  const elementClass = 'Firestore-Request-Details-Inspection-Element';
   const mainElementClass = elementClass + '--Main';
 
   function displayContent() {
@@ -46,7 +46,7 @@ export const InspectionBlock: React.FC<{
     ) : (
       <div
         title={value}
-        className="Firestore-Evaluation-Details-Inspection-Element-Value"
+        className="Firestore-Request-Details-Inspection-Element-Value"
       >
         {value}
       </div>
@@ -61,7 +61,7 @@ export const InspectionBlock: React.FC<{
       >
         <span
           title={label}
-          className="Firestore-Evaluation-Details-Inspection-Element-Label"
+          className="Firestore-Request-Details-Inspection-Element-Label"
         >
           {' '}
           {label}{' '}
@@ -73,12 +73,12 @@ export const InspectionBlock: React.FC<{
   );
 };
 
-const EvaluationDetailsInspectionSection: React.FC<{
+const RequestDetailsInspectionSection: React.FC<{
   inspectionElements?: InspectionElement[];
 }> = ({ inspectionElements }) => (
-  <div className="Firestore-Evaluation-Details-Inspection">
+  <div className="Firestore-Request-Details-Inspection">
     <InspectionBlock isMainBlock label="Actions">
-      <div className="Firestore-Evaluation-Details-Inspection-Action">
+      <div className="Firestore-Request-Details-Inspection-Action">
         <InspectionAction label="Retrigger Request" onClick={() => {}} />
         <InspectionAction
           label="Archive Request Evaluation"
@@ -110,4 +110,4 @@ const EvaluationDetailsInspectionSection: React.FC<{
   </div>
 );
 
-export default EvaluationDetailsInspectionSection;
+export default RequestDetailsInspectionSection;

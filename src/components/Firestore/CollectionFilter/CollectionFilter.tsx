@@ -18,7 +18,7 @@ import { CardActionButton, CardActionButtons, CardActions } from '@rmwc/card';
 import { CollapsibleList, SimpleListItem } from '@rmwc/list';
 import { Theme, ThemeProvider } from '@rmwc/theme';
 import { Typography } from '@rmwc/typography';
-import { firestore } from 'firebase';
+import firebase from 'firebase';
 import React, { useState } from 'react';
 import { Controller, FormContext, useForm } from 'react-hook-form';
 
@@ -199,7 +199,10 @@ const Preview: React.FC<{ path: string; cf: CollectionFilterType }> = ({
 };
 
 const ConditionSelect: React.FC = ({ children }) => {
-  const options: Array<{ label: string; value: firestore.WhereFilterOp }> = [
+  const options: Array<{
+    label: string;
+    value: firebase.firestore.WhereFilterOp;
+  }> = [
     {
       label: '(==) equal to',
       value: '==',

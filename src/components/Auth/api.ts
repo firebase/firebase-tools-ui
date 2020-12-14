@@ -32,10 +32,12 @@ export interface ApiAuthUserFields {
 }
 
 export default class AuthApi extends RestApi {
-  private readonly baseUrl = `http://${this.hostAndPort}/identitytoolkit.googleapis.com/v1/`;
-  private readonly baseUrlWithProject =
-    this.baseUrl + `projects/${this.projectId}/accounts:`;
+  // Note: Always use API paths that contain `projectId` for consistency.
+  // Unprefixed versions (e.g. /v1/accounts:signUp) are intended for non-admin
+  // clients and infers projectId, which can lead to unexpected mismatches.
 
+  // https://cloud.google.com/identity-platform/docs/reference/rest/v1/projects.accounts
+  private readonly baseUrl = `http://${this.hostAndPort}/identitytoolkit.googleapis.com/v1/projects/${this.projectId}`;
   private readonly baseEmulatorUrl = `http://${this.hostAndPort}/emulator/v1/projects/${this.projectId}`;
 
   constructor(
@@ -52,7 +54,7 @@ export default class AuthApi extends RestApi {
 
   async fetchUsers(): Promise<AuthUser[]> {
     const { json } = await this.jsonRequest(
-      `${this.baseUrlWithProject}query`,
+      `${this.baseUrl}/accounts:query`,
       {},
       'POST'
     );
@@ -62,17 +64,22 @@ export default class AuthApi extends RestApi {
 
   async fetchUser(localId: string): Promise<AuthUser> {
     const { json } = await this.jsonRequest(
-      `${this.baseUrlWithProject}lookup`,
+      `${this.baseUrl}/accounts:lookup`,
       { localId: [localId] },
       'POST'
     );
 
+    if (!json.users || !json.users.length) {
+      throw new Error(
+        `User "${localId}" not found in Project "${this.projectId}"!`
+      );
+    }
     return importUser(json.users[0]);
   }
 
   async createUser(user: AddAuthUserPayload): Promise<AuthUser> {
     const { json } = await this.jsonRequest(
-      `${this.baseUrl}accounts:signUp`,
+      `${this.baseUrl}/accounts`,
       { ...user },
       'POST'
     );
@@ -100,7 +107,7 @@ export default class AuthApi extends RestApi {
 
   async updateUser(user: AddAuthUserPayload): Promise<AuthUser> {
     const { json } = await this.jsonRequest(
-      `${this.baseUrl}accounts:update`,
+      `${this.baseUrl}/accounts:update`,
       user,
       'POST'
     );
@@ -109,7 +116,7 @@ export default class AuthApi extends RestApi {
   }
 
   async deleteUser(user: AuthUser): Promise<void> {
-    await this.jsonRequest(`${this.baseUrl}accounts:delete`, user, 'POST');
+    await this.jsonRequest(`${this.baseUrl}/accounts:delete`, user, 'POST');
   }
 }
 

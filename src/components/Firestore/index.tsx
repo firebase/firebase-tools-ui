@@ -21,6 +21,7 @@ import { Card } from '@rmwc/card';
 import { Elevation } from '@rmwc/elevation';
 import { GridCell } from '@rmwc/grid';
 import { Tab, TabBar } from '@rmwc/tabs';
+import firebase from 'firebase';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import {
@@ -50,7 +51,7 @@ import {
   useEjector,
 } from './FirestoreEmulatedApiProvider';
 import PanelHeader from './PanelHeader';
-import FirestoreRules from './Rules';
+import FirestoreRequests from './Requests';
 import { FirestoreStore } from './store';
 
 interface WindowWithFirestoreDb extends Window {
@@ -131,7 +132,7 @@ export const Firestore: React.FC = React.memo(() => {
 
   function handleNavigate(path?: string) {
     // TODO: move to routing constants
-    const root = '/firestore';
+    const root = '/firestore/data';
     if (path === undefined) {
       history.push(root);
     } else {
@@ -179,11 +180,11 @@ export const Firestore: React.FC = React.memo(() => {
     );
   }
 
-  function renderFirestoreRules() {
+  function renderFirestoreRequests() {
     return (
       <Elevation z="2" wrap>
         <Card className="Firestore-panels-wrapper">
-          <FirestoreRules />
+          <FirestoreRequests />
         </Card>
       </Elevation>
     );
@@ -206,7 +207,7 @@ export const Firestore: React.FC = React.memo(() => {
         </div>
 
         <Route path="/firestore/data">{renderFirestoreData()}</Route>
-        <Route path="/firestore/rules">{renderFirestoreRules()}</Route>
+        <Route path="/firestore/requests">{renderFirestoreRequests()}</Route>
       </GridCell>
     </FirestoreStore>
   );

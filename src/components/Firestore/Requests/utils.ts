@@ -16,18 +16,16 @@
 
 import moment from 'moment';
 
+import { InspectionElement, RulesOutcomeData } from '../Requests/types';
 import { FirestoreRulesEvaluation } from './rules_evaluation_result_model';
-import { InspectionElement, RulesOutcomeData } from './types';
 
-// outputs the main data of the evaluation in a clean format
-export function useEvaluationMainInformation(
-  evaluation?: FirestoreRulesEvaluation
-) {
-  if (!evaluation) {
+// outputs the main data of the request in a clean format
+export function useRequestMainInformation(request?: FirestoreRulesEvaluation) {
+  if (!request) {
     return [undefined, undefined, undefined, undefined, undefined] as const;
   }
 
-  const { rulesContext, outcome } = evaluation;
+  const { rulesContext, outcome } = request;
   // time * 1000 converts timestamp units from seconds to millis
   const requestTimeMoment = moment(rulesContext?.request?.time * 1000);
   const requestTimeComplete = requestTimeMoment.format(
@@ -55,15 +53,15 @@ export function useEvaluationMainInformation(
   ] as const;
 }
 
-// outputs the detailed data of the evaluation in a clean format
-export function useEvaluationInspectionElements(
-  evaluation?: FirestoreRulesEvaluation
+// outputs the detailed data of the request in a clean format
+export function useRequestInspectionElements(
+  request?: FirestoreRulesEvaluation
 ) {
-  if (!evaluation) {
+  if (!request) {
     return undefined;
   }
 
-  const { rulesContext } = evaluation;
+  const { rulesContext } = request;
   const inspectionElements = Object.entries(rulesContext || {}).map(
     ([key, value]) => {
       return {

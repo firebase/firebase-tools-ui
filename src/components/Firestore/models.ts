@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { firestore } from 'firebase';
+import firebase from 'firebase';
 
 export interface DocumentCollectionDatabaseApi<U, V> {
   projectId: string;
@@ -24,12 +24,12 @@ export interface DocumentCollectionDatabaseApi<U, V> {
 
   delete(): Promise<void>;
 
-  getCollections(docRef?: V): Promise<firestore.CollectionReference[]>;
+  getCollections(docRef?: V): Promise<firebase.firestore.CollectionReference[]>;
 }
 
 export type FirestoreApi = DocumentCollectionDatabaseApi<
-  firestore.Firestore,
-  firestore.DocumentReference
+  firebase.firestore.Firestore,
+  firebase.firestore.DocumentReference
 >;
 
 /** Field types supported by Firestore  */
@@ -54,11 +54,11 @@ export type FirestorePrimitive =
   | number
   | boolean
   | null
-  | firestore.DocumentReference
-  | firestore.GeoPoint
-  | firestore.Blob
-  | firestore.Timestamp
-  | firestore.FieldValue;
+  | firebase.firestore.DocumentReference
+  | firebase.firestore.GeoPoint
+  | firebase.firestore.Blob
+  | firebase.firestore.Timestamp
+  | firebase.firestore.FieldValue;
 
 export type FirestoreArray = Array<FirestorePrimitive | FirestoreMap>;
 
@@ -69,7 +69,7 @@ export type FirestoreMap = {
 /** Collection filter */
 export type CollectionFilterSort = 'ascending' | 'descending';
 
-interface Filter<T extends firestore.WhereFilterOp | undefined> {
+interface Filter<T extends firebase.firestore.WhereFilterOp | undefined> {
   field: string;
   operator: T;
 }
@@ -147,4 +147,8 @@ export function isSortableCollectionFilter(
     cf.operator === '<=' ||
     cf.operator === '<'
   );
+}
+
+export interface MissingDocument {
+  path: string;
 }

@@ -15,6 +15,7 @@
  */
 
 import { RenderResult } from '@testing-library/react';
+import firebase from 'firebase';
 
 import { waitForDialogsToOpen } from '../../../test_utils';
 import { renderWithFirestore } from './FirestoreTestProviders';

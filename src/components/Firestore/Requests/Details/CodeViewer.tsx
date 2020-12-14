@@ -22,7 +22,7 @@ import '../index.scss';
 import CodeMirror from '@uiw/react-codemirror';
 import React, { useEffect, useState } from 'react';
 
-import { OutcomeInfo } from '../rules_evaluation_result_model';
+import { OutcomeInfo } from '../../Requests/rules_evaluation_result_model';
 
 const RulesCodeViewer: React.FC<{
   linesOutcome?: OutcomeInfo[];
@@ -57,7 +57,7 @@ const RulesCodeViewer: React.FC<{
   }, [codeMirrorEditor, linesOutcome]);
 
   return (
-    <div className="Firestore-Evaluation-Details-Code">
+    <div className="Firestore-Request-Details-Code">
       <CodeMirror
         value={firestoreRules}
         options={{

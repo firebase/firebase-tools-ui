@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-.Firestore-Evaluation-Outcome {
+.Firestore-Request-Outcome {
   color: var(--mdc-theme-primary);
   font-weight: 500;
   // center
@@ -24,20 +24,20 @@
     margin: 0 auto;
   }
 }
-.Firestore-Evaluation-Method {
+.Firestore-Request-Method {
   text-transform: uppercase;
   font-weight: 600;
   font-size: 14px;
 }
-.Firestore-Evaluation-Date {
+.Firestore-Request-Date {
   font-weight: 100;
   font-size: 13px;
 }
-.Firestore-Evaluation-Path-Slash {
+.Firestore-Request-Path-Slash {
   font-size: 17px;
   font-weight: 900;
 }
-.Firestore-Evaluation-Path-Subpath {
+.Firestore-Request-Path-Subpath {
   font-size: 14px;
   padding: 3px;
   margin: 1px;

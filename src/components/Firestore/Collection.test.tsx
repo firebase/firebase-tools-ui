@@ -15,7 +15,12 @@
  */
 
 import { Portal } from '@rmwc/base';
-import { act, queryAllByText, waitForElement } from '@testing-library/react';
+import {
+  act,
+  queryAllByText,
+  waitForElement,
+  waitForElementToBeRemoved,
+} from '@testing-library/react';
 import React from 'react';
 import { Route } from 'react-router-dom';
 
@@ -29,7 +34,7 @@ import { renderWithFirestore } from './testing/FirestoreTestProviders';
 jest.mock('./store');
 
 describe('CollectionPanel', () => {
-  it('shows the list of documents in the collection', async () => {
+  it('shows the collection name', async () => {
     const { getByText } = await renderWithFirestore(async firestore => {
       const collectionRef = firestore.collection('my-stuff');
       await collectionRef.doc('cool-doc-1').set({ a: 1 });
@@ -42,13 +47,13 @@ describe('CollectionPanel', () => {
           collectionFilter={undefined}
           addDocument={async () => {}}
           docs={docs}
+          missingDocs={[]}
           url={'/foo'}
         />
       );
     });
 
     expect(getByText(/my-stuff/)).not.toBeNull();
-    expect(getByText(/cool-doc-1/)).not.toBeNull();
   });
 
   it('shows filter when filter button is clicked', async () => {
@@ -64,6 +69,7 @@ describe('CollectionPanel', () => {
           collectionFilter={undefined}
           addDocument={async () => {}}
           docs={docs}
+          missingDocs={[]}
           url={'/foo'}
         />
       );
@@ -146,7 +152,6 @@ it('filters documents for multi-value filters', async () => {
   expect(queryByText(/doc-without/)).toBeNull();
 });
 
-
 it('filters documents for multi-value not operator filters', async () => {
   useCollectionFilter.mockReturnValue({
     field: 'foo',
@@ -196,13 +201,31 @@ it('sorts documents when filtered', async () => {
   ]);
 });
 
+it('shows the missing documents', async () => {
+  const { getByText } = await renderWithFirestore(
+    async firestore => {
+      const collectionRef = firestore.collection('my-stuff');
+      await collectionRef.doc('hidden/deep/cool-doc-1').set({ a: 1 });
+
+      return (
+        <>
+          <Collection collection={collectionRef} />
+          <Portal />
+        </>
+      );
+    },
+    {
+      path: '/hidden',
+    }
+  );
+
+  await waitForElement(() => getByText(/hidden/));
+
+  expect(getByText(/hidden/)).not.toBeNull();
+});
+
 it('shows the selected sub-document', async () => {
-  const {
-    queryAllByText,
-    getByText,
-    queryByText,
-    container,
-  } = await renderWithFirestore(
+  const { queryAllByText, getByText } = await renderWithFirestore(
     async firestore => {
       const collectionRef = firestore.collection('my-stuff');
       await collectionRef.doc('cool-doc-1').set({ a: 1 });
@@ -229,9 +252,10 @@ it('shows the selected sub-document', async () => {
 });
 
 describe('withCollectionState', () => {
-  let performAddDocument: () => Promise<void>;
+  let performAddDocument: (id?: string) => Promise<void>;
   const MyCollection = withCollectionState(({ addDocument }) => {
-    performAddDocument = () => addDocument({ id: 'new-document-id', data: {} });
+    performAddDocument = (id = 'new-document-id') =>
+      addDocument({ id, data: {} });
     return <div data-testid="withCollectionState" />;
   });
 
@@ -283,6 +307,64 @@ describe('withCollectionState', () => {
     await waitForElement(() => getByTestId('withCollectionState'));
 
     await act(performAddDocument);
+
+    expect(getByText(/_redirected_to_foo_/)).not.toBeNull();
+  });
+
+  it('redirects to a newly created document when a child is active and the document id has special characters', async () => {
+    const { getByTestId, getByText } = await renderWithFirestore(
+      async firestore => {
+        const collectionRef = firestore.collection('my-stuff');
+
+        return (
+          <>
+            <Route path="/my-stuff">
+              <MyCollection collection={collectionRef} />
+            </Route>
+            <Route path="/my-stuff/new-document-id-%40%23%24">
+              _redirected_to_foo_
+            </Route>
+          </>
+        );
+      },
+      {
+        path: '/my-stuff/my-doc/sub-coll',
+      }
+    );
+
+    await waitForElement(() => getByTestId('withCollectionState'));
+
+    await act(() => performAddDocument('new-document-id-@#$'));
+
+    expect(getByText(/_redirected_to_foo_/)).not.toBeNull();
+  });
+
+  // TODO: This test tracks the ideal behavior of the issue #442:
+  //          Error on the Firestore viewer when trying to decode URI containing the character '%'.
+  it.skip('redirects to a newly created document when a child is active and the document id has the special character %', async () => {
+    const { getByTestId, getByText } = await renderWithFirestore(
+      async firestore => {
+        const collectionRef = firestore.collection('my-stuff');
+
+        return (
+          <>
+            <Route path="/my-stuff">
+              <MyCollection collection={collectionRef} />
+            </Route>
+            <Route path="/my-stuff/new-document-id-%40%23%24%25">
+              _redirected_to_foo_
+            </Route>
+          </>
+        );
+      },
+      {
+        path: '/my-stuff/my-doc/sub-coll',
+      }
+    );
+
+    await waitForElement(() => getByTestId('withCollectionState'));
+
+    await act(() => performAddDocument('new-document-id-@#$%'));
 
     expect(getByText(/_redirected_to_foo_/)).not.toBeNull();
   });

@@ -21,34 +21,34 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { createStructuredSelector } from '../../../../store';
-import { getAllRequestEvaluations } from '../../../../store/firestoreRules/selectors';
+import { getAllRequestEvaluations } from '../../../../store/firestoreRequestEvaluations/selectors';
 import { FirestoreRulesEvaluation } from '../rules_evaluation_result_model';
-import EvaluationsTableRow from './TableRow';
+import RequestsTableRow from './TableRow';
 
 export interface PropsFromState {
-  evaluations: FirestoreRulesEvaluation[] | undefined;
+  requests: FirestoreRulesEvaluation[] | undefined;
 }
 
 export type Props = PropsFromState;
 
-const EvaluationsTable: React.FC<Props> = ({ evaluations }) => (
-  <table className="Firestore-Evaluations-Table">
+const RequestsTable: React.FC<Props> = ({ requests }) => (
+  <table className="Firestore-Requests-Table">
     <thead>
       <tr>
-        <th className="Firestore-Evaluations-Table-Outcome-Header"></th>
-        <th className="Firestore-Evaluations-Table-Method-Header">Method</th>
-        <th className="Firestore-Evaluations-Table-Path-Header">Path</th>
+        <th className="Firestore-Requests-Table-Outcome-Header"></th>
+        <th className="Firestore-Requests-Table-Method-Header">Method</th>
+        <th className="Firestore-Requests-Table-Path-Header">Path</th>
         <th>Date</th>
       </tr>
     </thead>
     <tbody>
-      {evaluations?.map((evaluation: FirestoreRulesEvaluation) => {
-        const { evaluationId } = evaluation;
+      {requests?.map((request: FirestoreRulesEvaluation) => {
+        const { requestId } = request;
         return (
-          <EvaluationsTableRow
-            key={evaluationId}
-            evaluationId={evaluationId}
-            evaluation={evaluation}
+          <RequestsTableRow
+            key={requestId}
+            requestId={requestId}
+            request={request}
           />
         );
       })}
@@ -57,7 +57,7 @@ const EvaluationsTable: React.FC<Props> = ({ evaluations }) => (
 );
 
 export const mapStateToProps = createStructuredSelector({
-  evaluations: getAllRequestEvaluations,
+  requests: getAllRequestEvaluations,
 });
 
-export default connect(mapStateToProps)(EvaluationsTable);
+export default connect(mapStateToProps)(RequestsTable);

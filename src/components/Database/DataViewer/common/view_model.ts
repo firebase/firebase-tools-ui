@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import firebase from 'firebase';
+
 /**
  * Max nodes shown underneath each
  */

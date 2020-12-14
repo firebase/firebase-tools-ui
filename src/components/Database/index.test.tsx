@@ -21,7 +21,7 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { DatabaseConfig } from '../../store/config';
 import { DatabaseRoute, DatabaseRouteContent } from './index';
 
-jest.mock('./DatabaseContainer'); // Don't actually connect to db or store.
+jest.mock('./DatabaseContainer', () => () => null); // Don't actually connect to db or store.
 
 const sampleConfig: DatabaseConfig = {
   host: 'localhost',

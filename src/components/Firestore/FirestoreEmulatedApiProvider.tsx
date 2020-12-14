@@ -15,14 +15,20 @@
  */
 
 import firebase from 'firebase';
-import React, { Suspense, useEffect } from 'react';
-import { FirebaseAppProvider, useFirestore } from 'reactfire';
+import React, { Suspense, useEffect, useState } from 'react';
+import {
+  FirebaseAppProvider,
+  preloadFirestore,
+  useFirebaseApp,
+  useFirestore,
+} from 'reactfire';
 import { mutate } from 'swr';
 
 import { useEmulatedFirebaseApp } from '../../firebase';
 import { useFirestoreConfig, useProjectId } from '../../store/config/selectors';
 import { Spinner } from '../common/Spinner';
 import { useFetcher, useRequest } from '../common/useRequest';
+import { MissingDocument } from './models';
 
 interface WindowWithFirestore extends Window {
   firestore?: firebase.firestore.Firestore;
@@ -43,8 +49,10 @@ export const FirestoreEmulatedApiProvider: React.FC<{
       <Suspense
         fallback={<Spinner message="Loading Firestore SDK" span={12} />}
       >
-        <FirestoreEmulatorSettings>{children}</FirestoreEmulatorSettings>
-        {disableDevTools || <FirestoreDevTools />}
+        <FirestoreEmulatorSettings>
+          {children}
+          {disableDevTools || <FirestoreDevTools />}
+        </FirestoreEmulatorSettings>
       </Suspense>
     </FirebaseAppProvider>
   );
@@ -52,16 +60,19 @@ export const FirestoreEmulatedApiProvider: React.FC<{
 
 // Connect FirestoreSDK to Emulator Hub
 const FirestoreEmulatorSettings: React.FC = React.memo(({ children }) => {
-  const firestore = useFirestore();
+  const [connected, setConnected] = useState(false);
+  const firebaseApp = useFirebaseApp();
   // TODO: update config to always have a firestore-config obj
   const config = useFirestoreConfig()!;
 
-  firestore.settings({
-    host: config.hostAndPort,
-    ssl: false,
-  });
+  useEffect(() => {
+    preloadFirestore({
+      firebaseApp,
+      setup: firestore => firestore().useEmulator(config.host, config.port),
+    }).then(() => setConnected(true));
+  }, [firebaseApp, config]);
 
-  return <>{children}</>;
+  return connected ? <>{children}</> : null;
 });
 
 const FirestoreDevTools: React.FC = React.memo(() => {
@@ -119,7 +130,7 @@ export function useSubCollections(
   docRef: firebase.firestore.DocumentReference
 ) {
   const { baseUrl } = useFirestoreRestApi();
-  const encodedPath = docRef.path; // TODO: Encode each segment
+  const encodedPath = encodePath(docRef.path);
   const url = `${baseUrl}/documents/${encodedPath}:listCollectionIds`;
 
   const { data } = useRequest<{ collectionIds: string[] }>(
@@ -136,6 +147,37 @@ export function useSubCollections(
   return collectionIds.map(id => docRef.collection(id));
 }
 
+const DOCUMENT_PATH_RE = /projects\/(?<project>.*)\/databases\/(?<database>.*)\/documents\/(?<path>.*)/;
+
+export function useMissingDocuments(
+  collection: firebase.firestore.CollectionReference
+): MissingDocument[] {
+  const { baseUrl } = useFirestoreRestApi();
+  const encodedPath = encodePath(collection.path);
+  const url = `${baseUrl}/documents/${encodedPath}?mask.fieldPaths=_none_&pageSize=300&showMissing=true`;
+
+  const { data } = useRequest<{
+    documents: { name: string; createTime?: string }[];
+  }>(
+    url,
+    {
+      method: 'GET',
+    },
+    {
+      refreshInterval: 10_000,
+    }
+  );
+
+  return (
+    data?.documents
+      ?.filter(d => !d.createTime)
+      .map(d => {
+        const [, , , path] = DOCUMENT_PATH_RE.exec(d.name);
+        return { path };
+      }) || []
+  );
+}
+
 export function useEjector() {
   const { baseEmulatorUrl } = useFirestoreRestApi();
   const url = `${baseEmulatorUrl}/documents`;
@@ -148,4 +190,11 @@ export function useEjector() {
     mutate('*');
     return await fetcher(url);
   };
+}
+
+function encodePath(path: string): string {
+  return path
+    .split('/')
+    .map(uri => encodeURIComponent(uri))
+    .join('/');
 }

@@ -21,9 +21,10 @@ import { Icon } from '@rmwc/icon';
 import { IconButton } from '@rmwc/icon-button';
 import { List, ListItem } from '@rmwc/list';
 import { MenuSurface, MenuSurfaceAnchor } from '@rmwc/menu';
-import { firestore } from 'firebase';
+import firebase from 'firebase';
+import get from 'lodash.get';
 import React, { useState } from 'react';
-import { NavLink, Route, useHistory, useRouteMatch } from 'react-router-dom';
+import { Route, useHistory, useRouteMatch } from 'react-router-dom';
 import { useFirestoreCollection } from 'reactfire';
 
 import { CopyButton } from '../common/CopyButton';
@@ -35,8 +36,11 @@ import {
   AddDocumentDialogValue,
 } from './dialogs/AddDocumentDialog';
 import { Document } from './Document';
+import DocumentListItem from './DocumentListItem';
+import { useMissingDocuments } from './FirestoreEmulatedApiProvider';
 import {
   CollectionFilter as CollectionFilterType,
+  MissingDocument,
   isMultiValueCollectionFilter,
   isSingleValueCollectionFilter,
   isSortableCollectionFilter,
@@ -45,10 +49,12 @@ import PanelHeader from './PanelHeader';
 import { useCollectionFilter } from './store';
 import { useAutoSelect } from './useAutoSelect';
 
-const NO_DOCS: firestore.QueryDocumentSnapshot<firestore.DocumentData>[] = [];
+const NO_DOCS: firebase.firestore.QueryDocumentSnapshot<
+  firebase.firestore.DocumentData
+>[] = [];
 
 export interface Props {
-  collection: firestore.CollectionReference;
+  collection: firebase.firestore.CollectionReference;
 }
 
 export function withCollectionState(
@@ -63,19 +69,18 @@ export function withCollectionState(
     );
     const collectionSnapshot = useFirestoreCollection<unknown>(
       filteredCollection,
-
-      // HACK(#387): HOT-FIX: Disable suspending for now by specifying default.
-      // This works around an issue in React legacy mode that causes filters to
-      // be ignored and listeners leaking.
-      // TODO(yuchenshi): remove after switching to blocking / concurrent mode.
-      { startWithValue: { docs: [] } as any }
+      {
+        suspense: true,
+      }
     );
     const history = useHistory();
 
     const { url } = useRouteMatch()!;
-    // TODO: Fetch missing documents (i.e. nonexistent docs with subcollections).
-    const docs = collectionSnapshot.docs.length
-      ? collectionSnapshot.docs
+
+    const missingDocs = useMissingDocuments(collection);
+
+    const docs = collectionSnapshot.data.docs.length
+      ? collectionSnapshot.data.docs
       : NO_DOCS;
     const redirectIfAutoSelectable = useAutoSelect(docs);
 
@@ -87,7 +92,7 @@ export function withCollectionState(
     };
 
     if (newDocumentId) {
-      history.push(`${url}/${newDocumentId}`);
+      history.push(`${url}/${encodeURIComponent(newDocumentId)}`);
       setNewDocumentId('');
       return null;
     }
@@ -102,6 +107,7 @@ export function withCollectionState(
         collectionFilter={collectionFilter}
         addDocument={addDocument}
         docs={docs}
+        missingDocs={missingDocs}
         url={url}
       />
     );
@@ -110,7 +116,9 @@ export function withCollectionState(
 
 // TODO: create a CollectionSkeleton that the loading+loaded state can utilize
 export const CollectionLoading: React.FC<{
-  collection: firestore.CollectionReference<firestore.DocumentData>;
+  collection: firebase.firestore.CollectionReference<
+    firebase.firestore.DocumentData
+  >;
 }> = ({ collection }) => (
   <div className="Firestore-Collection">
     <PanelHeader
@@ -122,10 +130,15 @@ export const CollectionLoading: React.FC<{
 );
 
 interface CollectionPresentationProps {
-  collection: firestore.CollectionReference<firestore.DocumentData>;
+  collection: firebase.firestore.CollectionReference<
+    firebase.firestore.DocumentData
+  >;
   collectionFilter: ReturnType<typeof useCollectionFilter>;
   addDocument: (value: AddDocumentDialogValue | null) => Promise<void>;
-  docs: firestore.QueryDocumentSnapshot<firestore.DocumentData>[];
+  docs: firebase.firestore.QueryDocumentSnapshot<
+    firebase.firestore.DocumentData
+  >[];
+  missingDocs: MissingDocument[];
   url: string;
 }
 
@@ -134,6 +147,7 @@ export const CollectionPresentation: React.FC<CollectionPresentationProps> = ({
   collectionFilter,
   addDocument,
   docs,
+  missingDocs,
   url,
 }) => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -192,24 +206,47 @@ export const CollectionPresentation: React.FC<CollectionPresentationProps> = ({
           ></ListItem>
         </List>
 
-        <List dense className="Firestore-Document-List" tag="div">
+        <List
+          dense
+          className="Firestore-Document-List"
+          tag="div"
+          twoLine={
+            collectionFilter && isSortableCollectionFilter(collectionFilter)
+          }
+        >
           {docs.map(doc => (
-            <ListItem
+            <DocumentListItem
               key={doc.ref.id}
-              className="Firestore-List-Item"
-              tag={NavLink}
-              to={`${url}/${doc.ref.id}`}
-              activeClassName="mdc-list-item--activated"
-            >
-              {doc.ref.id}
-            </ListItem>
+              url={url}
+              docId={doc.ref.id}
+              queryFieldValue={
+                collectionFilter && isSortableCollectionFilter(collectionFilter)
+                  ? get(doc.data(), collectionFilter.field)
+                  : undefined
+              }
+            />
           ))}
+
+          {missingDocs.map((doc: { path: string }) => {
+            const id = doc.path.replace(collection.path, '').split('/')[1];
+
+            return (
+              <DocumentListItem
+                missing
+                key={id}
+                url={url}
+                docId={id}
+                queryFieldValue={undefined}
+              />
+            );
+          })}
         </List>
       </div>
       <Route
         path={`${url}/:id`}
         render={({ match }: any) => {
-          const docRef = collection.doc(match.params.id);
+          const docId = decodeURIComponent(match.params.id);
+          const docRef = collection.doc(docId);
           return <Document reference={docRef} />;
         }}
       ></Route>
@@ -218,9 +255,9 @@ export const CollectionPresentation: React.FC<CollectionPresentationProps> = ({
 };
 
 function applyCollectionFilter(
-  collection: firestore.Query<firestore.DocumentData>,
+  collection: firebase.firestore.Query<firebase.firestore.DocumentData>,
   collectionFilter?: CollectionFilterType
-): firestore.Query<firestore.DocumentData> {
+): firebase.firestore.Query<firebase.firestore.DocumentData> {
   let filteredCollection = collection;
   if (collectionFilter && isSingleValueCollectionFilter(collectionFilter)) {
     filteredCollection = filteredCollection.where(

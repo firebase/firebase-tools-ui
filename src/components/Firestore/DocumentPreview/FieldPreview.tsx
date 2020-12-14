@@ -21,18 +21,20 @@ import { IconButton } from '@rmwc/icon-button';
 import { ListItem, ListItemMeta } from '@rmwc/list';
 import { Theme } from '@rmwc/theme';
 import classnames from 'classnames';
-import { firestore } from 'firebase';
+import firebase from 'firebase';
 import React, { useState } from 'react';
 
 import { supportsEditing } from '../DocumentEditor';
-import { FieldType, FirestoreAny, FirestoreArray } from '../models';
+import { FirestoreArray } from '../models';
 import {
+  compareFirestoreKeys,
   getFieldType,
   getParentPath,
   isArray,
   isMap,
   isPrimitive,
   lastFieldName,
+  summarize,
 } from '../utils';
 import { deleteField, updateField } from './api';
 import InlineEditor from './InlineEditor';
@@ -40,7 +42,7 @@ import { useDocumentState, useFieldState } from './store';
 
 const FieldPreview: React.FC<{
   path: string[];
-  documentRef: firestore.DocumentReference;
+  documentRef: firebase.firestore.DocumentReference;
   maxSummaryLen: number;
 }> = ({ path, documentRef, maxSummaryLen }) => {
   const documentData = useDocumentState();
@@ -53,17 +55,19 @@ const FieldPreview: React.FC<{
   let childFields = null;
   if (isMap(state)) {
     // Inline editor for new field will default to key: ''
-    childFields = Object.keys(state).map(childLeaf => {
-      const childPath = [...path, childLeaf];
-      return (
-        <FieldPreview
-          key={childLeaf}
-          path={childPath}
-          documentRef={documentRef}
-          maxSummaryLen={maxSummaryLen}
-        />
-      );
-    });
+    childFields = Object.keys(state)
+      .sort(compareFirestoreKeys)
+      .map(childLeaf => {
+        const childPath = [...path, childLeaf];
+        return (
+          <FieldPreview
+            key={childLeaf}
+            path={childPath}
+            documentRef={documentRef}
+            maxSummaryLen={maxSummaryLen}
+          />
+        );
+      });
   } else if (isArray(state)) {
     // Inline editor for new field will default to key: '{index}'
     childFields = state.map((value, index) => {
@@ -209,78 +213,5 @@ const FieldPreview: React.FC<{
     </>
   );
 };
-
-// Give a brief text summary of the data.
-// Note: maxLen is soft (at least for now). End result may still be longer.
-function summarize(data: FirestoreAny, maxLen: number): string {
-  switch (getFieldType(data)) {
-    case FieldType.ARRAY:
-      return summarizeArray(data as FirestoreAny[], maxLen);
-    case FieldType.MAP:
-      return summarizeMap(data as Record<string, FirestoreAny>, maxLen);
-    case FieldType.BLOB:
-      const base64 = (data as firestore.Blob).toBase64();
-      if (base64.length < maxLen) return base64;
-      else return base64.substr(0, maxLen) + '...';
-    case FieldType.BOOLEAN:
-      return (data as boolean).toString();
-    case FieldType.GEOPOINT:
-      const value = data as firestore.GeoPoint;
-      return `[${latStr(value.latitude)}, ${longStr(value.longitude)}]`;
-    case FieldType.NULL:
-      return 'null';
-    case FieldType.NUMBER:
-      return (data as number).toString();
-    case FieldType.REFERENCE:
-      return (data as firestore.DocumentReference).path;
-    case FieldType.STRING:
-      return `"${data as string}"`;
-    case FieldType.TIMESTAMP:
-      // TODO: Better date time formatting.
-      // Note: Not using toLocaleString() since it does not stringify timezone.
-      return (data as firestore.Timestamp).toDate().toString();
-    case FieldType.JSON:
-      throw new Error('JSON field type is input only');
-  }
-}
-
-function summarizeArray(array: FirestoreAny[], maxLen: number): string {
-  let output = '[';
-  for (const element of array) {
-    if (output.length > 1) output += ', ';
-    if (output.length > maxLen) {
-      output += '...';
-      break;
-    }
-    output += summarize(element, maxLen - output.length);
-  }
-  output += ']';
-  return output;
-}
-
-function summarizeMap(
-  map: Record<string, FirestoreAny>,
-  maxLen: number
-): string {
-  let output = '{';
-  for (const [key, value] of Object.entries(map)) {
-    if (output.length > 1) output += ', ';
-    if (output.length > maxLen) {
-      output += '...';
-      break;
-    }
-    output += `${key}: ${summarize(value, maxLen - output.length)}`;
-  }
-  output += '}';
-  return output;
-}
-
-function latStr(lat: number): string {
-  return `${Math.abs(lat)}° ${lat >= 0 ? 'N' : 'S'}`;
-}
-
-function longStr(long: number): string {
-  return `${Math.abs(long)}° ${long >= 0 ? 'E' : 'W'}`;
-}
 
 export default FieldPreview;

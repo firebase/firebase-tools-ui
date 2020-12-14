@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { firestore } from 'firebase';
+import firebase from 'firebase';
 import React, { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
@@ -33,8 +33,8 @@ function dateToLocale(date: Date): string {
 
 // TODO: update to a date-picker that potentially supports time-zones
 const TimestampEditor: React.FC<{
-  value: firestore.Timestamp;
-  onChange: (value: firestore.Timestamp) => void;
+  value: firebase.firestore.Timestamp;
+  onChange: (value: firebase.firestore.Timestamp) => void;
   name: string;
 }> = ({ value, onChange, name }) => {
   const [date, setDate] = useState(value.toDate());
@@ -57,7 +57,7 @@ const TimestampEditor: React.FC<{
 
   useEffect(() => {
     if (value.toMillis() !== date.getTime()) {
-      onChange(firestore.Timestamp.fromDate(date));
+      onChange(firebase.firestore.Timestamp.fromDate(date));
     }
   }, [value, date, onChange]);
 

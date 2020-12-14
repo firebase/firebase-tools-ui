@@ -33,39 +33,36 @@ interface Props {
   outcomeData: OutcomeData | undefined;
 }
 
-const EvaluationDetailsHeader: React.FC<Props> = ({
+const RequestDetailsHeader: React.FC<Props> = ({
   requestTimeComplete,
   requestTimeFromNow,
   requestMethod,
   resourceSubPaths,
   outcomeData,
 }) => (
-  <div className="Firestore-Evaluation-Details-Header">
+  <div className="Firestore-Request-Details-Header">
     <div
-      className="Firestore-Evaluation-Details-Header-Return"
+      className="Firestore-Request-Details-Header-Return"
       title="Go back to Table"
     >
-      <IconButton icon="arrow_back_ios" tag={Link} to="/firestore/rules" />
+      <IconButton icon="arrow_back_ios" tag={Link} to="/firestore/requests" />
     </div>
-    <div className="Firestore-Evaluation-Details-Header-Info">
+    <div className="Firestore-Request-Details-Header-Info">
       <CustomThemeProvider use={outcomeData?.theme || 'note'} wrap>
-        <div
-          className="Firestore-Evaluation-Outcome"
-          title={outcomeData?.label}
-        >
+        <div className="Firestore-Request-Outcome" title={outcomeData?.label}>
           {outcomeData?.icon && (
             <Icon icon={{ icon: outcomeData?.icon, size: 'large' }} />
           )}
         </div>
       </CustomThemeProvider>
-      <div className="Firestore-Evaluation-Method">{requestMethod}</div>
-      <div className="Firestore-Evaluation-Path-Container">
+      <div className="Firestore-Request-Method">{requestMethod}</div>
+      <div className="Firestore-Request-Path-Container">
         {resourceSubPaths?.map((subpath, index) => (
           <React.Fragment key={`${subpath}-${index}`}>
-            <span className="Firestore-Evaluation-Path-Slash"> / </span>
+            <span className="Firestore-Request-Path-Slash"> / </span>
             <span
               title="copy subpath"
-              className="Firestore-Evaluation-Path-Subpath"
+              className="Firestore-Request-Path-Subpath"
               onClick={() => {
                 navigator.clipboard.writeText(subpath);
               }}
@@ -76,11 +73,11 @@ const EvaluationDetailsHeader: React.FC<Props> = ({
           </React.Fragment>
         ))}
       </div>
-      <div className="Firestore-Evaluation-Date" title={requestTimeComplete}>
+      <div className="Firestore-Request-Date" title={requestTimeComplete}>
         {requestTimeFromNow}
       </div>
     </div>
   </div>
 );
 
-export default EvaluationDetailsHeader;
+export default RequestDetailsHeader;

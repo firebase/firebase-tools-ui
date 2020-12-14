@@ -23,7 +23,7 @@ import {
   DialogProps,
   DialogTitle,
 } from '@rmwc/dialog';
-import { firestore } from 'firebase';
+import firebase from 'firebase';
 import React, { useCallback, useEffect, useState } from 'react';
 
 import { Field } from '../../common/Field';
@@ -36,7 +36,7 @@ export interface AddDocumentDialogValue {
 }
 
 export interface AddDocumentStepProps {
-  collectionRef: firestore.CollectionReference;
+  collectionRef: firebase.firestore.CollectionReference;
   onChange: (value: AddDocumentDialogValue) => void;
 }
 
@@ -89,7 +89,7 @@ export const AddDocumentStep: React.FC<AddDocumentStepProps> = ({
 };
 
 interface Props extends DialogProps {
-  collectionRef: firestore.CollectionReference;
+  collectionRef: firebase.firestore.CollectionReference;
   onValue: (v: AddDocumentDialogValue | null) => void;
 }
 

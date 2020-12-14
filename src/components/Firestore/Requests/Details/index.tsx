@@ -22,76 +22,72 @@ import { MapDispatchToPropsFunction, connect } from 'react-redux';
 import { Redirect, useParams } from 'react-router-dom';
 
 import { createStructuredSelector } from '../../../../store';
-import { selectRequestEvaluationById } from '../../../../store/firestoreRules';
-import { getSelectedRequestEvaluation } from '../../../../store/firestoreRules/selectors';
-import { FirestoreRulesEvaluation } from '../rules_evaluation_result_model';
-import { sampleRules } from '../sample-rules';
+import { selectRequestEvaluationById } from '../../../../store/firestoreRequestEvaluations';
+import { getSelectedRequestEvaluation } from '../../../../store/firestoreRequestEvaluations/selectors';
+import { FirestoreRulesEvaluation } from '../../Requests/rules_evaluation_result_model';
+import { sampleRules } from '../../Requests/sample-rules';
 import {
-  useEvaluationInspectionElements,
-  useEvaluationMainInformation,
-} from '../utils';
-import EvaluationDetailsCode from './CodeViewer';
-import EvaluationDetailsHeader from './Header';
-import EvaluationDetailsInspectionSection from './InspectionSection';
+  useRequestInspectionElements,
+  useRequestMainInformation,
+} from '../../Requests/utils';
+import RequestDetailsCode from './CodeViewer';
+import RequestDetailsHeader from './Header';
+import RequestDetailsInspectionSection from './InspectionSection';
 
 export interface PropsFromState {
-  selectedEvaluation?: FirestoreRulesEvaluation;
+  selectedRequest?: FirestoreRulesEvaluation;
 }
 
 export interface PropsFromDispatch {
-  selectEvaluationById: typeof selectRequestEvaluationById;
+  selectRequestById: typeof selectRequestEvaluationById;
 }
 
 export type Props = PropsFromState & PropsFromDispatch;
 
-const EvaluationDetails: React.FC<Props> = ({
-  selectedEvaluation,
-  selectEvaluationById,
+const RequestDetails: React.FC<Props> = ({
+  selectedRequest,
+  selectRequestById,
 }) => {
-  const { evaluationId } = useParams<{ evaluationId: string }>();
+  const { requestId } = useParams<{ requestId: string }>();
   const [
     requestTimeComplete,
     requestTimeFromNow,
     requestMethod,
     resourceSubPaths,
     outcomeData,
-  ] = useEvaluationMainInformation(selectedEvaluation);
-  const { granularAllowOutcomes } = selectedEvaluation || {};
-  const inspectionElements = useEvaluationInspectionElements(
-    selectedEvaluation
-  );
+  ] = useRequestMainInformation(selectedRequest);
+  const inspectionElements = useRequestInspectionElements(selectedRequest);
+  const { granularAllowOutcomes } = selectedRequest || {};
 
-  const [wasEvaluationSelected, setWasEvaluationSelected] = useState<Boolean>(
-    false
-  );
+  const [wasRequestSelected, setWasRequestSelected] = useState<Boolean>(false);
 
   useEffect(() => {
-    selectEvaluationById(evaluationId);
-    setWasEvaluationSelected(true);
+    selectRequestById(requestId);
+    setWasRequestSelected(true);
     return () => {
-      selectEvaluationById(null);
+      selectRequestById(null);
     };
-  }, [selectEvaluationById, evaluationId]);
+  }, [selectRequestById, requestId]);
 
-  if (wasEvaluationSelected && !selectedEvaluation) {
-    return <Redirect to="/firestore/rules" />;
+  if (wasRequestSelected && !selectedRequest) {
+    return <Redirect to="/firestore/requests" />;
   }
 
   return (
     <>
-      <EvaluationDetailsHeader
+      <RequestDetailsHeader
         requestTimeComplete={requestTimeComplete}
         requestTimeFromNow={requestTimeFromNow}
         requestMethod={requestMethod}
         resourceSubPaths={resourceSubPaths}
         outcomeData={outcomeData}
       />
-      <div className="Firestore-Evaluation-Details-Content">
-        <EvaluationDetailsCode
+      <div className="Firestore-Request-Details-Content">
+        <RequestDetailsCode
           linesOutcome={granularAllowOutcomes}
           firestoreRules={sampleRules}
         />
-        <EvaluationDetailsInspectionSection
+        <RequestDetailsInspectionSection
           inspectionElements={inspectionElements}
         />
       </div>
@@ -100,14 +96,14 @@ const EvaluationDetails: React.FC<Props> = ({
 };
 
 export const mapStateToProps = createStructuredSelector({
-  selectedEvaluation: getSelectedRequestEvaluation,
+  selectedRequest: getSelectedRequestEvaluation,
 });
 export const mapDispatchToProps: MapDispatchToPropsFunction<
   PropsFromDispatch,
   {}
 > = dispatch => ({
-  selectEvaluationById: (selectedEvaluationId: string | null) =>
-    dispatch(selectRequestEvaluationById(selectedEvaluationId)),
+  selectRequestById: (selectedRequestId: string | null) =>
+    dispatch(selectRequestEvaluationById(selectedRequestId)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(EvaluationDetails);
+export default connect(mapStateToProps, mapDispatchToProps)(RequestDetails);

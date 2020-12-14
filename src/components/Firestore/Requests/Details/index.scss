@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-.Firestore-Evaluation-Details-Header {
+.Firestore-Request-Details-Header {
   border-radius: 8px 8px 0 0;
   width: 100%;
   box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12) inset;
@@ -25,14 +25,14 @@
   justify-content: space-between;
   align-items: center;
 }
-.Firestore-Evaluation-Details-Header-Return {
+.Firestore-Request-Details-Header-Return {
   min-width: 64px;
   box-shadow: -1px 0 0 rgba(0, 0, 0, 0.12) inset;
   // flex
   display: flex;
   justify-content: center;
 }
-.Firestore-Evaluation-Details-Header-Info {
+.Firestore-Request-Details-Header-Info {
   width: calc(100% - 64px);
   height: 100%;
   padding: 0 12px;
@@ -42,16 +42,16 @@
   justify-content: flex-start;
   align-items: center;
 
-  .Firestore-Evaluation-Outcome {
+  .Firestore-Request-Outcome {
     width: 5%;
     margin-right: 15px;
   }
-  .Firestore-Evaluation-Method {
+  .Firestore-Request-Method {
     width: 10%;
     margin-right: 10px;
     text-align: center;
   }
-  .Firestore-Evaluation-Path-Container {
+  .Firestore-Request-Path-Container {
     width: 65%;
     // flex
     display: flex;
@@ -59,13 +59,13 @@
     align-items: center;
     flex-wrap: wrap;
   }
-  .Firestore-Evaluation-Date {
+  .Firestore-Request-Date {
     width: 20%;
     text-align: right;
   }
 }
 
-.Firestore-Evaluation-Details-Content {
+.Firestore-Request-Details-Content {
   width: 100%;
   // flex
   display: flex;
@@ -82,7 +82,7 @@
   }
 }
 
-.Firestore-Evaluation-Details-Code {
+.Firestore-Request-Details-Code {
   // overflow
   width: 75%;
   position: absolute;
@@ -143,7 +143,7 @@
   }
 }
 
-.Firestore-Evaluation-Details-Inspection {
+.Firestore-Request-Details-Inspection {
   box-shadow: 1px 0 0 rgba(0, 0, 0, 0.12) inset;
   // overflow
   width: 25%;
@@ -155,7 +155,7 @@
   overflow: scroll;
 }
 
-.Firestore-Evaluation-Details-Inspection-Element {
+.Firestore-Request-Details-Inspection-Element {
   background-color: var(--mdc-theme-surface);
   box-shadow: 1px -1px 0 rgba(0, 0, 0, 0.12) inset;
   padding: 10px;
@@ -165,13 +165,13 @@
   justify-content: space-between;
   align-items: center;
 }
-.Firestore-Evaluation-Details-Inspection-Element.Firestore-Evaluation-Details-Inspection-Element--Main {
+.Firestore-Request-Details-Inspection-Element.Firestore-Request-Details-Inspection-Element--Main {
   background-color: var(--mdc-theme-hover);
   font-weight: 500;
   padding: 5px 10px;
   font-size: 13px;
 }
-.Firestore-Evaluation-Details-Inspection-Element-Label {
+.Firestore-Request-Details-Inspection-Element-Label {
   width: 100%;
   font-size: 14px;
   // truncate text
@@ -179,14 +179,14 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.Firestore-Evaluation-Details-Inspection-Element-Value {
+.Firestore-Request-Details-Inspection-Element-Value {
   padding: 10px;
   box-shadow: 1px -1px 0 rgba(0, 0, 0, 0.12) inset;
   overflow: scroll;
   font-size: 14px;
   white-space: pre;
 }
-.Firestore-Evaluation-Details-Inspection-Action {
+.Firestore-Request-Details-Inspection-Action {
   padding: 10px;
   // flex
   display: flex;
