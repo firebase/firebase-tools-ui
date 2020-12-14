@@ -23,6 +23,7 @@ import { connect } from 'react-redux';
 
 import { createStructuredSelector } from '../../../../store';
 import { getAllRequestEvaluations } from '../../../../store/firestoreRequestEvaluations/selectors';
+import CopyPathNotification from '../CopyPathNotification';
 import { FirestoreRulesEvaluation } from '../rules_evaluation_result_model';
 import RequestsTableRow from './TableRow';
 
@@ -62,11 +63,9 @@ const RequestsTable: React.FC<Props> = ({ requests }) => {
           })}
         </tbody>
       </table>
-      <Snackbar
-        open={showCopyNotification}
-        onClose={(evt: SnackbarOnCloseEventT) => setShowCopyNotification(false)}
-        message="Path copied to clipboard"
-        icon={{ icon: 'check_circle', size: 'medium' }}
+      <CopyPathNotification
+        showCopyNotification={showCopyNotification}
+        setShowCopyNotification={setShowCopyNotification}
       />
     </>
   );

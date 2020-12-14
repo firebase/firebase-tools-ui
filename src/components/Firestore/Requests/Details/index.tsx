@@ -17,7 +17,6 @@
 import '../index.scss';
 import './index.scss';
 
-import { Snackbar, SnackbarOnCloseEventT } from '@rmwc/snackbar';
 import React, { useEffect, useState } from 'react';
 import { MapDispatchToPropsFunction, connect } from 'react-redux';
 import { Redirect, useParams } from 'react-router-dom';
@@ -31,6 +30,7 @@ import {
   useRequestInspectionElements,
   useRequestMainInformation,
 } from '../../Requests/utils';
+import CopyPathNotification from '../CopyPathNotification';
 import RequestDetailsCode from './CodeViewer';
 import RequestDetailsHeader from './Header';
 import RequestDetailsInspectionSection from './InspectionSection';
@@ -96,11 +96,9 @@ const RequestDetails: React.FC<Props> = ({
           inspectionElements={inspectionElements}
         />
       </div>
-      <Snackbar
-        open={showCopyNotification}
-        onClose={(evt: SnackbarOnCloseEventT) => setShowCopyNotification(false)}
-        message="Path copied to clipboard"
-        icon={{ icon: 'check_circle', size: 'medium' }}
+      <CopyPathNotification
+        showCopyNotification={showCopyNotification}
+        setShowCopyNotification={setShowCopyNotification}
       />
     </>
   );
