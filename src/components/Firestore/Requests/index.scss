@@ -18,10 +18,10 @@
   color: var(--mdc-theme-primary);
   font-weight: 500;
   // center
-  a,
   i {
     display: block;
     margin: 0 auto;
+    text-align: center;
   }
 }
 .Firestore-Request-Method {
@@ -33,26 +33,33 @@
   font-weight: 100;
   font-size: 13px;
 }
-.Firestore-Request-Path-Slash {
-  font-size: 17px;
-  font-weight: 900;
-}
-.Firestore-Request-Path-Subpath {
+.Firestore-Request-Path {
   font-size: 14px;
-  padding: 3px;
-  margin: 1px;
-  border-radius: 4px;
-  background: lightblue;
   max-width: 100%;
-  // animation
-  cursor: pointer;
-  transition: all 0.05s;
-  display: inline-block;
   &:hover {
-    transform: scale(1.01);
+    .Firestore-Request-Path-Container button {
+      display: block;
+    }
   }
-  // truncate text
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+
+  .Firestore-Request-Path-Container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    & > div {
+      // truncate text
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    button {
+      display: none;
+      transition: color 0.2s;
+      color: rgb(0 0 0 / 54%);
+      &:hover {
+        color: black;
+      }
+    }
+  }
 }

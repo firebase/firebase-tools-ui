@@ -51,13 +51,12 @@
     margin-right: 10px;
     text-align: center;
   }
-  .Firestore-Request-Path-Container {
+  .Firestore-Request-Path {
     width: 65%;
-    // flex
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    flex-wrap: wrap;
+
+    .Firestore-Request-Path-Container button {
+      display: block;
+    }
   }
   .Firestore-Request-Date {
     width: 20%;

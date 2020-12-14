@@ -24,7 +24,8 @@
   td,
   th {
     text-align: left;
-    padding: 5px;
+    padding: 0 10px;
+    height: 54px;
   }
   th {
     font-weight: 500;
@@ -43,8 +44,11 @@
     background-color: white;
     box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12) inset;
 
+    cursor: pointer;
+    transition: all 0.1s;
     &:hover {
       background-color: var(--mdc-theme-hover);
+      // background-color: rgba(0, 0, 0, 0.04);
     }
   }
 
@@ -57,16 +61,8 @@
     width: 10%;
   }
   .Firestore-Requests-Table-Path-Header,
-  .Firestore-Request-Path-Container {
+  .Firestore-Request-Path {
     width: 55%;
-  }
-
-  .Firestore-Requests-Table-SubPaths-Container {
-    // flex
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    flex-wrap: wrap;
   }
 
   // handle overflow scroll

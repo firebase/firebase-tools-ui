@@ -17,7 +17,8 @@
 import '../index.scss';
 import './index.scss';
 
-import React from 'react';
+import { Snackbar, SnackbarOnCloseEventT } from '@rmwc/snackbar';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 
 import { createStructuredSelector } from '../../../../store';
@@ -31,30 +32,45 @@ export interface PropsFromState {
 
 export type Props = PropsFromState;
 
-const RequestsTable: React.FC<Props> = ({ requests }) => (
-  <table className="Firestore-Requests-Table">
-    <thead>
-      <tr>
-        <th className="Firestore-Requests-Table-Outcome-Header"></th>
-        <th className="Firestore-Requests-Table-Method-Header">Method</th>
-        <th className="Firestore-Requests-Table-Path-Header">Path</th>
-        <th>Date</th>
-      </tr>
-    </thead>
-    <tbody>
-      {requests?.map((request: FirestoreRulesEvaluation) => {
-        const { requestId } = request;
-        return (
-          <RequestsTableRow
-            key={requestId}
-            requestId={requestId}
-            request={request}
-          />
-        );
-      })}
-    </tbody>
-  </table>
-);
+const RequestsTable: React.FC<Props> = ({ requests }) => {
+  const [showCopyNotification, setShowCopyNotification] = useState<boolean>(
+    false
+  );
+
+  return (
+    <>
+      <table className="Firestore-Requests-Table">
+        <thead>
+          <tr>
+            <th className="Firestore-Requests-Table-Outcome-Header"></th>
+            <th className="Firestore-Requests-Table-Method-Header">Method</th>
+            <th className="Firestore-Requests-Table-Path-Header">Path</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {requests?.map((request: FirestoreRulesEvaluation) => {
+            const { requestId } = request;
+            return (
+              <RequestsTableRow
+                key={requestId}
+                requestId={requestId}
+                request={request}
+                setShowCopyNotification={setShowCopyNotification}
+              />
+            );
+          })}
+        </tbody>
+      </table>
+      <Snackbar
+        open={showCopyNotification}
+        onClose={(evt: SnackbarOnCloseEventT) => setShowCopyNotification(false)}
+        message="Path copied to clipboard"
+        icon={{ icon: 'check_circle', size: 'medium' }}
+      />
+    </>
+  );
+};
 
 export const mapStateToProps = createStructuredSelector({
   requests: getAllRequestEvaluations,

@@ -17,6 +17,7 @@
 import '../index.scss';
 import './index.scss';
 
+import { Snackbar, SnackbarOnCloseEventT } from '@rmwc/snackbar';
 import React, { useEffect, useState } from 'react';
 import { MapDispatchToPropsFunction, connect } from 'react-redux';
 import { Redirect, useParams } from 'react-router-dom';
@@ -53,13 +54,16 @@ const RequestDetails: React.FC<Props> = ({
     requestTimeComplete,
     requestTimeFromNow,
     requestMethod,
-    resourceSubPaths,
+    resourcePath,
     outcomeData,
   ] = useRequestMainInformation(selectedRequest);
   const inspectionElements = useRequestInspectionElements(selectedRequest);
   const { granularAllowOutcomes } = selectedRequest || {};
 
   const [wasRequestSelected, setWasRequestSelected] = useState<Boolean>(false);
+  const [showCopyNotification, setShowCopyNotification] = useState<boolean>(
+    false
+  );
 
   useEffect(() => {
     selectRequestById(requestId);
@@ -79,8 +83,9 @@ const RequestDetails: React.FC<Props> = ({
         requestTimeComplete={requestTimeComplete}
         requestTimeFromNow={requestTimeFromNow}
         requestMethod={requestMethod}
-        resourceSubPaths={resourceSubPaths}
+        resourcePath={resourcePath}
         outcomeData={outcomeData}
+        setShowCopyNotification={setShowCopyNotification}
       />
       <div className="Firestore-Request-Details-Content">
         <RequestDetailsCode
@@ -91,6 +96,12 @@ const RequestDetails: React.FC<Props> = ({
           inspectionElements={inspectionElements}
         />
       </div>
+      <Snackbar
+        open={showCopyNotification}
+        onClose={(evt: SnackbarOnCloseEventT) => setShowCopyNotification(false)}
+        message="Path copied to clipboard"
+        icon={{ icon: 'check_circle', size: 'medium' }}
+      />
     </>
   );
 };

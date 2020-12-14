@@ -25,20 +25,20 @@ import { Link } from 'react-router-dom';
 import { CustomThemeProvider } from '../../../../themes';
 import { OutcomeData } from '../types';
 
-interface Props {
+const RequestDetailsHeader: React.FC<{
   requestTimeComplete: string | undefined;
   requestTimeFromNow: string | undefined;
   requestMethod: string | undefined;
-  resourceSubPaths: string[] | undefined;
+  resourcePath: string | undefined;
   outcomeData: OutcomeData | undefined;
-}
-
-const RequestDetailsHeader: React.FC<Props> = ({
+  setShowCopyNotification: (value: boolean) => void;
+}> = ({
   requestTimeComplete,
   requestTimeFromNow,
   requestMethod,
-  resourceSubPaths,
+  resourcePath,
   outcomeData,
+  setShowCopyNotification,
 }) => (
   <div className="Firestore-Request-Details-Header">
     <div
@@ -56,22 +56,22 @@ const RequestDetailsHeader: React.FC<Props> = ({
         </div>
       </CustomThemeProvider>
       <div className="Firestore-Request-Method">{requestMethod}</div>
-      <div className="Firestore-Request-Path-Container">
-        {resourceSubPaths?.map((subpath, index) => (
-          <React.Fragment key={`${subpath}-${index}`}>
-            <span className="Firestore-Request-Path-Slash"> / </span>
-            <span
-              title="copy subpath"
-              className="Firestore-Request-Path-Subpath"
-              onClick={() => {
-                navigator.clipboard.writeText(subpath);
+      <div className="Firestore-Request-Path" title={resourcePath}>
+        {resourcePath && (
+          <div className="Firestore-Request-Path-Container">
+            <div>{resourcePath}</div>
+            <IconButton
+              icon="content_copy"
+              onClick={(event: React.MouseEvent<HTMLElement>) => {
+                event.preventDefault();
+                event.stopPropagation();
+                navigator.clipboard.writeText(resourcePath.replace(/\s/g, ''));
+                setShowCopyNotification(true);
               }}
-            >
-              {' '}
-              {subpath}{' '}
-            </span>
-          </React.Fragment>
-        ))}
+              title="Copy Path"
+            />
+          </div>
+        )}
       </div>
       <div className="Firestore-Request-Date" title={requestTimeComplete}>
         {requestTimeFromNow}

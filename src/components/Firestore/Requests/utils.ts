@@ -34,10 +34,12 @@ export function useRequestMainInformation(request?: FirestoreRulesEvaluation) {
   const requestTimeFromNow = requestTimeMoment.fromNow();
   const requestMethod = rulesContext?.request?.method;
   // replace root path, split every subpath and remove resulting empty elements
-  const resourceSubPaths = rulesContext?.request?.path
+  const resourcePath = rulesContext?.request?.path
     ?.replace('/databases/(default)/documents', '')
     ?.split('/')
-    ?.filter(i => i);
+    ?.filter(i => i)
+    ?.map(subpath => `/ ${subpath} `)
+    ?.join('');
   const outcomeData: RulesOutcomeData = {
     allow: { theme: 'success', icon: 'check', label: 'ALLOW' },
     deny: { theme: 'warning', icon: 'close', label: 'DENY' },
@@ -48,7 +50,7 @@ export function useRequestMainInformation(request?: FirestoreRulesEvaluation) {
     requestTimeComplete,
     requestTimeFromNow,
     requestMethod,
-    resourceSubPaths,
+    resourcePath,
     outcomeData[outcome],
   ] as const;
 }
