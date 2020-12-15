@@ -37,7 +37,7 @@ export const renderWithFirestore = async (
 ) => {
   const component = render(
     <FirestoreTestProviders path={options.path}>
-      <AsyncFirestore>{children}</AsyncFirestore>
+      <AsyncFirestore r={children}></AsyncFirestore>
     </FirestoreTestProviders>
   );
 
@@ -85,10 +85,8 @@ export const FirestoreTestProviders: React.FC<RenderOptions> = React.memo(
 const ASYNC_FIRESTORE_WRAPPER_TEST_ID = 'AsyncFirestore-wrapper';
 
 const AsyncFirestore: React.FC<{
-  children: (
-    firestore: firebase.firestore.Firestore
-  ) => Promise<React.ReactElement>;
-}> = React.memo(({ children }) => {
+  r: (firestore: firebase.firestore.Firestore) => Promise<React.ReactElement>;
+}> = React.memo(({ r }) => {
   const firestore = useFirestore();
   const [
     firestoreChildren,
@@ -96,8 +94,8 @@ const AsyncFirestore: React.FC<{
   ] = useState<React.ReactElement | null>(null);
 
   useEffect(() => {
-    children(firestore).then((c) => setFirestoreChildren(c));
-  }, [children, firestore, setFirestoreChildren]);
+    r(firestore).then((c) => setFirestoreChildren(c));
+  }, [r, firestore, setFirestoreChildren]);
 
   return firestoreChildren ? (
     <div data-testid={ASYNC_FIRESTORE_WRAPPER_TEST_ID}>{firestoreChildren}</div>
