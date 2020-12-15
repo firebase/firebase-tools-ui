@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { render, waitForElement } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import firebase from 'firebase';
 import React, { Suspense, useEffect, useState } from 'react';
 import { Provider } from 'react-redux';
@@ -41,9 +41,7 @@ export const renderWithFirestore = async (
     </FirestoreTestProviders>
   );
 
-  await waitForElement(() =>
-    component.findByTestId(ASYNC_FIRESTORE_WRAPPER_TEST_ID)
-  );
+  await waitFor(() => component.getByTestId(ASYNC_FIRESTORE_WRAPPER_TEST_ID));
 
   return component;
 };
@@ -98,7 +96,7 @@ const AsyncFirestore: React.FC<{
   ] = useState<React.ReactElement | null>(null);
 
   useEffect(() => {
-    children(firestore).then(c => setFirestoreChildren(c));
+    children(firestore).then((c) => setFirestoreChildren(c));
   }, [children, firestore, setFirestoreChildren]);
 
   return firestoreChildren ? (
