@@ -52,6 +52,20 @@
     }
   }
 
+  tbody tr.Firestore-Requests-Table-Empty-Message {
+    background-color: white;
+    box-shadow: 0 0 0 0 black;
+    height: calc(100vh - 136px - 72px - 56px);
+    border-radius: 0 0 8px 8px;
+
+    &:hover {
+      background-color: white;
+    }
+    td {
+      text-align: center;
+    }
+  }
+
   .Firestore-Requests-Table-Outcome-Header,
   .Firestore-Request-Outcome {
     width: 10%;

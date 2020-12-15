@@ -61,6 +61,13 @@ const RequestsTable: React.FC<Props> = ({ requests }) => {
               />
             );
           })}
+          {!requests?.length && (
+            <tr className="Firestore-Requests-Table-Empty-Message">
+              <td>
+                <div> No Firestore Requests for this project yet </div>
+              </td>
+            </tr>
+          )}
         </tbody>
       </table>
       <CopyPathNotification
