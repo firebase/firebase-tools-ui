@@ -14,10 +14,6 @@
  * limitations under the License.
  */
 
-import '../index.scss';
-import './index.scss';
-
-import { Snackbar, SnackbarOnCloseEventT } from '@rmwc/snackbar';
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 
@@ -25,51 +21,27 @@ import { createStructuredSelector } from '../../../../store';
 import { getAllRequestEvaluations } from '../../../../store/firestoreRequestEvaluations/selectors';
 import CopyPathNotification from '../CopyPathNotification';
 import { FirestoreRulesEvaluation } from '../rules_evaluation_result_model';
-import RequestsTableRow from './TableRow';
+import RequestsTable from './RequestsTable';
 
 export interface PropsFromState {
   requests: FirestoreRulesEvaluation[] | undefined;
 }
-
 export type Props = PropsFromState;
 
-const RequestsTable: React.FC<Props> = ({ requests }) => {
+const RequestsTableIndex: React.FC<Props> = ({ requests }) => {
   const [showCopyNotification, setShowCopyNotification] = useState<boolean>(
     false
   );
+  const hasRequests = !!requests?.length;
 
   return (
     <>
-      <table className="Firestore-Requests-Table">
-        <thead>
-          <tr>
-            <th className="Firestore-Requests-Table-Outcome-Header"></th>
-            <th className="Firestore-Requests-Table-Method-Header">Method</th>
-            <th className="Firestore-Requests-Table-Path-Header">Path</th>
-            <th>Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          {requests?.map((request: FirestoreRulesEvaluation) => {
-            const { requestId } = request;
-            return (
-              <RequestsTableRow
-                key={requestId}
-                requestId={requestId}
-                request={request}
-                setShowCopyNotification={setShowCopyNotification}
-              />
-            );
-          })}
-          {!requests?.length && (
-            <tr className="Firestore-Requests-Table-Empty-Message">
-              <td>
-                <div> No Firestore Requests for this project yet </div>
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+      <RequestsTable
+        filteredRequests={requests}
+        shouldShowTable={hasRequests}
+        shouldShowZeroState={!hasRequests}
+        setShowCopyNotification={setShowCopyNotification}
+      />
       <CopyPathNotification
         showCopyNotification={showCopyNotification}
         setShowCopyNotification={setShowCopyNotification}
@@ -82,4 +54,4 @@ export const mapStateToProps = createStructuredSelector({
   requests: getAllRequestEvaluations,
 });
 
-export default connect(mapStateToProps)(RequestsTable);
+export default connect(mapStateToProps)(RequestsTableIndex);

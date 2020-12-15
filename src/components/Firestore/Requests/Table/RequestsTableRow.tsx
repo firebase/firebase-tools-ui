@@ -17,6 +17,7 @@
 import '../index.scss';
 import './index.scss';
 
+import { DataTableCell, DataTableRow } from '@rmwc/data-table';
 import { Icon } from '@rmwc/icon';
 import { IconButton } from '@rmwc/icon-button';
 import React from 'react';
@@ -41,14 +42,21 @@ const RequestTableRow: React.FC<{
   ] = useRequestMainInformation(request);
 
   return (
-    <tr onClick={() => history.push(`/firestore/requests/${requestId}`)}>
+    <DataTableRow
+      onClick={() => history.push(`/firestore/requests/${requestId}`)}
+    >
       <CustomThemeProvider use={outcomeData?.theme || 'note'} wrap>
-        <td className="Firestore-Request-Outcome" title={outcomeData?.label}>
+        <DataTableCell
+          className="Firestore-Request-Outcome"
+          title={outcomeData?.label}
+        >
           {outcomeData?.icon && <Icon icon={{ icon: outcomeData?.icon }} />}
-        </td>
+        </DataTableCell>
       </CustomThemeProvider>
-      <td className="Firestore-Request-Method">{requestMethod}</td>
-      <td className="Firestore-Request-Path" title={resourcePath}>
+      <DataTableCell className="Firestore-Request-Method">
+        {requestMethod}
+      </DataTableCell>
+      <DataTableCell className="Firestore-Request-Path" title={resourcePath}>
         {resourcePath && (
           <div className="Firestore-Request-Path-Container">
             <div>{resourcePath}</div>
@@ -64,11 +72,14 @@ const RequestTableRow: React.FC<{
             />
           </div>
         )}
-      </td>
-      <td className="Firestore-Request-Date" title={requestTimeComplete}>
+      </DataTableCell>
+      <DataTableCell
+        className="Firestore-Request-Date"
+        title={requestTimeComplete}
+      >
         {requestTimeFromNow}
-      </td>
-    </tr>
+      </DataTableCell>
+    </DataTableRow>
   );
 };
 

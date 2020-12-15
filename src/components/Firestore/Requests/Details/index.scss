@@ -54,8 +54,12 @@
   .Firestore-Request-Path {
     width: 65%;
 
-    .Firestore-Request-Path-Container button {
-      display: block;
+    .Firestore-Request-Path-Container {
+      justify-content: flex-start;
+
+      button {
+        display: block;
+      }
     }
   }
   .Firestore-Request-Date {

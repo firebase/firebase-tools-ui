@@ -14,74 +14,55 @@
  * limitations under the License.
  */
 
-.Firestore-Requests-Table {
-  border-collapse: collapse;
-  width: 100%;
+// Double selector - for higher specificity to Override rmwc styles.
+.Firestore-Requests-Table.Firestore-Requests-Table {
   border-radius: 8px;
-  position: relative;
-  table-layout: fixed;
-
+  // Avoid double borders.
+  margin: -1px;
   td,
   th {
-    text-align: left;
-    padding: 0 10px;
+    padding: 0 8px;
     height: 54px;
   }
-  th {
-    font-weight: 500;
-    font-size: 14px;
-    background-color: var(--mdc-theme-surface);
-    box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12) inset;
-    padding: 20px 5px;
+  thead {
+    background-color: white;
   }
-  th:first-of-type {
-    border-top-left-radius: 8px;
-  }
-  th:last-of-type {
-    border-top-right-radius: 8px;
-  }
+
+  // handle clickable rows
   tbody tr {
-    background-color: white;
-    box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12) inset;
-
     cursor: pointer;
-    transition: all 0.1s;
-    &:hover {
-      background-color: var(--mdc-theme-hover);
-      // background-color: rgba(0, 0, 0, 0.04);
+
+    &:last-of-type {
+      // border at bottom
+      box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12) inset;
     }
   }
 
-  tbody tr.Firestore-Requests-Table-Empty-Message {
-    background-color: white;
-    box-shadow: 0 0 0 0 black;
-    height: calc(100vh - 136px - 72px - 56px);
-    border-radius: 0 0 8px 8px;
-
-    &:hover {
-      background-color: white;
-    }
-    td {
-      text-align: center;
-    }
-  }
-
+  // handle widths
   .Firestore-Requests-Table-Outcome-Header,
   .Firestore-Request-Outcome {
     width: 10%;
   }
   .Firestore-Requests-Table-Method-Header,
   .Firestore-Request-Method {
-    width: 10%;
+    width: 81px;
+    @media screen and (max-width: 650px) {
+      padding-right: 0px;
+      width: 60px;
+    }
   }
   .Firestore-Requests-Table-Path-Header,
   .Firestore-Request-Path {
     width: 55%;
+    @media screen and (max-width: 650px) {
+      width: 45%;
+    }
   }
 
   // handle overflow scroll
   thead,
   tbody tr {
+    // this styles format are required in order to apply overflow for scrolling
     display: table;
     table-layout: fixed;
     width: 100%;
@@ -89,13 +70,30 @@
   tbody {
     display: block;
     overflow: auto;
+    background-color: white;
     // border-radius on bottom left and bottom right
     border-radius: 0 0 8px 8px;
     // min-height is the whole view height minus height of external components
-    max-height: calc(100vh - 136px - 72px - 56px);
+    height: calc(100vh - 136px - 72px - 56px);
 
+    // this media query is needed to avoid weird behavior on small-height devices
     @media screen and (max-height: 535px) {
-      min-height: calc(328px - 56px);
+      height: calc(328px - 56px);
     }
   }
+}
+
+// handle Zero State
+.Firestore-Requests-Table.Firestore-Requests-Table.Firestore-Requests-Table--Empty {
+  border-radius: 8px 8px 0 0;
+
+  tbody {
+    height: 0px;
+  }
+}
+.Firestore-Requests-Table-Zero-State {
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
