@@ -30,7 +30,6 @@ import RequestsTable from './Table';
 export interface PropsFromDispatch {
   addRequest: typeof addRequestEvaluation;
 }
-
 export type Props = PropsFromDispatch;
 
 const Requests: React.FC<Props> = ({ addRequest }) => {

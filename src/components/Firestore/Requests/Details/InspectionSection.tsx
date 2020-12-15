@@ -16,64 +16,13 @@
 
 import '../index.scss';
 
-import { Button } from '@rmwc/button';
-import { Icon } from '@rmwc/icon';
-import React, { useState } from 'react';
+import React from 'react';
 
 import { InspectionElement } from '../types';
+import InspectionAction from './InspectionAction';
+import InspectionBlock from './InspectionBlock';
 
-export const InspectionAction: React.FC<{
-  label: string;
-  onClick: () => void;
-}> = ({ label, onClick }) => (
-  <Button unelevated onClick={onClick}>
-    {label}
-  </Button>
-);
-
-export const InspectionBlock: React.FC<{
-  label: string;
-  value?: string;
-  isMainBlock?: boolean;
-}> = ({ label, value, isMainBlock, children }) => {
-  const [isExpanded, setIsExpanded] = useState<Boolean>(!!isMainBlock);
-  const elementClass = 'Firestore-Request-Details-Inspection-Element';
-  const mainElementClass = elementClass + '--Main';
-
-  function displayContent() {
-    return children ? (
-      children
-    ) : (
-      <div
-        title={value}
-        className="Firestore-Request-Details-Inspection-Element-Value"
-      >
-        {value}
-      </div>
-    );
-  }
-
-  return (
-    <>
-      <div
-        className={`${elementClass} ${isMainBlock && mainElementClass}`}
-        onClick={() => setIsExpanded(!isExpanded)}
-      >
-        <span
-          title={label}
-          className="Firestore-Request-Details-Inspection-Element-Label"
-        >
-          {' '}
-          {label}{' '}
-        </span>
-        <Icon icon={{ icon: `expand_${isExpanded ? 'less' : 'more'}` }} />
-      </div>
-      {isExpanded && displayContent()}
-    </>
-  );
-};
-
-const RequestDetailsInspectionSection: React.FC<{
+const InspectionSection: React.FC<{
   inspectionElements?: InspectionElement[];
 }> = ({ inspectionElements }) => (
   <div className="Firestore-Request-Details-Inspection">
@@ -110,4 +59,4 @@ const RequestDetailsInspectionSection: React.FC<{
   </div>
 );
 
-export default RequestDetailsInspectionSection;
+export default InspectionSection;

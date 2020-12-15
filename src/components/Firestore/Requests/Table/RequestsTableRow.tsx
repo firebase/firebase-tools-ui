@@ -19,11 +19,12 @@ import './index.scss';
 
 import { DataTableCell, DataTableRow } from '@rmwc/data-table';
 import { Icon } from '@rmwc/icon';
-import { IconButton } from '@rmwc/icon-button';
+import { Tooltip } from '@rmwc/tooltip';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { CustomThemeProvider } from '../../../../themes';
+import RequestPath from '../RequestPath';
 import { FirestoreRulesEvaluation } from '../rules_evaluation_result_model';
 import { useRequestMainInformation } from '../utils';
 
@@ -46,39 +47,30 @@ const RequestTableRow: React.FC<{
       onClick={() => history.push(`/firestore/requests/${requestId}`)}
     >
       <CustomThemeProvider use={outcomeData?.theme || 'note'} wrap>
-        <DataTableCell
-          className="Firestore-Request-Outcome"
-          title={outcomeData?.label}
-        >
-          {outcomeData?.icon && <Icon icon={{ icon: outcomeData?.icon }} />}
+        <DataTableCell className="Firestore-Request-Outcome">
+          {outcomeData?.icon && (
+            <Tooltip content={outcomeData?.label} align="top" enterDelay={100}>
+              <Icon icon={{ icon: outcomeData?.icon }} />
+            </Tooltip>
+          )}
         </DataTableCell>
       </CustomThemeProvider>
       <DataTableCell className="Firestore-Request-Method">
         {requestMethod}
       </DataTableCell>
-      <DataTableCell className="Firestore-Request-Path" title={resourcePath}>
+      <DataTableCell className="Firestore-Request-Path">
         {resourcePath && (
-          <div className="Firestore-Request-Path-Container">
-            <div>{resourcePath}</div>
-            <IconButton
-              icon="content_copy"
-              onClick={(event: React.MouseEvent<HTMLElement>) => {
-                event.preventDefault();
-                event.stopPropagation();
-                navigator.clipboard.writeText(resourcePath.replace(/\s/g, ''));
-                setShowCopyNotification(true);
-              }}
-              title="Copy Path"
-            />
-          </div>
+          <RequestPath
+            resourcePath={resourcePath}
+            setShowCopyNotification={setShowCopyNotification}
+          />
         )}
       </DataTableCell>
-      <DataTableCell
-        className="Firestore-Request-Date"
-        title={requestTimeComplete}
-      >
-        {requestTimeFromNow}
-      </DataTableCell>
+      <Tooltip content={requestTimeComplete} align="topLeft" enterDelay={100}>
+        <DataTableCell className="Firestore-Request-Date">
+          {requestTimeFromNow}
+        </DataTableCell>
+      </Tooltip>
     </DataTableRow>
   );
 };

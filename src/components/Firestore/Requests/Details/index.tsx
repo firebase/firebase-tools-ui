@@ -38,11 +38,9 @@ import RequestDetailsInspectionSection from './InspectionSection';
 export interface PropsFromState {
   selectedRequest?: FirestoreRulesEvaluation;
 }
-
 export interface PropsFromDispatch {
   selectRequestById: typeof selectRequestEvaluationById;
 }
-
 export type Props = PropsFromState & PropsFromDispatch;
 
 const RequestDetails: React.FC<Props> = ({

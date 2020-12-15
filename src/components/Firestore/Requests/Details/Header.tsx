@@ -19,10 +19,12 @@ import './index.scss';
 
 import { Icon } from '@rmwc/icon';
 import { IconButton } from '@rmwc/icon-button';
+import { Tooltip } from '@rmwc/tooltip';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { CustomThemeProvider } from '../../../../themes';
+import RequestPath from '../RequestPath';
 import { OutcomeData } from '../types';
 
 const RequestDetailsHeader: React.FC<{
@@ -41,41 +43,33 @@ const RequestDetailsHeader: React.FC<{
   setShowCopyNotification,
 }) => (
   <div className="Firestore-Request-Details-Header">
-    <div
-      className="Firestore-Request-Details-Header-Return"
-      title="Go back to Table"
-    >
-      <IconButton icon="arrow_back_ios" tag={Link} to="/firestore/requests" />
+    <div className="Firestore-Request-Details-Header-Return">
+      <Tooltip content="Go back to Table" align="bottom" enterDelay={100}>
+        <IconButton icon="arrow_back_ios" tag={Link} to="/firestore/requests" />
+      </Tooltip>
     </div>
     <div className="Firestore-Request-Details-Header-Info">
       <CustomThemeProvider use={outcomeData?.theme || 'note'} wrap>
-        <div className="Firestore-Request-Outcome" title={outcomeData?.label}>
+        <div className="Firestore-Request-Outcome">
           {outcomeData?.icon && (
-            <Icon icon={{ icon: outcomeData?.icon, size: 'large' }} />
+            <Tooltip content={outcomeData?.label} align="top" enterDelay={100}>
+              <Icon icon={{ icon: outcomeData?.icon, size: 'large' }} />
+            </Tooltip>
           )}
         </div>
       </CustomThemeProvider>
       <div className="Firestore-Request-Method">{requestMethod}</div>
-      <div className="Firestore-Request-Path" title={resourcePath}>
+      <div className="Firestore-Request-Path">
         {resourcePath && (
-          <div className="Firestore-Request-Path-Container">
-            <div>{resourcePath}</div>
-            <IconButton
-              icon="content_copy"
-              onClick={(event: React.MouseEvent<HTMLElement>) => {
-                event.preventDefault();
-                event.stopPropagation();
-                navigator.clipboard.writeText(resourcePath.replace(/\s/g, ''));
-                setShowCopyNotification(true);
-              }}
-              title="Copy Path"
-            />
-          </div>
+          <RequestPath
+            resourcePath={resourcePath}
+            setShowCopyNotification={setShowCopyNotification}
+          />
         )}
       </div>
-      <div className="Firestore-Request-Date" title={requestTimeComplete}>
-        {requestTimeFromNow}
-      </div>
+      <Tooltip content={requestTimeComplete} enterDelay={100}>
+        <div className="Firestore-Request-Date">{requestTimeFromNow}</div>
+      </Tooltip>
     </div>
   </div>
 );
