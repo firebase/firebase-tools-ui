@@ -14,21 +14,20 @@
  * limitations under the License.
  */
 
-import './CodeViewerZeroState.scss';
-
-import { Icon } from '@rmwc/icon';
-import { Typography } from '@rmwc/typography';
-import React from 'react';
-
-const CodeViewerZeroState: React.FC = () => {
-  return (
-    <div className="Firestore-Requests-Details-Code-Zero-State">
-      <Typography use="body2" theme="textSecondaryOnBackground">
-        Admin requests bypass Firestore rules
-      </Typography>
-      <Icon icon={{ icon: 'vpn_key', size: 'xlarge' }} />
-    </div>
-  );
-};
-
-export default CodeViewerZeroState;
+.Firestore-Requests-Details-Code-Zero-State {
+  height: 100%;
+  background: var(--mdc-theme-surface);
+  // flex behavior
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  // message Typography
+  span {
+    margin-bottom: 20px;
+  }
+  // key Icon
+  i {
+    color: rgba(0, 0, 0, 0.54);
+  }
+}

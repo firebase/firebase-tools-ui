@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import '../index.scss';
+import './InspectionBlock.scss';
 
 import { Icon } from '@rmwc/icon';
 import { Tooltip } from '@rmwc/tooltip';
@@ -26,7 +26,7 @@ export const InspectionBlock: React.FC<{
   isMainBlock?: boolean;
 }> = ({ label, value, isMainBlock, children }) => {
   const [isExpanded, setIsExpanded] = useState<Boolean>(!!isMainBlock);
-  const elementClass = 'Firestore-Request-Details-Inspection-Element';
+  const elementClass = 'Firestore-Request-Details-Inspection-Block';
   const mainElementClass = elementClass + '--Main';
 
   function displayContent() {
@@ -34,7 +34,7 @@ export const InspectionBlock: React.FC<{
       children
     ) : (
       <div
-        className="Firestore-Request-Details-Inspection-Element-Value"
+        className="Firestore-Request-Details-Inspection-Block-Value"
         title={value}
       >
         {value}
@@ -49,7 +49,7 @@ export const InspectionBlock: React.FC<{
         onClick={() => setIsExpanded(!isExpanded)}
       >
         <Tooltip content={label} align="bottomLeft" enterDelay={400}>
-          <span className="Firestore-Request-Details-Inspection-Element-Label">
+          <span className="Firestore-Request-Details-Inspection-Block-Label">
             {' '}
             {label}{' '}
           </span>

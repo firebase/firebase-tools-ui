@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import '../index.scss';
+import './InspectionSection.scss';
 
 import React from 'react';
 
@@ -27,7 +27,7 @@ const InspectionSection: React.FC<{
 }> = ({ inspectionElements }) => (
   <div className="Firestore-Request-Details-Inspection">
     <InspectionBlock isMainBlock label="Actions">
-      <div className="Firestore-Request-Details-Inspection-Action">
+      <div className="Firestore-Request-Details-Inspection-Actions-Container">
         <InspectionAction label="Retrigger Request" onClick={() => {}} />
         <InspectionAction
           label="Archive Request Evaluation"

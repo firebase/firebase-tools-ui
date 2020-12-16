@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import '../index.scss';
-import './index.scss';
+import './RequestsTable.scss';
 
 import {
   DataTable,

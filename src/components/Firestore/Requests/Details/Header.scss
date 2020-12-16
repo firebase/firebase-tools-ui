@@ -1,0 +1,96 @@
+/**
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@import '../index.scss';
+
+.Firestore-Request-Details-Header {
+  border-radius: 8px 8px 0 0;
+  width: 100%;
+  box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12) inset;
+  background-color: var(--mdc-theme-surface);
+  min-height: 56px;
+  // flex behavior
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.Firestore-Request-Details-Header-Return {
+  min-width: 64px;
+  box-shadow: -1px 0 0 rgba(0, 0, 0, 0.12) inset;
+  // flex behavior
+  display: flex;
+  justify-content: center;
+  // mobile styles
+  @media screen and (max-width: 500px) {
+    min-width: 48px;
+  }
+}
+
+.Firestore-Request-Details-Header-Info {
+  width: calc(100% - 64px);
+  height: 100%;
+  padding: 0 12px;
+  position: relative;
+  // flex behavior
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  // mobile styles
+  @media screen and (max-width: 500px) {
+    width: calc(100% - 48px);
+    padding: 0 6px;
+  }
+
+  .Firestore-Request-Outcome {
+    width: 5%;
+    margin-right: 15px;
+    // mobile styles
+    @media screen and (max-width: 500px) {
+      // outcome Icon
+      i {
+        font-size: 1.8rem;
+      }
+    }
+  }
+  .Firestore-Request-Method {
+    width: 10%;
+    margin-right: 10px;
+    text-align: center;
+  }
+  .Firestore-Request-Path {
+    width: 65%;
+    // mobile styles
+    @media screen and (max-width: 500px) {
+      width: 55%;
+    }
+    .Firestore-Request-Path-Container {
+      justify-content: flex-start;
+      // copy IconButton
+      button {
+        display: block;
+        // mobile styles
+        @media screen and (max-width: 500px) {
+          padding: 6px;
+        }
+      }
+    }
+  }
+  .Firestore-Request-Date {
+    width: 20%;
+    text-align: right;
+  }
+}

@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import '../index.scss';
-import './index.scss';
+import './Header.scss';
 
 import { Icon } from '@rmwc/icon';
 import { IconButton } from '@rmwc/icon-button';

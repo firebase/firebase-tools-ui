@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import './index.scss';
+import './RequestsZeroState.scss';
 
 import { Typography } from '@rmwc/typography';
 import React from 'react';

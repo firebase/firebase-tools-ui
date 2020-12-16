@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import '../index.scss';
 import './index.scss';
 
 import React, { useEffect, useState } from 'react';

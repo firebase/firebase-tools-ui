@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
+@import '../index.scss';
+
 // Double selector - for higher specificity to Override rmwc styles.
 .Firestore-Requests-Table.Firestore-Requests-Table {
   border-radius: 8px;
-  // Avoid double borders.
+  // avoid double borders.
   margin: -1px;
   td,
   th {
@@ -27,18 +29,22 @@
   thead {
     background-color: white;
   }
+  // this media query is needed to avoid weird behavior on small-height devices
+  @media screen and (max-height: 535px) {
+    height: calc(328px - 56px);
+  }
 
-  // handle clickable rows
+  // clicklable rows styles
   tbody tr {
     cursor: pointer;
-
+    // select last row
     &:last-of-type {
       // border at bottom
       box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12) inset;
     }
   }
 
-  // handle widths
+  // distribute column widths
   .Firestore-Requests-Table-Outcome-Header,
   .Firestore-Request-Outcome {
     width: 10%;
@@ -46,6 +52,7 @@
   .Firestore-Requests-Table-Method-Header,
   .Firestore-Request-Method {
     width: 81px;
+    // mobile styles
     @media screen and (max-width: 650px) {
       padding-right: 0px;
       width: 60px;
@@ -54,12 +61,13 @@
   .Firestore-Requests-Table-Path-Header,
   .Firestore-Request-Path {
     width: 55%;
+    // mobile styles
     @media screen and (max-width: 650px) {
       width: 45%;
     }
   }
 
-  // handle overflow scroll
+  // fix body height and ensure body content scrollable behavior
   thead,
   tbody tr {
     // this styles format are required in order to apply overflow for scrolling
@@ -75,25 +83,13 @@
     border-radius: 0 0 8px 8px;
     // min-height is the whole view height minus height of external components
     height: calc(100vh - 136px - 72px - 56px);
-
-    // this media query is needed to avoid weird behavior on small-height devices
-    @media screen and (max-height: 535px) {
-      height: calc(328px - 56px);
-    }
   }
 }
 
-// handle Zero State
+// empty Requests Table
 .Firestore-Requests-Table.Firestore-Requests-Table.Firestore-Requests-Table--Empty {
   border-radius: 8px 8px 0 0;
-
   tbody {
     height: 0px;
   }
-}
-.Firestore-Requests-Table-Zero-State {
-  height: 200px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }

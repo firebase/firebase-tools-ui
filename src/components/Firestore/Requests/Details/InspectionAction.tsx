@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import './InspectionAction.scss';
+
 import { Button } from '@rmwc/button';
 import React from 'react';
 
@@ -21,7 +23,11 @@ export const InspectionAction: React.FC<{
   label: string;
   onClick: () => void;
 }> = ({ label, onClick }) => (
-  <Button unelevated onClick={onClick}>
+  <Button
+    unelevated
+    onClick={onClick}
+    className="Firestore-Request-Details-Inspection-Action"
+  >
     {label}
   </Button>
 );

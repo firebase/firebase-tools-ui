@@ -15,9 +15,10 @@
  */
 
 .Firestore-Request-Outcome {
-  color: var(--mdc-theme-primary);
-  // center
+  // outcome Icon
   i {
+    color: var(--mdc-theme-primary);
+    // center
     display: block;
     margin: 0 auto;
     text-align: center;
@@ -36,6 +37,7 @@
   font-size: 14px;
   max-width: 100%;
   &:hover {
+    // display copy IconButton only when path is hovered
     .Firestore-Request-Path-Container button {
       display: block;
     }
@@ -45,13 +47,14 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-
+    // Request path string
     & > div {
       // truncate text
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
+    // copy IconButton
     button {
       display: none;
       transition: color 0.2s;

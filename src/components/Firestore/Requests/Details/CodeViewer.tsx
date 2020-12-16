@@ -17,7 +17,7 @@
 import 'codemirror/keymap/sublime';
 import 'codemirror/theme/xq-light.css';
 
-import '../index.scss';
+import './CodeViewer.scss';
 
 import CodeMirror from '@uiw/react-codemirror';
 import React, { useCallback, useEffect, useState } from 'react';

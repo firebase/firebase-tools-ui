@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import '../index.scss';
-import './index.scss';
+import './RequestsTable.scss';
 
 import { DataTableCell, DataTableRow } from '@rmwc/data-table';
 import { Icon } from '@rmwc/icon';

@@ -1,0 +1,83 @@
+/**
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.Firestore-Request-Details-Code {
+  // overflow behavior
+  width: 75%;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 100%;
+  overflow: scroll;
+  // mobile styles
+  @media screen and (max-width: 500px) {
+    display: none;
+  }
+
+  // hide bodering textarea coming from CodeMirror (visible for a second when loading)
+  & > textarea {
+    display: none;
+  }
+  // CodeMirror styles override
+  .CodeMirror-sizer,
+  .CodeMirror-gutter,
+  .CodeMirror-gutters,
+  .CodeMirror-linenumber.CodeMirror-linenumber {
+    margin-right: 30px;
+  }
+  .CodeMirror-gutter-elt {
+    // outcome Icon
+    & > i {
+      left: 40px;
+      position: absolute;
+      padding: 1px 4px;
+      font-size: 15px;
+    }
+    & > i.deny {
+      // TODO: get this color from a theme variable
+      background-color: rgb(255 82 82 / 25%);
+      color: #d32f2f;
+    }
+    & > i.allow {
+      // TODO: get this color from a theme variable
+      background-color: rgb(0 191 165 / 20%);
+      color: #00796b;
+    }
+    & > i.error {
+      // TODO: get this color from a theme variable
+      background-color: #ff8f003d;
+      color: #ff8f00;
+    }
+  }
+  .CodeMirror-code {
+    // highlight line of code
+    & > div:focus {
+      background-color: var(--mdc-theme-hover);
+    }
+    & > div.deny {
+      // TODO: get this color from a theme variable
+      background-color: rgb(255 82 82 / 25%);
+    }
+    & > div.allow {
+      // TODO: get this color from a theme variable
+      background-color: rgb(0 191 165 / 20%);
+    }
+    & > div.error {
+      // TODO: get this color from a theme variable
+      background-color: #ff8f003d;
+    }
+  }
+}
