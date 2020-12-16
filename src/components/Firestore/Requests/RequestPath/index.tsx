@@ -25,10 +25,10 @@ const RequestPath: React.FC<{
   setShowCopyNotification: (value: boolean) => void;
 }> = ({ resourcePath, setShowCopyNotification }) => (
   <div className="Firestore-Request-Path-Container">
-    <Tooltip content={resourcePath} align="topLeft" enterDelay={400}>
+    <Tooltip content={resourcePath} align="bottomLeft" enterDelay={400}>
       <div>{resourcePath}</div>
     </Tooltip>
-    <Tooltip content="Copy Path" enterDelay={200}>
+    <Tooltip content="Copy Path" align="bottom" enterDelay={200}>
       <IconButton
         icon="content_copy"
         onClick={(event: React.MouseEvent<HTMLElement>) => {

@@ -49,7 +49,11 @@ const RequestTableRow: React.FC<{
       <CustomThemeProvider use={outcomeData?.theme || 'note'} wrap>
         <DataTableCell className="Firestore-Request-Outcome">
           {outcomeData?.icon && (
-            <Tooltip content={outcomeData?.label} align="top" enterDelay={100}>
+            <Tooltip
+              content={outcomeData?.label}
+              align="bottom"
+              enterDelay={100}
+            >
               <Icon icon={{ icon: outcomeData?.icon }} />
             </Tooltip>
           )}
@@ -66,7 +70,11 @@ const RequestTableRow: React.FC<{
           />
         )}
       </DataTableCell>
-      <Tooltip content={requestTimeComplete} align="topLeft" enterDelay={100}>
+      <Tooltip
+        content={requestTimeComplete}
+        align="bottomLeft"
+        enterDelay={300}
+      >
         <DataTableCell className="Firestore-Request-Date">
           {requestTimeFromNow}
         </DataTableCell>

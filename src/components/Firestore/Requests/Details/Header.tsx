@@ -52,7 +52,11 @@ const RequestDetailsHeader: React.FC<{
       <CustomThemeProvider use={outcomeData?.theme || 'note'} wrap>
         <div className="Firestore-Request-Outcome">
           {outcomeData?.icon && (
-            <Tooltip content={outcomeData?.label} align="top" enterDelay={100}>
+            <Tooltip
+              content={outcomeData?.label}
+              align="bottom"
+              enterDelay={100}
+            >
               <Icon icon={{ icon: outcomeData?.icon, size: 'large' }} />
             </Tooltip>
           )}
@@ -67,7 +71,11 @@ const RequestDetailsHeader: React.FC<{
           />
         )}
       </div>
-      <Tooltip content={requestTimeComplete} enterDelay={100}>
+      <Tooltip
+        content={requestTimeComplete}
+        align="bottomRight"
+        enterDelay={300}
+      >
         <div className="Firestore-Request-Date">{requestTimeFromNow}</div>
       </Tooltip>
     </div>
