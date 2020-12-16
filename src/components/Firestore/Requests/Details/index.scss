@@ -31,6 +31,11 @@
   // flex
   display: flex;
   justify-content: center;
+
+  // handle mobile
+  @media screen and (max-width: 500px) {
+    min-width: 48px;
+  }
 }
 .Firestore-Request-Details-Header-Info {
   width: calc(100% - 64px);
@@ -45,6 +50,13 @@
   .Firestore-Request-Outcome {
     width: 5%;
     margin-right: 15px;
+
+    // handle mobile
+    @media screen and (max-width: 500px) {
+      i {
+        font-size: 1.8rem;
+      }
+    }
   }
   .Firestore-Request-Method {
     width: 10%;
@@ -52,19 +64,29 @@
     text-align: center;
   }
   .Firestore-Request-Path {
-    width: 65%;
+    width: 55%;
 
     .Firestore-Request-Path-Container {
       justify-content: flex-start;
 
       button {
         display: block;
+        // handle mobile
+        @media screen and (max-width: 500px) {
+          padding: 6px;
+        }
       }
     }
   }
   .Firestore-Request-Date {
     width: 20%;
     text-align: right;
+  }
+
+  // handle mobile
+  @media screen and (max-width: 500px) {
+    width: calc(100% - 48px);
+    padding: 0 6px;
   }
 }
 
@@ -162,6 +184,11 @@
       color: rgba(0, 0, 0, 0.54);
     }
   }
+
+  // handle mobile
+  @media screen and (max-width: 500px) {
+    display: none;
+  }
 }
 
 .Firestore-Request-Details-Inspection {
@@ -174,51 +201,56 @@
   min-width: 20%;
   height: 100%;
   overflow: scroll;
-}
 
-.Firestore-Request-Details-Inspection-Element {
-  background-color: var(--mdc-theme-surface);
-  box-shadow: 1px -1px 0 rgba(0, 0, 0, 0.12) inset;
-  padding: 10px;
-  cursor: pointer;
-  // flex
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.Firestore-Request-Details-Inspection-Element.Firestore-Request-Details-Inspection-Element--Main {
-  background-color: var(--mdc-theme-hover);
-  font-weight: 500;
-  padding: 5px 10px;
-  font-size: 13px;
-}
-.Firestore-Request-Details-Inspection-Element-Label {
-  width: 100%;
-  font-size: 14px;
-  // truncate text
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.Firestore-Request-Details-Inspection-Element-Value {
-  padding: 10px;
-  box-shadow: 1px -1px 0 rgba(0, 0, 0, 0.12) inset;
-  overflow: scroll;
-  font-size: 14px;
-  white-space: pre;
-}
-.Firestore-Request-Details-Inspection-Action {
-  padding: 10px;
-  // flex
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-
-  button {
+  .Firestore-Request-Details-Inspection-Element {
+    background-color: var(--mdc-theme-surface);
+    box-shadow: 1px -1px 0 rgba(0, 0, 0, 0.12) inset;
+    padding: 10px;
+    cursor: pointer;
+    // flex
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .Firestore-Request-Details-Inspection-Element.Firestore-Request-Details-Inspection-Element--Main {
+    background-color: var(--mdc-theme-hover);
+    font-weight: 500;
+    padding: 5px 10px;
     font-size: 13px;
   }
-  button:not(:last-of-type) {
-    margin-bottom: 10px;
+  .Firestore-Request-Details-Inspection-Element-Label {
+    width: 100%;
+    font-size: 14px;
+    // truncate text
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .Firestore-Request-Details-Inspection-Element-Value {
+    padding: 10px;
+    box-shadow: 1px -1px 0 rgba(0, 0, 0, 0.12) inset;
+    overflow: scroll;
+    font-size: 14px;
+    white-space: pre;
+  }
+  .Firestore-Request-Details-Inspection-Action {
+    padding: 10px;
+    // flex
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+
+    button {
+      font-size: 13px;
+    }
+    button:not(:last-of-type) {
+      margin-bottom: 10px;
+    }
+  }
+
+  // handle mobile
+  @media screen and (max-width: 500px) {
+    width: 100%;
   }
 }
