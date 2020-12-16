@@ -25,13 +25,12 @@ import { createStructuredSelector } from '../../../../store';
 import { selectRequestEvaluationById } from '../../../../store/firestoreRequestEvaluations';
 import { getSelectedRequestEvaluation } from '../../../../store/firestoreRequestEvaluations/selectors';
 import { FirestoreRulesEvaluation } from '../../Requests/rules_evaluation_result_model';
-import { sampleRules } from '../../Requests/sample-rules';
 import {
   useRequestInspectionElements,
   useRequestMainInformation,
 } from '../../Requests/utils';
 import CopyPathNotification from '../CopyPathNotification';
-import RequestDetailsCode from './CodeViewer';
+import RequestDetailsCodeViewer from './CodeViewer';
 import RequestDetailsHeader from './Header';
 import RequestDetailsInspectionSection from './InspectionSection';
 
@@ -55,8 +54,12 @@ const RequestDetails: React.FC<Props> = ({
     resourcePath,
     outcomeData,
   ] = useRequestMainInformation(selectedRequest);
-  const inspectionElements = useRequestInspectionElements(selectedRequest);
-  const { granularAllowOutcomes } = selectedRequest || {};
+  const [
+    firestoreRules,
+    linesOutcome,
+    linesIssues,
+    inspectionElements,
+  ] = useRequestInspectionElements(selectedRequest);
 
   const [wasRequestSelected, setWasRequestSelected] = useState<Boolean>(false);
   const [showCopyNotification, setShowCopyNotification] = useState<boolean>(
@@ -86,9 +89,10 @@ const RequestDetails: React.FC<Props> = ({
         setShowCopyNotification={setShowCopyNotification}
       />
       <div className="Firestore-Request-Details-Content">
-        <RequestDetailsCode
-          linesOutcome={granularAllowOutcomes}
-          firestoreRules={sampleRules}
+        <RequestDetailsCodeViewer
+          firestoreRules={firestoreRules}
+          linesOutcome={linesOutcome}
+          linesIssues={linesIssues}
         />
         <RequestDetailsInspectionSection
           inspectionElements={inspectionElements}

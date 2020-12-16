@@ -123,8 +123,8 @@
     }
     & > i.error {
       // TODO: get this color from a theme variable
-      background-color: #1b3a5754;
-      color: #476282;
+      background-color: #ff8f003d;
+      color: #ff8f00;
     }
   }
   .CodeMirror-code {
@@ -141,7 +141,25 @@
     }
     & > div.error {
       // TODO: get this color from a theme variable
-      background-color: #1b3a5754;
+      background-color: #ff8f003d;
+    }
+  }
+
+  // handle zero state
+  .Firestore-Requests-Details-Code-Zero-State {
+    height: 100%;
+    background: var(--mdc-theme-surface);
+    // flex
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    span {
+      margin-bottom: 20px;
+    }
+    i {
+      color: rgba(0, 0, 0, 0.54);
     }
   }
 }

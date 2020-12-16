@@ -34,12 +34,12 @@ export type Props = PropsFromDispatch;
 
 const Requests: React.FC<Props> = ({ addRequest }) => {
   useEffect(() => {
-    const callbackFunction = (newEvaluation: FirestoreRulesEvaluation) => {
-      const { type } = newEvaluation;
+    const callbackFunction = (newRequest: FirestoreRulesEvaluation) => {
+      const { type } = newRequest;
       if (type === 'RULES_UPDATE') {
         // TODO: UPDATE RULES
       } else {
-        addRequest(newEvaluation);
+        addRequest(newRequest);
       }
     };
     const unsubscribeFromRules = registerForRulesEvents(callbackFunction);

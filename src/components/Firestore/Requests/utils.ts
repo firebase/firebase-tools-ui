@@ -17,7 +17,25 @@
 import moment from 'moment';
 
 import { InspectionElement, RulesOutcomeData } from '../Requests/types';
-import { FirestoreRulesEvaluation } from './rules_evaluation_result_model';
+import {
+  FirestoreRulesEvaluation,
+  RulesOutcome,
+} from './rules_evaluation_result_model';
+
+const iconSelector = {
+  allow: 'check',
+  deny: 'close',
+  error: 'warning',
+  admin: 'verified_user',
+};
+
+// outputs the detailed data of the request in a clean format
+export function getIconFromRequestOutcome(outcome?: RulesOutcome) {
+  if (!outcome) {
+    return '';
+  }
+  return iconSelector[outcome];
+}
 
 // outputs the main data of the request in a clean format
 export function useRequestMainInformation(request?: FirestoreRulesEvaluation) {
@@ -41,9 +59,10 @@ export function useRequestMainInformation(request?: FirestoreRulesEvaluation) {
     ?.map(subpath => `/ ${subpath} `)
     ?.join('');
   const outcomeData: RulesOutcomeData = {
-    allow: { theme: 'success', icon: 'check', label: 'ALLOW' },
-    deny: { theme: 'warning', icon: 'close', label: 'DENY' },
-    error: { theme: 'note', icon: 'error', label: 'ERROR' },
+    allow: { theme: 'success', icon: iconSelector['allow'], label: 'ALLOW' },
+    deny: { theme: 'warning', icon: iconSelector['deny'], label: 'DENY' },
+    error: { theme: 'caution', icon: iconSelector['error'], label: 'ERROR' },
+    admin: { theme: 'note', icon: iconSelector['admin'], label: 'ADMIN' },
   };
 
   return [
@@ -60,10 +79,13 @@ export function useRequestInspectionElements(
   request?: FirestoreRulesEvaluation
 ) {
   if (!request) {
-    return undefined;
+    return [undefined, undefined, undefined, undefined] as const;
   }
 
-  const { rulesContext } = request;
+  const { rulesContext, data, granularAllowOutcomes } = request;
+  const firestoreRules = data?.rules;
+  const linesOutcome = granularAllowOutcomes;
+  const linesIssues = data?.issues;
   const inspectionElements = Object.entries(rulesContext || {}).map(
     ([key, value]) => {
       return {
@@ -73,7 +95,12 @@ export function useRequestInspectionElements(
     }
   );
 
-  return inspectionElements;
+  return [
+    firestoreRules,
+    linesOutcome,
+    linesIssues,
+    inspectionElements,
+  ] as const;
 }
 
 // returns an id made out of 20 random upper- and lower-case letters and numbers
