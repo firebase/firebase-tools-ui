@@ -73,8 +73,13 @@ const RequestDetails: React.FC<Props> = ({
     };
   }, [selectRequestById, requestId]);
 
+  // redirect to table if selected (requestId) was not valid
   if (wasRequestSelected && !selectedRequest) {
     return <Redirect to="/firestore/requests" />;
+  }
+  // return empty view if (selectedRequest) has not yet been requested
+  else if (!selectedRequest) {
+    return <></>;
   }
 
   return (
