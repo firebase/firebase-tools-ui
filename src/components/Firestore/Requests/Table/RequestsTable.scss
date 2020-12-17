@@ -19,8 +19,6 @@
 // Double selector - for higher specificity to Override rmwc styles.
 .Firestore-Requests-Table.Firestore-Requests-Table {
   border-radius: 8px;
-  // avoid double borders.
-  margin: -1px;
   td,
   th {
     padding: 0 8px;
@@ -31,7 +29,7 @@
   }
   // this media query is needed to avoid weird behavior on small-height devices
   @media screen and (max-height: 535px) {
-    height: calc(328px - 56px);
+    height: 328px;
   }
 
   // clicklable rows styles
@@ -79,16 +77,21 @@
     display: block;
     overflow: auto;
     background-color: white;
-    // border-radius on bottom left and bottom right
-    border-radius: 0 0 8px 8px;
     // min-height is the whole view height minus height of external components
     height: calc(100vh - 136px - 72px - 56px);
+    // this media query is needed to avoid weird behavior on small-height devices
+    @media screen and (max-height: 535px) {
+      height: (328px - 56px);
+    }
   }
 }
 
 // empty Requests Table
 .Firestore-Requests-Table.Firestore-Requests-Table.Firestore-Requests-Table--Empty {
-  border-radius: 8px 8px 0 0;
+  // borders only on top-left and top-right corners
+  border-radius: 8px 8px 0px 0px;
+  // avoid double borders.
+  margin: -1px;
   tbody {
     height: 0px;
   }
