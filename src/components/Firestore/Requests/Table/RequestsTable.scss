@@ -92,4 +92,8 @@
   tbody {
     height: 0px;
   }
+  // this media query is needed to avoid weird behavior on small-height devices
+  @media screen and (max-height: 535px) {
+    height: 56px;
+  }
 }
