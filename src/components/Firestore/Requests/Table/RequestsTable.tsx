@@ -24,9 +24,10 @@ import {
   DataTableHeadCell,
   DataTableRow,
 } from '@rmwc/data-table';
-import React from 'react';
+import React, { useRef } from 'react';
 
 import { FirestoreRulesEvaluation } from '../rules_evaluation_result_model';
+import { usePathContainerWidth } from '../utils';
 import RequestsTableRow from './RequestsTableRow';
 import RequestsZeroState from './RequestsZeroState';
 
@@ -42,46 +43,55 @@ const RequestsTable: React.FC<Props> = ({
   shouldShowTable,
   shouldShowZeroState,
   setShowCopyNotification,
-}) => (
-  <>
-    <DataTable
-      className={
-        shouldShowTable
-          ? 'Firestore-Requests-Table'
-          : 'Firestore-Requests-Table Firestore-Requests-Table--Empty'
-      }
-    >
-      <DataTableContent>
-        <DataTableHead>
-          <DataTableRow>
-            <DataTableHeadCell className="Firestore-Requests-Table-Outcome-Header"></DataTableHeadCell>
-            <DataTableHeadCell className="Firestore-Requests-Table-Method-Header">
-              Method
-            </DataTableHeadCell>
-            <DataTableHeadCell className="Firestore-Requests-Table-Path-Header">
-              Path
-            </DataTableHeadCell>
-            <DataTableHeadCell>Date</DataTableHeadCell>
-          </DataTableRow>
-        </DataTableHead>
-        <DataTableBody>
-          {shouldShowTable &&
-            filteredRequests?.map((request: FirestoreRulesEvaluation) => {
-              const { requestId } = request;
-              return (
-                <RequestsTableRow
-                  key={requestId}
-                  requestId={requestId}
-                  request={request}
-                  setShowCopyNotification={setShowCopyNotification}
-                />
-              );
-            })}
-        </DataTableBody>
-      </DataTableContent>
-    </DataTable>
-    {shouldShowZeroState && <RequestsZeroState />}
-  </>
-);
+}) => {
+  const pathContainerRef = useRef<HTMLElement>(null);
+  const requestPathContainerWidth = usePathContainerWidth(pathContainerRef);
+
+  return (
+    <>
+      <DataTable
+        className={
+          shouldShowTable
+            ? 'Firestore-Requests-Table'
+            : 'Firestore-Requests-Table Firestore-Requests-Table--Empty'
+        }
+      >
+        <DataTableContent>
+          <DataTableHead>
+            <DataTableRow>
+              <DataTableHeadCell className="Firestore-Requests-Table-Outcome-Header"></DataTableHeadCell>
+              <DataTableHeadCell className="Firestore-Requests-Table-Method-Header">
+                Method
+              </DataTableHeadCell>
+              <DataTableHeadCell
+                ref={pathContainerRef}
+                className="Firestore-Requests-Table-Path-Header"
+              >
+                Path
+              </DataTableHeadCell>
+              <DataTableHeadCell>Date</DataTableHeadCell>
+            </DataTableRow>
+          </DataTableHead>
+          <DataTableBody>
+            {shouldShowTable &&
+              filteredRequests?.map((request: FirestoreRulesEvaluation) => {
+                const { requestId } = request;
+                return (
+                  <RequestsTableRow
+                    key={requestId}
+                    requestId={requestId}
+                    request={request}
+                    setShowCopyNotification={setShowCopyNotification}
+                    requestPathContainerWidth={requestPathContainerWidth}
+                  />
+                );
+              })}
+          </DataTableBody>
+        </DataTableContent>
+      </DataTable>
+      {shouldShowZeroState && <RequestsZeroState />}
+    </>
+  );
+};
 
 export default RequestsTable;

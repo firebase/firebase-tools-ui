@@ -14,27 +14,32 @@
  * limitations under the License.
  */
 
+import debounce from 'lodash.debounce';
 import moment from 'moment';
+import { useCallback, useEffect, useState } from 'react';
 
-import { InspectionElement, RulesOutcomeData } from '../Requests/types';
 import {
   FirestoreRulesEvaluation,
   RulesOutcome,
 } from './rules_evaluation_result_model';
+import { InspectionElement, RulesOutcomeData } from './types';
 
-const iconSelector = {
+// matches the material-icon name by request outcome
+const ICON_SELECTOR = {
   allow: 'check',
   deny: 'close',
   error: 'warning',
   admin: 'verified_user',
 };
+const REQUEST_PATH_CHARACTER_PX_WIDTH = 8.4;
+const COPY_ICON_BUTTON_PX_WIDTH = 48;
 
 // outputs the detailed data of the request in a clean format
 export function getIconFromRequestOutcome(outcome?: RulesOutcome) {
   if (!outcome) {
     return '';
   }
-  return iconSelector[outcome];
+  return ICON_SELECTOR[outcome];
 }
 
 // outputs the main data of the request in a clean format
@@ -59,10 +64,10 @@ export function useRequestMainInformation(request?: FirestoreRulesEvaluation) {
     ?.map(subpath => `/ ${subpath} `)
     ?.join('');
   const outcomeData: RulesOutcomeData = {
-    allow: { theme: 'success', icon: iconSelector['allow'], label: 'ALLOW' },
-    deny: { theme: 'warning', icon: iconSelector['deny'], label: 'DENY' },
-    error: { theme: 'caution', icon: iconSelector['error'], label: 'ERROR' },
-    admin: { theme: 'note', icon: iconSelector['admin'], label: 'ADMIN' },
+    allow: { theme: 'success', icon: ICON_SELECTOR['allow'], label: 'ALLOW' },
+    deny: { theme: 'warning', icon: ICON_SELECTOR['deny'], label: 'DENY' },
+    error: { theme: 'caution', icon: ICON_SELECTOR['error'], label: 'ERROR' },
+    admin: { theme: 'note', icon: ICON_SELECTOR['admin'], label: 'ADMIN' },
   };
 
   return [
@@ -101,6 +106,84 @@ export function useRequestInspectionElements(
     linesIssues,
     inspectionElements,
   ] as const;
+}
+
+export function usePathContainerWidth(
+  pathContainerRef:
+    | React.RefObject<HTMLElement>
+    | React.RefObject<HTMLDivElement>
+): number | undefined {
+  const [pathContainerWidth, setPathContainerWidth] = useState<
+    number | undefined
+  >();
+
+  const getPathContainerWidth = useCallback(() => {
+    return pathContainerRef?.current?.offsetWidth;
+  }, [pathContainerRef]);
+
+  // update pathContainerWidth, debounce helps avoiding unnecessary calls
+  const debouncedHandleWindowResize = useCallback(
+    debounce(() => {
+      setPathContainerWidth(getPathContainerWidth());
+    }, 100),
+    [pathContainerRef, setPathContainerWidth, getPathContainerWidth]
+  );
+
+  // starts and stops subscription to window resizing,
+  // and updates (pathContainerWidth) after every change
+  useEffect(() => {
+    window?.addEventListener('resize', debouncedHandleWindowResize);
+    return () =>
+      window?.removeEventListener('resize', debouncedHandleWindowResize);
+  }, [debouncedHandleWindowResize]);
+
+  // updates width if HTML reference changes (useful to get initial width)
+  useEffect(() => {
+    setPathContainerWidth(getPathContainerWidth());
+  }, [pathContainerRef, getPathContainerWidth]);
+
+  return pathContainerWidth && pathContainerWidth - 16;
+}
+
+export function truncateHTMLElementFromLeft(
+  pathTextElement: React.RefObject<HTMLDivElement>,
+  completeRequestPath: string,
+  requestPathContainerWidth?: number,
+  prevPathContainerWidth?: number
+): void {
+  const pathHtmlElement = pathTextElement.current;
+  if (!pathHtmlElement || !requestPathContainerWidth) {
+    return;
+  }
+  const {
+    offsetWidth: pathTextWidth,
+    innerText: pathTextString,
+  } = pathHtmlElement;
+  // boolean conditions to truncate text
+  const pathContainerWidthIncremented =
+    prevPathContainerWidth &&
+    requestPathContainerWidth > prevPathContainerWidth;
+  const textAndCopyIconExceededWidthOfContainer =
+    pathTextWidth + COPY_ICON_BUTTON_PX_WIDTH > requestPathContainerWidth;
+  const textIsTruncated = pathTextString.includes('...');
+  if (
+    textAndCopyIconExceededWidthOfContainer ||
+    (textIsTruncated && pathContainerWidthIncremented)
+  ) {
+    // calculate amount of characters that fit into the div
+    const stringMaxSize = Math.ceil(
+      (requestPathContainerWidth - COPY_ICON_BUTTON_PX_WIDTH) /
+        REQUEST_PATH_CHARACTER_PX_WIDTH
+    );
+    const newRequestPathStart = completeRequestPath.length - stringMaxSize;
+    // truncate the path, or the complete path if there is enough width
+    const newPathString =
+      newRequestPathStart > 0
+        ? `...${completeRequestPath.substr(newRequestPathStart)}`
+        : completeRequestPath;
+    // update path in HTML element
+    pathHtmlElement.innerText = newPathString;
+  }
 }
 
 // returns an id made out of 20 random upper- and lower-case letters and numbers

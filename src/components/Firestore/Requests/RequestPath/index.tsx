@@ -18,28 +18,53 @@ import '../index.scss';
 
 import { IconButton } from '@rmwc/icon-button';
 import { Tooltip } from '@rmwc/tooltip';
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+
+import { truncateHTMLElementFromLeft } from '../utils';
 
 const RequestPath: React.FC<{
   resourcePath: string;
   setShowCopyNotification: (value: boolean) => void;
-}> = ({ resourcePath, setShowCopyNotification }) => (
-  <div className="Firestore-Request-Path-Container">
-    <Tooltip content={resourcePath} align="bottomLeft" enterDelay={400}>
-      <div>{resourcePath}</div>
-    </Tooltip>
-    <Tooltip content="Copy Path" align="bottom" enterDelay={200}>
-      <IconButton
-        icon="content_copy"
-        onClick={(event: React.MouseEvent<HTMLElement>) => {
-          event.preventDefault();
-          event.stopPropagation();
-          navigator.clipboard.writeText(resourcePath.replace(/\s/g, ''));
-          setShowCopyNotification(true);
-        }}
-      />
-    </Tooltip>
-  </div>
-);
+  requestPathContainerWidth?: number;
+}> = ({ resourcePath, setShowCopyNotification, requestPathContainerWidth }) => {
+  const pathTextRef = useRef<HTMLDivElement>(null);
+  const [prevPathContainerWidth, setPrevPathContainerWidth] = useState<
+    number | undefined
+  >();
+
+  useEffect(() => {
+    truncateHTMLElementFromLeft(
+      pathTextRef,
+      resourcePath,
+      requestPathContainerWidth,
+      prevPathContainerWidth
+    );
+    setPrevPathContainerWidth(requestPathContainerWidth);
+  }, [
+    requestPathContainerWidth,
+    resourcePath,
+    setPrevPathContainerWidth,
+    prevPathContainerWidth,
+  ]);
+
+  return (
+    <div className="Firestore-Request-Path-Container">
+      <Tooltip content={resourcePath} align="bottomLeft" enterDelay={400}>
+        <div ref={pathTextRef}>{resourcePath}</div>
+      </Tooltip>
+      <Tooltip content="Copy Path" align="bottom" enterDelay={200}>
+        <IconButton
+          icon="content_copy"
+          onClick={(event: React.MouseEvent<HTMLElement>) => {
+            event.preventDefault();
+            event.stopPropagation();
+            navigator.clipboard.writeText(resourcePath.replace(/\s/g, ''));
+            setShowCopyNotification(true);
+          }}
+        />
+      </Tooltip>
+    </div>
+  );
+};
 
 export default RequestPath;

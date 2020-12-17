@@ -23,12 +23,12 @@ import { Redirect, useParams } from 'react-router-dom';
 import { createStructuredSelector } from '../../../../store';
 import { selectRequestEvaluationById } from '../../../../store/firestoreRequestEvaluations';
 import { getSelectedRequestEvaluation } from '../../../../store/firestoreRequestEvaluations/selectors';
-import { FirestoreRulesEvaluation } from '../../Requests/rules_evaluation_result_model';
+import CopyPathNotification from '../CopyPathNotification';
+import { FirestoreRulesEvaluation } from '../rules_evaluation_result_model';
 import {
   useRequestInspectionElements,
   useRequestMainInformation,
-} from '../../Requests/utils';
-import CopyPathNotification from '../CopyPathNotification';
+} from '../utils';
 import RequestDetailsCodeViewer from './CodeViewer';
 import RequestDetailsHeader from './Header';
 import RequestDetailsInspectionSection from './InspectionSection';

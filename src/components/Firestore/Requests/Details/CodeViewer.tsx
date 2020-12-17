@@ -25,7 +25,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import {
   FirestoreRulesIssue,
   OutcomeInfo,
-} from '../../Requests/rules_evaluation_result_model';
+} from '../rules_evaluation_result_model';
 import { getIconFromRequestOutcome } from '../utils';
 import CodeViewerZeroState from './CodeViewerZeroState';
 

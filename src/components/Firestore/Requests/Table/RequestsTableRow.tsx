@@ -31,7 +31,13 @@ const RequestTableRow: React.FC<{
   request: FirestoreRulesEvaluation;
   requestId: string;
   setShowCopyNotification: (value: boolean) => void;
-}> = ({ request, requestId, setShowCopyNotification }) => {
+  requestPathContainerWidth?: number;
+}> = ({
+  request,
+  requestId,
+  setShowCopyNotification,
+  requestPathContainerWidth,
+}) => {
   const history = useHistory();
   const [
     requestTimeComplete,
@@ -66,6 +72,7 @@ const RequestTableRow: React.FC<{
           <RequestPath
             resourcePath={resourcePath}
             setShowCopyNotification={setShowCopyNotification}
+            requestPathContainerWidth={requestPathContainerWidth}
           />
         )}
       </DataTableCell>

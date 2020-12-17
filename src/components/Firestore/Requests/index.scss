@@ -44,18 +44,28 @@
   }
 
   .Firestore-Request-Path-Container {
+    // flex behavior
     display: flex;
     justify-content: space-between;
     align-items: center;
     // Request path string
     & > div {
-      // truncate text
+      // NOTE: (width) property should not be modified, in order for truncation to work
+      // NOTE: (font-size) should match the constant (REQUEST_PATH_FONT_SIZE) on utils
+      font-size: 14px;
+      // ensure path only has one line
       white-space: nowrap;
       overflow: hidden;
-      text-overflow: ellipsis;
     }
     // copy IconButton
     button {
+      padding: 12px 0;
+      // NOTE: (min-width) should match the constant (COPY_ICON_BUTTON_WIDTH) on RequestPath/index
+      min-width: 48px;
+      // absolute position to the right
+      position: absolute;
+      right: 0px;
+      // hover effects
       display: none;
       transition: color 0.2s;
       color: rgb(0 0 0 / 54%);

@@ -19,12 +19,13 @@ import './Header.scss';
 import { Icon } from '@rmwc/icon';
 import { IconButton } from '@rmwc/icon-button';
 import { Tooltip } from '@rmwc/tooltip';
-import React from 'react';
+import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
 
 import { CustomThemeProvider } from '../../../../themes';
 import RequestPath from '../RequestPath';
 import { OutcomeData } from '../types';
+import { usePathContainerWidth } from '../utils';
 
 const RequestDetailsHeader: React.FC<{
   requestTimeComplete: string | undefined;
@@ -40,45 +41,55 @@ const RequestDetailsHeader: React.FC<{
   resourcePath,
   outcomeData,
   setShowCopyNotification,
-}) => (
-  <div className="Firestore-Request-Details-Header">
-    <div className="Firestore-Request-Details-Header-Return">
-      <Tooltip content="Go back to Table" align="bottom" enterDelay={100}>
-        <IconButton icon="arrow_back_ios" tag={Link} to="/firestore/requests" />
-      </Tooltip>
-    </div>
-    <div className="Firestore-Request-Details-Header-Info">
-      <CustomThemeProvider use={outcomeData?.theme || 'note'} wrap>
-        <div className="Firestore-Request-Outcome">
-          {outcomeData?.icon && (
-            <Tooltip
-              content={outcomeData?.label}
-              align="bottom"
-              enterDelay={100}
-            >
-              <Icon icon={{ icon: outcomeData?.icon, size: 'large' }} />
-            </Tooltip>
+}) => {
+  const pathContainerRef = useRef<HTMLDivElement>(null);
+  const requestPathContainerWidth = usePathContainerWidth(pathContainerRef);
+
+  return (
+    <div className="Firestore-Request-Details-Header">
+      <div className="Firestore-Request-Details-Header-Return">
+        <Tooltip content="Go back to Table" align="bottom" enterDelay={100}>
+          <IconButton
+            icon="arrow_back_ios"
+            tag={Link}
+            to="/firestore/requests"
+          />
+        </Tooltip>
+      </div>
+      <div className="Firestore-Request-Details-Header-Info">
+        <CustomThemeProvider use={outcomeData?.theme || 'note'} wrap>
+          <div className="Firestore-Request-Outcome">
+            {outcomeData?.icon && (
+              <Tooltip
+                content={outcomeData?.label}
+                align="bottom"
+                enterDelay={100}
+              >
+                <Icon icon={{ icon: outcomeData?.icon, size: 'large' }} />
+              </Tooltip>
+            )}
+          </div>
+        </CustomThemeProvider>
+        <div className="Firestore-Request-Method">{requestMethod}</div>
+        <div className="Firestore-Request-Path" ref={pathContainerRef}>
+          {resourcePath && (
+            <RequestPath
+              resourcePath={resourcePath}
+              setShowCopyNotification={setShowCopyNotification}
+              requestPathContainerWidth={requestPathContainerWidth}
+            />
           )}
         </div>
-      </CustomThemeProvider>
-      <div className="Firestore-Request-Method">{requestMethod}</div>
-      <div className="Firestore-Request-Path">
-        {resourcePath && (
-          <RequestPath
-            resourcePath={resourcePath}
-            setShowCopyNotification={setShowCopyNotification}
-          />
-        )}
+        <Tooltip
+          content={requestTimeComplete}
+          align="bottomRight"
+          enterDelay={300}
+        >
+          <div className="Firestore-Request-Date">{requestTimeFromNow}</div>
+        </Tooltip>
       </div>
-      <Tooltip
-        content={requestTimeComplete}
-        align="bottomRight"
-        enterDelay={300}
-      >
-        <div className="Firestore-Request-Date">{requestTimeFromNow}</div>
-      </Tooltip>
     </div>
-  </div>
-);
+  );
+};
 
 export default RequestDetailsHeader;
