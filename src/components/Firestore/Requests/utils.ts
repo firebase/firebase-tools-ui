@@ -33,6 +33,7 @@ const ICON_SELECTOR = {
 };
 const REQUEST_PATH_CHARACTER_PX_WIDTH = 8.4;
 const COPY_ICON_BUTTON_PX_WIDTH = 48;
+const PATH_CONTAINER_HORIZONTAL_PADDING = 16;
 
 // outputs the detailed data of the request in a clean format
 export function getIconFromRequestOutcome(outcome?: RulesOutcome) {
@@ -108,6 +109,8 @@ export function useRequestInspectionElements(
   ] as const;
 }
 
+// custom hook that returns the width of the path container,
+// a new width is returned after every window resizing is done
 export function usePathContainerWidth(
   pathContainerRef:
     | React.RefObject<HTMLElement>
@@ -142,9 +145,16 @@ export function usePathContainerWidth(
     setPathContainerWidth(getPathContainerWidth());
   }, [pathContainerRef, getPathContainerWidth]);
 
-  return pathContainerWidth && pathContainerWidth - 16;
+  // substracts the horizontal padding from the returned width
+  return (
+    pathContainerWidth && pathContainerWidth - PATH_CONTAINER_HORIZONTAL_PADDING
+  );
 }
 
+// custom hook that based on the width of the complete path's string,
+// and the width of the path container: consider if truncation is necessary.
+// If it is, the new path that fits the container is calculated and the
+// HTML element is updated width the new truncated path.
 export function truncateHTMLElementFromLeft(
   pathTextElement: React.RefObject<HTMLDivElement>,
   completeRequestPath: string,
@@ -159,7 +169,7 @@ export function truncateHTMLElementFromLeft(
     offsetWidth: pathTextWidth,
     innerText: pathTextString,
   } = pathHtmlElement;
-  // boolean conditions to truncate text
+  // boolean conditions to truncate text only if necessary
   const pathContainerWidthIncremented =
     prevPathContainerWidth &&
     requestPathContainerWidth > prevPathContainerWidth;
@@ -171,12 +181,13 @@ export function truncateHTMLElementFromLeft(
     (textIsTruncated && pathContainerWidthIncremented)
   ) {
     // calculate amount of characters that fit into the div
+    // (width of div is width of container minus width of copy Icon)
     const stringMaxSize = Math.ceil(
       (requestPathContainerWidth - COPY_ICON_BUTTON_PX_WIDTH) /
         REQUEST_PATH_CHARACTER_PX_WIDTH
     );
     const newRequestPathStart = completeRequestPath.length - stringMaxSize;
-    // truncate the path, or the complete path if there is enough width
+    // truncate the path, or return the complete path if there is enough width
     const newPathString =
       newRequestPathStart > 0
         ? `...${completeRequestPath.substr(newRequestPathStart)}`
