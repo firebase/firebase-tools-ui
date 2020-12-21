@@ -14,17 +14,6 @@
  * limitations under the License.
  */
 
-import './LiveStatus.scss';
-
-import { IconButton } from '@rmwc/icon-button';
-import React from 'react';
-
-const LiveStatus: React.FC<{}> = () => (
-  <IconButton
-    icon="pause"
-    onIcon="play_arrow"
-    className="Firestore-Requests-Header-Live-Status"
-  />
-);
-
-export default LiveStatus;
+.Firestore-Requests-Header-Live-Status {
+  margin-right: 8px;
+}
