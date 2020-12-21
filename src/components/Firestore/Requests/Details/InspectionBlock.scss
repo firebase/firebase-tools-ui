@@ -16,9 +16,10 @@
 
 .Firestore-Request-Details-Inspection-Block {
   background-color: var(--mdc-theme-surface);
-  box-shadow: 1px -1px 0 rgba(0, 0, 0, 0.12) inset;
   padding: 10px;
   cursor: pointer;
+  // shadow border at left and bottom
+  box-shadow: 1px -1px 0 rgba(0, 0, 0, 0.12) inset;
   // flex behavior
   display: flex;
   justify-content: space-between;
@@ -43,8 +44,10 @@
 
 .Firestore-Request-Details-Inspection-Block-Value {
   padding: 10px;
-  box-shadow: 1px -1px 0 rgba(0, 0, 0, 0.12) inset;
-  overflow: scroll;
   font-size: 14px;
+  overflow: scroll;
+  // shadow border at left and bottom
+  box-shadow: 1px -1px 0 rgba(0, 0, 0, 0.12) inset;
+  // handle line-breaks
   white-space: pre;
 }

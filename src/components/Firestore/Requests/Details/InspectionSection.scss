@@ -15,8 +15,9 @@
  */
 
 .Firestore-Request-Details-Inspection {
-  box-shadow: 1px 0 0 rgba(0, 0, 0, 0.12) inset;
   border-bottom-right-radius: 8px;
+  // shadow border at left
+  box-shadow: 1px 0 0 rgba(0, 0, 0, 0.12) inset;
   // overflow behavior behavior
   width: 25%;
   position: absolute;

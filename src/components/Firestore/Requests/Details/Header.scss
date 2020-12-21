@@ -19,9 +19,10 @@
 .Firestore-Request-Details-Header {
   border-radius: 8px 8px 0 0;
   width: 100%;
-  box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12) inset;
   background-color: var(--mdc-theme-surface);
   min-height: 56px;
+  // shadow border at bottom
+  box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12) inset;
   // flex behavior
   display: flex;
   justify-content: space-between;
@@ -30,6 +31,7 @@
 
 .Firestore-Request-Details-Header-Return {
   min-width: 64px;
+  // shadow border at right
   box-shadow: -1px 0 0 rgba(0, 0, 0, 0.12) inset;
   // flex behavior
   display: flex;

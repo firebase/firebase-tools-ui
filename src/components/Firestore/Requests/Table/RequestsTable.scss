@@ -26,6 +26,10 @@
   }
   thead {
     background-color: white;
+    tr {
+      // border at bottom
+      box-shadow: 0px -1px 0 rgba(0, 0, 0, 0.12) inset;
+    }
   }
   // this media query is needed to avoid weird behavior on small-height devices
   @media screen and (max-height: 535px) {
