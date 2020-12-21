@@ -26,7 +26,7 @@ import React from 'react';
 import { FormContextValues, UseFormOptions, useForm } from 'react-hook-form';
 
 export function delay(timeoutMs: number): Promise<void> {
-  return new Promise(resolve => setTimeout(resolve, timeoutMs));
+  return new Promise((resolve) => setTimeout(resolve, timeoutMs));
 }
 
 /**
@@ -104,7 +104,7 @@ export interface Deferred<T> {
 export function makeDeferred<T>(): Deferred<T> {
   let resolve: (value?: T | PromiseLike<T>) => void;
   let isResolved = false;
-  const promise = new Promise<T>(res => {
+  const promise = new Promise<T>((res) => {
     resolve = res;
   });
   return {
@@ -163,13 +163,3 @@ export const wrapWithForm = <P, T, F = UseFormOptions<T>>(
 
   return { ...methods, triggerValidation, submit };
 };
-
-/**
- * Wait for MDC Menu to be fully open, so no DOM changes happen outside
- * our control and trigger warnings of not wrapped in act(...) etc.
- */
-export async function waitForMenuToOpen(container: ParentNode = document) {
-  await waitForElementToBeRemoved(() =>
-    container.querySelector('.mdc-menu-surface--animating-open')
-  );
-}
