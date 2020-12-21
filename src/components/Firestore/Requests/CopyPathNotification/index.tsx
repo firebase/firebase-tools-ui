@@ -24,7 +24,7 @@ const CopyPathNotification: React.FC<{
   <Snackbar
     open={showCopyNotification}
     onClose={(evt: SnackbarOnCloseEventT) => setShowCopyNotification(false)}
-    message="Request Path copied to clipboard"
+    message="Request path copied to clipboard"
     icon={{ icon: 'check_circle', size: 'medium' }}
   />
 );
