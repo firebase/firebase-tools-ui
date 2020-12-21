@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import './RequestsTable.scss';
+import './index.scss';
 
 import {
   DataTable,
@@ -26,10 +26,10 @@ import {
 } from '@rmwc/data-table';
 import React, { useRef } from 'react';
 
-import { FirestoreRulesEvaluation } from '../rules_evaluation_result_model';
-import { usePathContainerWidth } from '../utils';
-import RequestsTableRow from './RequestsTableRow';
-import RequestsZeroState from './RequestsZeroState';
+import { FirestoreRulesEvaluation } from '../../rules_evaluation_result_model';
+import { usePathContainerWidth } from '../../utils';
+import RequestsTableRow from './TableRow';
+import RequestsZeroState from './ZeroState';
 
 export interface Props {
   filteredRequests: FirestoreRulesEvaluation[] | undefined;

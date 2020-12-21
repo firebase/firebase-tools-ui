@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import './RequestsTable.scss';
+import './index.scss';
 
 import { DataTableCell, DataTableRow } from '@rmwc/data-table';
 import { Icon } from '@rmwc/icon';
@@ -22,10 +22,10 @@ import { Tooltip } from '@rmwc/tooltip';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { CustomThemeProvider } from '../../../../themes';
-import RequestPath from '../RequestPath';
-import { FirestoreRulesEvaluation } from '../rules_evaluation_result_model';
-import { useRequestMainInformation } from '../utils';
+import { CustomThemeProvider } from '../../../../../themes';
+import RequestPath from '../../RequestPath';
+import { FirestoreRulesEvaluation } from '../../rules_evaluation_result_model';
+import { useRequestMainInformation } from '../../utils';
 
 const RequestTableRow: React.FC<{
   request: FirestoreRulesEvaluation;

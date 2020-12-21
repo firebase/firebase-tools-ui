@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-import './RequestsHeader.scss';
+import './index.scss';
 
 import React from 'react';
 
 import {
   CardActionBar,
   CardActionBarActions,
-} from '../../../common/CardActionBar';
+} from '../../../../common/CardActionBar';
 
 const RequestsHeader: React.FC<{}> = () => {
   return (

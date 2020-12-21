@@ -22,10 +22,10 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import { grey100 } from '../../../colors';
 import { addRequestEvaluation } from '../../../store/firestoreRequestEvaluations';
 import { noteTheme } from '../../../themes';
-import RequestDetails from './Details';
+import RequestDetails from './RequestDetails';
+import RequestsCard from './RequestsCard';
 import { FirestoreRulesEvaluation } from './rules_evaluation_result_model';
 import { registerForRulesEvents } from './rules_evaluations_listener';
-import RequestsTable from './Table';
 
 export interface PropsFromDispatch {
   addRequest: typeof addRequestEvaluation;
@@ -55,7 +55,7 @@ const Requests: React.FC<Props> = ({ addRequest }) => {
     >
       <Switch>
         <Route exact path="/firestore/requests">
-          <RequestsTable />
+          <RequestsCard />
         </Route>
         <Route exact path="/firestore/requests/:requestId">
           <RequestDetails />
