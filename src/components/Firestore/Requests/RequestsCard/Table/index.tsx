@@ -24,12 +24,16 @@ import {
   DataTableHeadCell,
   DataTableRow,
 } from '@rmwc/data-table';
+import classnames from 'classnames';
 import React, { useRef } from 'react';
 
 import { FirestoreRulesEvaluation } from '../../rules_evaluation_result_model';
 import { usePathContainerWidth } from '../../utils';
 import RequestsTableRow from './TableRow';
 import RequestsZeroState from './ZeroState';
+
+const TABLE_CLASS = 'Firestore-Requests-Table';
+const EMPTY_TABLE_CLASS = TABLE_CLASS + '--Empty';
 
 export interface Props {
   filteredRequests: FirestoreRulesEvaluation[] | undefined;
@@ -52,22 +56,23 @@ const RequestsTable: React.FC<Props> = ({
   return (
     <>
       <DataTable
-        className={
-          shouldShowTable
-            ? 'Firestore-Requests-Table'
-            : 'Firestore-Requests-Table Firestore-Requests-Table--Empty'
-        }
+        className={classnames(
+          TABLE_CLASS,
+          !shouldShowTable && EMPTY_TABLE_CLASS
+        )}
       >
         <DataTableContent>
           <DataTableHead>
             <DataTableRow>
-              <DataTableHeadCell className="Firestore-Requests-Table-Outcome-Header"></DataTableHeadCell>
-              <DataTableHeadCell className="Firestore-Requests-Table-Method-Header">
+              <DataTableHeadCell
+                className={`${TABLE_CLASS}-Outcome-Header`}
+              ></DataTableHeadCell>
+              <DataTableHeadCell className={`${TABLE_CLASS}-Method-Header`}>
                 Method
               </DataTableHeadCell>
               <DataTableHeadCell
                 ref={pathContainerRef}
-                className="Firestore-Requests-Table-Path-Header"
+                className={`${TABLE_CLASS}-Path-Header`}
               >
                 Path
               </DataTableHeadCell>

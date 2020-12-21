@@ -18,7 +18,11 @@ import './InspectionBlock.scss';
 
 import { Icon } from '@rmwc/icon';
 import { Tooltip } from '@rmwc/tooltip';
+import classnames from 'classnames';
 import React, { useState } from 'react';
+
+const INSPECT_BLOCK_CLASS = 'Firestore-Request-Details-Inspection-Block';
+const MAIN_INSPECT_BLOCK_CLASS = INSPECT_BLOCK_CLASS + '--Main';
 
 export const InspectionBlock: React.FC<{
   label: string;
@@ -26,17 +30,12 @@ export const InspectionBlock: React.FC<{
   isMainBlock?: boolean;
 }> = ({ label, value, isMainBlock, children }) => {
   const [isExpanded, setIsExpanded] = useState<Boolean>(!!isMainBlock);
-  const elementClass = 'Firestore-Request-Details-Inspection-Block';
-  const mainElementClass = elementClass + '--Main';
 
   function displayContent() {
     return children ? (
       children
     ) : (
-      <div
-        className="Firestore-Request-Details-Inspection-Block-Value"
-        title={value}
-      >
+      <div className={`${INSPECT_BLOCK_CLASS}-Value`} title={value}>
         {value}
       </div>
     );
@@ -45,14 +44,14 @@ export const InspectionBlock: React.FC<{
   return (
     <>
       <div
-        className={`${elementClass} ${isMainBlock && mainElementClass}`}
+        className={classnames(
+          INSPECT_BLOCK_CLASS,
+          isMainBlock && MAIN_INSPECT_BLOCK_CLASS
+        )}
         onClick={() => setIsExpanded(!isExpanded)}
       >
         <Tooltip content={label} align="bottomLeft" enterDelay={400}>
-          <span className="Firestore-Request-Details-Inspection-Block-Label">
-            {' '}
-            {label}{' '}
-          </span>
+          <span className={`${INSPECT_BLOCK_CLASS}-Label`}> {label} </span>
         </Tooltip>
         <Icon icon={{ icon: `expand_${isExpanded ? 'less' : 'more'}` }} />
       </div>
