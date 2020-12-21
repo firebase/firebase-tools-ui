@@ -20,7 +20,7 @@ import { TextField } from '@rmwc/textfield';
 import keycode from 'keycode';
 import React, { useState } from 'react';
 
-export const PathFilter: React.FC<{}> = ({}) => {
+export const PathFilter: React.FC<{}> = () => {
   const [searchText, setSearchText] = useState<string>('');
 
   const clearSearchText = () => {
