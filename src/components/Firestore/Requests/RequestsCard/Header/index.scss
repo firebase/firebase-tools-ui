@@ -15,6 +15,7 @@
  */
 
 .Firestore-Requests-Header {
+  width: 100%;
   // fit the border-radius of the Requests grid container
   .CardActionBar .CardActionBar-container {
     border-radius: 8px 8px 0 0;
@@ -22,9 +23,26 @@
 }
 
 .Firestore-Requests-Header-Container {
+  width: 100%;
   padding: 8px;
   // flex behavior
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  // filters
+  & > div {
+    // select all filters but the first one
+    &:not(:first-child) {
+      margin-left: 10px;
+    }
+    // remove not desired subtext
+    .Field .Field-subtext {
+      display: none;
+    }
+    // removed unused label padding to center Fields
+    .Field,
+    .Field .Field-label {
+      padding-bottom: 0px;
+    }
+  }
 }
