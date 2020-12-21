@@ -16,18 +16,19 @@
 
 .Firestore-Requests-Header {
   width: 100%;
+  position: relative;
   // fit the border-radius of the Requests grid container
   .CardActionBar .CardActionBar-container {
     border-radius: 8px 8px 0 0;
   }
 }
 
-.Firestore-Requests-Header-Container {
+.Firestore-Requests-Header-Filters-Container {
   width: 100%;
   padding: 8px;
   // flex behavior
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   align-items: center;
   // filters
   & > div {

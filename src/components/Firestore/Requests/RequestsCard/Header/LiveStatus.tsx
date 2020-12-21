@@ -14,17 +14,11 @@
  * limitations under the License.
  */
 
-.Firestore-Requests-Header-Path-Filter {
-  width: 250px;
+import { IconButton } from '@rmwc/icon-button';
+import React from 'react';
 
-  .Firestore-Requests-Header-Path-Filter-Text {
-    padding-left: 50px;
-    &::placeholder {
-      text-overflow: ellipsis;
-    }
-    // Get rid of material line in the bottom of the input.
-    .mdc-line-ripple {
-      display: none;
-    }
-  }
-}
+const LiveStatus: React.FC<{}> = () => (
+  <IconButton icon="pause" onIcon="play_arrow" />
+);
+
+export default LiveStatus;
