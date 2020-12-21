@@ -22,6 +22,18 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import { truncateHTMLElementFromLeft } from '../utils';
 
+// copies path without spaces to clipboard
+// and triggers copy notification (SnackBar)
+function copyPathToClipboard(
+  resourcePath: string,
+  setShowCopyNotification: (value: boolean) => void
+) {
+  navigator.clipboard
+    .writeText(resourcePath.replace(/\s/g, ''))
+    .then(() => setShowCopyNotification(true))
+    .catch(() => setShowCopyNotification(false));
+}
+
 const RequestPath: React.FC<{
   resourcePath: string;
   setShowCopyNotification: (value: boolean) => void;
@@ -58,8 +70,7 @@ const RequestPath: React.FC<{
           onClick={(event: React.MouseEvent<HTMLElement>) => {
             event.preventDefault();
             event.stopPropagation();
-            navigator.clipboard.writeText(resourcePath.replace(/\s/g, ''));
-            setShowCopyNotification(true);
+            copyPathToClipboard(resourcePath, setShowCopyNotification);
           }}
         />
       </Tooltip>
