@@ -14,21 +14,17 @@
  * limitations under the License.
  */
 
-.Firestore-Request-Details-Content {
-  width: 100%;
+.Firestore-Requests-Header {
+  // fit the border-radius of the Requests grid container
+  .CardActionBar .CardActionBar-container {
+    border-radius: 8px 8px 0 0;
+  }
+}
+
+.Firestore-Requests-Header-Container {
+  padding: 8px;
   // flex behavior
   display: flex;
-  justify-content: flex-start;
-  align-items: stretch;
-  // overflow behavior
-  position: relative;
-  overflow: hidden;
-  // min-height is the whole view height minus height of external components
-  // min-height = allViewHeight - navBarHeight - appHorizontalPadding - firestoreSubTabsHeight - requestDetailsHeader
-  min-height: calc(100vh - 88px - 48px - 72px - 56px);
-  // mobile styles
-  @media screen and (max-height: 535px) {
-    // height = totalAvailableHeight - requestDetailsHeader
-    min-height: calc(328px - 56px);
-  }
+  justify-content: flex-end;
+  align-items: center;
 }

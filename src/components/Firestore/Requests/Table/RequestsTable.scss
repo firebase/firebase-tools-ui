@@ -18,10 +18,14 @@
 
 // Double selector - for higher specificity to Override rmwc styles.
 .Firestore-Requests-Table.Firestore-Requests-Table {
-  border-radius: 8px;
+  border-radius: 0px 0px 8px 8px;
+  // avoid double borders.
+  margin: -1px;
+  margin-top: 0px;
   td,
   th {
     padding: 0 8px;
+    // the real height ends up been 56px because of the vertical box-shadow of 1px
     height: 54px;
   }
   thead {
@@ -31,9 +35,10 @@
       box-shadow: 0px -1px 0 rgba(0, 0, 0, 0.12) inset;
     }
   }
-  // this media query is needed to avoid weird behavior on small-height devices
   @media screen and (max-height: 535px) {
-    height: 328px;
+    // fix height on short-devices (to avoid depending on view height value at this point)
+    // height = totalAvailableHeight - requestsHeaderHeight
+    height: calc(328px - 56px);
   }
 
   // clicklable rows styles
@@ -82,25 +87,26 @@
     overflow: auto;
     background-color: white;
     // min-height is the whole view height minus height of external components
-    height: calc(100vh - 136px - 72px - 56px);
-    // this media query is needed to avoid weird behavior on small-height devices
+    // min-height = allViewHeight - firestoreSubTabsHeight - requestsHeaderHeight - requestTableHeader
+    height: calc(100vh - 136px - 72px - 56px - 56px);
     @media screen and (max-height: 535px) {
-      height: (328px - 56px);
+      // fix height on short-devices (to avoid depending on view height value at this point)
+      // height = totalAvailableHeight - requestsHeaderHeight - requestTableHeader
+      height: (328px - 56px - 56px);
     }
   }
 }
 
-// empty Requests Table
 .Firestore-Requests-Table.Firestore-Requests-Table.Firestore-Requests-Table--Empty {
-  // borders only on top-left and top-right corners
-  border-radius: 8px 8px 0px 0px;
+  border-radius: 0px;
   // avoid double borders.
   margin: -1px;
   tbody {
     height: 0px;
   }
-  // this media query is needed to avoid weird behavior on small-height devices
   @media screen and (max-height: 535px) {
+    // make table height equal to the height of the requestTableHeader,
+    // helpful to display the Zero State message
     height: 56px;
   }
 }

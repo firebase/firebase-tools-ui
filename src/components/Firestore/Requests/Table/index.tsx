@@ -21,6 +21,7 @@ import { createStructuredSelector } from '../../../../store';
 import { getAllRequestEvaluations } from '../../../../store/firestoreRequestEvaluations/selectors';
 import CopyPathNotification from '../CopyPathNotification';
 import { FirestoreRulesEvaluation } from '../rules_evaluation_result_model';
+import RequestsHeader from './RequestsHeader';
 import RequestsTable from './RequestsTable';
 
 export interface PropsFromState {
@@ -36,6 +37,7 @@ const RequestsTableIndex: React.FC<Props> = ({ requests }) => {
 
   return (
     <>
+      <RequestsHeader />
       <RequestsTable
         filteredRequests={requests}
         shouldShowTable={hasRequests}

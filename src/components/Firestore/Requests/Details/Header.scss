@@ -20,7 +20,7 @@
   border-radius: 8px 8px 0 0;
   width: 100%;
   background-color: var(--mdc-theme-surface);
-  min-height: 56px;
+  height: 56px;
   // shadow border at bottom
   box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12) inset;
   // flex behavior
@@ -53,6 +53,7 @@
   align-items: center;
   // mobile styles
   @media screen and (max-width: 500px) {
+    // width = 100% - returnIconButton
     width: calc(100% - 48px);
     padding: 0 6px;
   }
