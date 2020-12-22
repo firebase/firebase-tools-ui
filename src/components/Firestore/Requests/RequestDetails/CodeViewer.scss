@@ -58,8 +58,8 @@
     }
     & > i.error {
       // TODO: get this color from a theme variable
-      background-color: #ff8f003d;
-      color: #ff8f00;
+      background-color: rgb(255 82 82 / 25%);
+      color: #d32f2f;
     }
   }
   .CodeMirror-code {
@@ -77,7 +77,7 @@
     }
     & > div.error {
       // TODO: get this color from a theme variable
-      background-color: #ff8f003d;
+      background-color: rgb(255 82 82 / 25%);
     }
   }
 }

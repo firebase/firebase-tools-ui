@@ -67,8 +67,8 @@ export function useRequestMainInformation(request?: FirestoreRulesEvaluation) {
   const outcomeData: RulesOutcomeData = {
     allow: { theme: 'success', icon: ICON_SELECTOR['allow'], label: 'ALLOW' },
     deny: { theme: 'warning', icon: ICON_SELECTOR['deny'], label: 'DENY' },
-    error: { theme: 'caution', icon: ICON_SELECTOR['error'], label: 'ERROR' },
-    admin: { theme: 'note', icon: ICON_SELECTOR['admin'], label: 'ADMIN' },
+    error: { theme: 'warning', icon: ICON_SELECTOR['error'], label: 'ERROR' },
+    admin: { theme: 'success', icon: ICON_SELECTOR['admin'], label: 'ADMIN' },
   };
 
   return [
