@@ -19,12 +19,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, MemoryRouter, Route } from 'react-router-dom';
 
 import configureStore from '../../configureStore';
 import { delay, waitForDialogsToOpen } from '../../test_utils';
 import { alert } from '../common/DialogQueue';
-import App from '.';
+import App, { REDIRECT_LOGS_URL } from '.';
 
 it('renders without crashing', async () => {
   const div = document.createElement('div');
@@ -64,3 +64,39 @@ it('shows dialogs in the queue', async () => {
 
   expect(getByText('wowah')).not.toBeNull();
 });
+
+// it('redirects from url /functions to correct logs url', async () => {
+//   const store = configureStore();
+//   const { getByText } = render(
+//     <MemoryRouter initialEntries={['/functions']}>
+//       <Provider store={store}>
+//         <BrowserRouter>
+//           <Route exact path={REDIRECT_LOGS_URL}> Redirected Logs URL </Route>
+//           <App />
+//         </BrowserRouter>
+//       </Provider>
+//     </MemoryRouter>
+//   );
+
+//   await act(() => delay(100)); // Wait for tab indicator async DOM updates.
+
+//   expect(getByText('Redirected Logs URL')).not.toBe(null);
+// });
+
+// it('redirects from url /firestore to /firestore/data', async () => {
+//   const store = configureStore();
+//   const { getByText } = render(
+//     <MemoryRouter initialEntries={['/firestore']}>
+//       <Provider store={store}>
+//         <BrowserRouter>
+//           <Route exact path='/firestore/data'> Firestore Data </Route>
+//           <App />
+//         </BrowserRouter>
+//       </Provider>
+//     </MemoryRouter>
+//   );
+
+//   await act(() => delay(100)); // Wait for tab indicator async DOM updates.
+
+//   expect(getByText('Firestore Data')).not.toBe(null);
+// });

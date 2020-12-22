@@ -74,10 +74,10 @@ const CollectionList: React.FC<Props> = ({ collections, reference }) => {
           .map(uri => encodeURIComponent(uri))
           .join('/');
         history.push(
-          `/firestore/${encodedReferencePath}/${encodedCollectionId}`
+          `/firestore/data/${encodedReferencePath}/${encodedCollectionId}`
         );
       } else {
-        history.push(`/firestore/${encodedCollectionId}`);
+        history.push(`/firestore/data/${encodedCollectionId}`);
       }
     }
   };

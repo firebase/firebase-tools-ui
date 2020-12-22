@@ -155,7 +155,7 @@ export const Firestore: React.FC = React.memo(() => {
       <Elevation z="2" wrap>
         <Card className="Firestore-panels-wrapper">
           <InteractiveBreadCrumbBar
-            base="/firestore"
+            base="/firestore/data"
             path={path}
             onNavigate={handleNavigate}
           />
