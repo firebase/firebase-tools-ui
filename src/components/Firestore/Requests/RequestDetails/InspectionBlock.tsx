@@ -50,9 +50,7 @@ export const InspectionBlock: React.FC<{
         )}
         onClick={() => setIsExpanded(!isExpanded)}
       >
-        <Tooltip content={label} align="bottomLeft" enterDelay={400}>
-          <span className={`${INSPECT_BLOCK_CLASS}-Label`}> {label} </span>
-        </Tooltip>
+        <span className={`${INSPECT_BLOCK_CLASS}-Label`}> {label} </span>
         <Icon icon={{ icon: `expand_${isExpanded ? 'less' : 'more'}` }} />
       </div>
       {isExpanded && displayContent()}
