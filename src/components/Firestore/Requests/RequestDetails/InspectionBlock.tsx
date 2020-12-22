@@ -17,7 +17,6 @@
 import './InspectionBlock.scss';
 
 import { Icon } from '@rmwc/icon';
-import { Tooltip } from '@rmwc/tooltip';
 import classnames from 'classnames';
 import React, { useState } from 'react';
 
