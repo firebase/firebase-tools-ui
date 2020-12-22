@@ -17,6 +17,8 @@
 .Firestore-Requests-Header {
   width: 100%;
   position: relative;
+  // overflow behavior
+  overflow: hidden;
   // fit the border-radius of the Requests grid container
   .CardActionBar .CardActionBar-container {
     border-radius: 8px 8px 0 0;
