@@ -16,7 +16,6 @@
 
 import './CodeViewerZeroState.scss';
 
-import { Icon } from '@rmwc/icon';
 import { Typography } from '@rmwc/typography';
 import React from 'react';
 
@@ -26,7 +25,6 @@ const CodeViewerZeroState: React.FC = () => {
       <Typography use="body2" theme="textSecondaryOnBackground">
         Admin requests bypass Firestore rules
       </Typography>
-      <Icon icon={{ icon: 'vpn_key', size: 'xlarge' }} />
     </div>
   );
 };
