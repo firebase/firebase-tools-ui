@@ -85,6 +85,8 @@
       // copy IconButton
       button {
         display: block;
+        // override position absolute to the right
+        position: relative;
         // mobile styles
         @media screen and (max-width: 500px) {
           padding: 6px;
