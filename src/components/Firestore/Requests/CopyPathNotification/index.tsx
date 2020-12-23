@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import './index.scss';
+
 import { Snackbar, SnackbarOnCloseEventT } from '@rmwc/snackbar';
 import React from 'react';
 
@@ -21,12 +23,14 @@ const CopyPathNotification: React.FC<{
   showCopyNotification: boolean;
   setShowCopyNotification: (value: boolean) => void;
 }> = ({ showCopyNotification, setShowCopyNotification }) => (
-  <Snackbar
-    open={showCopyNotification}
-    onClose={(evt: SnackbarOnCloseEventT) => setShowCopyNotification(false)}
-    message="Request path copied to clipboard"
-    icon={{ icon: 'check_circle', size: 'medium' }}
-  />
+  <div className="Firestore-Requests-Copy-Path-Snackbar">
+    <Snackbar
+      open={showCopyNotification}
+      onClose={(evt: SnackbarOnCloseEventT) => setShowCopyNotification(false)}
+      message="Request path copied to clipboard"
+      icon={{ icon: 'check_circle', size: 'medium' }}
+    />
+  </div>
 );
 
 export default CopyPathNotification;
