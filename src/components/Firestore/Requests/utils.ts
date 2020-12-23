@@ -54,7 +54,6 @@ export function useRequestMainInformation(request?: FirestoreRulesEvaluation) {
   const timestamp = rulesContext?.request?.time * 1000;
   const requestTimeComplete = new Date(timestamp).toString();
   const requestTimeFormatted = formatTimestamp(timestamp);
-  console.log('dev: ', requestTimeComplete, requestTimeFormatted);
   const requestMethod = rulesContext?.request?.method;
   // replace root path, split every subpath and remove resulting empty elements
   const resourcePath = rulesContext?.request?.path
