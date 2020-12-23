@@ -19,7 +19,6 @@ import './index.scss';
 import React from 'react';
 
 import { CardActionBar } from '../../../../common/CardActionBar';
-import LiveStatus from './LiveStatus';
 import MethodFilter from './MethodFilter';
 import OutcomeFilter from './OutcomeFilter';
 import PathFilter from './PathFilter';
@@ -32,7 +31,6 @@ const RequestsHeader: React.FC<{}> = () => (
         <MethodFilter />
         <OutcomeFilter />
       </div>
-      <LiveStatus />
     </CardActionBar>
   </div>
 );
