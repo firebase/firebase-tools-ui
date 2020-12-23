@@ -41,7 +41,7 @@ const RequestTableRow: React.FC<{
   const history = useHistory();
   const [
     requestTimeComplete,
-    requestTimeFromNow,
+    requestTimeFormatted,
     requestMethod,
     resourcePath,
     outcomeData,
@@ -82,7 +82,7 @@ const RequestTableRow: React.FC<{
         enterDelay={300}
       >
         <DataTableCell className="Firestore-Request-Date">
-          {requestTimeFromNow}
+          {requestTimeFormatted}
         </DataTableCell>
       </Tooltip>
     </DataTableRow>

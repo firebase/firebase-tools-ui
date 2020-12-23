@@ -48,7 +48,7 @@ const RequestDetails: React.FC<Props> = ({
   const { requestId } = useParams<{ requestId: string }>();
   const [
     requestTimeComplete,
-    requestTimeFromNow,
+    requestTimeFormatted,
     requestMethod,
     resourcePath,
     outcomeData,
@@ -86,7 +86,7 @@ const RequestDetails: React.FC<Props> = ({
     <>
       <RequestDetailsHeader
         requestTimeComplete={requestTimeComplete}
-        requestTimeFromNow={requestTimeFromNow}
+        requestTimeFormatted={requestTimeFormatted}
         requestMethod={requestMethod}
         resourcePath={resourcePath}
         outcomeData={outcomeData}

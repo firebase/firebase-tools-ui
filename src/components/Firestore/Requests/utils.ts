@@ -15,9 +15,9 @@
  */
 
 import debounce from 'lodash.debounce';
-import moment from 'moment';
 import { useCallback, useEffect, useState } from 'react';
 
+import { formatTimestamp } from '../../LogViewer/History';
 import {
   FirestoreRulesEvaluation,
   RulesOutcome,
@@ -51,11 +51,10 @@ export function useRequestMainInformation(request?: FirestoreRulesEvaluation) {
 
   const { rulesContext, outcome } = request;
   // time * 1000 converts timestamp units from seconds to millis
-  const requestTimeMoment = moment(rulesContext?.request?.time * 1000);
-  const requestTimeComplete = requestTimeMoment.format(
-    'MMMM Do YYYY, h:mm:ss A'
-  );
-  const requestTimeFromNow = requestTimeMoment.fromNow();
+  const timestamp = rulesContext?.request?.time * 1000;
+  const requestTimeComplete = new Date(timestamp).toString();
+  const requestTimeFormatted = formatTimestamp(timestamp);
+  console.log('dev: ', requestTimeComplete, requestTimeFormatted);
   const requestMethod = rulesContext?.request?.method;
   // replace root path, split every subpath and remove resulting empty elements
   const resourcePath = rulesContext?.request?.path
@@ -73,7 +72,7 @@ export function useRequestMainInformation(request?: FirestoreRulesEvaluation) {
 
   return [
     requestTimeComplete,
-    requestTimeFromNow,
+    requestTimeFormatted,
     requestMethod,
     resourcePath,
     outcomeData[outcome],

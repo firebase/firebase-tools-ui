@@ -29,14 +29,14 @@ import { usePathContainerWidth } from '../utils';
 
 const RequestDetailsHeader: React.FC<{
   requestTimeComplete: string | undefined;
-  requestTimeFromNow: string | undefined;
+  requestTimeFormatted: string | undefined;
   requestMethod: string | undefined;
   resourcePath: string | undefined;
   outcomeData: OutcomeData | undefined;
   setShowCopyNotification: (value: boolean) => void;
 }> = ({
   requestTimeComplete,
-  requestTimeFromNow,
+  requestTimeFormatted,
   requestMethod,
   resourcePath,
   outcomeData,
@@ -85,7 +85,7 @@ const RequestDetailsHeader: React.FC<{
           align="bottomRight"
           enterDelay={300}
         >
-          <div className="Firestore-Request-Date">{requestTimeFromNow}</div>
+          <div className="Firestore-Request-Date">{requestTimeFormatted}</div>
         </Tooltip>
       </div>
     </div>
