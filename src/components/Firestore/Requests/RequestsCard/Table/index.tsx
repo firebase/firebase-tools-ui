@@ -64,6 +64,9 @@ const RequestsTable: React.FC<Props> = ({
         <DataTableContent>
           <DataTableHead>
             <DataTableRow>
+              <DataTableHeadCell className={`${TABLE_CLASS}-Date-Header`}>
+                Date
+              </DataTableHeadCell>
               <DataTableHeadCell
                 className={`${TABLE_CLASS}-Outcome-Header`}
               ></DataTableHeadCell>
@@ -76,7 +79,6 @@ const RequestsTable: React.FC<Props> = ({
               >
                 Path
               </DataTableHeadCell>
-              <DataTableHeadCell>Date</DataTableHeadCell>
             </DataTableRow>
           </DataTableHead>
           <DataTableBody>

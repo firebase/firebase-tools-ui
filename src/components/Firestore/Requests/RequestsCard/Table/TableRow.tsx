@@ -51,6 +51,15 @@ const RequestTableRow: React.FC<{
     <DataTableRow
       onClick={() => history.push(`/firestore/requests/${requestId}`)}
     >
+      <Tooltip
+        content={requestTimeComplete}
+        align="bottomLeft"
+        enterDelay={300}
+      >
+        <DataTableCell className="Firestore-Request-Date">
+          {requestTimeFormatted}
+        </DataTableCell>
+      </Tooltip>
       <CustomThemeProvider use={outcomeData?.theme || 'note'} wrap>
         <DataTableCell className="Firestore-Request-Outcome">
           {outcomeData?.icon && (
@@ -76,15 +85,6 @@ const RequestTableRow: React.FC<{
           />
         )}
       </DataTableCell>
-      <Tooltip
-        content={requestTimeComplete}
-        align="bottomLeft"
-        enterDelay={300}
-      >
-        <DataTableCell className="Firestore-Request-Date">
-          {requestTimeFormatted}
-        </DataTableCell>
-      </Tooltip>
     </DataTableRow>
   );
 };

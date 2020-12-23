@@ -21,15 +21,19 @@
   border-radius: 0px 0px 8px 8px;
   // avoid double borders.
   margin: -1px;
-  margin-top: 0px;
   td,
   th {
-    padding: 0 8px;
-    // the real height ends up been 56px because of the vertical box-shadow of 1px
-    height: 54px;
+    padding: 8px 0 8px 24px;
+    // the real height ends up been 33px because of the vertical box-shadow of 1px on each side
+    height: 31px;
+  }
+  th {
+    font-size: 12px;
+    // avoid extra text height
+    line-height: 1;
   }
   thead {
-    background-color: white;
+    background-color: var(--mdc-theme-surface);
     tr {
       // border at bottom
       box-shadow: 0px -1px 0 rgba(0, 0, 0, 0.12) inset;
@@ -51,27 +55,18 @@
     }
   }
 
-  // distribute column widths
+  // distribute column widths (width values include the padding-left)
+  .Firestore-Requests-Table-Date-Header,
+  .Firestore-Request-Date {
+    width: 77px;
+  }
   .Firestore-Requests-Table-Outcome-Header,
   .Firestore-Request-Outcome {
-    width: 10%;
+    width: 73px;
   }
   .Firestore-Requests-Table-Method-Header,
   .Firestore-Request-Method {
-    width: 81px;
-    // mobile styles
-    @media screen and (max-width: 650px) {
-      padding-right: 0px;
-      width: 60px;
-    }
-  }
-  .Firestore-Requests-Table-Path-Header,
-  .Firestore-Request-Path {
-    width: 55%;
-    // mobile styles
-    @media screen and (max-width: 650px) {
-      width: 45%;
-    }
+    width: 88px;
   }
 
   // fix body height and ensure body content scrollable behavior
@@ -88,11 +83,11 @@
     background-color: white;
     // min-height is the whole view height minus height of external components
     // min-height = allViewHeight - firestoreSubTabsHeight - requestsHeaderHeight - requestTableHeader
-    height: calc(100vh - 136px - 72px - 56px - 56px);
+    height: calc(100vh - 136px - 72px - 33px - 56px);
     @media screen and (max-height: 535px) {
       // fix height on short-devices (to avoid depending on view height value at this point)
       // height = totalAvailableHeight - requestsHeaderHeight - requestTableHeader
-      height: (328px - 56px - 56px);
+      height: (328px - 33px - 56px);
     }
   }
 }
@@ -107,6 +102,6 @@
   @media screen and (max-height: 535px) {
     // make table height equal to the height of the requestTableHeader,
     // helpful to display the Zero State message
-    height: 56px;
+    height: 33px;
   }
 }
