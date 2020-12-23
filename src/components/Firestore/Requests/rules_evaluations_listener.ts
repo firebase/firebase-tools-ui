@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 
+import { ReconnectingWebSocket } from '../../../reconnectingWebSocket';
 import { FirestoreRulesEvaluation } from './rules_evaluation_result_model';
 import { generateId } from './utils';
+
+const REQUESTS_EVALUATION_WEBSOCKET_HOST_AND_PORT = 'localhost:8888/rules/ws';
 
 export type OnEvaluationFn = (evaluation: FirestoreRulesEvaluation) => void;
 export type Unsubscribe = () => void;
@@ -24,11 +27,11 @@ export type Unsubscribe = () => void;
 export function registerForRulesEvents(callback: OnEvaluationFn): Unsubscribe {
   // TODO: Replace hardcoded websocket URL (used for development purposes only)
   //       with a function that somehow gets the proper URL
-  const ws = new WebSocket('ws://localhost:8888/rules/ws');
-  ws.onmessage = evt => {
-    const newEvaluation: FirestoreRulesEvaluation = JSON.parse(evt.data);
+  const webSocket = new ReconnectingWebSocket(
+    REQUESTS_EVALUATION_WEBSOCKET_HOST_AND_PORT
+  );
+  webSocket.listener = (newEvaluation: FirestoreRulesEvaluation) => {
     callback({ ...newEvaluation, requestId: generateId() });
   };
-
-  return () => ws.close();
+  return () => webSocket.cleanup();
 }
