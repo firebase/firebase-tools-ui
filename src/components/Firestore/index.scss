@@ -21,6 +21,7 @@
 .Firestore {
   display: flex;
   flex-direction: column;
+  position: relative;
 
   // Each panel is individually scrollable within the panel, so we want to avoid
   // making the whole page scrollable by making stuff fit into viewport height.
@@ -29,17 +30,31 @@
   min-height: 400px;
 }
 
-.Firestore-actions {
-  text-align: end;
-  margin-bottom: 24px;
-  // flex behavior
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.Firestore-sub-tabs {
+  margin-bottom: 48px;
+  // shadow border at bottom
+  box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12) inset;
+
+  .Firestore-sub-tab-bar {
+    width: fit-content;
+    .mdc-tab {
+      &:not(:first-of-type) {
+        margin-left: 24px;
+      }
+    }
+  }
 }
 
-.Firestore-sub-tab-bar {
-  width: fit-content;
+.Firestore-actions {
+  position: absolute;
+  right: 0px;
+  // TODO: get 48px value from margin-bottom of same Firestore-sub-tabs variable
+  top: 48px;
+
+  button {
+    width: fit-content;
+    margin: 6px 0;
+  }
 }
 
 .Firestore-panels-wrapper {
