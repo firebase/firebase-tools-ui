@@ -65,7 +65,7 @@ const RequestsTable: React.FC<Props> = ({
           <DataTableHead>
             <DataTableRow>
               <DataTableHeadCell className={`${TABLE_CLASS}-Date-Header`}>
-                Date
+                Time
               </DataTableHeadCell>
               <DataTableHeadCell
                 className={`${TABLE_CLASS}-Outcome-Header`}

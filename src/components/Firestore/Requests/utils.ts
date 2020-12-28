@@ -52,7 +52,7 @@ export function useRequestMainInformation(request?: FirestoreRulesEvaluation) {
   const { rulesContext, outcome } = request;
   // time * 1000 converts timestamp units from seconds to millis
   const timestamp = rulesContext?.request?.time * 1000;
-  const requestTimeComplete = new Date(timestamp).toString();
+  const requestTimeComplete = new Date(timestamp).toLocaleString();
   const requestTimeFormatted = formatTimestamp(timestamp);
   const requestMethod = rulesContext?.request?.method;
   // replace root path, split every subpath and remove resulting empty elements
