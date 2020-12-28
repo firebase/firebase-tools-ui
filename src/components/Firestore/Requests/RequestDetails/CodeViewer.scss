@@ -76,5 +76,10 @@
       // TODO: get this color from a theme variable
       background-color: rgb(255 82 82 / 25%);
     }
+    // change color of comments
+    span.cm-comment {
+      // TODO: get this 'Text Black Terniary' color from a theme variable
+      color: rgb(0 0 0 / 0.38);
+    }
   }
 }
