@@ -25,20 +25,6 @@
   }
 }
 
-.Firestore-Request-Details-Actions-Collapsed-Button {
-  display: none;
-  // show collapsed button
-  @media screen and (max-width: 850px) {
-    display: block;
-  }
-  // mobile styles
-  @media screen and (max-width: 510px) {
-    width: 30px;
-    height: 30px;
-    padding: 0px;
-  }
-}
-
 .Firestore-Request-Details-Action {
   font-size: 12px;
   // get text in just one line

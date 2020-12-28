@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-import './RequestActions.scss';
+import './Actions.scss';
 
 import { Button } from '@rmwc/button';
-import { IconButton } from '@rmwc/icon-button';
-import React from 'react';
+import React, { useState } from 'react';
+
+import RequestActionsCollapsedMenu from './ActionsCollapsedMenu';
 
 const Action: React.FC<{
   label: string;
@@ -33,16 +34,21 @@ const Action: React.FC<{
   </Button>
 );
 
-const RequestActions: React.FC<{}> = () => (
-  <>
-    <div className="Firestore-Request-Details-Actions-Container">
-      <Action label="Retrigger Request" onClick={() => {}} />
-    </div>
-    <IconButton
-      icon={{ icon: 'more_vert' }}
-      className="Firestore-Request-Details-Actions-Collapsed-Button"
-    />
-  </>
-);
+const RequestActions: React.FC<{}> = () => {
+  const [menuOpen, setMenuOpen] = useState<boolean>(false);
+
+  return (
+    <>
+      <div className="Firestore-Request-Details-Actions-Container">
+        <Action label="Retrigger request" onClick={() => {}} />
+      </div>
+      <RequestActionsCollapsedMenu
+        menuOpen={menuOpen}
+        setMenuOpen={setMenuOpen}
+        onRetriggerRequest={() => {}}
+      />
+    </>
+  );
+};
 
 export default RequestActions;

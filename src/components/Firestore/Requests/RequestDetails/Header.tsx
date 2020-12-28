@@ -26,7 +26,7 @@ import { CustomThemeProvider } from '../../../../themes';
 import RequestPath from '../RequestPath';
 import { OutcomeData } from '../types';
 import { usePathContainerWidth } from '../utils';
-import RequestActions from './RequestActions';
+import RequestActions from './Actions';
 
 const RequestDetailsHeader: React.FC<{
   requestTimeComplete: string | undefined;

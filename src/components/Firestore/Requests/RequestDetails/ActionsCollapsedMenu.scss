@@ -1,0 +1,37 @@
+/**
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// hide Menu Portal if Actions are no longer collapsed
+@media screen and (min-width: 850px) {
+  .mdc-menu-surface--open {
+    display: none;
+  }
+}
+.Firestore-Request-Details-Actions-Collapsed-Menu {
+  // hide collapsed button when width is higher than specified
+  @media screen and (min-width: 850px) {
+    display: none;
+  }
+
+  .Firestore-Request-Details-Actions-Collapsed-Button {
+    // mobile styles
+    @media screen and (max-width: 510px) {
+      width: 30px;
+      height: 30px;
+      padding: 0px;
+    }
+  }
+}
