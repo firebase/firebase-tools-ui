@@ -19,22 +19,12 @@ import './InspectionSection.scss';
 import React from 'react';
 
 import { InspectionElement } from '../types';
-import InspectionAction from './InspectionAction';
 import InspectionBlock from './InspectionBlock';
 
 const InspectionSection: React.FC<{
   inspectionElements?: InspectionElement[];
 }> = ({ inspectionElements }) => (
   <div className="Firestore-Request-Details-Inspection">
-    <InspectionBlock isMainBlock label="Actions">
-      <div className="Firestore-Request-Details-Inspection-Actions-Container">
-        <InspectionAction label="Retrigger Request" onClick={() => {}} />
-        <InspectionAction
-          label="Archive Request Evaluation"
-          onClick={() => {}}
-        />
-      </div>
-    </InspectionBlock>
     <InspectionBlock isMainBlock label="Query Information">
       <InspectionBlock label="limit" value="20" />
       <InspectionBlock label="orderBy" value="total_reviews" />

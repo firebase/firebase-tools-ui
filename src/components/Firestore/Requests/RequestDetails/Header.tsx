@@ -26,6 +26,7 @@ import { CustomThemeProvider } from '../../../../themes';
 import RequestPath from '../RequestPath';
 import { OutcomeData } from '../types';
 import { usePathContainerWidth } from '../utils';
+import RequestActions from './RequestActions';
 
 const RequestDetailsHeader: React.FC<{
   requestTimeComplete: string | undefined;
@@ -88,6 +89,7 @@ const RequestDetailsHeader: React.FC<{
           )}
         </div>
       </div>
+      <RequestActions />
     </div>
   );
 };

@@ -21,17 +21,13 @@
   width: 100%;
   background-color: var(--mdc-theme-surface);
   height: 56px;
-  padding: 0 12px;
+  padding: 0 6px;
   // shadow border at bottom
   box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12) inset;
   // flex behavior
   display: flex;
   justify-content: space-between;
   align-items: center;
-  // mobile styles
-  @media screen and (max-width: 500px) {
-    padding: 0 6px;
-  }
 }
 
 .Firestore-Request-Details-Header-Return {
@@ -59,19 +55,43 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  // make space for the collapsed button
+  @media screen and (max-width: 850px) {
+    // width = wholeWidth - widthReturnButton - widthCollapsedButton
+    width: calc(100% - 42px - 48px);
+  }
 
   .Firestore-Request-Date {
     width: 70px;
+    // mobile styles
+    @media screen and (max-width: 500px) {
+      width: 50px;
+    }
   }
   .Firestore-Request-Outcome {
     width: 50px;
+    // mobile styles
+    @media screen and (max-width: 500px) {
+      width: 40px;
+    }
   }
   .Firestore-Request-Method {
     width: 70px;
     text-align: center;
+    // mobile styles
+    @media screen and (max-width: 500px) {
+      width: 35px;
+    }
   }
   .Firestore-Request-Path {
-    width: 100%;
+    // width = 100% - widthDate - widthOutcome - widthMethod
+    width: calc(100% - 70px - 50px - 70px);
+    // mobile styles
+    @media screen and (max-width: 500px) {
+      // width = 100% - widthDate - widthOutcome - widthMethod
+      width: calc(100% - 50px - 40px - 35px);
+    }
+
     .Firestore-Request-Path-Container {
       justify-content: flex-start;
       // copy IconButton

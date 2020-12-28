@@ -14,8 +14,35 @@
  * limitations under the License.
  */
 
-.Firestore-Request-Details-Inspection-Action {
-  font-size: 13px;
+.Firestore-Request-Details-Actions-Container {
+  // flex behavior
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  // show collapsed button
+  @media screen and (max-width: 850px) {
+    display: none;
+  }
+}
+
+.Firestore-Request-Details-Actions-Collapsed-Button {
+  display: none;
+  // show collapsed button
+  @media screen and (max-width: 850px) {
+    display: block;
+  }
+  // mobile styles
+  @media screen and (max-width: 510px) {
+    width: 30px;
+    height: 30px;
+    padding: 0px;
+  }
+}
+
+.Firestore-Request-Details-Action {
+  font-size: 12px;
+  // get text in just one line
+  white-space: nowrap;
   // select all Actions but the last one
   &:not(:last-of-type) {
     margin-bottom: 10px;

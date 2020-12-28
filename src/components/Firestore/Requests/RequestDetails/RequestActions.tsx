@@ -14,22 +14,35 @@
  * limitations under the License.
  */
 
-import './InspectionAction.scss';
+import './RequestActions.scss';
 
 import { Button } from '@rmwc/button';
+import { IconButton } from '@rmwc/icon-button';
 import React from 'react';
 
-export const InspectionAction: React.FC<{
+const Action: React.FC<{
   label: string;
   onClick: () => void;
 }> = ({ label, onClick }) => (
   <Button
-    unelevated
+    outlined
     onClick={onClick}
-    className="Firestore-Request-Details-Inspection-Action"
+    className="Firestore-Request-Details-Action"
   >
     {label}
   </Button>
 );
 
-export default InspectionAction;
+const RequestActions: React.FC<{}> = () => (
+  <>
+    <div className="Firestore-Request-Details-Actions-Container">
+      <Action label="Retrigger Request" onClick={() => {}} />
+    </div>
+    <IconButton
+      icon={{ icon: 'more_vert' }}
+      className="Firestore-Request-Details-Actions-Collapsed-Button"
+    />
+  </>
+);
+
+export default RequestActions;
