@@ -25,10 +25,11 @@
   overflow: hidden;
   // min-height is the whole view height minus height of external components
   // min-height = allViewHeight - navBarHeight - appHorizontalPadding - firestoreSubTabsHeight - requestDetailsHeader
-  min-height: calc(100vh - 88px - 48px - 72px - 56px);
+  min-height: calc(100vh - 88px - 48px - 96px - 56px);
   // mobile styles
   @media screen and (max-height: 535px) {
+    // totalAvailableHeight = 400px - 48px - 48px
     // height = totalAvailableHeight - requestDetailsHeader
-    min-height: calc(328px - 56px);
+    min-height: calc(304px - 56px);
   }
 }

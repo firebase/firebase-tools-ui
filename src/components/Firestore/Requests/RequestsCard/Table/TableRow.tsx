@@ -68,7 +68,7 @@ const RequestTableRow: React.FC<{
               align="bottom"
               enterDelay={100}
             >
-              <Icon icon={{ icon: outcomeData?.icon }} />
+              <Icon icon={{ icon: outcomeData?.icon, size: 'medium' }} />
             </Tooltip>
           )}
         </DataTableCell>

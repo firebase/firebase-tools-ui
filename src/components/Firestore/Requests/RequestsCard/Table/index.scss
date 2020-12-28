@@ -24,7 +24,6 @@
   td,
   th {
     padding: 8px 0 8px 24px;
-    // the real height ends up been 33px because of the vertical box-shadow of 1px on each side
     height: 31px;
   }
   th {
@@ -42,8 +41,9 @@
   }
   @media screen and (max-height: 535px) {
     // fix height on short-devices (to avoid depending on view height value at this point)
-    // height = totalAvailableHeight - requestsHeaderHeight
-    height: calc(328px - 56px);
+    // totalAvailableHeight = 400px - 48px - 48px
+    // height = totalAvailableHeight + restoreNegativeMargin - requestsHeaderHeight
+    height: calc(304px + 2px - 56px);
   }
 
   // clicklable rows styles
@@ -63,11 +63,11 @@
   }
   .Firestore-Requests-Table-Outcome-Header,
   .Firestore-Request-Outcome {
-    width: 73px;
+    width: 50px;
   }
   .Firestore-Requests-Table-Method-Header,
   .Firestore-Request-Method {
-    width: 88px;
+    width: 80px;
   }
 
   // fix body height and ensure body content scrollable behavior
@@ -83,12 +83,13 @@
     overflow: auto;
     background-color: white;
     // min-height is the whole view height minus height of external components
-    // min-height = allViewHeight - firestoreSubTabsHeight - requestsHeaderHeight - requestTableHeader
-    height: calc(100vh - 136px - 72px - 33px - 56px);
+    // min-height = allViewHeight - navBarHeight - appHorizontalPadding - firestoreSubTabsHeight - requestsHeaderHeight - requestTableHeader
+    height: calc(100vh - 88px - 48px - 96px - 31px - 56px);
     @media screen and (max-height: 535px) {
       // fix height on short-devices (to avoid depending on view height value at this point)
+      // totalAvailableHeight = 400px - 48px - 48px
       // height = totalAvailableHeight - requestsHeaderHeight - requestTableHeader
-      height: (328px - 33px - 56px);
+      height: (304px - 31px - 56px);
     }
   }
 }
@@ -103,6 +104,6 @@
   @media screen and (max-height: 535px) {
     // make table height equal to the height of the requestTableHeader,
     // helpful to display the Zero State message
-    height: 33px;
+    height: 31px;
   }
 }

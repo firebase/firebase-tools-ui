@@ -21,65 +21,57 @@
   width: 100%;
   background-color: var(--mdc-theme-surface);
   height: 56px;
+  padding: 0 12px;
   // shadow border at bottom
   box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12) inset;
   // flex behavior
   display: flex;
   justify-content: space-between;
   align-items: center;
+  // mobile styles
+  @media screen and (max-width: 500px) {
+    padding: 0 6px;
+  }
 }
 
 .Firestore-Request-Details-Header-Return {
-  min-width: 64px;
-  // shadow border at right
-  box-shadow: -1px 0 0 rgba(0, 0, 0, 0.12) inset;
+  padding-right: 12px;
   // flex behavior
   display: flex;
   justify-content: center;
+  // Icon Button
+  a {
+    width: 30px;
+    height: 30px;
+    padding: 5px;
+  }
   // mobile styles
   @media screen and (max-width: 500px) {
-    min-width: 48px;
+    padding-right: 0px;
   }
 }
 
 .Firestore-Request-Details-Header-Info {
-  width: calc(100% - 64px);
+  width: 100%;
   height: 100%;
-  padding: 0 12px;
   position: relative;
   // flex behavior
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  // mobile styles
-  @media screen and (max-width: 500px) {
-    // width = 100% - returnIconButton
-    width: calc(100% - 48px);
-    padding: 0 6px;
-  }
 
+  .Firestore-Request-Date {
+    width: 70px;
+  }
   .Firestore-Request-Outcome {
-    width: 5%;
-    margin-right: 15px;
-    // mobile styles
-    @media screen and (max-width: 500px) {
-      // outcome Icon
-      i {
-        font-size: 1.8rem;
-      }
-    }
+    width: 50px;
   }
   .Firestore-Request-Method {
-    width: 10%;
-    margin-right: 10px;
+    width: 70px;
     text-align: center;
   }
   .Firestore-Request-Path {
-    width: 65%;
-    // mobile styles
-    @media screen and (max-width: 500px) {
-      width: 55%;
-    }
+    width: 100%;
     .Firestore-Request-Path-Container {
       justify-content: flex-start;
       // copy IconButton
@@ -93,9 +85,5 @@
         }
       }
     }
-  }
-  .Firestore-Request-Date {
-    width: 20%;
-    text-align: right;
   }
 }

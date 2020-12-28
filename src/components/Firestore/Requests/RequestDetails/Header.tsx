@@ -50,13 +50,20 @@ const RequestDetailsHeader: React.FC<{
       <div className="Firestore-Request-Details-Header-Return">
         <Tooltip content="Go back to Table" align="bottom" enterDelay={100}>
           <IconButton
-            icon="arrow_back_ios"
+            icon={{ icon: 'arrow_back_ios', size: 'small' }}
             tag={Link}
             to="/firestore/requests"
           />
         </Tooltip>
       </div>
       <div className="Firestore-Request-Details-Header-Info">
+        <Tooltip
+          content={requestTimeComplete}
+          align="bottomRight"
+          enterDelay={300}
+        >
+          <div className="Firestore-Request-Date">{requestTimeFormatted}</div>
+        </Tooltip>
         <CustomThemeProvider use={outcomeData?.theme || 'note'} wrap>
           <div className="Firestore-Request-Outcome">
             {outcomeData?.icon && (
@@ -65,7 +72,7 @@ const RequestDetailsHeader: React.FC<{
                 align="bottom"
                 enterDelay={100}
               >
-                <Icon icon={{ icon: outcomeData?.icon, size: 'large' }} />
+                <Icon icon={{ icon: outcomeData?.icon, size: 'medium' }} />
               </Tooltip>
             )}
           </div>
@@ -80,13 +87,6 @@ const RequestDetailsHeader: React.FC<{
             />
           )}
         </div>
-        <Tooltip
-          content={requestTimeComplete}
-          align="bottomRight"
-          enterDelay={300}
-        >
-          <div className="Firestore-Request-Date">{requestTimeFormatted}</div>
-        </Tooltip>
       </div>
     </div>
   );

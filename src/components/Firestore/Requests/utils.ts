@@ -26,10 +26,10 @@ import { InspectionElement, RulesOutcomeData } from './types';
 
 // matches the material-icon name by request outcome
 const ICON_SELECTOR = {
-  allow: 'check',
-  deny: 'close',
-  error: 'warning',
-  admin: 'verified_user',
+  allow: 'check_circle',
+  deny: 'remove_circle',
+  error: 'report_problem',
+  admin: 'security',
 };
 const REQUEST_PATH_CHARACTER_PX_WIDTH = 8.4;
 const COPY_ICON_BUTTON_PX_WIDTH = 48;
