@@ -59,25 +59,17 @@
   // make space for the collapsed button
   @media screen and (max-width: 850px) {
     // width = wholeWidth - widthReturnButton - widthCollapsedButton
-    width: calc(100% - 42px - 48px);
+    width: calc(100% - 30px - 30px);
   }
 
   .Firestore-Request-Date {
-    width: 70px;
-    // mobile styles
-    @media screen and (max-width: 500px) {
-      width: 50px;
-    }
+    width: 50px;
   }
   .Firestore-Request-Outcome {
-    width: 50px;
-    // mobile styles
-    @media screen and (max-width: 500px) {
-      width: 40px;
-    }
+    width: 35px;
   }
   .Firestore-Request-Method {
-    width: 70px;
+    width: 60px;
     text-align: center;
     // mobile styles
     @media screen and (max-width: 500px) {
