@@ -64,9 +64,6 @@
   }
   .CodeMirror-code {
     // highlight line of code
-    & > div:focus {
-      background-color: var(--mdc-theme-hover);
-    }
     & > div.deny {
       // TODO: get this color from a theme variable
       background-color: rgb(255 82 82 / 25%);

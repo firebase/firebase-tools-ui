@@ -27,7 +27,8 @@
 }
 
 .Firestore-Request-Details-Inspection-Block.Firestore-Request-Details-Inspection-Block--Main {
-  background-color: var(--mdc-theme-hover);
+  // TODO: get from theme, and make sure this color is part of the firebase color spec
+  background-color: #e2e2e2;
   font-weight: 500;
   padding: 5px 10px;
   font-size: 13px;

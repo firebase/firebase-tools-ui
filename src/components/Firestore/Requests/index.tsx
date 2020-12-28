@@ -21,7 +21,6 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 
 import { grey100 } from '../../../colors';
 import { addRequestEvaluation } from '../../../store/firestoreRequestEvaluations';
-import { noteTheme } from '../../../themes';
 import RequestDetails from './RequestDetails';
 import RequestsCard from './RequestsCard';
 import { FirestoreRulesEvaluation } from './rules_evaluation_result_model';
@@ -50,7 +49,6 @@ const Requests: React.FC<Props> = ({ addRequest }) => {
     <ThemeProvider
       options={{
         surface: grey100,
-        hover: noteTheme.background,
       }}
     >
       <Switch>
