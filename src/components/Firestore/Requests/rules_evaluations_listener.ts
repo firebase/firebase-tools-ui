@@ -18,6 +18,8 @@ import { ReconnectingWebSocket } from '../../../reconnectingWebSocket';
 import { FirestoreRulesEvaluation } from './rules_evaluation_result_model';
 import { generateId } from './utils';
 
+// TODO: Replace hardcoded websocket URL (used for development purposes only)
+//       with a function that somehow gets the proper URL
 const REQUESTS_EVALUATION_WEBSOCKET_HOST_AND_PORT = 'localhost:8888/rules/ws';
 
 export type OnEvaluationFn = (evaluation: FirestoreRulesEvaluation) => void;
@@ -25,8 +27,6 @@ export type Unsubscribe = () => void;
 
 /** Starts listening to a realtime feed of rule evaluations */
 export function registerForRulesEvents(callback: OnEvaluationFn): Unsubscribe {
-  // TODO: Replace hardcoded websocket URL (used for development purposes only)
-  //       with a function that somehow gets the proper URL
   const webSocket = new ReconnectingWebSocket(
     REQUESTS_EVALUATION_WEBSOCKET_HOST_AND_PORT
   );
