@@ -23,8 +23,12 @@
   margin: -1px;
   td,
   th {
-    padding: 8px 0 8px 24px;
     height: 31px;
+    padding: 8px 0 8px 24px;
+    // mobile styles
+    @media screen and (max-width: 500px) {
+      padding: 8px 0 8px 10px;
+    }
   }
   th {
     font-size: 12px;
@@ -60,14 +64,26 @@
   .Firestore-Requests-Table-Date-Header,
   .Firestore-Request-Date {
     width: 77px;
+    // mobile styles
+    @media screen and (max-width: 500px) {
+      width: 61px;
+    }
   }
   .Firestore-Requests-Table-Outcome-Header,
   .Firestore-Request-Outcome {
     width: 50px;
+    // mobile styles
+    @media screen and (max-width: 500px) {
+      width: 35px;
+    }
   }
   .Firestore-Requests-Table-Method-Header,
   .Firestore-Request-Method {
     width: 80px;
+    // mobile styles
+    @media screen and (max-width: 500px) {
+      width: 70px;
+    }
   }
 
   // fix body height and ensure body content scrollable behavior
