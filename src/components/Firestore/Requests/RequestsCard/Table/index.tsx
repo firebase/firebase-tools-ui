@@ -64,7 +64,11 @@ const RequestsTable: React.FC<Props> = ({
         <DataTableContent>
           <DataTableHead>
             <DataTableRow>
-              <DataTableHeadCell className={`${TABLE_CLASS}-Date-Header`}>
+              {/* TODO: add onSortChange to toggle sorting value when functionality is ready */}
+              <DataTableHeadCell
+                className={`${TABLE_CLASS}-Date-Header`}
+                sort={1}
+              >
                 Time
               </DataTableHeadCell>
               <DataTableHeadCell

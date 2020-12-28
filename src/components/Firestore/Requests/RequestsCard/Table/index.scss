@@ -32,9 +32,18 @@
   }
   th {
     font-size: 12px;
-    font-weight: 400;
     // avoid extra text height
     line-height: 1;
+    // font-weight different for sorted and not sorted columns
+    font-weight: 400;
+    &.rmwc-data-table__head-cell--sorted {
+      font-weight: 600;
+    }
+    // move sort icon to the right side
+    .rmwc-data-table__sort-icon {
+      position: absolute;
+      right: 0px;
+    }
   }
   thead {
     background-color: var(--mdc-theme-surface);
