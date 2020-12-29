@@ -14,12 +14,33 @@
  * limitations under the License.
  */
 
-import { dummyRequestEvaluation } from '../../components/Firestore/Requests/test_utils';
+import { FirestoreRulesEvaluation } from '../../components/Firestore/Requests/rules_evaluation_result_model';
 import { addRequestEvaluation, selectRequestEvaluationById } from './actions';
 import {
   FirestoreRequestEvaluationsState,
   firestoreRequestEvaluationsReducer,
 } from './reducer';
+
+const dummyRequestEvaluation: FirestoreRulesEvaluation = {
+  outcome: 'allow',
+  rulesContext: {
+    request: {
+      method: 'get',
+      path: 'databases/(default)/documents/users/foo',
+      time: new Date().getTime(),
+    },
+    resource: {
+      __name__: 'foo',
+      id: 'database/(default)/documents/users/foo',
+      data: {
+        name: 'Foo Bar',
+        accountAge: 94,
+      },
+    },
+  },
+  requestId: 'unique_id',
+  granularAllowOutcomes: [],
+};
 
 describe('firestore request evaluations reducer', () => {
   const INIT_STATE: FirestoreRequestEvaluationsState = {
