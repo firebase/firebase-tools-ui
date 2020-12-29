@@ -97,7 +97,7 @@ export const Firestore: React.FC = React.memo(() => {
   const showCollectionShell = path.split('/').length < 2;
   const showDocumentShell = path.split('/').length < 3;
 
-  const subNavRoutes = routes.filter(r => r.showInFirestoreSubNav);
+  const subNavRoutes = routes.filter((r) => r.showInFirestoreSubNav);
   const subTabs = subNavRoutes.map(({ path, label }: RouteType) => (
     <Tab
       key={label}
@@ -108,7 +108,7 @@ export const Firestore: React.FC = React.memo(() => {
     </Tab>
   ));
 
-  const activeTabIndex = subNavRoutes.findIndex(r =>
+  const activeTabIndex = subNavRoutes.findIndex((r) =>
     matchPath(location.pathname, {
       path: r.multiPath || r.path,
       exact: r.exact,
@@ -201,7 +201,7 @@ const FirestoreDataCard: React.FC<FirestoreDataCardProps> = ({
     <Elevation z="2" wrap>
       <Card className="Firestore-panels-wrapper">
         <InteractiveBreadCrumbBar
-          base="/firestore"
+          base="/firestore/data"
           path={path}
           onNavigate={handleNavigate}
         />
