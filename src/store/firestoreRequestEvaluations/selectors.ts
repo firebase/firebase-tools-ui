@@ -19,10 +19,16 @@ import { createSelector } from 'reselect';
 import { AppState } from '..';
 
 function getAllRequestEvaluationsFromState(state: AppState) {
-  return state.firestoreRequestEvaluations.requestEvaluations;
+  return state.firestore.requests.evaluations;
 }
-function getSelectedRequestEvaluationIdFromState(state: AppState) {
-  return state.firestoreRequestEvaluations.selectedRequestEvaluationId;
+
+function getSelectedRequestEvaluationFromState(
+  state: AppState,
+  selectedRequestEvaluationId: string
+) {
+  return state.firestore.requests.evaluations.find(
+    ({ requestId }) => requestId === selectedRequestEvaluationId
+  );
 }
 
 export const getAllRequestEvaluations = createSelector(
@@ -31,10 +37,6 @@ export const getAllRequestEvaluations = createSelector(
 );
 
 export const getSelectedRequestEvaluation = createSelector(
-  getAllRequestEvaluationsFromState,
-  getSelectedRequestEvaluationIdFromState,
-  (requestEvaluations, selectedRequestEvaluationId) =>
-    requestEvaluations?.find(
-      ({ requestId }) => requestId === selectedRequestEvaluationId
-    )
+  getSelectedRequestEvaluationFromState,
+  selectedRequestEvaluation => selectedRequestEvaluation
 );
