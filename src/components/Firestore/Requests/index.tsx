@@ -15,64 +15,34 @@
  */
 
 import { ThemeProvider } from '@rmwc/theme';
-import React, { useEffect } from 'react';
-import { MapDispatchToPropsFunction, connect } from 'react-redux';
+import React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 
 import { grey100 } from '../../../colors';
-import { addRequestEvaluation } from '../../../store/firestoreRequestEvaluations';
-import { noteTheme } from '../../../themes';
-import { FirestoreRulesEvaluation } from './rules_evaluation_result_model';
-import { registerForRulesEvents } from './rules_evaluations_listener';
+import RequestDetails from './RequestDetails';
+import RequestsCard from './RequestsCard';
 
-export interface PropsFromDispatch {
-  addRequest: typeof addRequestEvaluation;
-}
+const Requests: React.FC<{}> = () => (
+  <ThemeProvider
+    options={{
+      surface: grey100,
+    }}
+  >
+    <Switch>
+      <Route exact path="/firestore/requests">
+        <RequestsCard />
+      </Route>
+      <Route
+        exact
+        path="/firestore/requests/:requestId"
+        render={({ match }: any) => {
+          const requestId = match.params.requestId;
+          return <RequestDetails requestId={requestId} />;
+        }}
+      />
+      <Redirect to="/firestore/requests" />
+    </Switch>
+  </ThemeProvider>
+);
 
-export type Props = PropsFromDispatch;
-
-const Requests: React.FC<Props> = ({ addRequest }) => {
-  useEffect(() => {
-    const callbackFunction = (newEvaluation: FirestoreRulesEvaluation) => {
-      const { type } = newEvaluation;
-      if (type === 'RULES_UPDATE') {
-        // TODO: UPDATE RULES
-      } else {
-        addRequest(newEvaluation);
-      }
-    };
-    const unsubscribeFromRules = registerForRulesEvents(callbackFunction);
-    return () => unsubscribeFromRules();
-  }, [addRequest]);
-
-  return (
-    <ThemeProvider
-      options={{
-        surface: grey100,
-        hover: noteTheme.background,
-      }}
-    >
-      <Switch>
-        <Route exact path="/firestore/requests">
-          {/* NOTE: This will be an import to the actual Component on the next PR */}
-          <div> Requests Table </div>
-        </Route>
-        <Route exact path="/firestore/requests/:requestId">
-          {/* NOTE: This will be an import to the actual Component on the next PR */}
-          <div> Request Details </div>
-        </Route>
-        <Redirect to="/firestore/requests" />
-      </Switch>
-    </ThemeProvider>
-  );
-};
-
-export const mapDispatchToProps: MapDispatchToPropsFunction<
-  PropsFromDispatch,
-  {}
-> = dispatch => ({
-  addRequest: (newEvaluation: FirestoreRulesEvaluation) =>
-    dispatch(addRequestEvaluation(newEvaluation)),
-});
-
-export default connect(null, mapDispatchToProps)(Requests);
+export default Requests;
