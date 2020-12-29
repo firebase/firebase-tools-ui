@@ -97,8 +97,7 @@ export const Firestore: React.FC = React.memo(() => {
   const showCollectionShell = path.split('/').length < 2;
   const showDocumentShell = path.split('/').length < 3;
 
-  const subNavRoutes = routes.filter(r => r.showInFirestoreSubNav);
-
+  const subNavRoutes = routes.filter((r) => r.showInFirestoreSubNav);
   const subTabs = subNavRoutes.map(({ path, label }: RouteType) => (
     <Tab
       key={label}
@@ -109,7 +108,7 @@ export const Firestore: React.FC = React.memo(() => {
     </Tab>
   ));
 
-  const activeTabIndex = subNavRoutes.findIndex(r =>
+  const activeTabIndex = subNavRoutes.findIndex((r) =>
     matchPath(location.pathname, {
       path: r.multiPath || r.path,
       exact: r.exact,
@@ -140,62 +139,12 @@ export const Firestore: React.FC = React.memo(() => {
     }
   }
 
-  function renderClearDataAction() {
-    return (
-      <CustomThemeProvider use="warning" wrap>
-        <Button unelevated onClick={() => handleClearData()}>
-          Clear all data
-        </Button>
-      </CustomThemeProvider>
-    );
-  }
-
-  function renderFirestoreData() {
-    return (
-      <Elevation z="2" wrap>
-        <Card className="Firestore-panels-wrapper">
-          <InteractiveBreadCrumbBar
-            base="/firestore/data"
-            path={path}
-            onNavigate={handleNavigate}
-          />
-          <div className="Firestore-panels">
-            <Root />
-            {showCollectionShell && (
-              <div
-                className="Firestore-Collection"
-                data-testid="collection-shell"
-              >
-                <PanelHeader id="" icon={null} />
-              </div>
-            )}
-            {showDocumentShell && (
-              <div className="Firestore-Document" data-testid="document-shell">
-                <PanelHeader id="" icon={null} />
-              </div>
-            )}
-          </div>
-        </Card>
-      </Elevation>
-    );
-  }
-
-  function renderFirestoreRequests() {
-    return (
-      <Elevation z="2" wrap>
-        <Card className="Firestore-panels-wrapper">
-          <FirestoreRequests />
-        </Card>
-      </Elevation>
-    );
-  }
-
   return isRefreshing ? (
     <Spinner span={12} data-testid="firestore-loading" />
   ) : (
     <FirestoreStore>
       <GridCell span={12} className="Firestore">
-        <div className="Firestore-actions">
+        <div className="Firestore-sub-tabs">
           <TabBar
             className="Firestore-sub-tab-bar"
             theme="onSurface"
@@ -203,11 +152,20 @@ export const Firestore: React.FC = React.memo(() => {
           >
             {subTabs}
           </TabBar>
-          <Route path="/firestore/data">{renderClearDataAction()}</Route>
         </div>
 
-        <Route path="/firestore/data">{renderFirestoreData()}</Route>
-        <Route path="/firestore/requests">{renderFirestoreRequests()}</Route>
+        <Route path="/firestore/data">
+          <FirestoreDataCard
+            path={path}
+            handleClearData={handleClearData}
+            handleNavigate={handleNavigate}
+            showCollectionShell={showCollectionShell}
+            showDocumentShell={showDocumentShell}
+          />
+        </Route>
+        <Route path="/firestore/requests">
+          <FirestoreRequestsCard />
+        </Route>
       </GridCell>
     </FirestoreStore>
   );
@@ -215,4 +173,63 @@ export const Firestore: React.FC = React.memo(() => {
 
 export const FirestoreRouteDisabled: React.FC = () => (
   <EmulatorDisabled productName="Firestore" />
+);
+
+interface FirestoreDataCardProps {
+  path: string;
+  handleClearData: () => void;
+  handleNavigate: (path?: string) => void;
+  showCollectionShell: boolean;
+  showDocumentShell: boolean;
+}
+
+const FirestoreDataCard: React.FC<FirestoreDataCardProps> = ({
+  path,
+  handleClearData,
+  handleNavigate,
+  showCollectionShell,
+  showDocumentShell,
+}) => (
+  <>
+    <div className="Firestore-actions">
+      <CustomThemeProvider use="warning" wrap>
+        <Button unelevated onClick={() => handleClearData()}>
+          Clear all data
+        </Button>
+      </CustomThemeProvider>
+    </div>
+    <Elevation z="2" wrap>
+      <Card className="Firestore-panels-wrapper">
+        <InteractiveBreadCrumbBar
+          base="/firestore/data"
+          path={path}
+          onNavigate={handleNavigate}
+        />
+        <div className="Firestore-panels">
+          <Root />
+          {showCollectionShell && (
+            <div
+              className="Firestore-Collection"
+              data-testid="collection-shell"
+            >
+              <PanelHeader id="" icon={null} />
+            </div>
+          )}
+          {showDocumentShell && (
+            <div className="Firestore-Document" data-testid="document-shell">
+              <PanelHeader id="" icon={null} />
+            </div>
+          )}
+        </div>
+      </Card>
+    </Elevation>
+  </>
+);
+
+const FirestoreRequestsCard: React.FC = () => (
+  <Elevation z="2" wrap>
+    <Card className="Firestore-panels-wrapper">
+      <FirestoreRequests />
+    </Card>
+  </Elevation>
 );
