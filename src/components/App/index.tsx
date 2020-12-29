@@ -28,6 +28,9 @@ import { dialogs } from '../common/DialogQueue';
 import AppBar from './AppBar';
 import AppDisconnected from './AppDisconnected';
 
+export const REDIRECT_LOGS_URL =
+  '/logs?q=metadata.emulator.name%3D%22functions%22';
+
 const App: React.FC = () => {
   return (
     <>
@@ -39,7 +42,7 @@ const App: React.FC = () => {
           <AppBar routes={routes} />
           <Grid className="App-main">
             <Switch>
-              {routes.map(r => (
+              {routes.map((r) => (
                 <Route
                   key={r.path}
                   path={r.path}
@@ -47,10 +50,7 @@ const App: React.FC = () => {
                   exact={r.exact}
                 />
               ))}
-              <Redirect
-                from="/functions"
-                to="/logs?q=metadata.emulator.name%3D%22functions%22"
-              />
+              <Redirect from="/functions" to={REDIRECT_LOGS_URL} />
               <Redirect from="/firestore" to="/firestore/data" />
               <Redirect to="/" /> {/* Fallback to redirect to overview. */}
             </Switch>

@@ -18,11 +18,12 @@ import { ReactNode, useEffect, useState } from 'react';
 import React from 'react';
 import { Redirect, useLocation, useRouteMatch } from 'react-router-dom';
 
-const FIRESTORE_ROUTE = '/firestore';
+const FIRESTORE_ROUTE = '/firestore/data';
+const FIRESTORE_ROUTE_PATH_LENGTH = FIRESTORE_ROUTE.split('/').length;
 
 /**
  * Given a list of collections or documents, auto select the first item. Only
- * works on root (`/firestore`) or top level collections (`/firestore/users`)
+ * works on root (`/firestore/data`) or top level collections (`/firestore/data/users`)
  * to prevent deep auto selection.
  */
 export function useAutoSelect<T extends { id: string }>(list?: T[] | null) {
@@ -33,8 +34,9 @@ export function useAutoSelect<T extends { id: string }>(list?: T[] | null) {
   useEffect(() => {
     const isRootOrRootCollection =
       url === FIRESTORE_ROUTE ||
-      // /firestore/users
-      (url.startsWith(FIRESTORE_ROUTE) && url.split('/').length === 3);
+      // /firestore/data/users
+      (url.startsWith(FIRESTORE_ROUTE) &&
+        url.split('/').length === FIRESTORE_ROUTE_PATH_LENGTH + 1);
     const hasNothingSelected = url === pathname;
     const firstChild = list?.[0];
     const shouldAutoSelect = isRootOrRootCollection && hasNothingSelected;
