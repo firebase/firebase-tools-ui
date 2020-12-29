@@ -16,12 +16,11 @@
 
 import './index.scss';
 
-import React, { useEffect, useState } from 'react';
-import { MapDispatchToPropsFunction, connect } from 'react-redux';
-import { Redirect, useParams } from 'react-router-dom';
+import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 
-import { createStructuredSelector } from '../../../../store';
-import { selectRequestEvaluationById } from '../../../../store/firestoreRequestEvaluations';
+import { AppState } from '../../../../store';
 import { getSelectedRequestEvaluation } from '../../../../store/firestoreRequestEvaluations/selectors';
 import CopyPathNotification from '../CopyPathNotification';
 import { FirestoreRulesEvaluation } from '../rules_evaluation_result_model';
@@ -33,19 +32,15 @@ import RequestDetailsCodeViewer from './CodeViewer';
 import RequestDetailsHeader from './Header';
 import RequestDetailsInspectionSection from './InspectionSection';
 
-export interface PropsFromState {
+interface PropsFromState {
   selectedRequest?: FirestoreRulesEvaluation;
 }
-export interface PropsFromDispatch {
-  selectRequestById: typeof selectRequestEvaluationById;
+interface PropsFromParentComponent {
+  requestId?: string;
 }
-export type Props = PropsFromState & PropsFromDispatch;
+export type Props = PropsFromState & PropsFromParentComponent;
 
-const RequestDetails: React.FC<Props> = ({
-  selectedRequest,
-  selectRequestById,
-}) => {
-  const { requestId } = useParams<{ requestId: string }>();
+const RequestDetails: React.FC<Props> = ({ selectedRequest, requestId }) => {
   const [
     requestTimeComplete,
     requestTimeFormatted,
@@ -60,24 +55,15 @@ const RequestDetails: React.FC<Props> = ({
     inspectionElements,
   ] = useRequestInspectionElements(selectedRequest);
 
-  const [wasRequestSelected, setWasRequestSelected] = useState<Boolean>(false);
   const [showCopyNotification, setShowCopyNotification] = useState<boolean>(
     false
   );
 
-  useEffect(() => {
-    selectRequestById(requestId);
-    setWasRequestSelected(true);
-    return () => {
-      selectRequestById(null);
-    };
-  }, [selectRequestById, requestId]);
-
   // redirect to table if selected (requestId) was not valid
-  if (wasRequestSelected && !selectedRequest) {
+  if (requestId && !selectedRequest) {
     return <Redirect to="/firestore/requests" />;
   }
-  // return empty view if (selectedRequest) has not yet been requested
+  // return empty view if (selectedRequest) has not yet been selected
   else if (!selectedRequest) {
     return <></>;
   }
@@ -110,15 +96,10 @@ const RequestDetails: React.FC<Props> = ({
   );
 };
 
-export const mapStateToProps = createStructuredSelector({
-  selectedRequest: getSelectedRequestEvaluation,
-});
-export const mapDispatchToProps: MapDispatchToPropsFunction<
-  PropsFromDispatch,
-  {}
-> = dispatch => ({
-  selectRequestById: (selectedRequestId: string | null) =>
-    dispatch(selectRequestEvaluationById(selectedRequestId)),
-});
+export const mapStateToProps = (state: AppState, { requestId }: Props) => {
+  return {
+    selectedRequest: getSelectedRequestEvaluation(state, requestId || ''),
+  };
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(RequestDetails);
+export default connect(mapStateToProps, null)(RequestDetails);

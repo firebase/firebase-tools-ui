@@ -55,9 +55,14 @@ const Requests: React.FC<Props> = ({ addRequest }) => {
         <Route exact path="/firestore/requests">
           <RequestsCard />
         </Route>
-        <Route exact path="/firestore/requests/:requestId">
-          <RequestDetails />
-        </Route>
+        <Route
+          exact
+          path="/firestore/requests/:requestId"
+          render={({ match }: any) => {
+            const requestId = match.params.requestId;
+            return <RequestDetails requestId={requestId} />;
+          }}
+        />
         <Redirect to="/firestore/requests" />
       </Switch>
     </ThemeProvider>
