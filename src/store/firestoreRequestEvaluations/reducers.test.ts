@@ -15,7 +15,7 @@
  */
 
 import { FirestoreRulesEvaluation } from '../../components/Firestore/Requests/rules_evaluation_result_model';
-import { addRequestEvaluation, selectRequestEvaluationById } from './actions';
+import { addRequestEvaluation } from './actions';
 import {
   FirestoreRequestEvaluationsState,
   firestoreRequestEvaluationsReducer,
@@ -43,10 +43,7 @@ const dummyRequestEvaluation: FirestoreRulesEvaluation = {
 };
 
 describe('firestore request evaluations reducer', () => {
-  const INIT_STATE: FirestoreRequestEvaluationsState = {
-    requestEvaluations: [],
-    selectedRequestEvaluationId: null,
-  };
+  const INIT_STATE: FirestoreRequestEvaluationsState = [];
 
   it(`${addRequestEvaluation} => adds request evaluation to beginning of array`, () => {
     const updatedState = firestoreRequestEvaluationsReducer(
@@ -63,36 +60,6 @@ describe('firestore request evaluations reducer', () => {
         updatedState,
         addRequestEvaluation(secondDummyRequestEvaluation)
       )
-    ).toEqual({
-      requestEvaluations: [
-        secondDummyRequestEvaluation,
-        dummyRequestEvaluation,
-      ],
-      selectedRequestEvaluationId: null,
-    });
-  });
-
-  it(`${selectRequestEvaluationById} => sets value of selectedRequestEvaluationId to a string`, () => {
-    expect(
-      firestoreRequestEvaluationsReducer(
-        INIT_STATE,
-        selectRequestEvaluationById('unique-request-id')
-      )
-    ).toEqual({
-      requestEvaluations: [],
-      selectedRequestEvaluationId: 'unique-request-id',
-    });
-  });
-
-  it(`${selectRequestEvaluationById} => sets value of selectedRequestEvaluationId to null`, () => {
-    expect(
-      firestoreRequestEvaluationsReducer(
-        { ...INIT_STATE, selectedRequestEvaluationId: 'unique-request-id' },
-        selectRequestEvaluationById(null)
-      )
-    ).toEqual({
-      requestEvaluations: [],
-      selectedRequestEvaluationId: null,
-    });
+    ).toEqual([secondDummyRequestEvaluation, dummyRequestEvaluation]);
   });
 });

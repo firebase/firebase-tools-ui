@@ -29,12 +29,18 @@ import {
 } from './firestoreRequestEvaluations';
 import { LogState, logReducer } from './logviewer';
 
+export interface FirestoreRequestsState {
+  evaluations: FirestoreRequestEvaluationsState;
+}
+export interface FirestoreState {
+  requests: FirestoreRequestsState;
+}
 export interface AppState {
   config: ConfigState;
   database: DatabaseState;
   auth: AuthState;
   log: LogState;
-  firestoreRequestEvaluations: FirestoreRequestEvaluationsState;
+  firestore: FirestoreState;
 }
 
 export function* rootSaga() {
@@ -46,7 +52,11 @@ export const rootReducer = combineReducers<AppState>({
   database: databaseReducer,
   auth: authReducer,
   log: logReducer,
-  firestoreRequestEvaluations: firestoreRequestEvaluationsReducer,
+  firestore: combineReducers<FirestoreState>({
+    requests: combineReducers<FirestoreRequestsState>({
+      evaluations: firestoreRequestEvaluationsReducer,
+    }),
+  }),
 });
 
 export function createStructuredSelector<T>(

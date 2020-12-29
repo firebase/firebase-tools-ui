@@ -20,27 +20,15 @@ import { Action, createReducer } from 'typesafe-actions';
 import { FirestoreRulesEvaluation } from '../../components/Firestore/Requests/rules_evaluation_result_model';
 import * as actions from './actions';
 
-export interface FirestoreRequestEvaluationsState {
-  requestEvaluations: FirestoreRulesEvaluation[];
-  selectedRequestEvaluationId: string | null;
-}
+export type FirestoreRequestEvaluationsState = FirestoreRulesEvaluation[];
 
-const INIT_STATE: FirestoreRequestEvaluationsState = {
-  requestEvaluations: [],
-  selectedRequestEvaluationId: null,
-};
+const INIT_STATE: FirestoreRequestEvaluationsState = [];
 
 export const firestoreRequestEvaluationsReducer = createReducer<
   FirestoreRequestEvaluationsState,
   Action
->(INIT_STATE)
-  .handleAction(actions.addRequestEvaluation, (state, { payload }) =>
-    produce(state, draft => {
-      draft.requestEvaluations = [payload, ...draft.requestEvaluations];
-    })
-  )
-  .handleAction(actions.selectRequestEvaluationById, (state, { payload }) =>
-    produce(state, draft => {
-      draft.selectedRequestEvaluationId = payload;
-    })
-  );
+>(INIT_STATE).handleAction(actions.addRequestEvaluation, (state, { payload }) =>
+  produce(state, draftState => {
+    draftState.unshift(payload);
+  })
+);
