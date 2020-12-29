@@ -34,6 +34,8 @@ export const InspectionBlock: React.FC<{
     return children ? (
       children
     ) : (
+      // TODO: improve how the value is rendered: differ by value types
+      //       (string, number, boolean, object and maybe array too)
       <div className={`${INSPECT_BLOCK_CLASS}-Value`} title={value}>
         {value}
       </div>
