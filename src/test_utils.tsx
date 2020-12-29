@@ -163,13 +163,3 @@ export const wrapWithForm = <P, T, F = UseFormOptions<T>>(
 
   return { ...methods, triggerValidation, submit };
 };
-
-/**
- * Wait for MDC Menu to be fully open, so no DOM changes happen outside
- * our control and trigger warnings of not wrapped in act(...) etc.
- */
-export async function waitForMenuToOpen(container: ParentNode = document) {
-  await waitForElementToBeRemoved(() =>
-    container.querySelector('.mdc-menu-surface--animating-open')
-  );
-}

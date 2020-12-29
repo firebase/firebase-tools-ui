@@ -13,27 +13,6 @@
       enabled: false,
     },
     
-    // BEGIN version constraints for Node.js 8 support.
-    // TODO: Remove these once Renovate learns to ignore incompatible versions.
-    // https://github.com/renovatebot/renovate/issues/4826
-    {
-      packageNames: ["@testing-library/react"],
-      allowedVersions: '<10',
-    },
-    {
-      packageNames: ["husky"],
-      allowedVersions: '<4',
-    },
-    {
-      packageNames: ["lint-staged"],
-      allowedVersions: '<10',
-    },
-    {
-      packageNames: ["prettier"],
-      allowedVersions: '<2',
-    },
-    // END version constraints for Node.js 8 support.
-    
     // Schedule PRs once a week for non-critical packages with frequent updates.
     {
       packageNames: ["@types/jest", "@types/node"],

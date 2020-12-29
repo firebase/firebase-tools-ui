@@ -79,8 +79,9 @@ exports.registerApis = function (app) {
         host = '::1';
       }
       json[name] = {
-        hostAndPort: hostAndPort(host, info.port),
         ...info,
+        host,
+        hostAndPort: hostAndPort(host, info.port),
       }
     });
     return json;

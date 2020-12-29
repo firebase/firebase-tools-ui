@@ -5,7 +5,7 @@ import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
 
 import { createRemoteDataLoaded } from '../../../../store/utils';
-import { waitForMenuToOpen } from '../../../../test_utils';
+import { delay } from '../../../../test_utils';
 import { createFakeUser, getMockAuthStore } from '../../test_utils';
 import { confirmDeleteUser } from './confirmDeleteUser';
 import { UsersTable, UsersTableProps } from './UsersTable';
@@ -104,13 +104,11 @@ describe('UserTable', () => {
         fireEvent.click(menu);
       });
 
-      await waitForMenuToOpen();
+      // TODO: Investigate the best way to wait for menu to fully open.
+      await act(() => delay(200));
 
-      // Investigate: Menu was animating in still (flaky)
-      await waitForElement(() => '.mdc-menu-surface--open');
-
-      const button = result.getByText(text, {
-        selector: '.mdc-menu-surface--open .mdc-list-item',
+      const button = result.getByRole('menuitem', {
+        name: text,
       });
 
       return { ...result, button };
