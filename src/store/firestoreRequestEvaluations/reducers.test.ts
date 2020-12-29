@@ -60,11 +60,6 @@ describe('firestore request evaluations reducer', () => {
         updatedState,
         addRequestEvaluation(secondDummyRequestEvaluation)
       )
-    ).toEqual({
-      requestEvaluations: [
-        secondDummyRequestEvaluation,
-        dummyRequestEvaluation,
-      ],
-    });
+    ).toEqual([secondDummyRequestEvaluation, dummyRequestEvaluation]);
   });
 });
