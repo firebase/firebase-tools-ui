@@ -19,7 +19,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
-import { BrowserRouter, MemoryRouter, Route } from 'react-router-dom';
+import { BrowserRouter, MemoryRouter, Route, Switch } from 'react-router-dom';
 
 import configureStore from '../../configureStore';
 import { delay, waitForDialogsToOpen } from '../../test_utils';
@@ -71,8 +71,10 @@ it('shows dialogs in the queue', async () => {
 //     <MemoryRouter initialEntries={['/functions']}>
 //       <Provider store={store}>
 //         <BrowserRouter>
-//           <Route exact path={REDIRECT_LOGS_URL}> Redirected Logs URL </Route>
 //           <App />
+//           <Switch>
+//             <Route exact path={REDIRECT_LOGS_URL}> Redirected Logs URL </Route>
+//           </Switch>
 //         </BrowserRouter>
 //       </Provider>
 //     </MemoryRouter>
@@ -80,7 +82,7 @@ it('shows dialogs in the queue', async () => {
 
 //   await act(() => delay(100)); // Wait for tab indicator async DOM updates.
 
-//   expect(getByText('Redirected Logs URL')).not.toBe(null);
+//   expect(getByText(/Redirected Logs URL/)).not.toBe(null);
 // });
 
 // it('redirects from url /firestore to /firestore/data', async () => {
