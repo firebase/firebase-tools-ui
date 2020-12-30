@@ -56,3 +56,34 @@ it('selects the matching nav-tab', async () => {
   expect(isTabActive(getByText('foo'))).toBe(false);
   expect(isTabActive(getByText('bar'))).toBe(true);
 });
+
+it('selects the matching nav-tab when a path has multiple sub-tab paths', async () => {
+  const { getByText } = render(
+    <MemoryRouter initialEntries={['/bar']}>
+      <AppBar
+        routes={[
+          {
+            label: 'foo',
+            path: '/foo',
+            showInNav: true,
+            component: React.Fragment,
+            exact: false,
+          },
+          {
+            label: 'bar and not-bar',
+            path: '/bar',
+            multiPath: '/:tab(bar|not-bar)',
+            showInNav: true,
+            component: React.Fragment,
+            exact: false,
+          },
+        ]}
+      />
+    </MemoryRouter>
+  );
+
+  await act(() => delay(300)); // Wait for tab indicator async DOM updates.
+
+  expect(isTabActive(getByText('foo'))).toBe(false);
+  expect(isTabActive(getByText('bar and not-bar'))).toBe(true);
+});
