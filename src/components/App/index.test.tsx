@@ -15,6 +15,7 @@
  */
 
 import { render } from '@testing-library/react';
+import { createMemoryHistory } from 'history';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { act } from 'react-dom/test-utils';
@@ -67,38 +68,32 @@ it('shows dialogs in the queue', async () => {
 
 // it('redirects from url /functions to correct logs url', async () => {
 //   const store = configureStore();
-//   const { getByText } = render(
-//     <MemoryRouter initialEntries={['/functions']}>
-//       <Provider store={store}>
-//         <BrowserRouter>
-//           <App />
-//           <Switch>
-//             <Route exact path={REDIRECT_LOGS_URL}> Redirected Logs URL </Route>
-//           </Switch>
-//         </BrowserRouter>
-//       </Provider>
-//     </MemoryRouter>
+//   const history = createMemoryHistory({
+//     initialEntries: ['/functions'],
+//   });
+//   render(
+//     <Provider store={store}>
+//       <BrowserRouter>
+//         <App />
+//       </BrowserRouter>
+//     </Provider>
 //   );
-
 //   await act(() => delay(100)); // Wait for tab indicator async DOM updates.
-
-//   expect(getByText(/Redirected Logs URL/)).not.toBe(null);
+//   expect(history.location.pathname).toBe(REDIRECT_LOGS_URL);
 // });
 
 // it('redirects from url /firestore to /firestore/data', async () => {
 //   const store = configureStore();
-//   const { getByText } = render(
-//     <MemoryRouter initialEntries={['/firestore']}>
-//       <Provider store={store}>
-//         <BrowserRouter>
-//           <Route exact path='/firestore/data'> Firestore Data </Route>
-//           <App />
-//         </BrowserRouter>
-//       </Provider>
-//     </MemoryRouter>
+//   const history = createMemoryHistory({
+//     initialEntries: ['/firestore'],
+//   });
+//   render(
+//     <Provider store={store}>
+//       <BrowserRouter>
+//         <App />
+//       </BrowserRouter>
+//     </Provider>
 //   );
-
 //   await act(() => delay(100)); // Wait for tab indicator async DOM updates.
-
-//   expect(getByText('Firestore Data')).not.toBe(null);
+//   expect(history.location.pathname).toBe('/firestore/data');
 // });
