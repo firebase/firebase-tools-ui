@@ -16,11 +16,11 @@
 
 import React from 'react';
 
-const RequestsTableIndex: React.FC<{}> = () => (
-  <>
+const RequestsCard: React.FC<{}> = () => (
+  <div data-testid="requests-card">
     <div> Requests Header </div>
     <div> Requests Table </div>
-  </>
+  </div>
 );
 
-export default RequestsTableIndex;
+export default RequestsCard;
