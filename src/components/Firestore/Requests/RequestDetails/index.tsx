@@ -23,7 +23,6 @@ import { Redirect } from 'react-router-dom';
 import { AppState } from '../../../../store';
 import { getSelectedRequestEvaluation } from '../../../../store/firestoreRequestEvaluations/selectors';
 import CopyPathNotification from '../CopyPathNotification';
-import { FirestoreRulesEvaluation } from '../rules_evaluation_result_model';
 import {
   useRequestInspectionElements,
   useRequestMainInformation,
@@ -32,13 +31,19 @@ import RequestDetailsCodeViewer from './CodeViewer';
 import RequestDetailsHeader from './Header';
 import RequestDetailsInspectionSection from './InspectionSection';
 
-interface PropsFromState {
-  selectedRequest?: FirestoreRulesEvaluation;
-}
 interface PropsFromParentComponent {
   requestId?: string;
 }
-export type Props = PropsFromState & PropsFromParentComponent;
+const mapStateToProps = (
+  state: AppState,
+  { requestId }: PropsFromParentComponent
+) => {
+  return {
+    selectedRequest: getSelectedRequestEvaluation(state, requestId || ''),
+  };
+};
+type PropsFromState = ReturnType<typeof mapStateToProps>;
+type Props = PropsFromState & PropsFromParentComponent;
 
 const RequestDetails: React.FC<Props> = ({ selectedRequest, requestId }) => {
   const [
@@ -94,12 +99,6 @@ const RequestDetails: React.FC<Props> = ({ selectedRequest, requestId }) => {
       />
     </>
   );
-};
-
-export const mapStateToProps = (state: AppState, { requestId }: Props) => {
-  return {
-    selectedRequest: getSelectedRequestEvaluation(state, requestId || ''),
-  };
 };
 
 export default connect(mapStateToProps, null)(RequestDetails);

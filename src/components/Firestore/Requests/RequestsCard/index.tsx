@@ -20,16 +20,15 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from '../../../../store';
 import { getAllRequestEvaluations } from '../../../../store/firestoreRequestEvaluations/selectors';
 import CopyPathNotification from '../CopyPathNotification';
-import { FirestoreRulesEvaluation } from '../rules_evaluation_result_model';
 import RequestsHeader from './Header';
 import RequestsTable from './Table';
 
-export interface PropsFromState {
-  requests: FirestoreRulesEvaluation[] | undefined;
-}
-export type Props = PropsFromState;
+const mapStateToProps = createStructuredSelector({
+  requests: getAllRequestEvaluations,
+});
+type PropsFromState = ReturnType<typeof mapStateToProps>;
 
-const RequestsTableIndex: React.FC<Props> = ({ requests }) => {
+const RequestsTableIndex: React.FC<PropsFromState> = ({ requests }) => {
   const [showCopyNotification, setShowCopyNotification] = useState<boolean>(
     false
   );
@@ -51,9 +50,5 @@ const RequestsTableIndex: React.FC<Props> = ({ requests }) => {
     </>
   );
 };
-
-export const mapStateToProps = createStructuredSelector({
-  requests: getAllRequestEvaluations,
-});
 
 export default connect(mapStateToProps)(RequestsTableIndex);
