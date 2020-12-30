@@ -22,7 +22,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { delay } from '../../test_utils';
 import { AppBar } from './AppBar';
 
-function isTabActive(labelEl: HTMLElement) {
+export function isTabActive(labelEl: HTMLElement) {
   const tabEl = labelEl.closest('.mdc-tab')!;
   return tabEl.classList.contains('mdc-tab--active');
 }

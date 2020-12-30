@@ -18,9 +18,7 @@ import { RMWCProvider } from '@rmwc/provider';
 import { render } from '@testing-library/react';
 import React from 'react';
 import { Provider } from 'react-redux';
-import configureStore from 'redux-mock-store';
 
-import { AppState } from '../../store';
 import { AuthConfig } from '../../store/config';
 import { AuthRoute } from './index';
 import { getMockAuthStore } from './test_utils';

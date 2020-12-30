@@ -98,6 +98,7 @@ export const Firestore: React.FC = React.memo(() => {
   const showDocumentShell = path.split('/').length < 3;
 
   const subNavRoutes = routes.filter((r) => r.showInFirestoreSubNav);
+
   const subTabs = subNavRoutes.map(({ path, label }: RouteType) => (
     <Tab
       key={label}
@@ -107,7 +108,6 @@ export const Firestore: React.FC = React.memo(() => {
       {label}
     </Tab>
   ));
-
   const activeTabIndex = subNavRoutes.findIndex((r) =>
     matchPath(location.pathname, {
       path: r.multiPath || r.path,
