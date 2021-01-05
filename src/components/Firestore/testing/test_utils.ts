@@ -16,9 +16,7 @@
 
 import { RenderResult } from '@testing-library/react';
 import firebase from 'firebase';
-import configureStore from 'redux-mock-store';
 
-import { AppState } from '../../../store';
 import { waitForDialogsToOpen } from '../../../test_utils';
 import { FirestoreRulesEvaluation } from '../Requests/rules_evaluation_result_model';
 import { sampleRules } from '../Requests/sample-rules';
@@ -38,17 +36,10 @@ export async function renderDialogWithFirestore(
   return result;
 }
 
-export function getMockFirestoreStore(state?: Partial<AppState>) {
-  return configureStore<Pick<AppState, 'firestore'>>()({
-    firestore: {
-      requests: {
-        evaluations: [],
-      },
-    },
-    ...state,
-  });
-}
-
+/*
+ * Returns a mocked version of a request evaluation, but also a portion of
+ * an evaluation can be provided to create a custom request evaluation.
+ */
 export function createFakeFirestoreRequestEvaluation(
   evaluation?: Partial<FirestoreRulesEvaluation>
 ): FirestoreRulesEvaluation {
