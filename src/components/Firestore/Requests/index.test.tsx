@@ -15,12 +15,9 @@
  */
 
 import { render } from '@testing-library/react';
-import { createMemoryHistory } from 'history';
 import React from 'react';
-import { act } from 'react-dom/test-utils';
-import { BrowserRouter, MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 
-import { delay } from '../../../test_utils';
 import FirestoreRequests from '.';
 
 describe('Firestore Requests', () => {
@@ -30,8 +27,6 @@ describe('Firestore Requests', () => {
         <FirestoreRequests />
       </MemoryRouter>
     );
-
-    // await waitForElement(() => getByTestId('requests-card'));
 
     expect(getByTestId('requests-card')).not.toBeNull();
   });
@@ -43,23 +38,18 @@ describe('Firestore Requests', () => {
       </MemoryRouter>
     );
 
-    // await waitForElement(() => getByTestId('request-details'));
-
     expect(getByTestId('request-details')).not.toBeNull();
   });
 
-  // it('redirects to /firestore/requests for any other /firestore/requests/:requestId/... path', async () => {
-  //   const history = createMemoryHistory({
-  //     initialEntries: ['/firestore/requests/uniqueRequestId/foo'],
-  //   });
-  //   render(
-  //     <BrowserRouter>
-  //       <FirestoreRequests />
-  //     </BrowserRouter>
-  //   );
+  it('redirects to /firestore/requests for any other /firestore/requests/:requestId/... path', async () => {
+    const { getByTestId } = render(
+      <MemoryRouter
+        initialEntries={['/firestore/requests/uniqueRequestId/foo']}
+      >
+        <FirestoreRequests />
+      </MemoryRouter>
+    );
 
-  //   await act(() => delay(100)); // Wait for tab indicator async DOM updates.
-
-  //   expect(history.location.pathname).toBe('/firestore/requests');
-  // });
+    expect(getByTestId('requests-card')).not.toBeNull();
+  });
 });
