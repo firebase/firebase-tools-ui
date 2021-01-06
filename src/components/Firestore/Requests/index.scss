@@ -26,21 +26,24 @@
 }
 .Firestore-Request-Method {
   text-transform: uppercase;
-  font-weight: 600;
-  font-size: 14px;
+  font-size: 13px;
+  font-family: Courier;
+  font-style: normal;
+  font-weight: bold;
 }
 .Firestore-Request-Date {
-  font-weight: 100;
   font-size: 13px;
+  font-family: Courier;
+  font-style: normal;
+  font-weight: 100;
 }
 .Firestore-Request-Path {
   position: relative;
-  font-size: 14px;
   max-width: 100%;
   &:hover {
     // display copy IconButton only when path is hovered
     .Firestore-Request-Path-Container button {
-      display: block;
+      visibility: visible;
     }
   }
 
@@ -51,23 +54,24 @@
     align-items: center;
     // Request path string
     & > div {
-      // NOTE: (width) property should not be modified, in order for truncation to work
-      // NOTE: (font-size) should match the constant (REQUEST_PATH_FONT_SIZE) on utils
-      font-size: 14px;
+      font-size: 13px;
+      font-family: Courier;
+      font-style: normal;
+      font-weight: normal;
       // ensure path only has one line
       white-space: nowrap;
-      overflow: hidden;
+      // NOTE: the overflow must NOT be 'hidden', to ensure the text truncation works as expected
     }
     // copy IconButton
     button {
       padding: 12px 0;
-      // NOTE: (min-width) should match the constant (COPY_ICON_BUTTON_WIDTH) on RequestPath/index
       min-width: 48px;
       // absolute position to the right
       position: absolute;
       right: 0px;
       // hover effects
-      display: none;
+      // NOTE: 'visibility' is chosed instead of 'display' because './utils' needs the element to be always rendered
+      visibility: hidden;
       transition: color 0.2s;
       color: rgb(0 0 0 / 54%);
       &:hover {

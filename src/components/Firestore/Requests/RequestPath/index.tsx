@@ -45,18 +45,26 @@ const RequestPath: React.FC<{
   >();
 
   useEffect(() => {
-    truncateHTMLElementFromLeft(
-      pathTextRef,
-      resourcePath,
-      requestPathContainerWidth,
-      prevPathContainerWidth
-    );
+    requestPathContainerWidth !== prevPathContainerWidth &&
+      truncateHTMLElementFromLeft(
+        pathTextRef,
+        resourcePath,
+        requestPathContainerWidth,
+        prevPathContainerWidth
+      );
+  }, [
+    pathTextRef,
+    resourcePath,
+    requestPathContainerWidth,
+    prevPathContainerWidth,
+  ]);
+
+  useEffect(() => {
     setPrevPathContainerWidth(requestPathContainerWidth);
   }, [
     requestPathContainerWidth,
-    resourcePath,
-    setPrevPathContainerWidth,
     prevPathContainerWidth,
+    setPrevPathContainerWidth,
   ]);
 
   return (
@@ -66,6 +74,7 @@ const RequestPath: React.FC<{
       </Tooltip>
       <Tooltip content="Copy Path" align="bottom" enterDelay={200}>
         <IconButton
+          id="path-copy-icon-button"
           icon="content_copy"
           onClick={(event: React.MouseEvent<HTMLElement>) => {
             event.preventDefault();

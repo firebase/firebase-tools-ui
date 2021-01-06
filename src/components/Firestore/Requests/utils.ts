@@ -31,9 +31,6 @@ const ICON_SELECTOR = {
   error: 'report_problem',
   admin: 'security',
 };
-const REQUEST_PATH_CHARACTER_PX_WIDTH = 8.4;
-const COPY_ICON_BUTTON_PX_WIDTH = 48;
-const PATH_CONTAINER_HORIZONTAL_PADDING = 16;
 
 // outputs the detailed data of the request in a clean format
 export function getIconFromRequestOutcome(outcome?: RulesOutcome) {
@@ -59,8 +56,8 @@ export function useRequestMainInformation(request?: FirestoreRulesEvaluation) {
   const resourcePath = rulesContext?.request?.path
     ?.replace('/databases/(default)/documents', '')
     ?.split('/')
-    ?.filter(i => i)
-    ?.map(subpath => `/ ${subpath} `)
+    ?.filter((i) => i)
+    ?.map((subpath) => `/${subpath}`)
     ?.join('');
   const outcomeData: RulesOutcomeData = {
     allow: { theme: 'success', icon: ICON_SELECTOR['allow'], label: 'ALLOW' },
@@ -110,9 +107,7 @@ export function useRequestInspectionElements(
 // custom hook that returns the width of the path container,
 // a new width is returned after every window resizing is done
 export function usePathContainerWidth(
-  pathContainerRef:
-    | React.RefObject<HTMLElement>
-    | React.RefObject<HTMLDivElement>
+  pathContainerRef: React.RefObject<HTMLDivElement>
 ): number | undefined {
   const [pathContainerWidth, setPathContainerWidth] = useState<
     number | undefined
@@ -126,7 +121,7 @@ export function usePathContainerWidth(
   const debouncedHandleWindowResize = useCallback(
     debounce(() => {
       setPathContainerWidth(getPathContainerWidth());
-    }, 100),
+    }, 150),
     [pathContainerRef, setPathContainerWidth, getPathContainerWidth]
   );
 
@@ -143,16 +138,13 @@ export function usePathContainerWidth(
     setPathContainerWidth(getPathContainerWidth());
   }, [pathContainerRef, getPathContainerWidth]);
 
-  // substracts the horizontal padding from the returned width
-  return (
-    pathContainerWidth && pathContainerWidth - PATH_CONTAINER_HORIZONTAL_PADDING
-  );
+  return pathContainerWidth;
 }
 
-// custom hook that based on the width of the complete path's string,
-// and the width of the path container: consider if truncation is necessary.
-// If it is, the new path that fits the container is calculated and the
-// HTML element is updated width the new truncated path.
+// function that based on the width of the complete path's string,
+// and the width of the path container: considers if truncation should be applied.
+// Only if it should, the new truncated path that fits the container's clientWidth
+// is calculated, and the HTML element is updated width the new truncated string.
 export function truncateHTMLElementFromLeft(
   pathTextElement: React.RefObject<HTMLDivElement>,
   completeRequestPath: string,
@@ -167,31 +159,63 @@ export function truncateHTMLElementFromLeft(
     offsetWidth: pathTextWidth,
     innerText: pathTextString,
   } = pathHtmlElement;
-  // boolean conditions to truncate text only if necessary
-  const pathContainerWidthIncremented =
-    prevPathContainerWidth &&
-    requestPathContainerWidth > prevPathContainerWidth;
-  const textAndCopyIconExceededWidthOfContainer =
-    pathTextWidth + COPY_ICON_BUTTON_PX_WIDTH > requestPathContainerWidth;
-  const textIsTruncated = pathTextString.includes('...');
-  if (
-    textAndCopyIconExceededWidthOfContainer ||
-    (textIsTruncated && pathContainerWidthIncremented)
-  ) {
-    // calculate amount of characters that fit into the div
-    // (width of div is width of container minus width of copy Icon)
-    const stringMaxSize = Math.ceil(
-      (requestPathContainerWidth - COPY_ICON_BUTTON_PX_WIDTH) /
-        REQUEST_PATH_CHARACTER_PX_WIDTH
+
+  // gets the width in px of the copy icon button element, which is a sibling of the pathHtmlElement
+  function getCopyIconButtonWidth(): number {
+    // '!!' at the end converts any falsy width into a numeric 0
+    return pathHtmlElement?.parentElement?.querySelector(
+      '#path-copy-icon-button'
+    )?.clientWidth!!;
+  }
+  const copyIconButtonWidth = getCopyIconButtonWidth();
+
+  function shouldTruncateHtmlElement(): boolean {
+    if (!requestPathContainerWidth) {
+      return false;
+    }
+    // boolean conditions to truncate text only if necessary
+    const textAndCopyIconExceededWidthOfContainer =
+      pathTextWidth + copyIconButtonWidth > requestPathContainerWidth;
+    const textIsCurrentlyTruncated = pathTextString.includes('...');
+    // '!!' at the beginning converts any falsy numeric width into boolean
+    const pathContainerWidthIncremented =
+      !!prevPathContainerWidth &&
+      requestPathContainerWidth > prevPathContainerWidth;
+
+    return (
+      textAndCopyIconExceededWidthOfContainer ||
+      (textIsCurrentlyTruncated && pathContainerWidthIncremented)
     );
+  }
+
+  function truncateHtmlElement(): void {
+    if (!pathHtmlElement || !requestPathContainerWidth) {
+      return;
+    }
+    // calculate width in px of a single character: (totalWidth / totalCharacters)
+    // (this calculation is not affected by the style of the font)
+    const requestPathCharacterPxWidth = pathTextWidth / pathTextString.length;
+    // calculate amount of characters that fit into the pathHtmlElement
+    // (width of pathHtmlElement is width of path container minus width of copy icon button)
+    const stringMaxSize = Math.ceil(
+      (requestPathContainerWidth - copyIconButtonWidth) /
+        requestPathCharacterPxWidth
+    );
+    // calculate where to start the truncated substring
     const newRequestPathStart = completeRequestPath.length - stringMaxSize;
-    // truncate the path, or return the complete path if there is enough width
-    const newPathString =
-      newRequestPathStart > 0
-        ? `...${completeRequestPath.substr(newRequestPathStart)}`
-        : completeRequestPath;
-    // update path in HTML element
-    pathHtmlElement.innerText = newPathString;
+    // truncate the path, or return the complete path if there is enough width.
+    if (newRequestPathStart > 0) {
+      // if the path will be truncated, a (+ 3) is added to compensate the space of the '...' substring
+      pathHtmlElement.innerText = `...${completeRequestPath.substr(
+        newRequestPathStart + 3
+      )}`;
+    } else {
+      pathHtmlElement.innerText = completeRequestPath;
+    }
+  }
+
+  if (shouldTruncateHtmlElement()) {
+    truncateHtmlElement();
   }
 }
 

@@ -15,6 +15,7 @@
  */
 
 @import '../../index.scss';
+@import '../../index_variables.scss';
 
 // Double selector - for higher specificity to Override rmwc styles.
 .Firestore-Requests-Table.Firestore-Requests-Table {
@@ -23,14 +24,16 @@
   margin: -1px;
   td,
   th {
-    height: 31px;
-    padding: 8px 0 8px 24px;
+    padding: 8px 0;
+    // TODO: get value from scss variable
+    padding-left: $request-table-padding-left;
     // mobile styles
     @media screen and (max-width: 500px) {
-      padding: 8px 0 8px 10px;
+      padding-left: 10px;
     }
   }
   th {
+    height: 31px;
     font-size: 12px;
     // avoid extra text height
     line-height: 1;
@@ -45,6 +48,9 @@
       right: 0px;
     }
   }
+  td {
+    height: 48px;
+  }
   thead {
     background-color: var(--mdc-theme-surface);
     tr {
@@ -55,7 +61,7 @@
   @media screen and (max-height: 535px) {
     // fix height on short-devices (to avoid depending on view height value at this point)
     // totalAvailableHeight = 400px - 48px - 48px
-    // height = totalAvailableHeight + restoreNegativeMargin - requestsHeaderHeight
+    // height = totalAvailableHeight + compensateNegativeMargin - requestsHeaderHeight
     height: calc(304px + 2px - 56px);
   }
 
@@ -72,10 +78,10 @@
   // distribute column widths (width values include the padding-left)
   .Firestore-Requests-Table-Date-Header,
   .Firestore-Request-Date {
-    width: 77px;
+    width: 90px;
     // mobile styles
     @media screen and (max-width: 500px) {
-      width: 61px;
+      width: 76px;
     }
   }
   .Firestore-Requests-Table-Outcome-Header,
@@ -108,12 +114,12 @@
     overflow: auto;
     background-color: white;
     // min-height is the whole view height minus height of external components
-    // min-height = allViewHeight - navBarHeight - appHorizontalPadding - firestoreSubTabsHeight - requestsHeaderHeight - requestTableHeader
+    // min-height = allViewHeight - navBarHeight - appHorizontalPadding - firestoreSubTabsHeight - requestTableHeader - requestsHeaderHeight
     height: calc(100vh - 88px - 48px - 96px - 31px - 56px);
     @media screen and (max-height: 535px) {
       // fix height on short-devices (to avoid depending on view height value at this point)
       // totalAvailableHeight = 400px - 48px - 48px
-      // height = totalAvailableHeight - requestsHeaderHeight - requestTableHeader
+      // height = totalAvailableHeight - requestTableHeader - requestsHeaderHeight
       height: (304px - 31px - 56px);
     }
   }
@@ -129,6 +135,7 @@
   @media screen and (max-height: 535px) {
     // make table height equal to the height of the requestTableHeader,
     // helpful to display the Zero State message
-    height: 31px;
+    // height = requestTableHeader + compensateNegativeMargin
+    height: calc(31px + 2px);
   }
 }

@@ -49,8 +49,8 @@ const RequestsTable: React.FC<Props> = ({
   setShowCopyNotification,
 }) => {
   // references the path header because it has always the same width
-  // as the path column and it renders only once.
-  const pathContainerRef = useRef<HTMLElement>(null);
+  // as the path column, but it renders only once.
+  const pathContainerRef = useRef<HTMLDivElement>(null);
   const requestPathContainerWidth = usePathContainerWidth(pathContainerRef);
 
   return (
@@ -77,11 +77,12 @@ const RequestsTable: React.FC<Props> = ({
               <DataTableHeadCell className={`${TABLE_CLASS}-Method-Header`}>
                 Method
               </DataTableHeadCell>
-              <DataTableHeadCell
-                ref={pathContainerRef}
-                className={`${TABLE_CLASS}-Path-Header`}
-              >
-                Path
+              <DataTableHeadCell className={`${TABLE_CLASS}-Path-Header`}>
+                {/* 
+                  (ref) is placed on an inner div to avoid the padding of the Table Header
+                  from modifying the real width of the container
+                */}
+                <div ref={pathContainerRef}>Path</div>
               </DataTableHeadCell>
             </DataTableRow>
           </DataTableHead>

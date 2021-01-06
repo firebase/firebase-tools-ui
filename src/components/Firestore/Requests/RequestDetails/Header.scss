@@ -22,6 +22,7 @@
   background-color: var(--mdc-theme-surface);
   height: 56px;
   padding: 0 6px;
+  position: relative;
   // shadow border at bottom
   box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12) inset;
   // flex behavior
@@ -58,12 +59,12 @@
   align-items: center;
   // make space for the collapsed button
   @media screen and (max-width: 850px) {
-    // width = wholeWidth - widthReturnButton - widthCollapsedButton
-    width: calc(100% - 30px - 30px);
+    // width = wholeWidth - widthReturnButton - paddingRightReturnButton - widthCollapsedButton
+    width: calc(100% - 30px - 12px - 30px);
   }
 
   .Firestore-Request-Date {
-    width: 50px;
+    width: 63px;
   }
   .Firestore-Request-Outcome {
     width: 35px;
@@ -78,18 +79,19 @@
   }
   .Firestore-Request-Path {
     // width = 100% - widthDate - widthOutcome - widthMethod
-    width: calc(100% - 70px - 50px - 70px);
+    width: calc(100% - 63px - 35px - 60px);
     // mobile styles
     @media screen and (max-width: 500px) {
       // width = 100% - widthDate - widthOutcome - widthMethod
-      width: calc(100% - 50px - 40px - 35px);
+      width: calc(100% - 63px - 35px - 35px);
     }
 
     .Firestore-Request-Path-Container {
       justify-content: flex-start;
       // copy IconButton
       button {
-        display: block;
+        // override hover effect to show/hide
+        visibility: visible;
         // override position absolute to the right
         position: relative;
         // mobile styles
