@@ -20,7 +20,7 @@ import { IconButton } from '@rmwc/icon-button';
 import { Tooltip } from '@rmwc/tooltip';
 import React, { useEffect, useRef, useState } from 'react';
 
-import { truncateHTMLElementFromLeft } from '../utils';
+import { considerTruncatingHTMLElementFromLeft } from '../utils';
 
 // copies path without spaces to clipboard
 // and triggers copy notification (SnackBar)
@@ -45,8 +45,9 @@ const RequestPath: React.FC<{
   >();
 
   useEffect(() => {
+    // consider truncation only if the width of the pathContainer changed
     requestPathContainerWidth !== prevPathContainerWidth &&
-      truncateHTMLElementFromLeft(
+      considerTruncatingHTMLElementFromLeft(
         pathTextRef,
         resourcePath,
         requestPathContainerWidth,

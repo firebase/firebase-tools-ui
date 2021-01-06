@@ -145,7 +145,7 @@ export function usePathContainerWidth(
 // and the width of the path container: considers if truncation should be applied.
 // Only if it should, the new truncated path that fits the container's clientWidth
 // is calculated, and the HTML element is updated width the new truncated string.
-export function truncateHTMLElementFromLeft(
+export function considerTruncatingHTMLElementFromLeft(
   pathTextElement: React.RefObject<HTMLDivElement>,
   completeRequestPath: string,
   requestPathContainerWidth?: number,
