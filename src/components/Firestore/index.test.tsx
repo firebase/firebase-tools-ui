@@ -20,7 +20,7 @@ import { Route } from 'react-router-dom';
 
 import { FirestoreConfig } from '../../store/config';
 import { delay, makeDeferred } from '../../test_utils';
-import { isTabActive } from '../App/AppBar.test';
+import { isTabActive } from '../../test_utils';
 import { confirm } from '../common/DialogQueue';
 import * as emulatedApi from './FirestoreEmulatedApiProvider';
 import { Firestore, FirestoreRoute } from './index';

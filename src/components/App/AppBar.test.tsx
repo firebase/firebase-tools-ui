@@ -20,12 +20,8 @@ import { act } from 'react-dom/test-utils';
 import { MemoryRouter } from 'react-router-dom';
 
 import { delay } from '../../test_utils';
+import { isTabActive } from '../../test_utils';
 import { AppBar } from './AppBar';
-
-export function isTabActive(labelEl: HTMLElement) {
-  const tabEl = labelEl.closest('.mdc-tab')!;
-  return tabEl.classList.contains('mdc-tab--active');
-}
 
 it('selects the matching nav-tab', async () => {
   const { getByText } = render(
