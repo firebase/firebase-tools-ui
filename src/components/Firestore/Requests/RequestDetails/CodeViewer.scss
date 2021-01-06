@@ -45,21 +45,22 @@
       position: absolute;
       padding: 1px 4px;
       font-size: 15px;
-    }
-    & > i.deny {
-      // TODO: get this color from a theme variable
-      background-color: rgb(255 82 82 / 25%);
-      color: #d32f2f;
-    }
-    & > i.allow {
-      // TODO: get this color from a theme variable
-      background-color: rgb(0 191 165 / 20%);
-      color: #00796b;
-    }
-    & > i.error {
-      // TODO: get this color from a theme variable
-      background-color: rgb(255 82 82 / 25%);
-      color: #d32f2f;
+
+      &.deny {
+        // TODO: get this color from a theme variable
+        background-color: rgb(255 82 82 / 25%);
+        color: #d32f2f;
+      }
+      &.allow {
+        // TODO: get this color from a theme variable
+        background-color: rgb(0 191 165 / 20%);
+        color: #00796b;
+      }
+      &.error {
+        // TODO: get this color from a theme variable
+        background-color: rgb(255 82 82 / 25%);
+        color: #d32f2f;
+      }
     }
   }
   .CodeMirror-code {

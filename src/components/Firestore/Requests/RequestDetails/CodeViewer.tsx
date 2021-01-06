@@ -25,6 +25,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import {
   FirestoreRulesIssue,
   OutcomeInfo,
+  RulesOutcome,
 } from '../rules_evaluation_result_model';
 import { getIconFromRequestOutcome } from '../utils';
 import CodeViewerZeroState from './CodeViewerZeroState';
@@ -36,39 +37,38 @@ const RulesCodeViewer: React.FC<{
 }> = ({ firestoreRules, linesOutcome, linesIssues }) => {
   const [codeMirrorEditor, setCodeMirrorEditor] = useState<any>(null);
 
+  const getMarkerElement = useCallback((outcome: RulesOutcome): HTMLElement => {
+    // TODO: Is there a better way of creating a HTMLElement without manipulating DOM?
+    // JSX can't be passed to the codemirror library, see: https://github.com/scniro/react-codemirror2/issues/57
+    let marker = document.createElement('i');
+    marker.className = `${outcome} material-icons`;
+    marker.innerText = getIconFromRequestOutcome(outcome);
+    return marker;
+  }, []);
+
   const addLinesOutcomeGutters = useCallback(() => {
-    linesOutcome?.map(lineAction => {
+    linesOutcome?.map((lineAction) => {
       const { line, outcome } = lineAction;
-      // TODO: Replace jQuery to a virtualDOM strategy if possible
-      // https://github.com/scniro/react-codemirror2/issues/57
-      let marker = document.createElement('i');
-      marker.className = `${outcome} material-icons`;
-      marker.innerText = getIconFromRequestOutcome(outcome);
       codeMirrorEditor.setGutterMarker(
         line - 1,
         'CodeMirror-gutter-elt',
-        marker
+        getMarkerElement(outcome)
       );
       codeMirrorEditor.addLineClass(line - 1, '', outcome);
     });
-  }, [codeMirrorEditor, linesOutcome]);
+  }, [codeMirrorEditor, linesOutcome, getMarkerElement]);
 
   const addLinesIssuesGutters = useCallback(() => {
-    linesIssues?.map(lineIssue => {
+    linesIssues?.map((lineIssue) => {
       const { line } = lineIssue;
-      // TODO: Replace jQuery to a virtualDOM strategy if possible
-      // https://github.com/scniro/react-codemirror2/issues/57
-      let marker = document.createElement('i');
-      marker.className = 'error material-icons';
-      marker.innerText = getIconFromRequestOutcome('error');
       codeMirrorEditor.setGutterMarker(
         line - 1,
         'CodeMirror-gutter-elt',
-        marker
+        getMarkerElement('error')
       );
       codeMirrorEditor.addLineClass(line - 1, '', 'error');
     });
-  }, [codeMirrorEditor, linesIssues]);
+  }, [codeMirrorEditor, linesIssues, getMarkerElement]);
 
   // highlights and adds outcome icon to corresponding lines of rules code viewer
   useEffect(() => {
@@ -97,7 +97,9 @@ const RulesCodeViewer: React.FC<{
             readOnly: true,
             gutters: ['CodeMirror-gutter-elt'],
           }}
-          onChanges={editor => !codeMirrorEditor && setCodeMirrorEditor(editor)}
+          onChanges={(editor) =>
+            !codeMirrorEditor && setCodeMirrorEditor(editor)
+          }
         />
       )}
       {!firestoreRules && <CodeViewerZeroState />}
