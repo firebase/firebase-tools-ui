@@ -14,12 +14,16 @@
  * limitations under the License.
  */
 
-// firestore card
-$firestore-card-min-height: 400px;
+$firebase-success-theme-primary: #00796b;
+$firebase-success-theme-background: #e0f2f1;
+$firebase-error-theme-primary: #d32f2f;
+$firebase-error-theme-background: #fbe9e7;
 
-// firestore sub tabs
-$firestore-sub-tabs-height: 48px;
-$firestore-sub-tabs-margin-bottom: 48px;
-$firestore-sub-tabs-total-height: (
-  $firestore-sub-tabs-height + $firestore-sub-tabs-margin-bottom
-);
+$firebase-darker-gray-color: #e2e2e2;
+
+$firebase-navy-800-color: #051e34;
+$firebase-success-on-dark-color: #00bfa5;
+
+$firebase-text-black-primary-color: rgb(0 0 0 / 0.87);
+$firebase-text-black-secondary-color: rgb(0 0 0 / 0.54);
+$firebase-text-black-ternary-color: rgb(0 0 0 / 0.38);

@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-@import '../variables.scss';
+@import '../../../../colors-variables.scss';
 
 // inspection main block
 $firestore-request-details-inspection-main-block-background-color: $firebase-darker-gray-color;
+
+// inspection block
+$firestore-request-details-inspection-block-value-color: $firebase-text-black-secondary-color;

@@ -38,7 +38,7 @@
   .CodeMirror-gutter,
   .CodeMirror-gutters,
   .CodeMirror-linenumber.CodeMirror-linenumber {
-    margin-right: 30px;
+    margin-right: 28px;
   }
   .CodeMirror-gutter-elt {
     // outcome Icon
@@ -72,5 +72,10 @@
     span.cm-comment {
       color: $firestore-request-details-code-viewer-comment-color;
     }
+  }
+  // move the code a little to the left to remove gap between that hightlighted-line and left-border
+  .CodeMirror-lines {
+    left: -2px;
+    position: relative;
   }
 }

@@ -20,6 +20,7 @@
   background-color: var(--mdc-theme-surface);
   padding: 10px;
   cursor: pointer;
+  height: 48px;
   // shadow border at left and bottom
   box-shadow: 1px -1px 0 rgba(0, 0, 0, 0.12) inset;
   // flex behavior
@@ -48,6 +49,14 @@
   padding: 10px;
   font-size: 14px;
   font-family: monospace, monospace;
+  color: $firestore-request-details-inspection-block-value-color;
+  min-height: 48px;
+  // flex behavior
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  // overflow behavior
   overflow: scroll;
   // shadow border at left and bottom
   box-shadow: 1px -1px 0 rgba(0, 0, 0, 0.12) inset;

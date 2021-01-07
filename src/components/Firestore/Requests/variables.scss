@@ -22,21 +22,6 @@
 ********************************/
 $compensate-negative-margin: 2px;
 
-// TODO: find a better way to provide this colors to the code viewer,
-// using the ThemeProvider seems to not be possible because it may need
-// more than one theme at the same time (not just one)
-$firebase-success-theme-primary: #00796b;
-$firebase-success-theme-background: #e0f2f1;
-$firebase-error-theme-primary: #d32f2f;
-$firebase-error-theme-background: #fbe9e7;
-
-$firebase-darker-gray-color: #e2e2e2;
-
-$firebase-navy-800-color: #051e34;
-$firebase-success-on-dark-color: #00bfa5;
-
-$firebase-text-black-ternary-color: rgb(0 0 0 / 0.38);
-
 /********************************
          Requests Card
 ********************************/

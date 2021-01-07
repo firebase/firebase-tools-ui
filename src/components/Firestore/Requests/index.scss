@@ -14,6 +14,15 @@
  * limitations under the License.
  */
 
+@import '../../../colors-variables.scss';
+
+.Firestore-Request-Date {
+  font-size: 13px;
+  font-family: Courier;
+  font-style: normal;
+  font-weight: normal;
+  color: $firebase-text-black-secondary-color;
+}
 .Firestore-Request-Outcome {
   // outcome Icon
   i {
@@ -30,12 +39,7 @@
   font-family: Courier;
   font-style: normal;
   font-weight: bold;
-}
-.Firestore-Request-Date {
-  font-size: 13px;
-  font-family: Courier;
-  font-style: normal;
-  font-weight: 100;
+  color: $firebase-text-black-primary-color;
 }
 .Firestore-Request-Path {
   position: relative;
@@ -56,6 +60,7 @@
       font-family: Courier;
       font-style: normal;
       font-weight: normal;
+      color: $firebase-text-black-primary-color;
       // ensure path only has one line
       white-space: nowrap;
       // NOTE: the overflow must NOT be 'hidden' to ensure the text truncation works as expected
