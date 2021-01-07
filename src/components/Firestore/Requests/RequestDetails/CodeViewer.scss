@@ -78,4 +78,9 @@
     left: -2px;
     position: relative;
   }
+  // make sure the gutters (where the line numbers are) has always the same width,
+  // so that the icon's background is always right next to the border
+  .CodeMirror-gutters {
+    width: 61px !important;
+  }
 }
