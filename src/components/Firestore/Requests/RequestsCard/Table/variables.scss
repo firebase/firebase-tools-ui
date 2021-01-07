@@ -17,6 +17,12 @@
 @import '../Header/variables.scss';
 @import '../../variables.scss';
 
+// table th
+$firestore-requests-table-header-height: 31px;
+
+// table td
+$firestore-requests-table-cell-height: 47px;
+
 // table
 $firestore-requests-table-min-height: (
   $firestore-requests-card-min-height + $compensate-negative-margin -
@@ -25,12 +31,6 @@ $firestore-requests-table-min-height: (
 $firestore-requests-empty-table-min-height: (
   $firestore-requests-table-header-height + $compensate-negative-margin
 );
-
-// table th
-$firestore-requests-table-header-height: 31px;
-
-// table td
-$firestore-requests-table-cell-height: 47px;
 
 // table tbody
 $firestore-requests-table-body-min-height: (
