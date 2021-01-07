@@ -30,7 +30,7 @@ const REQUESTS_EVALUATION_WEBSOCKET_HOST_AND_PORT = 'localhost:8888/rules/ws';
 
 // TODO: Remove function when 'admin' and 'error' requests, and (rules) are received from server
 // this function returns to you a mocked (RulesUpdateData) with firestore (rules) and (issues) behaviors
-function injectMockedPropertiesToRequestData(
+function injectMockPropertiesToEvaluationUpdateData(
   requestUpdateData?: FirestoreRulesUpdateData,
   customOutcome?: RulesOutcome
 ): FirestoreRulesUpdateData {
@@ -52,7 +52,7 @@ function injectMockedPropertiesToRequestData(
 
 // TODO: Remove function when 'admin' and 'error' requests, and (requestId) are received from server
 // this function is used to generate a fake (requestId), inject a custom (outcome)
-function injectMockedPropertiesToRequest(
+function injectMockPropertiesToEvaluation(
   request: FirestoreRulesEvaluation,
   customOutcome?: RulesOutcome
 ): FirestoreRulesEvaluation {
@@ -60,7 +60,10 @@ function injectMockedPropertiesToRequest(
     ...request,
     requestId: generateId(),
     outcome: customOutcome || request?.outcome,
-    data: injectMockedPropertiesToRequestData(request?.data, customOutcome),
+    data: injectMockPropertiesToEvaluationUpdateData(
+      request?.data,
+      customOutcome
+    ),
   };
 }
 
@@ -77,12 +80,12 @@ export function registerForRulesEvents(callback: OnEvaluationFn): Unsubscribe {
     const probability = Math.random();
     if (probability < 0.2) {
       // there is a 20% chance that the request is transformed to an admin request
-      return callback(injectMockedPropertiesToRequest(newEvaluation, 'admin'));
+      return callback(injectMockPropertiesToEvaluation(newEvaluation, 'admin'));
     } else if (probability > 0.9) {
       // there is a 10% chance that the request is transformed to an error request
-      return callback(injectMockedPropertiesToRequest(newEvaluation, 'error'));
+      return callback(injectMockPropertiesToEvaluation(newEvaluation, 'error'));
     }
-    callback(injectMockedPropertiesToRequest(newEvaluation));
+    callback(injectMockPropertiesToEvaluation(newEvaluation));
   };
   return () => webSocket.cleanup();
 }

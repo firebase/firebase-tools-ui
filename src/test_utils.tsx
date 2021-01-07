@@ -26,7 +26,7 @@ import React from 'react';
 import { FormContextValues, UseFormOptions, useForm } from 'react-hook-form';
 
 export function delay(timeoutMs: number): Promise<void> {
-  return new Promise(resolve => setTimeout(resolve, timeoutMs));
+  return new Promise((resolve) => setTimeout(resolve, timeoutMs));
 }
 
 /**
@@ -104,7 +104,7 @@ export interface Deferred<T> {
 export function makeDeferred<T>(): Deferred<T> {
   let resolve: (value?: T | PromiseLike<T>) => void;
   let isResolved = false;
-  const promise = new Promise<T>(res => {
+  const promise = new Promise<T>((res) => {
     resolve = res;
   });
   return {
@@ -163,3 +163,8 @@ export const wrapWithForm = <P, T, F = UseFormOptions<T>>(
 
   return { ...methods, triggerValidation, submit };
 };
+
+export function isTabActive(labelEl: HTMLElement): boolean {
+  const tabEl = labelEl.closest('.mdc-tab')!;
+  return tabEl.classList.contains('mdc-tab--active');
+}

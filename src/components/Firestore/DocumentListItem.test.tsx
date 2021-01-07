@@ -23,10 +23,12 @@ import DocumentListItem from './DocumentListItem';
 
 describe('DocumentListItem', () => {
   it('shows the query value when queryFieldValue is string', async () => {
-    const history = createMemoryHistory({ initialEntries: ['/firestore'] });
+    const history = createMemoryHistory({
+      initialEntries: ['/firestore/data'],
+    });
     const { queryByText, queryByTestId } = await render(
       <Router history={history}>
-        <Route path="/firestore">
+        <Route path="/firestore/data">
           <DocumentListItem
             docId="an-item"
             url="/my-stuff"
@@ -42,10 +44,12 @@ describe('DocumentListItem', () => {
   });
 
   it('shows the query value when queryFieldValue is number', async () => {
-    const history = createMemoryHistory({ initialEntries: ['/firestore'] });
+    const history = createMemoryHistory({
+      initialEntries: ['/firestore/data'],
+    });
     const { queryByText, queryByTestId } = await render(
       <Router history={history}>
-        <Route path="/firestore">
+        <Route path="/firestore/data">
           <DocumentListItem
             docId="an-item"
             url="/my-stuff"
@@ -61,10 +65,12 @@ describe('DocumentListItem', () => {
   });
 
   it('shows the query value when queryFieldValue is boolean', async () => {
-    const history = createMemoryHistory({ initialEntries: ['/firestore'] });
+    const history = createMemoryHistory({
+      initialEntries: ['/firestore/data'],
+    });
     const { queryByText, queryByTestId } = await render(
       <Router history={history}>
-        <Route path="/firestore">
+        <Route path="/firestore/data">
           <DocumentListItem
             docId="an-item"
             url="/my-stuff"
@@ -80,10 +86,12 @@ describe('DocumentListItem', () => {
   });
 
   it('shows the query value when queryFieldValue is null', async () => {
-    const history = createMemoryHistory({ initialEntries: ['/firestore'] });
+    const history = createMemoryHistory({
+      initialEntries: ['/firestore/data'],
+    });
     const { queryByText, queryByTestId } = await render(
       <Router history={history}>
-        <Route path="/firestore">
+        <Route path="/firestore/data">
           <DocumentListItem
             docId="an-item"
             url="/my-stuff"
@@ -99,10 +107,12 @@ describe('DocumentListItem', () => {
   });
 
   it('does not show the query value when queryFieldValue is undefined', async () => {
-    const history = createMemoryHistory({ initialEntries: ['/firestore'] });
+    const history = createMemoryHistory({
+      initialEntries: ['/firestore/data'],
+    });
     const { debug, queryByText, queryByTestId } = await render(
       <Router history={history}>
-        <Route path="/firestore">
+        <Route path="/firestore/data">
           <DocumentListItem
             docId="an-item"
             url="/my-stuff"
@@ -117,10 +127,12 @@ describe('DocumentListItem', () => {
   });
 
   it('redirects to document path when clicking the document list item', async () => {
-    const history = createMemoryHistory({ initialEntries: ['/firestore'] });
+    const history = createMemoryHistory({
+      initialEntries: ['/firestore/data'],
+    });
     const { getByTestId } = await render(
       <Router history={history}>
-        <Route path="/firestore">
+        <Route path="/firestore/data">
           <DocumentListItem
             docId="an-item"
             url="/my-stuff"
@@ -135,10 +147,12 @@ describe('DocumentListItem', () => {
   });
 
   it('redirects to document path when clicking the document list item and the document id has special characters', async () => {
-    const history = createMemoryHistory({ initialEntries: ['/firestore'] });
+    const history = createMemoryHistory({
+      initialEntries: ['/firestore/data'],
+    });
     const { getByTestId } = await render(
       <Router history={history}>
-        <Route path="/firestore">
+        <Route path="/firestore/data">
           <DocumentListItem
             docId="an-item@#$"
             url="/my-stuff"

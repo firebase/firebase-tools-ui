@@ -27,7 +27,7 @@ import {
 import { renderWithFirestore } from './testing/FirestoreTestProviders';
 
 it('shows the root-collection list', async () => {
-  const { getByText } = await renderWithFirestore(async firestore => {
+  const { getByText } = await renderWithFirestore(async (firestore) => {
     await firestore.doc('coll-1/thing').set({ a: 1 });
     await firestore.doc('coll-2/thing').set({ a: 1 });
     return <RootCollectionList />;
@@ -40,16 +40,10 @@ it('shows the root-collection list', async () => {
 });
 
 it('shows the sub-collection list', async () => {
-  const { getByText } = await renderWithFirestore(async firestore => {
+  const { getByText } = await renderWithFirestore(async (firestore) => {
     const docRef = firestore.doc('top/thing');
-    await docRef
-      .collection('coll-1')
-      .doc('other')
-      .set({ a: 1 });
-    await docRef
-      .collection('coll-2')
-      .doc('other')
-      .set({ a: 1 });
+    await docRef.collection('coll-1').doc('other').set({ a: 1 });
+    await docRef.collection('coll-2').doc('other').set({ a: 1 });
     return <SubCollectionList reference={docRef} />;
   });
 
@@ -60,10 +54,10 @@ it('shows the sub-collection list', async () => {
 });
 
 it('redirects to collection when clicking the collection list item', async () => {
-  const history = createMemoryHistory({ initialEntries: ['/firestore'] });
+  const history = createMemoryHistory({ initialEntries: ['/firestore/data'] });
   const { getByTestId } = await render(
     <Router history={history}>
-      <Route path="/firestore">
+      <Route path="/firestore/data">
         <CollectionListItem
           collectionId="sub-coll-1"
           routeMatchUrl="/coll-1/thing"
@@ -77,10 +71,10 @@ it('redirects to collection when clicking the collection list item', async () =>
 });
 
 it('redirects to collection when clicking the collection list item and the ids have special characters', async () => {
-  const history = createMemoryHistory({ initialEntries: ['/firestore'] });
+  const history = createMemoryHistory({ initialEntries: ['/firestore/data'] });
   const { getByTestId } = await render(
     <Router history={history}>
-      <Route path="/firestore">
+      <Route path="/firestore/data">
         <CollectionListItem
           collectionId="sub-coll-1@#$"
           routeMatchUrl="/coll-1%40%23%24/thing%40%23%24"
@@ -97,20 +91,20 @@ it('redirects to collection when clicking the collection list item and the ids h
 
 it('triggers a redirect to a new collection at the root', async () => {
   const { getByLabelText, getByText } = await renderWithFirestore(
-    async firestore => {
+    async (firestore) => {
       await firestore.doc('coll-1/thing').set({ a: 1 });
       return (
         <>
-          <Route path="/firestore/coll-1">
+          <Route path="/firestore/data/coll-1">
             <RootCollectionList />
           </Route>
 
-          <Route path="/firestore/abc">_redirected_to_foo_</Route>
+          <Route path="/firestore/data/abc">_redirected_to_foo_</Route>
         </>
       );
     },
     {
-      path: '/firestore/coll-1',
+      path: '/firestore/data/coll-1',
     }
   );
 
@@ -143,20 +137,20 @@ it('triggers a redirect to a new collection at the root', async () => {
 
 it('triggers a redirect to a new collection at the root when there are special characters on the ids', async () => {
   const { getByLabelText, getByText } = await renderWithFirestore(
-    async firestore => {
+    async (firestore) => {
       await firestore.doc('coll-1@#$/thing@#$').set({ a: 1 });
       return (
         <>
-          <Route path="/firestore/coll-1%40%23%24">
+          <Route path="/firestore/data/coll-1%40%23%24">
             <RootCollectionList />
           </Route>
 
-          <Route path="/firestore/abc%40%23%24">_redirected_to_foo_</Route>
+          <Route path="/firestore/data/abc%40%23%24">_redirected_to_foo_</Route>
         </>
       );
     },
     {
-      path: '/firestore/coll-1%40%23%24',
+      path: '/firestore/data/coll-1%40%23%24',
     }
   );
 
@@ -189,26 +183,23 @@ it('triggers a redirect to a new collection at the root when there are special c
 
 it('triggers a redirect to a new collection in a document', async () => {
   const { getByLabelText, getByText } = await renderWithFirestore(
-    async firestore => {
+    async (firestore) => {
       const docRef = firestore.doc('top/thing');
-      await docRef
-        .collection('coll-1')
-        .doc('other')
-        .set({ a: 1 });
+      await docRef.collection('coll-1').doc('other').set({ a: 1 });
       return (
         <>
-          <Route path="/firestore/top/thing">
+          <Route path="/firestore/data/top/thing">
             <SubCollectionList reference={docRef} />
           </Route>
 
-          <Route path="/firestore/top/thing/abc">
+          <Route path="/firestore/data/top/thing/abc">
             _redirected_to_sub_document_
           </Route>
         </>
       );
     },
     {
-      path: '/firestore/top/thing',
+      path: '/firestore/data/top/thing',
     }
   );
 
@@ -241,26 +232,23 @@ it('triggers a redirect to a new collection in a document', async () => {
 
 it('triggers a redirect to a new collection in a document when there are special characters on the ids', async () => {
   const { getByLabelText, getByText } = await renderWithFirestore(
-    async firestore => {
+    async (firestore) => {
       const docRef = firestore.doc('top@#$/thing@#$');
-      await docRef
-        .collection('coll-1@#$')
-        .doc('other@#$')
-        .set({ a: 1 });
+      await docRef.collection('coll-1@#$').doc('other@#$').set({ a: 1 });
       return (
         <>
-          <Route path="/firestore/top%40%23%24/thing%40%23%24">
+          <Route path="/firestore/data/top%40%23%24/thing%40%23%24">
             <SubCollectionList reference={docRef} />
           </Route>
 
-          <Route path="/firestore/top%40%23%24/thing%40%23%24/abc%40%23%24">
+          <Route path="/firestore/data/top%40%23%24/thing%40%23%24/abc%40%23%24">
             _redirected_to_sub_document_
           </Route>
         </>
       );
     },
     {
-      path: '/firestore/top%40%23%24/thing%40%23%24',
+      path: '/firestore/data/top%40%23%24/thing%40%23%24',
     }
   );
 

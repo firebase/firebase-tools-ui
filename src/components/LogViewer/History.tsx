@@ -32,7 +32,7 @@ export const formatTimestamp = (timestamp: number) => {
   const segments = [date.getHours(), date.getMinutes(), date.getSeconds()];
 
   return segments
-    .map(segment => {
+    .map((segment) => {
       const number = segment.toString();
 
       if (number.length === 2) return number;
@@ -95,7 +95,7 @@ export const History: React.FC<Props> = ({
   log,
   compiledGetters,
 }) => {
-  const history = log.history.filter(log =>
+  const history = log.history.filter((log) =>
     isQueryMatch(parsedQuery, log, compiledGetters)
   );
 
@@ -103,7 +103,7 @@ export const History: React.FC<Props> = ({
 
   const scrollToBottom = () => {
     if (messagesEndRef && messagesEndRef.current) {
-      (messagesEndRef.current as any).scrollIntoView();
+      (messagesEndRef.current as any).scrollIntoView?.();
     }
   };
 

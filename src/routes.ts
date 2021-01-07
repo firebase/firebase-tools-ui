@@ -24,6 +24,7 @@ import LogsViewer from './components/LogViewer';
 
 export interface Route {
   path: string;
+  // multiPath enables paths that contain tabs to accept multiple path alternatives
   multiPath?: string;
   component: React.FC;
   label: string;
@@ -33,6 +34,7 @@ export interface Route {
 }
 
 export const routes: ReadonlyArray<Route> = [
+  // Firebase Nav tabs
   {
     path: '/',
     component: Home,
@@ -48,6 +50,7 @@ export const routes: ReadonlyArray<Route> = [
     showInNav: true,
   },
   {
+    // it accepts either /firestore/data or /firestore/requests
     path: '/firestore/data',
     multiPath: '/firestore/:tab(data|requests)',
     component: Firestore,
@@ -81,6 +84,7 @@ export const routes: ReadonlyArray<Route> = [
   },
   {
     path: '/firestore/requests',
+    // it accepts either /firestore/requests or /firestore/requests/:requestId
     multiPath: '/firestore/:tab(requests|requests/:requestId)',
     component: Firestore,
     label: 'Requests',

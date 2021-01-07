@@ -24,8 +24,8 @@ export function getDatabases(state: AppState) {
 }
 
 // Get the names of the databases or undefined, if not ready for any reason.
-export const getDatabaseNames = createSelector(getDatabases, databases =>
+export const getDatabaseNames = createSelector(getDatabases, (databases) =>
   hasData(databases.result)
-    ? databases.result.data.map(db => db.name)
+    ? databases.result.data.map((db) => db.name)
     : undefined
 );

@@ -35,7 +35,7 @@ const RequestsTableIndex: React.FC<PropsFromState> = ({ requests }) => {
   const hasRequests = !!requests?.length;
 
   return (
-    <>
+    <div data-testid="requests-card">
       <RequestsHeader />
       <RequestsTable
         filteredRequests={requests}
@@ -47,7 +47,7 @@ const RequestsTableIndex: React.FC<PropsFromState> = ({ requests }) => {
         showCopyNotification={showCopyNotification}
         setShowCopyNotification={setShowCopyNotification}
       />
-    </>
+    </div>
   );
 };
 

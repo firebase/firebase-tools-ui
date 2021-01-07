@@ -43,7 +43,7 @@ const RouterWithInit = () => {
     store.dispatch(subscribeToConfig());
   }, []); // Empty-array means "run only once on init": https://reactjs.org/docs/hooks-effect.html#tip-optimizing-performance-by-skipping-effects
 
-  // Initialize global newRequest subscription to firestore requests evaluation
+  // Initialize global subscription to firestore requests evaluation
   useEffect(() => {
     const callbackFunction = (newRequest: FirestoreRulesEvaluation) => {
       const { type } = newRequest;

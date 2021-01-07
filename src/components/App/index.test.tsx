@@ -15,11 +15,12 @@
  */
 
 import { render } from '@testing-library/react';
+import { createMemoryHistory } from 'history';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
-import { BrowserRouter, MemoryRouter, Route } from 'react-router-dom';
+import { BrowserRouter, Router } from 'react-router-dom';
 
 import configureStore from '../../configureStore';
 import { delay, waitForDialogsToOpen } from '../../test_utils';
@@ -65,38 +66,36 @@ it('shows dialogs in the queue', async () => {
   expect(getByText('wowah')).not.toBeNull();
 });
 
-// it('redirects from url /functions to correct logs url', async () => {
-//   const store = configureStore();
-//   const { getByText } = render(
-//     <MemoryRouter initialEntries={['/functions']}>
-//       <Provider store={store}>
-//         <BrowserRouter>
-//           <Route exact path={REDIRECT_LOGS_URL}> Redirected Logs URL </Route>
-//           <App />
-//         </BrowserRouter>
-//       </Provider>
-//     </MemoryRouter>
-//   );
+it('redirects from url /functions to correct logs url', async () => {
+  const store = configureStore();
+  const history = createMemoryHistory({
+    initialEntries: ['/functions'],
+  });
+  render(
+    <Provider store={store}>
+      <Router history={history}>
+        <App />
+      </Router>
+    </Provider>
+  );
+  await act(() => delay(100)); // Wait for tab indicator async DOM updates.
+  const { pathname, search } = history.location;
+  const redirectedCompleteUrl = pathname + search;
+  expect(redirectedCompleteUrl).toBe(REDIRECT_LOGS_URL);
+});
 
-//   await act(() => delay(100)); // Wait for tab indicator async DOM updates.
-
-//   expect(getByText('Redirected Logs URL')).not.toBe(null);
-// });
-
-// it('redirects from url /firestore to /firestore/data', async () => {
-//   const store = configureStore();
-//   const { getByText } = render(
-//     <MemoryRouter initialEntries={['/firestore']}>
-//       <Provider store={store}>
-//         <BrowserRouter>
-//           <Route exact path='/firestore/data'> Firestore Data </Route>
-//           <App />
-//         </BrowserRouter>
-//       </Provider>
-//     </MemoryRouter>
-//   );
-
-//   await act(() => delay(100)); // Wait for tab indicator async DOM updates.
-
-//   expect(getByText('Firestore Data')).not.toBe(null);
-// });
+it('redirects from url /firestore to /firestore/data', async () => {
+  const store = configureStore();
+  const history = createMemoryHistory({
+    initialEntries: ['/firestore'],
+  });
+  render(
+    <Provider store={store}>
+      <Router history={history}>
+        <App />
+      </Router>
+    </Provider>
+  );
+  await act(() => delay(100)); // Wait for tab indicator async DOM updates.
+  expect(history.location.pathname).toBe('/firestore/data');
+});

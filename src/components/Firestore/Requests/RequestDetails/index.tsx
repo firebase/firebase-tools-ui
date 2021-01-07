@@ -69,7 +69,7 @@ const RequestDetails: React.FC<Props> = ({ selectedRequest, requestId }) => {
   }
 
   return (
-    <>
+    <div data-testid="request-details">
       <RequestDetailsHeader
         requestTimeComplete={requestTimeComplete}
         requestTimeFormatted={requestTimeFormatted}
@@ -92,7 +92,7 @@ const RequestDetails: React.FC<Props> = ({ selectedRequest, requestId }) => {
         showCopyNotification={showCopyNotification}
         setShowCopyNotification={setShowCopyNotification}
       />
-    </>
+    </div>
   );
 };
 
