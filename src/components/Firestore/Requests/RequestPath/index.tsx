@@ -20,32 +20,29 @@ import { IconButton } from '@rmwc/icon-button';
 import { Tooltip } from '@rmwc/tooltip';
 import React, { useEffect, useRef, useState } from 'react';
 
-import { considerTruncatingHTMLElementFromLeft } from '../utils';
+import {
+  considerTruncatingHTMLElementFromLeft,
+  copyPathToClipboard,
+} from '../utils';
 
-// copies path without spaces to clipboard
-// and triggers copy notification (SnackBar)
-function copyPathToClipboard(
-  resourcePath: string,
-  setShowCopyNotification: (value: boolean) => void
-) {
-  navigator.clipboard
-    .writeText(resourcePath.replace(/\s/g, ''))
-    .then(() => setShowCopyNotification(true))
-    .catch(() => setShowCopyNotification(false));
-}
-
-const RequestPath: React.FC<{
+interface Props {
   resourcePath: string;
   setShowCopyNotification: (value: boolean) => void;
   requestPathContainerWidth?: number;
-}> = ({ resourcePath, setShowCopyNotification, requestPathContainerWidth }) => {
+}
+
+const RequestPath: React.FC<Props> = ({
+  resourcePath,
+  setShowCopyNotification,
+  requestPathContainerWidth,
+}) => {
   const pathTextRef = useRef<HTMLDivElement>(null);
   const [prevPathContainerWidth, setPrevPathContainerWidth] = useState<
     number | undefined
   >();
 
   useEffect(() => {
-    // consider truncation only if the width of the pathContainer changed
+    // consider truncating text only if the width of the pathContainer changed
     requestPathContainerWidth !== prevPathContainerWidth &&
       considerTruncatingHTMLElementFromLeft(
         pathTextRef,
@@ -62,11 +59,7 @@ const RequestPath: React.FC<{
 
   useEffect(() => {
     setPrevPathContainerWidth(requestPathContainerWidth);
-  }, [
-    requestPathContainerWidth,
-    prevPathContainerWidth,
-    setPrevPathContainerWidth,
-  ]);
+  }, [requestPathContainerWidth, setPrevPathContainerWidth]);
 
   return (
     <div className="Firestore-Request-Path-Container">

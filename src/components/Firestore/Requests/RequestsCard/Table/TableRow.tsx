@@ -27,12 +27,14 @@ import RequestPath from '../../RequestPath';
 import { FirestoreRulesEvaluation } from '../../rules_evaluation_result_model';
 import { useRequestMainInformation } from '../../utils';
 
-const RequestTableRow: React.FC<{
+interface Props {
   request: FirestoreRulesEvaluation;
   requestId: string;
   setShowCopyNotification: (value: boolean) => void;
   requestPathContainerWidth?: number;
-}> = ({
+}
+
+const RequestTableRow: React.FC<Props> = ({
   request,
   requestId,
   setShowCopyNotification,

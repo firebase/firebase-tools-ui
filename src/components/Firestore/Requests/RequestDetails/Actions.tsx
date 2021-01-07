@@ -21,10 +21,12 @@ import React, { useState } from 'react';
 
 import RequestActionsCollapsedMenu from './ActionsCollapsedMenu';
 
-const Action: React.FC<{
+interface ActionProps {
   label: string;
   onClick: () => void;
-}> = ({ label, onClick }) => (
+}
+
+const Action: React.FC<ActionProps> = ({ label, onClick }) => (
   <Button
     outlined
     onClick={onClick}
@@ -34,7 +36,7 @@ const Action: React.FC<{
   </Button>
 );
 
-const RequestActions: React.FC<{}> = () => {
+const RequestActions: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
 
   return (

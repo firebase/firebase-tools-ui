@@ -14,20 +14,22 @@
  * limitations under the License.
  */
 
+@import './CodeViewer_variables.scss';
+
 .Firestore-Request-Details-Code {
-  // overflow behavior
+  // overflow behavior: make the inside content of the code viewer scrollable
   width: 75%;
   position: absolute;
   top: 0px;
   left: 0px;
   height: 100%;
   overflow: scroll;
-  // mobile styles
+  // hide code viewer for mobile
   @media screen and (max-width: 500px) {
     display: none;
   }
 
-  // hide bodering textarea coming from CodeMirror (visible for a second when loading)
+  // hide non-necessary textarea coming from CodeMirror (visible for a second when loading)
   & > textarea {
     display: none;
   }
@@ -46,41 +48,29 @@
       padding: 1px 4px;
       font-size: 15px;
 
-      &.deny {
-        // TODO: get this color from a theme variable
-        background-color: rgb(255 82 82 / 25%);
-        color: #d32f2f;
-      }
       &.allow {
-        // TODO: get this color from a theme variable
-        background-color: rgb(0 191 165 / 20%);
-        color: #00796b;
+        color: $firebase-success-theme-primary;
+        background-color: $firebase-success-theme-background;
       }
+      &.deny,
       &.error {
-        // TODO: get this color from a theme variable
-        background-color: rgb(255 82 82 / 25%);
-        color: #d32f2f;
+        color: $firebase-error-theme-primary;
+        background-color: $firebase-error-theme-background;
       }
     }
   }
   .CodeMirror-code {
     // highlight line of code
-    & > div.deny {
-      // TODO: get this color from a theme variable
-      background-color: rgb(255 82 82 / 25%);
-    }
     & > div.allow {
-      // TODO: get this color from a theme variable
-      background-color: rgb(0 191 165 / 20%);
+      background-color: $firebase-success-theme-background;
     }
+    & > div.deny,
     & > div.error {
-      // TODO: get this color from a theme variable
-      background-color: rgb(255 82 82 / 25%);
+      background-color: $firebase-error-theme-background;
     }
     // change color of comments
     span.cm-comment {
-      // TODO: get this 'Text Black Terniary' color from a theme variable
-      color: rgb(0 0 0 / 0.38);
+      color: $firestore-request-details-code-viewer-comment-color;
     }
   }
 }

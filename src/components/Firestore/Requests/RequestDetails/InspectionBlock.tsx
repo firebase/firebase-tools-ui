@@ -23,11 +23,18 @@ import React, { useState } from 'react';
 const INSPECT_BLOCK_CLASS = 'Firestore-Request-Details-Inspection-Block';
 const MAIN_INSPECT_BLOCK_CLASS = INSPECT_BLOCK_CLASS + '--Main';
 
-export const InspectionBlock: React.FC<{
+interface Props {
   label: string;
   value?: string;
   isMainBlock?: boolean;
-}> = ({ label, value, isMainBlock, children }) => {
+}
+
+export const InspectionBlock: React.FC<Props> = ({
+  label,
+  value,
+  isMainBlock,
+  children,
+}) => {
   const [isExpanded, setIsExpanded] = useState<Boolean>(!!isMainBlock);
 
   function displayContent() {

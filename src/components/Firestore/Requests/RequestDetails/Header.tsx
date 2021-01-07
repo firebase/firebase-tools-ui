@@ -28,14 +28,16 @@ import { OutcomeData } from '../types';
 import { usePathContainerWidth } from '../utils';
 import RequestActions from './Actions';
 
-const RequestDetailsHeader: React.FC<{
+interface Props {
   requestTimeComplete: string | undefined;
   requestTimeFormatted: string | undefined;
   requestMethod: string | undefined;
   resourcePath: string | undefined;
   outcomeData: OutcomeData | undefined;
   setShowCopyNotification: (value: boolean) => void;
-}> = ({
+}
+
+const RequestDetailsHeader: React.FC<Props> = ({
   requestTimeComplete,
   requestTimeFormatted,
   requestMethod,

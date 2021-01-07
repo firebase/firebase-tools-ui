@@ -39,14 +39,12 @@
 }
 .Firestore-Request-Path {
   position: relative;
-  max-width: 100%;
+  // display copy IconButton only when path is hovered
   &:hover {
-    // display copy IconButton only when path is hovered
     .Firestore-Request-Path-Container button {
       visibility: visible;
     }
   }
-
   .Firestore-Request-Path-Container {
     // flex behavior
     display: flex;
@@ -60,22 +58,29 @@
       font-weight: normal;
       // ensure path only has one line
       white-space: nowrap;
-      // NOTE: the overflow must NOT be 'hidden', to ensure the text truncation works as expected
+      // NOTE: the overflow must NOT be 'hidden' to ensure the text truncation works as expected
     }
     // copy IconButton
     button {
       padding: 12px 0;
+      // avoid button's width to go below 48px when container is too narrow
       min-width: 48px;
       // absolute position to the right
       position: absolute;
       right: 0px;
       // hover effects
-      // NOTE: 'visibility' is chosed instead of 'display' because './utils' needs the element to be always rendered
+      // NOTE: 'visibility' is chosed instead of 'display' because './utils' needs the element to
+      // be rendered in order to calculate its width. Only on mobile is the button 'display': none
       visibility: hidden;
       transition: color 0.2s;
       color: rgb(0 0 0 / 54%);
       &:hover {
         color: black;
+      }
+      // do not display button on mobile
+      @media screen and (max-width: 500px) {
+        display: none;
+        min-width: 0px;
       }
     }
   }

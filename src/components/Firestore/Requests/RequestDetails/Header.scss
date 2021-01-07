@@ -15,12 +15,13 @@
  */
 
 @import '../index.scss';
+@import './Header_variables.scss';
 
 .Firestore-Request-Details-Header {
   border-radius: 8px 8px 0 0;
   width: 100%;
   background-color: var(--mdc-theme-surface);
-  height: 56px;
+  height: $firestore-request-details-header-height;
   padding: 0 6px;
   position: relative;
   // shadow border at bottom
@@ -32,14 +33,14 @@
 }
 
 .Firestore-Request-Details-Header-Return {
-  padding-right: 12px;
+  padding-right: $firestore-request-details-header-return-padding-right;
   // flex behavior
   display: flex;
   justify-content: center;
-  // Icon Button
+  // return IconButton
   a {
-    width: 30px;
-    height: 30px;
+    width: $firestore-request-details-header-icon-button-width;
+    height: $firestore-request-details-header-icon-button-width;
     padding: 5px;
     padding-left: 9px;
   }
@@ -59,31 +60,32 @@
   align-items: center;
   // make space for the collapsed button
   @media screen and (max-width: 850px) {
-    // width = wholeWidth - widthReturnButton - paddingRightReturnButton - widthCollapsedButton
-    width: calc(100% - 30px - 12px - 30px);
+    width: $firestore-request-details-header-info-collapsed-width;
+  }
+  // width for mobile
+  @media screen and (max-width: 500px) {
+    width: $firestore-request-details-header-info-mobile-width;
   }
 
   .Firestore-Request-Date {
-    width: 63px;
+    width: $firestore-request-details-header-info-date-width;
   }
   .Firestore-Request-Outcome {
-    width: 35px;
+    width: $firestore-request-details-header-info-outcome-width;
   }
   .Firestore-Request-Method {
-    width: 60px;
+    width: $firestore-request-details-header-info-method-width;
     text-align: center;
-    // mobile styles
+    // width for mobile
     @media screen and (max-width: 500px) {
-      width: 35px;
+      width: $firestore-request-details-header-info-method-mobile-width;
     }
   }
   .Firestore-Request-Path {
-    // width = 100% - widthDate - widthOutcome - widthMethod
-    width: calc(100% - 63px - 35px - 60px);
-    // mobile styles
+    width: $firestore-request-details-header-info-path-width;
+    // width for mobile
     @media screen and (max-width: 500px) {
-      // width = 100% - widthDate - widthOutcome - widthMethod
-      width: calc(100% - 63px - 35px - 35px);
+      width: $firestore-request-details-header-info-path-mobile-width;
     }
 
     .Firestore-Request-Path-Container {
@@ -94,10 +96,6 @@
         visibility: visible;
         // override position absolute to the right
         position: relative;
-        // mobile styles
-        @media screen and (max-width: 500px) {
-          padding: 6px;
-        }
       }
     }
   }

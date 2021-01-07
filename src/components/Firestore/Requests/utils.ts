@@ -231,3 +231,15 @@ export function generateId(): string {
   }
   return newId;
 }
+
+// copies path without spaces to clipboard
+// and triggers copy notification (SnackBar)
+export function copyPathToClipboard(
+  resourcePath: string,
+  setShowCopyNotification: (value: boolean) => void
+) {
+  navigator.clipboard
+    .writeText(resourcePath.replace(/\s/g, ''))
+    .then(() => setShowCopyNotification(true))
+    .catch(() => setShowCopyNotification(false));
+}

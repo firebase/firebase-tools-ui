@@ -22,7 +22,7 @@ import { grey100 } from '../../../colors';
 import RequestDetails from './RequestDetails';
 import RequestsCard from './RequestsCard';
 
-const Requests: React.FC<{}> = () => (
+const Requests: React.FC = () => (
   <ThemeProvider
     options={{
       surface: grey100,

@@ -14,17 +14,8 @@
  * limitations under the License.
  */
 
-.Firestore-Requests-Details-Code-Zero-State {
-  height: 100%;
-  background: var(--mdc-theme-surface);
-  border-bottom-left-radius: 8px;
-  // flex behavior
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  // message Typography
-  span {
-    margin-bottom: 20px;
-  }
-}
+@import '../variables.scss';
+
+// snackbar
+$snackbar-background-color: $firebase-navy-800-color;
+$snackbar-text-color: $firebase-success-on-dark-color;

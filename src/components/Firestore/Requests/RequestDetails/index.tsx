@@ -63,7 +63,7 @@ const RequestDetails: React.FC<Props> = ({ selectedRequest, requestId }) => {
   if (requestId && !selectedRequest) {
     return <Redirect to="/firestore/requests" />;
   }
-  // return empty view if (selectedRequest) has not yet been selected
+  // return empty view if (selectedRequest) has not yet been selected/loaded
   else if (!selectedRequest) {
     return <></>;
   }

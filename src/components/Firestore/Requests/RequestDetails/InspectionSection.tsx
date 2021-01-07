@@ -21,14 +21,17 @@ import React from 'react';
 import { InspectionElement } from '../types';
 import InspectionBlock from './InspectionBlock';
 
-const InspectionSection: React.FC<{
+interface Props {
   inspectionElements?: InspectionElement[];
-}> = ({ inspectionElements }) => (
+}
+
+const InspectionSection: React.FC<Props> = ({ inspectionElements }) => (
   <div className="Firestore-Request-Details-Inspection">
     <InspectionBlock isMainBlock label="Query Information">
       <InspectionBlock label="limit" value="20" />
       <InspectionBlock label="orderBy" value="total_reviews" />
       <InspectionBlock label="where">
+        {/* TODO: this is just a placeholder value format */}
         <>
           <div>
             <span>name</span> <span>`{'=='}`</span> <span>'Pozole'</span>
@@ -41,8 +44,7 @@ const InspectionSection: React.FC<{
     </InspectionBlock>
     <InspectionBlock isMainBlock label="Expressions Inspection">
       <InspectionBlock label="isSignedIn()" value="false" />
-      {inspectionElements?.map((inspectionElement, index) => {
-        const { label, value } = inspectionElement;
+      {inspectionElements?.map(({ label, value }, index) => {
         return <InspectionBlock key={index} label={label} value={value} />;
       })}
     </InspectionBlock>

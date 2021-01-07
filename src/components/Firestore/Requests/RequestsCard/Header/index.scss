@@ -14,43 +14,49 @@
  * limitations under the License.
  */
 
+@import './variables.scss';
+
 .Firestore-Requests-Header {
   width: 100%;
+  height: $firestore-requests-header-height;
+  // important for the percentage width and height of the filters-container
   position: relative;
-  // overflow behavior
+  // hide cointent that does not fit inside the header
   overflow: hidden;
+
   .CardActionBar .CardActionBar-container {
-    // fit the border-radius of the Requests grid container
+    // top-left and top-right border-radius
     border-radius: 8px 8px 0 0;
     // remove bottom border
     box-shadow: none;
   }
-}
 
-.Firestore-Requests-Header-Filters-Container {
-  width: 100%;
-  padding: 8px;
-  // flex behavior
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  // overflow behavior
-  overflow-x: scroll;
+  .Firestore-Requests-Header-Filters-Container {
+    width: 100%;
+    height: 100%;
+    padding: 0 8px;
+    // flex behavior
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    // scroll horizontally to see filters that do not fit in the header
+    overflow-x: scroll;
 
-  // filters
-  & > div {
+    // select all filters
+    & > div {
+      // remove not desired subtext at bottom
+      .Field .Field-subtext {
+        display: none;
+      }
+      // removed unused label padding to center Fields
+      .Field,
+      .Field .Field-label {
+        padding-bottom: 0px;
+      }
+    }
     // select all filters but the first one
-    &:not(:first-child) {
+    & > div:not(:first-child) {
       margin-left: 10px;
-    }
-    // remove not desired subtext
-    .Field .Field-subtext {
-      display: none;
-    }
-    // removed unused label padding to center Fields
-    .Field,
-    .Field .Field-label {
-      padding-bottom: 0px;
     }
   }
 }

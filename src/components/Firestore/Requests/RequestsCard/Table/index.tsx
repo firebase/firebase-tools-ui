@@ -64,7 +64,7 @@ const RequestsTable: React.FC<Props> = ({
         <DataTableContent>
           <DataTableHead>
             <DataTableRow>
-              {/* TODO: add onSortChange to toggle sorting value when functionality is ready */}
+              {/* TODO: add onSortChange to toggle sorting value when sorting functionality is ready */}
               <DataTableHeadCell
                 className={`${TABLE_CLASS}-Date-Header`}
                 sort={1}
@@ -80,7 +80,7 @@ const RequestsTable: React.FC<Props> = ({
               <DataTableHeadCell className={`${TABLE_CLASS}-Path-Header`}>
                 {/* 
                   (ref) is placed on an inner div to avoid the padding of the Table Header
-                  from modifying the real width of the container
+                  from modifying the returned value of the path container's real width
                 */}
                 <div ref={pathContainerRef}>Path</div>
               </DataTableHeadCell>

@@ -30,13 +30,20 @@ import {
 import { getIconFromRequestOutcome } from '../utils';
 import CodeViewerZeroState from './CodeViewerZeroState';
 
-const RulesCodeViewer: React.FC<{
+interface Props {
   firestoreRules?: string;
   linesOutcome?: OutcomeInfo[];
   linesIssues?: FirestoreRulesIssue[];
-}> = ({ firestoreRules, linesOutcome, linesIssues }) => {
+}
+
+const RulesCodeViewer: React.FC<Props> = ({
+  firestoreRules,
+  linesOutcome,
+  linesIssues,
+}) => {
   const [codeMirrorEditor, setCodeMirrorEditor] = useState<any>(null);
 
+  // creates HTMLElement of a Marker containing the outcome icon
   const getMarkerElement = useCallback((outcome: RulesOutcome): HTMLElement => {
     // TODO: Is there a better way of creating a HTMLElement without manipulating DOM?
     // JSX can't be passed to the codemirror library, see: https://github.com/scniro/react-codemirror2/issues/57
@@ -46,6 +53,8 @@ const RulesCodeViewer: React.FC<{
     return marker;
   }, []);
 
+  // adds the corresponding Marker with the correct outcome icon
+  // to all lines that have an outcome (allow or deny)
   const addLinesOutcomeGutters = useCallback(() => {
     linesOutcome?.map((lineAction) => {
       const { line, outcome } = lineAction;
@@ -58,6 +67,8 @@ const RulesCodeViewer: React.FC<{
     });
   }, [codeMirrorEditor, linesOutcome, getMarkerElement]);
 
+  // adds the corresponding Marker with the error icon
+  // to all lines that have an issue (error)
   const addLinesIssuesGutters = useCallback(() => {
     linesIssues?.map((lineIssue) => {
       const { line } = lineIssue;

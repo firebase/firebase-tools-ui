@@ -15,29 +15,31 @@
  */
 
 @import '../../index.scss';
-@import '../../index_variables.scss';
+@import './variables.scss';
 
 // Double selector - for higher specificity to Override rmwc styles.
 .Firestore-Requests-Table.Firestore-Requests-Table {
-  border-radius: 0px 0px 8px 8px;
   // avoid double borders.
   margin: -1px;
+  // keep a min-height to keep it usable on short-devices (at the cost of page scrolling)
+  min-height: $firestore-requests-table-min-height;
+  // bottom-left and bottom-right border-radius
+  border-radius: 0px 0px 8px 8px;
   td,
   th {
-    padding: 8px 0;
-    // TODO: get value from scss variable
-    padding-left: $request-table-padding-left;
-    // mobile styles
+    padding: 0;
+    padding-left: 24px;
+    // avoid extra text height
+    line-height: 1;
     @media screen and (max-width: 500px) {
+      // less padding for mobile
       padding-left: 10px;
     }
   }
   th {
-    height: 31px;
+    height: $firestore-requests-table-header-height;
     font-size: 12px;
-    // avoid extra text height
-    line-height: 1;
-    // font-weight different for sorted and not sorted columns
+    // font-weight different for sorted and not sorted headers
     font-weight: 400;
     &.rmwc-data-table__head-cell--sorted {
       font-weight: 600;
@@ -46,10 +48,11 @@
     .rmwc-data-table__sort-icon {
       position: absolute;
       right: 0px;
+      margin-right: 0px;
     }
   }
   td {
-    height: 48px;
+    height: $firestore-requests-table-cell-height;
   }
   thead {
     background-color: var(--mdc-theme-surface);
@@ -57,12 +60,6 @@
       // border at bottom
       box-shadow: 0px -1px 0 rgba(0, 0, 0, 0.12) inset;
     }
-  }
-  @media screen and (max-height: 535px) {
-    // fix height on short-devices (to avoid depending on view height value at this point)
-    // totalAvailableHeight = 400px - 48px - 48px
-    // height = totalAvailableHeight + compensateNegativeMargin - requestsHeaderHeight
-    height: calc(304px + 2px - 56px);
   }
 
   // clicklable rows styles
@@ -77,51 +74,53 @@
 
   // distribute column widths (width values include the padding-left)
   .Firestore-Requests-Table-Date-Header,
+  .Firestore-Request-Date,
+  .Firestore-Requests-Table-Outcome-Header,
+  .Firestore-Request-Outcome,
+  .Firestore-Requests-Table-Method-Header,
+  .Firestore-Request-Method {
+    // causes padding to be added to the width, instead of been part of it.
+    // example (considering .Firestore-Request-Date):
+    //      width: 66px + padding-right + padding-left
+    box-sizing: content-box;
+  }
+  .Firestore-Requests-Table-Date-Header,
   .Firestore-Request-Date {
-    width: 90px;
-    // mobile styles
-    @media screen and (max-width: 500px) {
-      width: 76px;
-    }
+    width: 66px;
   }
   .Firestore-Requests-Table-Outcome-Header,
   .Firestore-Request-Outcome {
-    width: 50px;
-    // mobile styles
-    @media screen and (max-width: 500px) {
-      width: 35px;
-    }
+    width: 26px;
   }
   .Firestore-Requests-Table-Method-Header,
   .Firestore-Request-Method {
-    width: 80px;
-    // mobile styles
+    width: 60px;
+  }
+
+  // add small padding to path on mobile, since the copyIconButton is no longer displayed
+  // is important to add the padding to both the Path header and cells
+  .Firestore-Requests-Table-Path-Header,
+  .Firestore-Request-Path {
     @media screen and (max-width: 500px) {
-      width: 70px;
+      padding-right: 12px;
     }
   }
 
-  // fix body height and ensure body content scrollable behavior
+  // fix body height and ensure tbody content scrollable behavior
   thead,
   tbody tr {
-    // this styles format are required in order to apply overflow for scrolling
+    // this styles are required in order to apply scrolling overflow to tbody
     display: table;
     table-layout: fixed;
     width: 100%;
   }
   tbody {
+    background-color: white;
+    min-height: $firestore-requests-table-body-min-height;
+    height: $firestore-requests-table-body-viewport-height;
+    // this styles are required in order to apply scrolling overflow to tbody
     display: block;
     overflow: auto;
-    background-color: white;
-    // min-height is the whole view height minus height of external components
-    // min-height = allViewHeight - navBarHeight - appHorizontalPadding - firestoreSubTabsHeight - requestTableHeader - requestsHeaderHeight
-    height: calc(100vh - 88px - 48px - 96px - 31px - 56px);
-    @media screen and (max-height: 535px) {
-      // fix height on short-devices (to avoid depending on view height value at this point)
-      // totalAvailableHeight = 400px - 48px - 48px
-      // height = totalAvailableHeight - requestTableHeader - requestsHeaderHeight
-      height: (304px - 31px - 56px);
-    }
   }
 }
 
@@ -129,13 +128,12 @@
   border-radius: 0px;
   // avoid double borders.
   margin: -1px;
+  // make table height equal to the height of the requestTableHeader,
+  // helpful to display the Zero State message
+  min-height: $firestore-requests-empty-table-min-height;
   tbody {
+    // no content to display
     height: 0px;
-  }
-  @media screen and (max-height: 535px) {
-    // make table height equal to the height of the requestTableHeader,
-    // helpful to display the Zero State message
-    // height = requestTableHeader + compensateNegativeMargin
-    height: calc(31px + 2px);
+    min-height: 0px;
   }
 }

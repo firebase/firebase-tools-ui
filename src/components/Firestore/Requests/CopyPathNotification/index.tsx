@@ -16,17 +16,22 @@
 
 import './index.scss';
 
-import { Snackbar, SnackbarOnCloseEventT } from '@rmwc/snackbar';
+import { Snackbar } from '@rmwc/snackbar';
 import React from 'react';
 
-const CopyPathNotification: React.FC<{
+interface Props {
   showCopyNotification: boolean;
   setShowCopyNotification: (value: boolean) => void;
-}> = ({ showCopyNotification, setShowCopyNotification }) => (
+}
+
+const CopyPathNotification: React.FC<Props> = ({
+  showCopyNotification,
+  setShowCopyNotification,
+}) => (
   <div className="Firestore-Requests-Copy-Path-Snackbar">
     <Snackbar
       open={showCopyNotification}
-      onClose={(evt: SnackbarOnCloseEventT) => setShowCopyNotification(false)}
+      onClose={() => setShowCopyNotification(false)}
       message="Request path copied to clipboard"
       icon={{ icon: 'check_circle', size: 'medium' }}
     />

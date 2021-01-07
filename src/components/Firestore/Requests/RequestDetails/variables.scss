@@ -15,22 +15,16 @@
  */
 
 @import './Header_variables.scss';
+@import '../variables.scss';
 
-// hide Menu Portal if Actions are no longer collapsed
-@media screen and (min-width: 850px) {
-  .mdc-menu-surface--open {
-    display: none;
-  }
-}
-.Firestore-Request-Details-Actions-Collapsed-Menu {
-  // hide collapsed button when width is higher than specified
-  @media screen and (min-width: 850px) {
-    display: none;
-  }
-
-  .Firestore-Request-Details-Actions-Collapsed-Button {
-    width: $firestore-request-details-header-icon-button-width;
-    height: $firestore-request-details-header-icon-button-width;
-    padding: 0px;
-  }
-}
+// details content
+$firestore-request-details-content-min-height: (
+  $firestore-requests-card-min-height - $firestore-request-details-header-height
+);
+// since the app-...-content variable uses calc(), a SASS interpolation
+// is used in order to nest a calc() function inside another calc() function
+// css structure:            calc( calc(0px + 0px) - 0px)
+$firestore-request-details-content-viewport-height: calc(
+  #{$app-remaining-viewport-height-for-content} - #{$firestore-sub-tabs-total-height +
+    $firestore-request-details-header-height}
+);

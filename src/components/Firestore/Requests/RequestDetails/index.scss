@@ -14,22 +14,17 @@
  * limitations under the License.
  */
 
+@import './variables.scss';
+
 .Firestore-Request-Details-Content {
   width: 100%;
-  // flex behavior
+  // flex behavior: stretch content vertically
   display: flex;
   justify-content: flex-start;
   align-items: stretch;
   // overflow behavior
   position: relative;
   overflow: hidden;
-  // min-height is the whole view height minus height of external components
-  // min-height = allViewHeight - navBarHeight - appHorizontalPadding - firestoreSubTabsHeight - requestDetailsHeader
-  min-height: calc(100vh - 88px - 48px - 96px - 56px);
-  // mobile styles
-  @media screen and (max-height: 535px) {
-    // totalAvailableHeight = 400px - 48px - 48px
-    // height = totalAvailableHeight - requestDetailsHeader
-    min-height: calc(304px - 56px);
-  }
+  min-height: $firestore-request-details-content-min-height;
+  height: $firestore-request-details-content-viewport-height;
 }

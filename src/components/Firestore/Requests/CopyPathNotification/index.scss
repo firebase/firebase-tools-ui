@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
+@import './variables.scss';
+
 .Firestore-Requests-Copy-Path-Snackbar {
   .mdc-snackbar__surface {
-    // TODO: get this color from theme (navy800)
-    background-color: #051e34;
+    background-color: $snackbar-background-color;
   }
   i {
     // !important is needed because Snackbar sets an inline color style
-    // TODO: get this color from theme (success on dark)
-    color: #00bfa5 !important;
+    color: $snackbar-text-color !important;
   }
 }

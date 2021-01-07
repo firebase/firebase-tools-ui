@@ -21,7 +21,7 @@ import { Controller, useForm } from 'react-hook-form';
 
 import { SelectField } from '../../../../common/Field';
 
-const OutcomeFilter: React.FC<{}> = () => {
+const OutcomeFilter: React.FC = () => {
   const methods = useForm();
   const { control } = methods;
   const options: Array<{

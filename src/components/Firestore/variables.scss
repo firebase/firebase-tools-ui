@@ -14,4 +14,11 @@
  * limitations under the License.
  */
 
-$request-table-padding-left: 24px;
+// firestore card
+$firestore-card-min-height: 400px;
+
+// firestore sub tabs
+$firestore-sub-tabs-height: 48px;
+$firestore-sub-tabs-margin-bottom: 48px;
+$firestore-sub-tabs-total-height: $firestore-sub-tabs-height +
+  $firestore-sub-tabs-margin-bottom;

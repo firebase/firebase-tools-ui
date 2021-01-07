@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@import './InspectionBlock_variables.scss';
+
 .Firestore-Request-Details-Inspection-Block {
   background-color: var(--mdc-theme-surface);
   padding: 10px;
@@ -27,8 +29,7 @@
 }
 
 .Firestore-Request-Details-Inspection-Block.Firestore-Request-Details-Inspection-Block--Main {
-  // TODO: get from theme, and make sure this color is part of the firebase color spec
-  background-color: #e2e2e2;
+  background-color: $firestore-request-details-inspection-main-block-background-color;
   font-weight: 500;
   padding: 5px 10px;
   font-size: 13px;
@@ -50,6 +51,6 @@
   overflow: scroll;
   // shadow border at left and bottom
   box-shadow: 1px -1px 0 rgba(0, 0, 0, 0.12) inset;
-  // handle line-breaks
+  // format line-breaks
   white-space: pre;
 }

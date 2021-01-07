@@ -17,6 +17,7 @@
 @import '../common/color';
 @import '../common/utils';
 @import '../App/variables';
+@import './variables.scss';
 
 .Firestore {
   display: flex;
@@ -27,16 +28,17 @@
   // making the whole page scrollable by making stuff fit into viewport height.
   height: $app-remaining-viewport-height-for-content;
   // But keep a min-height to keep it usable (at the cost of page scrolling).
-  min-height: 400px;
+  min-height: $firestore-card-min-height;
 }
 
 .Firestore-sub-tabs {
-  margin-bottom: 48px;
+  margin-bottom: $firestore-sub-tabs-margin-bottom;
   // shadow border at bottom
   box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12) inset;
 
   .Firestore-sub-tab-bar {
     width: fit-content;
+    height: $firestore-sub-tabs-height;
     .mdc-tab {
       &:not(:first-of-type) {
         margin-left: 24px;
@@ -48,8 +50,7 @@
 .Firestore-actions {
   position: absolute;
   right: 0px;
-  // TODO: get 48px value from margin-bottom of same Firestore-sub-tabs variable
-  top: 48px;
+  top: $firestore-sub-tabs-margin-bottom;
 
   button {
     width: fit-content;

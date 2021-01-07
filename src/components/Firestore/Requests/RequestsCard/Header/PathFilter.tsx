@@ -20,7 +20,7 @@ import { TextField } from '@rmwc/textfield';
 import keycode from 'keycode';
 import React, { useState } from 'react';
 
-export const PathFilter: React.FC<{}> = () => {
+export const PathFilter: React.FC = () => {
   const [searchText, setSearchText] = useState<string>('');
 
   const clearSearchText = () => {
@@ -31,7 +31,7 @@ export const PathFilter: React.FC<{}> = () => {
     <form
       role="search"
       className="Firestore-Requests-Header-Path-Filter"
-      onSubmit={e => {
+      onSubmit={(e) => {
         e.preventDefault();
       }}
     >
@@ -45,7 +45,6 @@ export const PathFilter: React.FC<{}> = () => {
         aria-label="filter"
         fullwidth
         type="text"
-        // inputRef={filterEl}
         outlined={false}
         ripple={false}
         icon="search"
