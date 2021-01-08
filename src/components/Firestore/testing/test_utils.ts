@@ -18,6 +18,8 @@ import { RenderResult } from '@testing-library/react';
 import firebase from 'firebase';
 
 import { waitForDialogsToOpen } from '../../../test_utils';
+import { FirestoreRulesEvaluation } from '../Requests/rules_evaluation_result_model';
+import { sampleRules } from '../Requests/sample-rules';
 import { renderWithFirestore } from './FirestoreTestProviders';
 
 /*
@@ -32,4 +34,39 @@ export async function renderDialogWithFirestore(
   const result = await renderWithFirestore(ui);
   await waitForDialogsToOpen(result.container);
   return result;
+}
+
+/*
+ * Returns a mocked version of a request evaluation, but also a portion of
+ * an evaluation can be provided to create a custom request evaluation.
+ */
+export function createFakeFirestoreRequestEvaluation(
+  evaluation?: Partial<FirestoreRulesEvaluation>
+): FirestoreRulesEvaluation {
+  return {
+    outcome: 'allow',
+    rulesContext: {
+      request: {
+        method: 'get',
+        path: 'databases/(default)/documents/users/foo',
+        time: new Date().getTime(),
+      },
+      resource: {
+        __name__: 'foo',
+        id: 'database/(default)/documents/users/foo',
+        data: {
+          name: 'Foo Bar',
+          accountAge: 94,
+        },
+      },
+    },
+    requestId: 'unique_id',
+    granularAllowOutcomes: [],
+    data: {
+      isCompilationSuccess: true,
+      rules: sampleRules,
+      issues: [],
+    },
+    ...evaluation,
+  };
 }

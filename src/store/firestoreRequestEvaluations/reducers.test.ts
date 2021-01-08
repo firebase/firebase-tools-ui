@@ -14,46 +14,27 @@
  * limitations under the License.
  */
 
-import { FirestoreRulesEvaluation } from '../../components/Firestore/Requests/rules_evaluation_result_model';
+import { createFakeFirestoreRequestEvaluation } from '../../components/Firestore/testing/test_utils';
 import { addRequestEvaluation } from './actions';
 import {
   FirestoreRequestEvaluationsState,
   firestoreRequestEvaluationsReducer,
 } from './reducer';
 
-const dummyRequestEvaluation: FirestoreRulesEvaluation = {
-  outcome: 'allow',
-  rulesContext: {
-    request: {
-      method: 'get',
-      path: 'databases/(default)/documents/users/foo',
-      time: new Date().getTime(),
-    },
-    resource: {
-      __name__: 'foo',
-      id: 'database/(default)/documents/users/foo',
-      data: {
-        name: 'Foo Bar',
-        accountAge: 94,
-      },
-    },
-  },
-  requestId: 'unique_id',
-  granularAllowOutcomes: [],
-};
-
 describe('firestore request evaluations reducer', () => {
   const INIT_STATE: FirestoreRequestEvaluationsState = [];
+  const dummyRequestEvaluation = createFakeFirestoreRequestEvaluation({
+    requestId: 'first-dummy',
+  });
+  const secondDummyRequestEvaluation = createFakeFirestoreRequestEvaluation({
+    requestId: 'second-dummy',
+  });
 
   it(`${addRequestEvaluation} => adds request evaluation to beginning of array`, () => {
     const updatedState = firestoreRequestEvaluationsReducer(
       INIT_STATE,
       addRequestEvaluation(dummyRequestEvaluation)
     );
-    const secondDummyRequestEvaluation = {
-      ...dummyRequestEvaluation,
-      requestId: 'second-dummy',
-    };
 
     expect(
       firestoreRequestEvaluationsReducer(
