@@ -23,6 +23,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { connect } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 
+import { ReconnectingWebSocket } from '../../reconnectingWebSocket';
 import { AppState } from '../../store';
 import { LoggingConfig } from '../../store/config';
 import {
@@ -35,7 +36,6 @@ import { hasData } from '../../store/utils';
 import { CompiledGetterCache } from './CompiledGetterCache';
 import History from './History';
 import { QueryBar, parseQuery } from './QueryBar';
-import { ReconnectingWebSocket } from './ReconnectingWebSocket';
 
 interface PropsFromState {
   log: LogState;
@@ -68,7 +68,7 @@ export const LogViewer: React.FC<Props> = ({
     if (!config) return;
 
     logReset();
-    const webSocket = new ReconnectingWebSocket(config);
+    const webSocket = new ReconnectingWebSocket(config.hostAndPort);
     webSocket.listener = (log: LogEntry) => {
       logReceived(log);
     };
