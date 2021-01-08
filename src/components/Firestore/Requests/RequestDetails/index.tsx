@@ -23,9 +23,9 @@ export interface Props extends PropsFromParentComponent {}
 
 const RequestDetails: React.FC<Props> = ({ requestId }) => (
   <div data-testid="request-details">
-    <div> Request Details Header </div>
-    <div> Request Details Code Viewer </div>
-    <div> Request Details Inspection Section </div>
+    <div>Request Details Header</div>
+    <div>Request Details Code Viewer</div>
+    <div>Request Details Inspection Section</div>
   </div>
 );
 
