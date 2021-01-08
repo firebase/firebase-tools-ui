@@ -61,7 +61,7 @@ export interface FirestoreRulesContext {
   resource?: FirestoreResource;
 }
 
-export type RulesOutcome = 'allow' | 'deny' | 'error';
+export type RulesOutcome = 'allow' | 'deny' | 'error' | 'admin';
 
 export interface FirestoreRulesIssue {
   description: string;
@@ -76,7 +76,7 @@ export interface OutcomeInfo {
 export interface FirestoreRulesUpdateData {
   isCompilationSuccess: boolean;
   issues: FirestoreRulesIssue[];
-  rules: string;
+  rules?: string;
 }
 
 /** This captures everything about the evaluation, including the outcome */

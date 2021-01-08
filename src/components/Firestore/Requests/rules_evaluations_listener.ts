@@ -15,12 +15,57 @@
  */
 
 import { ReconnectingWebSocket } from '../../../reconnectingWebSocket';
-import { FirestoreRulesEvaluation } from './rules_evaluation_result_model';
+import {
+  FirestoreRulesEvaluation,
+  FirestoreRulesIssue,
+  FirestoreRulesUpdateData,
+  RulesOutcome,
+} from './rules_evaluation_result_model';
+import { sampleRules } from './sample-rules';
 import { generateId } from './utils';
 
 // TODO: Replace hardcoded websocket URL (used for development purposes only)
 //       with a function that somehow gets the proper URL
 const REQUESTS_EVALUATION_WEBSOCKET_HOST_AND_PORT = 'localhost:8888/rules/ws';
+
+// TODO: Remove function when 'admin' and 'error' requests, and (rules) are received from server
+// this function returns to you a mocked (RulesUpdateData) with firestore (rules) and (issues) behaviors
+function injectMockPropertiesToEvaluationUpdateData(
+  requestUpdateData?: FirestoreRulesUpdateData,
+  customOutcome?: RulesOutcome
+): FirestoreRulesUpdateData {
+  const mockedIssues: FirestoreRulesIssue[] = [
+    {
+      description: 'Mocked issue',
+      severity: 'Fake',
+      line: 23,
+      col: 40,
+    },
+  ];
+  const { issues, isCompilationSuccess } = requestUpdateData || {};
+  return {
+    isCompilationSuccess: requestUpdateData ? !!isCompilationSuccess : true,
+    rules: customOutcome === 'admin' ? undefined : sampleRules,
+    issues: customOutcome === 'error' ? mockedIssues : issues || [],
+  };
+}
+
+// TODO: Remove function when 'admin' and 'error' requests, and (requestId) are received from server
+// this function is used to generate a fake (requestId), inject a custom (outcome)
+function injectMockPropertiesToEvaluation(
+  request: FirestoreRulesEvaluation,
+  customOutcome?: RulesOutcome
+): FirestoreRulesEvaluation {
+  return {
+    ...request,
+    requestId: generateId(),
+    outcome: customOutcome || request?.outcome,
+    data: injectMockPropertiesToEvaluationUpdateData(
+      request?.data,
+      customOutcome
+    ),
+  };
+}
 
 export type OnEvaluationFn = (evaluation: FirestoreRulesEvaluation) => void;
 export type Unsubscribe = () => void;
@@ -31,7 +76,16 @@ export function registerForRulesEvents(callback: OnEvaluationFn): Unsubscribe {
     REQUESTS_EVALUATION_WEBSOCKET_HOST_AND_PORT
   );
   webSocket.listener = (newEvaluation: FirestoreRulesEvaluation) => {
-    callback({ ...newEvaluation, requestId: generateId() });
+    // TODO: Remove he following if statements when admin requests are received from server
+    const probability = Math.random();
+    if (probability < 0.2) {
+      // there is a 20% chance that the request is transformed to an admin request
+      return callback(injectMockPropertiesToEvaluation(newEvaluation, 'admin'));
+    } else if (probability > 0.9) {
+      // there is a 10% chance that the request is transformed to an error request
+      return callback(injectMockPropertiesToEvaluation(newEvaluation, 'error'));
+    }
+    callback(injectMockPropertiesToEvaluation(newEvaluation));
   };
   return () => webSocket.cleanup();
 }
