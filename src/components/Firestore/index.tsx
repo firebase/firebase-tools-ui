@@ -145,11 +145,7 @@ export const Firestore: React.FC = React.memo(() => {
     <FirestoreStore>
       <GridCell span={12} className="Firestore">
         <div className="Firestore-sub-tabs">
-          <TabBar
-            className="Firestore-sub-tab-bar"
-            theme="onSurface"
-            activeTabIndex={activeTabIndex}
-          >
+          <TabBar theme="onSurface" activeTabIndex={activeTabIndex}>
             {subTabs}
           </TabBar>
         </div>

@@ -36,13 +36,11 @@
   // shadow border at bottom
   box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12) inset;
 
-  .Firestore-sub-tab-bar {
+  .mdc-tab {
     width: fit-content;
     height: $firestore-sub-tabs-height;
-    .mdc-tab {
-      &:not(:first-of-type) {
-        margin-left: 24px;
-      }
+    &:not(:first-of-type) {
+      margin-left: 24px;
     }
   }
 }
