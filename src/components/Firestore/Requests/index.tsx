@@ -16,10 +16,10 @@
 
 import { ThemeProvider } from '@rmwc/theme';
 import React from 'react';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
 
 import { grey100 } from '../../../colors';
-import RequestDetails from './RequestDetails';
+import RequestDetails, { PropsFromParentComponent } from './RequestDetails';
 import RequestsCard from './RequestsCard';
 
 const Requests: React.FC = () => (
@@ -35,7 +35,7 @@ const Requests: React.FC = () => (
       <Route
         exact
         path="/firestore/requests/:requestId"
-        render={({ match }: any) => {
+        render={({ match }: RouteComponentProps<PropsFromParentComponent>) => {
           const requestId = match.params.requestId;
           return <RequestDetails requestId={requestId} />;
         }}

@@ -16,7 +16,7 @@
 
 import React from 'react';
 
-interface PropsFromParentComponent {
+export interface PropsFromParentComponent {
   requestId?: string;
 }
 export interface Props extends PropsFromParentComponent {}
