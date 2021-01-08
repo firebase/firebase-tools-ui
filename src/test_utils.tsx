@@ -165,6 +165,6 @@ export const wrapWithForm = <P, T, F = UseFormOptions<T>>(
 };
 
 export function isTabActive(labelEl: HTMLElement): boolean {
-  const tabEl = labelEl.closest('.mdc-tab')!;
-  return tabEl.classList.contains('mdc-tab--active');
+  const tabEl = labelEl.closest('.mdc-tab');
+  return !!tabEl?.classList.contains('mdc-tab--active');
 }
