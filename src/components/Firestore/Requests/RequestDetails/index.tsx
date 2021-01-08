@@ -19,7 +19,7 @@ import React from 'react';
 interface PropsFromParentComponent {
   requestId?: string;
 }
-export type Props = PropsFromParentComponent;
+export interface Props extends PropsFromParentComponent {}
 
 const RequestDetails: React.FC<Props> = ({ requestId }) => (
   <div data-testid="request-details">
