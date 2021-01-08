@@ -80,8 +80,7 @@ it('redirects from url /functions to correct logs url', async () => {
   );
   await act(() => delay(100)); // Wait for tab indicator async DOM updates.
   const { pathname, search } = history.location;
-  const redirectedCompleteUrl = pathname + search;
-  expect(redirectedCompleteUrl).toBe(REDIRECT_LOGS_URL);
+  expect(pathname + search).toBe(REDIRECT_LOGS_URL);
 });
 
 it('redirects from url /firestore to /firestore/data', async () => {
