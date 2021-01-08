@@ -38,7 +38,7 @@ interface PropsFromState {
 interface PropsFromParentComponent {
   requestId?: string;
 }
-export type Props = PropsFromState & PropsFromParentComponent;
+interface Props extends PropsFromState, PropsFromParentComponent {}
 
 const RequestDetails: React.FC<Props> = ({ selectedRequest, requestId }) => {
   const [
@@ -96,7 +96,7 @@ const RequestDetails: React.FC<Props> = ({ selectedRequest, requestId }) => {
   );
 };
 
-export const mapStateToProps = (state: AppState, { requestId }: Props) => {
+const mapStateToProps = (state: AppState, { requestId }: Props) => {
   return {
     selectedRequest: getSelectedRequestEvaluation(state, requestId || ''),
   };
