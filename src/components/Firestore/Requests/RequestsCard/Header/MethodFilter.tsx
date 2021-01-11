@@ -51,16 +51,15 @@ const OutcomeFilter: React.FC = () => {
   ];
 
   return (
-    <div className="Firestore-Requests-Header-Method-Filter">
-      <Controller
-        as={SelectField}
-        control={control}
-        name="method filter"
-        placeholder="All methods"
-        options={options}
-        onChange={([selected]) => selected.currentTarget.value || undefined}
-      />
-    </div>
+    <Controller
+      className="Firestore-Requests-Header-Method-Filter"
+      as={SelectField}
+      control={control}
+      name="method filter"
+      placeholder="All methods"
+      options={options}
+      onChange={([selected]) => selected.currentTarget.value || undefined}
+    />
   );
 };
 
