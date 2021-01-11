@@ -46,6 +46,7 @@
     color: $firebase-text-black-secondary-color;
     &.rmwc-data-table__head-cell--sorted {
       color: $firebase-text-black-primary-color;
+      cursor: auto;
     }
     // move sort icon to the right side
     .rmwc-data-table__sort-icon {
