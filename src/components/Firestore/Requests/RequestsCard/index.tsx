@@ -29,7 +29,7 @@ interface PropsFromState {
 }
 interface Props extends PropsFromState {}
 
-const RequestsTableIndex: React.FC<Props> = ({ requests }) => {
+const RequestsCard: React.FC<Props> = ({ requests }) => {
   const [showCopyNotification, setShowCopyNotification] = useState<boolean>(
     false
   );
@@ -51,8 +51,9 @@ const RequestsTableIndex: React.FC<Props> = ({ requests }) => {
     </div>
   );
 };
+
 const mapStateToProps = createStructuredSelector({
   requests: getAllRequestEvaluations,
 });
 
-export default connect(mapStateToProps)(RequestsTableIndex);
+export default connect(mapStateToProps)(RequestsCard);
