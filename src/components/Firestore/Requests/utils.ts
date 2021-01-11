@@ -32,12 +32,24 @@ const ICON_SELECTOR = {
   admin: 'security',
 };
 
-// outputs the detailed data of the request in a clean format
+// returns the corresponding icon-name based on the outcome argument
 export function getIconFromRequestOutcome(outcome?: RulesOutcome) {
   if (!outcome) {
     return '';
   }
   return ICON_SELECTOR[outcome];
+}
+
+// copies path without spaces to clipboard
+// and triggers copy notification (SnackBar)
+export function copyPathToClipboard(
+  resourcePath: string,
+  setShowCopyNotification: (value: boolean) => void
+) {
+  navigator.clipboard
+    .writeText(resourcePath.replace(/\s/g, ''))
+    .then(() => setShowCopyNotification(true))
+    .catch(() => setShowCopyNotification(false));
 }
 
 // outputs the main data of the request in a clean format
@@ -228,16 +240,4 @@ export function generateId(): string {
     newId += options.charAt(Math.floor(Math.random() * options.length));
   }
   return newId;
-}
-
-// copies path without spaces to clipboard
-// and triggers copy notification (SnackBar)
-export function copyPathToClipboard(
-  resourcePath: string,
-  setShowCopyNotification: (value: boolean) => void
-) {
-  navigator.clipboard
-    .writeText(resourcePath.replace(/\s/g, ''))
-    .then(() => setShowCopyNotification(true))
-    .catch(() => setShowCopyNotification(false));
 }
