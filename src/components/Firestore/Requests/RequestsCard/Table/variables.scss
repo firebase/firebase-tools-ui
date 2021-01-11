@@ -17,6 +17,18 @@
 @import '../Header/variables.scss';
 @import '../../variables.scss';
 
+// TODO: Remove variable when requests filters header is developed and always rendered
+$firestore-requests-header-is-rendered: (
+  $firestore-requests-header-height > 0px
+);
+
+// TODO: Remove condition when requests filters header is developed and always rendered
+// (value will always be 2px when header is rendered)
+$compensate-negative-margin: 0px;
+@if ($firestore-requests-header-is-rendered) {
+  $compensate-negative-margin: 2px;
+}
+
 // table th
 $firestore-requests-table-header-height: 31px;
 
@@ -31,6 +43,33 @@ $firestore-requests-table-min-height: (
 $firestore-requests-empty-table-min-height: (
   $firestore-requests-table-header-height + $compensate-negative-margin
 );
+
+// table border-radius
+// TODO: Update these variables when the requests filters header is developed and always rendered
+// (condition will no longer be needed, since border-radius will always be added below the table only)
+$firestore-requests-table-border-radius: 8px;
+$firestore-requests-empty-table-border-radius: 8px 8px 0px 0px;
+// if requests filters header will be rendered, do not
+// add border at the top-left and top-right of the table, because
+// the requests filters header will be above the table
+@if ($firestore-requests-header-is-rendered) {
+  $firestore-requests-table-border-radius: 0px 0px 8px 8px;
+  $firestore-requests-empty-table-border-radius: 0px;
+}
+
+// table margin
+// TODO: Delete variable and condition when requests filters header is developed and always rendered
+$firestore-requests-table-margin: 0px;
+@if ($firestore-requests-header-is-rendered) {
+  $firestore-requests-table-margin: -1px;
+}
+
+// table border
+// TODO: Delete variable and condition when requests filters header is developed and always rendered
+$firestore-requests-table-border: 0px;
+@if ($firestore-requests-header-is-rendered) {
+  $firestore-requests-table-border: auto;
+}
 
 // table tbody
 $firestore-requests-table-body-min-height: (

@@ -20,12 +20,14 @@
 
 // Double selector - for higher specificity to Override rmwc styles.
 .Firestore-Requests-Table.Firestore-Requests-Table {
+  border-radius: $firestore-requests-table-border-radius;
   // avoid double borders.
-  margin: -1px;
+  // TODO: when requests filters header is developed and always rendered,
+  // set margin to be always -1 and remove the border styling modification
+  margin: $firestore-requests-table-margin;
+  border: $firestore-requests-table-border;
   // keep a min-height to keep it usable on short-devices (at the cost of page scrolling)
   min-height: $firestore-requests-table-min-height;
-  // bottom-left and bottom-right border-radius
-  border-radius: 0px 0px 8px 8px;
   td,
   th {
     padding: 0;
@@ -126,9 +128,7 @@
 }
 
 .Firestore-Requests-Table.Firestore-Requests-Table.Firestore-Requests-Table--Empty {
-  border-radius: 0px;
-  // avoid double borders.
-  margin: -1px;
+  border-radius: $firestore-requests-empty-table-border-radius;
   // make table height equal to the height of the requestTableHeader,
   // helpful to display the Zero State message
   min-height: $firestore-requests-empty-table-min-height;

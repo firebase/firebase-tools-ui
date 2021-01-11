@@ -17,14 +17,6 @@
 @import '../variables.scss';
 @import '../../App/variables.scss';
 
-/********************************
-              Utils
-********************************/
-$compensate-negative-margin: 2px;
-
-/********************************
-         Requests Card
-********************************/
 $firestore-requests-card-min-height: (
   $firestore-card-min-height - $firestore-sub-tabs-total-height
 );
