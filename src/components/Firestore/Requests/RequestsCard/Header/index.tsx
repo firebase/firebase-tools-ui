@@ -24,15 +24,13 @@ import OutcomeFilter from './OutcomeFilter';
 import PathFilter from './PathFilter';
 
 const RequestsHeader: React.FC = () => (
-  <div className="Firestore-Requests-Header">
-    <CardActionBar>
-      <div className="Firestore-Requests-Header-Filters-Container">
-        <PathFilter />
-        <MethodFilter />
-        <OutcomeFilter />
-      </div>
-    </CardActionBar>
-  </div>
+  <CardActionBar className="Firestore-Requests-Header">
+    <div className="Firestore-Requests-Header-Filters-Container">
+      <PathFilter />
+      <MethodFilter />
+      <OutcomeFilter />
+    </div>
+  </CardActionBar>
 );
 
 export default RequestsHeader;
