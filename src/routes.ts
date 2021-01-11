@@ -24,17 +24,13 @@ import LogsViewer from './components/LogViewer';
 
 export interface Route {
   path: string;
-  // multiPath enables paths that contain tabs to accept multiple path alternatives
-  multiPath?: string;
   component: React.FC;
   label: string;
   exact: boolean;
   showInNav: boolean;
-  showInFirestoreSubNav?: boolean;
 }
 
 export const routes: ReadonlyArray<Route> = [
-  // Firebase Nav tabs
   {
     path: '/',
     component: Home,
@@ -50,9 +46,7 @@ export const routes: ReadonlyArray<Route> = [
     showInNav: true,
   },
   {
-    // it accepts either /firestore/data or /firestore/requests
-    path: '/firestore/data',
-    multiPath: '/firestore/:tab(data|requests)',
+    path: '/firestore',
     component: Firestore,
     label: 'Firestore',
     exact: false,
@@ -71,25 +65,5 @@ export const routes: ReadonlyArray<Route> = [
     label: 'Logs',
     exact: true,
     showInNav: true,
-  },
-
-  // Firestore SubNav tabs
-  {
-    path: '/firestore/data',
-    component: Firestore,
-    label: 'Data',
-    exact: false,
-    showInNav: false,
-    showInFirestoreSubNav: true,
-  },
-  {
-    path: '/firestore/requests',
-    // it accepts either /firestore/requests or /firestore/requests/:requestId
-    multiPath: '/firestore/:tab(requests|requests/:requestId)',
-    component: Firestore,
-    label: 'Requests',
-    exact: false,
-    showInNav: false,
-    showInFirestoreSubNav: true,
   },
 ];

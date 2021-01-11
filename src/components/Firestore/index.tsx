@@ -26,14 +26,15 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import {
   Link,
+  Redirect,
   Route,
+  Switch,
   matchPath,
   useHistory,
   useLocation,
 } from 'react-router-dom';
 import { useFirestore } from 'reactfire';
 
-import { Route as RouteType, routes } from '../../routes';
 import { createStructuredSelector } from '../../store';
 import {
   getFirestoreConfigResult,
@@ -85,6 +86,24 @@ export const FirestoreRoute: React.FC<PropsFromState> = ({
 
 export default connect(mapStateToProps)(FirestoreRoute);
 
+interface FirestoreTabRoute {
+  path: string;
+  label: string;
+  exact: boolean;
+}
+const firestoreRoutes: ReadonlyArray<FirestoreTabRoute> = [
+  {
+    path: '/firestore/data',
+    label: 'Data',
+    exact: false,
+  },
+  {
+    path: '/firestore/requests',
+    label: 'Requests',
+    exact: false,
+  },
+];
+
 export const Firestore: React.FC = React.memo(() => {
   const firestore = useFirestore();
   const location = useLocation();
@@ -97,9 +116,7 @@ export const Firestore: React.FC = React.memo(() => {
   const showCollectionShell = path.split('/').length < 2;
   const showDocumentShell = path.split('/').length < 3;
 
-  const subNavRoutes = routes.filter((r) => r.showInFirestoreSubNav);
-
-  const subTabs = subNavRoutes.map(({ path, label }: RouteType) => (
+  const subTabs = firestoreRoutes.map(({ path, label }: FirestoreTabRoute) => (
     <Tab
       key={label}
       className="mdc-tab--min-width"
@@ -108,9 +125,9 @@ export const Firestore: React.FC = React.memo(() => {
       {label}
     </Tab>
   ));
-  const activeTabIndex = subNavRoutes.findIndex((r) =>
+  const activeTabIndex = firestoreRoutes.findIndex((r) =>
     matchPath(location.pathname, {
-      path: r.multiPath || r.path,
+      path: r.path,
       exact: r.exact,
     })
   );
@@ -145,27 +162,26 @@ export const Firestore: React.FC = React.memo(() => {
     <FirestoreStore>
       <GridCell span={12} className="Firestore">
         <div className="Firestore-sub-tabs">
-          <TabBar
-            className="Firestore-sub-tab-bar"
-            theme="onSurface"
-            activeTabIndex={activeTabIndex}
-          >
+          <TabBar theme="onSurface" activeTabIndex={activeTabIndex}>
             {subTabs}
           </TabBar>
         </div>
 
-        <Route path="/firestore/data">
-          <FirestoreDataCard
-            path={path}
-            handleClearData={handleClearData}
-            handleNavigate={handleNavigate}
-            showCollectionShell={showCollectionShell}
-            showDocumentShell={showDocumentShell}
-          />
-        </Route>
-        <Route path="/firestore/requests">
-          <FirestoreRequestsCard />
-        </Route>
+        <Switch>
+          <Route path="/firestore/data">
+            <FirestoreDataCard
+              path={path}
+              handleClearData={handleClearData}
+              handleNavigate={handleNavigate}
+              showCollectionShell={showCollectionShell}
+              showDocumentShell={showDocumentShell}
+            />
+          </Route>
+          <Route path="/firestore/requests">
+            <FirestoreRequestsCard />
+          </Route>
+          <Redirect from="/firestore" to="/firestore/data" />
+        </Switch>
       </GridCell>
     </FirestoreStore>
   );

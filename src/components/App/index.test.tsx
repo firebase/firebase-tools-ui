@@ -80,22 +80,5 @@ it('redirects from url /functions to correct logs url', async () => {
   );
   await act(() => delay(100)); // Wait for tab indicator async DOM updates.
   const { pathname, search } = history.location;
-  const redirectedCompleteUrl = pathname + search;
-  expect(redirectedCompleteUrl).toBe(REDIRECT_LOGS_URL);
-});
-
-it('redirects from url /firestore to /firestore/data', async () => {
-  const store = configureStore();
-  const history = createMemoryHistory({
-    initialEntries: ['/firestore'],
-  });
-  render(
-    <Provider store={store}>
-      <Router history={history}>
-        <App />
-      </Router>
-    </Provider>
-  );
-  await act(() => delay(100)); // Wait for tab indicator async DOM updates.
-  expect(history.location.pathname).toBe('/firestore/data');
+  expect(pathname + search).toBe(REDIRECT_LOGS_URL);
 });

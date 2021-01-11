@@ -45,9 +45,10 @@ export const AppBar: React.FC<Props> = ({ routes }) => {
       {label}
     </Tab>
   ));
+
   const activeTabIndex = navRoutes.findIndex((r) =>
     matchPath(location.pathname, {
-      path: r.multiPath || r.path,
+      path: r.path,
       exact: r.exact,
     })
   );

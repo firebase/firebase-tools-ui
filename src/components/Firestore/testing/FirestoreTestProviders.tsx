@@ -97,7 +97,7 @@ const AsyncFirestore: React.FC<{
   ] = useState<React.ReactElement | null>(null);
 
   useEffect(() => {
-    r(firestore).then(c => setFirestoreChildren(c));
+    r(firestore).then((c) => setFirestoreChildren(c));
   }, [r, firestore, setFirestoreChildren]);
 
   return firestoreChildren ? (

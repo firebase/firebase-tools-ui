@@ -55,7 +55,7 @@ export type Props = PropsFromState;
 export const Home: React.FC<Props> = ({ configRemote }) =>
   squash(configRemote, {
     onNone: () => <Spinner span={12} message="Overview Page Loading..." />,
-    onData: config => <Overview config={config} />,
+    onData: (config) => <Overview config={config} />,
     // Show all emulators as "off" on error.
     onError: () => <Overview config={{}} />,
   });
@@ -85,7 +85,7 @@ const Overview: React.FC<{
           name="Firestore emulator"
           icon={<FirestoreIcon theme="secondary" />}
           config={config.firestore}
-          linkTo="/firestore/data"
+          linkTo="/firestore"
           testId="emulator-info-firestore"
         />
         <EmulatorCard

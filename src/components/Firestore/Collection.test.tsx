@@ -35,7 +35,7 @@ jest.mock('./store');
 
 describe('CollectionPanel', () => {
   it('shows the collection name', async () => {
-    const { getByText } = await renderWithFirestore(async firestore => {
+    const { getByText } = await renderWithFirestore(async (firestore) => {
       const collectionRef = firestore.collection('my-stuff');
       await collectionRef.doc('cool-doc-1').set({ a: 1 });
       const collectionSnapshot = await collectionRef.get();
@@ -57,7 +57,7 @@ describe('CollectionPanel', () => {
   });
 
   it('shows filter when filter button is clicked', async () => {
-    const { getByText } = await renderWithFirestore(async firestore => {
+    const { getByText } = await renderWithFirestore(async (firestore) => {
       const collectionRef = firestore.collection('my-stuff');
       await collectionRef.doc('cool-doc-1').set({ a: 1 });
       const collectionSnapshot = await collectionRef.get();
@@ -91,7 +91,7 @@ it('filters documents for single-value filters', async () => {
   });
 
   const { getByText, queryByText } = await renderWithFirestore(
-    async firestore => {
+    async (firestore) => {
       const collectionRef = firestore.collection('my-stuff');
       await collectionRef.doc('doc-with').set({ foo: 'bar' });
       await collectionRef.doc('doc-without').set({ foo: 'not-bar' });
@@ -114,7 +114,7 @@ it('filters documents for single-value not operator filters', async () => {
   });
 
   const { getByText, queryByText } = await renderWithFirestore(
-    async firestore => {
+    async (firestore) => {
       const collectionRef = firestore.collection('my-stuff');
       await collectionRef.doc('doc-with').set({ foo: 'not-bar' });
       await collectionRef.doc('doc-without').set({ foo: 'bar' });
@@ -137,7 +137,7 @@ it('filters documents for multi-value filters', async () => {
   });
 
   const { getByText, queryByText } = await renderWithFirestore(
-    async firestore => {
+    async (firestore) => {
       const collectionRef = firestore.collection('my-stuff');
       await collectionRef.doc('doc-with').set({ foo: 'eggs' });
       await collectionRef.doc('doc-without').set({ foo: 'not-eggs' });
@@ -160,7 +160,7 @@ it('filters documents for multi-value not operator filters', async () => {
   });
 
   const { getByText, queryByText } = await renderWithFirestore(
-    async firestore => {
+    async (firestore) => {
       const collectionRef = firestore.collection('my-stuff');
       await collectionRef.doc('doc-with').set({ foo: 'not-eggs' });
       await collectionRef.doc('doc-without').set({ foo: 'eggs' });
@@ -182,7 +182,7 @@ it('sorts documents when filtered', async () => {
   });
 
   const { queryAllByText, getByText, queryByText } = await renderWithFirestore(
-    async firestore => {
+    async (firestore) => {
       const collectionRef = firestore.collection('my-stuff');
       await collectionRef.doc('doc-z').set({ foo: 'z' });
       await collectionRef.doc('doc-a').set({ foo: 'a' });
@@ -194,16 +194,14 @@ it('sorts documents when filtered', async () => {
 
   await waitForElement(() => getByText(/doc-a/));
 
-  expect(queryAllByText(/doc-a|doc-b|doc-z/).map(e => e.textContent)).toEqual([
-    'doc-a',
-    'doc-b',
-    'doc-z',
-  ]);
+  expect(
+    queryAllByText(/doc-a|doc-b|doc-z/).map((e) => e.textContent)
+  ).toEqual(['doc-a', 'doc-b', 'doc-z']);
 });
 
 it('shows the missing documents', async () => {
   const { getByText } = await renderWithFirestore(
-    async firestore => {
+    async (firestore) => {
       const collectionRef = firestore.collection('my-stuff');
       await collectionRef.doc('hidden/deep/cool-doc-1').set({ a: 1 });
 
@@ -226,7 +224,7 @@ it('shows the missing documents', async () => {
 
 it('shows the selected sub-document', async () => {
   const { queryAllByText, getByText } = await renderWithFirestore(
-    async firestore => {
+    async (firestore) => {
       const collectionRef = firestore.collection('my-stuff');
       await collectionRef.doc('cool-doc-1').set({ a: 1 });
 
@@ -261,7 +259,7 @@ describe('withCollectionState', () => {
 
   it('redirects to a newly created document', async () => {
     const { getByTestId, getByText } = await renderWithFirestore(
-      async firestore => {
+      async (firestore) => {
         const collectionRef = firestore.collection('my-stuff');
 
         return (
@@ -287,7 +285,7 @@ describe('withCollectionState', () => {
 
   it('redirects to a newly created document when a child is active', async () => {
     const { getByTestId, getByText } = await renderWithFirestore(
-      async firestore => {
+      async (firestore) => {
         const collectionRef = firestore.collection('my-stuff');
 
         return (
@@ -313,7 +311,7 @@ describe('withCollectionState', () => {
 
   it('redirects to a newly created document when a child is active and the document id has special characters', async () => {
     const { getByTestId, getByText } = await renderWithFirestore(
-      async firestore => {
+      async (firestore) => {
         const collectionRef = firestore.collection('my-stuff');
 
         return (
@@ -343,7 +341,7 @@ describe('withCollectionState', () => {
   //          Error on the Firestore viewer when trying to decode URI containing the character '%'.
   it.skip('redirects to a newly created document when a child is active and the document id has the special character %', async () => {
     const { getByTestId, getByText } = await renderWithFirestore(
-      async firestore => {
+      async (firestore) => {
         const collectionRef = firestore.collection('my-stuff');
 
         return (

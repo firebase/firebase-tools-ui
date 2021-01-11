@@ -51,7 +51,6 @@ const App: React.FC = () => {
                 />
               ))}
               <Redirect from="/functions" to={REDIRECT_LOGS_URL} />
-              <Redirect from="/firestore" to="/firestore/data" />
               <Redirect to="/" /> {/* Fallback to redirect to overview. */}
             </Switch>
           </Grid>

@@ -35,7 +35,7 @@ import RequestDetailsInspectionSection from './InspectionSection';
 interface PropsFromState {
   selectedRequest?: FirestoreRulesEvaluation;
 }
-interface PropsFromParentComponent {
+export interface PropsFromParentComponent {
   requestId?: string;
 }
 interface Props extends PropsFromState, PropsFromParentComponent {}

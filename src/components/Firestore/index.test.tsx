@@ -78,7 +78,7 @@ describe('FirestoreRoute', () => {
 
 describe('Firestore', () => {
   describe('Firestore sub-tabs navigation', () => {
-    it('selects the Data tab', async () => {
+    it('selects the Data tab when /firestore/data', async () => {
       const { getByText } = await renderWithFirestore(
         async () => <Firestore />,
         { path: '/firestore/data' }
@@ -112,6 +112,18 @@ describe('Firestore', () => {
 
       expect(isTabActive(getByText('Data'))).toBe(false);
       expect(isTabActive(getByText('Requests'))).toBe(true);
+    });
+
+    it('Redirects to /firestore/data and selects the Data tab when /firestore ', async () => {
+      const { getByText } = await renderWithFirestore(
+        async () => <Firestore />,
+        { path: '/firestore' }
+      );
+
+      await act(() => delay(300)); // Wait for tab indicator async DOM updates.
+
+      expect(isTabActive(getByText('Data'))).toBe(true);
+      expect(isTabActive(getByText('Requests'))).toBe(false);
     });
   });
 
