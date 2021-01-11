@@ -25,7 +25,7 @@ import { useHistory } from 'react-router-dom';
 import { CustomThemeProvider } from '../../../../../themes';
 import RequestPath from '../../RequestPath';
 import { FirestoreRulesEvaluation } from '../../rules_evaluation_result_model';
-import { useRequestMainInformation } from '../../utils';
+import { useRequestMainData } from '../../utils';
 
 interface Props {
   request: FirestoreRulesEvaluation;
@@ -47,7 +47,7 @@ const RequestTableRow: React.FC<Props> = ({
     requestMethod,
     resourcePath,
     outcomeData,
-  ] = useRequestMainInformation(request);
+  ] = useRequestMainData(request);
 
   return (
     <DataTableRow

@@ -24,10 +24,7 @@ import { AppState } from '../../../../store';
 import { getSelectedRequestEvaluation } from '../../../../store/firestoreRequestEvaluations/selectors';
 import CopyPathNotification from '../CopyPathNotification';
 import { FirestoreRulesEvaluation } from '../rules_evaluation_result_model';
-import {
-  useRequestInspectionElements,
-  useRequestMainInformation,
-} from '../utils';
+import { useRequestDetailedData, useRequestMainData } from '../utils';
 import RequestDetailsCodeViewer from './CodeViewer';
 import RequestDetailsHeader from './Header';
 import RequestDetailsInspectionSection from './InspectionSection';
@@ -47,13 +44,13 @@ const RequestDetails: React.FC<Props> = ({ selectedRequest, requestId }) => {
     requestMethod,
     resourcePath,
     outcomeData,
-  ] = useRequestMainInformation(selectedRequest);
+  ] = useRequestMainData(selectedRequest);
   const [
     firestoreRules,
     linesOutcome,
     linesIssues,
     inspectionElements,
-  ] = useRequestInspectionElements(selectedRequest);
+  ] = useRequestDetailedData(selectedRequest);
 
   const [showCopyNotification, setShowCopyNotification] = useState<boolean>(
     false

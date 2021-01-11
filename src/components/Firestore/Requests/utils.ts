@@ -41,7 +41,7 @@ export function getIconFromRequestOutcome(outcome?: RulesOutcome) {
 }
 
 // outputs the main data of the request in a clean format
-export function useRequestMainInformation(request?: FirestoreRulesEvaluation) {
+export function useRequestMainData(request?: FirestoreRulesEvaluation) {
   if (!request) {
     return [undefined, undefined, undefined, undefined, undefined] as const;
   }
@@ -76,9 +76,7 @@ export function useRequestMainInformation(request?: FirestoreRulesEvaluation) {
 }
 
 // outputs the detailed data of the request in a clean format
-export function useRequestInspectionElements(
-  request?: FirestoreRulesEvaluation
-) {
+export function useRequestDetailedData(request?: FirestoreRulesEvaluation) {
   if (!request) {
     return [undefined, undefined, undefined, undefined] as const;
   }
