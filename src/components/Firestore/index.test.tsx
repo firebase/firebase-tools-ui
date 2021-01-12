@@ -78,10 +78,24 @@ describe('FirestoreRoute', () => {
 
 describe('Firestore', () => {
   describe('Firestore sub-tabs navigation', () => {
+    // this state object is needed because the Requests components connect
+    // to the 'firestore' store (by default renderWithfirestore only provides
+    // access to the 'config' store)
+    const firestoreInitState = {
+      firestore: {
+        requests: {
+          evaluations: [],
+        },
+      },
+    };
+
     it('selects the Data tab when /firestore/data', async () => {
       const { getByText } = await renderWithFirestore(
         async () => <Firestore />,
-        { path: '/firestore/data' }
+        {
+          path: '/firestore/data',
+          state: firestoreInitState,
+        }
       );
 
       await act(() => delay(300)); // Wait for tab indicator async DOM updates.
@@ -93,7 +107,10 @@ describe('Firestore', () => {
     it('selects the Requests tab when /firestore/requests', async () => {
       const { getByText } = await renderWithFirestore(
         async () => <Firestore />,
-        { path: '/firestore/requests' }
+        {
+          path: '/firestore/requests',
+          state: firestoreInitState,
+        }
       );
 
       await act(() => delay(300)); // Wait for tab indicator async DOM updates.
@@ -105,7 +122,10 @@ describe('Firestore', () => {
     it('selects the Requests tab when /firestore/requests/:id', async () => {
       const { getByText } = await renderWithFirestore(
         async () => <Firestore />,
-        { path: '/firestore/requests/uniqueRequestId' }
+        {
+          path: '/firestore/requests/uniqueRequestId',
+          state: firestoreInitState,
+        }
       );
 
       await act(() => delay(300)); // Wait for tab indicator async DOM updates.
@@ -117,7 +137,10 @@ describe('Firestore', () => {
     it('Redirects to /firestore/data and selects the Data tab when /firestore ', async () => {
       const { getByText } = await renderWithFirestore(
         async () => <Firestore />,
-        { path: '/firestore' }
+        {
+          path: '/firestore',
+          state: firestoreInitState,
+        }
       );
 
       await act(() => delay(300)); // Wait for tab indicator async DOM updates.

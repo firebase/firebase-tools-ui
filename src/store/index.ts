@@ -26,7 +26,7 @@ import { DatabaseState, databaseReducer, databaseSaga } from './database';
 import {
   FirestoreRequestEvaluationsState,
   firestoreRequestEvaluationsReducer,
-} from './firestoreRequestEvaluations';
+} from './firestore/requests/evaluations';
 import { LogState, logReducer } from './logviewer';
 
 export interface FirestoreRequestsState {
