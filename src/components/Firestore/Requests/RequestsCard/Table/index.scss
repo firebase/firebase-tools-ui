@@ -1,0 +1,138 @@
+/**
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@import './variables.scss';
+@import '../../../../../colors-variables.scss';
+
+// Double selector - for higher specificity to Override rmwc styles.
+.Firestore-Requests-Table.Firestore-Requests-Table {
+  border-radius: $firestore-requests-table-border-radius;
+  // avoid double borders.
+  margin: 0px;
+  border: 0px;
+  // keep a min-height to keep it usable on short-devices (at the cost of page scrolling)
+  min-height: $firestore-requests-table-min-height;
+  td,
+  th {
+    padding: 0;
+    padding-left: 24px;
+    // avoid extra text height
+    line-height: 1;
+    @media screen and (max-width: 500px) {
+      // less padding for mobile
+      padding-left: 10px;
+    }
+  }
+  th {
+    height: $firestore-requests-table-header-height;
+    font-size: 12px;
+    // color different for sorted and not sorted headers
+    color: $firebase-text-black-secondary-color;
+    &.rmwc-data-table__head-cell--sorted {
+      color: $firebase-text-black-primary-color;
+      cursor: auto;
+    }
+    // move sort icon to the right side
+    .rmwc-data-table__sort-icon {
+      position: absolute;
+      right: 0px;
+      margin-right: 0px;
+    }
+  }
+  td {
+    height: $firestore-requests-table-cell-height;
+  }
+  thead {
+    background-color: var(--mdc-theme-surface);
+    tr {
+      // border at bottom
+      box-shadow: 0px -1px 0 rgba(0, 0, 0, 0.12) inset;
+    }
+  }
+
+  // clicklable rows styles
+  tbody tr {
+    cursor: pointer;
+    // select last row
+    &:last-of-type {
+      // border at bottom (the last one is missing the bottom border)
+      box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12) inset;
+    }
+  }
+
+  // distribute column widths (width values include the padding-left)
+  .Firestore-Requests-Table-Date-Header,
+  .Firestore-Request-Date,
+  .Firestore-Requests-Table-Outcome-Header,
+  .Firestore-Request-Outcome,
+  .Firestore-Requests-Table-Method-Header,
+  .Firestore-Request-Method {
+    // causes padding to be added to the width, instead of been part of it.
+    // example (considering .Firestore-Request-Date):
+    //      width: 66px + padding-right + padding-left
+    box-sizing: content-box;
+  }
+  .Firestore-Requests-Table-Date-Header,
+  .Firestore-Request-Date {
+    width: 66px;
+  }
+  .Firestore-Requests-Table-Outcome-Header,
+  .Firestore-Request-Outcome {
+    width: 26px;
+  }
+  .Firestore-Requests-Table-Method-Header,
+  .Firestore-Request-Method {
+    width: 60px;
+  }
+
+  // add small padding to path on mobile, since the copyIconButton is no longer displayed
+  // is important to add the padding to both the Path header and cells
+  .Firestore-Requests-Table-Path-Header,
+  .Firestore-Request-Path {
+    @media screen and (max-width: 500px) {
+      padding-right: 12px;
+    }
+  }
+
+  // fix body height and ensure tbody content scrollable behavior
+  thead,
+  tbody tr {
+    // this styles are required in order to apply scrolling overflow to tbody
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+  }
+  tbody {
+    background-color: white;
+    min-height: $firestore-requests-table-body-min-height;
+    height: $firestore-requests-table-body-viewport-height;
+    // this styles are required in order to apply scrolling overflow to tbody
+    display: block;
+    overflow: auto;
+  }
+}
+
+.Firestore-Requests-Table.Firestore-Requests-Table.Firestore-Requests-Table--Empty {
+  border-radius: $firestore-requests-empty-table-border-radius;
+  // make table height equal to the height of the requestTableHeader,
+  // helpful to display the Zero State message
+  min-height: $firestore-requests-empty-table-min-height;
+  tbody {
+    // no content to display
+    height: 0px;
+    min-height: 0px;
+  }
+}

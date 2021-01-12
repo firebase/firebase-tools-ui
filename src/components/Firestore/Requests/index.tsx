@@ -20,7 +20,8 @@ import { Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
 
 import { grey100 } from '../../../colors';
 import RequestDetails, { PropsFromParentComponent } from './RequestDetails';
-import RequestsCard from './RequestsCard';
+// import RequestsHeader from './RequestsCard/Header';
+import RequestsTable from './RequestsCard/Table';
 
 const Requests: React.FC = () => (
   <ThemeProvider
@@ -30,7 +31,11 @@ const Requests: React.FC = () => (
   >
     <Switch>
       <Route exact path="/firestore/requests">
-        <RequestsCard />
+        <div data-testid="requests-card">
+          {/* TODO: Finish developing the RequestsHeader in order to render it */}
+          {/* <RequestsHeader /> */}
+          <RequestsTable />
+        </div>
       </Route>
       <Route
         exact

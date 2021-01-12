@@ -14,13 +14,22 @@
  * limitations under the License.
  */
 
+import './NoResults.scss';
+
+import { Typography } from '@rmwc/typography';
 import React from 'react';
 
-const RequestsCard: React.FC = () => (
-  <div data-testid="requests-card">
-    <div>Requests Header</div>
-    <div>Requests Table</div>
-  </div>
-);
+const RequestsNoResults: React.FC = () => {
+  return (
+    <Typography
+      use="body2"
+      aria-live="polite"
+      theme="textSecondaryOnBackground"
+      className="Firestore-Requests-Table-No-Results"
+    >
+      No results
+    </Typography>
+  );
+};
 
-export default RequestsCard;
+export default RequestsNoResults;

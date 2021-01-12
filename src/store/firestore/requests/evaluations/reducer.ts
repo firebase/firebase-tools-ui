@@ -17,7 +17,7 @@
 import produce from 'immer';
 import { Action, createReducer } from 'typesafe-actions';
 
-import { FirestoreRulesEvaluation } from '../../components/Firestore/Requests/rules_evaluation_result_model';
+import { FirestoreRulesEvaluation } from '../../../../components/Firestore/Requests/rules_evaluation_result_model';
 import * as actions from './actions';
 
 export type FirestoreRequestEvaluationsState = FirestoreRulesEvaluation[];
@@ -28,7 +28,7 @@ export const firestoreRequestEvaluationsReducer = createReducer<
   FirestoreRequestEvaluationsState,
   Action
 >(INIT_STATE).handleAction(actions.addRequestEvaluation, (state, { payload }) =>
-  produce(state, draftState => {
+  produce(state, (draftState) => {
     draftState.unshift(payload);
   })
 );

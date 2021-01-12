@@ -27,16 +27,17 @@ import { FirestoreEmulatedApiProvider } from '../FirestoreEmulatedApiProvider';
 
 interface RenderOptions {
   path?: string;
+  state?: Partial<AppState>;
 }
 
 export const renderWithFirestore = async (
   children: (
     firestore: firebase.firestore.Firestore
   ) => Promise<React.ReactElement>,
-  options: RenderOptions = {}
+  { path, state }: RenderOptions = {}
 ) => {
   const component = render(
-    <FirestoreTestProviders path={options.path}>
+    <FirestoreTestProviders path={path} state={state}>
       <AsyncFirestore r={children}></AsyncFirestore>
     </FirestoreTestProviders>
   );
@@ -50,7 +51,7 @@ export const renderWithFirestore = async (
 };
 
 export const FirestoreTestProviders: React.FC<RenderOptions> = React.memo(
-  ({ children, path = '' }) => {
+  ({ children, path = '', state = {} }) => {
     const projectId = `${process.env.GCLOUD_PROJECT}-${Date.now()}`;
     const hostAndPort =
       process.env.FIRESTORE_EMULATOR_HOST ||
@@ -59,7 +60,7 @@ export const FirestoreTestProviders: React.FC<RenderOptions> = React.memo(
       throw new Error('FirestoreTestProviders requires a running Emulator');
     }
     const [host, port] = hostAndPort.split(':');
-    const store = configureStore<Pick<AppState, 'config'>>()({
+    const store = configureStore<Partial<AppState>>()({
       config: {
         loading: false,
         result: {
@@ -69,6 +70,7 @@ export const FirestoreTestProviders: React.FC<RenderOptions> = React.memo(
           },
         },
       },
+      ...state,
     });
 
     return (
