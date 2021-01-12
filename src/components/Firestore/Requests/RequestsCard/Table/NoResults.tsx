@@ -14,14 +14,22 @@
  * limitations under the License.
  */
 
-@import './variables.scss';
+import './NoResults.scss';
 
-.Firestore-Requests-Copy-Path-Snackbar {
-  &.mdc-snackbar__surface {
-    background-color: $snackbar-background-color;
-  }
-  i {
-    // !important is needed because Snackbar sets an inline color style
-    color: $snackbar-text-color !important;
-  }
-}
+import { Typography } from '@rmwc/typography';
+import React from 'react';
+
+const RequestsNoResults: React.FC = () => {
+  return (
+    <Typography
+      use="body2"
+      aria-live="polite"
+      theme="textSecondaryOnBackground"
+      className="Firestore-Requests-Table-No-Results"
+    >
+      No results
+    </Typography>
+  );
+};
+
+export default RequestsNoResults;

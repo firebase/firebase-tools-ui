@@ -16,13 +16,13 @@
 
 import './index.scss';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
 import { AppState } from '../../../../store';
-import { getSelectedRequestEvaluation } from '../../../../store/firestoreRequestEvaluations/selectors';
-import CopyPathNotification from '../CopyPathNotification';
+import { getSelectedRequestEvaluationById } from '../../../../store/firestore/requests/evaluations/selectors';
+import { RequestDetailsRouteParams } from '../index';
 import { FirestoreRulesEvaluation } from '../rules_evaluation_result_model';
 import { useRequestDetailedData, useRequestMainData } from '../utils';
 import RequestDetailsCodeViewer from './CodeViewer';
@@ -32,12 +32,16 @@ import RequestDetailsInspectionSection from './InspectionSection';
 interface PropsFromState {
   selectedRequest?: FirestoreRulesEvaluation;
 }
-export interface PropsFromParentComponent {
-  requestId?: string;
+interface PropsFromParentComponent extends RequestDetailsRouteParams {
+  setShowCopyNotification: (value: boolean) => void;
 }
 interface Props extends PropsFromState, PropsFromParentComponent {}
 
-const RequestDetails: React.FC<Props> = ({ selectedRequest, requestId }) => {
+const RequestDetails: React.FC<Props> = ({
+  selectedRequest,
+  requestId,
+  setShowCopyNotification,
+}) => {
   const [
     requestTimeComplete,
     requestTimeFormatted,
@@ -51,10 +55,6 @@ const RequestDetails: React.FC<Props> = ({ selectedRequest, requestId }) => {
     linesIssues,
     inspectionElements,
   ] = useRequestDetailedData(selectedRequest);
-
-  const [showCopyNotification, setShowCopyNotification] = useState<boolean>(
-    false
-  );
 
   // redirect to table if selected (requestId) was not valid
   if (requestId && !selectedRequest) {
@@ -85,17 +85,13 @@ const RequestDetails: React.FC<Props> = ({ selectedRequest, requestId }) => {
           inspectionElements={inspectionElements}
         />
       </div>
-      <CopyPathNotification
-        showCopyNotification={showCopyNotification}
-        setShowCopyNotification={setShowCopyNotification}
-      />
     </div>
   );
 };
 
 const mapStateToProps = (state: AppState, { requestId }: Props) => {
   return {
-    selectedRequest: getSelectedRequestEvaluation(state, requestId || ''),
+    selectedRequest: getSelectedRequestEvaluationById(state, requestId || ''),
   };
 };
 

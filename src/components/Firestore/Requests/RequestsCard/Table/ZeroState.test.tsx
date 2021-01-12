@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-@import './variables.scss';
+import { render } from '@testing-library/react';
+import React from 'react';
 
-.Firestore-Requests-Copy-Path-Snackbar {
-  &.mdc-snackbar__surface {
-    background-color: $snackbar-background-color;
-  }
-  i {
-    // !important is needed because Snackbar sets an inline color style
-    color: $snackbar-text-color !important;
-  }
-}
+import RequestsZeroState from './ZeroState';
+
+describe('Requests ZeroState', () => {
+  it('renders no requests message', () => {
+    const { getByText } = render(<RequestsZeroState />);
+    expect(getByText(/No Firestore requests/)).not.toBeNull();
+  });
+});

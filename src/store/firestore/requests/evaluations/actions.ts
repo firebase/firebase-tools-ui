@@ -1,5 +1,5 @@
 /**
- * Copyright 2019 Google LLC
+ * Copyright 2020 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,10 @@
  * limitations under the License.
  */
 
-@import './variables.scss';
+import { createAction } from 'typesafe-actions';
 
-.Firestore-Requests-Copy-Path-Snackbar {
-  &.mdc-snackbar__surface {
-    background-color: $snackbar-background-color;
-  }
-  i {
-    // !important is needed because Snackbar sets an inline color style
-    color: $snackbar-text-color !important;
-  }
-}
+import { FirestoreRulesEvaluation } from '../../../../components/Firestore/Requests/rules_evaluation_result_model';
+
+export const addRequestEvaluation = createAction(
+  '@firestore-requests-evaluations/addRequestEvaluation'
+)<FirestoreRulesEvaluation>();

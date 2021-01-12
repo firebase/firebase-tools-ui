@@ -33,7 +33,7 @@ import { FirestoreRulesEvaluation } from './components/Firestore/Requests/rules_
 import { registerForRulesEvents } from './components/Firestore/Requests/rules_evaluations_listener';
 import configureStore from './configureStore';
 import { subscribe as subscribeToConfig } from './store/config';
-import { addRequestEvaluation } from './store/firestoreRequestEvaluations';
+import { addRequestEvaluation } from './store/firestore/requests/evaluations';
 import { error } from './themes';
 
 const store = configureStore();

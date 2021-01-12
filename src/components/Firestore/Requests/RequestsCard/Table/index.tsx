@@ -26,26 +26,41 @@ import {
 } from '@rmwc/data-table';
 import classnames from 'classnames';
 import React, { useRef } from 'react';
+import { connect } from 'react-redux';
 
+import { createStructuredSelector } from '../../../../../store';
+import {
+  getFilteredRequestsEvaluations,
+  getShowTable,
+  getShowZeroResults,
+  getShowZeroState,
+} from '../../../../../store/firestore/requests/evaluations/selectors';
 import { FirestoreRulesEvaluation } from '../../rules_evaluation_result_model';
 import { usePathContainerWidth } from '../../utils';
+import RequestsNoResults from './NoResults';
 import RequestsTableRow from './TableRow';
 import RequestsZeroState from './ZeroState';
 
 const TABLE_CLASS = 'Firestore-Requests-Table';
 const EMPTY_TABLE_CLASS = TABLE_CLASS + '--Empty';
 
-export interface Props {
-  filteredRequests: FirestoreRulesEvaluation[] | undefined;
-  shouldShowTable: boolean;
-  shouldShowZeroState: boolean;
+const mapStateToProps = createStructuredSelector({
+  filteredRequests: getFilteredRequestsEvaluations,
+  shouldShowZeroState: getShowZeroState,
+  shouldShowZeroResults: getShowZeroResults,
+  shouldShowTable: getShowTable,
+});
+interface PropsFromStore extends ReturnType<typeof mapStateToProps> {}
+interface PropsFromParentComponent {
   setShowCopyNotification: (value: boolean) => void;
 }
+interface Props extends PropsFromStore, PropsFromParentComponent {}
 
-const RequestsTable: React.FC<Props> = ({
+export const RequestsTable: React.FC<Props> = ({
   filteredRequests,
-  shouldShowTable,
   shouldShowZeroState,
+  shouldShowZeroResults,
+  shouldShowTable,
   setShowCopyNotification,
 }) => {
   // references the path header because it has always the same width
@@ -103,9 +118,10 @@ const RequestsTable: React.FC<Props> = ({
           </DataTableBody>
         </DataTableContent>
       </DataTable>
+      {shouldShowZeroResults && <RequestsNoResults />}
       {shouldShowZeroState && <RequestsZeroState />}
     </>
   );
 };
 
-export default RequestsTable;
+export default connect(mapStateToProps)(RequestsTable);

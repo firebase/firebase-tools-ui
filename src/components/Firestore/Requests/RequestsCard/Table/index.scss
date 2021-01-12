@@ -71,7 +71,7 @@
     cursor: pointer;
     // select last row
     &:last-of-type {
-      // border at bottom
+      // border at bottom (the last one is missing the bottom border)
       box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12) inset;
     }
   }
