@@ -16,10 +16,8 @@
 
 @import './variables.scss';
 
-.Firestore-Requests-Copy-Path-Snackbar {
-  .mdc-snackbar__surface {
-    background-color: $snackbar-background-color;
-  }
+.mdc-snackbar__surface.Firestore-Requests-Copy-Path-Snackbar {
+  background-color: $snackbar-background-color;
   i {
     // !important is needed because Snackbar sets an inline color style
     color: $snackbar-text-color !important;

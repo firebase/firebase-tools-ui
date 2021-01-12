@@ -28,14 +28,13 @@ const CopyPathNotification: React.FC<Props> = ({
   showCopyNotification,
   setShowCopyNotification,
 }) => (
-  <div className="Firestore-Requests-Copy-Path-Snackbar">
-    <Snackbar
-      open={showCopyNotification}
-      onClose={() => setShowCopyNotification(false)}
-      message="Request path copied to clipboard"
-      icon={{ icon: 'check_circle', size: 'medium' }}
-    />
-  </div>
+  <Snackbar
+    className="Firestore-Requests-Copy-Path-Snackbar"
+    open={showCopyNotification}
+    onClose={() => setShowCopyNotification(false)}
+    message="Request path copied to clipboard"
+    icon={{ icon: 'check_circle', size: 'medium' }}
+  />
 );
 
 export default CopyPathNotification;
