@@ -17,11 +17,11 @@
 import { render } from '@testing-library/react';
 import React from 'react';
 
-import RequestsNoResults from './NoResults';
+import RequestsNoResults, { noResultsMessage } from './NoResults';
 
 describe('Requests NoResults', () => {
   it('renders no results message', () => {
     const { getByText } = render(<RequestsNoResults />);
-    expect(getByText('No results')).not.toBeNull();
+    expect(getByText(noResultsMessage)).not.toBeNull();
   });
 });

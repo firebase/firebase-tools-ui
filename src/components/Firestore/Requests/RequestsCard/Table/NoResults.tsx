@@ -19,6 +19,8 @@ import './NoResults.scss';
 import { Typography } from '@rmwc/typography';
 import React from 'react';
 
+export const noResultsMessage = 'No results';
+
 const RequestsNoResults: React.FC = () => {
   return (
     <Typography
@@ -27,7 +29,7 @@ const RequestsNoResults: React.FC = () => {
       theme="textSecondaryOnBackground"
       className="Firestore-Requests-Table-No-Results"
     >
-      No results
+      {noResultsMessage}
     </Typography>
   );
 };

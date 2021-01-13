@@ -17,11 +17,11 @@
 import { render } from '@testing-library/react';
 import React from 'react';
 
-import RequestsZeroState from './ZeroState';
+import RequestsZeroState, { zeroStateMessage } from './ZeroState';
 
 describe('Requests ZeroState', () => {
   it('renders no requests message', () => {
     const { getByText } = render(<RequestsZeroState />);
-    expect(getByText(/No Firestore requests/)).not.toBeNull();
+    expect(getByText(zeroStateMessage)).not.toBeNull();
   });
 });
