@@ -20,9 +20,9 @@ import { Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
 
 import {
   grey100,
-  textBlackPrimaryColor,
-  textBlackSecondaryColor,
-  textBlackTernaryColor,
+  textBlackPrimary,
+  textBlackSecondary,
+  textBlackTernary,
 } from '../../../colors';
 import RequestDetails, { PropsFromParentComponent } from './RequestDetails';
 // import RequestsHeader from './RequestsCard/Header';
@@ -32,9 +32,9 @@ const Requests: React.FC = () => (
   <ThemeProvider
     options={{
       surface: grey100,
-      textBlackPrimaryColor,
-      textBlackSecondaryColor,
-      textBlackTernaryColor,
+      textBlackPrimary,
+      textBlackSecondary,
+      textBlackTernary,
     }}
   >
     <Switch>
