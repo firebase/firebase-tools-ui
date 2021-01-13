@@ -27,7 +27,7 @@ import { CompiledGetterCache } from './CompiledGetterCache';
 import { HighlightedJSON } from './HighlightedJSON';
 import { ParsedQuery, filtersToQueryString, isQueryMatch } from './QueryBar';
 
-const formatTimestamp = (timestamp: number) => {
+export const formatTimestamp = (timestamp: number) => {
   const date = new Date(timestamp);
   const segments = [date.getHours(), date.getMinutes(), date.getSeconds()];
 

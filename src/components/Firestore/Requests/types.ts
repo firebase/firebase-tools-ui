@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export const background = '#F6F7F9';
-export const primary = '#681DA8'; // Google Purple 900.
-export const secondary = 'rgba(0, 0, 0, .54)';
 
-export const grey100 = '#F5F5F5';
+import { CustomThemeType } from '../../../themes';
 
-export const navBarPrimary = '#D7AEFB'; // Google Purple 200.
-export const navBarSurface = '#0c2d48'; // Navy 700
-export const navBarOnSurface = '#FFF';
+export interface OutcomeData {
+  theme: CustomThemeType;
+  icon: string;
+  label: string;
+}
 
-export const textBlackPrimary = 'rgb(0 0 0 / 0.87)';
-export const textBlackSecondary = 'rgb(0 0 0 / 0.54)';
-export const textBlackTernary = 'rgb(0 0 0 / 0.38)';
+export interface RulesOutcomeData {
+  [outcome: string]: OutcomeData;
+}
