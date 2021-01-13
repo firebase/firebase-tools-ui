@@ -18,7 +18,12 @@ import { ThemeProvider } from '@rmwc/theme';
 import React from 'react';
 import { Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
 
-import { grey100 } from '../../../colors';
+import {
+  grey100,
+  textBlackPrimaryColor,
+  textBlackSecondaryColor,
+  textBlackTernaryColor,
+} from '../../../colors';
 import RequestDetails, { PropsFromParentComponent } from './RequestDetails';
 // import RequestsHeader from './RequestsCard/Header';
 import RequestsTable from './RequestsCard/Table';
@@ -27,6 +32,9 @@ const Requests: React.FC = () => (
   <ThemeProvider
     options={{
       surface: grey100,
+      textBlackPrimaryColor,
+      textBlackSecondaryColor,
+      textBlackTernaryColor,
     }}
   >
     <Switch>
