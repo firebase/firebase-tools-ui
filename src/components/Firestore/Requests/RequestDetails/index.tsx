@@ -60,31 +60,31 @@ const RequestDetails: React.FC<Props> = ({
   if (requestId && !selectedRequest) {
     return <Redirect to="/firestore/requests" />;
   }
-  // Return empty view if (selectedRequest) has not yet been selected/loaded
-  else if (!selectedRequest) {
-    return <></>;
-  }
 
   return (
     <div data-testid="request-details">
-      <RequestDetailsHeader
-        requestTimeComplete={requestTimeComplete}
-        requestTimeFormatted={requestTimeFormatted}
-        requestMethod={requestMethod}
-        resourcePath={resourcePath}
-        outcomeData={outcomeData}
-        setShowCopyNotification={setShowCopyNotification}
-      />
-      <div className="Firestore-Request-Details-Content">
-        <RequestDetailsCodeViewer
-          firestoreRules={firestoreRules}
-          linesOutcome={linesOutcome}
-          linesIssues={linesIssues}
-        />
-        <RequestDetailsInspectionSection
-          inspectionElements={inspectionElements}
-        />
-      </div>
+      {selectedRequest && (
+        <>
+          <RequestDetailsHeader
+            requestTimeComplete={requestTimeComplete}
+            requestTimeFormatted={requestTimeFormatted}
+            requestMethod={requestMethod}
+            resourcePath={resourcePath}
+            outcomeData={outcomeData}
+            setShowCopyNotification={setShowCopyNotification}
+          />
+          <div className="Firestore-Request-Details-Content">
+            <RequestDetailsCodeViewer
+              firestoreRules={firestoreRules}
+              linesOutcome={linesOutcome}
+              linesIssues={linesIssues}
+            />
+            <RequestDetailsInspectionSection
+              inspectionElements={inspectionElements}
+            />
+          </div>
+        </>
+      )}
     </div>
   );
 };
