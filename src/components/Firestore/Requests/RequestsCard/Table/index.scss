@@ -15,7 +15,6 @@
  */
 
 @import './variables.scss';
-@import '../../../../../colors-variables.scss';
 
 // Double selector - for higher specificity to Override rmwc styles.
 .Firestore-Requests-Table.Firestore-Requests-Table {
@@ -40,9 +39,9 @@
     height: $firestore-requests-table-header-height;
     font-size: 12px;
     // Color different for sorted and not sorted headers
-    color: $firebase-text-black-secondary-color;
+    color: var(--mdc-theme-text-black-secondary-color);
     &.rmwc-data-table__head-cell--sorted {
-      color: $firebase-text-black-primary-color;
+      color: var(--mdc-theme-text-black-primary-color);
       cursor: auto;
     }
     // Move sort icon to the right side
