@@ -14,19 +14,79 @@
  * limitations under the License.
  */
 
+import './index.scss';
+
 import React from 'react';
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 
-export interface PropsFromParentComponent {
-  requestId?: string;
-}
-export interface Props extends PropsFromParentComponent {}
+import { AppState } from '../../../../store';
+import { getSelectedRequestEvaluationById } from '../../../../store/firestore/requests/evaluations/selectors';
+import { RequestDetailsRouteParams } from '../index';
+import { useRequestDetailedData, useRequestMainData } from '../utils';
+import RequestDetailsCodeViewer from './CodeViewer';
+import RequestDetailsHeader from './Header';
+import RequestDetailsInspectionSection from './InspectionSection';
 
-const RequestDetails: React.FC<Props> = ({ requestId }) => (
-  <div data-testid="request-details">
-    <div>Request Details Header</div>
-    <div>Request Details Code Viewer</div>
-    <div>Request Details Inspection Section</div>
-  </div>
-);
+const mapStateToProps = (
+  state: AppState,
+  { requestId }: RequestDetailsRouteParams
+) => {
+  return {
+    selectedRequest: getSelectedRequestEvaluationById(state, requestId || ''),
+  };
+};
+interface PropsFromStore extends ReturnType<typeof mapStateToProps> {}
+interface Props extends PropsFromStore, RequestDetailsRouteParams {}
 
-export default RequestDetails;
+export const RequestDetails: React.FC<Props> = ({
+  selectedRequest,
+  requestId,
+}) => {
+  const [
+    requestTimeComplete,
+    requestTimeFormatted,
+    requestMethod,
+    resourcePath,
+    outcomeData,
+  ] = useRequestMainData(selectedRequest);
+  const [
+    firestoreRules,
+    linesOutcome,
+    linesIssues,
+    inspectionElements,
+  ] = useRequestDetailedData(selectedRequest);
+
+  // Redirect to requests table if selected (requestId) did not match any request
+  if (requestId && !selectedRequest) {
+    return <Redirect to="/firestore/requests" />;
+  }
+
+  return (
+    <div data-testid="request-details">
+      {selectedRequest && (
+        <>
+          <RequestDetailsHeader
+            requestTimeComplete={requestTimeComplete}
+            requestTimeFormatted={requestTimeFormatted}
+            requestMethod={requestMethod}
+            resourcePath={resourcePath}
+            outcomeData={outcomeData}
+          />
+          <div className="Firestore-Request-Details-Content">
+            <RequestDetailsCodeViewer
+              firestoreRules={firestoreRules}
+              linesOutcome={linesOutcome}
+              linesIssues={linesIssues}
+            />
+            <RequestDetailsInspectionSection
+              inspectionElements={inspectionElements}
+            />
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
+
+export default connect(mapStateToProps)(RequestDetails);

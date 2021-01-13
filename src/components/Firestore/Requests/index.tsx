@@ -24,9 +24,13 @@ import {
   textBlackSecondary,
   textBlackTernary,
 } from '../../../colors';
-import RequestDetails, { PropsFromParentComponent } from './RequestDetails';
+import RequestDetails from './RequestDetails';
 // import RequestsHeader from './RequestsCard/Header';
 import RequestsTable from './RequestsCard/Table';
+
+export interface RequestDetailsRouteParams {
+  requestId: string;
+}
 
 const Requests: React.FC = () => (
   <ThemeProvider
@@ -48,7 +52,7 @@ const Requests: React.FC = () => (
       <Route
         exact
         path="/firestore/requests/:requestId"
-        render={({ match }: RouteComponentProps<PropsFromParentComponent>) => {
+        render={({ match }: RouteComponentProps<RequestDetailsRouteParams>) => {
           const requestId = match.params.requestId;
           return <RequestDetails requestId={requestId} />;
         }}

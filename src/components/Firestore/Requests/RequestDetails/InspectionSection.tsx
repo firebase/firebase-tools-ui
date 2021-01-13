@@ -1,5 +1,5 @@
 /**
- * Copyright 2021 Google LLC
+ * Copyright 2019 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,21 @@
  * limitations under the License.
  */
 
-import { CustomThemeType } from '../../../themes';
+import React from 'react';
 
-export interface OutcomeData {
-  theme: CustomThemeType;
-  icon: string;
-  label: string;
+import { InspectionElement } from '../types';
+
+interface Props {
+  inspectionElements?: InspectionElement[];
 }
 
-export interface InspectionElement {
-  label: string;
-  value: string;
-}
+const InspectionSection: React.FC<Props> = ({ inspectionElements }) => (
+  <div
+    data-testid="request-details-inspection-section"
+    className="Firestore-Request-Details-Inspection"
+  >
+    Inspection Section
+  </div>
+);
+
+export default InspectionSection;
