@@ -64,7 +64,7 @@ export function useRequestMainData(request?: FirestoreRulesEvaluation) {
   const requestTimeComplete = new Date(timestamp).toLocaleString();
   const requestTimeFormatted = formatTimestamp(timestamp);
   const requestMethod = rulesContext?.request?.method;
-  // Replace root path, split every subpath and remove resulting empty elements
+  // Remove root path, split every subpath and remove resulting empty elements
   const resourcePath = rulesContext?.request?.path
     ?.replace('/databases/(default)/documents', '')
     ?.split('/')
