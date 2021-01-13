@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-// returns an id made out of 20 random upper- and lower-case letters and numbers
+// Returns an id made out of 20 random upper- and lower-case letters and numbers
 // TODO: Remove generateId function once the backend itself generates a UID for each request
 export function generateId(): string {
   let newId = '';
