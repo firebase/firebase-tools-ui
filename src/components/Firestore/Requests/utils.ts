@@ -25,6 +25,13 @@ const ICON_SELECTOR = {
   error: 'report_problem',
   admin: 'security',
 };
+// Dictionary that returns the corresponding OutcomeData by outcome key
+const outcomeData: RulesOutcomeData = {
+  allow: { theme: 'success', icon: ICON_SELECTOR['allow'], label: 'ALLOW' },
+  deny: { theme: 'warning', icon: ICON_SELECTOR['deny'], label: 'DENY' },
+  error: { theme: 'warning', icon: ICON_SELECTOR['error'], label: 'ERROR' },
+  admin: { theme: 'success', icon: ICON_SELECTOR['admin'], label: 'ADMIN' },
+};
 
 // Outputs the main data of the request in a clean format
 export function useRequestMainData(request?: FirestoreRulesEvaluation) {
@@ -45,12 +52,6 @@ export function useRequestMainData(request?: FirestoreRulesEvaluation) {
     ?.filter((i) => i)
     ?.map((subpath) => `/${subpath}`)
     ?.join('');
-  const outcomeData: RulesOutcomeData = {
-    allow: { theme: 'success', icon: ICON_SELECTOR['allow'], label: 'ALLOW' },
-    deny: { theme: 'warning', icon: ICON_SELECTOR['deny'], label: 'DENY' },
-    error: { theme: 'warning', icon: ICON_SELECTOR['error'], label: 'ERROR' },
-    admin: { theme: 'success', icon: ICON_SELECTOR['admin'], label: 'ADMIN' },
-  };
 
   return [
     requestTimeComplete,
