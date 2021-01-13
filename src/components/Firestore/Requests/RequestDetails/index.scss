@@ -18,11 +18,11 @@
 
 .Firestore-Request-Details-Content {
   width: 100%;
-  // flex behavior: stretch content vertically
+  // Flex behavior: stretch content vertically
   display: flex;
   justify-content: flex-start;
   align-items: stretch;
-  // overflow behavior
+  // Overflow behavior
   position: relative;
   overflow: hidden;
   min-height: $firestore-request-details-content-min-height;

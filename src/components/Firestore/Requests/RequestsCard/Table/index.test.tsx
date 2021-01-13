@@ -35,6 +35,7 @@ describe('RequestsTable', () => {
         shouldShowZeroResults={false}
         shouldShowZeroState={true}
         shouldShowTable={false}
+        setShowCopyNotification={() => {}}
       />
     );
     // Keeps the header
@@ -48,6 +49,7 @@ describe('RequestsTable', () => {
         shouldShowZeroResults={false}
         shouldShowZeroState={false}
         shouldShowTable={true}
+        setShowCopyNotification={() => {}}
       />
     );
     // Header + 2 requests
@@ -62,6 +64,7 @@ describe('RequestsTable', () => {
         shouldShowZeroResults={true}
         shouldShowZeroState={false}
         shouldShowTable={false}
+        setShowCopyNotification={() => {}}
       />
     );
     // Keeps the header
@@ -76,6 +79,7 @@ describe('RequestsTable', () => {
         shouldShowZeroResults={false}
         shouldShowZeroState={true}
         shouldShowTable={false}
+        setShowCopyNotification={() => {}}
       />
     );
     // Keeps the header

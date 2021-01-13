@@ -14,20 +14,18 @@
  * limitations under the License.
  */
 
-@import '../../../colors-variables.scss';
-
 .Firestore-Request-Date {
   font-size: 13px;
   font-family: Courier;
   font-style: normal;
   font-weight: normal;
-  color: $firebase-text-black-secondary-color;
+  color: var(--mdc-theme-text-black-secondary);
 }
 .Firestore-Request-Outcome {
-  // outcome Icon
+  // Outcome Icon
   i {
     color: var(--mdc-theme-primary);
-    // center
+    // Center icon
     display: block;
     margin: 0 auto;
     text-align: center;
@@ -39,18 +37,18 @@
   font-family: Courier;
   font-style: normal;
   font-weight: bold;
-  color: $firebase-text-black-primary-color;
+  color: var(--mdc-theme-text-black-primary);
 }
 .Firestore-Request-Path {
   position: relative;
-  // display copy IconButton only when path is hovered
+  // Display copy IconButton only when path is hovered
   &:hover {
     .Firestore-Request-Path-Container button {
       visibility: visible;
     }
   }
   .Firestore-Request-Path-Container {
-    // flex behavior
+    // Flex behavior
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -60,20 +58,20 @@
       font-family: Courier;
       font-style: normal;
       font-weight: normal;
-      color: $firebase-text-black-primary-color;
-      // ensure path only has one line
+      color: var(--mdc-theme-text-black-primary);
+      // Ensure path only has one line
       white-space: nowrap;
       // NOTE: the overflow must NOT be 'hidden' to ensure the text truncation works as expected
     }
-    // copy IconButton
+    // Copy IconButton
     button {
       padding: 12px 0;
-      // avoid button's width to go below 48px when container is too narrow
+      // Avoid button's width to go below 48px when container is too narrow
       min-width: 48px;
-      // absolute position to the right
+      // Absolute position to the right
       position: absolute;
       right: 0px;
-      // hover effects
+      // Hover effects
       // NOTE: 'visibility' is chosed instead of 'display' because './utils' needs the element to
       // be rendered in order to calculate its width. Only on mobile is the button 'display': none
       visibility: hidden;
@@ -82,7 +80,7 @@
       &:hover {
         color: black;
       }
-      // do not display button on mobile
+      // Do not display button on mobile
       @media screen and (max-width: 500px) {
         display: none;
         min-width: 0px;

@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-// header
+// Header
 $firestore-request-details-header-height: 52px;
 
-// header icon buttons (return and collapsed menu)
+// Header icon buttons (return and collapsed menu)
 $firestore-request-details-header-icon-button-width: 30px;
 
-// header return button
+// Header return button
 $firestore-request-details-header-return-padding-right: 12px;
 
-// header info container
+// Header info container
 $firestore-request-details-header-info-collapsed-width: calc(
   100% - #{($firestore-request-details-header-icon-button-width * 2) + $firestore-request-details-header-return-padding-right}
 );
@@ -31,7 +31,7 @@ $firestore-request-details-header-info-mobile-width: calc(
   100% - #{($firestore-request-details-header-icon-button-width * 2)}
 );
 
-// header info content
+// Header info content
 $firestore-request-details-header-info-date-width: 63px;
 
 $firestore-request-details-header-info-outcome-width: 35px;

@@ -19,6 +19,8 @@ import './ZeroState.scss';
 import { Typography } from '@rmwc/typography';
 import React from 'react';
 
+export const zeroStateMessage = 'No Firestore requests for this project yet';
+
 const RequestsZeroState: React.FC = () => {
   return (
     <Typography
@@ -26,7 +28,7 @@ const RequestsZeroState: React.FC = () => {
       theme="textSecondaryOnBackground"
       className="Firestore-Requests-Table-Zero-State"
     >
-      No Firestore requests for this project yet
+      {zeroStateMessage}
     </Typography>
   );
 };

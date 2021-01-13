@@ -14,23 +14,21 @@
  * limitations under the License.
  */
 
-@import './InspectionBlock_variables.scss';
-
 .Firestore-Request-Details-Inspection-Block {
   background-color: var(--mdc-theme-surface);
   padding: 10px;
   cursor: pointer;
   height: 48px;
-  // shadow border at left and bottom
+  // Shadow border at left and bottom
   box-shadow: 1px -1px 0 rgba(0, 0, 0, 0.12) inset;
-  // flex behavior
+  // Flex behavior
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
 .Firestore-Request-Details-Inspection-Block.Firestore-Request-Details-Inspection-Block--Main {
-  background-color: $firestore-request-details-inspection-main-block-background-color;
+  background-color: var(--mdc-theme-inspection-main-block-background);
   font-weight: 500;
   padding: 5px 10px;
   font-size: 13px;
@@ -39,7 +37,7 @@
 .Firestore-Request-Details-Inspection-Block-Label {
   width: 100%;
   font-size: 14px;
-  // truncate text
+  // Truncate text
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -49,17 +47,17 @@
   padding: 10px;
   font-size: 14px;
   font-family: monospace, monospace;
-  color: $firestore-request-details-inspection-block-value-color;
+  color: var(--mdc-theme-text-black-secondary);
   min-height: 48px;
-  // flex behavior
+  // Flex behavior
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  // overflow behavior
+  // Overflow behavior
   overflow: scroll;
-  // shadow border at left and bottom
+  // Shadow border at left and bottom
   box-shadow: 1px -1px 0 rgba(0, 0, 0, 0.12) inset;
-  // format line-breaks
+  // Format line-breaks
   white-space: pre;
 }

@@ -14,22 +14,20 @@
  * limitations under the License.
  */
 
-@import './CodeViewer_variables.scss';
-
 .Firestore-Request-Details-Code {
-  // overflow behavior: make the inside content of the code viewer scrollable
+  // Overflow behavior: make the inside content of the code viewer scrollable
   width: 75%;
   position: absolute;
   top: 0px;
   left: 0px;
   height: 100%;
   overflow: scroll;
-  // hide code viewer for mobile
+  // Hide code viewer for mobile
   @media screen and (max-width: 500px) {
     display: none;
   }
 
-  // hide non-necessary textarea coming from CodeMirror (visible for a second when loading)
+  // Hide non-necessary textarea coming from CodeMirror (visible for a second when loading)
   & > textarea {
     display: none;
   }
@@ -41,7 +39,7 @@
     margin-right: 28px;
   }
   .CodeMirror-gutter-elt {
-    // outcome Icon
+    // Outcome Icon
     & > i {
       left: 40px;
       position: absolute;
@@ -49,36 +47,36 @@
       font-size: 15px;
 
       &.allow {
-        color: $firebase-success-theme-primary;
-        background-color: $firebase-success-theme-background;
+        color: var(--mdc-theme-success-theme-primary);
+        background-color: var(--mdc-theme-success-theme-background);
       }
       &.deny,
       &.error {
-        color: $firebase-error-theme-primary;
-        background-color: $firebase-error-theme-background;
+        color: var(--mdc-theme-error-theme-primary);
+        background-color: var(--mdc-theme-error-theme-background);
       }
     }
   }
   .CodeMirror-code {
-    // highlight line of code
+    // Highlight line of code
     & > div.allow {
-      background-color: $firebase-success-theme-background;
+      background-color: var(--mdc-theme-success-theme-background);
     }
     & > div.deny,
     & > div.error {
-      background-color: $firebase-error-theme-background;
+      background-color: var(--mdc-theme-error-theme-background);
     }
-    // change color of comments
+    // Change color of comments
     span.cm-comment {
-      color: $firestore-request-details-code-viewer-comment-color;
+      color: var(--mdc-theme-text-black-ternary);
     }
   }
-  // move the code a little to the left to remove gap between that hightlighted-line and left-border
+  // Move the code a little to the left to remove gap between that hightlighted-line and left-border
   .CodeMirror-lines {
     left: -2px;
     position: relative;
   }
-  // make sure the gutters (where the line numbers are) has always the same width,
+  // Make sure the gutters (where the line numbers are) has always the same width,
   // so that the icon's background is always right next to the border
   .CodeMirror-gutters {
     width: 61px !important;

@@ -19,9 +19,11 @@ import 'codemirror/theme/xq-light.css';
 
 import './CodeViewer.scss';
 
+import { ThemeProvider } from '@rmwc/theme';
 import CodeMirror from '@uiw/react-codemirror';
 import React, { useCallback, useEffect, useState } from 'react';
 
+import { errorTheme, successTheme } from '../../../../themes';
 import {
   FirestoreRulesIssue,
   OutcomeInfo,
@@ -43,7 +45,7 @@ const RulesCodeViewer: React.FC<Props> = ({
 }) => {
   const [codeMirrorEditor, setCodeMirrorEditor] = useState<any>(null);
 
-  // creates HTMLElement of a Marker containing the outcome icon
+  // Creates HTMLElement of a Marker containing the outcome icon
   const getMarkerElement = useCallback((outcome: RulesOutcome): HTMLElement => {
     // TODO: Is there a better way of creating a HTMLElement without manipulating DOM?
     // JSX can't be passed to the codemirror library, see: https://github.com/scniro/react-codemirror2/issues/57
@@ -53,7 +55,7 @@ const RulesCodeViewer: React.FC<Props> = ({
     return marker;
   }, []);
 
-  // adds the corresponding Marker with the correct outcome icon
+  // Adds the corresponding Marker with the correct outcome icon
   // to all lines that have an outcome (allow or deny)
   const addLinesOutcomeGutters = useCallback(() => {
     linesOutcome?.map((lineAction) => {
@@ -67,7 +69,7 @@ const RulesCodeViewer: React.FC<Props> = ({
     });
   }, [codeMirrorEditor, linesOutcome, getMarkerElement]);
 
-  // adds the corresponding Marker with the error icon
+  // Adds the corresponding Marker with the error icon
   // to all lines that have an issue (error)
   const addLinesIssuesGutters = useCallback(() => {
     linesIssues?.map((lineIssue) => {
@@ -81,10 +83,10 @@ const RulesCodeViewer: React.FC<Props> = ({
     });
   }, [codeMirrorEditor, linesIssues, getMarkerElement]);
 
-  // highlights and adds outcome icon to corresponding lines of rules code viewer
+  // Highlights and adds outcome icon to corresponding lines of rules code viewer
   useEffect(() => {
     if (codeMirrorEditor) {
-      // a Gutter in CodeMirror is the icon displayed next to the line number
+      // A Gutter in CodeMirror is the icon displayed next to the line number
       !linesIssues?.length && addLinesOutcomeGutters();
       addLinesIssuesGutters();
     }
@@ -96,25 +98,34 @@ const RulesCodeViewer: React.FC<Props> = ({
   ]);
 
   return (
-    <div className="Firestore-Request-Details-Code">
-      {firestoreRules && (
-        <CodeMirror
-          value={firestoreRules}
-          options={{
-            theme: 'xq-light',
-            keyMap: 'sublime',
-            mode: 'jsx',
-            tabsize: 2,
-            readOnly: true,
-            gutters: ['CodeMirror-gutter-elt'],
-          }}
-          onChanges={(editor) =>
-            !codeMirrorEditor && setCodeMirrorEditor(editor)
-          }
-        />
-      )}
-      {!firestoreRules && <CodeViewerZeroState />}
-    </div>
+    <ThemeProvider
+      options={{
+        successThemePrimary: successTheme.primary,
+        successThemeBackground: successTheme.background,
+        errorThemePrimary: errorTheme.primary,
+        errorThemeBackground: errorTheme.background,
+      }}
+    >
+      <div className="Firestore-Request-Details-Code">
+        {firestoreRules && (
+          <CodeMirror
+            value={firestoreRules}
+            options={{
+              theme: 'xq-light',
+              keyMap: 'sublime',
+              mode: 'jsx',
+              tabsize: 2,
+              readOnly: true,
+              gutters: ['CodeMirror-gutter-elt'],
+            }}
+            onChanges={(editor) =>
+              !codeMirrorEditor && setCodeMirrorEditor(editor)
+            }
+          />
+        )}
+        {!firestoreRules && <CodeViewerZeroState />}
+      </div>
+    </ThemeProvider>
   );
 };
 

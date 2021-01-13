@@ -63,7 +63,7 @@ export const RequestsTable: React.FC<Props> = ({
   shouldShowTable,
   setShowCopyNotification,
 }) => {
-  // references the path header because it has always the same width
+  // References the path header because it has always the same width
   // as the path column, but it renders only once.
   const pathContainerRef = useRef<HTMLDivElement>(null);
   const requestPathContainerWidth = usePathContainerWidth(pathContainerRef);

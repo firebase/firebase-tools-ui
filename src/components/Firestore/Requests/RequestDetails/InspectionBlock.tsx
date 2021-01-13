@@ -17,8 +17,11 @@
 import './InspectionBlock.scss';
 
 import { Icon } from '@rmwc/icon';
+import { ThemeProvider } from '@rmwc/theme';
 import classnames from 'classnames';
 import React, { useState } from 'react';
+
+import { darkestGray } from '../../../../colors';
 
 const INSPECT_BLOCK_CLASS = 'Firestore-Request-Details-Inspection-Block';
 const MAIN_INSPECT_BLOCK_CLASS = INSPECT_BLOCK_CLASS + '--Main';
@@ -50,7 +53,11 @@ export const InspectionBlock: React.FC<Props> = ({
   }
 
   return (
-    <>
+    <ThemeProvider
+      options={{
+        inspectionMainBlockBackground: darkestGray,
+      }}
+    >
       <div
         className={classnames(
           INSPECT_BLOCK_CLASS,
@@ -62,7 +69,7 @@ export const InspectionBlock: React.FC<Props> = ({
         <Icon icon={{ icon: `expand_${isExpanded ? 'less' : 'more'}` }} />
       </div>
       {isExpanded && displayContent()}
-    </>
+    </ThemeProvider>
   );
 };
 

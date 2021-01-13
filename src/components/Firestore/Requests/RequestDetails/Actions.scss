@@ -15,11 +15,11 @@
  */
 
 .Firestore-Request-Details-Actions-Container {
-  // flex behavior
+  // Flex behavior
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  // show collapsed button
+  // Show collapsed button
   @media screen and (max-width: 850px) {
     display: none;
   }
@@ -27,9 +27,9 @@
 
 .Firestore-Request-Details-Action {
   font-size: 12px;
-  // get text in just one line
+  // Get text in just one line
   white-space: nowrap;
-  // select all Actions but the last one
+  // Select all Actions but the last one
   &:not(:last-of-type) {
     margin-bottom: 10px;
   }

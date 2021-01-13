@@ -17,11 +17,11 @@
 @import './Header_variables.scss';
 @import '../variables.scss';
 
-// details content
+// Details content
 $firestore-request-details-content-min-height: (
   $firestore-requests-card-min-height - $firestore-request-details-header-height
 );
-// since the app-...-content variable uses calc(), a SASS interpolation
+// Since the app-...-content variable uses calc(), a SASS interpolation
 // is used in order to nest a calc() function inside another calc() function
 // css structure:            calc( calc(0px + 0px) - 0px)
 $firestore-request-details-content-viewport-height: calc(

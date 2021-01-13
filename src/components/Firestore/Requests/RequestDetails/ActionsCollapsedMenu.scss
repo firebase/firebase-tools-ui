@@ -16,18 +16,17 @@
 
 @import './Header_variables.scss';
 
-// hide Menu Portal if Actions are no longer collapsed
+// Hide Menu Portal if Actions are no longer collapsed
 @media screen and (min-width: 850px) {
   .mdc-menu-surface--open {
     display: none;
   }
 }
 .Firestore-Request-Details-Actions-Collapsed-Menu {
-  // hide collapsed button when width is higher than specified
+  // Hide collapsed button when width is higher than specified
   @media screen and (min-width: 850px) {
     display: none;
   }
-
   .Firestore-Request-Details-Actions-Collapsed-Button {
     width: $firestore-request-details-header-icon-button-width;
     height: $firestore-request-details-header-icon-button-width;

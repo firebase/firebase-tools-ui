@@ -24,9 +24,9 @@
   height: $firestore-request-details-header-height;
   padding: 0 6px;
   position: relative;
-  // shadow border at bottom
+  // Shadow border at bottom
   box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12) inset;
-  // flex behavior
+  // Flex behavior
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -34,17 +34,17 @@
 
 .Firestore-Request-Details-Header-Return {
   padding-right: $firestore-request-details-header-return-padding-right;
-  // flex behavior
+  // Flex behavior
   display: flex;
   justify-content: center;
-  // return IconButton
+  // Return IconButton
   a {
     width: $firestore-request-details-header-icon-button-width;
     height: $firestore-request-details-header-icon-button-width;
     padding: 5px;
     padding-left: 9px;
   }
-  // mobile styles
+  // Mobile styles
   @media screen and (max-width: 500px) {
     padding-right: 0px;
   }
@@ -54,15 +54,15 @@
   width: 100%;
   height: 100%;
   position: relative;
-  // flex behavior
+  // Flex behavior
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  // make space for the collapsed button
+  // Make space for the collapsed button
   @media screen and (max-width: 850px) {
     width: $firestore-request-details-header-info-collapsed-width;
   }
-  // width for mobile
+  // Width for mobile
   @media screen and (max-width: 500px) {
     width: $firestore-request-details-header-info-mobile-width;
   }
@@ -76,25 +76,25 @@
   .Firestore-Request-Method {
     width: $firestore-request-details-header-info-method-width;
     text-align: center;
-    // width for mobile
+    // Width for mobile
     @media screen and (max-width: 500px) {
       width: $firestore-request-details-header-info-method-mobile-width;
     }
   }
   .Firestore-Request-Path {
     width: $firestore-request-details-header-info-path-width;
-    // width for mobile
+    // Width for mobile
     @media screen and (max-width: 500px) {
       width: $firestore-request-details-header-info-path-mobile-width;
     }
 
     .Firestore-Request-Path-Container {
       justify-content: flex-start;
-      // copy IconButton
+      // Copy IconButton
       button {
-        // override hover effect to show/hide
+        // Override hover effect to show/hide
         visibility: visible;
-        // override position absolute to the right
+        // Override position absolute to the right
         position: relative;
       }
     }

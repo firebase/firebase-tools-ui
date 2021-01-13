@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-@import './variables.scss';
-
 .Firestore-Requests-Copy-Path-Snackbar {
   &.mdc-snackbar__surface {
-    background-color: $snackbar-background-color;
+    background-color: var(--mdc-theme-snackbar-background);
   }
   i {
     // !important is needed because Snackbar sets an inline color style
-    color: $snackbar-text-color !important;
+    color: var(--mdc-theme-snackbar-text) !important;
   }
 }

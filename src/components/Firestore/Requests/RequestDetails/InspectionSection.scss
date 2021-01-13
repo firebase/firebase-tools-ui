@@ -16,9 +16,9 @@
 
 .Firestore-Request-Details-Inspection {
   border-bottom-right-radius: 8px;
-  // shadow border at left
+  // Shadow border at left
   box-shadow: 1px 0 0 rgba(0, 0, 0, 0.12) inset;
-  // overflow behavior: make the inside content of the inspection section scrollable
+  // Overflow behavior: make the inside content of the inspection section scrollable
   width: 25%;
   position: absolute;
   top: 0px;
@@ -26,7 +26,7 @@
   min-width: 20%;
   height: 100%;
   overflow: scroll;
-  // take all width on mobile
+  // Take all width on mobile
   @media screen and (max-width: 500px) {
     width: 100%;
     border-bottom-left-radius: 8px;

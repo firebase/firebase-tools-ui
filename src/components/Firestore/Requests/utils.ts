@@ -24,7 +24,7 @@ import {
 } from './rules_evaluation_result_model';
 import { InspectionElement, RulesOutcomeData } from './types';
 
-// matches the material-icon name by request outcome
+// Matches the material-icon name by request outcome
 const ICON_SELECTOR = {
   allow: 'check_circle',
   deny: 'remove_circle',
@@ -32,7 +32,7 @@ const ICON_SELECTOR = {
   admin: 'security',
 };
 
-// returns the corresponding icon-name based on the outcome argument
+// Returns the corresponding icon-name based on the outcome argument
 export function getIconFromRequestOutcome(outcome?: RulesOutcome) {
   if (!outcome) {
     return '';
@@ -40,7 +40,7 @@ export function getIconFromRequestOutcome(outcome?: RulesOutcome) {
   return ICON_SELECTOR[outcome];
 }
 
-// copies path without spaces to clipboard
+// Copies path without spaces to clipboard
 // and triggers copy notification (SnackBar)
 export function copyPathToClipboard(
   resourcePath: string,
@@ -52,7 +52,7 @@ export function copyPathToClipboard(
     .catch(() => setShowCopyNotification(false));
 }
 
-// outputs the main data of the request in a clean format
+// Outputs the main data of the request in a clean format
 export function useRequestMainData(request?: FirestoreRulesEvaluation) {
   if (!request) {
     return [undefined, undefined, undefined, undefined, undefined] as const;
@@ -64,7 +64,7 @@ export function useRequestMainData(request?: FirestoreRulesEvaluation) {
   const requestTimeComplete = new Date(timestamp).toLocaleString();
   const requestTimeFormatted = formatTimestamp(timestamp);
   const requestMethod = rulesContext?.request?.method;
-  // replace root path, split every subpath and remove resulting empty elements
+  // Replace root path, split every subpath and remove resulting empty elements
   const resourcePath = rulesContext?.request?.path
     ?.replace('/databases/(default)/documents', '')
     ?.split('/')
@@ -87,7 +87,7 @@ export function useRequestMainData(request?: FirestoreRulesEvaluation) {
   ] as const;
 }
 
-// outputs the detailed data of the request in a clean format
+// Outputs the detailed data of the request in a clean format
 export function useRequestDetailedData(request?: FirestoreRulesEvaluation) {
   if (!request) {
     return [undefined, undefined, undefined, undefined] as const;
@@ -114,7 +114,7 @@ export function useRequestDetailedData(request?: FirestoreRulesEvaluation) {
   ] as const;
 }
 
-// custom hook that returns the width of the path container,
+// Custom hook that returns the width of the path container,
 // a new width is returned after every window resizing is done
 export function usePathContainerWidth(
   pathContainerRef: React.RefObject<HTMLDivElement>
@@ -127,7 +127,7 @@ export function usePathContainerWidth(
     return pathContainerRef?.current?.offsetWidth;
   }, [pathContainerRef]);
 
-  // update pathContainerWidth, debounce helps avoiding unnecessary calls
+  // Update pathContainerWidth, debounce helps avoiding unnecessary calls
   const debouncedHandleWindowResize = useCallback(
     debounce(() => {
       setPathContainerWidth(getPathContainerWidth());
@@ -135,7 +135,7 @@ export function usePathContainerWidth(
     [pathContainerRef, setPathContainerWidth, getPathContainerWidth]
   );
 
-  // starts and stops subscription to window resizing,
+  // Starts and stops subscription to window resizing,
   // and updates (pathContainerWidth) after every change
   useEffect(() => {
     window?.addEventListener('resize', debouncedHandleWindowResize);
@@ -143,7 +143,7 @@ export function usePathContainerWidth(
       window?.removeEventListener('resize', debouncedHandleWindowResize);
   }, [debouncedHandleWindowResize]);
 
-  // updates width if HTML reference changes (useful to get initial width)
+  // Updates width if HTML reference changes (useful to get initial width)
   useEffect(() => {
     setPathContainerWidth(getPathContainerWidth());
   }, [pathContainerRef, getPathContainerWidth]);
@@ -151,7 +151,7 @@ export function usePathContainerWidth(
   return pathContainerWidth;
 }
 
-// function that based on the width of the complete path's string,
+// Function that based on the width of the complete path's string,
 // and the width of the path container: considers if truncation should be applied.
 // Only if it should, the new truncated path that fits the container's clientWidth
 // is calculated, and the HTML element is updated width the new truncated string.
@@ -170,7 +170,7 @@ export function considerTruncatingHTMLElementFromLeft(
     innerText: pathTextString,
   } = pathHtmlElement;
 
-  // gets the width in px of the copy icon button element, which is a sibling of the pathHtmlElement
+  // Gets the width in px of the copy icon button element, which is a sibling of the pathHtmlElement
   function getCopyIconButtonWidth(): number {
     // '!!' at the end converts any falsy width into a numeric 0
     return pathHtmlElement?.parentElement?.querySelector(
@@ -183,7 +183,7 @@ export function considerTruncatingHTMLElementFromLeft(
     if (!requestPathContainerWidth) {
       return false;
     }
-    // boolean conditions to truncate text only if necessary
+    // Boolean conditions to truncate text only if necessary
     const textAndCopyIconExceededWidthOfContainer =
       pathTextWidth + copyIconButtonWidth > requestPathContainerWidth;
     const textIsCurrentlyTruncated = pathTextString.includes('...');
@@ -202,20 +202,20 @@ export function considerTruncatingHTMLElementFromLeft(
     if (!pathHtmlElement || !requestPathContainerWidth) {
       return;
     }
-    // calculate width in px of a single character: (totalWidth / totalCharacters)
+    // Calculate width in px of a single character: (totalWidth / totalCharacters)
     // (this calculation is not affected by the style of the font)
     const requestPathCharacterPxWidth = pathTextWidth / pathTextString.length;
-    // calculate amount of characters that fit into the pathHtmlElement
+    // Calculate amount of characters that fit into the pathHtmlElement
     // (width of pathHtmlElement is width of path container minus width of copy icon button)
     const stringMaxSize = Math.ceil(
       (requestPathContainerWidth - copyIconButtonWidth) /
         requestPathCharacterPxWidth
     );
-    // calculate where to start the truncated substring
+    // Calculate where to start the truncated substring
     const newRequestPathStart = completeRequestPath.length - stringMaxSize;
-    // truncate the path, or return the complete path if there is enough width.
+    // Truncate the path, or return the complete path if there is enough width.
     if (newRequestPathStart > 0) {
-      // if the path will be truncated, a (+ 3) is added to compensate the space of the '...' substring
+      // If the path will be truncated, a (+ 3) is added to compensate the space of the '...' substring
       pathHtmlElement.innerText = `...${completeRequestPath.substr(
         newRequestPathStart + 3
       )}`;
@@ -229,7 +229,7 @@ export function considerTruncatingHTMLElementFromLeft(
   }
 }
 
-// returns an id made out of 20 random upper- and lower-case letters and numbers
+// Returns an id made out of 20 random upper- and lower-case letters and numbers
 // TODO: Remove generateId function once the backend itself generates a UID for each request
 export function generateId(): string {
   let newId = '';
