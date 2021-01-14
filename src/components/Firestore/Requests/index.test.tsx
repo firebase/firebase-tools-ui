@@ -45,7 +45,8 @@ describe('Firestore Requests', () => {
   });
 
   it('renders request details view when /firestore/requests/:requestId', async () => {
-    // Make sure evaluation with such ID exists
+    // Make sure an evaluation with such ID exists on the store,
+    // otherwise you would be redirected back to the requests table
     const store = getMockFirestoreStore({
       firestore: {
         requests: {
