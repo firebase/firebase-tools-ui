@@ -83,19 +83,14 @@ const RulesCodeViewer: React.FC<Props> = ({
     });
   }, [codeMirrorEditor, linesIssues, getMarkerElement]);
 
-  // Highlights and adds outcome icon to corresponding lines of rules code viewer
+  // Highlights and adds the outcome Gutter to corresponding lines of rules code viewer
+  // (a Gutter in CodeMirror is an icon displayed next to the line number)
   useEffect(() => {
     if (codeMirrorEditor) {
-      // A Gutter in CodeMirror is the icon displayed next to the line number
-      !linesIssues?.length && addLinesOutcomeGutters();
+      addLinesOutcomeGutters();
       addLinesIssuesGutters();
     }
-  }, [
-    codeMirrorEditor,
-    addLinesOutcomeGutters,
-    addLinesIssuesGutters,
-    linesIssues,
-  ]);
+  }, [codeMirrorEditor, addLinesOutcomeGutters, addLinesIssuesGutters]);
 
   return (
     <ThemeProvider
