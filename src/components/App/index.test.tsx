@@ -15,16 +15,17 @@
  */
 
 import { render } from '@testing-library/react';
+import { createMemoryHistory } from 'history';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, Router } from 'react-router-dom';
 
 import configureStore from '../../configureStore';
 import { delay, waitForDialogsToOpen } from '../../test_utils';
 import { alert } from '../common/DialogQueue';
-import App from '.';
+import App, { REDIRECT_LOGS_URL } from '.';
 
 it('renders without crashing', async () => {
   const div = document.createElement('div');
@@ -63,4 +64,21 @@ it('shows dialogs in the queue', async () => {
   await waitForDialogsToOpen();
 
   expect(getByText('wowah')).not.toBeNull();
+});
+
+it('redirects from url /functions to correct logs url', async () => {
+  const store = configureStore();
+  const history = createMemoryHistory({
+    initialEntries: ['/functions'],
+  });
+  render(
+    <Provider store={store}>
+      <Router history={history}>
+        <App />
+      </Router>
+    </Provider>
+  );
+  await act(() => delay(100)); // Wait for tab indicator async DOM updates.
+  const { pathname, search } = history.location;
+  expect(pathname + search).toBe(REDIRECT_LOGS_URL);
 });

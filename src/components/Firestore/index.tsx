@@ -20,10 +20,19 @@ import { Button } from '@rmwc/button';
 import { Card } from '@rmwc/card';
 import { Elevation } from '@rmwc/elevation';
 import { GridCell } from '@rmwc/grid';
+import { Tab, TabBar } from '@rmwc/tabs';
 import firebase from 'firebase';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { useHistory, useLocation } from 'react-router-dom';
+import {
+  Link,
+  Redirect,
+  Route,
+  Switch,
+  matchPath,
+  useHistory,
+  useLocation,
+} from 'react-router-dom';
 import { useFirestore } from 'reactfire';
 
 import { createStructuredSelector } from '../../store';
@@ -43,6 +52,7 @@ import {
   useEjector,
 } from './FirestoreEmulatedApiProvider';
 import PanelHeader from './PanelHeader';
+import FirestoreRequests from './Requests';
 import { FirestoreStore } from './store';
 
 interface WindowWithFirestoreDb extends Window {
@@ -76,6 +86,24 @@ export const FirestoreRoute: React.FC<PropsFromState> = ({
 
 export default connect(mapStateToProps)(FirestoreRoute);
 
+interface FirestoreTabRoute {
+  path: string;
+  label: string;
+  exact: boolean;
+}
+const firestoreRoutes: ReadonlyArray<FirestoreTabRoute> = [
+  {
+    path: '/firestore/data',
+    label: 'Data',
+    exact: false,
+  },
+  {
+    path: '/firestore/requests',
+    label: 'Requests',
+    exact: false,
+  },
+];
+
 export const Firestore: React.FC = React.memo(() => {
   const firestore = useFirestore();
   const location = useLocation();
@@ -84,9 +112,25 @@ export const Firestore: React.FC = React.memo(() => {
   const eject = useEjector();
 
   // TODO: do something better here!
-  const path = location.pathname.replace(/^\/firestore/, '');
+  const path = location.pathname.replace(/^\/firestore\/data/, '');
   const showCollectionShell = path.split('/').length < 2;
   const showDocumentShell = path.split('/').length < 3;
+
+  const subTabs = firestoreRoutes.map(({ path, label }: FirestoreTabRoute) => (
+    <Tab
+      key={label}
+      className="mdc-tab--min-width"
+      {...{ tag: Link, to: path }}
+    >
+      {label}
+    </Tab>
+  ));
+  const activeTabIndex = firestoreRoutes.findIndex((r) =>
+    matchPath(location.pathname, {
+      path: r.path,
+      exact: r.exact,
+    })
+  );
 
   useEffect(() => {
     (window as WindowWithFirestoreDb).firestore = firestore;
@@ -104,7 +148,7 @@ export const Firestore: React.FC = React.memo(() => {
 
   function handleNavigate(path?: string) {
     // TODO: move to routing constants
-    const root = '/firestore';
+    const root = '/firestore/data';
     if (path === undefined) {
       history.push(root);
     } else {
@@ -117,41 +161,27 @@ export const Firestore: React.FC = React.memo(() => {
   ) : (
     <FirestoreStore>
       <GridCell span={12} className="Firestore">
-        <div className="Firestore-actions">
-          <CustomThemeProvider use="warning" wrap>
-            <Button unelevated onClick={() => handleClearData()}>
-              Clear all data
-            </Button>
-          </CustomThemeProvider>
+        <div className="Firestore-sub-tabs">
+          <TabBar theme="onSurface" activeTabIndex={activeTabIndex}>
+            {subTabs}
+          </TabBar>
         </div>
-        <Elevation z="2" wrap>
-          <Card className="Firestore-panels-wrapper">
-            <InteractiveBreadCrumbBar
-              base="/firestore"
+
+        <Switch>
+          <Route path="/firestore/data">
+            <FirestoreDataCard
               path={path}
-              onNavigate={handleNavigate}
+              handleClearData={handleClearData}
+              handleNavigate={handleNavigate}
+              showCollectionShell={showCollectionShell}
+              showDocumentShell={showDocumentShell}
             />
-            <div className="Firestore-panels">
-              <Root />
-              {showCollectionShell && (
-                <div
-                  className="Firestore-Collection"
-                  data-testid="collection-shell"
-                >
-                  <PanelHeader id="" icon={null} />
-                </div>
-              )}
-              {showDocumentShell && (
-                <div
-                  className="Firestore-Document"
-                  data-testid="document-shell"
-                >
-                  <PanelHeader id="" icon={null} />
-                </div>
-              )}
-            </div>
-          </Card>
-        </Elevation>
+          </Route>
+          <Route path="/firestore/requests">
+            <FirestoreRequestsCard />
+          </Route>
+          <Redirect from="/firestore" to="/firestore/data" />
+        </Switch>
       </GridCell>
     </FirestoreStore>
   );
@@ -159,4 +189,63 @@ export const Firestore: React.FC = React.memo(() => {
 
 export const FirestoreRouteDisabled: React.FC = () => (
   <EmulatorDisabled productName="Firestore" />
+);
+
+interface FirestoreDataCardProps {
+  path: string;
+  handleClearData: () => void;
+  handleNavigate: (path?: string) => void;
+  showCollectionShell: boolean;
+  showDocumentShell: boolean;
+}
+
+const FirestoreDataCard: React.FC<FirestoreDataCardProps> = ({
+  path,
+  handleClearData,
+  handleNavigate,
+  showCollectionShell,
+  showDocumentShell,
+}) => (
+  <>
+    <div className="Firestore-actions">
+      <CustomThemeProvider use="warning" wrap>
+        <Button unelevated onClick={() => handleClearData()}>
+          Clear all data
+        </Button>
+      </CustomThemeProvider>
+    </div>
+    <Elevation z="2" wrap>
+      <Card className="Firestore-panels-wrapper">
+        <InteractiveBreadCrumbBar
+          base="/firestore/data"
+          path={path}
+          onNavigate={handleNavigate}
+        />
+        <div className="Firestore-panels">
+          <Root />
+          {showCollectionShell && (
+            <div
+              className="Firestore-Collection"
+              data-testid="collection-shell"
+            >
+              <PanelHeader id="" icon={null} />
+            </div>
+          )}
+          {showDocumentShell && (
+            <div className="Firestore-Document" data-testid="document-shell">
+              <PanelHeader id="" icon={null} />
+            </div>
+          )}
+        </div>
+      </Card>
+    </Elevation>
+  </>
+);
+
+const FirestoreRequestsCard: React.FC = () => (
+  <Elevation z="2" wrap>
+    <Card className="Firestore-panels-wrapper">
+      <FirestoreRequests />
+    </Card>
+  </Elevation>
 );
