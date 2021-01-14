@@ -15,7 +15,9 @@
  */
 
 import { render } from '@testing-library/react';
+import { createMemoryHistory } from 'history';
 import React from 'react';
+import { Router } from 'react-router-dom';
 
 import { createFakeFirestoreRequestEvaluation } from '../../testing/test_utils';
 import { RequestDetails } from './index';
@@ -54,5 +56,20 @@ describe('RequestDetails', () => {
       />
     );
     expect(getByTestId('request-details-inspection-section')).not.toBeNull();
+  });
+
+  it('redirects back to requests-table when requestId did not match any existing request', async () => {
+    const history = createMemoryHistory({
+      initialEntries: [`/firestore/requests/${fakeEvaluation1_ID}`],
+    });
+    render(
+      <Router history={history}>
+        <RequestDetails
+          selectedRequest={undefined}
+          requestId={fakeEvaluation1_ID}
+        />
+      </Router>
+    );
+    expect(history.location.pathname).toBe('/firestore/requests');
   });
 });
