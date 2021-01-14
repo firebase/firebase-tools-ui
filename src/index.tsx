@@ -29,8 +29,11 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import { background, primary, secondary } from './colors';
 import App from './components/App';
+import { FirestoreRulesEvaluation } from './components/Firestore/Requests/rules_evaluation_result_model';
+import { registerForRulesEvents } from './components/Firestore/Requests/rules_evaluations_listener';
 import configureStore from './configureStore';
 import { subscribe as subscribeToConfig } from './store/config';
+import { addRequestEvaluation } from './store/firestoreRequestEvaluations';
 import { error } from './themes';
 
 const store = configureStore();
@@ -39,6 +42,23 @@ const RouterWithInit = () => {
   useEffect(() => {
     store.dispatch(subscribeToConfig());
   }, []); // Empty-array means "run only once on init": https://reactjs.org/docs/hooks-effect.html#tip-optimizing-performance-by-skipping-effects
+
+  // Initialize global subscription to firestore requests evaluation
+  useEffect(() => {
+    const callbackFunction = (newRequest: FirestoreRulesEvaluation) => {
+      const { type } = newRequest;
+      if (type === 'RULES_UPDATE') {
+        // TODO: Should we do something when rules are updated?
+      } else {
+        store.dispatch(addRequestEvaluation(newRequest));
+      }
+    };
+    const unsubscribeFromFirestoreRules = registerForRulesEvents(
+      callbackFunction
+    );
+    return () => unsubscribeFromFirestoreRules();
+  }, []);
+
   return (
     <BrowserRouter>
       <Switch>
