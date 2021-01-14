@@ -14,15 +14,10 @@
  * limitations under the License.
  */
 
-// Returns an id made out of 20 random upper- and lower-case letters and numbers
-// TODO: Remove generateId function once the backend itself generates a UID for each request
-export function generateId(): string {
-  let newId = '';
-  let options = 'ABCDEFGHIJKLMNOPQRSTUVWYZabcdefghijklmnoqrstuvwyz0123456789';
-  const ID_SIZE = 20;
+import { createAction } from 'typesafe-actions';
 
-  for (let i = 0; i < ID_SIZE; i++) {
-    newId += options.charAt(Math.floor(Math.random() * options.length));
-  }
-  return newId;
-}
+import { FirestoreRulesEvaluation } from '../../../../components/Firestore/Requests/rules_evaluation_result_model';
+
+export const addRequestEvaluation = createAction(
+  '@firestore-requests-evaluations/addRequestEvaluation'
+)<FirestoreRulesEvaluation>();

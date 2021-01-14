@@ -33,7 +33,7 @@
 
 .Firestore-sub-tabs {
   margin-bottom: $firestore-sub-tabs-margin-bottom;
-  // shadow border at bottom
+  // Shadow border at bottom
   box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12) inset;
 
   .mdc-tab {
@@ -77,7 +77,7 @@
 
   .Firestore-InlineEditor-relative-anchor {
     .Firestore-InlineEditor {
-      // default to the size of the panel + 8px overhang on each side
+      // Default to the size of the panel + 8px overhang on each side
       min-width: calc(100% + 16px);
     }
   }

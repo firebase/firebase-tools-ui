@@ -1,5 +1,5 @@
 /**
- * Copyright 2020 Google LLC
+ * Copyright 2019 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,24 @@
  * limitations under the License.
  */
 
-// Returns an id made out of 20 random upper- and lower-case letters and numbers
-// TODO: Remove generateId function once the backend itself generates a UID for each request
-export function generateId(): string {
-  let newId = '';
-  let options = 'ABCDEFGHIJKLMNOPQRSTUVWYZabcdefghijklmnoqrstuvwyz0123456789';
-  const ID_SIZE = 20;
+import './NoResults.scss';
 
-  for (let i = 0; i < ID_SIZE; i++) {
-    newId += options.charAt(Math.floor(Math.random() * options.length));
-  }
-  return newId;
-}
+import { Typography } from '@rmwc/typography';
+import React from 'react';
+
+export const noResultsMessage = 'No results';
+
+const RequestsNoResults: React.FC = () => {
+  return (
+    <Typography
+      use="body2"
+      aria-live="polite"
+      theme="textSecondaryOnBackground"
+      className="Firestore-Requests-Table-No-Results"
+    >
+      {noResultsMessage}
+    </Typography>
+  );
+};
+
+export default RequestsNoResults;

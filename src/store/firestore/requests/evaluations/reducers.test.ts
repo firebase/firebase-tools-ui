@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { createFakeFirestoreRequestEvaluation } from '../../components/Firestore/testing/test_utils';
+import { createFakeFirestoreRequestEvaluation } from '../../../../components/Firestore/testing/test_utils';
 import { addRequestEvaluation } from './actions';
 import {
   FirestoreRequestEvaluationsState,

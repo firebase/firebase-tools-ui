@@ -16,11 +16,6 @@
 
 import React from 'react';
 
-const RequestsCard: React.FC = () => (
-  <div data-testid="requests-card">
-    <div>Requests Header</div>
-    <div>Requests Table</div>
-  </div>
-);
+const RequestsHeader: React.FC = () => <div></div>;
 
-export default RequestsCard;
+export default RequestsHeader;

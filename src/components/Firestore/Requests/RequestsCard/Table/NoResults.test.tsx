@@ -1,5 +1,5 @@
 /**
- * Copyright 2020 Google LLC
+ * Copyright 2019 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-// Returns an id made out of 20 random upper- and lower-case letters and numbers
-// TODO: Remove generateId function once the backend itself generates a UID for each request
-export function generateId(): string {
-  let newId = '';
-  let options = 'ABCDEFGHIJKLMNOPQRSTUVWYZabcdefghijklmnoqrstuvwyz0123456789';
-  const ID_SIZE = 20;
+import { render } from '@testing-library/react';
+import React from 'react';
 
-  for (let i = 0; i < ID_SIZE; i++) {
-    newId += options.charAt(Math.floor(Math.random() * options.length));
-  }
-  return newId;
-}
+import RequestsNoResults, { noResultsMessage } from './NoResults';
+
+describe('Requests NoResults', () => {
+  it('renders no results message', () => {
+    const { getByText } = render(<RequestsNoResults />);
+    expect(getByText(noResultsMessage)).not.toBeNull();
+  });
+});

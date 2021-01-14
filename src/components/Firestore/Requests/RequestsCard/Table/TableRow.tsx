@@ -1,5 +1,5 @@
 /**
- * Copyright 2020 Google LLC
+ * Copyright 2019 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,18 @@
  * limitations under the License.
  */
 
-// Returns an id made out of 20 random upper- and lower-case letters and numbers
-// TODO: Remove generateId function once the backend itself generates a UID for each request
-export function generateId(): string {
-  let newId = '';
-  let options = 'ABCDEFGHIJKLMNOPQRSTUVWYZabcdefghijklmnoqrstuvwyz0123456789';
-  const ID_SIZE = 20;
+import { DataTableRow } from '@rmwc/data-table';
+import React from 'react';
 
-  for (let i = 0; i < ID_SIZE; i++) {
-    newId += options.charAt(Math.floor(Math.random() * options.length));
-  }
-  return newId;
+import { FirestoreRulesEvaluation } from '../../rules_evaluation_result_model';
+
+interface Props {
+  request: FirestoreRulesEvaluation;
+  requestId: string;
 }
+
+const RequestTableRow: React.FC<Props> = ({ request, requestId }) => (
+  <DataTableRow />
+);
+
+export default RequestTableRow;

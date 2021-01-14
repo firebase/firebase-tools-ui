@@ -1,5 +1,5 @@
 /**
- * Copyright 2020 Google LLC
+ * Copyright 2019 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,14 @@
  * limitations under the License.
  */
 
-import { createAction } from 'typesafe-actions';
+import { render } from '@testing-library/react';
+import React from 'react';
 
-import { FirestoreRulesEvaluation } from '../../components/Firestore/Requests/rules_evaluation_result_model';
+import RequestsZeroState, { zeroStateMessage } from './ZeroState';
 
-export const addRequestEvaluation = createAction(
-  '@firestoreRequestEvaluations/addRequestEvaluation'
-)<FirestoreRulesEvaluation>();
+describe('Requests ZeroState', () => {
+  it('renders no requests message', () => {
+    const { getByText } = render(<RequestsZeroState />);
+    expect(getByText(zeroStateMessage)).not.toBeNull();
+  });
+});
