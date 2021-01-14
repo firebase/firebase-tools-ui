@@ -19,11 +19,11 @@ import React from 'react';
 import { OutcomeData } from '../types';
 
 interface Props {
-  requestTimeComplete: string | undefined;
-  requestTimeFormatted: string | undefined;
-  requestMethod: string | undefined;
-  resourcePath: string | undefined;
-  outcomeData: OutcomeData | undefined;
+  requestTimeComplete?: string;
+  requestTimeFormatted?: string;
+  requestMethod?: string;
+  resourcePath?: string;
+  outcomeData?: OutcomeData;
 }
 
 const RequestDetailsHeader: React.FC<Props> = ({

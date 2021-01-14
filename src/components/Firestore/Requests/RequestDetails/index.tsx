@@ -57,7 +57,7 @@ export const RequestDetails: React.FC<Props> = ({
     inspectionElements,
   ] = useRequestDetailedData(selectedRequest);
 
-  // Redirect to requests table if selected (requestId) did not match any request
+  // Redirect to requests-table if (requestId) did not match any existing request
   if (requestId && !selectedRequest) {
     return <Redirect to="/firestore/requests" />;
   }
