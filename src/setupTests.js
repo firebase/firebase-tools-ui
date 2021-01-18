@@ -6,7 +6,7 @@ global.globalThis = require('globalthis')();
 
 import * as base from '@rmwc/base';
 
-// <AppBar> calls window.scrollTo which jsdom does not implement. Let's mock it
+// <AppBar> calls window.scrollTo, which jsdom does not implement. Let's mock it
 // out to silence warnings -- we don't actually need to test it.
 Object.defineProperty(window, 'scrollTo', {
   value: () => {},
@@ -18,5 +18,25 @@ Object.defineProperty(window, 'scrollTo', {
 // labels are assigned to an element with a random-id, but if all inputs have
 // the same ID then all inputs will use the first found label as opposed to its
 // own label.
-base.randomId = prefix =>
+base.randomId = (prefix) =>
   `${prefix}-${(Math.random() + Math.random() + 1).toString(36).substring(2)}`;
+
+// CodeMirror calls document.createRange, which jsdom does not implement. Mocking this
+// function is necessary in order to test components that render the CodeMirror component.
+// References:
+//    https://github.com/scniro/react-codemirror2/issues/23
+//    https://github.com/jsdom/jsdom/issues/3002
+global.document.createRange = () => {
+  return {
+    setEnd: jest.fn(),
+    setStart: jest.fn(),
+    getBoundingClientRect: jest.fn(),
+    getClientRects: () => {
+      return {
+        item: () => null,
+        length: 0,
+        [Symbol.iterator]: jest.fn(),
+      };
+    },
+  };
+};

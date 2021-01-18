@@ -26,6 +26,7 @@ const FAKE_EVALUATION_1 = createFakeFirestoreRequestEvaluation({
 const FAKE_EVALUATION_2 = createFakeFirestoreRequestEvaluation({
   requestId: 'second-fake-evaluation',
 });
+const SET_SHOW_COPY_NOTIFICATION = jest.fn();
 
 describe('RequestsTable', () => {
   it('renders table header row when there are no requests', () => {
@@ -35,7 +36,7 @@ describe('RequestsTable', () => {
         shouldShowZeroResults={false}
         shouldShowZeroState={true}
         shouldShowTable={false}
-        setShowCopyNotification={() => {}}
+        setShowCopyNotification={SET_SHOW_COPY_NOTIFICATION}
       />
     );
     // Keeps the header
@@ -49,7 +50,7 @@ describe('RequestsTable', () => {
         shouldShowZeroResults={false}
         shouldShowZeroState={false}
         shouldShowTable={true}
-        setShowCopyNotification={() => {}}
+        setShowCopyNotification={SET_SHOW_COPY_NOTIFICATION}
       />
     );
     // Header + 2 requests
@@ -64,7 +65,7 @@ describe('RequestsTable', () => {
         shouldShowZeroResults={true}
         shouldShowZeroState={false}
         shouldShowTable={false}
-        setShowCopyNotification={() => {}}
+        setShowCopyNotification={SET_SHOW_COPY_NOTIFICATION}
       />
     );
     // Keeps the header
@@ -79,7 +80,7 @@ describe('RequestsTable', () => {
         shouldShowZeroResults={false}
         shouldShowZeroState={true}
         shouldShowTable={false}
-        setShowCopyNotification={() => {}}
+        setShowCopyNotification={SET_SHOW_COPY_NOTIFICATION}
       />
     );
     // Keeps the header

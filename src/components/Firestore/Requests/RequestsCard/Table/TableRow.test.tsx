@@ -27,6 +27,7 @@ const FAKE_EVALUATION_ID = 'first-fake-evaluation';
 const FAKE_EVALUATION = createFakeFirestoreRequestEvaluation({
   requestId: FAKE_EVALUATION_ID,
 });
+const SET_SHOW_COPY_NOTIFICATION = jest.fn();
 
 describe('RequestsTableRow', () => {
   it('redirects to corresponding request details path when clicking table row', async () => {
@@ -38,7 +39,7 @@ describe('RequestsTableRow', () => {
         <RequestsTableRow
           request={FAKE_EVALUATION}
           requestId={FAKE_EVALUATION_ID}
-          setShowCopyNotification={() => {}}
+          setShowCopyNotification={SET_SHOW_COPY_NOTIFICATION}
           requestPathContainerWidth={0}
         />
       </Router>
