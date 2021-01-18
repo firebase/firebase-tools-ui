@@ -58,6 +58,7 @@ interface Props {
   request: FirestoreRulesEvaluation;
   requestId: string;
 }
+
 const RequestTableRow: React.FC<Props> = ({ request, requestId }) => {
   const history = useHistory();
   const {

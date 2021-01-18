@@ -25,9 +25,9 @@ import {
 } from '../testing/test_utils';
 import FirestoreRequests from '.';
 
-const fakeEvaluation1_ID = 'fakeEvaluation1_ID';
-const fakeEvaluation1 = createFakeFirestoreRequestEvaluation({
-  requestId: fakeEvaluation1_ID,
+const FAKE_EVALUATION_ID = 'first-fake-evaluation';
+const FAKE_EVALUATION = createFakeFirestoreRequestEvaluation({
+  requestId: FAKE_EVALUATION_ID,
 });
 
 describe('Firestore Requests', () => {
@@ -50,14 +50,14 @@ describe('Firestore Requests', () => {
     const store = getMockFirestoreStore({
       firestore: {
         requests: {
-          evaluations: [fakeEvaluation1],
+          evaluations: [FAKE_EVALUATION],
         },
       },
     });
     const { getByTestId } = render(
       <Provider store={store}>
         <MemoryRouter
-          initialEntries={[`/firestore/requests/${fakeEvaluation1_ID}`]}
+          initialEntries={[`/firestore/requests/${FAKE_EVALUATION_ID}`]}
         >
           <FirestoreRequests />
         </MemoryRouter>
@@ -72,7 +72,7 @@ describe('Firestore Requests', () => {
     const { getByTestId } = render(
       <Provider store={store}>
         <MemoryRouter
-          initialEntries={[`/firestore/requests/${fakeEvaluation1_ID}/foo`]}
+          initialEntries={[`/firestore/requests/${FAKE_EVALUATION_ID}/foo`]}
         >
           <FirestoreRequests />
         </MemoryRouter>

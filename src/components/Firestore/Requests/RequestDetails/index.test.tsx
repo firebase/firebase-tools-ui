@@ -1,5 +1,5 @@
 /**
- * Copyright 2019 Google LLC
+ * Copyright 2020 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,17 +22,17 @@ import { Router } from 'react-router-dom';
 import { createFakeFirestoreRequestEvaluation } from '../../testing/test_utils';
 import { RequestDetails } from './index';
 
-const fakeEvaluation1_ID = 'first-fake-evaluation';
-const fakeEvaluation1 = createFakeFirestoreRequestEvaluation({
-  requestId: fakeEvaluation1_ID,
+const FAKE_EVALUATION_ID = 'first-fake-evaluation';
+const FAKE_EVALUATION = createFakeFirestoreRequestEvaluation({
+  requestId: FAKE_EVALUATION_ID,
 });
 
 describe('RequestDetails', () => {
   it('renders header', () => {
     const { getByTestId } = render(
       <RequestDetails
-        selectedRequest={fakeEvaluation1}
-        requestId={fakeEvaluation1_ID}
+        selectedRequest={FAKE_EVALUATION}
+        requestId={FAKE_EVALUATION_ID}
       />
     );
     expect(getByTestId('request-details-header')).not.toBeNull();
@@ -41,8 +41,8 @@ describe('RequestDetails', () => {
   it('renders code viewer', () => {
     const { getByTestId } = render(
       <RequestDetails
-        selectedRequest={fakeEvaluation1}
-        requestId={fakeEvaluation1_ID}
+        selectedRequest={FAKE_EVALUATION}
+        requestId={FAKE_EVALUATION_ID}
       />
     );
     expect(getByTestId('request-details-code-viewer')).not.toBeNull();
@@ -51,8 +51,8 @@ describe('RequestDetails', () => {
   it('renders inspection section', () => {
     const { getByTestId } = render(
       <RequestDetails
-        selectedRequest={fakeEvaluation1}
-        requestId={fakeEvaluation1_ID}
+        selectedRequest={FAKE_EVALUATION}
+        requestId={FAKE_EVALUATION_ID}
       />
     );
     expect(getByTestId('request-details-inspection-section')).not.toBeNull();
@@ -60,13 +60,13 @@ describe('RequestDetails', () => {
 
   it('redirects back to requests-table when requestId did not match any existing request', async () => {
     const history = createMemoryHistory({
-      initialEntries: [`/firestore/requests/${fakeEvaluation1_ID}`],
+      initialEntries: [`/firestore/requests/${FAKE_EVALUATION_ID}`],
     });
     render(
       <Router history={history}>
         <RequestDetails
           selectedRequest={undefined}
-          requestId={fakeEvaluation1_ID}
+          requestId={FAKE_EVALUATION_ID}
         />
       </Router>
     );

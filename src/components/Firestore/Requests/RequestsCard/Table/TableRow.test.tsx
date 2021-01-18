@@ -1,5 +1,5 @@
 /**
- * Copyright 2019 Google LLC
+ * Copyright 2020 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,9 +23,9 @@ import { Router } from 'react-router-dom';
 import { createFakeFirestoreRequestEvaluation } from '../../../testing/test_utils';
 import RequestsTableRow from './TableRow';
 
-const fakeEvaluation1_ID = 'first-fake-evaluation';
-const fakeEvaluation1 = createFakeFirestoreRequestEvaluation({
-  requestId: fakeEvaluation1_ID,
+const FAKE_EVALUATION_ID = 'first-fake-evaluation';
+const FAKE_EVALUATION = createFakeFirestoreRequestEvaluation({
+  requestId: FAKE_EVALUATION_ID,
 });
 
 describe('RequestsTableRow', () => {
@@ -36,8 +36,8 @@ describe('RequestsTableRow', () => {
     const { getByRole } = render(
       <Router history={history}>
         <RequestsTableRow
-          request={fakeEvaluation1}
-          requestId={fakeEvaluation1_ID}
+          request={FAKE_EVALUATION}
+          requestId={FAKE_EVALUATION_ID}
         />
       </Router>
     );
@@ -45,7 +45,7 @@ describe('RequestsTableRow', () => {
       fireEvent.click(getByRole('row'));
     });
     expect(history.location.pathname).toBe(
-      `/firestore/requests/${fakeEvaluation1_ID}`
+      `/firestore/requests/${FAKE_EVALUATION_ID}`
     );
   });
 });
