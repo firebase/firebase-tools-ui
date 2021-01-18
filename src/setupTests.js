@@ -21,8 +21,9 @@ Object.defineProperty(window, 'scrollTo', {
 base.randomId = (prefix) =>
   `${prefix}-${(Math.random() + Math.random() + 1).toString(36).substring(2)}`;
 
-// CodeMirror calls document.createRange, which jsdom does not implement. Mocking this
-// function is necessary in order to test components that render the CodeMirror component.
+// CodeMirror calls document.createRange, which jsdom does not implement.
+// Mocking this function is necessary in order to test components
+// that render the CodeMirror component.
 // References:
 //    https://github.com/scniro/react-codemirror2/issues/23
 //    https://github.com/jsdom/jsdom/issues/3002
