@@ -1,5 +1,5 @@
 /**
- * Copyright 2019 Google LLC
+ * Copyright 2020 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,23 +23,50 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { CustomThemeProvider } from '../../../../../themes';
+import { formatTimestamp } from '../../../../../utils';
 import { FirestoreRulesEvaluation } from '../../rules_evaluation_result_model';
-import { useRequestMainData } from '../../utils';
+import { OutcomeData } from '../../types';
+import { OUTCOME_DATA } from '../../utils';
+
+interface TableRowRequestData {
+  requestTimeComplete: string;
+  requestTimeFormatted: string;
+  requestMethod: string;
+  resourcePath: string;
+  outcomeData: OutcomeData;
+}
+// Outputs (in a clean format) the request data used by the table-row
+function getTableRowRequestData(
+  request: FirestoreRulesEvaluation
+): TableRowRequestData {
+  const { rulesContext, outcome } = request;
+  // time * 1000 converts timestamp units from seconds to millis
+  const timestamp = rulesContext.request.time * 1000;
+  return {
+    requestTimeComplete: new Date(timestamp).toLocaleString(),
+    requestTimeFormatted: formatTimestamp(timestamp),
+    requestMethod: rulesContext.request.method,
+    resourcePath: rulesContext.request.path.replace(
+      '/databases/(default)/documents',
+      ''
+    ),
+    outcomeData: OUTCOME_DATA[outcome],
+  };
+}
 
 interface Props {
   request: FirestoreRulesEvaluation;
   requestId: string;
 }
-
 const RequestTableRow: React.FC<Props> = ({ request, requestId }) => {
   const history = useHistory();
-  const [
+  const {
     requestTimeComplete,
     requestTimeFormatted,
     requestMethod,
     resourcePath,
     outcomeData,
-  ] = useRequestMainData(request);
+  } = getTableRowRequestData(request);
 
   return (
     <DataTableRow
@@ -62,7 +89,10 @@ const RequestTableRow: React.FC<Props> = ({ request, requestId }) => {
               align="bottom"
               enterDelay={100}
             >
-              <Icon icon={{ icon: outcomeData?.icon, size: 'medium' }} />
+              <Icon
+                className="Firestore-Request-Outcome-Icon"
+                icon={{ icon: outcomeData?.icon, size: 'medium' }}
+              />
             </Tooltip>
           )}
         </DataTableCell>

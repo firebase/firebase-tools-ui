@@ -15,14 +15,9 @@
  */
 
 import { CustomThemeType } from '../../../themes';
-import { RulesOutcome } from './rules_evaluation_result_model';
 
 export interface OutcomeData {
   theme: CustomThemeType;
   icon: string;
   label: string;
 }
-
-export type RulesOutcomeData = {
-  [key in RulesOutcome]: OutcomeData;
-};
