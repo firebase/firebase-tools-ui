@@ -22,6 +22,7 @@ import { Redirect } from 'react-router-dom';
 
 import { AppState } from '../../../../store';
 import { getSelectedRequestEvaluationById } from '../../../../store/firestore/requests/evaluations/selectors';
+import { formatTimestamp } from '../../../../utils';
 import { RequestDetailsRouteParams } from '../index';
 import {
   FirestoreRulesContext,
