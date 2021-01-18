@@ -1,5 +1,5 @@
 /**
- * Copyright 2019 Google LLC
+ * Copyright 2020 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,10 +19,14 @@ import React from 'react';
 import { InspectionElement } from '../types';
 
 interface Props {
-  inspectionElements?: InspectionElement[];
+  inspectionExpressions?: InspectionElement[];
+  inspectionQueryData?: InspectionElement[];
 }
 
-const InspectionSection: React.FC<Props> = ({ inspectionElements }) => (
+const InspectionSection: React.FC<Props> = ({
+  inspectionExpressions,
+  inspectionQueryData,
+}) => (
   <div
     data-testid="request-details-inspection-section"
     className="Firestore-Request-Details-Inspection"

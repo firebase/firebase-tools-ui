@@ -1,5 +1,5 @@
 /**
- * Copyright 2019 Google LLC
+ * Copyright 2020 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,22 +18,14 @@ import { ThemeProvider } from '@rmwc/theme';
 import React from 'react';
 
 import { errorTheme, successTheme } from '../../../../themes';
-import {
-  FirestoreRulesIssue,
-  OutcomeInfo,
-} from '../rules_evaluation_result_model';
+import { OutcomeInfo } from '../rules_evaluation_result_model';
 
 interface Props {
   firestoreRules?: string;
   linesOutcome?: OutcomeInfo[];
-  linesIssues?: FirestoreRulesIssue[];
 }
 
-const CodeViewer: React.FC<Props> = ({
-  firestoreRules,
-  linesOutcome,
-  linesIssues,
-}) => (
+const CodeViewer: React.FC<Props> = ({ firestoreRules, linesOutcome }) => (
   <ThemeProvider
     options={{
       successThemePrimary: successTheme.primary,
