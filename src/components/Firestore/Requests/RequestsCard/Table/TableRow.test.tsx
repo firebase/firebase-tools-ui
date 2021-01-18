@@ -38,6 +38,8 @@ describe('RequestsTableRow', () => {
         <RequestsTableRow
           request={fakeEvaluation1}
           requestId={fakeEvaluation1_ID}
+          setShowCopyNotification={() => {}}
+          requestPathContainerWidth={0}
         />
       </Router>
     );

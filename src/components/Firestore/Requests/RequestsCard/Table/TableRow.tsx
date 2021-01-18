@@ -23,9 +23,37 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { CustomThemeProvider } from '../../../../../themes';
+import { formatTimestamp } from '../../../../../utils';
 import RequestPath from '../../RequestPath';
 import { FirestoreRulesEvaluation } from '../../rules_evaluation_result_model';
-import { useRequestMainData } from '../../utils';
+import { OutcomeData } from '../../types';
+import { OUTCOME_DATA } from '../../utils';
+
+interface TableRowRequestData {
+  requestTimeComplete: string;
+  requestTimeFormatted: string;
+  requestMethod: string;
+  resourcePath: string;
+  outcomeData: OutcomeData;
+}
+// Outputs (in a clean format) the request data used by the table-row
+function getTableRowRequestFormattedData(
+  request: FirestoreRulesEvaluation
+): TableRowRequestData {
+  const { rulesContext, outcome } = request;
+  // time * 1000 converts timestamp units from seconds to millis
+  const timestamp = rulesContext.request.time * 1000;
+  return {
+    requestTimeComplete: new Date(timestamp).toLocaleString(),
+    requestTimeFormatted: formatTimestamp(timestamp),
+    requestMethod: rulesContext.request.method,
+    resourcePath: rulesContext.request.path.replace(
+      '/databases/(default)/documents',
+      ''
+    ),
+    outcomeData: OUTCOME_DATA[outcome],
+  };
+}
 
 interface Props {
   request: FirestoreRulesEvaluation;
@@ -41,13 +69,13 @@ const RequestTableRow: React.FC<Props> = ({
   requestPathContainerWidth,
 }) => {
   const history = useHistory();
-  const [
+  const {
     requestTimeComplete,
     requestTimeFormatted,
     requestMethod,
     resourcePath,
     outcomeData,
-  ] = useRequestMainData(request);
+  } = getTableRowRequestFormattedData(request);
 
   return (
     <DataTableRow
@@ -70,7 +98,10 @@ const RequestTableRow: React.FC<Props> = ({
               align="bottom"
               enterDelay={100}
             >
-              <Icon icon={{ icon: outcomeData?.icon, size: 'medium' }} />
+              <Icon
+                className="Firestore-Request-Outcome-Icon"
+                icon={{ icon: outcomeData?.icon, size: 'medium' }}
+              />
             </Tooltip>
           )}
         </DataTableCell>

@@ -22,7 +22,8 @@
   display: flex;
   justify-content: flex-start;
   align-items: stretch;
-  // Overflow behavior
+  // Overflow behavior: (useful to allow children components
+  // to have inner scrolling behavior)
   position: relative;
   overflow: hidden;
   min-height: $firestore-request-details-content-min-height;

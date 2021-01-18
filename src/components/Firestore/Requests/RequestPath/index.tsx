@@ -20,10 +20,19 @@ import { IconButton } from '@rmwc/icon-button';
 import { Tooltip } from '@rmwc/tooltip';
 import React, { useEffect, useRef, useState } from 'react';
 
-import {
-  considerTruncatingHTMLElementFromLeft,
-  copyPathToClipboard,
-} from '../utils';
+import { truncateRequestPathFromLeft } from '../utils';
+
+// Copies path without spaces to clipboard
+// and triggers copy notification (SnackBar)
+function copyPathToClipboard(
+  resourcePath: string,
+  setShowCopyNotification: (value: boolean) => void
+) {
+  navigator.clipboard
+    .writeText(resourcePath.replace(/\s/g, ''))
+    .then(() => setShowCopyNotification(true))
+    .catch(() => setShowCopyNotification(false));
+}
 
 interface Props {
   resourcePath: string;
@@ -37,26 +46,29 @@ const RequestPath: React.FC<Props> = ({
   requestPathContainerWidth,
 }) => {
   const pathTextRef = useRef<HTMLDivElement>(null);
+  const copyButtonRef = useRef<HTMLButtonElement>(null);
   const [prevPathContainerWidth, setPrevPathContainerWidth] = useState<
     number | undefined
   >();
 
   useEffect(() => {
-    // consider truncating text only if the width of the pathContainer changed
+    // truncate request-path only if the width of the pathContainer changed
     requestPathContainerWidth !== prevPathContainerWidth &&
-      considerTruncatingHTMLElementFromLeft(
+      truncateRequestPathFromLeft(
         pathTextRef,
+        copyButtonRef,
         resourcePath,
-        requestPathContainerWidth,
-        prevPathContainerWidth
+        requestPathContainerWidth
       );
   }, [
     pathTextRef,
+    copyButtonRef,
     resourcePath,
     requestPathContainerWidth,
     prevPathContainerWidth,
   ]);
 
+  // record previous width (useful to identify if the width changed)
   useEffect(() => {
     setPrevPathContainerWidth(requestPathContainerWidth);
   }, [requestPathContainerWidth, setPrevPathContainerWidth]);
@@ -64,10 +76,14 @@ const RequestPath: React.FC<Props> = ({
   return (
     <div className="Firestore-Request-Path-Container">
       <Tooltip content={resourcePath} align="bottomLeft" enterDelay={400}>
-        <div ref={pathTextRef}>{resourcePath}</div>
+        <div className="Firestore-Request-Path-String" ref={pathTextRef}>
+          {resourcePath}
+        </div>
       </Tooltip>
-      <Tooltip content="Copy Path" align="bottom" enterDelay={200}>
+      <Tooltip content="Copy Path" align="bottom" enterDelay={400}>
         <IconButton
+          className="Firestore-Request-Path-Copy-Button"
+          ref={copyButtonRef}
           id="path-copy-icon-button"
           icon="content_copy"
           onClick={(event: React.MouseEvent<HTMLElement>) => {

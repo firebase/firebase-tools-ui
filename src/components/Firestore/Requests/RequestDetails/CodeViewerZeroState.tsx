@@ -19,13 +19,17 @@ import './CodeViewerZeroState.scss';
 import { Typography } from '@rmwc/typography';
 import React from 'react';
 
-export const zeroStateMessage = 'Admin requests bypass Firestore rules';
+export const ZERO_STATE_MESSAGE = 'Admin requests bypass Firestore rules';
 
 const CodeViewerZeroState: React.FC = () => {
   return (
-    <div className="Firestore-Requests-Details-Code-Zero-State">
-      <Typography use="body2" theme="textSecondaryOnBackground">
-        {zeroStateMessage}
+    <div className="Firestore-Requests-Details-Code-Zero-State-Container">
+      <Typography
+        use="body2"
+        theme="textSecondaryOnBackground"
+        className="Firestore-Requests-Details-Code-Zero-State-Message"
+      >
+        {ZERO_STATE_MESSAGE}
       </Typography>
     </div>
   );

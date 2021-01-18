@@ -23,23 +23,10 @@ import { connect } from 'react-redux';
 import { grey100 } from '../../colors';
 import { AppState } from '../../store';
 import { LogEntry, LogState } from '../../store/logviewer';
+import { formatTimestamp } from '../../utils';
 import { CompiledGetterCache } from './CompiledGetterCache';
 import { HighlightedJSON } from './HighlightedJSON';
 import { ParsedQuery, filtersToQueryString, isQueryMatch } from './QueryBar';
-
-export const formatTimestamp = (timestamp: number) => {
-  const date = new Date(timestamp);
-  const segments = [date.getHours(), date.getMinutes(), date.getSeconds()];
-
-  return segments
-    .map((segment) => {
-      const number = segment.toString();
-
-      if (number.length === 2) return number;
-      else return `0${number}`;
-    })
-    .join(':');
-};
 
 const FilterTag: React.FC<{ appendToQuery: Function; log: LogEntry }> = ({
   appendToQuery,

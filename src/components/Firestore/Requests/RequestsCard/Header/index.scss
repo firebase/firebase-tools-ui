@@ -1,5 +1,5 @@
 /**
- * Copyright 2019 Google LLC
+ * Copyright 2021 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,6 @@
     width: 100%;
     height: 100%;
     padding: 0 8px;
-    // Flex behavior
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -43,7 +42,7 @@
     overflow-x: scroll;
 
     // Select all filters
-    & > div {
+    .Firestore-Requests-Header-Filter {
       // Remove not desired subtext at bottom
       .Field .Field-subtext {
         display: none;
@@ -55,7 +54,7 @@
       }
     }
     // Select all filters but the first one
-    & > div:not(:first-child) {
+    .Firestore-Requests-Header-Filter:not(:first-child) {
       margin-left: 10px;
     }
   }

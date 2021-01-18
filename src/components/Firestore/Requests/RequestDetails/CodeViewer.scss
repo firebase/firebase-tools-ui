@@ -26,7 +26,6 @@
   @media screen and (max-width: 500px) {
     display: none;
   }
-
   // Hide non-necessary textarea coming from CodeMirror (visible for a second when loading)
   & > textarea {
     display: none;
@@ -40,12 +39,11 @@
   }
   .CodeMirror-gutter-elt {
     // Outcome Icon
-    & > i {
+    .CodeMirror-gutter-icon {
       left: 40px;
       position: absolute;
       padding: 1px 4px;
       font-size: 15px;
-
       &.allow {
         color: var(--mdc-theme-success-theme-primary);
         background-color: var(--mdc-theme-success-theme-background);
@@ -58,12 +56,12 @@
     }
   }
   .CodeMirror-code {
-    // Highlight line of code
-    & > div.allow {
+    // Highlight line of code.
+    .highlighted-line-of-code--allow {
       background-color: var(--mdc-theme-success-theme-background);
     }
-    & > div.deny,
-    & > div.error {
+    .highlighted-line-of-code--deny,
+    .highlighted-line-of-code--error {
       background-color: var(--mdc-theme-error-theme-background);
     }
     // Change color of comments
@@ -71,13 +69,14 @@
       color: var(--mdc-theme-text-black-ternary);
     }
   }
-  // Move the code a little to the left to remove gap between that hightlighted-line and left-border
+  // Move the code a little bit to the left to remove the
+  // gap between the hightlighted-line and the left-border
   .CodeMirror-lines {
     left: -2px;
     position: relative;
   }
-  // Make sure the gutters (where the line numbers are) has always the same width,
-  // so that the icon's background is always right next to the border
+  // Make sure the gutters (where the line numbers are) have always the same width,
+  // so that the icon's background is always exaclty next to the border
   .CodeMirror-gutters {
     width: 61px !important;
   }

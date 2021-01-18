@@ -14,17 +14,15 @@
  * limitations under the License.
  */
 
-.Firestore-Requests-Details-Code-Zero-State {
+.Firestore-Requests-Details-Code-Zero-State-Container {
   height: 100%;
   background: var(--mdc-theme-surface);
   border-bottom-left-radius: 8px;
-  // Flex behavior
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  // Message Typography
-  span {
+  .Firestore-Requests-Details-Code-Zero-State-Message {
     margin-bottom: 20px;
   }
 }

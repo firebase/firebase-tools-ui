@@ -14,17 +14,19 @@
  * limitations under the License.
  */
 
+@import './Actions_variables.scss';
 @import './Header_variables.scss';
 
-// Hide Menu Portal if Actions are no longer collapsed
-@media screen and (min-width: 850px) {
+// Make sure Menu Portal is hidden when Actions are no longer collapsed
+@media screen and (min-width: $firestore-details-actions-width-threshold) {
   .mdc-menu-surface--open {
     display: none;
   }
 }
 .Firestore-Request-Details-Actions-Collapsed-Menu {
-  // Hide collapsed button when width is higher than specified
-  @media screen and (min-width: 850px) {
+  // Hide collapsed-menu button when width is higher than threshold
+  // (to show Actions buttons instead)
+  @media screen and (min-width: $firestore-details-actions-width-threshold) {
     display: none;
   }
   .Firestore-Request-Details-Actions-Collapsed-Button {

@@ -53,6 +53,7 @@ const RequestDetailsHeader: React.FC<Props> = ({
       <div className="Firestore-Request-Details-Header-Return">
         <Tooltip content="Go back to Table" align="bottom" enterDelay={100}>
           <IconButton
+            className="Firestore-Request-Details-Header-Return-Button"
             icon={{ icon: 'arrow_back_ios', size: 'small' }}
             tag={Link}
             to="/firestore/requests"
@@ -75,7 +76,10 @@ const RequestDetailsHeader: React.FC<Props> = ({
                 align="bottom"
                 enterDelay={100}
               >
-                <Icon icon={{ icon: outcomeData?.icon, size: 'medium' }} />
+                <Icon
+                  className="Firestore-Request-Outcome-Icon"
+                  icon={{ icon: outcomeData?.icon, size: 'medium' }}
+                />
               </Tooltip>
             )}
           </div>

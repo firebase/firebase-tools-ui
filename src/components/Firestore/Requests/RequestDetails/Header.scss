@@ -26,7 +26,6 @@
   position: relative;
   // Shadow border at bottom
   box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12) inset;
-  // Flex behavior
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -34,17 +33,15 @@
 
 .Firestore-Request-Details-Header-Return {
   padding-right: $firestore-request-details-header-return-padding-right;
-  // Flex behavior
   display: flex;
   justify-content: center;
-  // Return IconButton
-  a {
+  .Firestore-Request-Details-Header-Return-Button {
     width: $firestore-request-details-header-icon-button-width;
     height: $firestore-request-details-header-icon-button-width;
     padding: 5px;
     padding-left: 9px;
   }
-  // Mobile styles
+  // No padding-right for mobile
   @media screen and (max-width: 500px) {
     padding-right: 0px;
   }
@@ -54,7 +51,6 @@
   width: 100%;
   height: 100%;
   position: relative;
-  // Flex behavior
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -90,8 +86,7 @@
 
     .Firestore-Request-Path-Container {
       justify-content: flex-start;
-      // Copy IconButton
-      button {
+      .Firestore-Request-Path-Copy-Button {
         // Override hover effect to show/hide
         visibility: visible;
         // Override position absolute to the right

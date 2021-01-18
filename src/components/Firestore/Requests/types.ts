@@ -22,10 +22,6 @@ export interface OutcomeData {
   label: string;
 }
 
-export interface RulesOutcomeData {
-  [outcome: string]: OutcomeData;
-}
-
 export interface InspectionElement {
   label: string;
   value: string;

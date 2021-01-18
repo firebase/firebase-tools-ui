@@ -24,73 +24,53 @@ import CodeMirror from '@uiw/react-codemirror';
 import React, { useCallback, useEffect, useState } from 'react';
 
 import { errorTheme, successTheme } from '../../../../themes';
-import {
-  FirestoreRulesIssue,
-  OutcomeInfo,
-  RulesOutcome,
-} from '../rules_evaluation_result_model';
-import { getIconFromRequestOutcome } from '../utils';
+import { OutcomeInfo, RulesOutcome } from '../rules_evaluation_result_model';
+import { ICON_SELECTOR } from '../utils';
 import CodeViewerZeroState from './CodeViewerZeroState';
 
 interface Props {
   firestoreRules?: string;
   linesOutcome?: OutcomeInfo[];
-  linesIssues?: FirestoreRulesIssue[];
 }
 
-const RulesCodeViewer: React.FC<Props> = ({
-  firestoreRules,
-  linesOutcome,
-  linesIssues,
-}) => {
-  const [codeMirrorEditor, setCodeMirrorEditor] = useState<any>(null);
+const RulesCodeViewer: React.FC<Props> = ({ firestoreRules, linesOutcome }) => {
+  const [
+    codeMirrorEditor,
+    setCodeMirrorEditor,
+  ] = useState<CodeMirror.Editor | null>(null);
 
   // Creates HTMLElement of a Marker containing the outcome icon
   const getMarkerElement = useCallback((outcome: RulesOutcome): HTMLElement => {
-    // TODO: Is there a better way of creating a HTMLElement without manipulating DOM?
-    // JSX can't be passed to the codemirror library, see: https://github.com/scniro/react-codemirror2/issues/57
     let marker = document.createElement('i');
-    marker.className = `${outcome} material-icons`;
-    marker.innerText = getIconFromRequestOutcome(outcome);
+    marker.className = `CodeMirror-gutter-icon ${outcome} material-icons`;
+    marker.innerText = ICON_SELECTOR[outcome];
     return marker;
   }, []);
 
   // Adds the corresponding Marker with the correct outcome icon
   // to all lines that have an outcome (allow or deny)
   const addLinesOutcomeGutters = useCallback(() => {
-    linesOutcome?.map((lineAction) => {
-      const { line, outcome } = lineAction;
-      codeMirrorEditor.setGutterMarker(
+    linesOutcome?.map(({ line, outcome }) => {
+      codeMirrorEditor?.setGutterMarker(
         line - 1,
         'CodeMirror-gutter-elt',
         getMarkerElement(outcome)
       );
-      codeMirrorEditor.addLineClass(line - 1, '', outcome);
+      codeMirrorEditor?.addLineClass(
+        line - 1,
+        '',
+        `highlighted-line-of-code--${outcome}`
+      );
     });
   }, [codeMirrorEditor, linesOutcome, getMarkerElement]);
 
-  // Adds the corresponding Marker with the error icon
-  // to all lines that have an issue (error)
-  const addLinesIssuesGutters = useCallback(() => {
-    linesIssues?.map((lineIssue) => {
-      const { line } = lineIssue;
-      codeMirrorEditor.setGutterMarker(
-        line - 1,
-        'CodeMirror-gutter-elt',
-        getMarkerElement('error')
-      );
-      codeMirrorEditor.addLineClass(line - 1, '', 'error');
-    });
-  }, [codeMirrorEditor, linesIssues, getMarkerElement]);
-
   // Highlights and adds the outcome Gutter to corresponding lines of rules code viewer
-  // (a Gutter in CodeMirror is an icon displayed next to the line number)
+  // NOTE: a Gutter in CodeMirror is an icon displayed next to the line number
   useEffect(() => {
     if (codeMirrorEditor) {
       addLinesOutcomeGutters();
-      addLinesIssuesGutters();
     }
-  }, [codeMirrorEditor, addLinesOutcomeGutters, addLinesIssuesGutters]);
+  }, [codeMirrorEditor, addLinesOutcomeGutters]);
 
   return (
     <ThemeProvider
@@ -109,7 +89,7 @@ const RulesCodeViewer: React.FC<Props> = ({
               theme: 'xq-light',
               keyMap: 'sublime',
               mode: 'jsx',
-              tabsize: 2,
+              tabSize: 2,
               readOnly: true,
               gutters: ['CodeMirror-gutter-elt'],
             }}

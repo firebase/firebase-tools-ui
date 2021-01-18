@@ -66,7 +66,10 @@ export const InspectionBlock: React.FC<Props> = ({
         onClick={() => setIsExpanded(!isExpanded)}
       >
         <span className={`${INSPECT_BLOCK_CLASS}-Label`}> {label} </span>
-        <Icon icon={{ icon: `expand_${isExpanded ? 'less' : 'more'}` }} />
+        <Icon
+          className={`${INSPECT_BLOCK_CLASS}-Icon`}
+          icon={{ icon: `expand_${isExpanded ? 'less' : 'more'}` }}
+        />
       </div>
       {isExpanded && displayContent()}
     </ThemeProvider>

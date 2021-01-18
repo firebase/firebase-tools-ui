@@ -14,7 +14,19 @@
  * limitations under the License.
  */
 
-// Filters header
-// TODO: set this variable to 56px when component is developed and
-// wants to be rendered, set it to 0px otherwise
-$firestore-requests-header-height: 0px;
+/**
+ * Converts a timestamp into a consistent and formatted firebase-log date
+ */
+export const formatTimestamp = (timestamp: number) => {
+  const date = new Date(timestamp);
+  const segments = [date.getHours(), date.getMinutes(), date.getSeconds()];
+
+  return segments
+    .map((segment) => {
+      const number = segment.toString();
+
+      if (number.length === 2) return number;
+      else return `0${number}`;
+    })
+    .join(':');
+};

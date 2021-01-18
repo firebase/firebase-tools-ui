@@ -21,36 +21,24 @@ import React from 'react';
 import { InspectionElement } from '../types';
 import InspectionBlock from './InspectionBlock';
 
-// TODO: when this data is available from server, receive this as props instead
-const inspectionQueryElements = [
-  {
-    label: 'limit',
-    value: '20',
-  },
-  {
-    label: 'orderBy',
-    value: 'total_reviews',
-  },
-  {
-    label: 'where',
-    value: "name == 'Pozole'\navg_review_rate > 4",
-  },
-];
-
 interface Props {
-  inspectionElements?: InspectionElement[];
+  inspectionExpressions?: InspectionElement[];
+  inspectionQueryData?: InspectionElement[];
 }
 
-const InspectionSection: React.FC<Props> = ({ inspectionElements }) => (
+const InspectionSection: React.FC<Props> = ({
+  inspectionExpressions,
+  inspectionQueryData,
+}) => (
   <div className="Firestore-Request-Details-Inspection">
     <InspectionBlock isMainBlock label="Query Information">
-      {inspectionQueryElements?.map(({ label, value }, index) => (
+      {inspectionQueryData?.map(({ label, value }, index) => (
         <InspectionBlock key={index} label={label} value={value} />
       ))}
     </InspectionBlock>
     <InspectionBlock isMainBlock label="Expressions Inspection">
       <InspectionBlock label="isSignedIn()" value="false" />
-      {inspectionElements?.map(({ label, value }, index) => (
+      {inspectionExpressions?.map(({ label, value }, index) => (
         <InspectionBlock key={index} label={label} value={value} />
       ))}
     </InspectionBlock>

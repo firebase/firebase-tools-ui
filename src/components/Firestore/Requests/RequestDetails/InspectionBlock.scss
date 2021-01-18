@@ -21,7 +21,6 @@
   height: 48px;
   // Shadow border at left and bottom
   box-shadow: 1px -1px 0 rgba(0, 0, 0, 0.12) inset;
-  // Flex behavior
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -43,18 +42,20 @@
   text-overflow: ellipsis;
 }
 
+.Firestore-Request-Details-Inspection-Block-Icon {
+  color: var(--mdc-theme-text-black-ternary);
+}
+
 .Firestore-Request-Details-Inspection-Block-Value {
   padding: 10px;
   font-size: 14px;
   font-family: monospace, monospace;
   color: var(--mdc-theme-text-black-secondary);
   min-height: 48px;
-  // Flex behavior
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  // Overflow behavior
   overflow: scroll;
   // Shadow border at left and bottom
   box-shadow: 1px -1px 0 rgba(0, 0, 0, 0.12) inset;

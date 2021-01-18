@@ -14,20 +14,22 @@
  * limitations under the License.
  */
 
+@import './Actions_variables.scss';
+
 .Firestore-Request-Details-Actions-Container {
-  // Flex behavior
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  // Show collapsed button
-  @media screen and (max-width: 850px) {
+  // Hide Actions buttons when width is lower than threshold
+  // (to show collapsed-menu button instead)
+  @media screen and (max-width: $firestore-details-actions-width-threshold) {
     display: none;
   }
 }
 
 .Firestore-Request-Details-Action {
   font-size: 12px;
-  // Get text in just one line
+  // Make sure text has just one line
   white-space: nowrap;
   // Select all Actions but the last one
   &:not(:last-of-type) {

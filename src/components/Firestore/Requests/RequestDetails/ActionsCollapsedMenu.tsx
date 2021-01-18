@@ -38,9 +38,9 @@ const RequestActionsCollapsedMenu: React.FC<Props> = ({
       onClose={() => setMenuOpen(false)}
       handle={
         <IconButton
+          className="Firestore-Request-Details-Actions-Collapsed-Button"
           icon={{ icon: 'more_vert' }}
           label="Open Requests Actions Menu"
-          className="Firestore-Request-Details-Actions-Collapsed-Button"
         />
       }
       renderToPortal
