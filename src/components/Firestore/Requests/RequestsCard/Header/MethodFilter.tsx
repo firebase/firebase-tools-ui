@@ -21,35 +21,35 @@ import { Controller, useForm } from 'react-hook-form';
 
 import { SelectField } from '../../../../common/Field';
 
+const OPTIONS: Array<{
+  label: string;
+  value: string;
+}> = [
+  {
+    label: 'GET',
+    value: 'get',
+  },
+  {
+    label: 'LIST',
+    value: 'list',
+  },
+  {
+    label: 'CREATE',
+    value: 'create',
+  },
+  {
+    label: 'UPDATE',
+    value: 'update',
+  },
+  {
+    label: 'DELETE',
+    value: 'delete',
+  },
+];
+
 const OutcomeFilter: React.FC = () => {
   const methods = useForm();
   const { control } = methods;
-  const options: Array<{
-    label: string;
-    value: string;
-  }> = [
-    {
-      label: 'GET',
-      value: 'get',
-    },
-    {
-      label: 'LIST',
-      value: 'list',
-    },
-    {
-      label: 'CREATE',
-      value: 'create',
-    },
-    {
-      label: 'UPDATE',
-      value: 'update',
-    },
-    {
-      label: 'DELETE',
-      value: 'delete',
-    },
-  ];
-
   return (
     <Controller
       className="Firestore-Requests-Header-Method-Filter"
@@ -57,7 +57,7 @@ const OutcomeFilter: React.FC = () => {
       control={control}
       name="method filter"
       placeholder="All methods"
-      options={options}
+      options={OPTIONS}
       onChange={([selected]) => selected.currentTarget.value || undefined}
     />
   );

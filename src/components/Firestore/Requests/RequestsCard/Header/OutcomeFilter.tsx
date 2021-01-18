@@ -21,31 +21,31 @@ import { Controller, useForm } from 'react-hook-form';
 
 import { SelectField } from '../../../../common/Field';
 
+const OPTIONS: Array<{
+  label: string;
+  value: string;
+}> = [
+  {
+    label: '✅ Allow',
+    value: 'allow',
+  },
+  {
+    label: '❌ Deny',
+    value: 'deny',
+  },
+  {
+    label: '🔑 Admin',
+    value: 'admin',
+  },
+  {
+    label: '⚠️ Error',
+    value: 'error',
+  },
+];
+
 const OutcomeFilter: React.FC = () => {
   const methods = useForm();
   const { control } = methods;
-  const options: Array<{
-    label: string;
-    value: string;
-  }> = [
-    {
-      label: '✅ Allow',
-      value: 'allow',
-    },
-    {
-      label: '❌ Deny',
-      value: 'deny',
-    },
-    {
-      label: '🔑 Admin',
-      value: 'admin',
-    },
-    {
-      label: '⚠️ Error',
-      value: 'error',
-    },
-  ];
-
   return (
     <Controller
       className="Firestore-Requests-Header-Outcome-Filter"
@@ -53,7 +53,7 @@ const OutcomeFilter: React.FC = () => {
       control={control}
       name="outcome filter"
       placeholder="All outcomes"
-      options={options}
+      options={OPTIONS}
       onChange={([selected]) => selected.currentTarget.value || undefined}
     />
   );
