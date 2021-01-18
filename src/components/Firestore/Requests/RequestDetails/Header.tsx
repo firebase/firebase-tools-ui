@@ -14,9 +14,17 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import './Header.scss';
 
+import { Icon } from '@rmwc/icon';
+import { IconButton } from '@rmwc/icon-button';
+import { Tooltip } from '@rmwc/tooltip';
+import React from 'react';
+import { Link } from 'react-router-dom';
+
+import { CustomThemeProvider } from '../../../../themes';
 import { OutcomeData } from '../types';
+import RequestActions from './Actions';
 
 interface Props {
   requestTimeComplete?: string;
@@ -37,7 +45,45 @@ const RequestDetailsHeader: React.FC<Props> = ({
     data-testid="request-details-header"
     className="Firestore-Request-Details-Header"
   >
-    Header
+    <div className="Firestore-Request-Details-Header-Return">
+      <Tooltip content="Go back to Table" align="bottom" enterDelay={100}>
+        <IconButton
+          className="Firestore-Request-Details-Header-Return-Button"
+          icon={{ icon: 'arrow_back_ios', size: 'small' }}
+          tag={Link}
+          to="/firestore/requests"
+          label="header-return-button"
+        />
+      </Tooltip>
+    </div>
+    <div className="Firestore-Request-Details-Header-Info">
+      <Tooltip
+        content={requestTimeComplete}
+        align="bottomRight"
+        enterDelay={300}
+      >
+        <div className="Firestore-Request-Date">{requestTimeFormatted}</div>
+      </Tooltip>
+      <CustomThemeProvider use={outcomeData?.theme || 'note'} wrap>
+        <div className="Firestore-Request-Outcome">
+          {outcomeData?.icon && (
+            <Tooltip
+              content={outcomeData?.label}
+              align="bottom"
+              enterDelay={100}
+            >
+              <Icon
+                className="Firestore-Request-Outcome-Icon"
+                icon={{ icon: outcomeData?.icon, size: 'medium' }}
+              />
+            </Tooltip>
+          )}
+        </div>
+      </CustomThemeProvider>
+      <div className="Firestore-Request-Method">{requestMethod}</div>
+      <div className="Firestore-Request-Path">{resourcePath}</div>
+    </div>
+    <RequestActions />
   </div>
 );
 

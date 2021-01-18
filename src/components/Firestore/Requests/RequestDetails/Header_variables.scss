@@ -16,3 +16,36 @@
 
 // Header
 $firestore-request-details-header-height: 52px;
+
+// Header icon buttons (return and collapsed menu)
+$firestore-request-details-header-icon-button-width: 30px;
+
+// Header return button
+$firestore-request-details-header-return-padding-right: 12px;
+
+// Header info container
+$firestore-request-details-header-info-collapsed-width: calc(
+  100% - #{($firestore-request-details-header-icon-button-width * 2) + $firestore-request-details-header-return-padding-right}
+);
+$firestore-request-details-header-info-mobile-width: calc(
+  100% - #{($firestore-request-details-header-icon-button-width * 2)}
+);
+
+// Header info content
+$firestore-request-details-header-info-date-width: 63px;
+
+$firestore-request-details-header-info-outcome-width: 35px;
+
+$firestore-request-details-header-info-method-width: 60px;
+$firestore-request-details-header-info-method-mobile-width: 35px;
+
+$firestore-request-details-header-info-path-width: calc(
+  100% - #{$firestore-request-details-header-info-date-width +
+    $firestore-request-details-header-info-outcome-width +
+    $firestore-request-details-header-info-method-width}
+);
+$firestore-request-details-header-info-path-mobile-width: calc(
+  100% - #{$firestore-request-details-header-info-date-width +
+    $firestore-request-details-header-info-outcome-width +
+    $firestore-request-details-header-info-method-mobile-width}
+);

@@ -1,0 +1,97 @@
+/**
+ * Copyright 2021 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@import '../index.scss';
+@import './Header_variables.scss';
+
+.Firestore-Request-Details-Header {
+  border-radius: 8px 8px 0 0;
+  width: 100%;
+  background-color: var(--mdc-theme-surface);
+  height: $firestore-request-details-header-height;
+  padding: 0 6px;
+  position: relative;
+  // Shadow border at bottom
+  box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12) inset;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.Firestore-Request-Details-Header-Return {
+  padding-right: $firestore-request-details-header-return-padding-right;
+  display: flex;
+  justify-content: center;
+  .Firestore-Request-Details-Header-Return-Button {
+    width: $firestore-request-details-header-icon-button-width;
+    height: $firestore-request-details-header-icon-button-width;
+    padding: 5px;
+    padding-left: 9px;
+  }
+  // No padding-right for mobile
+  @media screen and (max-width: 500px) {
+    padding-right: 0px;
+  }
+}
+
+.Firestore-Request-Details-Header-Info {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  // Make space for the collapsed button
+  @media screen and (max-width: 850px) {
+    width: $firestore-request-details-header-info-collapsed-width;
+  }
+  // Width for mobile
+  @media screen and (max-width: 500px) {
+    width: $firestore-request-details-header-info-mobile-width;
+  }
+
+  .Firestore-Request-Date {
+    width: $firestore-request-details-header-info-date-width;
+  }
+  .Firestore-Request-Outcome {
+    width: $firestore-request-details-header-info-outcome-width;
+  }
+  .Firestore-Request-Method {
+    width: $firestore-request-details-header-info-method-width;
+    text-align: center;
+    // Width for mobile
+    @media screen and (max-width: 500px) {
+      width: $firestore-request-details-header-info-method-mobile-width;
+    }
+  }
+  .Firestore-Request-Path {
+    width: $firestore-request-details-header-info-path-width;
+    // Width for mobile
+    @media screen and (max-width: 500px) {
+      width: $firestore-request-details-header-info-path-mobile-width;
+    }
+
+    .Firestore-Request-Path-Container {
+      justify-content: flex-start;
+      .Firestore-Request-Path-Copy-Button {
+        // Override hover effect to show/hide
+        visibility: visible;
+        // Override position absolute to the right
+        position: relative;
+      }
+    }
+  }
+}
