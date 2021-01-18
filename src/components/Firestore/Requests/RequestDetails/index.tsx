@@ -1,5 +1,5 @@
 /**
- * Copyright 2019 Google LLC
+ * Copyright 2020 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,11 +22,90 @@ import { Redirect } from 'react-router-dom';
 
 import { AppState } from '../../../../store';
 import { getSelectedRequestEvaluationById } from '../../../../store/firestore/requests/evaluations/selectors';
+import { formatTimestamp } from '../../../../utils';
 import { RequestDetailsRouteParams } from '../index';
-import { useRequestDetailedData, useRequestMainData } from '../utils';
+import {
+  FirestoreRulesContext,
+  FirestoreRulesEvaluation,
+  FirestoreRulesIssue,
+  OutcomeInfo,
+} from '../rules_evaluation_result_model';
+import { InspectionElement, OutcomeData } from '../types';
+import { OUTCOME_DATA } from '../utils';
 import RequestDetailsCodeViewer from './CodeViewer';
 import RequestDetailsHeader from './Header';
 import RequestDetailsInspectionSection from './InspectionSection';
+
+// TODO: remove this mock array when this data comes from the server
+const INSPECTION_QUERY_DATA: InspectionElement[] = [
+  { label: 'limit', value: '20' },
+  { label: 'orderBy', value: 'total_reviews' },
+  { label: 'where', value: "name == 'Pozole'\navg_review_rate > 4" },
+];
+
+// Combines (granularAllowOutcomes) and (issues) into one array of the same type
+function getLinesOutcome(
+  granularAllowOutcomes: OutcomeInfo[],
+  issues?: FirestoreRulesIssue[]
+): OutcomeInfo[] {
+  return [
+    ...granularAllowOutcomes,
+    ...issues?.map(
+      ({ line }): OutcomeInfo => {
+        return { outcome: 'error', line };
+      }
+    ),
+  ];
+}
+// Transforms the (rulesContext) data into InspectionElements
+function getInspectionExpressions(
+  rulesContext: FirestoreRulesContext
+): InspectionElement[] {
+  return Object.entries(rulesContext).map(
+    ([key, value]): InspectionElement => {
+      return {
+        label: key,
+        value: JSON.stringify(value, null, '\t'),
+      };
+    }
+  );
+}
+interface DetailedRequestData {
+  requestTimeComplete?: string;
+  requestTimeFormatted?: string;
+  requestMethod?: string;
+  resourcePath?: string;
+  outcomeData?: OutcomeData;
+  firestoreRules?: string;
+  linesOutcome?: OutcomeInfo[];
+  inspectionExpressions?: InspectionElement[];
+  inspectionQueryData?: InspectionElement[];
+}
+// Outputs (in a clean format) the request data used by the RequestDetails component
+function getDetailsRequestData(
+  request?: FirestoreRulesEvaluation
+): DetailedRequestData {
+  if (!request) {
+    return {};
+  }
+  const { rulesContext, granularAllowOutcomes, data, outcome } = request;
+  // (time * 1000) converts timestamp units from seconds to milliseconds
+  const timestamp = rulesContext.request.time * 1000;
+  return {
+    requestTimeComplete: new Date(timestamp).toLocaleString(),
+    requestTimeFormatted: formatTimestamp(timestamp),
+    requestMethod: rulesContext.request.method,
+    resourcePath: rulesContext.request.path.replace(
+      '/databases/(default)/documents',
+      ''
+    ),
+    outcomeData: OUTCOME_DATA[outcome],
+    firestoreRules: data?.rules,
+    linesOutcome: getLinesOutcome(granularAllowOutcomes, data?.issues),
+    inspectionExpressions: getInspectionExpressions(rulesContext),
+    inspectionQueryData: INSPECTION_QUERY_DATA,
+  };
+}
 
 const mapStateToProps = (
   state: AppState,
@@ -43,19 +122,17 @@ export const RequestDetails: React.FC<Props> = ({
   selectedRequest,
   requestId,
 }) => {
-  const [
+  const {
     requestTimeComplete,
     requestTimeFormatted,
     requestMethod,
     resourcePath,
     outcomeData,
-  ] = useRequestMainData(selectedRequest);
-  const [
     firestoreRules,
     linesOutcome,
-    linesIssues,
-    inspectionElements,
-  ] = useRequestDetailedData(selectedRequest);
+    inspectionExpressions,
+    inspectionQueryData,
+  } = getDetailsRequestData(selectedRequest);
 
   // Redirect to requests-table if (requestId) did not match any existing request
   if (requestId && !selectedRequest) {
@@ -77,10 +154,10 @@ export const RequestDetails: React.FC<Props> = ({
             <RequestDetailsCodeViewer
               firestoreRules={firestoreRules}
               linesOutcome={linesOutcome}
-              linesIssues={linesIssues}
             />
             <RequestDetailsInspectionSection
-              inspectionElements={inspectionElements}
+              inspectionExpressions={inspectionExpressions}
+              inspectionQueryData={inspectionQueryData}
             />
           </div>
         </>
