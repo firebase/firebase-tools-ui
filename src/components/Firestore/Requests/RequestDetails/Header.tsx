@@ -29,11 +29,11 @@ import { usePathContainerWidth } from '../utils';
 import RequestActions from './Actions';
 
 interface Props {
-  requestTimeComplete: string | undefined;
-  requestTimeFormatted: string | undefined;
-  requestMethod: string | undefined;
-  resourcePath: string | undefined;
-  outcomeData: OutcomeData | undefined;
+  requestTimeComplete?: string;
+  requestTimeFormatted?: string;
+  requestMethod?: string;
+  resourcePath?: string;
+  outcomeData?: OutcomeData;
   setShowCopyNotification: (value: boolean) => void;
 }
 
@@ -49,7 +49,10 @@ const RequestDetailsHeader: React.FC<Props> = ({
   const requestPathContainerWidth = usePathContainerWidth(pathContainerRef);
 
   return (
-    <div className="Firestore-Request-Details-Header">
+    <div
+      data-testid="request-details-header"
+      className="Firestore-Request-Details-Header"
+    >
       <div className="Firestore-Request-Details-Header-Return">
         <Tooltip content="Go back to Table" align="bottom" enterDelay={100}>
           <IconButton

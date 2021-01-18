@@ -1,5 +1,5 @@
 /**
- * Copyright 2019 Google LLC
+ * Copyright 2020 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,10 @@ const InspectionSection: React.FC<Props> = ({
   inspectionExpressions,
   inspectionQueryData,
 }) => (
-  <div className="Firestore-Request-Details-Inspection">
+  <div
+    data-testid="request-details-inspection-section"
+    className="Firestore-Request-Details-Inspection"
+  >
     <InspectionBlock isMainBlock label="Query Information">
       {inspectionQueryData?.map(({ label, value }, index) => (
         <InspectionBlock key={index} label={label} value={value} />

@@ -1,5 +1,9 @@
 /**
+<<<<<<< HEAD
  * Copyright 2019 Google LLC
+=======
+ * Copyright 2020 Google LLC
+>>>>>>> 60a77bb5a993246b0dc19a422aeca2a1e51c402c
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,35 +47,6 @@ const INSPECTION_QUERY_DATA: InspectionElement[] = [
   { label: 'where', value: "name == 'Pozole'\navg_review_rate > 4" },
 ];
 
-interface MainRequestData {
-  requestTimeComplete?: string;
-  requestTimeFormatted?: string;
-  requestMethod?: string;
-  resourcePath?: string;
-  outcomeData?: OutcomeData;
-}
-// Outputs (in a clean format) the request data used by the table-row
-function getMainRequestData(
-  request?: FirestoreRulesEvaluation
-): MainRequestData {
-  if (!request) {
-    return {};
-  }
-  const { rulesContext, outcome } = request;
-  // time * 1000 converts timestamp units from seconds to millis
-  const timestamp = rulesContext.request.time * 1000;
-  return {
-    requestTimeComplete: new Date(timestamp).toLocaleString(),
-    requestTimeFormatted: formatTimestamp(timestamp),
-    requestMethod: rulesContext.request.method,
-    resourcePath: rulesContext.request.path.replace(
-      '/databases/(default)/documents',
-      ''
-    ),
-    outcomeData: OUTCOME_DATA[outcome],
-  };
-}
-
 // Combines (granularAllowOutcomes) and (issues) into one array of the same type
 function getLinesOutcome(
   granularAllowOutcomes: OutcomeInfo[],
@@ -100,20 +75,35 @@ function getInspectionExpressions(
   );
 }
 interface DetailedRequestData {
+  requestTimeComplete?: string;
+  requestTimeFormatted?: string;
+  requestMethod?: string;
+  resourcePath?: string;
+  outcomeData?: OutcomeData;
   firestoreRules?: string;
   linesOutcome?: OutcomeInfo[];
   inspectionExpressions?: InspectionElement[];
   inspectionQueryData?: InspectionElement[];
 }
-// Outputs (in a clean format) the detailed data of the request
-function getDetailedRequestData(
+// Outputs (in a clean format) the request data used by the RequestDetails component
+function getDetailsRequestData(
   request?: FirestoreRulesEvaluation
 ): DetailedRequestData {
   if (!request) {
     return {};
   }
-  const { rulesContext, granularAllowOutcomes, data } = request;
+  const { rulesContext, granularAllowOutcomes, data, outcome } = request;
+  // (time * 1000) converts timestamp units from seconds to milliseconds
+  const timestamp = rulesContext.request.time * 1000;
   return {
+    requestTimeComplete: new Date(timestamp).toLocaleString(),
+    requestTimeFormatted: formatTimestamp(timestamp),
+    requestMethod: rulesContext.request.method,
+    resourcePath: rulesContext.request.path.replace(
+      '/databases/(default)/documents',
+      ''
+    ),
+    outcomeData: OUTCOME_DATA[outcome],
     firestoreRules: data?.rules,
     linesOutcome: getLinesOutcome(granularAllowOutcomes, data?.issues),
     inspectionExpressions: getInspectionExpressions(rulesContext),
@@ -121,15 +111,21 @@ function getDetailedRequestData(
   };
 }
 
-interface PropsFromState {
-  selectedRequest?: FirestoreRulesEvaluation;
-}
+const mapStateToProps = (
+  state: AppState,
+  { requestId }: RequestDetailsRouteParams
+) => {
+  return {
+    selectedRequest: getSelectedRequestEvaluationById(state, requestId || ''),
+  };
+};
+interface PropsFromStore extends ReturnType<typeof mapStateToProps> {}
 interface PropsFromParentComponent extends RequestDetailsRouteParams {
   setShowCopyNotification: (value: boolean) => void;
 }
-interface Props extends PropsFromState, PropsFromParentComponent {}
+interface Props extends PropsFromStore, PropsFromParentComponent {}
 
-const RequestDetails: React.FC<Props> = ({
+export const RequestDetails: React.FC<Props> = ({
   selectedRequest,
   requestId,
   setShowCopyNotification,
@@ -140,15 +136,13 @@ const RequestDetails: React.FC<Props> = ({
     requestMethod,
     resourcePath,
     outcomeData,
-  } = getMainRequestData(selectedRequest);
-  const {
     firestoreRules,
     linesOutcome,
     inspectionExpressions,
     inspectionQueryData,
-  } = getDetailedRequestData(selectedRequest);
+  } = getDetailsRequestData(selectedRequest);
 
-  // Redirect to table if selected (requestId) was not valid
+  // Redirect to requests-table if (requestId) did not match any existing request
   if (requestId && !selectedRequest) {
     return <Redirect to="/firestore/requests" />;
   }
@@ -181,10 +175,4 @@ const RequestDetails: React.FC<Props> = ({
   );
 };
 
-const mapStateToProps = (state: AppState, { requestId }: Props) => {
-  return {
-    selectedRequest: getSelectedRequestEvaluationById(state, requestId || ''),
-  };
-};
-
-export default connect(mapStateToProps, null)(RequestDetails);
+export default connect(mapStateToProps)(RequestDetails);

@@ -1,5 +1,9 @@
 /**
+<<<<<<< HEAD
  * Copyright 2019 Google LLC
+=======
+ * Copyright 2020 Google LLC
+>>>>>>> 60a77bb5a993246b0dc19a422aeca2a1e51c402c
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,11 +41,11 @@ interface TableRowRequestData {
   outcomeData: OutcomeData;
 }
 // Outputs (in a clean format) the request data used by the table-row
-function getTableRowRequestFormattedData(
+function getTableRowRequestData(
   request: FirestoreRulesEvaluation
 ): TableRowRequestData {
   const { rulesContext, outcome } = request;
-  // time * 1000 converts timestamp units from seconds to millis
+  // (time * 1000) converts timestamp units from seconds to milliseconds
   const timestamp = rulesContext.request.time * 1000;
   return {
     requestTimeComplete: new Date(timestamp).toLocaleString(),
@@ -75,7 +79,7 @@ const RequestTableRow: React.FC<Props> = ({
     requestMethod,
     resourcePath,
     outcomeData,
-  } = getTableRowRequestFormattedData(request);
+  } = getTableRowRequestData(request);
 
   return (
     <DataTableRow
