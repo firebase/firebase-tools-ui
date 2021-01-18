@@ -59,12 +59,12 @@
       // NOTE: the overflow must NOT be 'hidden' to ensure the text truncation works as expected
     }
     .Firestore-Request-Path-Copy-Button {
+      padding: 12px 0;
+      // Avoid button's width to go below 48px when container is too narrow
+      min-width: 48px;
       // Absolute position to the right
       position: absolute;
       right: 0px;
-      // Avoid button's width to go below 48px when container is too narrow
-      min-width: 48px;
-      padding: 12px 0;
       // Hover effects
       // NOTE: 'visibility' is chosed instead of 'display' because './utils' needs the element to
       // be rendered in order to calculate its width. Only in mobile is the button (display: none)
