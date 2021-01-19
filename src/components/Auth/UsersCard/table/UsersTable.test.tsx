@@ -5,7 +5,6 @@ import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
 
 import { createRemoteDataLoaded } from '../../../../store/utils';
-import { delay } from '../../../../test_utils';
 import { createFakeUser, getMockAuthStore } from '../../test_utils';
 import { confirmDeleteUser } from './confirmDeleteUser';
 import { UsersTable, UsersTableProps } from './UsersTable';
@@ -104,10 +103,10 @@ describe('UserTable', () => {
         fireEvent.click(menu);
       });
 
-      // TODO: Investigate the best way to wait for menu to fully open.
-      await act(() => delay(200));
-
-      const button = result.getByRole('menuitem', {
+      // NOTE: findByRole is the asynchronous version of getByRole, but
+      // expecting element to not appear immediately (it waits for DOM to change).
+      // Therefore, this is the equivalent to waiting for menu to open.
+      const button = await result.findByRole('menuitem', {
         name: text,
       });
 
