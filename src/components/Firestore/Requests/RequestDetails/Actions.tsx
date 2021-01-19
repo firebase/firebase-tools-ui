@@ -17,40 +17,41 @@
 import './Actions.scss';
 
 import { Button } from '@rmwc/button';
-import React, { useState } from 'react';
+import React from 'react';
 
 import RequestActionsCollapsedMenu from './ActionsCollapsedMenu';
 
-interface ActionProps {
+export interface RequestAction {
   label: string;
-  onClick: () => void;
+  action: () => void;
 }
+export const REQUEST_ACTIONS: RequestAction[] = [
+  {
+    label: 'Retrigger request',
+    action: () => {},
+  },
+];
 
-const Action: React.FC<ActionProps> = ({ label, onClick }) => (
+export const Action: React.FC<RequestAction> = ({ label, action }) => (
   <Button
     outlined
-    onClick={onClick}
+    onClick={action}
     className="Firestore-Request-Details-Action"
+    role="request-details-action-button"
   >
     {label}
   </Button>
 );
 
-const RequestActions: React.FC = () => {
-  const [menuOpen, setMenuOpen] = useState<boolean>(false);
-
-  return (
-    <div data-testid="request-details-header-actions">
-      <div className="Firestore-Request-Details-Actions-Container">
-        <Action label="Retrigger request" onClick={() => {}} />
-      </div>
-      <RequestActionsCollapsedMenu
-        menuOpen={menuOpen}
-        setMenuOpen={setMenuOpen}
-        onRetriggerRequest={() => {}}
-      />
+const RequestActions: React.FC = () => (
+  <div data-testid="request-details-header-actions">
+    <div className="Firestore-Request-Details-Actions-Container">
+      {REQUEST_ACTIONS.map(({ label, action }) => (
+        <Action key={label} label={label} action={action} />
+      ))}
     </div>
-  );
-};
+    <RequestActionsCollapsedMenu requestActions={REQUEST_ACTIONS} />
+  </div>
+);
 
 export default RequestActions;
