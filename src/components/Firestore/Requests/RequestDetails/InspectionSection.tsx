@@ -14,15 +14,25 @@
  * limitations under the License.
  */
 
-import { CustomThemeType } from '../../../themes';
+import React from 'react';
 
-export interface OutcomeData {
-  theme: CustomThemeType;
-  icon: string;
-  label: string;
+import { InspectionElement } from '../types';
+
+interface Props {
+  inspectionExpressions?: InspectionElement[];
+  inspectionQueryData?: InspectionElement[];
 }
 
-export interface InspectionElement {
-  label: string;
-  value: string;
-}
+const InspectionSection: React.FC<Props> = ({
+  inspectionExpressions,
+  inspectionQueryData,
+}) => (
+  <div
+    data-testid="request-details-inspection-section"
+    className="Firestore-Request-Details-Inspection"
+  >
+    Inspection Section
+  </div>
+);
+
+export default InspectionSection;
