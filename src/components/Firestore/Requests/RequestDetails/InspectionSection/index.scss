@@ -14,25 +14,21 @@
  * limitations under the License.
  */
 
-@import './Actions_variables.scss';
-
-.Firestore-Request-Details-Actions-Container {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  // Hide Actions buttons when width is lower than threshold
-  // (to show collapsed-menu button instead)
-  @media screen and (max-width: $firestore-details-actions-width-threshold) {
-    display: none;
-  }
-}
-
-.Firestore-Request-Details-Action {
-  font-size: 12px;
-  // Make sure text has just one line
-  white-space: nowrap;
-  // Select all Actions but the last one
-  &:not(:last-of-type) {
-    margin-bottom: 10px;
+.Firestore-Request-Details-Inspection {
+  border-bottom-right-radius: 8px;
+  // Shadow border at left
+  box-shadow: 1px 0 0 rgba(0, 0, 0, 0.12) inset;
+  // Overflow behavior: make the inside content of the inspection section scrollable
+  width: 25%;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  min-width: 20%;
+  height: 100%;
+  overflow: scroll;
+  // Take all width on mobile
+  @media screen and (max-width: 500px) {
+    width: 100%;
+    border-bottom-left-radius: 8px;
   }
 }

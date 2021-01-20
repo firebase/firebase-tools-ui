@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-@import './Actions_variables.scss';
-@import './Header_variables.scss';
+@import './variables.scss';
+@import './index.scss';
 
 .Firestore-Request-Details-Actions-Collapsed-Menu {
   // Hide collapsed-menu button when width is higher than threshold

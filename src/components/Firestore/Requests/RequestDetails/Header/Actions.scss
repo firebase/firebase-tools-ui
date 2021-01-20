@@ -14,5 +14,25 @@
  * limitations under the License.
  */
 
-// Actions
-$firestore-details-actions-width-threshold: 850px;
+@import './variables.scss';
+
+.Firestore-Request-Details-Actions-Container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  // Hide Actions buttons when width is lower than threshold
+  // (to show collapsed-menu button instead)
+  @media screen and (max-width: $firestore-details-actions-width-threshold) {
+    display: none;
+  }
+}
+
+.Firestore-Request-Details-Action {
+  font-size: 12px;
+  // Make sure text has just one line
+  white-space: nowrap;
+  // Select all Actions but the last one
+  &:not(:last-of-type) {
+    margin-bottom: 10px;
+  }
+}
