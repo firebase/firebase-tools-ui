@@ -23,7 +23,6 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { CustomThemeProvider } from '../../../../../themes';
-import { formatTimestamp } from '../../../../../utils';
 import { FirestoreRulesEvaluation } from '../../rules_evaluation_result_model';
 import { OutcomeData } from '../../types';
 import { OUTCOME_DATA } from '../../utils';
