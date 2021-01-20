@@ -16,7 +16,7 @@
 
 .Firestore-Request-Date {
   font-size: 13px;
-  font-family: Courier, 'Roboto Mono', monospace;
+  font-family: 'Roboto Mono', monospace;
   font-style: normal;
   font-weight: normal;
   color: var(--mdc-theme-text-black-secondary);
@@ -31,7 +31,7 @@
 .Firestore-Request-Method {
   text-transform: uppercase;
   font-size: 13px;
-  font-family: Courier, 'Roboto Mono', monospace;
+  font-family: 'Roboto Mono', monospace;
   font-style: normal;
   font-weight: bold;
   color: var(--mdc-theme-text-black-primary);
@@ -50,7 +50,7 @@
     align-items: center;
     .Firestore-Request-Path-String {
       font-size: 13px;
-      font-family: Courier, 'Roboto Mono', monospace;
+      font-family: 'Roboto Mono', monospace;
       font-style: normal;
       font-weight: normal;
       color: var(--mdc-theme-text-black-primary);
