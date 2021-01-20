@@ -20,8 +20,6 @@ import { IconButton } from '@rmwc/icon-button';
 import { Tooltip } from '@rmwc/tooltip';
 import React, { useEffect, useRef, useState } from 'react';
 
-import { truncateRequestPathFromLeft } from '../utils';
-
 // Copies path without spaces to clipboard
 // and triggers copy notification (SnackBar)
 function copyPathToClipboard(
@@ -32,6 +30,56 @@ function copyPathToClipboard(
     .writeText(resourcePath.replace(/\s/g, ''))
     .then(() => setShowCopyNotification(true))
     .catch(() => setShowCopyNotification(false));
+}
+
+// Function that truncates the request path from the left side of the string.
+// It first calculates the available width of the pathHtmlElement, and how many
+// characters fit inside the width. Based on that, it calculates a new truncated string.
+// For optimization purposes, the truncation is always calculated, but the HTMLElement
+// is only updated when the new truncated string is different than the HTMLElement's innerText.
+function truncateRequestPathFromLeft(
+  pathTextElement: React.RefObject<HTMLDivElement>,
+  copyButtonElement: React.RefObject<HTMLButtonElement>,
+  fullRequestPath: string,
+  pathContainerWidth?: number
+): void {
+  const pathHtmlElement = pathTextElement.current;
+  if (!pathHtmlElement || !pathContainerWidth) {
+    return;
+  }
+  const {
+    offsetWidth: pathTextWidth,
+    innerText: pathTextString,
+  } = pathHtmlElement;
+  const copyIconButtonWidth = copyButtonElement.current?.offsetWidth || 0;
+  // Calculate the width in px of a single character: (totalWidth / totalCharacters)
+  // NOTE: Even though the font-family is not monospace (every character may have a different width),
+  // this solution is accepted because the pixel approximation varies by only decimals.
+  const pathCharacterPxWidth = pathTextWidth / pathTextString.length;
+  // Calculate amount of characters that fit inside the pathHtmlElement: (totalWidth / widthPerCharacter)
+  // NOTE: Math.floor is chosen over Math.ceil to ensure there is a small space
+  // between the request-path and the copy-button
+  const pathHtmlElementAvailableWidth =
+    pathContainerWidth - copyIconButtonWidth;
+  const newPathMaxCharacters = Math.floor(
+    pathHtmlElementAvailableWidth / pathCharacterPxWidth
+  );
+  // Calculate where to start the truncated substring
+  const newPathStart = fullRequestPath.length - newPathMaxCharacters;
+  // Truncate the path only if the full path doesn't fit in the HTMLElement,
+  // otherwise just set the new path-string to be the full request-path.
+  // NOTE: If the path will be truncated, a '...' substring is prepended (added at the begining
+  // of the path) and a (+ 3) is added to the substring initial-index to compensate
+  // the space of the '...' characters ('...' replaces the first 3 characters of the truncated path)
+  const newTruncatedPathString =
+    newPathStart > 0
+      ? `...${fullRequestPath.substr(newPathStart + 3)}`
+      : fullRequestPath;
+  // Only update the HTMLElement's inner-text if the string value changed
+  // after truncation (to avoid unnecessary rerenders of component)
+  if (pathHtmlElement.innerText !== newTruncatedPathString) {
+    pathHtmlElement.innerText = newTruncatedPathString;
+  }
 }
 
 interface Props {
