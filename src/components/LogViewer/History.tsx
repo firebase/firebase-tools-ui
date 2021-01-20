@@ -23,7 +23,6 @@ import { connect } from 'react-redux';
 import { grey100 } from '../../colors';
 import { AppState } from '../../store';
 import { LogEntry, LogState } from '../../store/logviewer';
-import { formatTimestamp } from '../../utils';
 import { CompiledGetterCache } from './CompiledGetterCache';
 import { HighlightedJSON } from './HighlightedJSON';
 import { ParsedQuery, filtersToQueryString, isQueryMatch } from './QueryBar';
@@ -109,7 +108,9 @@ export const History: React.FC<Props> = ({
         history.slice(-MAX_LOG_LINES).map((log, index) => (
           <div id={`log_${index}`} className="log-entry" key={index}>
             <span className="log-timestamp">
-              {formatTimestamp(log.timestamp)}
+              {new Date(log.timestamp).toLocaleTimeString('en-US', {
+                hour12: false,
+              })}
             </span>
             <span
               className={`log-level ${log.level}`}

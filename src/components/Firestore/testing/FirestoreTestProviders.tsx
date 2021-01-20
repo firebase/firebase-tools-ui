@@ -42,7 +42,7 @@ export const renderWithFirestore = async (
     </FirestoreTestProviders>
   );
 
-  await waitFor(() => component.getByTestId(ASYNC_FIRESTORE_WRAPPER_TEST_ID), {
+  await waitFor(() => component.findByTestId(ASYNC_FIRESTORE_WRAPPER_TEST_ID), {
     // Some test setup can take longer than default 1000ms (esp. cold starts).
     timeout: 5000,
   });

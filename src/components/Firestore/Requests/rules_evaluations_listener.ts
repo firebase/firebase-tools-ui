@@ -1,5 +1,5 @@
 /**
- * Copyright 2020 Google LLC
+ * Copyright 2021 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import {
   FirestoreRulesUpdateData,
   RulesOutcome,
 } from './rules_evaluation_result_model';
-import { sampleRules } from './sample-rules';
+import { SAMPLE_RULES } from './sample-rules';
 import { generateId } from './utils';
 
 // TODO: Replace hardcoded websocket URL (used for development purposes only)
@@ -45,7 +45,7 @@ function injectMockPropertiesToEvaluationUpdateData(
   const { issues, isCompilationSuccess } = requestUpdateData || {};
   return {
     isCompilationSuccess: requestUpdateData ? !!isCompilationSuccess : true,
-    rules: customOutcome === 'admin' ? undefined : sampleRules,
+    rules: customOutcome === 'admin' ? undefined : SAMPLE_RULES,
     issues: customOutcome === 'error' ? mockedIssues : issues || [],
   };
 }

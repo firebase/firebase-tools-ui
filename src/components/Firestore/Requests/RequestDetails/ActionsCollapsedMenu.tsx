@@ -18,43 +18,48 @@ import './ActionsCollapsedMenu.scss';
 
 import { IconButton } from '@rmwc/icon-button';
 import { MenuItem, SimpleMenu } from '@rmwc/menu';
-import React from 'react';
+import React, { useState } from 'react';
+
+import { RequestAction } from './Actions';
 
 interface Props {
-  menuOpen: boolean;
-  setMenuOpen: (value: boolean) => void;
-  onRetriggerRequest: () => void;
+  requestActions: RequestAction[];
 }
 
-const RequestActionsCollapsedMenu: React.FC<Props> = ({
-  menuOpen,
-  setMenuOpen,
-  onRetriggerRequest,
-}) => (
-  <div className="Firestore-Request-Details-Actions-Collapsed-Menu">
-    <SimpleMenu
-      open={menuOpen}
-      onOpen={() => setMenuOpen(true)}
-      onClose={() => setMenuOpen(false)}
-      handle={
-        <IconButton
-          className="Firestore-Request-Details-Actions-Collapsed-Button"
-          icon={{ icon: 'more_vert' }}
-          label="Open Requests Actions Menu"
-        />
-      }
-      renderToPortal
+const RequestActionsCollapsedMenu: React.FC<Props> = ({ requestActions }) => {
+  const [menuOpen, setMenuOpen] = useState<boolean>(false);
+
+  return (
+    <div
+      data-testid="request-details-header-actions-collapsed-menu"
+      className="Firestore-Request-Details-Actions-Collapsed-Menu"
     >
-      <MenuItem
-        onClick={() => {
-          setMenuOpen(false);
-          onRetriggerRequest();
-        }}
+      <SimpleMenu
+        open={menuOpen}
+        onOpen={() => setMenuOpen(true)}
+        onClose={() => setMenuOpen(false)}
+        handle={
+          <IconButton
+            className="Firestore-Request-Details-Actions-Collapsed-Button"
+            icon={{ icon: 'more_vert' }}
+            label="Open Requests Actions Menu"
+          />
+        }
       >
-        Retrigger request
-      </MenuItem>
-    </SimpleMenu>
-  </div>
-);
+        {requestActions.map(({ label, action }) => (
+          <MenuItem
+            key={label}
+            onClick={() => {
+              setMenuOpen(false);
+              action();
+            }}
+          >
+            {label}
+          </MenuItem>
+        ))}
+      </SimpleMenu>
+    </div>
+  );
+};
 
 export default RequestActionsCollapsedMenu;

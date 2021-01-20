@@ -1,5 +1,5 @@
 /**
- * Copyright 2020 Google LLC
+ * Copyright 2021 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 import debounce from 'lodash.debounce';
 import { useCallback, useEffect, useState } from 'react';
 
+import { RulesOutcome } from './rules_evaluation_result_model';
 import { OutcomeData } from './types';
 
 // Matches the material-icon name by request outcome
@@ -26,9 +27,9 @@ export const ICON_SELECTOR = {
   error: 'report_problem',
   admin: 'security',
 };
-interface OutcomeDataPicker {
-  [outcome: string]: OutcomeData;
-}
+type OutcomeDataPicker = {
+  [key in RulesOutcome]: OutcomeData;
+};
 export const OUTCOME_DATA: OutcomeDataPicker = {
   allow: { theme: 'success', icon: ICON_SELECTOR['allow'], label: 'ALLOW' },
   deny: { theme: 'warning', icon: ICON_SELECTOR['deny'], label: 'DENY' },

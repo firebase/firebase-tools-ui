@@ -1,5 +1,5 @@
 /**
- * Copyright 2020 Google LLC
+ * Copyright 2021 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { CustomThemeProvider } from '../../../../../themes';
-import { formatTimestamp } from '../../../../../utils';
 import RequestPath from '../../RequestPath';
 import { FirestoreRulesEvaluation } from '../../rules_evaluation_result_model';
 import { OutcomeData } from '../../types';
@@ -41,11 +40,14 @@ function getTableRowRequestData(
   request: FirestoreRulesEvaluation
 ): TableRowRequestData {
   const { rulesContext, outcome } = request;
-  // (time * 1000) converts timestamp units from seconds to milliseconds
+  // time * 1000 converts timestamp units from seconds to millis
   const timestamp = rulesContext.request.time * 1000;
+  const requestDate = new Date(timestamp);
   return {
-    requestTimeComplete: new Date(timestamp).toLocaleString(),
-    requestTimeFormatted: formatTimestamp(timestamp),
+    requestTimeComplete: requestDate.toLocaleString(),
+    requestTimeFormatted: requestDate.toLocaleTimeString('en-US', {
+      hour12: false,
+    }),
     requestMethod: rulesContext.request.method,
     resourcePath: rulesContext.request.path.replace(
       '/databases/(default)/documents',

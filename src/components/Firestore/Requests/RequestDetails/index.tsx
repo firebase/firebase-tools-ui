@@ -1,5 +1,5 @@
 /**
- * Copyright 2020 Google LLC
+ * Copyright 2021 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@ import { Redirect } from 'react-router-dom';
 
 import { AppState } from '../../../../store';
 import { getSelectedRequestEvaluationById } from '../../../../store/firestore/requests/evaluations/selectors';
-import { formatTimestamp } from '../../../../utils';
 import { RequestDetailsRouteParams } from '../index';
 import {
   FirestoreRulesContext,
@@ -91,9 +90,12 @@ function getDetailsRequestData(
   const { rulesContext, granularAllowOutcomes, data, outcome } = request;
   // (time * 1000) converts timestamp units from seconds to milliseconds
   const timestamp = rulesContext.request.time * 1000;
+  const requestDate = new Date(timestamp);
   return {
-    requestTimeComplete: new Date(timestamp).toLocaleString(),
-    requestTimeFormatted: formatTimestamp(timestamp),
+    requestTimeComplete: requestDate.toLocaleString(),
+    requestTimeFormatted: requestDate.toLocaleTimeString('en-US', {
+      hour12: false,
+    }),
     requestMethod: rulesContext.request.method,
     resourcePath: rulesContext.request.path.replace(
       '/databases/(default)/documents',
