@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { Portal } from '@rmwc/base';
 import { act, fireEvent, render } from '@testing-library/react';
 import React from 'react';
 
@@ -32,10 +31,7 @@ describe('RequestDetails ActionsCollapsedMenu', () => {
     ];
 
     const result = render(
-      <>
-        <Portal />
-        <ActionsCollapsedMenu requestActions={TEST_REQUEST_ACTIONS} />
-      </>
+      <ActionsCollapsedMenu requestActions={TEST_REQUEST_ACTIONS} />
     );
 
     const menu = result.getByLabelText('Open Requests Actions Menu');
