@@ -45,7 +45,6 @@ const RequestActionsCollapsedMenu: React.FC<Props> = ({ requestActions }) => {
             label="Open Requests Actions Menu"
           />
         }
-        renderToPortal
       >
         {requestActions.map(({ label, action }) => (
           <MenuItem
