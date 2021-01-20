@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-export const sampleRules: string = `
+export const SAMPLE_RULES: string = `
 
 rules_version = '2';
 service cloud.firestore {

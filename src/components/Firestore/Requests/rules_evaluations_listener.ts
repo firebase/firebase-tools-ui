@@ -21,7 +21,7 @@ import {
   FirestoreRulesUpdateData,
   RulesOutcome,
 } from './rules_evaluation_result_model';
-import { sampleRules } from './sample-rules';
+import { SAMPLE_RULES } from './sample-rules';
 import { generateId } from './utils';
 
 // TODO: Replace hardcoded websocket URL (used for development purposes only)
@@ -45,7 +45,7 @@ function injectMockPropertiesToEvaluationUpdateData(
   const { issues, isCompilationSuccess } = requestUpdateData || {};
   return {
     isCompilationSuccess: requestUpdateData ? !!isCompilationSuccess : true,
-    rules: customOutcome === 'admin' ? undefined : sampleRules,
+    rules: customOutcome === 'admin' ? undefined : SAMPLE_RULES,
     issues: customOutcome === 'error' ? mockedIssues : issues || [],
   };
 }

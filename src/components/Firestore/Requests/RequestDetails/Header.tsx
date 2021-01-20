@@ -14,15 +14,31 @@
  * limitations under the License.
  */
 
-import { CustomThemeType } from '../../../themes';
+import React from 'react';
 
-export interface OutcomeData {
-  theme: CustomThemeType;
-  icon: string;
-  label: string;
+import { OutcomeData } from '../types';
+
+interface Props {
+  requestTimeComplete?: string;
+  requestTimeFormatted?: string;
+  requestMethod?: string;
+  resourcePath?: string;
+  outcomeData?: OutcomeData;
 }
 
-export interface InspectionElement {
-  label: string;
-  value: string;
-}
+const RequestDetailsHeader: React.FC<Props> = ({
+  requestTimeComplete,
+  requestTimeFormatted,
+  requestMethod,
+  resourcePath,
+  outcomeData,
+}) => (
+  <div
+    data-testid="request-details-header"
+    className="Firestore-Request-Details-Header"
+  >
+    Header
+  </div>
+);
+
+export default RequestDetailsHeader;

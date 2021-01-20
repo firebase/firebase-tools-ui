@@ -19,8 +19,16 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 
-import { getMockFirestoreStore } from '../testing/test_utils';
+import {
+  createFakeFirestoreRequestEvaluation,
+  getMockFirestoreStore,
+} from '../testing/test_utils';
 import FirestoreRequests from '.';
+
+const FAKE_EVALUATION_ID = 'first-fake-evaluation';
+const FAKE_EVALUATION = createFakeFirestoreRequestEvaluation({
+  requestId: FAKE_EVALUATION_ID,
+});
 
 describe('Firestore Requests', () => {
   it('renders requests table when /firestore/requests', async () => {
@@ -37,10 +45,20 @@ describe('Firestore Requests', () => {
   });
 
   it('renders request details view when /firestore/requests/:requestId', async () => {
-    const store = getMockFirestoreStore();
+    // Make sure an evaluation with such ID exists on the store,
+    // otherwise you would be redirected back to the requests table
+    const store = getMockFirestoreStore({
+      firestore: {
+        requests: {
+          evaluations: [FAKE_EVALUATION],
+        },
+      },
+    });
     const { getByTestId } = render(
       <Provider store={store}>
-        <MemoryRouter initialEntries={['/firestore/requests/uniqueRequestId']}>
+        <MemoryRouter
+          initialEntries={[`/firestore/requests/${FAKE_EVALUATION_ID}`]}
+        >
           <FirestoreRequests />
         </MemoryRouter>
       </Provider>
@@ -54,7 +72,7 @@ describe('Firestore Requests', () => {
     const { getByTestId } = render(
       <Provider store={store}>
         <MemoryRouter
-          initialEntries={['/firestore/requests/uniqueRequestId/foo']}
+          initialEntries={[`/firestore/requests/${FAKE_EVALUATION_ID}/foo`]}
         >
           <FirestoreRequests />
         </MemoryRouter>
