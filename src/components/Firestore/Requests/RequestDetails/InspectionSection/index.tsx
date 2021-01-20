@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
+import './index.scss';
+
 import React from 'react';
 
-import { InspectionElement } from '../types';
+import { InspectionElement } from '../../types';
 
 interface Props {
   inspectionExpressions?: InspectionElement[];

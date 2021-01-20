@@ -19,9 +19,9 @@ import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Router } from 'react-router-dom';
 
-import { createFakeFirestoreRequestEvaluation } from '../../testing/test_utils';
-import Header from './Header';
-import { getDetailsRequestData } from './index';
+import { createFakeFirestoreRequestEvaluation } from '../../../testing/test_utils';
+import Header from './index';
+import { getDetailsRequestData } from '../index';
 
 describe('RequestDetails Header', () => {
   it('renders header when all optional props are given', () => {

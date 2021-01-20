@@ -14,9 +14,21 @@
  * limitations under the License.
  */
 
-@import '../../Firestore/variables.scss';
-@import '../../App/variables.scss';
-
-$requests-card-min-height: (
-  $firestore-card-min-height - $firestore-sub-tabs-total-height
-);
+.Firestore-Request-Details-Inspection {
+  border-bottom-right-radius: 8px;
+  // Shadow border at left
+  box-shadow: 1px 0 0 rgba(0, 0, 0, 0.12) inset;
+  // Overflow behavior: make the inside content of the inspection section scrollable
+  width: 25%;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  min-width: 20%;
+  height: 100%;
+  overflow: scroll;
+  // Take all width on mobile
+  @media screen and (max-width: 500px) {
+    width: 100%;
+    border-bottom-left-radius: 8px;
+  }
+}
