@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { RulesOutcome } from './rules_evaluation_result_model';
 import { OutcomeData } from './types';
 
 // Matches the material-icon name by request outcome
@@ -23,9 +24,9 @@ const ICON_SELECTOR = {
   error: 'report_problem',
   admin: 'security',
 };
-interface OutcomeDataPicker {
-  [outcome: string]: OutcomeData;
-}
+type OutcomeDataPicker = {
+  [key in RulesOutcome]: OutcomeData;
+};
 export const OUTCOME_DATA: OutcomeDataPicker = {
   allow: { theme: 'success', icon: ICON_SELECTOR['allow'], label: 'ALLOW' },
   deny: { theme: 'warning', icon: ICON_SELECTOR['deny'], label: 'DENY' },
