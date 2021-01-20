@@ -28,6 +28,7 @@ const MOCKED_OUTCOME_DATA: OutcomeData = {
   icon: ICON_SELECTOR['allow'],
   label: 'ALLOW',
 };
+const SET_SHOW_COPY_NOTIFICATION = jest.fn();
 
 describe('RequestDetails Header', () => {
   it('renders header when all optional props are given', () => {
@@ -42,6 +43,7 @@ describe('RequestDetails Header', () => {
           requestMethod=""
           resourcePath=""
           outcomeData={MOCKED_OUTCOME_DATA}
+          setShowCopyNotification={SET_SHOW_COPY_NOTIFICATION}
         />
       </Router>
     );
@@ -54,7 +56,7 @@ describe('RequestDetails Header', () => {
     });
     const { getByTestId } = render(
       <Router history={history}>
-        <Header />
+        <Header setShowCopyNotification={SET_SHOW_COPY_NOTIFICATION} />
       </Router>
     );
     expect(getByTestId('request-details-header')).not.toBeNull();
@@ -66,7 +68,7 @@ describe('RequestDetails Header', () => {
     });
     const { getByLabelText } = render(
       <Router history={history}>
-        <Header />
+        <Header setShowCopyNotification={SET_SHOW_COPY_NOTIFICATION} />
       </Router>
     );
     await act(async () => {
@@ -81,7 +83,7 @@ describe('RequestDetails Header', () => {
     });
     const { getByTestId } = render(
       <Router history={history}>
-        <Header />
+        <Header setShowCopyNotification={SET_SHOW_COPY_NOTIFICATION} />
       </Router>
     );
     expect(getByTestId('request-details-header-actions')).not.toBeNull();
