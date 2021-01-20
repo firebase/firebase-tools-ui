@@ -28,12 +28,13 @@ import {
   FirestoreRulesEvaluation,
   FirestoreRulesIssue,
   OutcomeInfo,
+  RulesOutcome,
 } from '../rules_evaluation_result_model';
 import { InspectionElement, OutcomeData } from '../types';
 import { OUTCOME_DATA } from '../utils';
-import RequestDetailsCodeViewer from './CodeViewer';
-import RequestDetailsHeader from './Header';
-import RequestDetailsInspectionSection from './InspectionSection';
+import RequestDetailsCodeViewer from './CodeViewer/index';
+import RequestDetailsHeader from './Header/index';
+import RequestDetailsInspectionSection from './InspectionSection/index';
 
 // TODO: remove this mock array when this data comes from the server
 const INSPECTION_QUERY_DATA: InspectionElement[] = [
@@ -74,6 +75,7 @@ interface DetailedRequestData {
   requestTimeFormatted?: string;
   requestMethod?: string;
   resourcePath?: string;
+  outcome?: RulesOutcome;
   outcomeData?: OutcomeData;
   firestoreRules?: string;
   linesOutcome?: OutcomeInfo[];
@@ -101,6 +103,7 @@ function getDetailsRequestData(
       '/databases/(default)/documents',
       ''
     ),
+    outcome,
     outcomeData: OUTCOME_DATA[outcome],
     firestoreRules: data?.rules,
     linesOutcome: getLinesOutcome(granularAllowOutcomes, data?.issues),
@@ -129,6 +132,7 @@ export const RequestDetails: React.FC<Props> = ({
     requestTimeFormatted,
     requestMethod,
     resourcePath,
+    outcome,
     outcomeData,
     firestoreRules,
     linesOutcome,
@@ -156,6 +160,7 @@ export const RequestDetails: React.FC<Props> = ({
             <RequestDetailsCodeViewer
               firestoreRules={firestoreRules}
               linesOutcome={linesOutcome}
+              isAdminRequest={outcome === 'admin'}
             />
             <RequestDetailsInspectionSection
               inspectionExpressions={inspectionExpressions}

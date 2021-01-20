@@ -49,3 +49,6 @@ $firestore-request-details-header-info-path-mobile-width: calc(
     $firestore-request-details-header-info-outcome-width +
     $firestore-request-details-header-info-method-mobile-width}
 );
+
+// Actions
+$firestore-details-actions-width-threshold: 850px;

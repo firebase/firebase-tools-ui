@@ -15,7 +15,7 @@
  */
 
 @import '../Header/variables.scss';
-@import '../../variables.scss';
+@import '../../../Requests/variables.scss';
 
 // Table th
 $firestore-requests-table-header-height: 31px;
