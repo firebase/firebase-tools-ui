@@ -1,5 +1,5 @@
 /**
- * Copyright 2019 Google LLC
+ * Copyright 2021 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ import './ZeroState.scss';
 import { Typography } from '@rmwc/typography';
 import React from 'react';
 
-export const zeroStateMessage = 'No Firestore requests for this project yet';
+export const ZERO_STATE_MESSAGE = 'No Firestore requests for this project yet';
 
 const RequestsZeroState: React.FC = () => {
   return (
@@ -28,7 +28,7 @@ const RequestsZeroState: React.FC = () => {
       theme="textSecondaryOnBackground"
       className="Firestore-Requests-Table-Zero-State"
     >
-      {zeroStateMessage}
+      {ZERO_STATE_MESSAGE}
     </Typography>
   );
 };

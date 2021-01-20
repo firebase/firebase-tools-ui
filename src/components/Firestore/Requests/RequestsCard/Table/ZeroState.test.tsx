@@ -1,5 +1,5 @@
 /**
- * Copyright 2019 Google LLC
+ * Copyright 2021 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,11 +17,11 @@
 import { render } from '@testing-library/react';
 import React from 'react';
 
-import RequestsZeroState, { zeroStateMessage } from './ZeroState';
+import RequestsZeroState, { ZERO_STATE_MESSAGE } from './ZeroState';
 
 describe('Requests ZeroState', () => {
   it('renders no requests message', () => {
     const { getByText } = render(<RequestsZeroState />);
-    expect(getByText(zeroStateMessage)).not.toBeNull();
+    expect(getByText(ZERO_STATE_MESSAGE)).not.toBeNull();
   });
 });

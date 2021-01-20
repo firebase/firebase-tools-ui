@@ -21,7 +21,7 @@ import configureStore from 'redux-mock-store';
 import { AppState } from '../../../store/index';
 import { waitForDialogsToOpen } from '../../../test_utils';
 import { FirestoreRulesEvaluation } from '../Requests/rules_evaluation_result_model';
-import { sampleRules } from '../Requests/sample-rules';
+import { SAMPLE_RULES } from '../Requests/sample-rules';
 import { renderWithFirestore } from './FirestoreTestProviders';
 
 /*
@@ -81,7 +81,7 @@ export function createFakeFirestoreRequestEvaluation(
     granularAllowOutcomes: [],
     data: {
       isCompilationSuccess: true,
-      rules: sampleRules,
+      rules: SAMPLE_RULES,
       issues: [],
     },
     ...evaluation,

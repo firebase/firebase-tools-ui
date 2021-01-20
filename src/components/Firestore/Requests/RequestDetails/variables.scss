@@ -14,9 +14,17 @@
  * limitations under the License.
  */
 
+@import './Header_variables.scss';
 @import '../variables.scss';
-@import '../../App/variables.scss';
 
-$firestore-requests-card-min-height: (
-  $firestore-card-min-height - $firestore-sub-tabs-total-height
+// Details content
+$firestore-request-details-content-min-height: (
+  $firestore-requests-card-min-height - $firestore-request-details-header-height
+);
+// Since the app-...-content variable uses calc(), a SASS interpolation
+// is used in order to nest a calc() function inside another calc() function
+// css structure:            calc( calc(0px + 0px) - 0px)
+$firestore-request-details-content-viewport-height: calc(
+  #{$app-remaining-viewport-height-for-content} - #{$firestore-sub-tabs-total-height +
+    $firestore-request-details-header-height}
 );

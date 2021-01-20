@@ -1,5 +1,5 @@
 /**
- * Copyright 2019 Google LLC
+ * Copyright 2021 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+@import '../../index.scss';
 @import './variables.scss';
 
 // Double selector - for higher specificity to Override rmwc styles.
@@ -39,9 +40,9 @@
     height: $firestore-requests-table-header-height;
     font-size: 12px;
     // Color different for sorted and not sorted headers
-    color: var(--mdc-theme-text-black-secondary-color);
+    color: var(--mdc-theme-text-black-secondary);
     &.rmwc-data-table__head-cell--sorted {
-      color: var(--mdc-theme-text-black-primary-color);
+      color: var(--mdc-theme-text-black-primary);
       cursor: auto;
     }
     // Move sort icon to the right side

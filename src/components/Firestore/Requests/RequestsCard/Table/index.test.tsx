@@ -1,5 +1,5 @@
 /**
- * Copyright 2019 Google LLC
+ * Copyright 2021 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,10 +20,10 @@ import React from 'react';
 import { createFakeFirestoreRequestEvaluation } from '../../../testing/test_utils';
 import { RequestsTable } from './index';
 
-const fakeEvaluation1 = createFakeFirestoreRequestEvaluation({
+const FAKE_EVALUATION_1 = createFakeFirestoreRequestEvaluation({
   requestId: 'first-fake-evaluation',
 });
-const fakeEvaluation2 = createFakeFirestoreRequestEvaluation({
+const FAKE_EVALUATION_2 = createFakeFirestoreRequestEvaluation({
   requestId: 'second-fake-evaluation',
 });
 
@@ -44,7 +44,7 @@ describe('RequestsTable', () => {
   it('renders appropriate number of rows when there are requests', () => {
     const { getAllByRole, queryByText } = render(
       <RequestsTable
-        filteredRequests={[fakeEvaluation1, fakeEvaluation2]}
+        filteredRequests={[FAKE_EVALUATION_1, FAKE_EVALUATION_2]}
         shouldShowZeroResults={false}
         shouldShowZeroState={false}
         shouldShowTable={true}

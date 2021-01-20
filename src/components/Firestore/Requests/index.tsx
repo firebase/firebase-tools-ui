@@ -1,5 +1,5 @@
 /**
- * Copyright 2019 Google LLC
+ * Copyright 2021 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,21 +20,25 @@ import { Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
 
 import {
   grey100,
-  textBlackPrimaryColor,
-  textBlackSecondaryColor,
-  textBlackTernaryColor,
+  textBlackPrimary,
+  textBlackSecondary,
+  textBlackTernary,
 } from '../../../colors';
-import RequestDetails, { PropsFromParentComponent } from './RequestDetails';
+import RequestDetails from './RequestDetails';
 // import RequestsHeader from './RequestsCard/Header';
 import RequestsTable from './RequestsCard/Table';
+
+export interface RequestDetailsRouteParams {
+  requestId: string;
+}
 
 const Requests: React.FC = () => (
   <ThemeProvider
     options={{
       surface: grey100,
-      textBlackPrimaryColor,
-      textBlackSecondaryColor,
-      textBlackTernaryColor,
+      textBlackPrimary,
+      textBlackSecondary,
+      textBlackTernary,
     }}
   >
     <Switch>
@@ -48,7 +52,7 @@ const Requests: React.FC = () => (
       <Route
         exact
         path="/firestore/requests/:requestId"
-        render={({ match }: RouteComponentProps<PropsFromParentComponent>) => {
+        render={({ match }: RouteComponentProps<RequestDetailsRouteParams>) => {
           const requestId = match.params.requestId;
           return <RequestDetails requestId={requestId} />;
         }}

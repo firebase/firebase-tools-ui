@@ -14,7 +14,18 @@
  * limitations under the License.
  */
 
-// Filters header
-// TODO: set this variable to 56px when component is developed and
-// wants to be rendered, set it to 0px otherwise
-$firestore-requests-header-height: 0px;
+@import './variables.scss';
+
+.Firestore-Request-Details-Content {
+  width: 100%;
+  // Flex behavior: stretch content vertically
+  display: flex;
+  justify-content: flex-start;
+  align-items: stretch;
+  // Overflow behavior: (useful to allow children components
+  // to have inner scrolling behavior)
+  position: relative;
+  overflow: hidden;
+  min-height: $firestore-request-details-content-min-height;
+  height: $firestore-request-details-content-viewport-height;
+}

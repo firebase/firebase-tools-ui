@@ -1,5 +1,5 @@
 /**
- * Copyright 2020 Google LLC
+ * Copyright 2021 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import { RulesOutcome } from './rules_evaluation_result_model';
+import { OutcomeData } from './types';
+
+// Matches the material-icon name by request outcome
+const ICON_SELECTOR = {
+  allow: 'check_circle',
+  deny: 'remove_circle',
+  error: 'report_problem',
+  admin: 'security',
+};
+type OutcomeDataPicker = {
+  [key in RulesOutcome]: OutcomeData;
+};
+export const OUTCOME_DATA: OutcomeDataPicker = {
+  allow: { theme: 'success', icon: ICON_SELECTOR['allow'], label: 'ALLOW' },
+  deny: { theme: 'warning', icon: ICON_SELECTOR['deny'], label: 'DENY' },
+  error: { theme: 'warning', icon: ICON_SELECTOR['error'], label: 'ERROR' },
+  admin: { theme: 'success', icon: ICON_SELECTOR['admin'], label: 'ADMIN' },
+};
 
 // Returns an id made out of 20 random upper- and lower-case letters and numbers
 // TODO: Remove generateId function once the backend itself generates a UID for each request

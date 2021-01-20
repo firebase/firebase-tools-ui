@@ -1,5 +1,5 @@
 /**
- * Copyright 2020 Google LLC
+ * Copyright 2021 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ export class ReconnectingWebSocket {
       this.state = WebSocketState.DISCONNECTED;
     };
 
-    ws.onmessage = msg => {
+    ws.onmessage = (msg) => {
       const data = JSON.parse(msg.data);
       this.listener && this.listener(data);
     };

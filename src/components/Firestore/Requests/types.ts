@@ -14,7 +14,15 @@
  * limitations under the License.
  */
 
-// Filters header
-// TODO: set this variable to 56px when component is developed and
-// wants to be rendered, set it to 0px otherwise
-$firestore-requests-header-height: 0px;
+import { CustomThemeType } from '../../../themes';
+
+export interface OutcomeData {
+  theme: CustomThemeType;
+  icon: string;
+  label: string;
+}
+
+export interface InspectionElement {
+  label: string;
+  value: string;
+}

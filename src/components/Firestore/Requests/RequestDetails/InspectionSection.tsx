@@ -14,7 +14,25 @@
  * limitations under the License.
  */
 
-// Filters header
-// TODO: set this variable to 56px when component is developed and
-// wants to be rendered, set it to 0px otherwise
-$firestore-requests-header-height: 0px;
+import React from 'react';
+
+import { InspectionElement } from '../types';
+
+interface Props {
+  inspectionExpressions?: InspectionElement[];
+  inspectionQueryData?: InspectionElement[];
+}
+
+const InspectionSection: React.FC<Props> = ({
+  inspectionExpressions,
+  inspectionQueryData,
+}) => (
+  <div
+    data-testid="request-details-inspection-section"
+    className="Firestore-Request-Details-Inspection"
+  >
+    Inspection Section
+  </div>
+);
+
+export default InspectionSection;

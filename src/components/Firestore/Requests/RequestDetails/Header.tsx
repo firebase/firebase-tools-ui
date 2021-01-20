@@ -14,7 +14,31 @@
  * limitations under the License.
  */
 
-// Filters header
-// TODO: set this variable to 56px when component is developed and
-// wants to be rendered, set it to 0px otherwise
-$firestore-requests-header-height: 0px;
+import React from 'react';
+
+import { OutcomeData } from '../types';
+
+interface Props {
+  requestTimeComplete?: string;
+  requestTimeFormatted?: string;
+  requestMethod?: string;
+  resourcePath?: string;
+  outcomeData?: OutcomeData;
+}
+
+const RequestDetailsHeader: React.FC<Props> = ({
+  requestTimeComplete,
+  requestTimeFormatted,
+  requestMethod,
+  resourcePath,
+  outcomeData,
+}) => (
+  <div
+    data-testid="request-details-header"
+    className="Firestore-Request-Details-Header"
+  >
+    Header
+  </div>
+);
+
+export default RequestDetailsHeader;
