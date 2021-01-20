@@ -23,7 +23,6 @@ import { connect } from 'react-redux';
 import { grey100 } from '../../colors';
 import { AppState } from '../../store';
 import { LogEntry, LogState } from '../../store/logviewer';
-import { formatTimestamp } from '../../utils';
 import { CompiledGetterCache } from './CompiledGetterCache';
 import { HighlightedJSON } from './HighlightedJSON';
 import { ParsedQuery, filtersToQueryString, isQueryMatch } from './QueryBar';
