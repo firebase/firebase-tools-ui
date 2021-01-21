@@ -73,7 +73,7 @@ export const InspectionBlock: React.FC<Props> = ({
         <span className={`${INSPECT_BLOCK_CLASS}-Label`}> {label} </span>
         <Icon
           className={`${INSPECT_BLOCK_CLASS}-Icon`}
-          icon={{ icon: `expand_${isExpanded ? 'less' : 'more'}` }}
+          icon={{ icon: isExpanded ? 'expand_less' : 'expand_more' }}
         />
       </div>
       {isExpanded && renderContent()}
