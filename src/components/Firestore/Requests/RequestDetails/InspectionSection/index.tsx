@@ -35,14 +35,13 @@ const InspectionSection: React.FC<Props> = ({
     className="Firestore-Request-Details-Inspection"
   >
     <InspectionBlock isMainBlock label="Query Information">
-      {inspectionQueryData?.map(({ label, value }, index) => (
-        <InspectionBlock key={index} label={label} value={value} />
+      {inspectionQueryData?.map(({ label, value }) => (
+        <InspectionBlock key={label} label={label} value={value} />
       ))}
     </InspectionBlock>
     <InspectionBlock isMainBlock label="Expressions Inspection">
-      <InspectionBlock label="isSignedIn()" value="false" />
-      {inspectionExpressions?.map(({ label, value }, index) => (
-        <InspectionBlock key={index} label={label} value={value} />
+      {inspectionExpressions?.map(({ label, value }) => (
+        <InspectionBlock key={label} label={label} value={value} />
       ))}
     </InspectionBlock>
   </div>

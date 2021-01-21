@@ -38,19 +38,23 @@ export const InspectionBlock: React.FC<Props> = ({
   isMainBlock,
   children,
 }) => {
+  // Main inspection-blocks start expanded by default
   const [isExpanded, setIsExpanded] = useState<Boolean>(!!isMainBlock);
 
-  function displayContent() {
-    return children ? (
-      children
-    ) : (
-      // TODO: improve how the value is rendered: differ by value types
-      //       (string, number, boolean, object and maybe array too)
+  // NOTE: the content of the InspectionBlock could be either a string
+  // (passed through the value property) or HTML children elements.
+  const renderContent = () => {
+    if (children) {
+      return children;
+    }
+    // TODO: improve how the value property is rendered: differ by value types
+    //       (string, number, boolean, object and maybe array too)
+    return (
       <div className={`${INSPECT_BLOCK_CLASS}-Value`} title={value}>
         {value}
       </div>
     );
-  }
+  };
 
   return (
     <ThemeProvider
@@ -64,14 +68,15 @@ export const InspectionBlock: React.FC<Props> = ({
           isMainBlock && MAIN_INSPECT_BLOCK_CLASS
         )}
         onClick={() => setIsExpanded(!isExpanded)}
+        role={isMainBlock ? 'inspection-main-block' : 'inspection-block'}
       >
         <span className={`${INSPECT_BLOCK_CLASS}-Label`}> {label} </span>
         <Icon
           className={`${INSPECT_BLOCK_CLASS}-Icon`}
-          icon={{ icon: `expand_${isExpanded ? 'less' : 'more'}` }}
+          icon={{ icon: isExpanded ? 'expand_less' : 'expand_more' }}
         />
       </div>
-      {isExpanded && displayContent()}
+      {isExpanded && renderContent()}
     </ThemeProvider>
   );
 };
