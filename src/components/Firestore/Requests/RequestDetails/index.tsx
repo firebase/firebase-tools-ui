@@ -61,7 +61,14 @@ function getLinesOutcome(
 function getInspectionExpressions(
   rulesContext: FirestoreRulesContext
 ): InspectionElement[] {
-  return Object.entries(rulesContext).map(
+  // TODO: delete this constant and use only the rulesContext when
+  // the server provides the corresponding elements to inspect
+  // (this is only useful for development purposes and to show in the final presentation)
+  const MOCKED_RULES_CONTEXT = {
+    'isSignedIn()': false,
+    ...rulesContext,
+  };
+  return Object.entries(MOCKED_RULES_CONTEXT).map(
     ([key, value]): InspectionElement => {
       return {
         label: key,
