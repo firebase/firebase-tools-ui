@@ -19,6 +19,8 @@ import React from 'react';
 
 import { createFakeFirestoreRequestEvaluation } from '../../../testing/test_utils';
 import { RequestsTable } from './index';
+import { NO_RESULTS_MESSAGE } from './NoResults';
+import { ZERO_STATE_MESSAGE } from './ZeroState';
 
 const FAKE_EVALUATION_1 = createFakeFirestoreRequestEvaluation({
   requestId: 'first-fake-evaluation',
@@ -55,7 +57,7 @@ describe('RequestsTable', () => {
     );
     // Header + 2 requests
     expect(getAllByRole('row').length).toBe(3);
-    expect(queryByText('No results')).toBeNull();
+    expect(queryByText(NO_RESULTS_MESSAGE)).toBeNull();
   });
 
   it('displays NoResults message', () => {
@@ -70,7 +72,7 @@ describe('RequestsTable', () => {
     );
     // Keeps the header
     expect(getAllByRole('row').length).toBe(1);
-    getByText('No results');
+    getByText(NO_RESULTS_MESSAGE);
   });
 
   it('displays ZeroState message', () => {
@@ -85,6 +87,6 @@ describe('RequestsTable', () => {
     );
     // Keeps the header
     expect(getAllByRole('row').length).toBe(1);
-    getByText(/No Firestore requests/);
+    getByText(ZERO_STATE_MESSAGE);
   });
 });

@@ -14,9 +14,14 @@
  * limitations under the License.
  */
 
-@import '../../Firestore/variables.scss';
-@import '../../App/variables.scss';
+import { render } from '@testing-library/react';
+import React from 'react';
 
-$firestore-requests-card-min-height: (
-  $firestore-card-min-height - $firestore-sub-tabs-total-height
-);
+import CodeViewerZeroState, { ZERO_STATE_MESSAGE } from './ZeroState';
+
+describe('CodeViewerZeroState', () => {
+  it('shows zero state message', () => {
+    const { getByText } = render(<CodeViewerZeroState />);
+    expect(getByText(ZERO_STATE_MESSAGE)).not.toBeNull();
+  });
+});

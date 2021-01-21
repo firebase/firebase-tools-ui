@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import './CodeViewerZeroState.scss';
+import './ZeroState.scss';
 
 import { Typography } from '@rmwc/typography';
 import React from 'react';
 
-export const ZERO_STATE_MESSAGE = 'Admin requests bypass Firestore rules';
+export const ZERO_STATE_MESSAGE = 'No Firestore rules were provided';
 
 const CodeViewerZeroState: React.FC = () => {
   return (

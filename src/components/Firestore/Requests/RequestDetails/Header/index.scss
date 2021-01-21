@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-@import '../index.scss';
-@import './Header_variables.scss';
+@import '../../../Requests/index.scss';
+@import './variables.scss';
 
 .Firestore-Request-Details-Header {
   border-radius: 8px 8px 0 0;

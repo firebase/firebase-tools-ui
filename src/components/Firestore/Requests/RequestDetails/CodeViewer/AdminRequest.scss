@@ -14,5 +14,15 @@
  * limitations under the License.
  */
 
-// Actions
-$firestore-details-actions-width-threshold: 850px;
+.Firestore-Requests-Details-Code-Admin-Request-Container {
+  height: 100%;
+  background: var(--mdc-theme-surface);
+  border-bottom-left-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  .Firestore-Requests-Details-Code-Admin-Request-Message {
+    margin-bottom: 20px;
+  }
+}

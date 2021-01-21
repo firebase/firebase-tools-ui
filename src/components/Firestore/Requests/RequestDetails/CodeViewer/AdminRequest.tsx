@@ -14,25 +14,25 @@
  * limitations under the License.
  */
 
-@import './Actions_variables.scss';
+import './AdminRequest.scss';
 
-.Firestore-Request-Details-Actions-Container {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  // Hide Actions buttons when width is lower than threshold
-  // (to show collapsed-menu button instead)
-  @media screen and (max-width: $firestore-details-actions-width-threshold) {
-    display: none;
-  }
-}
+import { Typography } from '@rmwc/typography';
+import React from 'react';
 
-.Firestore-Request-Details-Action {
-  font-size: 12px;
-  // Make sure text has just one line
-  white-space: nowrap;
-  // Select all Actions but the last one
-  &:not(:last-of-type) {
-    margin-bottom: 10px;
-  }
-}
+export const ADMIN_REQUEST_MESSAGE = 'Admin requests bypass Firestore rules';
+
+const CodeViewerAdminRequest: React.FC = () => {
+  return (
+    <div className="Firestore-Requests-Details-Code-Admin-Request-Container">
+      <Typography
+        use="body2"
+        theme="textSecondaryOnBackground"
+        className="Firestore-Requests-Details-Code-Admin-Request-Message"
+      >
+        {ADMIN_REQUEST_MESSAGE}
+      </Typography>
+    </div>
+  );
+};
+
+export default CodeViewerAdminRequest;

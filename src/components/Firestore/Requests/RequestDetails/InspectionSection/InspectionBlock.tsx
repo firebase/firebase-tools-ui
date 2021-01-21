@@ -21,7 +21,7 @@ import { ThemeProvider } from '@rmwc/theme';
 import classnames from 'classnames';
 import React, { useState } from 'react';
 
-import { darkestGray } from '../../../../colors';
+import { darkestGray } from '../../../../../colors';
 
 const INSPECT_BLOCK_CLASS = 'Firestore-Request-Details-Inspection-Block';
 const MAIN_INSPECT_BLOCK_CLASS = INSPECT_BLOCK_CLASS + '--Main';

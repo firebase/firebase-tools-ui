@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import './InspectionSection.scss';
+import './index.scss';
 
 import React from 'react';
 
-import { InspectionElement } from '../types';
+import { InspectionElement } from '../../types';
 import InspectionBlock from './InspectionBlock';
 
 interface Props {

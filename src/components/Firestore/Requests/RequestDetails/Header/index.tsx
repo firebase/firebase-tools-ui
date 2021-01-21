@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import './Header.scss';
+import './index.scss';
 
 import { Icon } from '@rmwc/icon';
 import { IconButton } from '@rmwc/icon-button';
@@ -22,10 +22,10 @@ import { Tooltip } from '@rmwc/tooltip';
 import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
 
-import { CustomThemeProvider } from '../../../../themes';
-import RequestPath from '../RequestPath';
-import { OutcomeData } from '../types';
-import { usePathContainerWidth } from '../utils';
+import { CustomThemeProvider } from '../../../../../themes';
+import RequestPath from '../../RequestPath';
+import { OutcomeData } from '../../types';
+import { usePathContainerWidth } from '../../utils';
 import RequestActions from './Actions';
 
 interface Props {

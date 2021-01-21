@@ -17,23 +17,29 @@
 import 'codemirror/keymap/sublime';
 import 'codemirror/theme/xq-light.css';
 
-import './CodeViewer.scss';
+import './index.scss';
 
 import { ThemeProvider } from '@rmwc/theme';
 import CodeMirror from '@uiw/react-codemirror';
 import React, { useCallback, useEffect, useState } from 'react';
 
-import { errorTheme, successTheme } from '../../../../themes';
-import { OutcomeInfo, RulesOutcome } from '../rules_evaluation_result_model';
-import { ICON_SELECTOR } from '../utils';
-import CodeViewerZeroState from './CodeViewerZeroState';
+import { errorTheme, successTheme } from '../../../../../themes';
+import { OutcomeInfo, RulesOutcome } from '../../rules_evaluation_result_model';
+import { ICON_SELECTOR } from '../../utils';
+import CodeViewerAdminRequest from './AdminRequest';
+import CodeViewerZeroState from './ZeroState';
 
 interface Props {
   firestoreRules?: string;
   linesOutcome?: OutcomeInfo[];
+  isAdminRequest: boolean;
 }
 
-const RulesCodeViewer: React.FC<Props> = ({ firestoreRules, linesOutcome }) => {
+const RulesCodeViewer: React.FC<Props> = ({
+  firestoreRules,
+  linesOutcome,
+  isAdminRequest,
+}) => {
   const [
     codeMirrorEditor,
     setCodeMirrorEditor,
@@ -83,9 +89,9 @@ const RulesCodeViewer: React.FC<Props> = ({ firestoreRules, linesOutcome }) => {
     >
       <div
         data-testid="request-details-code-viewer"
-        className="Firestore-Request-Details-Code"
+        className="Firestore-Request-Details-Code-Section"
       >
-        {firestoreRules && (
+        {!isAdminRequest && firestoreRules && (
           <CodeMirror
             value={firestoreRules}
             options={{
@@ -101,7 +107,8 @@ const RulesCodeViewer: React.FC<Props> = ({ firestoreRules, linesOutcome }) => {
             }
           />
         )}
-        {!firestoreRules && <CodeViewerZeroState />}
+        {!isAdminRequest && !firestoreRules && <CodeViewerZeroState />}
+        {isAdminRequest && <CodeViewerAdminRequest />}
       </div>
     </ThemeProvider>
   );

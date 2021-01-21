@@ -15,7 +15,7 @@
  */
 
 @import '../Header/variables.scss';
-@import '../../variables.scss';
+@import '../../../Requests/variables.scss';
 
 // TODO: Remove variable when requests filters header is developed and always rendered
 $firestore-requests-header-is-rendered: (

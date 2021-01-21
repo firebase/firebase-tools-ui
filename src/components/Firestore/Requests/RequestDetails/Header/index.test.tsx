@@ -19,9 +19,9 @@ import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Router } from 'react-router-dom';
 
-import { OutcomeData } from '../types';
-import { ICON_SELECTOR } from '../utils';
-import Header from './Header';
+import { OutcomeData } from '../../types';
+import { ICON_SELECTOR } from '../../utils';
+import Header from '.';
 
 const MOCKED_OUTCOME_DATA: OutcomeData = {
   theme: 'success',
