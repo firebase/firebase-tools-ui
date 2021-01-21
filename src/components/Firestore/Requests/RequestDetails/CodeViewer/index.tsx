@@ -107,7 +107,7 @@ const RulesCodeViewer: React.FC<Props> = ({
       }}
     >
       <div
-        data-testid="request-details-code-viewer"
+        data-testid="request-details-code-viewer-section"
         className="Firestore-Request-Details-Code-Section"
       >
         {renderCodeViewer()}
