@@ -128,7 +128,7 @@ const RequestPath: React.FC<Props> = ({
           {resourcePath}
         </div>
       </Tooltip>
-      <Tooltip content="Copy Path" align="bottom" enterDelay={400}>
+      <Tooltip content="Copy path" align="bottom" enterDelay={400}>
         <IconButton
           className="Firestore-Request-Path-Copy-Button"
           ref={copyButtonRef}
