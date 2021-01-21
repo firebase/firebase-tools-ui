@@ -86,6 +86,8 @@
 
     .Firestore-Request-Path-Container {
       justify-content: flex-start;
+      // avoid content to be visible outside the header
+      overflow: hidden;
       .Firestore-Request-Path-Copy-Button {
         // Override hover effect to show/hide
         visibility: visible;
