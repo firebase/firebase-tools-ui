@@ -77,6 +77,26 @@ const RulesCodeViewer: React.FC<Props> = ({
     }
   }, [codeMirrorEditor, addLinesOutcomeGutters]);
 
+  const renderCodeViewer = () => {
+    if (isAdminRequest) {
+      return <CodeViewerAdminRequest />;
+    }
+    return (
+      <CodeMirror
+        value={firestoreRules}
+        options={{
+          theme: 'xq-light',
+          keyMap: 'sublime',
+          mode: 'jsx',
+          tabSize: 2,
+          readOnly: true,
+          gutters: ['CodeMirror-gutter-elt'],
+        }}
+        onChanges={(editor) => !codeMirrorEditor && setCodeMirrorEditor(editor)}
+      />
+    );
+  };
+
   return (
     <ThemeProvider
       options={{
@@ -90,23 +110,7 @@ const RulesCodeViewer: React.FC<Props> = ({
         data-testid="request-details-code-viewer"
         className="Firestore-Request-Details-Code-Section"
       >
-        {!isAdminRequest && (
-          <CodeMirror
-            value={firestoreRules}
-            options={{
-              theme: 'xq-light',
-              keyMap: 'sublime',
-              mode: 'jsx',
-              tabSize: 2,
-              readOnly: true,
-              gutters: ['CodeMirror-gutter-elt'],
-            }}
-            onChanges={(editor) =>
-              !codeMirrorEditor && setCodeMirrorEditor(editor)
-            }
-          />
-        )}
-        {isAdminRequest && <CodeViewerAdminRequest />}
+        {renderCodeViewer()}
       </div>
     </ThemeProvider>
   );
