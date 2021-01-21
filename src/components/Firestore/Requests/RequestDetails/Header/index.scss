@@ -38,8 +38,8 @@
   .Firestore-Request-Details-Header-Return-Button {
     width: $firestore-request-details-header-icon-button-width;
     height: $firestore-request-details-header-icon-button-width;
-    padding: 5px;
-    padding-left: 9px;
+    padding: 4px;
+    padding-left: 8px;
   }
   // No padding-right for mobile
   @media screen and (max-width: 500px) {

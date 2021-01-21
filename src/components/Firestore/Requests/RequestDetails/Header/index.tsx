@@ -54,7 +54,7 @@ const RequestDetailsHeader: React.FC<Props> = ({
       className="Firestore-Request-Details-Header"
     >
       <div className="Firestore-Request-Details-Header-Return">
-        <Tooltip content="Go back to Table" align="bottom" enterDelay={100}>
+        <Tooltip content="Go back to table" align="bottom" enterDelay={100}>
           <IconButton
             className="Firestore-Request-Details-Header-Return-Button"
             icon={{ icon: 'arrow_back_ios', size: 'small' }}

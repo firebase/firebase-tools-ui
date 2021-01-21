@@ -20,7 +20,6 @@ import React from 'react';
 import { OutcomeInfo } from '../../rules_evaluation_result_model';
 import { ICON_SELECTOR } from '../../utils';
 import { ADMIN_REQUEST_MESSAGE } from './AdminRequest';
-import { ZERO_STATE_MESSAGE } from './ZeroState';
 import CodeViewer from '.';
 
 describe('CodeViewer', () => {
@@ -37,18 +36,7 @@ describe('CodeViewer', () => {
     expect(getByText(ADMIN_REQUEST_MESSAGE)).not.toBeNull();
   });
 
-  it('renders no-rules message when the request is not admin and no rules are provided', () => {
-    const { getByText } = render(
-      <CodeViewer
-        firestoreRules={undefined}
-        linesOutcome={[]}
-        isAdminRequest={false}
-      />
-    );
-    expect(getByText(ZERO_STATE_MESSAGE)).not.toBeNull();
-  });
-
-  it('renders code-viewer when the request is not admin and rules are provided', () => {
+  it('renders code-viewer when the request is not admin', () => {
     const { getByText } = render(
       <CodeViewer
         firestoreRules={TEST_RULES}
