@@ -26,3 +26,5 @@ export const navBarOnSurface = '#FFF';
 export const textBlackPrimary = 'rgb(0 0 0 / 0.87)';
 export const textBlackSecondary = 'rgb(0 0 0 / 0.54)';
 export const textBlackTernary = 'rgb(0 0 0 / 0.38)';
+
+export const darkestGray = '#e2e2e2';
