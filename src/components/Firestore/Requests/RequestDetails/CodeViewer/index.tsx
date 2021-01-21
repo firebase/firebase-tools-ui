@@ -27,7 +27,6 @@ import { errorTheme, successTheme } from '../../../../../themes';
 import { OutcomeInfo, RulesOutcome } from '../../rules_evaluation_result_model';
 import { ICON_SELECTOR } from '../../utils';
 import CodeViewerAdminRequest from './AdminRequest';
-import CodeViewerZeroState from './ZeroState';
 
 interface Props {
   firestoreRules?: string;
@@ -91,7 +90,7 @@ const RulesCodeViewer: React.FC<Props> = ({
         data-testid="request-details-code-viewer"
         className="Firestore-Request-Details-Code-Section"
       >
-        {!isAdminRequest && firestoreRules && (
+        {!isAdminRequest && (
           <CodeMirror
             value={firestoreRules}
             options={{
@@ -107,7 +106,6 @@ const RulesCodeViewer: React.FC<Props> = ({
             }
           />
         )}
-        {!isAdminRequest && !firestoreRules && <CodeViewerZeroState />}
         {isAdminRequest && <CodeViewerAdminRequest />}
       </div>
     </ThemeProvider>
