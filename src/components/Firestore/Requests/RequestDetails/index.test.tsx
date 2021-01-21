@@ -42,7 +42,7 @@ describe('RequestDetails', () => {
     );
     expect(getByTestId('request-details-header')).not.toBeNull();
   });
-  it('renders code viewer', () => {
+  it('renders code viewer section', () => {
     const history = createMemoryHistory({
       initialEntries: [`/firestore/requests/${FAKE_EVALUATION_ID}`],
     });
@@ -54,7 +54,7 @@ describe('RequestDetails', () => {
         />
       </Router>
     );
-    expect(getByTestId('request-details-code-viewer')).not.toBeNull();
+    expect(getByTestId('request-details-code-viewer-section')).not.toBeNull();
   });
   it('renders inspection section', () => {
     const history = createMemoryHistory({
