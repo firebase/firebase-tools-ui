@@ -26,6 +26,7 @@ const FAKE_EVALUATION_ID = 'first-fake-evaluation';
 const FAKE_EVALUATION = createFakeFirestoreRequestEvaluation({
   requestId: FAKE_EVALUATION_ID,
 });
+const SET_SHOW_COPY_NOTIFICATION = jest.fn();
 
 describe('RequestDetails', () => {
   it('renders header', () => {
@@ -37,6 +38,7 @@ describe('RequestDetails', () => {
         <RequestDetails
           selectedRequest={FAKE_EVALUATION}
           requestId={FAKE_EVALUATION_ID}
+          setShowCopyNotification={SET_SHOW_COPY_NOTIFICATION}
         />
       </Router>
     );
@@ -51,6 +53,7 @@ describe('RequestDetails', () => {
         <RequestDetails
           selectedRequest={FAKE_EVALUATION}
           requestId={FAKE_EVALUATION_ID}
+          setShowCopyNotification={SET_SHOW_COPY_NOTIFICATION}
         />
       </Router>
     );
@@ -65,6 +68,7 @@ describe('RequestDetails', () => {
         <RequestDetails
           selectedRequest={FAKE_EVALUATION}
           requestId={FAKE_EVALUATION_ID}
+          setShowCopyNotification={SET_SHOW_COPY_NOTIFICATION}
         />
       </Router>
     );
@@ -80,6 +84,7 @@ describe('RequestDetails', () => {
         <RequestDetails
           selectedRequest={undefined}
           requestId={FAKE_EVALUATION_ID}
+          setShowCopyNotification={SET_SHOW_COPY_NOTIFICATION}
         />
       </Router>
     );
