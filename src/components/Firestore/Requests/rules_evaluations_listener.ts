@@ -22,11 +22,23 @@ import {
   RulesOutcome,
 } from './rules_evaluation_result_model';
 import { SAMPLE_RULES } from './sample-rules';
-import { generateId } from './utils';
 
 // TODO: Replace hardcoded websocket URL (used for development purposes only)
 //       with a function that somehow gets the proper URL
 const REQUESTS_EVALUATION_WEBSOCKET_HOST_AND_PORT = 'localhost:8888/rules/ws';
+
+// Returns an id made out of 20 random upper- and lower-case letters and numbers
+// TODO: Remove generateId function once the backend itself generates a UID for each request
+function generateId(): string {
+  let newId = '';
+  let options = 'ABCDEFGHIJKLMNOPQRSTUVWYZabcdefghijklmnoqrstuvwyz0123456789';
+  const ID_SIZE = 20;
+
+  for (let i = 0; i < ID_SIZE; i++) {
+    newId += options.charAt(Math.floor(Math.random() * options.length));
+  }
+  return newId;
+}
 
 // TODO: Remove function when 'admin' and 'error' requests, and (rules) are received from server
 // this function returns to you a mocked (RulesUpdateData) with firestore (rules) and (issues) behaviors

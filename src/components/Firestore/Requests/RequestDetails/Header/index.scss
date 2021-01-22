@@ -112,7 +112,10 @@ $header-info-path-mobile-width: calc(
     }
 
     .Firestore-Request-Path-Container {
+      // Place the copy-icon-button next to the request-path
       justify-content: flex-start;
+      // Avoid content to be visible outside the header
+      overflow: hidden;
       .Firestore-Request-Path-Copy-Button {
         // Override hover effect to show/hide
         visibility: visible;

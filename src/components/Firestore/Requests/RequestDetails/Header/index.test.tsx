@@ -24,6 +24,8 @@ import Header from './index';
 import { getDetailsRequestData } from '../index';
 
 describe('RequestDetails Header', () => {
+  const SET_SHOW_COPY_NOTIFICATION = jest.fn();
+
   it('renders header when all optional props are given', () => {
     const FAKE_EVALUATION = createFakeFirestoreRequestEvaluation();
     const {
@@ -45,6 +47,7 @@ describe('RequestDetails Header', () => {
           requestMethod={requestMethod}
           resourcePath={resourcePath}
           outcomeData={outcomeData}
+          setShowCopyNotification={SET_SHOW_COPY_NOTIFICATION}
         />
       </Router>
     );
@@ -57,7 +60,7 @@ describe('RequestDetails Header', () => {
     });
     const { getByTestId } = render(
       <Router history={history}>
-        <Header />
+        <Header setShowCopyNotification={SET_SHOW_COPY_NOTIFICATION} />
       </Router>
     );
     expect(getByTestId('request-details-header')).not.toBeNull();
@@ -69,7 +72,7 @@ describe('RequestDetails Header', () => {
     });
     const { getByLabelText } = render(
       <Router history={history}>
-        <Header />
+        <Header setShowCopyNotification={SET_SHOW_COPY_NOTIFICATION} />
       </Router>
     );
     await act(async () => {
@@ -84,7 +87,7 @@ describe('RequestDetails Header', () => {
     });
     const { getByTestId } = render(
       <Router history={history}>
-        <Header />
+        <Header setShowCopyNotification={SET_SHOW_COPY_NOTIFICATION} />
       </Router>
     );
     expect(getByTestId('request-details-header-actions')).not.toBeNull();
