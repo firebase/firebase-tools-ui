@@ -17,9 +17,9 @@
 import './Actions.scss';
 
 import { Button } from '@rmwc/button';
-import React from 'react';
-
-import RequestActionsCollapsedMenu from './ActionsCollapsedMenu';
+import { IconButton } from '@rmwc/icon-button';
+import { MenuItem, SimpleMenu } from '@rmwc/menu';
+import React, { useState } from 'react';
 
 export interface RequestAction {
   label: string;
@@ -32,12 +32,53 @@ export const REQUEST_ACTIONS: RequestAction[] = [
   },
 ];
 
+interface PropsCollapsedMenu {
+  requestActions: RequestAction[];
+}
+export const ActionsCollapsedMenu: React.FC<PropsCollapsedMenu> = ({
+  requestActions,
+}) => {
+  const [menuOpen, setMenuOpen] = useState<boolean>(false);
+
+  return (
+    <div
+      data-testid="request-details-header-actions-collapsed-menu"
+      className="Firestore-Request-Details-Actions-Collapsed-Menu"
+    >
+      <SimpleMenu
+        open={menuOpen}
+        onOpen={() => setMenuOpen(true)}
+        onClose={() => setMenuOpen(false)}
+        handle={
+          <IconButton
+            className="Firestore-Request-Details-Actions-Collapsed-Button"
+            icon={{ icon: 'more_vert' }}
+            label="Open Requests Actions Menu"
+          />
+        }
+      >
+        {requestActions.map(({ label, action }) => (
+          <MenuItem
+            key={label}
+            onClick={() => {
+              setMenuOpen(false);
+              action();
+            }}
+          >
+            {label}
+          </MenuItem>
+        ))}
+      </SimpleMenu>
+    </div>
+  );
+};
+
 export const Action: React.FC<RequestAction> = ({ label, action }) => (
   <Button
     outlined
     onClick={action}
     className="Firestore-Request-Details-Action"
-    role="request-details-action-button"
+    data-testid="request-details-action-button"
   >
     {label}
   </Button>
@@ -50,7 +91,7 @@ const RequestActions: React.FC = () => (
         <Action key={label} label={label} action={action} />
       ))}
     </div>
-    <RequestActionsCollapsedMenu requestActions={REQUEST_ACTIONS} />
+    <ActionsCollapsedMenu requestActions={REQUEST_ACTIONS} />
   </div>
 );
 
