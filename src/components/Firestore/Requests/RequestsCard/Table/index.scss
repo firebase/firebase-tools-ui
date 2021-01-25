@@ -15,16 +15,43 @@
  */
 
 @import '../../index.scss';
-@import './variables.scss';
+@import '../Header/variables.scss';
+@import '../../../Requests/variables.scss';
+
+// Table th
+$table-header-height: 31px;
+
+// Table td
+$table-cell-height: 47px;
+
+// Table
+$table-min-height: ($requests-card-min-height - $filters-header-height);
+$empty-table-min-height: ($table-header-height);
+
+// Table border-radius
+$table-border-radius: 8px;
+$empty-table-border-radius: 8px 8px 0px 0px;
+
+// Table tbody
+$table-body-min-height: (
+  $requests-card-min-height - $filters-header-height - $table-header-height
+);
+// Since the app-...-content variable uses calc(), a SASS interpolation
+// is used in order to nest a calc() function inside another calc() function.
+// CSS structure:            calc( calc(0px + 0px) - 0px)
+$table-body-viewport-height: calc(
+  #{$app-remaining-viewport-height-for-content} - #{$firestore-sub-tabs-total-height +
+    $filters-header-height + $table-header-height}
+);
 
 // Double selector - for higher specificity to Override rmwc styles.
 .Firestore-Requests-Table.Firestore-Requests-Table {
-  border-radius: $firestore-requests-table-border-radius;
+  border-radius: $table-border-radius;
   // Avoid double borders.
   margin: 0px;
   border: 0px;
   // Keep a min-height to keep it usable on short-devices (at the cost of page scrolling)
-  min-height: $firestore-requests-table-min-height;
+  min-height: $table-min-height;
   td,
   th {
     padding: 0;
@@ -37,12 +64,11 @@
     }
   }
   th {
-    height: $firestore-requests-table-header-height;
+    height: $table-header-height;
     font-size: 12px;
-    // Color different for sorted and not sorted headers
-    color: var(--mdc-theme-text-black-secondary);
+    // TODO: remove this style when sorting functionality is ready
+    // (when headers are clickable)
     &.rmwc-data-table__head-cell--sorted {
-      color: var(--mdc-theme-text-black-primary);
       cursor: auto;
     }
     // Move sort icon to the right side
@@ -53,14 +79,11 @@
     }
   }
   td {
-    height: $firestore-requests-table-cell-height;
+    height: $table-cell-height;
   }
-  thead {
-    background-color: var(--mdc-theme-surface);
-    tr {
-      // Border at bottom
-      box-shadow: 0px -1px 0 rgba(0, 0, 0, 0.12) inset;
-    }
+  thead tr {
+    // Border at bottom
+    box-shadow: 0px -1px 0 rgba(0, 0, 0, 0.12) inset;
   }
 
   // Clicklable rows styles
@@ -117,8 +140,8 @@
   }
   tbody {
     background-color: white;
-    min-height: $firestore-requests-table-body-min-height;
-    height: $firestore-requests-table-body-viewport-height;
+    min-height: $table-body-min-height;
+    height: $table-body-viewport-height;
     // This styles are required in order to apply scrolling overflow to tbody
     display: block;
     overflow: auto;
@@ -126,10 +149,10 @@
 }
 
 .Firestore-Requests-Table.Firestore-Requests-Table.Firestore-Requests-Table--Empty {
-  border-radius: $firestore-requests-empty-table-border-radius;
+  border-radius: $empty-table-border-radius;
   // Make table height equal to the height of the requestTableHeader,
   // helpful to display the Zero State message
-  min-height: $firestore-requests-empty-table-min-height;
+  min-height: $empty-table-min-height;
   tbody {
     // No content to display
     height: 0px;

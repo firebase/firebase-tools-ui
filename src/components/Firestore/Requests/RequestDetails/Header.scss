@@ -17,11 +17,38 @@
 @import '../index.scss';
 @import './Header_variables.scss';
 
+// Header return button
+$header-return-padding-right: 12px;
+
+// Header info container
+$header-info-collapsed-width: calc(
+  100% - #{($details-header-icon-button-width * 2) + $header-return-padding-right}
+);
+$header-info-mobile-width: calc(
+  100% - #{($details-header-icon-button-width * 2)}
+);
+
+// Header info content
+$header-info-date-width: 63px;
+
+$header-info-outcome-width: 35px;
+
+$header-info-method-width: 60px;
+$header-info-method-mobile-width: 35px;
+
+$header-info-path-width: calc(
+  100% - #{$header-info-date-width + $header-info-outcome-width +
+    $header-info-method-width}
+);
+$header-info-path-mobile-width: calc(
+  100% - #{$header-info-date-width + $header-info-outcome-width +
+    $header-info-method-mobile-width}
+);
+
 .Firestore-Request-Details-Header {
   border-radius: 8px 8px 0 0;
   width: 100%;
-  background-color: var(--mdc-theme-surface);
-  height: $firestore-request-details-header-height;
+  height: $details-header-height;
   padding: 0 6px;
   position: relative;
   // Shadow border at bottom
@@ -32,12 +59,12 @@
 }
 
 .Firestore-Request-Details-Header-Return {
-  padding-right: $firestore-request-details-header-return-padding-right;
+  padding-right: $header-return-padding-right;
   display: flex;
   justify-content: center;
   .Firestore-Request-Details-Header-Return-Button {
-    width: $firestore-request-details-header-icon-button-width;
-    height: $firestore-request-details-header-icon-button-width;
+    width: $details-header-icon-button-width;
+    height: $details-header-icon-button-width;
     padding: 4px;
     padding-left: 8px;
   }
@@ -56,32 +83,32 @@
   align-items: center;
   // Make space for the collapsed button
   @media screen and (max-width: 850px) {
-    width: $firestore-request-details-header-info-collapsed-width;
+    width: $header-info-collapsed-width;
   }
   // Width for mobile
   @media screen and (max-width: 500px) {
-    width: $firestore-request-details-header-info-mobile-width;
+    width: $header-info-mobile-width;
   }
 
   .Firestore-Request-Date {
-    width: $firestore-request-details-header-info-date-width;
+    width: $header-info-date-width;
   }
   .Firestore-Request-Outcome {
-    width: $firestore-request-details-header-info-outcome-width;
+    width: $header-info-outcome-width;
   }
   .Firestore-Request-Method {
-    width: $firestore-request-details-header-info-method-width;
+    width: $header-info-method-width;
     text-align: center;
     // Width for mobile
     @media screen and (max-width: 500px) {
-      width: $firestore-request-details-header-info-method-mobile-width;
+      width: $header-info-method-mobile-width;
     }
   }
   .Firestore-Request-Path {
-    width: $firestore-request-details-header-info-path-width;
+    width: $header-info-path-width;
     // Width for mobile
     @media screen and (max-width: 500px) {
-      width: $firestore-request-details-header-info-path-mobile-width;
+      width: $header-info-path-mobile-width;
     }
 
     .Firestore-Request-Path-Container {
