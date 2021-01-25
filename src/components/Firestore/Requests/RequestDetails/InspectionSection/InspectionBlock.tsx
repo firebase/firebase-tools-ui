@@ -74,7 +74,9 @@ export const InspectionBlock: React.FC<Props> = ({
             isMainBlock && MAIN_INSPECT_BLOCK_CLASS
           )}
           onClick={() => setIsExpanded(!isExpanded)}
-          role={isMainBlock ? 'inspection-main-block' : 'inspection-block'}
+          data-testid={
+            isMainBlock ? 'inspection-main-block' : 'inspection-block'
+          }
         >
           <span className={`${INSPECT_BLOCK_CLASS}-Label`}>{label}</span>
           <Theme use="textIconOnLight">

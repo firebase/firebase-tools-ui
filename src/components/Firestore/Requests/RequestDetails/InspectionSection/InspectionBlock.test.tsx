@@ -20,20 +20,20 @@ import React from 'react';
 import InspectionBlock from './InspectionBlock';
 
 describe('InspectionSection/InspectionBlock', () => {
-  it('render normal inspection block when isMainBlock is falsy', () => {
-    const { getByText, getByRole } = render(
+  it('renders normal inspection block when isMainBlock is falsy', () => {
+    const { getByText, getByTestId } = render(
       <InspectionBlock label="Regular block" isMainBlock={false} />
     );
     expect(getByText('Regular block')).not.toBeNull();
-    expect(getByRole('inspection-block')).not.toBeNull();
+    expect(getByTestId('inspection-block')).not.toBeNull();
   });
 
-  it('render main inspection block when isMainBlock is true', () => {
-    const { getByText, getByRole } = render(
+  it('renders main inspection block when isMainBlock is true', () => {
+    const { getByText, getByTestId } = render(
       <InspectionBlock label="Main block" isMainBlock={true} />
     );
     expect(getByText('Main block')).not.toBeNull();
-    expect(getByRole('inspection-main-block')).not.toBeNull();
+    expect(getByTestId('inspection-main-block')).not.toBeNull();
   });
 
   it("toggle block's expanded-icon-indicator when icon is clicked", async () => {
