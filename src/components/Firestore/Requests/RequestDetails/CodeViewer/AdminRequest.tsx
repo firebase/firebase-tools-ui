@@ -16,6 +16,7 @@
 
 import './AdminRequest.scss';
 
+import { Theme } from '@rmwc/theme';
 import { Typography } from '@rmwc/typography';
 import React from 'react';
 
@@ -23,15 +24,17 @@ export const ADMIN_REQUEST_MESSAGE = 'Admin requests bypass Firestore rules';
 
 const CodeViewerAdminRequest: React.FC = () => {
   return (
-    <div className="Firestore-Requests-Details-Code-Admin-Request-Container">
-      <Typography
-        use="body2"
-        theme="textSecondaryOnBackground"
-        className="Firestore-Requests-Details-Code-Admin-Request-Message"
-      >
-        {ADMIN_REQUEST_MESSAGE}
-      </Typography>
-    </div>
+    <Theme use="surface" wrap>
+      <div className="Firestore-Requests-Details-Code-Admin-Request-Container">
+        <Typography
+          use="body2"
+          theme="textSecondaryOnBackground"
+          className="Firestore-Requests-Details-Code-Admin-Request-Message"
+        >
+          {ADMIN_REQUEST_MESSAGE}
+        </Typography>
+      </div>
+    </Theme>
   );
 };
 
