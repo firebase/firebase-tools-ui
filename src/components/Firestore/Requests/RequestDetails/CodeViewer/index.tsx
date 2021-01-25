@@ -71,8 +71,14 @@ const RulesCodeViewer: React.FC<Props> = ({
     setCodeMirrorEditor,
   ] = useState<CodeMirror.Editor | null>(null);
 
-  // Highlights and adds the outcome Gutter to corresponding lines of rules code viewer
-  // NOTE: a Gutter in CodeMirror is an icon displayed next to the line number
+  // Highlights and adds the proper outcome-gutter to the corresponding lines of
+  // the rules code-viewer.
+  // NOTE: a gutter in CodeMirror is an icon displayed next to the line number
+  // NOTE: this current version of the code won't remove old gutters, nor old highlighted-lines
+  // if the (linesOutcome) array were to change, however, this code is fine because the
+  // (codeMirrorEditor) instance is destroyed / created after the component unmounts / mounts
+  // (therefore reseting all gutters and highlighted-lines). Additionally, there is currently
+  // no way to update the linesOutcome array of an existing request.
   useEffect(() => {
     if (codeMirrorEditor && linesOutcome) {
       linesOutcome.forEach(({ line, outcome }) => {
