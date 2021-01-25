@@ -22,9 +22,9 @@ import InspectionSection from './index';
 
 describe('InspectionSection', () => {
   const INSPECTION_MOCKED_DATA: InspectionElement[] = [
-    { label: '', value: '' },
-    { label: '', value: '' },
-    { label: '', value: '' },
+    { label: 'TEST_1', value: 'MOCKED_VALUE_1' },
+    { label: 'TEST_2', value: 'MOCKED_VALUE_2' },
+    { label: 'TEST_3', value: 'MOCKED_VALUE_3' },
   ];
 
   it("renders expressions inspection's main block", () => {
@@ -32,14 +32,19 @@ describe('InspectionSection', () => {
     expect(getByText('Query Information')).not.toBeNull();
   });
 
-  it('renders as many inspection-blocks as inspectionExpressions', () => {
-    const { getAllByRole } = render(
+  it('renders all given inspectionExpressions as inspection-blocks', () => {
+    const { getAllByTestId, getByText } = render(
       <InspectionSection
         inspectionExpressions={INSPECTION_MOCKED_DATA}
         inspectionQueryData={[]}
       />
     );
-    expect(getAllByRole('inspection-block').length).toBe(3);
+    expect(getAllByTestId('inspection-block').length).toBe(
+      INSPECTION_MOCKED_DATA.length
+    );
+    INSPECTION_MOCKED_DATA.forEach(({ label }) => {
+      expect(getByText(label)).not.toBeNull();
+    });
   });
 
   it("renders query information's main block", () => {
@@ -47,13 +52,18 @@ describe('InspectionSection', () => {
     expect(getByText('Expressions Inspection')).not.toBeNull();
   });
 
-  it('renders as many inspection-blocks as inspectionQueryData', () => {
-    const { getAllByRole } = render(
+  it('renders all given inspectionQueryData as inspection-blocks', () => {
+    const { getAllByTestId, getByText } = render(
       <InspectionSection
         inspectionExpressions={[]}
         inspectionQueryData={INSPECTION_MOCKED_DATA}
       />
     );
-    expect(getAllByRole('inspection-block').length).toBe(3);
+    expect(getAllByTestId('inspection-block').length).toBe(
+      INSPECTION_MOCKED_DATA.length
+    );
+    INSPECTION_MOCKED_DATA.forEach(({ label }) => {
+      expect(getByText(label)).not.toBeNull();
+    });
   });
 });
