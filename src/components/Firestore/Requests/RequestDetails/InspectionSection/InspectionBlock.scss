@@ -15,7 +15,6 @@
  */
 
 .Firestore-Request-Details-Inspection-Block {
-  background-color: var(--mdc-theme-surface);
   padding: 10px;
   cursor: pointer;
   height: 48px;
@@ -27,7 +26,6 @@
 }
 
 .Firestore-Request-Details-Inspection-Block.Firestore-Request-Details-Inspection-Block--Main {
-  background-color: var(--mdc-theme-inspection-main-block-background);
   font-weight: 500;
   padding: 5px 10px;
   font-size: 13px;
@@ -42,15 +40,10 @@
   text-overflow: ellipsis;
 }
 
-.Firestore-Request-Details-Inspection-Block-Icon {
-  color: var(--mdc-theme-text-black-ternary);
-}
-
 .Firestore-Request-Details-Inspection-Block-Value {
   padding: 10px;
   font-size: 14px;
   font-family: monospace;
-  color: var(--mdc-theme-text-black-secondary);
   min-height: 48px;
   display: flex;
   flex-direction: column;
