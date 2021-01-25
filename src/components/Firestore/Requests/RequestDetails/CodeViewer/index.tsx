@@ -19,10 +19,10 @@ import 'codemirror/theme/xq-light.css';
 
 import './index.scss';
 
-import { ThemeProvider } from '@rmwc/theme';
 import CodeMirror from '@uiw/react-codemirror';
 import React, { useCallback, useEffect, useState } from 'react';
 
+import { ternary } from '../../../../../colors';
 import { errorTheme, successTheme } from '../../../../../themes';
 import { OutcomeInfo, RulesOutcome } from '../../rules_evaluation_result_model';
 import { ICON_SELECTOR } from '../../utils';
@@ -98,21 +98,21 @@ const RulesCodeViewer: React.FC<Props> = ({
   };
 
   return (
-    <ThemeProvider
-      options={{
-        successThemePrimary: successTheme.primary,
-        successThemeBackground: successTheme.background,
-        errorThemePrimary: errorTheme.primary,
-        errorThemeBackground: errorTheme.background,
-      }}
+    <div
+      data-testid="request-details-code-viewer-section"
+      className="Firestore-Request-Details-Code-Section"
+      style={
+        {
+          '--emulator-ui-code-success-primary': successTheme.primary,
+          '--emulator-ui-code-success-background': successTheme.background,
+          '--emulator-ui-code-error-primary': errorTheme.primary,
+          '--emulator-ui-code-error-background': errorTheme.background,
+          '--emulator-ui-code-comment-text': ternary,
+        } as React.CSSProperties
+      }
     >
-      <div
-        data-testid="request-details-code-viewer-section"
-        className="Firestore-Request-Details-Code-Section"
-      >
-        {renderCodeViewer()}
-      </div>
-    </ThemeProvider>
+      {renderCodeViewer()}
+    </div>
   );
 };
 
