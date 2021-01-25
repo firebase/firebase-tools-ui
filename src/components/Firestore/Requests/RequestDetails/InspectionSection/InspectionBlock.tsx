@@ -17,14 +17,16 @@
 import './InspectionBlock.scss';
 
 import { Icon } from '@rmwc/icon';
-import { ThemeProvider } from '@rmwc/theme';
+import { Theme, ThemeProvider } from '@rmwc/theme';
 import classnames from 'classnames';
 import React, { useState } from 'react';
 
-import { darkestGray } from '../../../../../colors';
+import { grey100, ternary } from '../../../../../colors';
 
 const INSPECT_BLOCK_CLASS = 'Firestore-Request-Details-Inspection-Block';
 const MAIN_INSPECT_BLOCK_CLASS = INSPECT_BLOCK_CLASS + '--Main';
+
+const MAIN_INSPECT_BLOCK_BACKGROUND_COLOR = '#e2e2e2';
 
 interface Props {
   label: string;
@@ -50,32 +52,39 @@ export const InspectionBlock: React.FC<Props> = ({
     // TODO: improve how the value property is rendered: differ by value types
     //       (string, number, boolean, object and maybe array too)
     return (
-      <div className={`${INSPECT_BLOCK_CLASS}-Value`} title={value}>
-        {value}
-      </div>
+      <Theme use="secondary">
+        <div className={`${INSPECT_BLOCK_CLASS}-Value`} title={value}>
+          {value}
+        </div>
+      </Theme>
     );
   };
 
   return (
     <ThemeProvider
       options={{
-        inspectionMainBlockBackground: darkestGray,
+        surface: isMainBlock ? MAIN_INSPECT_BLOCK_BACKGROUND_COLOR : grey100,
+        textIconOnLight: ternary,
       }}
     >
-      <div
-        className={classnames(
-          INSPECT_BLOCK_CLASS,
-          isMainBlock && MAIN_INSPECT_BLOCK_CLASS
-        )}
-        onClick={() => setIsExpanded(!isExpanded)}
-        role={isMainBlock ? 'inspection-main-block' : 'inspection-block'}
-      >
-        <span className={`${INSPECT_BLOCK_CLASS}-Label`}> {label} </span>
-        <Icon
-          className={`${INSPECT_BLOCK_CLASS}-Icon`}
-          icon={{ icon: isExpanded ? 'expand_less' : 'expand_more' }}
-        />
-      </div>
+      <Theme use="surface" wrap>
+        <div
+          className={classnames(
+            INSPECT_BLOCK_CLASS,
+            isMainBlock && MAIN_INSPECT_BLOCK_CLASS
+          )}
+          onClick={() => setIsExpanded(!isExpanded)}
+          role={isMainBlock ? 'inspection-main-block' : 'inspection-block'}
+        >
+          <span className={`${INSPECT_BLOCK_CLASS}-Label`}>{label}</span>
+          <Theme use="textIconOnLight">
+            <Icon
+              className={`${INSPECT_BLOCK_CLASS}-Icon`}
+              icon={{ icon: isExpanded ? 'expand_less' : 'expand_more' }}
+            />
+          </Theme>
+        </div>
+      </Theme>
       {isExpanded && renderContent()}
     </ThemeProvider>
   );
