@@ -21,7 +21,7 @@ import { Theme, ThemeProvider } from '@rmwc/theme';
 import classnames from 'classnames';
 import React, { useState } from 'react';
 
-import { grey100, ternary } from '../../../../../colors';
+import { grey100, textBlackTertiary } from '../../../../../colors';
 
 const INSPECT_BLOCK_CLASS = 'Firestore-Request-Details-Inspection-Block';
 const MAIN_INSPECT_BLOCK_CLASS = INSPECT_BLOCK_CLASS + '--Main';
@@ -64,7 +64,7 @@ export const InspectionBlock: React.FC<Props> = ({
     <ThemeProvider
       options={{
         surface: isMainBlock ? MAIN_INSPECT_BLOCK_BACKGROUND_COLOR : grey100,
-        textIconOnLight: ternary,
+        textIconOnLight: textBlackTertiary,
       }}
     >
       <Theme use="surface" wrap>
