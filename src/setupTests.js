@@ -41,3 +41,14 @@ global.document.createRange = () => {
     },
   };
 };
+
+// Since jsdom does not implement navigator to copy to clipboard,
+// mocking this is necessary to test components that copy to clipboard.
+// NOTE: it returns a Promise that always resolves instantly
+Object.defineProperty(navigator, 'clipboard', {
+  value: {
+    writeText: (text) => {
+      return new Promise((resolve) => resolve(text));
+    },
+  },
+});

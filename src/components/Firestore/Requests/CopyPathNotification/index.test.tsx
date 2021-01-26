@@ -14,39 +14,40 @@
  * limitations under the License.
  */
 
-import { act, render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import React from 'react';
 
-import { delay } from '../../../../test_utils';
 import CopyPathNotification, { SNACKBAR_MESSAGE } from './index';
 
 describe('CopyPathNotification', () => {
-  const SET_SHOW_COPY_NOTIFICATION = jest.fn();
-
-  it('render snackbar when showCopyNotification is true', async () => {
-    const { findByText } = render(
+  it('render snackbar when showCopyNotification is true', () => {
+    const SET_SHOW_COPY_NOTIFICATION = jest.fn();
+    const { getByText } = render(
       <CopyPathNotification
-        showCopyNotification
+        showCopyNotification={true}
         setShowCopyNotification={SET_SHOW_COPY_NOTIFICATION}
         // Show snackbar indefinitely (just for testing purposes)
         timeout={-1}
       />
     );
-    await expect(findByText(SNACKBAR_MESSAGE)).not.toBeNull();
+    expect(getByText(SNACKBAR_MESSAGE)).not.toBeNull();
   });
 
-  it('automatically set showCopyNotification to false after closing snackbar', async () => {
-    const { findByText } = render(
+  // TODO: test the snackbar behavior to appear and dissapear
+  // using a more intuitive approach: test if the component is
+  // hidden or not by testing css styles
+  it('set showCopyNotification to false after snackbar timeout is over', async () => {
+    const SET_SHOW_COPY_NOTIFICATION = jest.fn();
+    render(
       <CopyPathNotification
-        showCopyNotification
+        showCopyNotification={true}
         setShowCopyNotification={SET_SHOW_COPY_NOTIFICATION}
-        // Hide snackbar after 100 ms (just for testing purposes)
-        timeout={100}
+        // Hide snackbar after 1 ms (just for testing purposes)
+        timeout={1}
       />
     );
-    await expect(findByText(SNACKBAR_MESSAGE)).not.toBeNull();
-    // Wait for snackbar to automatically close
-    await act(() => delay(150));
-    await expect(SET_SHOW_COPY_NOTIFICATION).toHaveBeenCalledWith(false);
+    await waitFor(() =>
+      expect(SET_SHOW_COPY_NOTIFICATION).toHaveBeenCalledWith(false)
+    );
   });
 });
