@@ -19,14 +19,41 @@ import 'codemirror/theme/xq-light.css';
 
 import './index.scss';
 
-import { ThemeProvider } from '@rmwc/theme';
 import CodeMirror from '@uiw/react-codemirror';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
+import { textBlackTertiary } from '../../../../../colors';
 import { errorTheme, successTheme } from '../../../../../themes';
 import { OutcomeInfo, RulesOutcome } from '../../rules_evaluation_result_model';
 import { ICON_SELECTOR } from '../../utils';
 import CodeViewerAdminRequest from './AdminRequest';
+
+// TODO: find a way to remove the CSSProperties cast
+// (TypeScript complains if object is not casted)
+const CODE_VIEWER_CUSTOM_STYLES = {
+  '--emulator-ui-code-success-primary': successTheme.primary,
+  '--emulator-ui-code-success-background': successTheme.background,
+  '--emulator-ui-code-error-primary': errorTheme.primary,
+  '--emulator-ui-code-error-background': errorTheme.background,
+  '--emulator-ui-code-comment-text': textBlackTertiary,
+} as React.CSSProperties;
+
+const CODE_MIRROR_OPTIONS = {
+  theme: 'xq-light',
+  keyMap: 'sublime',
+  mode: 'jsx',
+  tabSize: 2,
+  readOnly: true,
+  gutters: ['CodeMirror-gutter-elt'],
+};
+
+// Creates HTMLElement of a Marker containing the outcome icon
+function getMarkerElement(outcome: RulesOutcome): HTMLElement {
+  let marker = document.createElement('i');
+  marker.className = `CodeMirror-gutter-icon ${outcome} material-icons`;
+  marker.textContent = ICON_SELECTOR[outcome];
+  return marker;
+}
 
 interface Props {
   firestoreRules?: string;
@@ -44,38 +71,30 @@ const RulesCodeViewer: React.FC<Props> = ({
     setCodeMirrorEditor,
   ] = useState<CodeMirror.Editor | null>(null);
 
-  // Creates HTMLElement of a Marker containing the outcome icon
-  const getMarkerElement = useCallback((outcome: RulesOutcome): HTMLElement => {
-    let marker = document.createElement('i');
-    marker.className = `CodeMirror-gutter-icon ${outcome} material-icons`;
-    marker.innerText = ICON_SELECTOR[outcome];
-    return marker;
-  }, []);
-
-  // Adds the corresponding Marker with the correct outcome icon
-  // to all lines that have an outcome (allow or deny)
-  const addLinesOutcomeGutters = useCallback(() => {
-    linesOutcome?.map(({ line, outcome }) => {
-      codeMirrorEditor?.setGutterMarker(
-        line - 1,
-        'CodeMirror-gutter-elt',
-        getMarkerElement(outcome)
-      );
-      codeMirrorEditor?.addLineClass(
-        line - 1,
-        '',
-        `highlighted-line-of-code--${outcome}`
-      );
-    });
-  }, [codeMirrorEditor, linesOutcome, getMarkerElement]);
-
-  // Highlights and adds the outcome Gutter to corresponding lines of rules code viewer
-  // NOTE: a Gutter in CodeMirror is an icon displayed next to the line number
+  // Highlights and adds the proper outcome-gutter to the corresponding lines of
+  // the rules code-viewer.
+  // NOTE: a gutter in CodeMirror is an icon displayed next to the line number
+  // NOTE: this current version of the code won't remove old gutters, nor old highlighted-lines
+  // if the (linesOutcome) array were to change, however, this code is fine because the
+  // (codeMirrorEditor) instance is destroyed / created after the component unmounts / mounts
+  // (therefore reseting all gutters and highlighted-lines). Additionally, there is currently
+  // no way to update the linesOutcome array of an existing request.
   useEffect(() => {
-    if (codeMirrorEditor) {
-      addLinesOutcomeGutters();
+    if (codeMirrorEditor && linesOutcome) {
+      linesOutcome.forEach(({ line, outcome }) => {
+        codeMirrorEditor.setGutterMarker(
+          line - 1,
+          'CodeMirror-gutter-elt',
+          getMarkerElement(outcome)
+        );
+        codeMirrorEditor.addLineClass(
+          line - 1,
+          '',
+          `highlighted-line-of-code--${outcome}`
+        );
+      });
     }
-  }, [codeMirrorEditor, addLinesOutcomeGutters]);
+  }, [codeMirrorEditor, linesOutcome]);
 
   const renderCodeViewer = () => {
     if (isAdminRequest) {
@@ -84,35 +103,20 @@ const RulesCodeViewer: React.FC<Props> = ({
     return (
       <CodeMirror
         value={firestoreRules}
-        options={{
-          theme: 'xq-light',
-          keyMap: 'sublime',
-          mode: 'jsx',
-          tabSize: 2,
-          readOnly: true,
-          gutters: ['CodeMirror-gutter-elt'],
-        }}
+        options={CODE_MIRROR_OPTIONS}
         onChanges={(editor) => !codeMirrorEditor && setCodeMirrorEditor(editor)}
       />
     );
   };
 
   return (
-    <ThemeProvider
-      options={{
-        successThemePrimary: successTheme.primary,
-        successThemeBackground: successTheme.background,
-        errorThemePrimary: errorTheme.primary,
-        errorThemeBackground: errorTheme.background,
-      }}
+    <div
+      data-testid="request-details-code-viewer-section"
+      className="Firestore-Request-Details-Code-Section"
+      style={CODE_VIEWER_CUSTOM_STYLES}
     >
-      <div
-        data-testid="request-details-code-viewer-section"
-        className="Firestore-Request-Details-Code-Section"
-      >
-        {renderCodeViewer()}
-      </div>
-    </ThemeProvider>
+      {renderCodeViewer()}
+    </div>
   );
 };
 

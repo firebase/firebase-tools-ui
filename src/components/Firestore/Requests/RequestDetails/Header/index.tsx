@@ -18,6 +18,7 @@ import './index.scss';
 
 import { Icon } from '@rmwc/icon';
 import { IconButton } from '@rmwc/icon-button';
+import { Theme } from '@rmwc/theme';
 import { Tooltip } from '@rmwc/tooltip';
 import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
@@ -49,58 +50,64 @@ const RequestDetailsHeader: React.FC<Props> = ({
   const requestPathContainerWidth = usePathContainerWidth(pathContainerRef);
 
   return (
-    <div
-      data-testid="request-details-header"
-      className="Firestore-Request-Details-Header"
-    >
-      <div className="Firestore-Request-Details-Header-Return">
-        <Tooltip content="Go back to table" align="bottom" enterDelay={100}>
-          <IconButton
-            className="Firestore-Request-Details-Header-Return-Button"
-            icon={{ icon: 'arrow_back_ios', size: 'small' }}
-            tag={Link}
-            to="/firestore/requests"
-            label="header-return-button"
-          />
-        </Tooltip>
-      </div>
-      <div className="Firestore-Request-Details-Header-Info">
-        <Tooltip
-          content={requestTimeComplete}
-          align="bottomRight"
-          enterDelay={300}
-        >
-          <div className="Firestore-Request-Date">{requestTimeFormatted}</div>
-        </Tooltip>
-        <CustomThemeProvider use={outcomeData?.theme || 'note'} wrap>
-          <div className="Firestore-Request-Outcome">
-            {outcomeData?.icon && (
-              <Tooltip
-                content={outcomeData?.label}
-                align="bottom"
-                enterDelay={100}
-              >
-                <Icon
-                  className="Firestore-Request-Outcome-Icon"
-                  icon={{ icon: outcomeData?.icon, size: 'medium' }}
-                />
-              </Tooltip>
+    <Theme use="surface" wrap>
+      <div
+        data-testid="request-details-header"
+        className="Firestore-Request-Details-Header"
+      >
+        <div className="Firestore-Request-Details-Header-Return">
+          <Tooltip content="Go back to table" align="bottom" enterDelay={100}>
+            <IconButton
+              className="Firestore-Request-Details-Header-Return-Button"
+              icon={{ icon: 'arrow_back_ios', size: 'small' }}
+              tag={Link}
+              to="/firestore/requests"
+              label="header-return-button"
+            />
+          </Tooltip>
+        </div>
+        <div className="Firestore-Request-Details-Header-Info">
+          <Theme use="secondary">
+            <Tooltip
+              content={requestTimeComplete}
+              align="bottom"
+              enterDelay={300}
+            >
+              <div className="Firestore-Request-Date">
+                {requestTimeFormatted}
+              </div>
+            </Tooltip>
+          </Theme>
+          <CustomThemeProvider use={outcomeData?.theme || 'note'} wrap>
+            <div className="Firestore-Request-Outcome">
+              {outcomeData?.icon && (
+                <Tooltip
+                  content={outcomeData?.label}
+                  align="bottom"
+                  enterDelay={100}
+                >
+                  <Icon
+                    className="Firestore-Request-Outcome-Icon"
+                    icon={{ icon: outcomeData?.icon, size: 'medium' }}
+                  />
+                </Tooltip>
+              )}
+            </div>
+          </CustomThemeProvider>
+          <div className="Firestore-Request-Method">{requestMethod}</div>
+          <div className="Firestore-Request-Path" ref={pathContainerRef}>
+            {resourcePath && (
+              <RequestPath
+                resourcePath={resourcePath}
+                setShowCopyNotification={setShowCopyNotification}
+                requestPathContainerWidth={requestPathContainerWidth}
+              />
             )}
           </div>
-        </CustomThemeProvider>
-        <div className="Firestore-Request-Method">{requestMethod}</div>
-        <div className="Firestore-Request-Path" ref={pathContainerRef}>
-          {resourcePath && (
-            <RequestPath
-              resourcePath={resourcePath}
-              setShowCopyNotification={setShowCopyNotification}
-              requestPathContainerWidth={requestPathContainerWidth}
-            />
-          )}
         </div>
+        <RequestActions />
       </div>
-      <RequestActions />
-    </div>
+    </Theme>
   );
 };
 

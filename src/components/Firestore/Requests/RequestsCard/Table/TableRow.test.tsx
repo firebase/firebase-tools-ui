@@ -40,7 +40,6 @@ describe('RequestsTableRow', () => {
           request={FAKE_EVALUATION}
           requestId={FAKE_EVALUATION_ID}
           setShowCopyNotification={SET_SHOW_COPY_NOTIFICATION}
-          requestPathContainerWidth={0}
         />
       </Router>
     );

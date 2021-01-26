@@ -17,4 +17,7 @@
 // Filters header
 // TODO: set this variable to 56px when component is developed and
 // wants to be rendered, set it to 0px otherwise
-$firestore-requests-header-height: 0px;
+$filters-header-height: 0px;
+
+// TODO: Remove variable when requests filters header is developed and always rendered
+$filters-header-is-rendered: ($filters-header-height > 0px);

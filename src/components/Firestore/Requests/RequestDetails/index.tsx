@@ -90,7 +90,7 @@ interface DetailedRequestData {
   inspectionQueryData?: InspectionElement[];
 }
 // Outputs (in a clean format) the request data used by the RequestDetails component
-function getDetailsRequestData(
+export function getDetailsRequestData(
   request?: FirestoreRulesEvaluation
 ): DetailedRequestData {
   if (!request) {

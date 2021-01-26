@@ -19,30 +19,34 @@ import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Router } from 'react-router-dom';
 
-import { OutcomeData } from '../../types';
-import { ICON_SELECTOR } from '../../utils';
-import Header from '.';
-
-const MOCKED_OUTCOME_DATA: OutcomeData = {
-  theme: 'success',
-  icon: ICON_SELECTOR['allow'],
-  label: 'ALLOW',
-};
-const SET_SHOW_COPY_NOTIFICATION = jest.fn();
+import { createFakeFirestoreRequestEvaluation } from '../../../testing/test_utils';
+import { getDetailsRequestData } from '../index';
+import Header from './index';
 
 describe('RequestDetails Header', () => {
+  const SET_SHOW_COPY_NOTIFICATION = jest.fn();
+
   it('renders header when all optional props are given', () => {
+    const FAKE_EVALUATION = createFakeFirestoreRequestEvaluation();
+    const {
+      requestTimeComplete,
+      requestTimeFormatted,
+      requestMethod,
+      resourcePath,
+      outcomeData,
+    } = getDetailsRequestData(FAKE_EVALUATION);
+
     const history = createMemoryHistory({
       initialEntries: [`/firestore/requests/requestId`],
     });
     const { getByTestId } = render(
       <Router history={history}>
         <Header
-          requestTimeComplete=""
-          requestTimeFormatted=""
-          requestMethod=""
-          resourcePath=""
-          outcomeData={MOCKED_OUTCOME_DATA}
+          requestTimeComplete={requestTimeComplete}
+          requestTimeFormatted={requestTimeFormatted}
+          requestMethod={requestMethod}
+          resourcePath={resourcePath}
+          outcomeData={outcomeData}
           setShowCopyNotification={SET_SHOW_COPY_NOTIFICATION}
         />
       </Router>

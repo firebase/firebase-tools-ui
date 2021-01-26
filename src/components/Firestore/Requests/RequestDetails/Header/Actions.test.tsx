@@ -17,9 +17,57 @@
 import { act, fireEvent, render } from '@testing-library/react';
 import React from 'react';
 
-import RequestActions, { Action } from './Actions';
+import RequestActions, {
+  Action,
+  ActionsCollapsedMenu,
+  REQUEST_ACTIONS,
+  RequestAction,
+} from './Actions';
 
 describe('RequestDetails Actions', () => {
+  describe('ActionsCollapsedMenu', () => {
+    async function getMenuItemByText(text: string) {
+      const retriggerRequest = jest.fn();
+      const TEST_REQUEST_ACTIONS: RequestAction[] = [
+        {
+          label: 'Retrigger request',
+          action: retriggerRequest,
+        },
+      ];
+
+      const result = render(
+        <ActionsCollapsedMenu requestActions={TEST_REQUEST_ACTIONS} />
+      );
+
+      const menu = result.getByLabelText('Open Requests Actions Menu');
+
+      await act(async () => {
+        fireEvent.click(menu);
+      });
+
+      // NOTE: findByRole is the asynchronous version of getByRole, but
+      // expecting element to not appear immediately (it waits for DOM to change).
+      // Therefore, this is the equivalent to waiting for menu to open.
+      const button = await result.findByRole('menuitem', {
+        name: text,
+      });
+
+      return { ...result, button, retriggerRequest };
+    }
+
+    it('retrigger request', async () => {
+      const { button, retriggerRequest } = await getMenuItemByText(
+        'Retrigger request'
+      );
+
+      await act(async () => {
+        fireEvent.click(button);
+      });
+
+      expect(retriggerRequest).toHaveBeenCalled();
+    });
+  });
+
   describe('Action', () => {
     const ACTION_LABEL = 'Test label';
 
@@ -43,9 +91,11 @@ describe('RequestDetails Actions', () => {
   });
 
   describe('RequestActions', () => {
-    it('renders one action button', () => {
-      const { getAllByRole } = render(<RequestActions />);
-      expect(getAllByRole('request-details-action-button').length).toEqual(1);
+    it('renders all existing action buttons', () => {
+      const { getAllByTestId } = render(<RequestActions />);
+      expect(getAllByTestId('request-details-action-button').length).toEqual(
+        REQUEST_ACTIONS.length
+      );
     });
 
     it('renders the actions collapsed-menu button', () => {

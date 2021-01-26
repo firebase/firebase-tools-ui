@@ -17,6 +17,6 @@
 @import '../../Firestore/variables.scss';
 @import '../../App/variables.scss';
 
-$firestore-requests-card-min-height: (
+$requests-card-min-height: (
   $firestore-card-min-height - $firestore-sub-tabs-total-height
 );

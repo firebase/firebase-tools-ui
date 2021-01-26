@@ -16,18 +16,10 @@
 export const background = '#F6F7F9';
 export const primary = '#681DA8'; // Google Purple 900.
 export const secondary = 'rgba(0, 0, 0, .54)';
+export const textBlackTertiary = 'rgba(0, 0, 0, .38)';
 
 export const grey100 = '#F5F5F5';
 
 export const navBarPrimary = '#D7AEFB'; // Google Purple 200.
 export const navBarSurface = '#0c2d48'; // Navy 700
 export const navBarOnSurface = '#FFF';
-
-export const textBlackPrimary = 'rgb(0 0 0 / 0.87)';
-export const textBlackSecondary = 'rgb(0 0 0 / 0.54)';
-export const textBlackTernary = 'rgb(0 0 0 / 0.38)';
-
-export const darkestGray = '#e2e2e2';
-
-export const navy800 = '#051e34';
-export const successOnDark = '#00bfa5';

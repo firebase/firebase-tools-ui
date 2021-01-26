@@ -16,13 +16,16 @@
 
 @import './variables.scss';
 
+// Actions
+$actions-width-threshold: 850px;
+
 .Firestore-Request-Details-Actions-Container {
   display: flex;
   justify-content: flex-start;
   align-items: center;
   // Hide Actions buttons when width is lower than threshold
   // (to show collapsed-menu button instead)
-  @media screen and (max-width: $firestore-details-actions-width-threshold) {
+  @media screen and (max-width: $actions-width-threshold) {
     display: none;
   }
 }
@@ -34,5 +37,22 @@
   // Select all Actions but the last one
   &:not(:last-of-type) {
     margin-bottom: 10px;
+  }
+}
+
+.Firestore-Request-Details-Actions-Collapsed-Menu {
+  // Hide collapsed-menu button when width is higher than threshold
+  // (to show Actions buttons instead)
+  @media screen and (min-width: $actions-width-threshold) {
+    display: none;
+  }
+  // ensure menu items are single-lined
+  .mdc-list-item {
+    white-space: nowrap;
+  }
+  .Firestore-Request-Details-Actions-Collapsed-Button {
+    width: $details-header-icon-button-width;
+    height: $details-header-icon-button-width;
+    padding: 0px;
   }
 }

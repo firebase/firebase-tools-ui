@@ -15,11 +15,11 @@
  */
 
 .Firestore-Requests-Copy-Path-Snackbar {
-  &.mdc-snackbar__surface {
-    background-color: var(--mdc-theme-snackbar-background);
+  & .mdc-snackbar__surface {
+    background-color: #051e34; // navy800
   }
   i.rmwc-icon {
     // !important is needed because Snackbar sets an inline color style
-    color: var(--mdc-theme-snackbar-text) !important;
+    color: #00bfa5 !important; // successOnDark
   }
 }

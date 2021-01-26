@@ -17,34 +17,29 @@
 import './index.scss';
 
 import { Snackbar } from '@rmwc/snackbar';
-import { ThemeProvider } from '@rmwc/theme';
 import React from 'react';
 
-import { navy800, successOnDark } from '../../../../colors';
+export const SNACKBAR_MESSAGE = 'Request path copied to clipboard';
 
 interface Props {
   showCopyNotification: boolean;
   setShowCopyNotification: (value: boolean) => void;
+  timeout?: number;
 }
 
 const CopyPathNotification: React.FC<Props> = ({
   showCopyNotification,
   setShowCopyNotification,
+  timeout,
 }) => (
-  <ThemeProvider
-    options={{
-      snackbarBackground: navy800,
-      snackbarText: successOnDark,
-    }}
-  >
-    <Snackbar
-      className="Firestore-Requests-Copy-Path-Snackbar"
-      open={showCopyNotification}
-      onClose={() => setShowCopyNotification(false)}
-      message="Request path copied to clipboard"
-      icon={{ icon: 'check_circle', size: 'medium' }}
-    />
-  </ThemeProvider>
+  <Snackbar
+    className="Firestore-Requests-Copy-Path-Snackbar"
+    open={showCopyNotification}
+    onClose={() => setShowCopyNotification(false)}
+    message={SNACKBAR_MESSAGE}
+    icon={{ icon: 'check_circle', size: 'medium' }}
+    timeout={timeout}
+  />
 );
 
 export default CopyPathNotification;

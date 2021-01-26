@@ -14,7 +14,18 @@
  * limitations under the License.
  */
 
-@import './variables.scss';
+@import './Header/variables.scss';
+@import '../../Requests/variables.scss';
+
+// Details content
+$content-min-height: ($requests-card-min-height - $details-header-height);
+// Since the app-...-content variable uses calc(), a SASS interpolation
+// is used in order to nest a calc() function inside another calc() function
+// css structure:            calc( calc(0px + 0px) - 0px)
+$content-viewport-height: calc(
+  #{$app-remaining-viewport-height-for-content} - #{$firestore-sub-tabs-total-height +
+    $details-header-height}
+);
 
 .Firestore-Request-Details-Content {
   width: 100%;
@@ -26,6 +37,6 @@
   // to have inner scrolling behavior)
   position: relative;
   overflow: hidden;
-  min-height: $firestore-request-details-content-min-height;
-  height: $firestore-request-details-content-viewport-height;
+  min-height: $content-min-height;
+  height: $content-viewport-height;
 }
