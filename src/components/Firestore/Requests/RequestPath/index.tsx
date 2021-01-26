@@ -52,6 +52,9 @@ function truncateRequestPathFromLeft(
   }
   const pathTextString = pathHtmlElement.textContent;
   // Use the mocked offsetWidths for testing, otherwise use the real values
+  // NOTE: using this mocked values is important because jsdom does not handle
+  // layouts (which means that every variable that contains a size measurement
+  // will be equal to 0 during a test)
   const pathTextWidth = mockedPathOffsetWidth || pathHtmlElement.offsetWidth;
   const copyIconButtonWidth =
     mockedIconOffsetWidth || copyButtonElement.current?.offsetWidth || 0;
