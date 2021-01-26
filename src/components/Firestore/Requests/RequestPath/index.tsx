@@ -36,26 +36,36 @@ function copyPathToClipboard(
 // It first calculates the available width of the pathHtmlElement, and how many
 // characters fit inside the width. Based on that, it calculates a new truncated string.
 // For optimization purposes, the truncation is always calculated, but the HTMLElement
-// is only updated when the new truncated string is different than the HTMLElement's innerText.
+// is only updated when the new truncated string is different than the HTMLElement's textContent.
 function truncateRequestPathFromLeft(
   pathTextElement: React.RefObject<HTMLDivElement>,
   copyButtonElement: React.RefObject<HTMLButtonElement>,
   fullRequestPath: string,
-  pathContainerWidth?: number
+  pathContainerWidth?: number,
+  // Props used for testing purposes only
+  mockedPathOffsetWidth?: number,
+  mockedIconOffsetWidth?: number
 ): void {
   const pathHtmlElement = pathTextElement.current;
   if (!pathHtmlElement || !pathContainerWidth) {
     return;
   }
-  const {
-    offsetWidth: pathTextWidth,
-    innerText: pathTextString,
-  } = pathHtmlElement;
-  const copyIconButtonWidth = copyButtonElement.current?.offsetWidth || 0;
+  const pathTextString = pathHtmlElement.textContent;
+  // Use the mocked offsetWidths for testing, otherwise use the real values
+  const pathTextWidth = mockedPathOffsetWidth || pathHtmlElement.offsetWidth;
+  const copyIconButtonWidth =
+    mockedIconOffsetWidth || copyButtonElement.current?.offsetWidth || 0;
   // Calculate the width in px of a single character: (totalWidth / totalCharacters)
   // NOTE: Even though the font-family is not monospace (every character may have a different width),
   // this solution is accepted because the pixel approximation varies by only decimals.
-  const pathCharacterPxWidth = pathTextWidth / pathTextString.length;
+  const totalPathCharacters = pathTextString?.length || 0;
+  const pathCharacterPxWidth = totalPathCharacters
+    ? pathTextWidth / totalPathCharacters
+    : 0;
+  // End truncation to avoid x/0 division
+  if (!pathCharacterPxWidth) {
+    return;
+  }
   // Calculate amount of characters that fit inside the pathHtmlElement: (totalWidth / widthPerCharacter)
   // NOTE: Math.floor is chosen over Math.ceil to ensure there is a small space
   // between the request-path and the copy-button
@@ -77,8 +87,8 @@ function truncateRequestPathFromLeft(
       : fullRequestPath;
   // Only update the HTMLElement's inner-text if the string value changed
   // after truncation (to avoid unnecessary rerenders of component)
-  if (pathHtmlElement.innerText !== newTruncatedPathString) {
-    pathHtmlElement.innerText = newTruncatedPathString;
+  if (pathHtmlElement.textContent !== newTruncatedPathString) {
+    pathHtmlElement.textContent = newTruncatedPathString;
   }
 }
 
@@ -86,12 +96,17 @@ interface Props {
   resourcePath: string;
   setShowCopyNotification: (value: boolean) => void;
   requestPathContainerWidth?: number;
+  // Props used for testing purposes only
+  mockedPathOffsetWidth?: number;
+  mockedIconOffsetWidth?: number;
 }
 
 const RequestPath: React.FC<Props> = ({
   resourcePath,
   setShowCopyNotification,
   requestPathContainerWidth,
+  mockedPathOffsetWidth,
+  mockedIconOffsetWidth,
 }) => {
   const pathTextRef = useRef<HTMLDivElement>(null);
   const copyButtonRef = useRef<HTMLButtonElement>(null);
@@ -101,19 +116,24 @@ const RequestPath: React.FC<Props> = ({
 
   useEffect(() => {
     // truncate request-path only if the width of the pathContainer changed
-    requestPathContainerWidth !== prevPathContainerWidth &&
+    if (requestPathContainerWidth !== prevPathContainerWidth) {
       truncateRequestPathFromLeft(
         pathTextRef,
         copyButtonRef,
         resourcePath,
-        requestPathContainerWidth
+        requestPathContainerWidth,
+        mockedPathOffsetWidth,
+        mockedIconOffsetWidth
       );
+    }
   }, [
     pathTextRef,
     copyButtonRef,
     resourcePath,
     requestPathContainerWidth,
     prevPathContainerWidth,
+    mockedPathOffsetWidth,
+    mockedIconOffsetWidth,
   ]);
 
   // record previous width (useful to identify if the width changed)
@@ -132,7 +152,6 @@ const RequestPath: React.FC<Props> = ({
         <IconButton
           className="Firestore-Request-Path-Copy-Button"
           ref={copyButtonRef}
-          id="path-copy-icon-button"
           icon="content_copy"
           onClick={(event: React.MouseEvent<HTMLElement>) => {
             event.preventDefault();
