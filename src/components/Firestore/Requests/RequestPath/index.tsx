@@ -29,7 +29,10 @@ function copyPathToClipboard(
   navigator.clipboard
     .writeText(resourcePath.replace(/\s/g, ''))
     .then(() => setShowCopyNotification(true))
-    .catch(() => setShowCopyNotification(false));
+    .catch((error) => {
+      setShowCopyNotification(false);
+      throw new Error(error);
+    });
 }
 
 // Function that truncates the request path from the left side of the string.
