@@ -14,9 +14,27 @@
  * limitations under the License.
  */
 
-@import '../../Firestore/variables.scss';
-@import '../../App/variables.scss';
+import './index.scss';
 
-$requests-card-min-height: (
-  $firestore-card-min-height - $firestore-sub-tabs-total-height
+import React from 'react';
+
+import { InspectionElement } from '../../types';
+
+interface Props {
+  inspectionExpressions?: InspectionElement[];
+  inspectionQueryData?: InspectionElement[];
+}
+
+const InspectionSection: React.FC<Props> = ({
+  inspectionExpressions,
+  inspectionQueryData,
+}) => (
+  <div
+    data-testid="request-details-inspection-section"
+    className="Firestore-Request-Details-Inspection"
+  >
+    Inspection Section
+  </div>
 );
+
+export default InspectionSection;

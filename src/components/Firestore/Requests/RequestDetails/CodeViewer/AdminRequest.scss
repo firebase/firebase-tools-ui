@@ -14,25 +14,14 @@
  * limitations under the License.
  */
 
-import React from 'react';
-
-import { InspectionElement } from '../types';
-
-interface Props {
-  inspectionExpressions?: InspectionElement[];
-  inspectionQueryData?: InspectionElement[];
+.Firestore-Requests-Details-Code-Admin-Request-Container {
+  height: 100%;
+  border-bottom-left-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  .Firestore-Requests-Details-Code-Admin-Request-Message {
+    margin-bottom: 20px;
+  }
 }
-
-const InspectionSection: React.FC<Props> = ({
-  inspectionExpressions,
-  inspectionQueryData,
-}) => (
-  <div
-    data-testid="request-details-inspection-section"
-    className="Firestore-Request-Details-Inspection"
-  >
-    Inspection Section
-  </div>
-);
-
-export default InspectionSection;

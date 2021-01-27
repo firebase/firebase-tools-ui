@@ -14,9 +14,14 @@
  * limitations under the License.
  */
 
-@import '../../Firestore/variables.scss';
-@import '../../App/variables.scss';
+import { render } from '@testing-library/react';
+import React from 'react';
 
-$requests-card-min-height: (
-  $firestore-card-min-height - $firestore-sub-tabs-total-height
-);
+import CodeViewerAdminRequest, { ADMIN_REQUEST_MESSAGE } from './AdminRequest';
+
+describe('CodeViewerAdminRequest', () => {
+  it('shows admin-request message', () => {
+    const { getByText } = render(<CodeViewerAdminRequest />);
+    expect(getByText(ADMIN_REQUEST_MESSAGE)).not.toBeNull();
+  });
+});

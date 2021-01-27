@@ -1,0 +1,83 @@
+/**
+ * Copyright 2021 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.Firestore-Request-Details-Code-Section {
+  // Overflow behavior: make the inside content of the code viewer scrollable
+  width: 75%;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 100%;
+  overflow: scroll;
+  // Hide code viewer for mobile
+  @media screen and (max-width: 500px) {
+    display: none;
+  }
+  // Hide non-necessary textarea coming from CodeMirror (visible for a second when loading)
+  & > textarea {
+    display: none;
+  }
+  // CodeMirror styles override
+  .CodeMirror-sizer,
+  .CodeMirror-gutter,
+  .CodeMirror-gutters,
+  .CodeMirror-linenumber.CodeMirror-linenumber {
+    margin-right: 28px;
+  }
+  .CodeMirror-gutter-elt {
+    // Outcome Icon
+    .CodeMirror-gutter-icon {
+      left: 40px;
+      position: absolute;
+      padding: 1px 4px;
+      font-size: 15px;
+      &.allow {
+        color: var(--emulator-ui-code-success-primary);
+        background-color: var(--emulator-ui-code-success-background);
+      }
+      &.deny,
+      &.error {
+        color: var(--emulator-ui-code-error-primary);
+        background-color: var(--emulator-ui-code-error-background);
+      }
+    }
+  }
+  .CodeMirror-code {
+    // Highlight line of code.
+    .highlighted-line-of-code--allow {
+      background-color: var(--emulator-ui-code-success-background);
+    }
+    .highlighted-line-of-code--deny,
+    .highlighted-line-of-code--error {
+      background-color: var(--emulator-ui-code-error-background);
+    }
+    // Change color of comments
+    span.cm-comment {
+      color: var(--emulator-ui-code-comment-text);
+    }
+  }
+  // Move the code a little bit to the left to remove the
+  // gap between the hightlighted-line and the left-border
+  .CodeMirror-lines {
+    left: -2px;
+    position: relative;
+  }
+  // Make sure the gutters (where the line numbers are) have always the same width,
+  // so that the icon's background is always exaclty next to the border
+  .CodeMirror-gutters {
+    width: 61px !important;
+  }
+}
