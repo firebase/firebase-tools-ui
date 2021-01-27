@@ -19,6 +19,10 @@ import './index.scss';
 import React from 'react';
 
 import { InspectionElement } from '../../types';
+import InspectionBlock from './InspectionBlock';
+
+export const QUERY_INFORMATION_LABEL = 'Query information';
+export const EXPRESSIONS_INSPECTION_LABEL = 'Expressions inspection';
 
 interface Props {
   inspectionExpressions?: InspectionElement[];
@@ -33,7 +37,16 @@ const InspectionSection: React.FC<Props> = ({
     data-testid="request-details-inspection-section"
     className="Firestore-Request-Details-Inspection"
   >
-    Inspection Section
+    <InspectionBlock isMainBlock label={QUERY_INFORMATION_LABEL}>
+      {inspectionQueryData?.map(({ label, value }) => (
+        <InspectionBlock key={label} label={label} value={value} />
+      ))}
+    </InspectionBlock>
+    <InspectionBlock isMainBlock label={EXPRESSIONS_INSPECTION_LABEL}>
+      {inspectionExpressions?.map(({ label, value }) => (
+        <InspectionBlock key={label} label={label} value={value} />
+      ))}
+    </InspectionBlock>
   </div>
 );
 
