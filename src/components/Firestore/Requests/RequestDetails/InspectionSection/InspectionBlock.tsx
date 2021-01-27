@@ -41,7 +41,7 @@ export const InspectionBlock: React.FC<Props> = ({
   children,
 }) => {
   // Main inspection-blocks start expanded by default
-  const [isExpanded, setIsExpanded] = useState<Boolean>(!!isMainBlock);
+  const [isExpanded, setIsExpanded] = useState<boolean>(!!isMainBlock);
 
   // NOTE: the content of the InspectionBlock could be either a string
   // (passed through the value property) or HTML children elements.

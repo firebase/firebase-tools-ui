@@ -18,7 +18,10 @@ import { render } from '@testing-library/react';
 import React from 'react';
 
 import { InspectionElement } from '../../types';
-import InspectionSection from './index';
+import InspectionSection, {
+  EXPRESSIONS_INSPECTION_LABEL,
+  QUERY_INFORMATION_LABEL,
+} from './index';
 
 describe('InspectionSection', () => {
   const INSPECTION_MOCKED_DATA: InspectionElement[] = [
@@ -29,7 +32,7 @@ describe('InspectionSection', () => {
 
   it("renders expressions inspection's main block", () => {
     const { getByText } = render(<InspectionSection />);
-    expect(getByText('Query Information')).not.toBeNull();
+    expect(getByText(QUERY_INFORMATION_LABEL)).not.toBeNull();
   });
 
   it('renders all given inspectionExpressions as inspection-blocks', () => {
@@ -49,7 +52,7 @@ describe('InspectionSection', () => {
 
   it("renders query information's main block", () => {
     const { getByText } = render(<InspectionSection />);
-    expect(getByText('Expressions Inspection')).not.toBeNull();
+    expect(getByText(EXPRESSIONS_INSPECTION_LABEL)).not.toBeNull();
   });
 
   it('renders all given inspectionQueryData as inspection-blocks', () => {
