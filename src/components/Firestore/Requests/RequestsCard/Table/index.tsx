@@ -63,7 +63,7 @@ export const RequestsTable: React.FC<Props> = ({
       className={classnames(TABLE_CLASS, !shouldShowTable && EMPTY_TABLE_CLASS)}
     >
       <DataTableContent>
-        <DataTableHead>
+        <DataTableHead theme="surface">
           <DataTableRow>
             {/* TODO: add onSortChange to toggle sorting value when sorting functionality is ready */}
             <DataTableHeadCell
@@ -75,10 +75,16 @@ export const RequestsTable: React.FC<Props> = ({
             <DataTableHeadCell
               className={`${TABLE_CLASS}-Outcome-Header`}
             ></DataTableHeadCell>
-            <DataTableHeadCell className={`${TABLE_CLASS}-Method-Header`}>
+            <DataTableHeadCell
+              className={`${TABLE_CLASS}-Method-Header`}
+              theme="secondary"
+            >
               Method
             </DataTableHeadCell>
-            <DataTableHeadCell className={`${TABLE_CLASS}-Path-Header`}>
+            <DataTableHeadCell
+              className={`${TABLE_CLASS}-Path-Header`}
+              theme="secondary"
+            >
               Path
             </DataTableHeadCell>
           </DataTableRow>

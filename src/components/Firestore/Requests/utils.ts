@@ -18,7 +18,7 @@ import { RulesOutcome } from './rules_evaluation_result_model';
 import { OutcomeData } from './types';
 
 // Matches the material-icon name by request outcome
-const ICON_SELECTOR = {
+export const ICON_SELECTOR = {
   allow: 'check_circle',
   deny: 'remove_circle',
   error: 'report_problem',

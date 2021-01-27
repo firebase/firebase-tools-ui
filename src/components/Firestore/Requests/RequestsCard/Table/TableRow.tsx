@@ -80,7 +80,7 @@ const RequestTableRow: React.FC<Props> = ({ request, requestId }) => {
         align="bottomLeft"
         enterDelay={300}
       >
-        <DataTableCell className="Firestore-Request-Date">
+        <DataTableCell className="Firestore-Request-Date" theme="secondary">
           {requestTimeFormatted}
         </DataTableCell>
       </Tooltip>

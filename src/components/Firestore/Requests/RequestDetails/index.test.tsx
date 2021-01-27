@@ -29,31 +29,44 @@ const FAKE_EVALUATION = createFakeFirestoreRequestEvaluation({
 
 describe('RequestDetails', () => {
   it('renders header', () => {
+    const history = createMemoryHistory({
+      initialEntries: [`/firestore/requests/${FAKE_EVALUATION_ID}`],
+    });
     const { getByTestId } = render(
-      <RequestDetails
-        selectedRequest={FAKE_EVALUATION}
-        requestId={FAKE_EVALUATION_ID}
-      />
+      <Router history={history}>
+        <RequestDetails
+          selectedRequest={FAKE_EVALUATION}
+          requestId={FAKE_EVALUATION_ID}
+        />
+      </Router>
     );
     expect(getByTestId('request-details-header')).not.toBeNull();
   });
-
   it('renders code viewer', () => {
+    const history = createMemoryHistory({
+      initialEntries: [`/firestore/requests/${FAKE_EVALUATION_ID}`],
+    });
     const { getByTestId } = render(
-      <RequestDetails
-        selectedRequest={FAKE_EVALUATION}
-        requestId={FAKE_EVALUATION_ID}
-      />
+      <Router history={history}>
+        <RequestDetails
+          selectedRequest={FAKE_EVALUATION}
+          requestId={FAKE_EVALUATION_ID}
+        />
+      </Router>
     );
     expect(getByTestId('request-details-code-viewer')).not.toBeNull();
   });
-
   it('renders inspection section', () => {
+    const history = createMemoryHistory({
+      initialEntries: [`/firestore/requests/${FAKE_EVALUATION_ID}`],
+    });
     const { getByTestId } = render(
-      <RequestDetails
-        selectedRequest={FAKE_EVALUATION}
-        requestId={FAKE_EVALUATION_ID}
-      />
+      <Router history={history}>
+        <RequestDetails
+          selectedRequest={FAKE_EVALUATION}
+          requestId={FAKE_EVALUATION_ID}
+        />
+      </Router>
     );
     expect(getByTestId('request-details-inspection-section')).not.toBeNull();
   });

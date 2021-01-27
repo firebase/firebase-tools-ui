@@ -19,7 +19,6 @@
   font-family: 'Roboto Mono', monospace;
   font-style: normal;
   font-weight: normal;
-  color: var(--mdc-theme-text-black-secondary);
 }
 .Firestore-Request-Outcome .Firestore-Request-Outcome-Icon {
   color: var(--mdc-theme-primary);
@@ -34,7 +33,6 @@
   font-family: 'Roboto Mono', monospace;
   font-style: normal;
   font-weight: bold;
-  color: var(--mdc-theme-text-black-primary);
 }
 .Firestore-Request-Path {
   position: relative;
@@ -53,7 +51,6 @@
       font-family: 'Roboto Mono', monospace;
       font-style: normal;
       font-weight: normal;
-      color: var(--mdc-theme-text-black-primary);
       // Ensure path only has one line
       white-space: nowrap;
       // NOTE: the overflow must NOT be 'hidden' to ensure the text truncation works as expected

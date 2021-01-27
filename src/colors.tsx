@@ -22,7 +22,3 @@ export const grey100 = '#F5F5F5';
 export const navBarPrimary = '#D7AEFB'; // Google Purple 200.
 export const navBarSurface = '#0c2d48'; // Navy 700
 export const navBarOnSurface = '#FFF';
-
-export const textBlackPrimary = 'rgb(0 0 0 / 0.87)';
-export const textBlackSecondary = 'rgb(0 0 0 / 0.54)';
-export const textBlackTernary = 'rgb(0 0 0 / 0.38)';
