@@ -19,24 +19,25 @@ import React from 'react';
 
 import RequestPath from './index';
 
+// Manually set a custom offsetWidth value of a given HTML element
+// NOTE: using this mocked values is important because jsdom does not handle
+// layouts (which means that every variable that contains a size measurement
+// will be equal to 0 during a test)
+function setHTMLElementOffsetWidth(
+  htmlElement: HTMLElement,
+  offsetWidth: number
+): void {
+  Object.defineProperty(htmlElement, 'offsetWidth', {
+    value: offsetWidth,
+  });
+}
+
 describe('RequestPath', () => {
   const MOCKED_PATH =
     '/collection1/collection1_ID/subcollection/subcollection_ID';
   const COPY_ICON_TEXT = 'content_copy';
 
   describe('RequestPath => truncation', () => {
-    // Manually set a custom offsetWidth value of a given HTML element
-    // NOTE: using this mocked values is important because jsdom does not handle
-    // layouts (which means that every variable that contains a size measurement
-    // will be equal to 0 during a test)
-    function setHTMLElementOffsetWidth(
-      htmlElement: HTMLElement,
-      offsetWidth: number
-    ): void {
-      Object.defineProperty(htmlElement, 'offsetWidth', {
-        value: offsetWidth,
-      });
-    }
     // Helper to avoid duplicating code
     function truncationJSXContent(containersWidth?: number) {
       const SET_SHOW_COPY_NOTIFICATION = jest.fn();
