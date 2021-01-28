@@ -44,6 +44,7 @@ describe('RequestDetails', () => {
     );
     expect(getByTestId('request-details-header')).not.toBeNull();
   });
+
   it('renders code viewer section', () => {
     const history = createMemoryHistory({
       initialEntries: [`/firestore/requests/${FAKE_EVALUATION_ID}`],

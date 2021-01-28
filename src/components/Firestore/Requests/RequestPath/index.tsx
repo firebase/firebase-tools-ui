@@ -29,7 +29,10 @@ function copyPathToClipboard(
   navigator.clipboard
     .writeText(resourcePath.replace(/\s/g, ''))
     .then(() => setShowCopyNotification(true))
-    .catch(() => setShowCopyNotification(false));
+    .catch((error) => {
+      setShowCopyNotification(false);
+      throw new Error(error);
+    });
 }
 
 // Function that truncates the request path from the left side of the string.
@@ -41,23 +44,17 @@ function truncateRequestPathFromLeft(
   pathTextElement: React.RefObject<HTMLDivElement>,
   copyButtonElement: React.RefObject<HTMLButtonElement>,
   fullRequestPath: string,
-  pathContainerWidth?: number,
-  // Props used for testing purposes only
-  mockedPathOffsetWidth?: number,
-  mockedIconOffsetWidth?: number
+  pathContainerWidth?: number
 ): void {
   const pathHtmlElement = pathTextElement.current;
   if (!pathHtmlElement || !pathContainerWidth) {
     return;
   }
-  const pathTextString = pathHtmlElement.textContent;
-  // Use the mocked offsetWidths for testing, otherwise use the real values
-  // NOTE: using this mocked values is important because jsdom does not handle
-  // layouts (which means that every variable that contains a size measurement
-  // will be equal to 0 during a test)
-  const pathTextWidth = mockedPathOffsetWidth || pathHtmlElement.offsetWidth;
-  const copyIconButtonWidth =
-    mockedIconOffsetWidth || copyButtonElement.current?.offsetWidth || 0;
+  const {
+    textContent: pathTextString,
+    offsetWidth: pathTextWidth,
+  } = pathHtmlElement;
+  const copyIconButtonWidth = copyButtonElement.current?.offsetWidth || 0;
   // Calculate the width in px of a single character: (totalWidth / totalCharacters)
   // NOTE: Even though the font-family is not monospace (every character may have a different width),
   // this solution is accepted because the pixel approximation varies by only decimals.
@@ -99,17 +96,12 @@ interface Props {
   resourcePath: string;
   setShowCopyNotification: (value: boolean) => void;
   requestPathContainerWidth?: number;
-  // Props used for testing purposes only
-  mockedPathOffsetWidth?: number;
-  mockedIconOffsetWidth?: number;
 }
 
 const RequestPath: React.FC<Props> = ({
   resourcePath,
   setShowCopyNotification,
   requestPathContainerWidth,
-  mockedPathOffsetWidth,
-  mockedIconOffsetWidth,
 }) => {
   const pathTextRef = useRef<HTMLDivElement>(null);
   const copyButtonRef = useRef<HTMLButtonElement>(null);
@@ -124,9 +116,7 @@ const RequestPath: React.FC<Props> = ({
         pathTextRef,
         copyButtonRef,
         resourcePath,
-        requestPathContainerWidth,
-        mockedPathOffsetWidth,
-        mockedIconOffsetWidth
+        requestPathContainerWidth
       );
     }
   }, [
@@ -135,8 +125,6 @@ const RequestPath: React.FC<Props> = ({
     resourcePath,
     requestPathContainerWidth,
     prevPathContainerWidth,
-    mockedPathOffsetWidth,
-    mockedIconOffsetWidth,
   ]);
 
   // record previous width (useful to identify if the width changed)
@@ -147,7 +135,11 @@ const RequestPath: React.FC<Props> = ({
   return (
     <div className="Firestore-Request-Path-Container">
       <Tooltip content={resourcePath} align="bottomLeft" enterDelay={400}>
-        <div className="Firestore-Request-Path-String" ref={pathTextRef}>
+        <div
+          className="Firestore-Request-Path-String"
+          ref={pathTextRef}
+          data-testid="request-path-text"
+        >
           {resourcePath}
         </div>
       </Tooltip>

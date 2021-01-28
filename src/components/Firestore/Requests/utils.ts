@@ -58,22 +58,18 @@ export function usePathContainerWidth(
     [setPathContainerWidth, getPathContainerWidth]
   );
 
-  // Starts the subscription to window-resizing, and sends a callback
-  // that updates the (pathContainerWidth) after every resize.
-  // NOTE: this code only executes the first time the component renders,
-  // and it makes sure to remove the subscription when the component unmounts
-  // (to ensure only one subscription to window-resizing is active at a time)
+  // NOTE: this code only executes the first time the component renders.
   useEffect(() => {
+    // Set the initial width of path-container
+    setPathContainerWidth(getPathContainerWidth());
+    // Starts the subscription to window-resizing, and sends a callback
+    // that updates the (pathContainerWidth) after every resize.
     window?.addEventListener('resize', debouncedHandleWindowResize);
+    // Remove the subscription when the component unmounts
+    // (to ensure only one subscription to window-resizing is active at a time)
     return () =>
       window?.removeEventListener('resize', debouncedHandleWindowResize);
-  }, [debouncedHandleWindowResize]);
-
-  // Set the initial width of path-container
-  // NOTE: this code only executes the first time the component renders
-  useEffect(() => {
-    setPathContainerWidth(getPathContainerWidth());
-  }, [pathContainerRef, getPathContainerWidth]);
+  }, [debouncedHandleWindowResize, getPathContainerWidth]);
 
   return pathContainerWidth;
 }
