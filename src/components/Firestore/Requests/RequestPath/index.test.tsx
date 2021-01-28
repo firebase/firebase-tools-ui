@@ -25,21 +25,16 @@ describe('RequestPath', () => {
   const COPY_ICON_TEXT = 'content_copy';
 
   describe('RequestPath => truncation', () => {
-    // Manually set a custom offsetWidth value
+    // Manually set a custom offsetWidth value of a given HTML element
     // NOTE: using this mocked values is important because jsdom does not handle
     // layouts (which means that every variable that contains a size measurement
     // will be equal to 0 during a test)
-    function setOffsetWidths(
-      pathHtmlElement: HTMLElement,
-      copyIconButtonHtmlElement: HTMLElement,
-      offsetWidthPath: number,
-      offsetWidthIconButton: number
+    function setHTMLElementOffsetWidth(
+      htmlElement: HTMLElement,
+      offsetWidth: number
     ): void {
-      Object.defineProperty(pathHtmlElement, 'offsetWidth', {
-        value: offsetWidthPath,
-      });
-      Object.defineProperty(copyIconButtonHtmlElement, 'offsetWidth', {
-        value: offsetWidthIconButton,
+      Object.defineProperty(htmlElement, 'offsetWidth', {
+        value: offsetWidth,
       });
     }
     // Helper to avoid duplicating code
@@ -62,7 +57,8 @@ describe('RequestPath', () => {
       );
       const pathHtmlElement = getByTestId('request-path-text');
       const copyIconButtonHtmlElement = getByText(COPY_ICON_TEXT);
-      setOffsetWidths(pathHtmlElement, copyIconButtonHtmlElement, 250, 48);
+      setHTMLElementOffsetWidth(pathHtmlElement, 250);
+      setHTMLElementOffsetWidth(copyIconButtonHtmlElement, 48);
       // Rerender RequestPath with new path-container width
       // NOTE: re-rendering is important because we want the
       // new mocked offsetWidth values to be used
@@ -80,7 +76,8 @@ describe('RequestPath', () => {
       );
       const pathHtmlElement = getByTestId('request-path-text');
       const copyIconButtonHtmlElement = getByText(COPY_ICON_TEXT);
-      setOffsetWidths(pathHtmlElement, copyIconButtonHtmlElement, 250, 48);
+      setHTMLElementOffsetWidth(pathHtmlElement, 250);
+      setHTMLElementOffsetWidth(copyIconButtonHtmlElement, 48);
       // Rerender RequestPath with new path-container width
       // NOTE: re-rendering is important because we want the
       // new mocked offsetWidth values to be used
