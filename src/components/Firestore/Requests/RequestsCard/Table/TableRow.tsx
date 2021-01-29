@@ -23,6 +23,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { CustomThemeProvider } from '../../../../../themes';
+import RequestPath from '../../RequestPath';
 import { FirestoreRulesEvaluation } from '../../rules_evaluation_result_model';
 import { OutcomeData } from '../../types';
 import { OUTCOME_DATA } from '../../utils';
@@ -59,9 +60,16 @@ function getTableRowRequestData(
 interface Props {
   request: FirestoreRulesEvaluation;
   requestId: string;
+  setShowCopyNotification: (value: boolean) => void;
+  requestPathContainerWidth?: number;
 }
 
-const RequestTableRow: React.FC<Props> = ({ request, requestId }) => {
+const RequestTableRow: React.FC<Props> = ({
+  request,
+  requestId,
+  setShowCopyNotification,
+  requestPathContainerWidth,
+}) => {
   const history = useHistory();
   const {
     requestTimeComplete,
@@ -104,7 +112,13 @@ const RequestTableRow: React.FC<Props> = ({ request, requestId }) => {
         {requestMethod}
       </DataTableCell>
       <DataTableCell className="Firestore-Request-Path">
-        {resourcePath}
+        {resourcePath && (
+          <RequestPath
+            resourcePath={resourcePath}
+            setShowCopyNotification={setShowCopyNotification}
+            requestPathContainerWidth={requestPathContainerWidth}
+          />
+        )}
       </DataTableCell>
     </DataTableRow>
   );

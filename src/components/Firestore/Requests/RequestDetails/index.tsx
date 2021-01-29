@@ -128,11 +128,15 @@ const mapStateToProps = (
   };
 };
 interface PropsFromStore extends ReturnType<typeof mapStateToProps> {}
-interface Props extends PropsFromStore, RequestDetailsRouteParams {}
+interface PropsFromParentComponent extends RequestDetailsRouteParams {
+  setShowCopyNotification: (value: boolean) => void;
+}
+interface Props extends PropsFromStore, PropsFromParentComponent {}
 
 export const RequestDetails: React.FC<Props> = ({
   selectedRequest,
   requestId,
+  setShowCopyNotification,
 }) => {
   const {
     requestTimeComplete,
@@ -162,6 +166,7 @@ export const RequestDetails: React.FC<Props> = ({
             requestMethod={requestMethod}
             resourcePath={resourcePath}
             outcomeData={outcomeData}
+            setShowCopyNotification={setShowCopyNotification}
           />
           <div className="Firestore-Request-Details-Content">
             <RequestDetailsCodeViewer

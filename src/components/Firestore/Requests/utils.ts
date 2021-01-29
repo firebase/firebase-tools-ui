@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+import debounce from 'lodash.debounce';
+import { useCallback, useEffect, useState } from 'react';
+
 import { RulesOutcome } from './rules_evaluation_result_model';
 import { OutcomeData } from './types';
 
@@ -34,15 +37,39 @@ export const OUTCOME_DATA: OutcomeDataPicker = {
   admin: { theme: 'success', icon: ICON_SELECTOR['admin'], label: 'ADMIN' },
 };
 
-// Returns an id made out of 20 random upper- and lower-case letters and numbers
-// TODO: Remove generateId function once the backend itself generates a UID for each request
-export function generateId(): string {
-  let newId = '';
-  let options = 'ABCDEFGHIJKLMNOPQRSTUVWYZabcdefghijklmnoqrstuvwyz0123456789';
-  const ID_SIZE = 20;
+// Custom hook that returns the width of the path container,
+// a new width is returned after every window resizing is done
+export function usePathContainerWidth(
+  pathContainerRef: React.RefObject<HTMLDivElement>
+): number | undefined {
+  const [pathContainerWidth, setPathContainerWidth] = useState<
+    number | undefined
+  >();
 
-  for (let i = 0; i < ID_SIZE; i++) {
-    newId += options.charAt(Math.floor(Math.random() * options.length));
-  }
-  return newId;
+  const getPathContainerWidth = useCallback(() => {
+    return pathContainerRef?.current?.offsetWidth;
+  }, [pathContainerRef]);
+
+  // Update (pathContainerWidth), debounce helps avoiding unnecessary calls
+  const debouncedHandleWindowResize = useCallback(
+    debounce(() => {
+      setPathContainerWidth(getPathContainerWidth());
+    }, 150),
+    [setPathContainerWidth, getPathContainerWidth]
+  );
+
+  // NOTE: this code only executes the first time the component renders.
+  useEffect(() => {
+    // Set the initial width of path-container
+    setPathContainerWidth(getPathContainerWidth());
+    // Starts the subscription to window-resizing, and sends a callback
+    // that updates the (pathContainerWidth) after every resize.
+    window?.addEventListener('resize', debouncedHandleWindowResize);
+    // Remove the subscription when the component unmounts
+    // (to ensure only one subscription to window-resizing is active at a time)
+    return () =>
+      window?.removeEventListener('resize', debouncedHandleWindowResize);
+  }, [debouncedHandleWindowResize, getPathContainerWidth]);
+
+  return pathContainerWidth;
 }
