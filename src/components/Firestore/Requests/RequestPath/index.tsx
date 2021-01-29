@@ -26,12 +26,15 @@ function copyPathToClipboard(
   resourcePath: string,
   setShowCopyNotification: (value: boolean) => void
 ) {
+  if (!navigator?.clipboard?.writeText) {
+    throw new Error('Your browser does not support copying to clipboard');
+  }
   navigator.clipboard
     .writeText(resourcePath.replace(/\s/g, ''))
     .then(() => setShowCopyNotification(true))
     .catch((error) => {
       setShowCopyNotification(false);
-      throw new Error(error);
+      throw new Error(`Could not copy to clipboard.\n\nReason: ${error}`);
     });
 }
 
