@@ -68,7 +68,10 @@ const FirestoreEmulatorSettings: React.FC = React.memo(({ children }) => {
   useEffect(() => {
     preloadFirestore({
       firebaseApp,
-      setup: firestore => firestore().useEmulator(config.host, config.port),
+      setup: (firestore) => {
+        firestore().settings({ experimentalAutoDetectLongPolling: true });
+        firestore().useEmulator(config.host, config.port);
+      },
     }).then(() => setConnected(true));
   }, [firebaseApp, config]);
 
@@ -123,7 +126,7 @@ export function useRootCollections() {
   );
 
   const collectionIds = data?.collectionIds || [];
-  return collectionIds.map(id => firestore.collection(id));
+  return collectionIds.map((id) => firestore.collection(id));
 }
 
 export function useSubCollections(
@@ -144,7 +147,7 @@ export function useSubCollections(
   );
 
   const collectionIds = data?.collectionIds || [];
-  return collectionIds.map(id => docRef.collection(id));
+  return collectionIds.map((id) => docRef.collection(id));
 }
 
 const DOCUMENT_PATH_RE = /projects\/(?<project>.*)\/databases\/(?<database>.*)\/documents\/(?<path>.*)/;
@@ -170,8 +173,8 @@ export function useMissingDocuments(
 
   return (
     data?.documents
-      ?.filter(d => !d.createTime)
-      .map(d => {
+      ?.filter((d) => !d.createTime)
+      .map((d) => {
         const [, , , path] = DOCUMENT_PATH_RE.exec(d.name);
         return { path };
       }) || []
@@ -195,6 +198,6 @@ export function useEjector() {
 function encodePath(path: string): string {
   return path
     .split('/')
-    .map(uri => encodeURIComponent(uri))
+    .map((uri) => encodeURIComponent(uri))
     .join('/');
 }
