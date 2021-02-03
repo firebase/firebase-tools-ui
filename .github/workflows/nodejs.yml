@@ -78,12 +78,16 @@ jobs:
       - run: npm i cypress firebase-tools
       - name: Display structure of node-bins
         run: ls ./node_modules/.bin
+      - name: Create firebase.json
+        uses: jsdaniell/create-json@1.1.2
+        with:
+          name: "firebase.json"
+          json: '{"emulators":{"auth":{"port":9099},"functions":{"port":5001},"firestore":{"port":8080},"database":{"port":9000},"hosting":{"port":5000},"pubsub":{"port":8085}}}'
       - name: Run cypress specs
         uses: cypress-io/github-action@v2
         with:
-          install: false
           env: PORT=3000
-          start: ./node_modules/.bin/firebase emulators:exec --only database,firestore --project sample 'node server.bundle.js'
+          start: ./node_modules/.bin/firebase emulators:exec --project sample 'node server.bundle.js'
           wait-on: 'http://localhost:3000'
 
   check-package-lock:
