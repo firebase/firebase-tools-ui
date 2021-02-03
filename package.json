@@ -65,6 +65,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "start:prod": "node server.bundle.js",
     "build": "npm run build:web && npm run build:server",
     "bundle": "zip -r emulator-ui-dist.zip server.bundle.js build",
     "build:web": "react-scripts build",
