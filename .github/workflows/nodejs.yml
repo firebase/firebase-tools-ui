@@ -66,3 +66,26 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: npm install --package-lock-only
       - run: "git diff --exit-code -- package-lock.json || (echo 'Error: package-lock.json is changed during npm install! Please make sure to use npm >= 6.9.0 and commit package-lock.json.' && false)"
+
+  e2e:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [14.x]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm ci
+      - name: Run tests against emulator
+        run: |
+          npm install -g firebase-tools
+          npm run build
+          firebase emulators:exec --project sample --only database,firestore --import test-data 'PORT=3000 node server.bundle.js'
+          npm run e2e -- --forceExit
+        env:
+          CI: true
