@@ -85,10 +85,11 @@ jobs:
           json: '{"emulators":{"auth":{"port":9099},"functions":{"port":5001},"firestore":{"port":8080},"database":{"port":9000},"hosting":{"port":5000},"pubsub":{"port":8085}}}'
       - run: pwd
       - run: ls
+      - run: nohup firebase emulators:exec --project sample --import test-data 'PORT=3000 node server.bundle.js' &
       - name: Run cypress specs
         uses: cypress-io/github-action@v2
         with:
-          start: firebase emulators:exec --project sample --import test-data 'echo $PATH && which node'
+          # start: firebase emulators:exec --project sample --import test-data 'echo $PATH && which node'
           wait-on: 'http://localhost:3000'
 
   check-package-lock:
