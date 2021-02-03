@@ -75,18 +75,13 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - uses: actions/cache@v2
-        with:
-          path: |
-            ~/.cache/Cypress
-            node_modules
-          key: my-cache-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
       - run: npm i cypress firebase-tools
+      - name: Display structure of node-bins
+        run: ls ./node_modules/.bin
       - name: Run cypress specs
         uses: cypress-io/github-action@v2
         with:
           install: false
-          node-version: ${{ matrix.node-version }}
           env: PORT=3000
           start: ./node_modules/.bin/firebase emulators:exec --only database,firestore --project sample 'node ./build/server.bundle.js'
           wait-on: 'http://localhost:3000'
