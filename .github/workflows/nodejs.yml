@@ -69,28 +69,31 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: firebase-tools-ui
-      - name: Display structure of downloaded files
-        run: ls -R
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
       - run: npm i -g firebase-tools
-      # - name: Display structure of node-bins
-      #   run: ls ./node_modules/.bin
       - name: Create firebase.json
         uses: jsdaniell/create-json@1.1.2
         with:
           name: "firebase.json"
           json: '{"emulators":{"auth":{"port":9099},"functions":{"port":5001},"firestore":{"port":8080},"database":{"port":9000},"hosting":{"port":5000},"pubsub":{"port":8085}}}'
-      - run: pwd
-      - run: ls
       - run: nohup firebase emulators:exec --project sample --import test-data 'PORT=3000 node server.bundle.js' &
       - name: Run cypress specs
         uses: cypress-io/github-action@v2
         with:
-          # start: firebase emulators:exec --project sample --import test-data 'echo $PATH && which node'
           wait-on: 'http://localhost:3000'
+      - uses: actions/upload-artifact@v1
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots
+      - uses: actions/upload-artifact@v1
+        if: always()
+        with:
+          name: cypress-videos
+          path: cypress/videos
 
   check-package-lock:
     runs-on: ubuntu-latest
