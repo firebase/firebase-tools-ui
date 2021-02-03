@@ -89,7 +89,7 @@ jobs:
         uses: cypress-io/github-action@v2
         with:
           env: PORT=3000,CI=true
-          start: firebase emulators:exec --project sample 'ls'
+          start: firebase emulators:exec --project sample 'node server.bundle.js'
           wait-on: 'http://localhost:3000'
 
   check-package-lock:
