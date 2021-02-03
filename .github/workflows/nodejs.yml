@@ -29,7 +29,7 @@ jobs:
           CI: true
       - uses: actions/upload-artifact@v2
         with:
-          name: emulator-tools-ui
+          name: firebase-tools-ui
           path: |
             build/
             server.bundle.js
@@ -47,41 +47,44 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      # - run: curl -sL https://firebase.tools | bash
       - run: npm ci
       - name: Run tests against emulator
-        # forceExit: something is not cleaning up - likely firebase-app that needs to be deleted, investigate
         run: |
           npm install -g firebase-tools
           firebase emulators:exec --only database,firestore --project sample 'npm run test:coverage -- --forceExit'
         env:
           CI: true
 
-  # e2e:
-  #   runs-on: ubuntu-latest
+  e2e:
+    runs-on: ubuntu-latest
 
-  #   strategy:
-  #     matrix:
-  #       node-version: [14.x]
+    needs: build
 
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - name: Use Node.js ${{ matrix.node-version }}
-  #       uses: actions/setup-node@v1
-  #       with:
-  #         node-version: ${{ matrix.node-version }}
-  #     - name: Clean install dependencies and build
-  #       run: |
-  #         npm ci
-  #         npm run build
-  #     - name: Install emulators
-  #       run: npm install -g firebase-tools
-  #     - name: Run cypress specs
-  #       uses: cypress-io/github-action@v2
-  #       with:
-  #         env: PORT=3000
-  #         start: firebase emulators:exec --only database,firestore --project sample 'node server.bundle.js'
-        
+    strategy:
+      matrix:
+        node-version: [14.x]
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v2
+        with:
+          name: firebase-tools-ui
+
+      - name: Display structure of downloaded files
+        run: ls -R
+      
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: np ci
+      - name: Install emulators
+        run: npm install -g firebase-tools
+      - name: Run cypress specs
+        uses: cypress-io/github-action@v2
+        with:
+          env: PORT=3000
+          start: firebase emulators:exec --only database,firestore --project sample 'node ./firebase-emulators-ui/server.bundle.js'
 
   check-package-lock:
     runs-on: ubuntu-latest
