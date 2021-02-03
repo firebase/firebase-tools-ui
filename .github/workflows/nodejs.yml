@@ -83,7 +83,7 @@ jobs:
         with:
           install: false
           env: PORT=3000
-          start: ./node_modules/.bin/firebase emulators:exec --only database,firestore --project sample 'node ./build/server.bundle.js'
+          start: ./node_modules/.bin/firebase emulators:exec --only database,firestore --project sample 'node server.bundle.js'
           wait-on: 'http://localhost:3000'
 
   check-package-lock:
