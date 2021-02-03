@@ -75,7 +75,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm i cypress firebase-tools
+      - run: npm i -g firebase-tools
       - name: Display structure of node-bins
         run: ls ./node_modules/.bin
       - name: Create firebase.json
