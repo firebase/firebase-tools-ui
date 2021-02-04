@@ -3,16 +3,12 @@ context('Firestore', () => {
     cy.visit('/firestore');
   });
 
-  it('looks good with an empty database', () => {
+  it('looks good', () => {
     cy.viewport('macbook-13');
-    cy.matchImageSnapshot('zero-state');
-  });
-
-  it('looks good with data', () => {
     cy.get('button:contains("Start collection")').click();
 
-    cy.get('.mdc-dialog').within(() => {
-      cy.matchImageSnapshot('new-collection-dialog');
+    cy.get('.mdc-dialog__surface').within(() => {
+      cy.root().matchImageSnapshot('new-collection-dialog');
 
       cy.focused().type('my-collection');
       cy.get('button:contains("Next")').click();
@@ -20,7 +16,7 @@ context('Firestore', () => {
       cy.contains('.Field', 'Document ID').within(() => {
         cy.get('input').clear().type('my-document');
       });
-      cy.matchImageSnapshot('new-data-dialog');
+      cy.root().matchImageSnapshot('new-data-dialog');
 
       cy.contains('.Field', 'Field').within(() => {
         cy.get('input').clear().type('foobar');
@@ -31,6 +27,6 @@ context('Firestore', () => {
       cy.get('button:contains("Save")').click();
     });
 
-    cy.get('.Firestore').matchImageSnapshot('zero-state');
+    cy.get('.Firestore').matchImageSnapshot('with-data');
   });
 });
