@@ -27,7 +27,6 @@ import { CustomThemeProvider } from '../../../../../themes';
 import RequestPath from '../../RequestPath';
 import { OutcomeData } from '../../types';
 import { usePathContainerWidth } from '../../utils';
-import RequestActions from './Actions';
 
 interface Props {
   requestTimeComplete?: string;
@@ -50,7 +49,7 @@ const RequestDetailsHeader: React.FC<Props> = ({
   const requestPathContainerWidth = usePathContainerWidth(pathContainerRef);
 
   return (
-    <Theme use="surface" wrap>    
+    <Theme use="surface" wrap>
       <div
         data-testid="request-details-header"
         className="Firestore-Request-Details-Header"
@@ -73,7 +72,9 @@ const RequestDetailsHeader: React.FC<Props> = ({
               align="bottom"
               enterDelay={300}
             >
-              <div className="Firestore-Request-Date">{requestTimeFormatted}</div>
+              <div className="Firestore-Request-Date">
+                {requestTimeFormatted}
+              </div>
             </Tooltip>
           </Theme>
           <CustomThemeProvider use={outcomeData?.theme || 'note'} wrap>
@@ -103,9 +104,8 @@ const RequestDetailsHeader: React.FC<Props> = ({
             )}
           </div>
         </div>
-        <RequestActions />
       </div>
-    </Theme>    
+    </Theme>
   );
 };
 

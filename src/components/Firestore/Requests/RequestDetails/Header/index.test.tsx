@@ -20,8 +20,8 @@ import React from 'react';
 import { Router } from 'react-router-dom';
 
 import { createFakeFirestoreRequestEvaluation } from '../../../testing/test_utils';
-import Header from './index';
 import { getDetailsRequestData } from '../index';
+import Header from './index';
 
 describe('RequestDetails Header', () => {
   const SET_SHOW_COPY_NOTIFICATION = jest.fn();
@@ -79,17 +79,5 @@ describe('RequestDetails Header', () => {
       await fireEvent.click(getByLabelText('header-return-button'));
     });
     expect(history.location.pathname).toBe('/firestore/requests');
-  });
-
-  it('renders the actions component', () => {
-    const history = createMemoryHistory({
-      initialEntries: [`/firestore/requests/requestId`],
-    });
-    const { getByTestId } = render(
-      <Router history={history}>
-        <Header setShowCopyNotification={SET_SHOW_COPY_NOTIFICATION} />
-      </Router>
-    );
-    expect(getByTestId('request-details-header-actions')).not.toBeNull();
   });
 });

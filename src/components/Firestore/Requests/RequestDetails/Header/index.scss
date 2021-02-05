@@ -17,16 +17,17 @@
 @import '../../../Requests/index.scss';
 @import './variables.scss';
 
+// Header icon button
+$header-return-icon-button-width: 30px;
+
 // Header return button
 $header-return-padding-right: 12px;
 
 // Header info container
 $header-info-collapsed-width: calc(
-  100% - #{($details-header-icon-button-width * 2) + $header-return-padding-right}
+  100% - #{$header-return-icon-button-width + $header-return-padding-right}
 );
-$header-info-mobile-width: calc(
-  100% - #{($details-header-icon-button-width * 2)}
-);
+$header-info-mobile-width: calc(100% - #{$header-return-icon-button-width});
 
 // Header info content
 $header-info-date-width: 63px;
@@ -63,8 +64,8 @@ $header-info-path-mobile-width: calc(
   display: flex;
   justify-content: center;
   .Firestore-Request-Details-Header-Return-Button {
-    width: $details-header-icon-button-width;
-    height: $details-header-icon-button-width;
+    width: $header-return-icon-button-width;
+    height: $header-return-icon-button-width;
     padding: 4px;
     padding-left: 8px;
   }
