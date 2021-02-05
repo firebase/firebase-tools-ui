@@ -80,10 +80,7 @@ export const RequestsTable: React.FC<Props> = ({
           <DataTableHead theme="surface">
             <DataTableRow>
               {/* TODO: add onSortChange to toggle sorting value when sorting functionality is ready */}
-              <DataTableHeadCell
-                className={`${TABLE_CLASS}-Date-Header`}
-                sort={1}
-              >
+              <DataTableHeadCell className={`${TABLE_CLASS}-Date-Header`}>
                 Time
               </DataTableHeadCell>
               <DataTableHeadCell
