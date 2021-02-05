@@ -27,7 +27,8 @@ import { CustomThemeProvider } from '../../../../../themes';
 import RequestPath from '../../RequestPath';
 import { OutcomeData } from '../../types';
 import { usePathContainerWidth } from '../../utils';
-import RequestActions from './Actions';
+
+// import RequestActions from './Actions';
 
 interface Props {
   requestTimeComplete?: string;
@@ -105,7 +106,7 @@ const RequestDetailsHeader: React.FC<Props> = ({
             )}
           </div>
         </div>
-        <RequestActions />
+        {/* <RequestActions /> */}
       </div>
     </Theme>
   );

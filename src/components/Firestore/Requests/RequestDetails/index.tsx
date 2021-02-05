@@ -36,13 +36,6 @@ import RequestDetailsCodeViewer from './CodeViewer/index';
 import RequestDetailsHeader from './Header/index';
 import RequestDetailsInspectionSection from './InspectionSection/index';
 
-// TODO: remove this mock array when this data comes from the server
-const INSPECTION_QUERY_DATA: InspectionElement[] = [
-  { label: 'limit', value: '20' },
-  { label: 'orderBy', value: 'total_reviews' },
-  { label: 'where', value: "name == 'Pozole'\navg_review_rate > 4" },
-];
-
 // Combines (granularAllowOutcomes) and (issues) into one array of the same type
 function getLinesOutcome(
   granularAllowOutcomes: OutcomeInfo[],
@@ -59,15 +52,33 @@ function getLinesOutcome(
 }
 // Transforms the (rulesContext) data into InspectionElements
 function getInspectionExpressions(
-  rulesContext: FirestoreRulesContext
+  rulesContext: FirestoreRulesContext,
+  outcome: RulesOutcome
 ): InspectionElement[] {
+  if (outcome === 'admin') {
+    return [];
+  }
   // TODO: delete this constant and use only the rulesContext when
   // the server provides the corresponding elements to inspect
   // (this is only useful for development purposes and to show in the final presentation)
-  const MOCKED_RULES_CONTEXT = {
-    'isSignedIn()': false,
+  const timestamp = rulesContext.request.time * 1000;
+  const requestDate = new Date(timestamp);
+  const RULES_CONTEXT_WITH_FORMATTED_TIME = {
     ...rulesContext,
+    request: {
+      ...rulesContext.request,
+      time: requestDate.toLocaleString(),
+    },
   };
+  // show mocked expressions to inspect only for denied requests
+  const MOCKED_RULES_CONTEXT =
+    outcome === 'deny'
+      ? {
+          'isSignedIn()': false,
+          'userOwnsDocument()': false,
+          ...RULES_CONTEXT_WITH_FORMATTED_TIME,
+        }
+      : RULES_CONTEXT_WITH_FORMATTED_TIME;
   return Object.entries(MOCKED_RULES_CONTEXT).map(
     ([key, value]): InspectionElement => {
       return {
@@ -114,8 +125,7 @@ export function getDetailsRequestData(
     outcomeData: OUTCOME_DATA[outcome],
     firestoreRules: data?.rules,
     linesOutcome: getLinesOutcome(granularAllowOutcomes, data?.issues),
-    inspectionExpressions: getInspectionExpressions(rulesContext),
-    inspectionQueryData: INSPECTION_QUERY_DATA,
+    inspectionExpressions: getInspectionExpressions(rulesContext, outcome),
   };
 }
 
@@ -148,7 +158,6 @@ export const RequestDetails: React.FC<Props> = ({
     firestoreRules,
     linesOutcome,
     inspectionExpressions,
-    inspectionQueryData,
   } = getDetailsRequestData(selectedRequest);
 
   // Redirect to requests-table if (requestId) did not match any existing request
@@ -176,7 +185,6 @@ export const RequestDetails: React.FC<Props> = ({
             />
             <RequestDetailsInspectionSection
               inspectionExpressions={inspectionExpressions}
-              inspectionQueryData={inspectionQueryData}
             />
           </div>
         </>

@@ -88,13 +88,15 @@ export function registerForRulesEvents(callback: OnEvaluationFn): Unsubscribe {
     REQUESTS_EVALUATION_WEBSOCKET_HOST_AND_PORT
   );
   webSocket.listener = (newEvaluation: FirestoreRulesEvaluation) => {
-    // TODO: Remove he following if statements when admin requests are received from server
-    const probability = Math.random();
-    if (probability < 0.2) {
-      // there is a 20% chance that the request is transformed to an admin request
+    const requestPath = newEvaluation.rulesContext.request.path.replace(
+      '/databases/(default)/documents',
+      ''
+    );
+    // mock admin requests
+    if (requestPath.match(/admin/)) {
       return callback(injectMockPropertiesToEvaluation(newEvaluation, 'admin'));
-    } else if (probability > 0.9) {
-      // there is a 10% chance that the request is transformed to an error request
+      // mock error requests
+    } else if (requestPath.match(/error/)) {
       return callback(injectMockPropertiesToEvaluation(newEvaluation, 'error'));
     }
     callback(injectMockPropertiesToEvaluation(newEvaluation));
