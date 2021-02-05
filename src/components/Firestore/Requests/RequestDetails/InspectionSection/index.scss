@@ -32,3 +32,13 @@
     border-bottom-left-radius: 8px;
   }
 }
+
+.Firestore-Request-Details-Inspection-Nothing-To-Show {
+  padding: 10px;
+  font-size: 14px;
+  min-height: 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}

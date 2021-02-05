@@ -21,33 +21,37 @@ import React from 'react';
 import { InspectionElement } from '../../types';
 import InspectionBlock from './InspectionBlock';
 
-export const QUERY_INFORMATION_LABEL = 'Query information';
-export const EXPRESSIONS_INSPECTION_LABEL = 'Expressions inspection';
+export const EXPRESSIONS_INSPECTION_LABEL = 'Detailed information';
+export const NOTHING_TO_SHOW_MESSAGE = 'Nothing to show here';
 
 interface Props {
   inspectionExpressions?: InspectionElement[];
-  inspectionQueryData?: InspectionElement[];
 }
 
-const InspectionSection: React.FC<Props> = ({
-  inspectionExpressions,
-  inspectionQueryData,
-}) => (
-  <div
-    data-testid="request-details-inspection-section"
-    className="Firestore-Request-Details-Inspection"
-  >
-    <InspectionBlock isMainBlock label={QUERY_INFORMATION_LABEL}>
-      {inspectionQueryData?.map(({ label, value }) => (
-        <InspectionBlock key={label} label={label} value={value} />
-      ))}
-    </InspectionBlock>
-    <InspectionBlock isMainBlock label={EXPRESSIONS_INSPECTION_LABEL}>
-      {inspectionExpressions?.map(({ label, value }) => (
-        <InspectionBlock key={label} label={label} value={value} />
-      ))}
-    </InspectionBlock>
-  </div>
-);
+const InspectionSection: React.FC<Props> = ({ inspectionExpressions }) => {
+  const renderInspectionContent = () => {
+    if (!inspectionExpressions?.length) {
+      return (
+        <span className="Firestore-Request-Details-Inspection-Nothing-To-Show">
+          {NOTHING_TO_SHOW_MESSAGE}
+        </span>
+      );
+    }
+    return inspectionExpressions.map(({ label, value }) => (
+      <InspectionBlock key={label} label={label} value={value} />
+    ));
+  };
+
+  return (
+    <div
+      data-testid="request-details-inspection-section"
+      className="Firestore-Request-Details-Inspection"
+    >
+      <InspectionBlock isMainBlock label={EXPRESSIONS_INSPECTION_LABEL}>
+        {renderInspectionContent()}
+      </InspectionBlock>
+    </div>
+  );
+};
 
 export default InspectionSection;

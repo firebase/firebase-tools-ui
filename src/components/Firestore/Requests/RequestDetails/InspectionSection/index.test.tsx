@@ -18,10 +18,7 @@ import { render } from '@testing-library/react';
 import React from 'react';
 
 import { InspectionElement } from '../../types';
-import InspectionSection, {
-  EXPRESSIONS_INSPECTION_LABEL,
-  QUERY_INFORMATION_LABEL,
-} from './index';
+import InspectionSection, { EXPRESSIONS_INSPECTION_LABEL } from './index';
 
 describe('InspectionSection', () => {
   const INSPECTION_MOCKED_DATA: InspectionElement[] = [
@@ -32,35 +29,12 @@ describe('InspectionSection', () => {
 
   it("renders expressions inspection's main block", () => {
     const { getByText } = render(<InspectionSection />);
-    expect(getByText(QUERY_INFORMATION_LABEL)).not.toBeNull();
+    expect(getByText(EXPRESSIONS_INSPECTION_LABEL)).not.toBeNull();
   });
 
   it('renders all given inspectionExpressions as inspection-blocks', () => {
     const { getAllByTestId, getByText } = render(
-      <InspectionSection
-        inspectionExpressions={INSPECTION_MOCKED_DATA}
-        inspectionQueryData={[]}
-      />
-    );
-    expect(getAllByTestId('inspection-block').length).toBe(
-      INSPECTION_MOCKED_DATA.length
-    );
-    INSPECTION_MOCKED_DATA.forEach(({ label }) => {
-      expect(getByText(label)).not.toBeNull();
-    });
-  });
-
-  it("renders query information's main block", () => {
-    const { getByText } = render(<InspectionSection />);
-    expect(getByText(EXPRESSIONS_INSPECTION_LABEL)).not.toBeNull();
-  });
-
-  it('renders all given inspectionQueryData as inspection-blocks', () => {
-    const { getAllByTestId, getByText } = render(
-      <InspectionSection
-        inspectionExpressions={[]}
-        inspectionQueryData={INSPECTION_MOCKED_DATA}
-      />
+      <InspectionSection inspectionExpressions={INSPECTION_MOCKED_DATA} />
     );
     expect(getAllByTestId('inspection-block').length).toBe(
       INSPECTION_MOCKED_DATA.length
