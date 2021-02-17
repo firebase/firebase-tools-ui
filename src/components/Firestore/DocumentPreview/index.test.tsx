@@ -32,7 +32,7 @@ describe('loaded document', () => {
   let documentReference: firestore.DocumentReference;
 
   beforeEach(async () => {
-    result = await renderWithFirestore(async firestore => {
+    result = await renderWithFirestore(async (firestore) => {
       documentReference = firestore.doc('my-stuff/an-item');
       await documentReference.set({ foo: 'bar' });
       documentReference.update = jest.fn();
@@ -129,7 +129,7 @@ describe('missing document', () => {
   let documentReference: firestore.DocumentReference;
 
   beforeEach(async () => {
-    result = await renderWithFirestore(async firestore => {
+    result = await renderWithFirestore(async (firestore) => {
       documentReference = firestore.doc('not/here');
       documentReference.set = jest.fn();
       return <DocumentPreview reference={documentReference} />;
@@ -171,12 +171,65 @@ describe('missing document', () => {
   });
 }); // missing document
 
+describe('empty document', () => {
+  let result: RenderResult;
+  let documentReference: firestore.DocumentReference;
+
+  beforeEach(async () => {
+    result = await renderWithFirestore(async (firestore) => {
+      documentReference = firestore.doc('iam/empty');
+      await documentReference.set({}); // exists but has no fields
+      documentReference.set = jest.fn();
+      documentReference.update = jest.fn();
+      return <DocumentPreview reference={documentReference} />;
+    });
+
+    await waitForElement(() => result.getByText(/Add field/));
+  });
+
+  it('shows message about no data', async () => {
+    const { getByText } = result;
+
+    expect(getByText(/This document has no data/)).not.toBeNull();
+  });
+
+  it('calls ref.update() when adding a field, not ref.set()', async () => {
+    const { queryByText, getByText, getByLabelText } = result;
+
+    await act(async () => getByText('Add field').click());
+
+    act(() => {
+      fireEvent.change(getByLabelText('Field'), {
+        target: { value: 'meaningOfLife' },
+      });
+    });
+
+    act(() => {
+      fireEvent.change(getByLabelText('Value'), {
+        target: { value: '42' },
+      });
+    });
+
+    await act(async () => {
+      fireEvent.submit(getByText('Save'));
+    });
+
+    await wait(() => !queryByText('Save'));
+
+    expect(documentReference.update).toHaveBeenCalledWith(
+      new firestore.FieldPath('meaningOfLife'),
+      '42'
+    );
+    expect(documentReference.set).not.toHaveBeenCalled();
+  });
+}); // empty document
+
 describe('loaded array', () => {
   let result: RenderResult;
   let documentReference: firestore.DocumentReference;
 
   beforeEach(async () => {
-    result = await renderWithFirestore(async firestore => {
+    result = await renderWithFirestore(async (firestore) => {
       documentReference = firestore.doc('foo/bar');
       documentReference.update = jest.fn();
       await documentReference.set({
@@ -274,7 +327,7 @@ describe('loaded map', () => {
   let documentReference: firestore.DocumentReference;
 
   beforeEach(async () => {
-    result = await renderWithFirestore(async firestore => {
+    result = await renderWithFirestore(async (firestore) => {
       documentReference = firestore.doc('foo/bar');
       documentReference.update = jest.fn();
       await documentReference.set({

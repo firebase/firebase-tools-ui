@@ -19,8 +19,9 @@ import { List, ListItem } from '@rmwc/list';
 import { Typography } from '@rmwc/typography';
 import firebase from 'firebase';
 import React, { useState } from 'react';
-import { useFirestoreDocData } from 'reactfire';
+import { useFirestoreDoc } from 'reactfire';
 
+import { FirestoreMap } from '../models';
 import { compareFirestoreKeys, isMap } from '../utils';
 import { addFieldToMissingDocument, updateField } from './api';
 import FieldPreview from './FieldPreview';
@@ -36,9 +37,11 @@ const DocumentPreview: React.FC<Props> = ({
   reference,
   maxSummaryLen = 20,
 }) => {
-  const { data } = useFirestoreDocData<{}>(reference, { suspense: true });
+  const snapshot = useFirestoreDoc(reference, { suspense: true }).data;
   const [isAddingField, setIsAddingField] = useState(false);
-  const docExists = Object.keys(data).length > 0;
+  const docExists = snapshot.exists;
+  const data = docExists ? (snapshot.data() as FirestoreMap) : {};
+  const docEmpty = docExists && Object.keys(data).length === 0;
 
   return (
     <>
@@ -76,11 +79,11 @@ const DocumentPreview: React.FC<Props> = ({
             />
           )}
 
-          {docExists && isMap(data) ? (
+          {docExists && !docEmpty && (
             <div className="Firestore-Field-List">
               {Object.keys(data)
                 .sort(compareFirestoreKeys)
-                .map(name => (
+                .map((name) => (
                   <FieldPreview
                     key={name}
                     path={[name]}
@@ -89,7 +92,8 @@ const DocumentPreview: React.FC<Props> = ({
                   />
                 ))}
             </div>
-          ) : (
+          )}
+          {!docExists && (
             <Typography
               theme="secondary"
               use="body2"
@@ -99,6 +103,15 @@ const DocumentPreview: React.FC<Props> = ({
                 This document does not exist, it will not appear in queries or
                 snapshots
               </i>
+            </Typography>
+          )}
+          {docEmpty && (
+            <Typography
+              theme="secondary"
+              use="body2"
+              className="Firestore-Document-Warning"
+            >
+              <i>This document has no data</i>
             </Typography>
           )}
         </List>
