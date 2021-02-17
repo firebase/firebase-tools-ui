@@ -22,7 +22,7 @@ import React, { useState } from 'react';
 import { useFirestoreDoc } from 'reactfire';
 
 import { FirestoreMap } from '../models';
-import { compareFirestoreKeys, isMap } from '../utils';
+import { compareFirestoreKeys } from '../utils';
 import { addFieldToMissingDocument, updateField } from './api';
 import FieldPreview from './FieldPreview';
 import InlineEditor from './InlineEditor';
