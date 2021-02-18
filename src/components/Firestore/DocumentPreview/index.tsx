@@ -94,30 +94,28 @@ const DocumentPreview: React.FC<Props> = ({
             </div>
           )}
           {!docExists && (
-            <Typography
-              theme="secondary"
-              use="body2"
-              className="Firestore-Document-Warning"
-            >
-              <i>
-                This document does not exist, it will not appear in queries or
-                snapshots
-              </i>
-            </Typography>
+            <DocumentWarning>
+              This document does not exist, it will not appear in queries or
+              snapshots
+            </DocumentWarning>
           )}
           {docEmpty && (
-            <Typography
-              theme="secondary"
-              use="body2"
-              className="Firestore-Document-Warning"
-            >
-              <i>This document has no data</i>
-            </Typography>
+            <DocumentWarning>This document has no data</DocumentWarning>
           )}
         </List>
       </DocumentProvider>
     </>
   );
 };
+
+const DocumentWarning: React.FC<{}> = ({ children }) => (
+  <Typography
+    theme="secondary"
+    use="body2"
+    className="Firestore-Document-Warning"
+  >
+    <i>{children}</i>
+  </Typography>
+);
 
 export default DocumentPreview;
