@@ -19,9 +19,10 @@ import { List, ListItem } from '@rmwc/list';
 import { Typography } from '@rmwc/typography';
 import firebase from 'firebase';
 import React, { useState } from 'react';
-import { useFirestoreDocData } from 'reactfire';
+import { useFirestoreDoc } from 'reactfire';
 
-import { compareFirestoreKeys, isMap } from '../utils';
+import { FirestoreMap } from '../models';
+import { compareFirestoreKeys } from '../utils';
 import { addFieldToMissingDocument, updateField } from './api';
 import FieldPreview from './FieldPreview';
 import InlineEditor from './InlineEditor';
@@ -36,9 +37,11 @@ const DocumentPreview: React.FC<Props> = ({
   reference,
   maxSummaryLen = 20,
 }) => {
-  const { data } = useFirestoreDocData<{}>(reference, { suspense: true });
+  const snapshot = useFirestoreDoc(reference, { suspense: true }).data;
   const [isAddingField, setIsAddingField] = useState(false);
-  const docExists = Object.keys(data).length > 0;
+  const docExists = snapshot.exists;
+  const data = docExists ? (snapshot.data() as FirestoreMap) : {};
+  const docEmpty = docExists && Object.keys(data).length === 0;
 
   return (
     <>
@@ -76,11 +79,11 @@ const DocumentPreview: React.FC<Props> = ({
             />
           )}
 
-          {docExists && isMap(data) ? (
+          {docExists && !docEmpty && (
             <div className="Firestore-Field-List">
               {Object.keys(data)
                 .sort(compareFirestoreKeys)
-                .map(name => (
+                .map((name) => (
                   <FieldPreview
                     key={name}
                     path={[name]}
@@ -89,22 +92,30 @@ const DocumentPreview: React.FC<Props> = ({
                   />
                 ))}
             </div>
-          ) : (
-            <Typography
-              theme="secondary"
-              use="body2"
-              className="Firestore-Document-Warning"
-            >
-              <i>
-                This document does not exist, it will not appear in queries or
-                snapshots
-              </i>
-            </Typography>
+          )}
+          {!docExists && (
+            <DocumentWarning>
+              This document does not exist, it will not appear in queries or
+              snapshots
+            </DocumentWarning>
+          )}
+          {docEmpty && (
+            <DocumentWarning>This document has no data</DocumentWarning>
           )}
         </List>
       </DocumentProvider>
     </>
   );
 };
+
+const DocumentWarning: React.FC<{}> = ({ children }) => (
+  <Typography
+    theme="secondary"
+    use="body2"
+    className="Firestore-Document-Warning"
+  >
+    <i>{children}</i>
+  </Typography>
+);
 
 export default DocumentPreview;
