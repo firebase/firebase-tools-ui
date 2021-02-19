@@ -86,9 +86,9 @@ export interface Deferred<T> {
    * function also returns another promise that is always FULFILLED after the
    * controlled promise is resolved.
    *
-   * Example Usage: `await act(() => deferred.resolve(x));`.
+   * Example Usage: `await act(() => deferred.resolve(value));`.
    */
-  readonly resolve: (value?: T | PromiseLike<T>) => Promise<void>;
+  readonly resolve: (value: T | PromiseLike<T>) => Promise<void>;
 
   /**
    * A helper function to reject the controlled promise. For convenience, this
@@ -96,13 +96,13 @@ export interface Deferred<T> {
    * controlled promise is rejected.
    * This is just syntatic sugar for `deferred.resolve(Promise.reject(reason))`
    *
-   * Example Usage: `await act(() => deferred.resolve(x));`.
+   * Example Usage: `await act(() => deferred.reject(reason));`.
    */
   readonly reject: (reason?: any) => Promise<void>;
 }
 
 export function makeDeferred<T>(): Deferred<T> {
-  let resolve: (value?: T | PromiseLike<T>) => void;
+  let resolve: (value: T | PromiseLike<T>) => void;
   let isResolved = false;
   const promise = new Promise<T>((res) => {
     resolve = res;
@@ -111,7 +111,7 @@ export function makeDeferred<T>(): Deferred<T> {
     promise,
     resolve(value) {
       if (isResolved) {
-        fail(
+        throw new Error(
           'Cannot resolve Deferred since it is already resolved! There is ' +
             'very likely a mistake in the test that calls resolve/reject twice.'
         );

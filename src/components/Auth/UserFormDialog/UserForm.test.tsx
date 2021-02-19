@@ -67,7 +67,7 @@ describe('UserForm', () => {
     await triggerValidation();
     expect(updateUser).toHaveBeenCalledWith({
       localId: user.localId,
-      user: jasmine.objectContaining({
+      user: expect.objectContaining({
         displayName,
         phoneNumber,
       }),
@@ -96,7 +96,7 @@ describe('UserForm', () => {
 
     expect(createUser).toHaveBeenCalledWith({
       keepDialogOpen: undefined,
-      user: jasmine.objectContaining({ phoneNumber: '+1 555-555-0100' }),
+      user: expect.objectContaining({ phoneNumber: '+1 555-555-0100' }),
     });
   });
 
@@ -124,7 +124,7 @@ describe('UserForm', () => {
 
     expect(createUser).toHaveBeenCalledWith({
       keepDialogOpen: true,
-      user: jasmine.objectContaining({ phoneNumber: '+1 555-555-0100' }),
+      user: expect.objectContaining({ phoneNumber: '+1 555-555-0100' }),
     });
   });
 

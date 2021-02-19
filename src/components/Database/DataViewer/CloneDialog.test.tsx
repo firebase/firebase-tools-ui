@@ -40,7 +40,7 @@ const setup = async () => {
     getByText,
     getByLabelText,
     getByTestId,
-  } = await renderDialogWithFirestore(async firestore => (
+  } = await renderDialogWithFirestore(async (firestore) => (
     <CloneDialog onComplete={onComplete} realtimeRef={ref} />
   ));
   return { ref, onComplete, getByLabelText, getByText, getByTestId };
@@ -86,7 +86,7 @@ it('uses a filtered data set when query params are provided', async () => {
 });
 
 it('fails when trying to clone the root', async () => {
-  spyOn(console, 'error'); // hide expected errors
+  jest.spyOn(console, 'error'); // hide expected errors
 
   const rootRef = fakeReference({
     parent: null,
