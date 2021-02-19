@@ -30,7 +30,7 @@ const path = require('path');
 exports.startServer = function () {
   const app = express();
   exports.registerApis(app);
-  const webDir = path.join(path.dirname(process.argv[1]), 'build')
+  const webDir = path.join(path.dirname(process.argv[1]), 'build');
   app.use(express.static(webDir));
 
   // Required for the router to work properly.
@@ -41,7 +41,9 @@ exports.startServer = function () {
   const host = process.env.HOST || 'localhost';
   const port = process.env.PORT || 3000;
   app.listen(port, host, () => {
-    console.log(`Web / API server started at http://${hostAndPort(host, port)}`);
+    console.log(
+      `Web / API server started at http://${hostAndPort(host, port)}`
+    );
   });
   return app;
 };
@@ -54,38 +56,41 @@ exports.startServer = function () {
 */
 exports.registerApis = function (app) {
   const projectEnv = 'GCLOUD_PROJECT';
-  const hubEnv = 'FIREBASE_EMULATOR_HUB'
+  const hubEnv = 'FIREBASE_EMULATOR_HUB';
   const projectId = process.env[projectEnv];
   const hubHost = process.env[hubEnv];
   if (!projectId || !hubHost) {
     throw new Error(
       `Please specify these environment variables: ${projectEnv} ${hubEnv}\n` +
-      '(Are you using firebase-tools@>=7.14.0 with `--project your-project`?)'
+        '(Are you using firebase-tools@>=7.14.0 with `--project your-project`?)'
     );
   }
   // Exposes the host and port of various emulators to facilitate accessing
   // them using client SDKs. For features that involve multiple emulators or
   // hard to accomplish using client SDKs, consider adding an API below.
-  app.get('/api/config', jsonHandler(async (req) => {
-    const emulatorsRes = await fetch(`http://${hubHost}/emulators`);
-    const emulators = await emulatorsRes.json();
+  app.get(
+    '/api/config',
+    jsonHandler(async (req) => {
+      const emulatorsRes = await fetch(`http://${hubHost}/emulators`);
+      const emulators = await emulatorsRes.json();
 
-    const json = { projectId };
-    Object.entries(emulators).forEach(([name, info]) => {
-      let host = info.host;
-      if (host === '0.0.0.0') {
-        host = '127.0.0.1';
-      } else if (host === '::') {
-        host = '::1';
-      }
-      json[name] = {
-        ...info,
-        host,
-        hostAndPort: hostAndPort(host, info.port),
-      }
-    });
-    return json;
-  }));
+      const json = { projectId };
+      Object.entries(emulators).forEach(([name, info]) => {
+        let host = info.host;
+        if (host === '0.0.0.0') {
+          host = '127.0.0.1';
+        } else if (host === '::') {
+          host = '::1';
+        }
+        json[name] = {
+          ...info,
+          host,
+          hostAndPort: hostAndPort(host, info.port),
+        };
+      });
+      return json;
+    })
+  );
 };
 
 function hostAndPort(host, port) {
@@ -94,18 +99,21 @@ function hostAndPort(host, port) {
 }
 
 function jsonHandler(handler) {
-  return ((req, res) => {
-    handler(req).then((body) => {
-      res.status(200).json(body);
-    }, (err) => {
-      console.error(err);
-      res.status(500).json({
-        message: err.message,
-        stack: err.stack,
-        raw: err,
-      });
-    })
-  });
+  return (req, res) => {
+    handler(req).then(
+      (body) => {
+        res.status(200).json(body);
+      },
+      (err) => {
+        console.error(err);
+        res.status(500).json({
+          message: err.message,
+          stack: err.stack,
+          raw: err,
+        });
+      }
+    );
+  };
 }
 
 // When this file is ran directly like `node server.js`, just start the server.

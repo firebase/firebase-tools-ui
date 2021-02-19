@@ -49,7 +49,7 @@ const TimestampEditor: React.FC<{
 
   useEffect(() => {
     register(name, {
-      validate: e => !isNaN(e) || 'Must be a date-time',
+      validate: (e) => !isNaN(e) || 'Must be a date-time',
     });
 
     return () => unregister(name);
@@ -66,7 +66,7 @@ const TimestampEditor: React.FC<{
       label="Value"
       type="datetime-local"
       defaultValue={dateToLocale(date)}
-      onChange={e => {
+      onChange={(e) => {
         const timestamp = Date.parse(e.currentTarget.value);
         setValue(name, timestamp, true);
         if (!isNaN(timestamp) && timestamp !== date.getTime()) {

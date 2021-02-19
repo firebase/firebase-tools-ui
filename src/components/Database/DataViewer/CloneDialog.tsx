@@ -136,7 +136,7 @@ export const CloneDialog = React.memo<Props>(function CloneDialog$({
           <Field
             label="New destination path:"
             value={newDestinationPath}
-            onChange={e =>
+            onChange={(e) =>
               setNewDestinationPath((e.target as HTMLInputElement).value)
             }
             type="text"
@@ -147,7 +147,7 @@ export const CloneDialog = React.memo<Props>(function CloneDialog$({
               <Checkbox
                 label="Clone filtered data set"
                 checked={isCloningWithFiltered}
-                onChange={event => {
+                onChange={(event) => {
                   setCloningFiltered(!!event.currentTarget.checked);
                 }}
               />

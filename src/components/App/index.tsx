@@ -39,7 +39,7 @@ const App: React.FC = () => {
           <AppBar routes={routes} />
           <Grid className="App-main">
             <Switch>
-              {routes.map(r => (
+              {routes.map((r) => (
                 <Route
                   key={r.path}
                   path={r.path}

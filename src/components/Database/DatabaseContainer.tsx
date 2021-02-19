@@ -100,7 +100,7 @@ export const DatabaseContainer: React.FC<Props> = ({
 export const mapDispatchToProps: MapDispatchToPropsFunction<
   PropsFromDispatch,
   {}
-> = dispatch => ({
+> = (dispatch) => ({
   databasesSubscribe: () => void dispatch(databasesSubscribe()),
   databasesUnsubscribe: () => void dispatch(databasesUnsubscribe()),
 });

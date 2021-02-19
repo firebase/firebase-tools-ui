@@ -41,7 +41,7 @@ it('shows correct title', async () => {
 describe('step 1', () => {
   it('displays the parent document path', async () => {
     const { getByLabelText } = await renderDialogWithFirestore(
-      async firestore => {
+      async (firestore) => {
         const docRef = firestore.doc('docs/my-doc');
         return (
           <AddCollectionDialog
@@ -71,7 +71,7 @@ describe('step 2', () => {
 
   beforeEach(async () => {
     onValue = jest.fn();
-    result = await renderDialogWithFirestore(async firestore => {
+    result = await renderDialogWithFirestore(async (firestore) => {
       const docRef = firestore.doc('docs/my-doc');
       return (
         <AddCollectionDialog

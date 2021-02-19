@@ -47,7 +47,7 @@ const toHierarchyStep = (key: string) => {
 
 const toHierarchyJS = (hierarchy: HierarchyReference[]) =>
   hierarchy
-    .map(ref => {
+    .map((ref) => {
       switch (ref.mode) {
         case HierarchyReferenceMode.NONE:
           return ref.key;

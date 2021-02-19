@@ -27,7 +27,7 @@ import {
 import { renderWithFirestore } from './testing/FirestoreTestProviders';
 
 it('shows the root-collection list', async () => {
-  const { getByText } = await renderWithFirestore(async firestore => {
+  const { getByText } = await renderWithFirestore(async (firestore) => {
     await firestore.doc('coll-1/thing').set({ a: 1 });
     await firestore.doc('coll-2/thing').set({ a: 1 });
     return <RootCollectionList />;
@@ -40,16 +40,10 @@ it('shows the root-collection list', async () => {
 });
 
 it('shows the sub-collection list', async () => {
-  const { getByText } = await renderWithFirestore(async firestore => {
+  const { getByText } = await renderWithFirestore(async (firestore) => {
     const docRef = firestore.doc('top/thing');
-    await docRef
-      .collection('coll-1')
-      .doc('other')
-      .set({ a: 1 });
-    await docRef
-      .collection('coll-2')
-      .doc('other')
-      .set({ a: 1 });
+    await docRef.collection('coll-1').doc('other').set({ a: 1 });
+    await docRef.collection('coll-2').doc('other').set({ a: 1 });
     return <SubCollectionList reference={docRef} />;
   });
 
@@ -97,7 +91,7 @@ it('redirects to collection when clicking the collection list item and the ids h
 
 it('triggers a redirect to a new collection at the root', async () => {
   const { getByLabelText, getByText } = await renderWithFirestore(
-    async firestore => {
+    async (firestore) => {
       await firestore.doc('coll-1/thing').set({ a: 1 });
       return (
         <>
@@ -143,7 +137,7 @@ it('triggers a redirect to a new collection at the root', async () => {
 
 it('triggers a redirect to a new collection at the root when there are special characters on the ids', async () => {
   const { getByLabelText, getByText } = await renderWithFirestore(
-    async firestore => {
+    async (firestore) => {
       await firestore.doc('coll-1@#$/thing@#$').set({ a: 1 });
       return (
         <>
@@ -189,12 +183,9 @@ it('triggers a redirect to a new collection at the root when there are special c
 
 it('triggers a redirect to a new collection in a document', async () => {
   const { getByLabelText, getByText } = await renderWithFirestore(
-    async firestore => {
+    async (firestore) => {
       const docRef = firestore.doc('top/thing');
-      await docRef
-        .collection('coll-1')
-        .doc('other')
-        .set({ a: 1 });
+      await docRef.collection('coll-1').doc('other').set({ a: 1 });
       return (
         <>
           <Route path="/firestore/top/thing">
@@ -241,12 +232,9 @@ it('triggers a redirect to a new collection in a document', async () => {
 
 it('triggers a redirect to a new collection in a document when there are special characters on the ids', async () => {
   const { getByLabelText, getByText } = await renderWithFirestore(
-    async firestore => {
+    async (firestore) => {
       const docRef = firestore.doc('top@#$/thing@#$');
-      await docRef
-        .collection('coll-1@#$')
-        .doc('other@#$')
-        .set({ a: 1 });
+      await docRef.collection('coll-1@#$').doc('other@#$').set({ a: 1 });
       return (
         <>
           <Route path="/firestore/top%40%23%24/thing%40%23%24">

@@ -87,7 +87,7 @@ const GeoPointEditor: React.FC<{
         type="number"
         step="any"
         defaultValue={latitude}
-        onChange={e => {
+        onChange={(e) => {
           setValue(latitudeName, e.currentTarget.value, true);
           setLatitude(e.currentTarget.value);
         }}
@@ -99,7 +99,7 @@ const GeoPointEditor: React.FC<{
         type="number"
         step="any"
         defaultValue={longitude}
-        onChange={e => {
+        onChange={(e) => {
           setValue(longitudeName, e.currentTarget.value, true);
           setLongitude(e.currentTarget.value);
         }}

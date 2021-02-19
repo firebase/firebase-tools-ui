@@ -133,7 +133,7 @@ export const UsersTable: React.FC<UsersTableProps> = ({
           </DataTableHead>
           <DataTableBody>
             {shouldShowTable &&
-              filteredUsers.map(user => (
+              filteredUsers.map((user) => (
                 <UsersTableRow
                   key={user.localId}
                   user={user}
@@ -180,10 +180,10 @@ export interface PropsFromDispatch {
 export const mapDispatchToProps: MapDispatchToPropsFunction<
   PropsFromDispatch,
   {}
-> = dispatch => {
+> = (dispatch) => {
   return {
-    setUserDisabled: d => dispatch(setUserDisabledRequest(d)),
-    deleteUser: d => dispatch(deleteUserRequest(d)),
+    setUserDisabled: (d) => dispatch(setUserDisabledRequest(d)),
+    deleteUser: (d) => dispatch(deleteUserRequest(d)),
     openAuthUserDialog: (data: RemoteResult<AuthUser | undefined>) =>
       dispatch(openAuthUserDialog(data)),
   };

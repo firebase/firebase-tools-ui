@@ -32,9 +32,9 @@ function validate(attributes: string) {
 
 const CUSTOM_ATTRIBUTES_CONTROL_NAME = 'customAttributes';
 
-export const CustomAttributes: React.FC<FormContextValues<
-  AddAuthUserPayload
->> = ({ errors, register }) => {
+export const CustomAttributes: React.FC<
+  FormContextValues<AddAuthUserPayload>
+> = ({ errors, register }) => {
   const label = (
     <label>
       <Typography use="subtitle2" tag="div" theme="textPrimaryOnBackground">

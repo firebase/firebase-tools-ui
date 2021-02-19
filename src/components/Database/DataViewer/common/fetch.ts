@@ -54,9 +54,9 @@ export function createViewModel(
   const query = new ReplaySubject<QueryParams>(1);
   query.next({ limit: DEFAULT_PAGE_SIZE });
   const viewModel$ = query.pipe(
-    switchMap(queryParams => {
+    switchMap((queryParams) => {
       return canDoRealtime$.pipe(
-        concatMap(realtime =>
+        concatMap((realtime) =>
           realtime
             ? realtimeToViewModel(ref, queryParams)
             : nonRealtimeToViewModel(ref, queryParams)
@@ -91,7 +91,7 @@ function realtimeToViewModel(
 ) {
   let query: firebase.database.Query;
   return once(ref).pipe(
-    switchMap(snap => {
+    switchMap((snap) => {
       // The "default" query contains limitToFirst(50), so we can not blindly
       // apply the query to leaf nodes. leafNodeRef.limitToFirst(n) will yield
       // null data.
@@ -133,8 +133,8 @@ function once(query: firebase.database.Query) {
 }
 
 function toObservable(query: firebase.database.Query) {
-  return new Observable<firebase.database.DataSnapshot>(o => {
-    const handler = query.on('value', snapshot => o.next(snapshot));
+  return new Observable<firebase.database.DataSnapshot>((o) => {
+    const handler = query.on('value', (snapshot) => o.next(snapshot));
     return () => query.off('value', handler);
   });
 }
@@ -169,8 +169,8 @@ function fetchNonRealtime(
   const params = getRestQueryParams(query);
   const shallow = restUrl(realtimeRef, { ...params, shallow: 'true' });
   return defer(() => fetch(shallow, { headers: ADMIN_AUTH_HEADERS })).pipe(
-    map(r => r.json()),
-    map(data => Object.keys(data))
+    map((r) => r.json()),
+    map((data) => Object.keys(data))
   );
 }
 

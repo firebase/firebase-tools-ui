@@ -17,33 +17,33 @@ export const getAuthUserDialog = createSelector(getAuth, (state: AuthState) => {
 
 export const getCurrentEditedUser = createSelector(
   getAuthUserDialog,
-  authUserDialogData => {
+  (authUserDialogData) => {
     return authUserDialogData && hasData(authUserDialogData.result)
       ? authUserDialogData.result.data
       : undefined;
   }
 );
 
-export const isEditingUser = createSelector(getCurrentEditedUser, user => {
+export const isEditingUser = createSelector(getCurrentEditedUser, (user) => {
   return !!user;
 });
 
-export const getAuthUsersResult = createSelector(getAuthUsers, users => {
+export const getAuthUsersResult = createSelector(getAuthUsers, (users) => {
   return users.result;
 });
 
-export const getUsers = createSelector(getAuthUsers, users => {
+export const getUsers = createSelector(getAuthUsers, (users) => {
   return [...squashOrDefaut(users, [])].sort(
     (a, b) => Number(new Date(b.createdAt)) - Number(new Date(a.createdAt || 0))
   );
 });
 
-export const getAllEmails = createSelector(getUsers, users => {
-  return new Set(users.map(u => u.email).filter(e => !!e));
+export const getAllEmails = createSelector(getUsers, (users) => {
+  return new Set(users.map((u) => u.email).filter((e) => !!e));
 });
 
-export const getAllPhoneNumbers = createSelector(getUsers, users => {
-  return new Set(users.map(u => u.phoneNumber).filter(e => !!e));
+export const getAllPhoneNumbers = createSelector(getUsers, (users) => {
+  return new Set(users.map((u) => u.phoneNumber).filter((e) => !!e));
 });
 
 export const hasUsers = createSelector(
@@ -68,7 +68,7 @@ export const getFilteredUsers = createSelector(
     if (!filter) {
       return users;
     }
-    return users.filter(u => {
+    return users.filter((u) => {
       return [u.localId, u.displayName, u.email || '', u.phoneNumber || '']
         .join('\n')
         .toLocaleUpperCase()
@@ -78,7 +78,7 @@ export const getFilteredUsers = createSelector(
 );
 export const getShowZeroState = createSelector(
   getUsers,
-  users => users.length === 0
+  (users) => users.length === 0
 );
 export const getShowZeroResults = createSelector(
   getUsers,
@@ -91,6 +91,6 @@ export const getShowTable = createSelector(
   (users, filteredUsers) => filteredUsers.length > 0
 );
 
-export const getAuthConfigResult = createSelector(getConfigResult, result =>
-  map(result, config => config.auth)
+export const getAuthConfigResult = createSelector(getConfigResult, (result) =>
+  map(result, (config) => config.auth)
 );

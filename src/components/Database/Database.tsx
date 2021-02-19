@@ -97,7 +97,7 @@ export const Database: React.FC<Props> = ({ config, namespace, path }) => {
             </SimpleMenu>
           </InteractiveBreadCrumbBar>
 
-          <DatabaseDropZone onDrop={f => setDroppedFile(f)}>
+          <DatabaseDropZone onDrop={(f) => setDroppedFile(f)}>
             <NodeContainer realtimeRef={ref} isViewRoot />
           </DatabaseDropZone>
 
@@ -133,7 +133,7 @@ const DatabaseDropZone: React.FC<{ onDrop: (file: File) => void }> = ({
     isDragActive,
     isDragAccept,
   } = useDropzone({
-    onDrop: files => onDrop(files[0]),
+    onDrop: (files) => onDrop(files[0]),
     noClick: true,
     accept: 'application/json',
   });

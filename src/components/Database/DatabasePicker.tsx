@@ -66,7 +66,9 @@ export const DatabasePicker: React.FC<Props> = ({
   navigation,
   databases,
 }) => {
-  const secondaryDbs = databases ? databases.filter(db => db !== primary) : [];
+  const secondaryDbs = databases
+    ? databases.filter((db) => db !== primary)
+    : [];
 
   // Always show current database, which may not be in the list.
   if (current !== primary && secondaryDbs.indexOf(current) < 0) {
@@ -91,7 +93,7 @@ export const DatabasePicker: React.FC<Props> = ({
             navigation={navigation}
           />
           <ListDivider tag="div" />
-          {secondaryDbs.map(db => (
+          {secondaryDbs.map((db) => (
             <DatabaseListItem
               key={db}
               activated={current === db}

@@ -37,7 +37,7 @@ const JsonEditor: React.FC<{
 
   useEffect(() => {
     register(name, {
-      validate: e => {
+      validate: (e) => {
         try {
           JSON.parse(e);
           return true;
@@ -60,7 +60,7 @@ const JsonEditor: React.FC<{
     <Field
       label="JSON"
       defaultValue={initialValue}
-      onChange={e => {
+      onChange={(e) => {
         setValue(name, e.currentTarget.value);
         handleChange(e.currentTarget.value);
       }}

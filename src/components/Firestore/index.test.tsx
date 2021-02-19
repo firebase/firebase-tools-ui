@@ -78,7 +78,7 @@ describe('FirestoreRoute', () => {
 describe('Firestore', () => {
   it('shows the top-level collections', async () => {
     const { getByText, queryByText } = await renderWithFirestore(
-      async firestore => {
+      async (firestore) => {
         const collectionRef = firestore.collection('cool-coll');
         await collectionRef.doc('bar').set({ a: 1 });
 
@@ -120,7 +120,7 @@ describe('Firestore', () => {
 
   it('shows no shells if 2-levels deep', async () => {
     const { getByText, getByTestId, queryByTestId } = await renderWithFirestore(
-      async firestore => {
+      async (firestore) => {
         const collectionRef = firestore.collection('coll');
         await collectionRef.doc('doc').set({ a: 1 });
         return <Firestore />;

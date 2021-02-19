@@ -39,7 +39,7 @@ const ReferenceEditor: React.FC<{
 
   useEffect(() => {
     register(name, {
-      validate: e => {
+      validate: (e) => {
         try {
           firestore.doc(e);
           return true;
@@ -62,7 +62,7 @@ const ReferenceEditor: React.FC<{
     <Field
       label="Document path"
       defaultValue={path}
-      onChange={e => {
+      onChange={(e) => {
         setValue(name, e.currentTarget.value);
         handleChange(e.currentTarget.value);
       }}

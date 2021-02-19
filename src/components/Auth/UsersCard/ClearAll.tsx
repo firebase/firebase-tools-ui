@@ -45,7 +45,7 @@ export type PropsFromState = ReturnType<typeof mapStateToProps>;
 export const mapDispatchToProps: MapDispatchToPropsFunction<
   PropsFromDispatch,
   {}
-> = dispatch => ({
+> = (dispatch) => ({
   clearAllData: () => dispatch(nukeUsersRequest()),
 });
 

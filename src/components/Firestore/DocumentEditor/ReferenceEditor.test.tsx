@@ -29,7 +29,7 @@ const TestForm: React.FC = ({ children }) => {
 it('renders an editor for a document-ref', async () => {
   const onChange = jest.fn();
   const { getByLabelText, getByText } = await renderWithFirestore(
-    async firestore => (
+    async (firestore) => (
       <TestForm>
         <ReferenceEditor
           name="foo"

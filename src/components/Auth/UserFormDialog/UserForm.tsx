@@ -101,7 +101,7 @@ export const UserForm: React.FC<UserFormProps> = ({
           </DialogButton>
           {!isEditing && (
             <Button
-              onClick={handleSubmit(result => {
+              onClick={handleSubmit((result) => {
                 save(result, /* keepDialogOpen */ true);
                 reset(user);
               })}
@@ -136,11 +136,11 @@ export type PropsFromState = ReturnType<typeof mapStateToProps>;
 export const mapDispatchToProps: MapDispatchToPropsFunction<
   PropsFromDispatch,
   {}
-> = dispatch => {
+> = (dispatch) => {
   return {
     clearAuthUserDialogData: () => dispatch(clearAuthUserDialogData()),
-    updateUser: d => dispatch(updateUserRequest(d)),
-    createUser: d => dispatch(createUserRequest(d)),
+    updateUser: (d) => dispatch(updateUserRequest(d)),
+    createUser: (d) => dispatch(createUserRequest(d)),
   };
 };
 

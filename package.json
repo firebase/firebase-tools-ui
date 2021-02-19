@@ -74,8 +74,10 @@
     "test:debug": "react-scripts --inspect-brk test --env=./custom-jest-environment.js --runInBand",
     "test:coverage": "react-scripts test --coverage --watchAll=false --env=./custom-jest-environment.js",
     "eject": "react-scripts eject",
-    "lint": "eslint 'src/**/*.{ts,tsx}'",
-    "fmt": "prettier --write 'src/**'"
+    "lint": "prettier --check . && eslint 'src/**/*.{ts,tsx}'",
+    "lint:fix": "eslint --fix 'src/**/*.{ts,tsx}' && npm run format",
+    "fmt": "npm run format",
+    "format": "prettier --write ."
   },
   "eslintConfig": {
     "extends": [
@@ -133,9 +135,9 @@
     }
   },
   "lint-staged": {
-    "src/**/*.{js,jsx,ts,tsx,json,css,md,scss}": [
-      "prettier --write",
-      "git add"
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
     ]
   },
   "importSort": {

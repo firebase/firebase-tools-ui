@@ -96,7 +96,7 @@ export const InteractiveBreadCrumbBar: React.FC<Props> = ({
               className="value"
               type="text"
               value={value}
-              onChange={e => setValue(e.currentTarget.value)}
+              onChange={(e) => setValue(e.currentTarget.value)}
               inputRef={inputRef}
             />
             <IconButton

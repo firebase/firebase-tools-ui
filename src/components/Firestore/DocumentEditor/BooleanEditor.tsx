@@ -27,7 +27,7 @@ const BooleanEditor: React.FC<{
       label="Value"
       value={value.toString()}
       options={['true', 'false']}
-      onChange={e => {
+      onChange={(e) => {
         onChange(e.currentTarget.value === 'true');
       }}
     />

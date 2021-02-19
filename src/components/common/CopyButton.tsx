@@ -14,7 +14,7 @@ function useClipboard(text: string) {
       return navigator.clipboard
         .writeText(text)
         .then(() => setIsTextCopied(true))
-        .catch(() => setIsTextCopied(isTextCopied => isTextCopied));
+        .catch(() => setIsTextCopied((isTextCopied) => isTextCopied));
     }, [text]),
   };
 }
