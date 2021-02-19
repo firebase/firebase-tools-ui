@@ -24,19 +24,19 @@ import { ConfigState } from './types';
 export const configReducer = createReducer<ConfigState, Action>({
   loading: false,
 })
-  .handleAction(fetchRequest, state =>
-    produce(state, draft => {
+  .handleAction(fetchRequest, (state) =>
+    produce(state, (draft) => {
       draft.loading = true;
     })
   )
   .handleAction(fetchSuccess, (state, { payload }) =>
-    produce(state, draft => {
+    produce(state, (draft) => {
       draft.loading = false;
       replaceIfChanged(draft, 'result', { data: payload });
     })
   )
   .handleAction(fetchError, (state, { payload }) =>
-    produce(state, draft => {
+    produce(state, (draft) => {
       draft.loading = false;
       replaceIfChanged(draft, 'result', { error: payload });
     })

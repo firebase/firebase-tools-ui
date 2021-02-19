@@ -57,7 +57,7 @@ const FieldPreview: React.FC<{
     // Inline editor for new field will default to key: ''
     childFields = Object.keys(state)
       .sort(compareFirestoreKeys)
-      .map(childLeaf => {
+      .map((childLeaf) => {
         const childPath = [...path, childLeaf];
         return (
           <FieldPreview
@@ -147,7 +147,7 @@ const FieldPreview: React.FC<{
             <IconButton
               icon="edit"
               label="Edit field"
-              onClick={e => {
+              onClick={(e) => {
                 e.stopPropagation();
                 setIsEditing(true);
               }}
@@ -157,7 +157,7 @@ const FieldPreview: React.FC<{
             <IconButton
               icon="add"
               label="Add field"
-              onClick={e => {
+              onClick={(e) => {
                 e.stopPropagation();
                 setIsAddingField(true);
               }}
@@ -166,7 +166,7 @@ const FieldPreview: React.FC<{
           <IconButton
             icon="delete"
             label="Remove field"
-            onClick={e => {
+            onClick={(e) => {
               e.stopPropagation();
               deleteField(documentRef, documentData, path);
             }}

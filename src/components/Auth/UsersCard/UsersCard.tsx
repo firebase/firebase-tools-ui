@@ -41,7 +41,7 @@ export type PropsFromState = ReturnType<typeof mapStateToProps>;
 export const mapDispatchToProps: MapDispatchToPropsFunction<
   PropsFromDispatch,
   {}
-> = dispatch => {
+> = (dispatch) => {
   return {
     openAuthUserDialog: (data: RemoteResult<AuthUser | undefined>) =>
       dispatch(openAuthUserDialog(data)),

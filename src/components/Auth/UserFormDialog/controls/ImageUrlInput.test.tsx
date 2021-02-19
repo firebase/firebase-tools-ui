@@ -8,7 +8,7 @@ import { ImageUrlInput } from './ImageUrlInput';
 describe('ImageUrlInput', () => {
   function setup(defaultValues: Partial<AddAuthUserPayload>) {
     const mockImage = { src: '', onload: undefined, onerror: undefined };
-    const MockImageConstructor = (function() {
+    const MockImageConstructor = (function () {
       return mockImage;
     } as unknown) as new () => HTMLImageElement;
 

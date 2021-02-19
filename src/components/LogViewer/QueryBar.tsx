@@ -174,11 +174,11 @@ export function parseQuery(query: string): ParsedQuery {
   const search = [
     filters.search,
     queryChunks
-      .filter(v => v)
+      .filter((v) => v)
       .join(' ')
       .trim(),
   ]
-    .filter(v => v)
+    .filter((v) => v)
     .join(' ');
 
   if (search.length) filters.search = search;
@@ -212,7 +212,7 @@ export const QueryBar: React.FC<Props> = ({ query, setQuery }) => {
         className="QueryBar-input"
         spellCheck={false}
         value={temporaryQuery}
-        onChange={e => setTemporaryQuery((e.target as any).value)}
+        onChange={(e) => setTemporaryQuery((e.target as any).value)}
         placeholder="Filter or search logs..."
       ></textarea>
       <div className="QueryBar-actions">

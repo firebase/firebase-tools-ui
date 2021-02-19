@@ -74,7 +74,7 @@ const FIRESTORE_FIELD_TYPES = [
  * of the "DocumentEditor"
  */
 const FIRESTORE_ARRAY_FIELD_TYPES = FIRESTORE_FIELD_TYPES.filter(
-  ft => ft !== FieldType.ARRAY
+  (ft) => ft !== FieldType.ARRAY
 );
 
 const RTDB_FIELD_TYPES = [
@@ -193,7 +193,7 @@ const FieldEditor: React.FC<{
     return (
       <div className="DocumentEditor-Map">
         <div className="DocumentEditor-MapEntries">
-          {field.mapChildren.map(c => {
+          {field.mapChildren.map((c) => {
             return (
               <div className="DocumentEditor-MapEntry" key={c.uuid}>
                 <div className="DocumentEditor-MapEntryMetadata">
@@ -310,7 +310,7 @@ const FieldEditor: React.FC<{
       <JsonEditor
         name={`${uuid}`}
         value={field.value}
-        onChange={value => dispatch(actions.updateValue({ uuid, value }))}
+        onChange={(value) => dispatch(actions.updateValue({ uuid, value }))}
       />
     );
   } else {
@@ -319,35 +319,35 @@ const FieldEditor: React.FC<{
         <ReferenceEditor
           name={`${uuid}`}
           value={field.value}
-          onChange={value => dispatch(actions.updateValue({ uuid, value }))}
+          onChange={(value) => dispatch(actions.updateValue({ uuid, value }))}
         />
       ) : isString(field.value) ? (
         <StringEditor
           value={field.value}
-          onChange={value => dispatch(actions.updateValue({ uuid, value }))}
+          onChange={(value) => dispatch(actions.updateValue({ uuid, value }))}
         />
       ) : isBoolean(field.value) ? (
         <BooleanEditor
           value={field.value}
-          onChange={value => dispatch(actions.updateValue({ uuid, value }))}
+          onChange={(value) => dispatch(actions.updateValue({ uuid, value }))}
         />
       ) : isNumber(field.value) ? (
         <NumberEditor
           name={`${uuid}`}
           value={field.value}
-          onChange={value => dispatch(actions.updateValue({ uuid, value }))}
+          onChange={(value) => dispatch(actions.updateValue({ uuid, value }))}
         />
       ) : isGeoPoint(field.value) ? (
         <GeoPointEditor
           name={`${uuid}`}
           value={field.value}
-          onChange={value => dispatch(actions.updateValue({ uuid, value }))}
+          onChange={(value) => dispatch(actions.updateValue({ uuid, value }))}
         />
       ) : isTimestamp(field.value) ? (
         <TimestampEditor
           name={`${uuid}`}
           value={field.value}
-          onChange={value => dispatch(actions.updateValue({ uuid, value }))}
+          onChange={(value) => dispatch(actions.updateValue({ uuid, value }))}
         />
       ) : null;
 
@@ -368,7 +368,7 @@ const ChildTypeSelect: React.FC<{
       outlined
       options={allowedTypes}
       value={getDocumentFieldType(field)}
-      onChange={e => {
+      onChange={(e) => {
         dispatch(
           actions.updateType({ uuid, type: e.currentTarget.value as FieldType })
         );
@@ -394,7 +394,7 @@ const NameEditor: React.FC<{
   } = useFormContext();
 
   const dispatch = useDispatch();
-  const child = field.mapChildren.find(c => c.uuid === childId);
+  const child = field.mapChildren.find((c) => c.uuid === childId);
   if (!child) {
     throw new Error('Tried to render a name-edtior for a non-map-child');
   }
@@ -402,7 +402,9 @@ const NameEditor: React.FC<{
   const formName = `${childId}`;
 
   const siblingNames = React.useMemo(() => {
-    return field.mapChildren.filter(c => c.uuid !== childId).map(c => c.name);
+    return field.mapChildren
+      .filter((c) => c.uuid !== childId)
+      .map((c) => c.name);
   }, [field, childId]);
 
   useEffect(() => {
@@ -412,7 +414,7 @@ const NameEditor: React.FC<{
 
   useEffect(() => {
     // Validate `name` when siblings change
-    const isUnique = siblingNames.every(name => name !== child.name);
+    const isUnique = siblingNames.every((name) => name !== child.name);
     if (!child.name) {
       setError(formName, 'required', 'Required');
     } else if (!isUnique) {
@@ -428,7 +430,7 @@ const NameEditor: React.FC<{
       outlined
       value={child.name}
       disabled={readonly}
-      onChange={e => {
+      onChange={(e) => {
         setValue(formName, e.currentTarget.value);
         dispatch(
           actions.updateName({

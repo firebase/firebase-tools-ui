@@ -57,7 +57,7 @@ export const ConditionEntry: React.FC<ConditionEntryProps> = React.memo(
         <SelectField
           options={['string', 'number', 'boolean']}
           value={fieldType}
-          onChange={evt => {
+          onChange={(evt) => {
             setFieldType(evt.currentTarget.value);
           }}
           fieldClassName={styles.conditionEntryType}
@@ -122,7 +122,7 @@ const BooleanCondition: React.FC<{ name: string }> = ({ name }) => {
       name={name}
       options={['true', 'false']}
       value={selectValue}
-      onChange={evt => setValue(name, evt.currentTarget.value === 'true')}
+      onChange={(evt) => setValue(name, evt.currentTarget.value === 'true')}
       fieldClassName={styles.conditionEntryValue}
       aria-label="Value"
     />

@@ -13,8 +13,9 @@ const ERROR_AT_LEAST_ONE_METHOD_REQUIRED = 'atLeastOneMethodRequired';
 export type SignInMethodProps = {
   user?: AddAuthUserPayload;
 };
-export const SignInMethod: React.FC<SignInMethodProps &
-  FormContextValues<AddAuthUserPayload>> = form => {
+export const SignInMethod: React.FC<
+  SignInMethodProps & FormContextValues<AddAuthUserPayload>
+> = (form) => {
   const { watch, setError, clearError, formState, errors, user } = form;
   const email = watch('email');
   const password = watch('password');

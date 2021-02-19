@@ -55,7 +55,7 @@ export const NodeContainer = React.memo<Props>(function NodeContainer$({
     const canDoRealtime$ = canDoRealtime(realtimeRef);
     const { query, viewModel$ } = createViewModel(realtimeRef, canDoRealtime$);
     setQuerySubject(query);
-    const sub = viewModel$.subscribe(vm => setViewModel(vm));
+    const sub = viewModel$.subscribe((vm) => setViewModel(vm));
     return () => sub.unsubscribe();
   }, [realtimeRef]);
 

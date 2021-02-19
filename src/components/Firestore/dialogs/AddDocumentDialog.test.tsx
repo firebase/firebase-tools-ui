@@ -23,7 +23,7 @@ import { renderDialogWithFirestore } from '../testing/test_utils';
 import { AddDocumentDialog } from './AddDocumentDialog';
 
 it('shows correct title', async () => {
-  const { getByText } = await renderDialogWithFirestore(async firestore => {
+  const { getByText } = await renderDialogWithFirestore(async (firestore) => {
     const collectionRef = firestore.collection('things');
     return (
       <AddDocumentDialog
@@ -39,7 +39,7 @@ it('shows correct title', async () => {
 
 it('shows the (disabled) creation path', async () => {
   const { getByLabelText } = await renderDialogWithFirestore(
-    async firestore => {
+    async (firestore) => {
       const nestedCollectionRef = firestore.collection('things/1/objects');
       return (
         <AddDocumentDialog
@@ -57,7 +57,7 @@ it('shows the (disabled) creation path', async () => {
 
 it('auto generates an id', async () => {
   const { getByLabelText } = await renderDialogWithFirestore(
-    async firestore => {
+    async (firestore) => {
       const collectionRef = firestore.collection('things');
       return (
         <AddDocumentDialog
@@ -74,7 +74,7 @@ it('auto generates an id', async () => {
 
 it('provides a document-editor', async () => {
   const { getByLabelText } = await renderDialogWithFirestore(
-    async firestore => {
+    async (firestore) => {
       const collectionRef = firestore.collection('things');
       return (
         <AddDocumentDialog
@@ -95,7 +95,7 @@ it('provides a document-editor', async () => {
 it.skip('[Save] is disabled with invalid doc-data', async () => {
   const onValue = jest.fn();
   const { getByText, getByLabelText } = await renderDialogWithFirestore(
-    async firestore => {
+    async (firestore) => {
       const collectionRef = firestore.collection('things');
       return (
         <AddDocumentDialog
@@ -117,7 +117,7 @@ it.skip('[Save] is disabled with invalid doc-data', async () => {
 it('emits id and parsed data when [Save] is clicked', async () => {
   const onValue = jest.fn();
   const { getByText, getByLabelText } = await renderDialogWithFirestore(
-    async firestore => {
+    async (firestore) => {
       const collectionRef = firestore.collection('things');
       return (
         <AddDocumentDialog
@@ -154,7 +154,7 @@ it('emits id and parsed data when [Save] is clicked', async () => {
 it('emits null when [Cancel] is clicked', async () => {
   const onValue = jest.fn();
   const { getByText, getByLabelText } = await renderDialogWithFirestore(
-    async firestore => {
+    async (firestore) => {
       const collectionRef = firestore.collection('things');
       return (
         <AddDocumentDialog

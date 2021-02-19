@@ -82,7 +82,7 @@ function applyAdminAuth(app: firebase.app.App): void {
       ({
         getToken: async () => ({ accessToken: accessToken }),
         getUid: () => null,
-        addAuthTokenListener: listener => {
+        addAuthTokenListener: (listener) => {
           // Call listener once immediately with predefined
           // accessToken.
           listener(accessToken);

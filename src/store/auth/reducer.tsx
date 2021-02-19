@@ -31,7 +31,7 @@ export const authReducer = createReducer<AuthState, Action>(INIT_STATE)
   .handleAction(
     authActions.updateUserSuccess,
     produce((draft: AuthState, { payload }) => {
-      draft.users = mapResult(draft.users, users =>
+      draft.users = mapResult(draft.users, (users) =>
         users.map((user: AuthUser) => {
           return user.localId === payload.user.localId
             ? { ...user, ...payload.user }
@@ -42,7 +42,7 @@ export const authReducer = createReducer<AuthState, Action>(INIT_STATE)
   )
   .handleAction(
     authActions.nukeUsersSuccess,
-    produce(draft => {
+    produce((draft) => {
       draft.users = mapResult(draft.users, () => []);
     })
   )
@@ -102,7 +102,7 @@ export const authReducer = createReducer<AuthState, Action>(INIT_STATE)
   )
   .handleAction(
     authActions.clearAuthUserDialogData,
-    produce(draft => {
+    produce((draft) => {
       draft.authUserDialogData = undefined;
     })
   )

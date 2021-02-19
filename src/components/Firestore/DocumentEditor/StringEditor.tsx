@@ -27,7 +27,7 @@ const StringEditor: React.FC<{
       value={value}
       outlined
       label="Value"
-      onChange={e => onChange(e.currentTarget.value)}
+      onChange={(e) => onChange(e.currentTarget.value)}
     />
   );
 };

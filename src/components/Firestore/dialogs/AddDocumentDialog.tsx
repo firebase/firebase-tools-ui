@@ -83,7 +83,7 @@ export const AddDocumentStep: React.FC<AddDocumentStepProps> = ({
         onChange={updateId}
         required
       />
-      <DocumentEditor value={{ '': '' }} onChange={data => setData(data)} />
+      <DocumentEditor value={{ '': '' }} onChange={(data) => setData(data)} />
     </>
   );
 };

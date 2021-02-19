@@ -32,31 +32,31 @@ export const databaseReducer = createReducer<DatabaseState, Action>({
   databasesSubscribed: false,
 })
   .handleAction(databasesFetchRequest, (state, _) =>
-    produce(state, draft => {
+    produce(state, (draft) => {
       draft.databases.loading = true;
     })
   )
   .handleAction(databasesFetchSuccess, (state, { payload }) => {
     const databases = [...payload];
     databases.sort((db1, db2) => db1.name.localeCompare(db2.name));
-    return produce(state, draft => {
+    return produce(state, (draft) => {
       draft.databases.loading = false;
       replaceIfChanged(draft.databases, 'result', { data: databases });
     });
   })
   .handleAction(databasesFetchError, (state, { payload }) =>
-    produce(state, draft => {
+    produce(state, (draft) => {
       draft.databases.loading = false;
       replaceIfChanged(draft.databases, 'result', { error: payload });
     })
   )
-  .handleAction(databasesSubscribe, state =>
-    produce(state, draft => {
+  .handleAction(databasesSubscribe, (state) =>
+    produce(state, (draft) => {
       draft.databasesSubscribed = true;
     })
   )
-  .handleAction(databasesUnsubscribe, state =>
-    produce(state, draft => {
+  .handleAction(databasesUnsubscribe, (state) =>
+    produce(state, (draft) => {
       draft.databasesSubscribed = false;
     })
   );

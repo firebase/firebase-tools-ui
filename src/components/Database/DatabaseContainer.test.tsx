@@ -13,7 +13,7 @@ it('renders prompt to refresh when new dbs are added', async () => {
       <DatabaseContainer
         primary="foo"
         current="bar"
-        navigation={db => `/nav/${db}`}
+        navigation={(db) => `/nav/${db}`}
         databasesSubscribe={() => {}}
         databasesUnsubscribe={() => {}}
         databases={databases}

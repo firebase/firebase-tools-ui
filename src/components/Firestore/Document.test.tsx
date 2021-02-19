@@ -31,7 +31,7 @@ it('shows the root-id', async () => {
 });
 
 it('shows the document-id', async () => {
-  const { getByText } = await renderWithFirestore(async firestore => {
+  const { getByText } = await renderWithFirestore(async (firestore) => {
     const docRef = firestore.doc('my-stuff/foo');
     await docRef.set({ a: 1 });
     return (
@@ -49,7 +49,7 @@ it('shows the document-id', async () => {
 
 it('shows the root collection-list', async () => {
   const { getByText, getByTestId } = await renderWithFirestore(
-    async firestore => {
+    async (firestore) => {
       await firestore.doc('foo/bar').set({ a: 1 });
       return (
         <>
@@ -68,12 +68,9 @@ it('shows the root collection-list', async () => {
 
 it('shows the document collection-list', async () => {
   const { getByText, getByTestId } = await renderWithFirestore(
-    async firestore => {
+    async (firestore) => {
       const documentRef = firestore.doc('foo/bar');
-      await documentRef
-        .collection('sub')
-        .doc('spam')
-        .set({ a: 1 });
+      await documentRef.collection('sub').doc('spam').set({ a: 1 });
       return (
         <>
           <Document reference={documentRef} />
@@ -91,7 +88,7 @@ it('shows the document collection-list', async () => {
 
 it('shows the selected root-collection', async () => {
   const { getAllByText, getAllByTestId } = await renderWithFirestore(
-    async firestore => {
+    async (firestore) => {
       await firestore.doc('foo/bar').set({ a: 1 });
       return (
         <Route path="/firestore">
@@ -114,7 +111,7 @@ it('shows the selected root-collection', async () => {
 
 it('shows the selected root-collection when the collection id has special characters', async () => {
   const { getAllByText, getAllByTestId } = await renderWithFirestore(
-    async firestore => {
+    async (firestore) => {
       await firestore.doc('foo@#$/bar').set({ a: 1 });
       return (
         <Route path="/firestore">
@@ -137,12 +134,9 @@ it('shows the selected root-collection when the collection id has special charac
 
 it('shows the selected document-collection', async () => {
   const { getAllByTestId, getByText } = await renderWithFirestore(
-    async firestore => {
+    async (firestore) => {
       const documentRef = firestore.doc('foo/bar');
-      await documentRef
-        .collection('sub')
-        .doc('doc')
-        .set({ spam: 'eggs' });
+      await documentRef.collection('sub').doc('doc').set({ spam: 'eggs' });
       return (
         <Route path="/firestore/foo/bar">
           <Document reference={documentRef} />
@@ -163,7 +157,7 @@ it('shows the selected document-collection', async () => {
 
 it('shows the selected document-collection when there are collection and document ids with special characters', async () => {
   const { getAllByTestId, getByText } = await renderWithFirestore(
-    async firestore => {
+    async (firestore) => {
       const documentRef = firestore.doc('foo@#$/bar@#$');
       await documentRef
         .collection('sub@#$')

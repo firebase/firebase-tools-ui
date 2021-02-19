@@ -125,7 +125,7 @@ export function combineData<
 
   return {
     data: (results.map(
-      result => (result as DataResult<unknown>).data
+      (result) => (result as DataResult<unknown>).data
     ) as unknown) as DataTypeOfEach<Arr>,
   };
 }
@@ -161,8 +161,8 @@ export function squash<T, E, R>(
 ): R {
   return handle(remoteResult.result, {
     onNone: () => mappers.onNone(remoteResult.loading),
-    onData: data => mappers.onData(data, remoteResult.loading),
-    onError: error => mappers.onError(error, remoteResult.loading),
+    onData: (data) => mappers.onData(data, remoteResult.loading),
+    onError: (error) => mappers.onError(error, remoteResult.loading),
   });
 }
 
@@ -172,7 +172,7 @@ export function squashOrDefaut<T>(
 ) {
   return squash(remoteResult, {
     onNone: () => defaultValue,
-    onData: a => a,
+    onData: (a) => a,
     onError: () => defaultValue,
   });
 }

@@ -15,17 +15,18 @@ export const getConfigResult = (state: AppState) => state.config.result;
 // is present, use getConfigResult. This only tells whether we're fetching.
 export const getConfigLoading = (state: AppState) => state.config.loading;
 
-export const getProjectIdResult = createSelector(getConfigResult, result =>
-  map(result, config => config.projectId)
+export const getProjectIdResult = createSelector(getConfigResult, (result) =>
+  map(result, (config) => config.projectId)
 );
 
-export const getDatabaseConfigResult = createSelector(getConfigResult, result =>
-  map(result, config => config.database)
+export const getDatabaseConfigResult = createSelector(
+  getConfigResult,
+  (result) => map(result, (config) => config.database)
 );
 
 export const getFirestoreConfigResult = createSelector(
   getConfigResult,
-  result => map(result, config => config.firestore)
+  (result) => map(result, (config) => config.firestore)
 );
 
 function useRemoteResultData<T = {}>(result: Result<T> | undefined) {

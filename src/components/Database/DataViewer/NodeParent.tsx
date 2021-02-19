@@ -106,7 +106,7 @@ export const NodeParent = React.memo<Props>(function NodeParent$({
         <NodeActions
           realtimeRef={realtimeRef}
           displayType={displayType}
-          onDisplayTypeChange={type => {
+          onDisplayTypeChange={(type) => {
             setDisplayType(type);
             setIsExpanded(true);
           }}
@@ -126,7 +126,7 @@ export const NodeParent = React.memo<Props>(function NodeParent$({
             />
           ) : (
             <ul className="NodeParent__children">
-              {children.map(key => (
+              {children.map((key) => (
                 <li key={key}>
                   <NodeContainer realtimeRef={realtimeRef.child(key)} />
                 </li>

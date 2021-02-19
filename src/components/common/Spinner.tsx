@@ -22,12 +22,14 @@ import { Typography } from '@rmwc/typography';
 import classnames from 'classnames';
 import React from 'react';
 
-export const Spinner: React.FC<{
-  message?: string;
-  span?: number;
-  cover?: boolean;
-  scrim?: boolean;
-} & React.HTMLProps<any>> = ({ message, span, cover, scrim, ...props }) => {
+export const Spinner: React.FC<
+  {
+    message?: string;
+    span?: number;
+    cover?: boolean;
+    scrim?: boolean;
+  } & React.HTMLProps<any>
+> = ({ message, span, cover, scrim, ...props }) => {
   const children = (
     <>
       <CircularProgress size="xlarge" />

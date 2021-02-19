@@ -87,7 +87,7 @@ export const DatabaseRouteContent: React.FC<ContentProps> = ({
             <DatabaseContainer
               primary={primary}
               current={current}
-              navigation={db => `${url}/${db}/data`}
+              navigation={(db) => `${url}/${db}/data`}
             >
               <Database namespace={current} path={dbPath} config={config} />
             </DatabaseContainer>

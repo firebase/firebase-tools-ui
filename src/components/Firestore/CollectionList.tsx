@@ -71,7 +71,7 @@ const CollectionList: React.FC<Props> = ({ collections, reference }) => {
       if (reference) {
         const encodedReferencePath = reference.path
           .split('/')
-          .map(uri => encodeURIComponent(uri))
+          .map((uri) => encodeURIComponent(uri))
           .join('/');
         history.push(
           `/firestore/${encodedReferencePath}/${encodedCollectionId}`
@@ -107,7 +107,7 @@ const CollectionList: React.FC<Props> = ({ collections, reference }) => {
 
       <List dense tag="div">
         {collections &&
-          collections.map(coll => (
+          collections.map((coll) => (
             <CollectionListItem
               key={coll.id}
               collectionId={coll.id}

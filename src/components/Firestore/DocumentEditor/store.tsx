@@ -83,7 +83,7 @@ export const reducer = createReducer<Store, Action>({ fields: {} })
     produce((draft, { payload }) => {
       const field = draft.fields[payload.uuid];
       assertIsMapField(field);
-      const child = field.mapChildren.find(c => c.uuid === payload.childId);
+      const child = field.mapChildren.find((c) => c.uuid === payload.childId);
       if (!child) {
         throw new Error('No map-child found with given ID');
       }
@@ -95,7 +95,7 @@ export const reducer = createReducer<Store, Action>({ fields: {} })
 
       // Remove reference from parent
       field.mapChildren = field.mapChildren.filter(
-        c => c.uuid !== payload.childId
+        (c) => c.uuid !== payload.childId
       );
     })
   )
@@ -104,7 +104,7 @@ export const reducer = createReducer<Store, Action>({ fields: {} })
     produce((draft, { payload }) => {
       const field = draft.fields[payload.uuid];
       assertIsArrayField(field);
-      const child = field.arrayChildren.find(c => c.uuid === payload.childId);
+      const child = field.arrayChildren.find((c) => c.uuid === payload.childId);
       if (!child) {
         throw new Error('No array-child found with given ID');
       }
@@ -116,7 +116,7 @@ export const reducer = createReducer<Store, Action>({ fields: {} })
 
       // Remove reference from parent
       field.arrayChildren = field.arrayChildren.filter(
-        c => c.uuid !== payload.childId
+        (c) => c.uuid !== payload.childId
       );
     })
   )
@@ -126,7 +126,7 @@ export const reducer = createReducer<Store, Action>({ fields: {} })
       const field = draft.fields[payload.uuid];
       assertIsMapField(field);
       const childField = field.mapChildren.find(
-        c => c.uuid === payload.childId
+        (c) => c.uuid === payload.childId
       );
       if (!childField) {
         throw new Error('No map-child found with given ID');

@@ -2,41 +2,39 @@
 // https://docs.renovatebot.com/configuration-options/
 // This is a JSON5 (json5.org) file which supports comments and unquoted keys.
 {
-  timezone: "America/Los_Angeles",
-  extends: [
-    "config:base",
-  ],
+  timezone: 'America/Los_Angeles',
+  extends: ['config:base'],
   packageRules: [
     {
       // Do not upgrade Node.js versions ("engine" field in package.json).
-      packageNames: ["node"],
+      packageNames: ['node'],
       enabled: false,
     },
-    
+
     // Schedule PRs once a week for non-critical packages with frequent updates.
     {
-      packageNames: ["@types/jest", "@types/node"],
-      packagePatterns: ["^@types/react", "eslint"],
-      extends: ["schedule:earlyMondays"],
+      packageNames: ['@types/jest', '@types/node'],
+      packagePatterns: ['^@types/react', 'eslint'],
+      extends: ['schedule:earlyMondays'],
     },
 
     // Group all Firebase packages together in at most one PR once a week.
     {
-      packageNames: ["firebase"],
-      packagePatterns: ["^@firebase/"],
-      groupName: "firebase packages",
-      extends: ["schedule:earlyMondays"],
+      packageNames: ['firebase'],
+      packagePatterns: ['^@firebase/'],
+      groupName: 'firebase packages',
+      extends: ['schedule:earlyMondays'],
     },
-    
+
     // Group all @rmwc/* packages together in at most one PR once a week.
     {
-      packagePatterns: ["^@rmwc/"],
-      excludePackageNames: ["@rmwc/select"],
-      groupName: "@rmwc packages",
-      extends: ["schedule:earlyMondays"],
+      packagePatterns: ['^@rmwc/'],
+      excludePackageNames: ['@rmwc/select'],
+      groupName: '@rmwc packages',
+      extends: ['schedule:earlyMondays'],
     },
   ],
   // Update package-lock.json when in-range updates are available, otherwise replace
   // the range in package.json for updates out of range.
-  rangeStrategy: "update-lockfile",
+  rangeStrategy: 'update-lockfile',
 }

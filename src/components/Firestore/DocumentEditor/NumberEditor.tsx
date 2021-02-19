@@ -56,7 +56,7 @@ const NumberEditor: React.FC<{
     <Field
       label="Value"
       defaultValue={value}
-      onChange={e => {
+      onChange={(e) => {
         setValue(name, e.currentTarget.value);
         handleChange(e.currentTarget.value);
       }}

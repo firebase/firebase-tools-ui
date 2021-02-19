@@ -179,7 +179,7 @@ export const NodeActions = React.memo<Props>(function NodeActions$({
         {showQueryUi && (
           <InlineQuery
             params={queryParams}
-            onSubmit={params => {
+            onSubmit={(params) => {
               updateQuery && updateQuery(params);
               setShowQueryUi(false);
             }}

@@ -198,14 +198,14 @@ export function getDescendantIds(fields: Fields, ids: number[]): number[] {
       acc.push(
         ...getDescendantIds(
           fields,
-          field.mapChildren.map(c => c.valueId)
+          field.mapChildren.map((c) => c.valueId)
         )
       );
     } else if (isArrayField(field)) {
       acc.push(
         ...getDescendantIds(
           fields,
-          field.arrayChildren.map(c => c.valueId)
+          field.arrayChildren.map((c) => c.valueId)
         )
       );
     }

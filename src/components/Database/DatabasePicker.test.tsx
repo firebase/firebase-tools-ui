@@ -26,7 +26,7 @@ it('renders primary database name and link', () => {
       <DatabasePicker
         primary="foo"
         current="foo"
-        navigation={db => `/nav/${db}`}
+        navigation={(db) => `/nav/${db}`}
         databases={['foo']}
       />
     </MemoryRouter>
@@ -40,7 +40,7 @@ it('renders current database name even if it is not in list', () => {
       <DatabasePicker
         primary="foo"
         current="random"
-        navigation={db => `/nav/${db}`}
+        navigation={(db) => `/nav/${db}`}
         databases={['foo']}
       />
     </MemoryRouter>
@@ -54,7 +54,7 @@ it('renders extra databases with link', () => {
       <DatabasePicker
         primary="foo"
         current="bar"
-        navigation={db => `/nav/${db}`}
+        navigation={(db) => `/nav/${db}`}
         databases={['foo', 'bar', 'baz']}
       />
     </MemoryRouter>

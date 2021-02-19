@@ -22,7 +22,7 @@ export interface PropsFromDispatch {
 export const mapDispatchToProps: MapDispatchToPropsFunction<
   PropsFromDispatch,
   {}
-> = dispatch => {
+> = (dispatch) => {
   return {
     refresh: () => dispatch(authFetchUsersRequest()),
   };

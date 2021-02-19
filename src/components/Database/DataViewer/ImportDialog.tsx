@@ -89,7 +89,7 @@ export const ImportDialog: React.FC<Props> = ({
             label="Data (JSON)"
             required
             value={file?.name || 'Drop a file, or click to select'}
-            onFiles={files => setFile(files[0])}
+            onFiles={(files) => setFile(files[0])}
             error={error}
           />
         </DialogContent>

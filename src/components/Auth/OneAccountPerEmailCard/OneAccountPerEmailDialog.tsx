@@ -88,7 +88,7 @@ export interface PropsFromDispatch {
 export const mapDispatchToProps: MapDispatchToPropsFunction<
   PropsFromDispatch,
   {}
-> = dispatch => ({
+> = (dispatch) => ({
   setAllowDuplicateEmails: (value: boolean) =>
     dispatch(setAllowDuplicateEmailsRequest(value)),
 });

@@ -35,12 +35,12 @@ it('should get root-collections', async () => {
   const TestResults = () => {
     const collections = useRootCollections();
     return (
-      <div data-testid="collections">{collections.map(c => c.id).join()}</div>
+      <div data-testid="collections">{collections.map((c) => c.id).join()}</div>
     );
   };
 
   const { getByText, getByTestId } = await renderWithFirestore(
-    async firestore => {
+    async (firestore) => {
       await firestore.doc('things/a').set({ a: 1 });
       await firestore.doc('others/a').set({ a: 1 });
       return <TestResults />;
@@ -60,21 +60,15 @@ it('should get sub-collections', async () => {
   }) => {
     const collections = useSubCollections(docRef);
     return (
-      <div data-testid="collections">{collections.map(c => c.id).join()}</div>
+      <div data-testid="collections">{collections.map((c) => c.id).join()}</div>
     );
   };
 
   const { getByText, getByTestId } = await renderWithFirestore(
-    async firestore => {
+    async (firestore) => {
       const docRef = firestore.doc('top/doc');
-      await docRef
-        .collection('things')
-        .doc('a')
-        .set({ a: 1 });
-      await docRef
-        .collection('others')
-        .doc('a')
-        .set({ a: 1 });
+      await docRef.collection('things').doc('a').set({ a: 1 });
+      await docRef.collection('others').doc('a').set({ a: 1 });
       return <TestResults docRef={docRef} />;
     }
   );
@@ -88,21 +82,15 @@ it('should get sub-collections with special characters inside URI', async () => 
   const TestResults = ({ docRef }: { docRef: firestore.DocumentReference }) => {
     const collections = useSubCollections(docRef);
     return (
-      <div data-testid="collections">{collections.map(c => c.id).join()}</div>
+      <div data-testid="collections">{collections.map((c) => c.id).join()}</div>
     );
   };
 
   const { getByText, getByTestId } = await renderWithFirestore(
-    async firestore => {
+    async (firestore) => {
       const docRef = firestore.doc('top/doc _!@#$_');
-      await docRef
-        .collection('things')
-        .doc('a')
-        .set({ a: 1 });
-      await docRef
-        .collection('others')
-        .doc('a')
-        .set({ a: 1 });
+      await docRef.collection('things').doc('a').set({ a: 1 });
+      await docRef.collection('others').doc('a').set({ a: 1 });
       return <TestResults docRef={docRef} />;
     }
   );
@@ -118,12 +106,12 @@ it('should get missing-documents', async () => {
   }> = ({ collection }) => {
     const documents = useMissingDocuments(collection);
     return (
-      <div data-testid="documents">{documents.map(d => d.path).join()}</div>
+      <div data-testid="documents">{documents.map((d) => d.path).join()}</div>
     );
   };
 
   const { getByText, getByTestId } = await renderWithFirestore(
-    async firestore => {
+    async (firestore) => {
       await firestore.doc('foo/bar').set({ a: 1 });
       await firestore.doc('foo/bar/deep/egg').set({ a: 1 });
       await firestore.doc('foo/hidden/deep/egg').set({ a: 1 });
@@ -154,7 +142,7 @@ it('should clear the database', async () => {
   };
 
   const { getByText, getByTestId } = await renderWithFirestore(
-    async firestore => {
+    async (firestore) => {
       const docRef = firestore.doc('top/doc');
       await docRef.set({ a: 1 });
       return <TestResults docRef={docRef} />;

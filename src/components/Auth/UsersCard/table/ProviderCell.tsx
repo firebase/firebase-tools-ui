@@ -16,7 +16,7 @@ export const ProviderCell: React.FC<ProviderCellProps> = ({
     <Theme use="secondary">
       <div className={styles.iconWrapper}>
         {user.providerUserInfo.map(
-          providerInfo =>
+          (providerInfo) =>
             providerToIconMap[providerInfo.providerId] && (
               <Icon
                 icon={providerToIconMap[providerInfo.providerId]}

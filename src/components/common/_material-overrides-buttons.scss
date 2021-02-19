@@ -296,7 +296,7 @@ $FOCUS_OUTLINE_THICKNESS: 2px;
   %all-dark-flat-buttons {
     @include __flat-text-button-styling(
       // sorry about important, overrides mdc important
-        $foreColor: $COLOR_WHITE_PRIMARY !important,
+      $foreColor: $COLOR_WHITE_PRIMARY !important,
       $bgColorHoverFocus: $COLOR_WHITE_PRIMARY,
       $disabledForeColor: $COLOR_WHITE_DISABLED
     );

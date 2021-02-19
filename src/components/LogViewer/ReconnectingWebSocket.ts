@@ -51,7 +51,7 @@ export class ReconnectingWebSocket {
       this.state = WebSocketState.DISCONNECTED;
     };
 
-    ws.onmessage = msg => {
+    ws.onmessage = (msg) => {
       const data = JSON.parse(msg.data);
       this.listener && this.listener(data);
     };

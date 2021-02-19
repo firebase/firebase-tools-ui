@@ -27,7 +27,7 @@ export const AuthFilter: React.FC<AuthFilterProps> = ({
       <form
         role="search"
         className={styles.filterForm}
-        onSubmit={e => {
+        onSubmit={(e) => {
           e.preventDefault();
         }}
       >
@@ -85,8 +85,8 @@ export interface PropsFromDispatch {
 export const mapDispatchToProps: MapDispatchToPropsFunction<
   PropsFromDispatch,
   {}
-> = dispatch => ({
-  updateFilter: f => dispatch(updateFilter(f)),
+> = (dispatch) => ({
+  updateFilter: (f) => dispatch(updateFilter(f)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AuthFilter);

@@ -49,9 +49,7 @@ import PanelHeader from './PanelHeader';
 import { useCollectionFilter } from './store';
 import { useAutoSelect } from './useAutoSelect';
 
-const NO_DOCS: firebase.firestore.QueryDocumentSnapshot<
-  firebase.firestore.DocumentData
->[] = [];
+const NO_DOCS: firebase.firestore.QueryDocumentSnapshot<firebase.firestore.DocumentData>[] = [];
 
 export interface Props {
   collection: firebase.firestore.CollectionReference;
@@ -116,9 +114,7 @@ export function withCollectionState(
 
 // TODO: create a CollectionSkeleton that the loading+loaded state can utilize
 export const CollectionLoading: React.FC<{
-  collection: firebase.firestore.CollectionReference<
-    firebase.firestore.DocumentData
-  >;
+  collection: firebase.firestore.CollectionReference<firebase.firestore.DocumentData>;
 }> = ({ collection }) => (
   <div className="Firestore-Collection">
     <PanelHeader
@@ -130,14 +126,10 @@ export const CollectionLoading: React.FC<{
 );
 
 interface CollectionPresentationProps {
-  collection: firebase.firestore.CollectionReference<
-    firebase.firestore.DocumentData
-  >;
+  collection: firebase.firestore.CollectionReference<firebase.firestore.DocumentData>;
   collectionFilter: ReturnType<typeof useCollectionFilter>;
   addDocument: (value: AddDocumentDialogValue | null) => Promise<void>;
-  docs: firebase.firestore.QueryDocumentSnapshot<
-    firebase.firestore.DocumentData
-  >[];
+  docs: firebase.firestore.QueryDocumentSnapshot<firebase.firestore.DocumentData>[];
   missingDocs: MissingDocument[];
   url: string;
 }
@@ -214,7 +206,7 @@ export const CollectionPresentation: React.FC<CollectionPresentationProps> = ({
             collectionFilter && isSortableCollectionFilter(collectionFilter)
           }
         >
-          {docs.map(doc => (
+          {docs.map((doc) => (
             <DocumentListItem
               key={doc.ref.id}
               url={url}
