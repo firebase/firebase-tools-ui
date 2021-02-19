@@ -41,7 +41,6 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-      # - run: curl -sL https://firebase.tools | bash
       - run: npm ci
       - name: Run tests against emulator
         # forceExit: something is not cleaning up - likely firebase-app that needs to be deleted, investigate
@@ -51,7 +50,7 @@ jobs:
         env:
           CI: true
 
-  check-package-lock:
+  lint:
     runs-on: ubuntu-latest
 
     strategy:
@@ -64,5 +63,8 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm install --package-lock-only
-      - run: "git diff --exit-code -- package-lock.json || (echo 'Error: package-lock.json is changed during npm install! Please make sure to use npm >= 6.9.0 and commit package-lock.json.' && false)"
+      - run: npm install
+      - name: Lint package-lock.json
+        run: "git diff --exit-code -- package-lock.json || (echo 'Error: package-lock.json is changed during npm install! Please make sure to use npm >= 6.9.0 and commit package-lock.json.' && false)"
+      - name: Lint source files
+        run: npm run lint
