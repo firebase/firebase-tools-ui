@@ -30,7 +30,7 @@ describe('PhoneControl', () => {
       {
         phoneNumber,
       },
-      jasmine.any(Object)
+      expect.any(Object)
     );
   });
 

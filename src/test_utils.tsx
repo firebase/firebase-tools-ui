@@ -111,7 +111,7 @@ export function makeDeferred<T>(): Deferred<T> {
     promise,
     resolve(value) {
       if (isResolved) {
-        fail(
+        throw new Error(
           'Cannot resolve Deferred since it is already resolved! There is ' +
             'very likely a mistake in the test that calls resolve/reject twice.'
         );
