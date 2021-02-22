@@ -13,12 +13,10 @@ enum ImagePreviewStatus {
   ERROR = 'ERROR',
 }
 
-export interface ImageUrlInput {
+export type ImageUrlInputProps = FormContextValues<AddAuthUserPayload> & {
   ImageConstructor?: typeof Image;
-}
+};
 
-export type ImageUrlInputProps = ImageUrlInput &
-  FormContextValues<AddAuthUserPayload>;
 export const ImageUrlInput: React.FC<ImageUrlInputProps> = ({
   register,
   watch,
