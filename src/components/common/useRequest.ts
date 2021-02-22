@@ -20,7 +20,7 @@ interface RequestOptions {
   refreshInterval?: number;
 }
 
-export function useFetcher<T = unknown>(
+export function useFetcher(
   options: RequestInit,
   onSuccess = (r: Response) => r.json()
 ) {
@@ -40,7 +40,7 @@ export function useRequest<T = unknown>(
   options: RequestInit,
   { refreshInterval = 0 }: RequestOptions
 ) {
-  const fetcher = useFetcher<T>(options);
+  const fetcher = useFetcher(options);
 
   return useSwr<T>(url, fetcher, {
     refreshInterval,
