@@ -101,4 +101,6 @@ the server as described above.
 
 ## License
 
-Apache 2.0
+[Apache-2.0 License](https://github.com/firebase/firebase-tools-ui/blob/master/LICENSE)
+<br>
+Copyright 2019-present Google LLC. All rights reserved.
