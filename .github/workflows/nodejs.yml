@@ -94,5 +94,6 @@ jobs:
           go-version: '^1.16.0'
       - name: Install google/addlicense
         run: go get -u github.com/google/addlicense
+      - uses: actions/checkout@v2
       - name: Check license headers
         run: addlicense -check -c "Google LLC" -l apache .
