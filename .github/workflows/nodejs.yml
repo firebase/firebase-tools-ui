@@ -96,4 +96,4 @@ jobs:
         run: go get -u github.com/google/addlicense
       - uses: actions/checkout@v2
       - name: Check license headers
-        run: addlicense -check -c "Google LLC" -l apache .
+        run: env BASHOPTS=extglob bash -c 'addlicense -check -c "Google LLC" -l apache !(node_modules)'
