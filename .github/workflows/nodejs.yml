@@ -93,4 +93,4 @@ jobs:
       - name: Install google/addlicense
         run: go get -u github.com/google/addlicense
       - name: Check license headers
-        run: addlicense -check -c "Google LLC" -l apache .
+        run: $GOPATH/addlicense -check -c "Google LLC" -l apache .
