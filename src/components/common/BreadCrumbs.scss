@@ -16,6 +16,7 @@
 
 @import '../common/icon';
 @import '../common/utils';
+@import '../common/a11y';
 
 .BreadCrumbs {
   align-items: center;
@@ -29,6 +30,8 @@
   margin: 0 6px;
   min-width: 0;
   padding: 0;
+
+  @include a11y-display-on-hover('.mdc-icon-button');
 
   .mdc-icon-button {
     &::before,
@@ -95,7 +98,6 @@
     font-size: 16px;
     height: 24px;
     padding: 0;
-    visibility: hidden;
     width: 24px;
   }
 }

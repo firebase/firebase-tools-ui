@@ -21,6 +21,7 @@ import Database from './components/Database';
 import Firestore from './components/Firestore';
 import Home from './components/Home';
 import LogsViewer from './components/LogViewer';
+import { Storage } from './components/Storage';
 
 export interface Route {
   path: string;
@@ -56,6 +57,13 @@ export const routes: ReadonlyArray<Route> = [
     path: '/database',
     component: Database,
     label: 'Realtime Database',
+    exact: false,
+    showInNav: true,
+  },
+  {
+    path: '/storage',
+    component: Storage,
+    label: 'Storage',
     exact: false,
     showInNav: true,
   },

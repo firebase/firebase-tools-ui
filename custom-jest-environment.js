@@ -22,19 +22,19 @@ const JsdomEnvironment = require('jest-environment-jsdom');
 class EmulatorUiTestEnvironment extends JsdomEnvironment {
   constructor(config) {
     super(
-      Object.assign({}, config, {
-        globals: Object.assign({}, config.globals, {
-          // https://github.com/firebase/firebase-js-sdk/issues/3096#issuecomment-640259275
-          Uint32Array: Uint32Array,
-          Uint8Array: Uint8Array,
-          ArrayBuffer: ArrayBuffer,
+        Object.assign({}, config, {
+          globals: Object.assign({}, config.globals, {
+            // https://github.com/firebase/firebase-js-sdk/issues/3096#issuecomment-640259275
+            Uint32Array: Uint32Array,
+            Uint8Array: Uint8Array,
+            ArrayBuffer: ArrayBuffer,
 
-          // grpc requires Node.js timers (with .unref()), not browser timers.
-          setImmediate: setImmediate,
-          setInterval: setInterval,
-          setTimeout: setTimeout,
-        }),
-      })
+            // grpc requires Node.js timers (with .unref()), not browser timers.
+            setImmediate: setImmediate,
+            setInterval: setInterval,
+            setTimeout: setTimeout,
+          }),
+        })
     );
   }
 

@@ -40,6 +40,7 @@ export interface Config {
   functions?: FunctionsConfig;
   logging?: LoggingConfig;
   hosting?: EmulatorConfig;
+  storage?: EmulatorConfig;
   pubsub?: EmulatorConfig;
 }
 

@@ -81,7 +81,8 @@ $mdc-select-outlined-hover-border: var(--fire-color-input-borders);
     padding: $input-default-padding; // base component doesnt do this yet
   }
 
-  .mdc-select__dropdown-icon {
+  .mdc-select__dropdown-icon,
+  .mdc-select__icon {
     bottom: $input-default-padding - 2px; // base component doesnt do this yet
     z-index: $ZINDEX_MEDIUM;
   }
@@ -119,4 +120,10 @@ $mdc-select-outlined-hover-border: var(--fire-color-input-borders);
   // because Material styles position it ABOVE the input on Chrome autofill,
   // causing input content text to be covered. See b/170908531 (internal) and:
   // https://github.com/material-components/material-components-web/pull/4232/files
+}
+
+// Highlight checkboxes when navigating from keyboard
+.mdc-data-table__header-row-checkbox .mdc-checkbox__native-control:enabled:not(:checked):not(:indeterminate) ~ .mdc-checkbox__background:before,
+.mdc-data-table__row-checkbox .mdc-checkbox__native-control:enabled:not(:checked):not(:indeterminate) ~ .mdc-checkbox__background:before {
+  background-color: rgba(0, 0, 0, 0.54);
 }

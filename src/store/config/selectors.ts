@@ -40,6 +40,11 @@ export const getDatabaseConfigResult = createSelector(
   (result) => map(result, (config) => config.database)
 );
 
+export const getStorageConfigResult = createSelector(
+  getConfigResult,
+  (result) => map(result, (config) => config.storage)
+);
+
 export const getFirestoreConfigResult = createSelector(
   getConfigResult,
   (result) => map(result, (config) => config.firestore)

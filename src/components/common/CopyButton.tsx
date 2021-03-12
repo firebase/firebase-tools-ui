@@ -20,6 +20,7 @@ import React, { useCallback, useState } from 'react';
 
 interface CopyButtonProps extends HTMLProps<IconButtonProps> {
   textToCopy: string;
+  icon?: string;
 }
 
 function useClipboard(text: string) {
@@ -39,16 +40,12 @@ export function CopyButton({
   textToCopy: text,
   label,
   theme,
+  icon = 'content_copy',
 }: CopyButtonProps) {
   label = label || 'Copy';
   theme = theme || 'textPrimaryOnBackground';
   const { writeText } = useClipboard(text);
   return (
-    <IconButton
-      theme={theme}
-      icon="content_copy"
-      label={label}
-      onClick={writeText}
-    />
+    <IconButton theme={theme} icon={icon} label={label} onClick={writeText} />
   );
 }
