@@ -1,0 +1,17 @@
+.list {
+  margin-left: -16px;
+  margin-right: -16px;
+  width: 100%;
+}
+
+
+.metadata {
+  margin: 0;
+
+  :global dd {
+    margin: 0 0 16px 0;
+  }
+}
+
+
+

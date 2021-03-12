@@ -17,6 +17,8 @@
 import './BreadCrumbs.scss';
 
 import { IconButton } from '@rmwc/icon-button';
+import { IconPropT } from '@rmwc/types';
+import { Typography } from '@rmwc/typography';
 import classnames from 'classnames';
 import React from 'react';
 import { Link } from 'react-router-dom';
@@ -26,6 +28,7 @@ export interface Props {
   base: string;
   path: string;
   onEdit?: () => void;
+  homeElement?: IconPropT;
 }
 
 const EMPTY_KEYS: string[] = [];
@@ -35,6 +38,7 @@ export const BreadCrumbs: React.FC<Props> = ({
   path,
   onEdit,
   children,
+  homeElement = <IconButton icon={'home'} />,
 }) => {
   const normalizedPath = path.startsWith('/') ? path.substr(1) : path;
   const keys = normalizedPath ? normalizedPath.split('/') : EMPTY_KEYS;
@@ -47,8 +51,12 @@ export const BreadCrumbs: React.FC<Props> = ({
 
   return (
     <ul role="navigation" className="BreadCrumbs">
-      <li className="BreadCrumbs-crumb">
-        <IconButton icon="home" tag={Link} to={base} />
+      <li className="BreadCrumbs-crumb BreadCrumbs-homeCrumb">
+        <Link to={base}>
+          <Typography use="body2" theme="secondary">
+            {homeElement}
+          </Typography>
+        </Link>
       </li>
 
       {keys.map((key, i) => (
@@ -67,7 +75,7 @@ export const BreadCrumbs: React.FC<Props> = ({
         aria-label="Edit URL"
         onClick={() => onEdit && onEdit()}
       >
-        <IconButton icon="edit" />
+        <IconButton icon="edit" label="edit" />
       </li>
       <li>{children}</li>
     </ul>

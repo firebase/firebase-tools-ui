@@ -107,6 +107,7 @@ export const getShowTable = createSelector(
   (users, filteredUsers) => filteredUsers.length > 0
 );
 
-export const getAuthConfigResult = createSelector(getConfigResult, (result) =>
-  map(result, (config) => config.auth)
+export const getAuthConfigResult = createSelector(
+  getConfigResult,
+  (result): any => map(result, (config) => config.auth)
 );

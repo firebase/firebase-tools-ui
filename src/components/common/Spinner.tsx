@@ -28,11 +28,12 @@ export const Spinner: React.FC<
     span?: number;
     cover?: boolean;
     scrim?: boolean;
-  } & React.HTMLProps<any>
-> = ({ message, span, cover, scrim, ...props }) => {
+    size?: 'xsmall' | 'small' | 'medium' | 'large' | 'xlarge' | number;
+  } & React.HTMLProps<HTMLDivElement>
+> = ({ message, size, span, cover, scrim, ...props }) => {
   const children = (
     <>
-      <CircularProgress size="xlarge" />
+      <CircularProgress size={size ?? 'xlarge'} />
       {message && (
         <Typography use="body2" tag="p">
           {message}

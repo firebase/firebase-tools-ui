@@ -40,8 +40,10 @@ import {
   FunctionsIcon,
   HostingIcon,
   PubSubIcon,
+  StorageIcon,
 } from '../common/icons';
 import { Spinner } from '../common/Spinner';
+import { storagePath } from '../Storage/common/constants';
 import { LocalWarningCallout } from './LocalWarningCallout';
 import { StatusLabel } from './StatusLabel';
 
@@ -102,6 +104,14 @@ const Overview: React.FC<{
           linkTo="/functions"
           linkLabel="View logs"
           testId="emulator-info-functions"
+        />
+        <EmulatorCard
+          name="Storage emulator"
+          icon={<StorageIcon />}
+          config={config.storage}
+          linkTo={storagePath}
+          linkLabel="Storage"
+          testId="emulator-info-storage"
         />
         <EmulatorCard
           name="Hosting emulator"

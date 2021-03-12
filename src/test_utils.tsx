@@ -19,6 +19,8 @@ import {
   act,
   fireEvent,
   render,
+  screen,
+  waitFor,
   waitForElement,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
@@ -50,10 +52,23 @@ export async function waitForDialogsToOpen(container: ParentNode = document) {
 }
 
 /**
+ *  TODO(kirjs): Migrate remaining dialogs to the same style.
+ */
+export async function waitAlertDialogToOpen() {
+  await screen.findByRole('alertdialog');
+}
+
+export async function waitAlertDialogToClose() {
+  return await waitFor(() => {
+    expect(screen.queryByRole('alertdialog')).toBeNull();
+  });
+}
+
+/**
  * Wait for MDC dialogs to be fully closed, so no DOM changes happen outside
  * our control and trigger warnings of not wrapped in act(...) etc.
  */
-export async function waitForDialogsToClose(container: ParentNode = document) {
+export async function waitForDialogsToClose() {
   // TODO: Change to waitFor once we migrate to react-testing-library@10.
   await waitForElementToBeRemoved(() =>
     document.querySelector('.mdc-dialog--closing')

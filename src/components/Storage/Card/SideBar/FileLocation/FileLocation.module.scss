@@ -1,0 +1,22 @@
+
+.metadata {
+  margin: 0;
+
+  :global dd {
+    margin: 0 0 16px 0;
+  }
+
+  :global dt {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.token {
+  background: transparent;
+  width: 100%;
+  border: 0 solid;
+  height: 20px;
+}
+
