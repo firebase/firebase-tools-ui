@@ -32,6 +32,7 @@ describe('DeleteAllButton', () => {
     confirmDeleteAllFiles.mockReturnValueOnce(Promise.resolve(true));
 
     await uploadFile('lol.txt');
+
     const button = getByText('Delete all files');
     waitFor(() => expect(button.parentElement.disabled).not.toBe(true), {
       timeout: true,

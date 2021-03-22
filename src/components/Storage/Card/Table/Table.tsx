@@ -40,7 +40,7 @@ import { ZeroState } from './ZeroState/ZeroState';
 interface StorageTableProps {
   selection: UseMultiselectResult;
   selectedFile?: StorageFile;
-  selectFile: (file: StorageFile) => void;
+  selectFile: (file?: StorageFile) => void;
 }
 
 export const StorageTable: React.FC<StorageTableProps> = ({
@@ -96,13 +96,10 @@ export const StorageTable: React.FC<StorageTableProps> = ({
   );
 };
 
-interface StorageTableRowProps {
+interface StorageTableRowProps extends StorageTableProps {
   item: StorageItem;
-  selection: UseMultiselectResult;
   bucket: string;
-  selectFile: (file: StorageFile) => void;
   setPath: (path: string) => void;
-  selectedFile?: StorageFile;
 }
 
 function lastModified(item: StorageItem) {
@@ -135,12 +132,12 @@ export const StorageFileTableRow: React.FC<StorageTableRowProps> = ({
   function navigate() {
     if (item.type === 'file') {
       if (selectedFile === item) {
-        selectFile(undefined as any);
+        selectFile(undefined);
       } else {
         selectFile(item);
       }
     } else {
-      selectFile(undefined as any);
+      selectFile(undefined);
       setPath(item.fullPath);
     }
   }

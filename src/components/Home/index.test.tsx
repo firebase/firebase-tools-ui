@@ -155,6 +155,31 @@ it('shows pubsub emulator card', () => {
   expect(getByText(card, '8085')).not.toBeNull();
   expect(getByText(card, 'PubSub emulator')).not.toBeNull();
 });
+it('shows storage emulator card', () => {
+  const { getByTestId } = render(
+    <MemoryRouter>
+      <Home
+        configRemote={{
+          loading: false,
+          result: {
+            data: {
+              projectId: 'example',
+              storage: {
+                host: 'localhost',
+                port: 9199,
+                hostAndPort: 'localhost:9199',
+              },
+            },
+          },
+        }}
+      />
+    </MemoryRouter>
+  );
+
+  const card = getByTestId(`emulator-info-storage`);
+  expect(getByText(card, '9199')).not.toBeNull();
+  expect(getByText(card, 'Storage')).not.toBeNull();
+});
 
 it('shows button for function emulator logs', () => {
   const { getByTestId } = render(

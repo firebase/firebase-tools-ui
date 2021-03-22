@@ -153,7 +153,6 @@ describe('auth reducers', () => {
       const state = createFakeAuthStateWithUsers([]);
 
       const message = 'ayayay!!!';
-      const users: AuthUser[] = [createFakeUser({ localId })];
       const action = authFetchUsersError({ message });
 
       const result = authReducer(state, action);

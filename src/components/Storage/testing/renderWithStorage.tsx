@@ -26,16 +26,18 @@ import { StorageFile } from '../types';
 import { FakeStorageWrappers } from './FakeStorageWrappers';
 import { mockBuckets } from './mockBuckets';
 
+interface CurrentType {
+  storage: useStorageFilesResult;
+  history: History;
+  bucket: UseBucketResult;
+}
+
 export async function renderWithStorage(children: ReactElement) {
   const defaultBucket = randomId('bucket');
 
   mockBuckets([defaultBucket]);
 
-  const current: {
-    storage: useStorageFilesResult;
-    history: History;
-    bucket: UseBucketResult;
-  } = {} as any;
+  const current = {} as CurrentType;
 
   async function waitForNFiles(n: number) {
     await waitFor(

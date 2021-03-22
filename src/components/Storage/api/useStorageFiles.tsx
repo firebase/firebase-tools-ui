@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import firebase from 'firebase';
 import { useStorage } from 'reactfire';
 import useSwr from 'swr';
 
@@ -23,12 +24,14 @@ import { useBucket } from './useBucket';
 import { useCreateFolder } from './useCreateFolder';
 import { usePath } from './usePath';
 
-async function importFile(fileRef: any): Promise<StorageFile> {
+async function importFile(
+  fileRef: firebase.storage.Reference
+): Promise<StorageFile> {
   const metadata = await fileRef.getMetadata();
   return { type: 'file', ...metadata };
 }
 
-function importFolder(folder: any): StorageFolder {
+function importFolder(folder: firebase.storage.Reference): StorageFolder {
   return {
     type: 'folder',
     name: folder.name,
@@ -72,11 +75,11 @@ export function useStorageFiles() {
     { suspense: true }
   );
 
-  async function deleteFile(path: string): Promise<any> {
+  async function deleteFile(path: string): Promise<void> {
     return await getCurrentRef('').child(path).delete();
   }
 
-  async function deleteFolder(path: string): Promise<any> {
+  async function deleteFolder(path: string): Promise<void> {
     const { items, prefixes } = await getCurrentRef(path).listAll();
 
     try {
@@ -87,15 +90,17 @@ export function useStorageFiles() {
       // Swallow errors.
     }
 
-    const prefixesPromise = prefixes.map((prefix) => {
-      return deleteFolder(prefix.fullPath);
+    const prefixesPromise: Promise<void>[] = prefixes.map(async (prefix) => {
+      return await deleteFolder(prefix.fullPath);
     });
 
-    const filesPromise = items.map(async (file) => {
+    const filesPromise: Promise<void>[] = items.map(async (file) => {
       return await file.delete();
     });
 
-    return await Promise.all([...filesPromise, ...prefixesPromise]);
+    return await Promise.all([...filesPromise, ...prefixesPromise]).then(
+      () => undefined
+    );
   }
 
   async function deleteAllFiles() {

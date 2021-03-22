@@ -6,7 +6,7 @@ import { FirebaseAppProvider } from 'reactfire';
 import { getStorageApp } from '../../../firebase';
 import { useStorageConfig } from '../api/useStorageConfig';
 
-function useStorageApp(): any {
+function useStorageApp() {
   const { host, port } = useStorageConfig();
   const app = useMemo(() => getStorageApp(host, port.toString()), [host, port]);
 

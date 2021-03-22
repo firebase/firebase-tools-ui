@@ -123,7 +123,11 @@ $mdc-select-outlined-hover-border: var(--fire-color-input-borders);
 }
 
 // Highlight checkboxes when navigating from keyboard
-.mdc-data-table__header-row-checkbox .mdc-checkbox__native-control:enabled:not(:checked):not(:indeterminate) ~ .mdc-checkbox__background:before,
-.mdc-data-table__row-checkbox .mdc-checkbox__native-control:enabled:not(:checked):not(:indeterminate) ~ .mdc-checkbox__background:before {
+.mdc-data-table__header-row-checkbox
+  .mdc-checkbox__native-control:enabled:not(:checked):not(:indeterminate)
+  ~ .mdc-checkbox__background:before,
+.mdc-data-table__row-checkbox
+  .mdc-checkbox__native-control:enabled:not(:checked):not(:indeterminate)
+  ~ .mdc-checkbox__background:before {
   background-color: rgba(0, 0, 0, 0.54);
 }

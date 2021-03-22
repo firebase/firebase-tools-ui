@@ -21,7 +21,7 @@ import { renderWithStorage } from '../../testing/renderWithStorage';
 import { BucketPicker } from './BucketPicker';
 
 describe('Bucket Picker', () => {
-  it('allows to pick a bucket', async () => {
+  it('updates the URL with selected bucket', async () => {
     const { getByLabelText, current, defaultBucket } = await renderWithStorage(
       <BucketPicker />
     );
