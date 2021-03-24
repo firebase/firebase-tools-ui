@@ -25,7 +25,7 @@ describe('FileLocation', () => {
   const token = 'token-a';
 
   async function setup() {
-    mockTokens([token, 'toke-b']);
+    mockTokens([token, 'token-b']);
     return await renderWithStorage(<FileLocation fullPath={name} />);
   }
 

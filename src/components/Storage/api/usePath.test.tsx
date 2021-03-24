@@ -50,7 +50,7 @@ describe('usePath', () => {
     };
   }
 
-  it('picks up bucket name from the URL', async () => {
+  it('picks up path from the URL', async () => {
     const { path } = setup();
     expect(path).toBe(initialPath);
   });

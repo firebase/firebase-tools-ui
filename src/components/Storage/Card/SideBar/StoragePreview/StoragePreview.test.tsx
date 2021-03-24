@@ -31,7 +31,7 @@ describe('StoragePreview', () => {
     expect(getByAltText('Preview')).toBeDefined();
   });
 
-  it('does not render the image', async () => {
+  it('does not render the image if preview URL is not present', async () => {
     jest.spyOn(usePreviewUrl, 'usePreviewUrl').mockReturnValueOnce(undefined);
     const { queryByAltText } = await renderWithStorage(
       <StoragePreviewUnwrapped file={file} />

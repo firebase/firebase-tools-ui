@@ -45,7 +45,6 @@ export const CreateFolderDialog: React.FC<NewFolderDialogProps> = ({
     setName('');
     close();
   };
-  console.log(name);
   return (
     <Dialog open={isOpen} onClose={() => close()}>
       <DialogTitle>Create folder</DialogTitle>

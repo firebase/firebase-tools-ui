@@ -28,7 +28,7 @@ describe('useStorageConfig', () => {
     return renderHook(() => useStorageConfig(), { wrapper: Wrapper }).result;
   }
 
-  it('picks up bucket name from the URL', async () => {
+  it('returns host and port from provider', async () => {
     const result = await setup();
     expect(result.current.host).toEqual('localhost');
     expect(result.current.port).toEqual(9199);
