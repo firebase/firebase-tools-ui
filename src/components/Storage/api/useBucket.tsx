@@ -19,7 +19,9 @@ import { useHistory, useParams } from 'react-router-dom';
 import { storagePath } from '../common/constants';
 import { StorageRouterParams } from '../types';
 
-export function useBucket(): [string, (bucket: string) => void] {
+export type UseBucketResult = [string, (bucket: string) => void];
+
+export function useBucket(): UseBucketResult {
   const history = useHistory();
   const bucket = useParams<StorageRouterParams>().bucket;
 
@@ -29,5 +31,3 @@ export function useBucket(): [string, (bucket: string) => void] {
 
   return [bucket, setBucket];
 }
-
-export type UseBucketResult = ReturnType<typeof useBucket>;

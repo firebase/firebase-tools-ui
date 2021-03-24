@@ -22,17 +22,14 @@
   margin-bottom: -1px;
 
   :global .mdc-data-table__cell {
-    // This allows for multiline file names.
+    // This allows for multiline file names. Taking height value from rmwc.
     height: auto;
     min-height: 52px;
   }
 }
 
 .link {
-  // For some reason link color does not use a var.
-  color: var(--mdc-theme-secondary);
   text-decoration: underline;
-  cursor: pointer;
 }
 
 .checkboxColumn {

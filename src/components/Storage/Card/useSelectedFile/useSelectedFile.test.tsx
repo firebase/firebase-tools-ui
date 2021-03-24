@@ -16,7 +16,7 @@
 
 import { act, renderHook } from '@testing-library/react-hooks';
 
-import { StorageFile } from '../types';
+import { StorageFile } from '../../types';
 import { useSelectedFile } from './useSelectedFile';
 
 describe('useSelectedFile', () => {

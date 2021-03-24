@@ -26,9 +26,7 @@ export function usePath(): [string, (bucket: string) => void] {
   const history = useHistory();
 
   function setPath(path: string) {
-    while (path.includes('//')) {
-      path = path.replace('//', '/');
-    }
+    path = path.replace(/\/+/g, '/');
 
     history.push(
       storagePath + bucket + (path.startsWith('/') ? '' : '/') + path

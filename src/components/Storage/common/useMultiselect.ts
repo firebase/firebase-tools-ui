@@ -63,8 +63,8 @@ export function useMultiselect<T>(options: T[]) {
       return selected.has(item);
     },
     selected,
-    toggleSingle(item: T) {
-      if (selected.has(item)) {
+    toggleSingle(item: T, checked?: boolean) {
+      if (!checked ?? selected.has(item)) {
         toggleAllItems([item], false);
         setStack(stack.filter((i) => i !== item));
       } else {

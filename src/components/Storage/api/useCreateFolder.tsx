@@ -14,14 +14,10 @@
  * limitations under the License.
  */
 
+import { useStorageConfig } from '../../../store/config/selectors';
 import { useBucket } from './useBucket';
-import { useStorageConfig } from './useStorageConfig';
 
-export function useCreateFolder() {
-  const config = useStorageConfig();
-  const [bucket] = useBucket();
-
-  const data = `--boundary
+const EMPTY_FOLDER_DATA = `--boundary
 Content-Type: application/json
 
 {"contentType":"text/plain"}
@@ -30,20 +26,24 @@ Content-Type: text/plain
 
 --boundary--`;
 
+export function useCreateFolder() {
+  const config = useStorageConfig();
+  const [bucket] = useBucket();
+
   async function createFolder(fullPath: string) {
-    function normalizePath(fullPath: string) {
-      return encodeURIComponent(fullPath.replace(/^\//, ''));
-    }
+    const normalizedPath = fullPath.replace(/\/+/g, '/').replace(/^\//, '');
+    const encodedPath = encodeURIComponent(normalizedPath);
+
     await fetch(
       `http://${
         config!.hostAndPort
-      }/upload/storage/v1/b/${bucket}/o?name=${normalizePath(fullPath)}/`,
+      }/upload/storage/v1/b/${bucket}/o?name=${encodedPath}/`,
       {
         headers: {
           'Content-Type': 'multipart/related; boundary=boundary',
         },
         method: 'POST',
-        body: new Blob([data]),
+        body: new Blob([EMPTY_FOLDER_DATA]),
       }
     );
   }

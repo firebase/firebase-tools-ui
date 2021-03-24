@@ -94,7 +94,10 @@ export const HostingIcon = svgIcon(
 
 export const StorageIcon = svgIcon(
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
-    <path d="M80 32H32c-8.8 0-15.92 7.2-15.92 16L16 144c0 8.8 7.2 16 16 16h128c8.8 0 16-7.2 16-16V64c0-8.8-7.2-16-16-16H96zm11.6 93.68L117.328 96 152 136H48l26-32z" />
+    <path
+      fill="currentColor"
+      d="M80 32H32c-8.8 0-15.92 7.2-15.92 16L16 144c0 8.8 7.2 16 16 16h128c8.8 0 16-7.2 16-16V64c0-8.8-7.2-16-16-16H96zm11.6 93.68L117.328 96 152 136H48l26-32z"
+    />
   </svg>
 );
 

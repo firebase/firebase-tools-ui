@@ -25,7 +25,8 @@ import {
   DataTableHeadCell,
   DataTableRow,
 } from '@rmwc/data-table';
-import React, { KeyboardEvent } from 'react';
+import { Typography } from '@rmwc/typography';
+import React, { KeyboardEvent, MouseEvent } from 'react';
 
 import { formatBytes } from '../../../common/formatBytes';
 import { Spinner } from '../../../common/Spinner';
@@ -158,9 +159,12 @@ export const StorageFileTableRow: React.FC<StorageTableRowProps> = ({
         <Checkbox
           aria-labelledby={fileNameId}
           checked={selection.isSelected(item.fullPath)}
-          onClick={(event) => {
+          onClick={(event: MouseEvent<HTMLInputElement>) => {
             event.stopPropagation();
-            return selection.toggleSingle(item.fullPath);
+            return selection.toggleSingle(
+              item.fullPath,
+              (event.target as HTMLInputElement).checked
+            );
           }}
         />
       </DataTableCell>
@@ -168,16 +172,26 @@ export const StorageFileTableRow: React.FC<StorageTableRowProps> = ({
         {item.type === 'folder' ? (
           <>
             <StorageFolderIcon />
-            <span className={`${styles.link} ${styles.item} `}>
+            <Typography
+              use="body2"
+              id={fileNameId}
+              theme="textPrimaryOnLight"
+              className={`${styles.item} ${styles.link}`}
+            >
               {item.name}/
-            </span>
+            </Typography>
           </>
         ) : (
           <>
             <StorageFileIcon contentType={item.contentType} />
-            <span id={fileNameId} className={styles.item}>
+            <Typography
+              use="body2"
+              id={fileNameId}
+              className={styles.item}
+              theme="textPrimaryOnLight"
+            >
               {item.name}
-            </span>
+            </Typography>
           </>
         )}
       </DataTableCell>

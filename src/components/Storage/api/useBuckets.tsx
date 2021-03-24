@@ -16,8 +16,8 @@
 
 import useSWR from 'swr';
 
+import { useStorageConfig } from '../../../store/config/selectors';
 import { useBucket } from './useBucket';
-import { useStorageConfig } from './useStorageConfig';
 
 export interface Bucket {
   name: string;

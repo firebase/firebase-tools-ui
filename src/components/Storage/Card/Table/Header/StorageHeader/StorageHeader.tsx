@@ -31,23 +31,23 @@ export const StorageHeader: React.FC = () => {
   const [path, setPath] = usePath();
   const [bucket] = useBucket();
 
-  const prefix = `gs://${bucket}`;
+  const bucketRoot = `gs://${bucket}`;
 
   return (
     <div className={styles.storageHeaderActionBarWrapper}>
       <CardActionBar>
         <div className={styles.storageHeaderWrapper}>
           <Tooltip content="Copy URL to clipboard">
-            <CopyButton textToCopy={prefix + '/' + path} icon="link" />
+            <CopyButton textToCopy={bucketRoot + '/' + path} icon="link" />
           </Tooltip>
           <div className={styles.wrapper}>
             <div className={styles.breadcrumbWrapper}>
               <InteractiveBreadCrumbBar
-                inputPrefix={prefix + '/'}
+                inputPrefix={bucketRoot + '/'}
                 onNavigate={setPath}
                 base={storagePath + bucket}
                 path={path}
-                homeElement={prefix}
+                homeElement={bucketRoot}
               />
             </div>
           </div>

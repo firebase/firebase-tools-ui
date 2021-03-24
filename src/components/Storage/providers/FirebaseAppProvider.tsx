@@ -4,7 +4,7 @@ import React, { useEffect, useMemo } from 'react';
 import { FirebaseAppProvider } from 'reactfire';
 
 import { getStorageApp } from '../../../firebase';
-import { useStorageConfig } from '../api/useStorageConfig';
+import { useStorageConfig } from '../../../store/config/selectors';
 
 function useStorageApp() {
   const { host, port } = useStorageConfig();

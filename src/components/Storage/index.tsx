@@ -16,12 +16,14 @@
 
 import { GridCell } from '@rmwc/grid';
 import React, { Suspense } from 'react';
+import { useSelector } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
 
+import { getStorageConfigResult } from '../../store/config/selectors';
+import { handle } from '../../store/utils';
 import { EmulatorDisabled } from '../common/EmulatorDisabled';
 import { Spinner } from '../common/Spinner';
 import { useBuckets } from './api/useBuckets';
-import { useStorageConfig } from './api/useStorageConfig';
 import { StorageCanvas } from './Canvas/Canvas';
 import { StorageCard } from './Card/StorageCard';
 import { storagePath } from './common/constants';
@@ -69,8 +71,14 @@ export const StorageRoute: React.FC = ({ children }) => {
 };
 
 export const StorageRouteWrapper: React.FC = ({ children }) => {
-  const config = useStorageConfig();
-  return config ? <>{children}</> : <StorageRouteDisabled />;
+  const configResult = useSelector(getStorageConfigResult);
+
+  return handle(configResult, {
+    onNone: () => <Spinner span={12} message="Storage Emulator Loading..." />,
+    onError: () => <StorageRouteDisabled />,
+    onData: (config) =>
+      config === undefined ? <StorageRouteDisabled /> : children,
+  }) as any;
 };
 
 export const StorageRouteDisabled: React.FC = () => (

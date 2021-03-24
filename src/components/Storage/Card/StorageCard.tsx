@@ -21,7 +21,6 @@ import { ThemeProvider } from '@rmwc/theme';
 import React from 'react';
 
 import { grey100 } from '../../../colors';
-import { useSelectedFile } from '../api/useSelectedFile';
 import { useStorageFiles } from '../api/useStorageFiles';
 import { useMultiselect } from '../common/useMultiselect';
 import { StorageItem } from '../types';
@@ -31,6 +30,7 @@ import { ActionHeader } from './Table/Header/ActionHeader/ActionHeader';
 import { StorageHeader } from './Table/Header/StorageHeader/StorageHeader';
 import { StorageTable } from './Table/Table';
 import { TableDropzoneWrapper } from './TableDropzoneWrapper/TableDropzoneWrapper';
+import { useSelectedFile } from './useSelectedFile/useSelectedFile';
 
 type File = StorageItem;
 export const StorageCard: React.FC = () => {

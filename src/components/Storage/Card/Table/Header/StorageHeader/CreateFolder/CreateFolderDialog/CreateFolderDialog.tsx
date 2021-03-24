@@ -21,7 +21,7 @@ import {
   DialogContent,
   DialogTitle,
 } from '@rmwc/dialog';
-import React, { FormEvent, KeyboardEvent, useReducer } from 'react';
+import React, { FormEvent, useReducer } from 'react';
 
 import { Field } from '../../../../../../../common/Field';
 
@@ -30,6 +30,9 @@ interface NewFolderDialogProps {
   close: () => void;
   isOpen: boolean;
 }
+
+// This is the limit on the back-end.
+const MAX_FOLDER_NAME_LENGTH = 252;
 
 export const CreateFolderDialog: React.FC<NewFolderDialogProps> = ({
   confirm,
@@ -40,40 +43,36 @@ export const CreateFolderDialog: React.FC<NewFolderDialogProps> = ({
     (s: string, value: string) => value.trim(),
     ''
   );
+
   const createFolder = () => {
     confirm(name);
-    setName('');
     close();
   };
+
   return (
     <Dialog open={isOpen} onClose={() => close()}>
       <DialogTitle>Create folder</DialogTitle>
 
       <DialogContent>
-        <Field
-          maxLength={252}
-          onChange={(e: FormEvent<HTMLInputElement>) => {
-            setName((e.target as HTMLInputElement).value);
+        <form
+          onSubmit={(e: FormEvent) => {
+            e.preventDefault();
+            createFolder();
           }}
-          onKeyDown={(e: KeyboardEvent<HTMLElement>) => {
-            if (e.key === 'Enter') {
-              createFolder();
-            }
-          }}
-          required
-          label="New folder name"
-        />
+        >
+          <Field
+            maxLength={MAX_FOLDER_NAME_LENGTH}
+            onChange={(e: FormEvent<HTMLInputElement>) => {
+              setName((e.target as HTMLInputElement).value);
+            }}
+            required
+            label="New folder name"
+          />
+        </form>
       </DialogContent>
 
       <DialogActions>
-        <DialogButton
-          type="button"
-          theme="secondary"
-          onClick={() => {
-            setName('');
-            close();
-          }}
-        >
+        <DialogButton type="button" theme="secondary" onClick={close}>
           Cancel
         </DialogButton>
 

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { StorageFile, StorageItem } from '../types';
+import { StorageFile, StorageItem } from '../../types';
 
 export function useSelectedFile(
   files: StorageItem[]
