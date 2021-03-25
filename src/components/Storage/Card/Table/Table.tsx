@@ -26,7 +26,7 @@ import {
   DataTableRow,
 } from '@rmwc/data-table';
 import { Typography } from '@rmwc/typography';
-import React, { KeyboardEvent, MouseEvent } from 'react';
+import React, { ChangeEvent, KeyboardEvent, MouseEvent } from 'react';
 
 import { formatBytes } from '../../../common/formatBytes';
 import { Spinner } from '../../../common/Spinner';
@@ -65,7 +65,18 @@ export const StorageTable: React.FC<StorageTableProps> = ({
                   disabled={files.length === 0}
                   checked={selection.allSelected}
                   indeterminate={selection.allIndeterminate}
-                  onChange={() => selection.toggleAll()}
+                  onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                    const {
+                      checked,
+                      indeterminate,
+                    } = event.target as HTMLInputElement;
+                    if (
+                      checked !== selection.allSelected ||
+                      indeterminate !== selection.allIndeterminate
+                    ) {
+                      selection.toggleAll();
+                    }
+                  }}
                   aria-label="Select all"
                 />
               </DataTableHeadCell>
@@ -159,12 +170,15 @@ export const StorageFileTableRow: React.FC<StorageTableRowProps> = ({
         <Checkbox
           aria-labelledby={fileNameId}
           checked={selection.isSelected(item.fullPath)}
-          onClick={(event: MouseEvent<HTMLInputElement>) => {
+          onChange={(event: MouseEvent<HTMLInputElement>) => {
             event.stopPropagation();
-            return selection.toggleSingle(
-              item.fullPath,
+
+            if (
+              selection.isSelected(item.fullPath) !==
               (event.target as HTMLInputElement).checked
-            );
+            ) {
+              selection.toggleSingle(item.fullPath);
+            }
           }}
         />
       </DataTableCell>

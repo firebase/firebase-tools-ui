@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
 
-import { StorageFirebaseAppProvider } from '../providers/FirebaseAppProvider';
+import { StorageFirebaseAppProvider } from '../providers/StorageFirebaseAppProvider';
 import { FakeFirebaseRouterProvider } from './FakeFirebaseRouterProvider';
 import { FakeStorageStoreProvider } from './FakeStorageStoreProvider';
 

@@ -17,7 +17,10 @@
 import { act, fireEvent } from '@testing-library/react';
 import React from 'react';
 
-import { waitAlertDialogToOpen } from '../../../../../../../test_utils';
+import {
+  waitAlertDialogToClose,
+  waitAlertDialogToOpen,
+} from '../../../../../../../test_utils';
 import { renderWithStorage } from '../../../../../testing/renderWithStorage';
 import { CreateFolder } from './CreateFolder';
 
@@ -28,6 +31,7 @@ describe('CreateFolder', () => {
       getByText,
       waitForNFiles,
     } = await renderWithStorage(<CreateFolder />);
+    const folderName = 'Pirojok the folder';
     const newFolder = getByLabelText('Create new folder');
     await act(async () => {
       await fireEvent.click(newFolder);
@@ -36,9 +40,17 @@ describe('CreateFolder', () => {
     await waitAlertDialogToOpen();
 
     await act(async () => {
+      await fireEvent.change(getByLabelText('New folder name'), {
+        target: { value: folderName },
+      });
+    });
+
+    await act(async () => {
       await fireEvent.click(getByText('Create'));
     });
 
-    expect(waitForNFiles(1)).toBe(true);
+    expect(await waitForNFiles(1)).toBe(true);
+
+    await waitAlertDialogToClose();
   });
 });

@@ -17,7 +17,7 @@
 import { useState } from 'react';
 
 function useSelected<T>(options: T[]): [Set<T>, (t: Set<T>) => void] {
-  const [selectedValue, setSelected] = useState<Set<T>>(new Set());
+  const [selectedValue, setSelected] = useState(new Set<T>());
 
   return [
     new Set(options.filter((path) => selectedValue.has(path))),
@@ -28,6 +28,16 @@ function useSelected<T>(options: T[]): [Set<T>, (t: Set<T>) => void] {
 // Takes a list of elements and allow to select multiple like in gmail.
 export function useMultiselect<T>(options: T[]) {
   const [selected, setSelected] = useSelected(options);
+
+  /**
+   * Multiple selection is actually pretty tricky.
+   *
+   * Storing just single "last selected" value is not enough.
+   *
+   * e.g. user has a pretty complex selection, then selects and deselect
+   * another checkbox. We need stack to know where to get back to have a
+   * reference point.
+   */
   const [stack, setStack] = useState<T[]>([]);
 
   function findBetween(item1: T, item2: T) {
@@ -39,12 +49,19 @@ export function useMultiselect<T>(options: T[]) {
     return options.slice(firstIndex, firstIndex + numberOfItems);
   }
 
+  // We when deselecting the item, we want to remove it from the stack even if
+  // it's in the middle.
+  function removeFromStack(item: T) {
+    setStack(stack.filter((i) => i !== item));
+  }
+
   function toggleAllItems(items: T[], shouldSelect: boolean) {
     for (const item of items) {
       if (shouldSelect) {
         selected.add(item);
       } else {
         selected.delete(item);
+        removeFromStack(item);
       }
     }
 
@@ -52,8 +69,7 @@ export function useMultiselect<T>(options: T[]) {
   }
 
   function addToStack(item: T) {
-    stack.push(item);
-    setStack([...stack]);
+    setStack([...stack, item]);
   }
 
   return {
@@ -63,17 +79,17 @@ export function useMultiselect<T>(options: T[]) {
       return selected.has(item);
     },
     selected,
-    toggleSingle(item: T, checked?: boolean) {
-      if (!checked ?? selected.has(item)) {
+    toggleSingle(item: T) {
+      if (selected.has(item)) {
         toggleAllItems([item], false);
-        setStack(stack.filter((i) => i !== item));
+        removeFromStack(item);
       } else {
         toggleAllItems([item], true);
         addToStack(item);
       }
     },
     toggleContinuous(item: T) {
-      if (selected.size === 0) {
+      if (selected.size === 0 || stack.length === 0) {
         this.toggleSingle(item);
       }
 
@@ -83,13 +99,12 @@ export function useMultiselect<T>(options: T[]) {
       addToStack(item);
     },
     clearAll() {
-      selected.clear();
-      setSelected(new Set([...selected]));
+      setSelected(new Set());
+      setStack([]);
     },
     toggleAll() {
       if (selected.size === options.length) {
-        selected.clear();
-        setSelected(new Set([...selected]));
+        setSelected(new Set());
       } else {
         toggleAllItems(options, true);
       }

@@ -22,7 +22,6 @@ import { useHistory } from 'react-router-dom';
 
 import { UseBucketResult, useBucket } from '../api/useBucket';
 import { useStorageFiles, useStorageFilesResult } from '../api/useStorageFiles';
-import { StorageFile } from '../types';
 import { FakeStorageWrappers } from './FakeStorageWrappers';
 import { mockBuckets } from './mockBuckets';
 
@@ -99,9 +98,11 @@ export async function renderWithStorage(children: ReactElement) {
   async function waitForFilesToBeUploaded() {
     return await waitFor(
       () => {
-        expect(
-          (current.storage.files[0] as StorageFile).uploading
-        ).toBeUndefined();
+        for (const file of current.storage.files) {
+          expect(file.type === 'folder' || file.uploading === undefined).toBe(
+            true
+          );
+        }
       },
       { timeout: 5000 }
     );

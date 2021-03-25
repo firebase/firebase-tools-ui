@@ -28,18 +28,25 @@ import { StorageCanvas } from './Canvas/Canvas';
 import { StorageCard } from './Card/StorageCard';
 import { storagePath } from './common/constants';
 import styles from './index.module.scss';
-import { StorageFirebaseAppProvider } from './providers/FirebaseAppProvider';
+import { StorageFirebaseAppProvider } from './providers/StorageFirebaseAppProvider';
 
 export const Storage: React.FC = () => {
-  return (
-    <Suspense fallback={<Spinner message="Loading storage..." />}>
-      <StorageRouteWrapper>
-        <StorageRoute>
-          <StorageWrapper />
-        </StorageRoute>
-      </StorageRouteWrapper>
-    </Suspense>
-  );
+  const configResult = useSelector(getStorageConfigResult);
+
+  return handle(configResult, {
+    onNone: () => <Spinner span={12} message="Storage Emulator Loading..." />,
+    onError: () => <StorageRouteDisabled />,
+    onData: (config) =>
+      config === undefined ? (
+        <StorageRouteDisabled />
+      ) : (
+        <Suspense fallback={'lol'}>
+          <StorageRoute>
+            <StorageWrapper />
+          </StorageRoute>
+        </Suspense>
+      ),
+  });
 };
 
 export const StorageWrapper: React.FC = () => {
@@ -68,17 +75,6 @@ export const StorageRoute: React.FC = ({ children }) => {
       </Route>
     </Switch>
   );
-};
-
-export const StorageRouteWrapper: React.FC = ({ children }) => {
-  const configResult = useSelector(getStorageConfigResult);
-
-  return handle(configResult, {
-    onNone: () => <Spinner span={12} message="Storage Emulator Loading..." />,
-    onError: () => <StorageRouteDisabled />,
-    onData: (config) =>
-      config === undefined ? <StorageRouteDisabled /> : children,
-  }) as any;
 };
 
 export const StorageRouteDisabled: React.FC = () => (

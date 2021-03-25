@@ -18,6 +18,7 @@ import firebase from 'firebase';
 import { useStorage } from 'reactfire';
 import useSwr from 'swr';
 
+import { assert } from '../../common/asserts';
 import { fileToStorageFile } from '../common/fileToStorageFile';
 import { StorageFile, StorageFolder, StorageItem } from '../types';
 import { useBucket } from './useBucket';
@@ -62,7 +63,7 @@ export function useStorageFiles() {
     { suspense: true }
   );
 
-  const files = useSwr(
+  const result = useSwr(
     `storage/${bucket}/${path}`,
     async (): Promise<StorageItem[]> => {
       const { items, prefixes } = await getCurrentRef().listAll();
@@ -75,6 +76,8 @@ export function useStorageFiles() {
     { suspense: true }
   );
 
+  const files = result.data || [];
+
   async function deleteFile(path: string): Promise<void> {
     return await getCurrentRef('').child(path).delete();
   }
@@ -83,11 +86,16 @@ export function useStorageFiles() {
     const { items, prefixes } = await getCurrentRef(path).listAll();
 
     try {
-      // If folder is represented as a file - delete it.
-
+      /**
+       * We don't know if physical folder exists, or it is inferred from
+       * nested file path.
+       *
+       * So here we attempt to delete physical representation, but if it does
+       * not exist, we just swallow the error.
+       */
       await deleteFile(path + '%2f');
-    } catch (e) {
-      // Swallow errors.
+    } catch {
+      // quietly swallow any errors.
     }
 
     const prefixesPromise: Promise<void>[] = prefixes.map(async (prefix) => {
@@ -98,9 +106,7 @@ export function useStorageFiles() {
       return await file.delete();
     });
 
-    return await Promise.all([...filesPromise, ...prefixesPromise]).then(
-      () => undefined
-    );
+    await Promise.all([...filesPromise, ...prefixesPromise]);
   }
 
   async function deleteAllFiles() {
@@ -118,17 +124,16 @@ export function useStorageFiles() {
 
   async function deleteFiles(paths: string[]) {
     return await Promise.all(
-      paths
-        .map(
-          (path) => (files.data || []).find((file) => file.fullPath === path)!
-        )
-        .map(async (file: StorageItem) => {
-          if (file.type === 'folder') {
-            return await deleteFolder(file.fullPath);
-          } else {
-            return await deleteFile(file.fullPath);
-          }
-        })
+      paths.map(async (path: string) => {
+        const file = files.find((file) => file.fullPath === path);
+        assert(file);
+
+        if (file.type === 'folder') {
+          return await deleteFolder(file.fullPath);
+        } else {
+          return await deleteFile(file.fullPath);
+        }
+      })
     );
   }
 
@@ -149,7 +154,7 @@ export function useStorageFiles() {
   }
 
   return {
-    files: files.data || [],
+    files,
     setBucket,
     bucket,
     path,
@@ -157,45 +162,43 @@ export function useStorageFiles() {
     bucketHasAnyFiles: bucketHasAnyFiles.data,
     getLocation,
     async uploadFiles(uploadedFiles: File[], folderName?: string) {
-      // Optimistically display new files on top with the loading state.
+      // Optimistically display new result on top with the loading state.
       const names = new Set(uploadedFiles.map(({ name }) => name));
-      const oldFiles = (files.data || []).filter(
-        (file) => !names.has(file.name)
-      );
+      const oldFiles = files.filter((file) => !names.has(file.name));
 
       const newFiles = uploadedFiles.map((file) =>
         fileToStorageFile(file, bucket, path)
       );
-      files.mutate([...newFiles, ...oldFiles], false);
+      result.mutate([...newFiles, ...oldFiles], false);
 
       await uploadFiles(uploadedFiles, folderName);
 
-      await files.mutate();
+      await result.mutate();
       await bucketHasAnyFiles.mutate();
     },
     async deleteAllFiles() {
-      await files.mutate([], false);
+      await result.mutate([], false);
       setPath('');
       await deleteAllFiles();
-      await files.mutate();
+      await result.mutate();
       await bucketHasAnyFiles.mutate();
     },
     openAllFiles,
     async createFolder(name: string) {
       createFolder(path + '/' + name);
-      await files.mutate();
+      await result.mutate();
       await bucketHasAnyFiles.mutate();
     },
     async deleteFiles(paths: string[]) {
-      // Optimistically hide files
+      // Optimistically hide result
       const pathsSet = new Set(paths);
-      const remainingFiles = (files.data || []).filter(
+      const remainingFiles = files.filter(
         (file) => !pathsSet.has(file.fullPath)
       );
-      files.mutate(remainingFiles, false);
+      result.mutate(remainingFiles, false);
 
       await deleteFiles(paths);
-      await files.mutate();
+      await result.mutate();
       await bucketHasAnyFiles.mutate();
     },
   };

@@ -40,7 +40,7 @@ export const Accordion: React.FC<AccordionProps> = ({
         tabIndex={0}
         role="button"
         id={headerId}
-        aria-controls="id"
+        aria-controls={contentId}
         aria-expanded={isAccordionExpanded}
         onClick={() => setIsAccordionExpanded(!isAccordionExpanded)}
         onKeyDown={(e) =>

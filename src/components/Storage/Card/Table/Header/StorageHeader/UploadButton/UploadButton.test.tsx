@@ -34,5 +34,5 @@ describe('UploadButton', () => {
     });
 
     expect(await waitForNFiles(1)).toBe(true);
-  });
+  }, 20000);
 });

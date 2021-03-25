@@ -29,6 +29,26 @@ describe('useStorageFiles', () => {
       wrapper: FakeStorageWrappers,
     });
 
+    await waitFor(() => expect(storage.result.current).toBeDefined());
+
+    await act(async () => {
+      await storage.result.current.deleteAllFiles();
+    });
+
+    return {
+      uploadFile,
+      storage,
+      waitForNFiles,
+      deleteFiles,
+    };
+
+    async function waitForNFiles(n: number) {
+      await waitFor(() => {
+        expect(storage.result.current.files!.length).toBe(n);
+      });
+      return true;
+    }
+
     async function uploadFile(fileName: string, folderName?: string) {
       const file = new File([''], fileName);
 
@@ -42,26 +62,6 @@ describe('useStorageFiles', () => {
         await storage.result.current.deleteFiles(files);
       });
     }
-
-    await waitFor(() => expect(storage.result.current).toBeDefined());
-
-    await act(async () => {
-      await storage.result.current.deleteAllFiles();
-    });
-
-    async function waitForNFiles(n: number) {
-      await waitFor(() => {
-        expect(storage.result.current.files!.length).toBe(n);
-      });
-      return true;
-    }
-
-    return {
-      uploadFile,
-      storage,
-      waitForNFiles,
-      deleteFiles,
-    };
   }
 
   const fileName = 'lol.txt';

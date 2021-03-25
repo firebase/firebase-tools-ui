@@ -66,7 +66,7 @@ describe('useMultiSelect', () => {
       expect(r.result.current.selected).toEqual(new Set());
     });
 
-    it('allows to select single element ', async () => {
+    it('allows to select single element', async () => {
       const { result, toggleSingle } = setup();
 
       toggleSingle(item1);
@@ -74,7 +74,7 @@ describe('useMultiSelect', () => {
       expect(result.current.selected).toEqual(new Set([item1]));
     });
 
-    it('allows to deselect single element ', async () => {
+    it('allows to deselect single element', async () => {
       const { result, toggleSingle } = setup();
 
       toggleSingle(item1);
@@ -83,7 +83,7 @@ describe('useMultiSelect', () => {
       expect(result.current.selected).toEqual(new Set([]));
     });
 
-    it('allows to reselect single element ', async () => {
+    it('allows to reselect single element', async () => {
       const { result, toggleSingle } = setup();
 
       toggleSingle(item1);
