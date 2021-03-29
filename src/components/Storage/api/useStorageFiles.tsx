@@ -162,7 +162,7 @@ export function useStorageFiles() {
     bucketHasAnyFiles: bucketHasAnyFiles.data,
     getLocation,
     async uploadFiles(uploadedFiles: File[], folderName?: string) {
-      // Optimistically display new result on top with the loading state.
+      // Optimistically display new file on top with the loading state.
       const names = new Set(uploadedFiles.map(({ name }) => name));
       const oldFiles = files.filter((file) => !names.has(file.name));
 
@@ -190,7 +190,7 @@ export function useStorageFiles() {
       await bucketHasAnyFiles.mutate();
     },
     async deleteFiles(paths: string[]) {
-      // Optimistically hide result
+      // Optimistically hide file
       const pathsSet = new Set(paths);
       const remainingFiles = files.filter(
         (file) => !pathsSet.has(file.fullPath)

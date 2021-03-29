@@ -19,11 +19,8 @@ import { act, renderHook } from '@testing-library/react-hooks';
 import { useMultiselect } from './useMultiselect';
 
 describe('useMultiSelect', () => {
-  const item1 = 'a';
-  const item2 = 'b';
-
   function setup() {
-    const items = [item1, item2, 'c', 'd', 'e'];
+    const items = ['pirojok', 'pelmeni', 'kompot', 'chiken', 'borscht'];
 
     const { result } = renderHook(() => useMultiselect(items));
 
@@ -53,6 +50,7 @@ describe('useMultiSelect', () => {
 
     return {
       result,
+      items,
       toggleSingle,
       toggleContinuous,
       toggleAll,
@@ -67,123 +65,119 @@ describe('useMultiSelect', () => {
     });
 
     it('allows to select single element', async () => {
-      const { result, toggleSingle } = setup();
+      const { result, toggleSingle, items } = setup();
 
-      toggleSingle(item1);
+      toggleSingle(items[0]);
 
-      expect(result.current.selected).toEqual(new Set([item1]));
+      expect(result.current.selected).toEqual(new Set([items[0]]));
     });
 
     it('allows to deselect single element', async () => {
-      const { result, toggleSingle } = setup();
+      const { result, toggleSingle, items } = setup();
 
-      toggleSingle(item1);
-      toggleSingle(item1);
+      toggleSingle(items[0]);
+      toggleSingle(items[0]);
 
       expect(result.current.selected).toEqual(new Set([]));
     });
 
     it('allows to reselect single element', async () => {
-      const { result, toggleSingle } = setup();
+      const { result, toggleSingle, items } = setup();
 
-      toggleSingle(item1);
-      toggleSingle(item2);
-      toggleSingle('c');
-      toggleSingle(item2);
+      toggleSingle(items[0]);
+      toggleSingle(items[1]);
+      toggleSingle(items[2]);
+      toggleSingle(items[1]);
 
-      expect(result.current.selected).toEqual(new Set([item1, 'c']));
+      expect(result.current.selected).toEqual(new Set([items[0], items[2]]));
     });
   });
 
   describe('selecting with shift', () => {
     it('allows to select multiple elements', async () => {
-      const { result, toggleSingle, toggleContinuous } = setup();
+      const { result, toggleSingle, toggleContinuous, items } = setup();
 
-      toggleSingle(item1);
-      toggleContinuous('c');
+      toggleSingle(items[0]);
+      toggleContinuous(items[2]);
 
-      expect(result.current.selected).toEqual(new Set([item1, item2, 'c']));
+      expect(result.current.selected).toEqual(
+        new Set([items[0], items[1], items[2]])
+      );
     });
 
     it('allows to deselect multiple elements', async () => {
-      const { result, toggleSingle, toggleContinuous } = setup();
+      const { result, toggleSingle, toggleContinuous, items } = setup();
 
-      toggleSingle(item1);
-      toggleSingle(item2);
-      toggleSingle('c');
-      toggleContinuous(item1);
+      toggleSingle(items[0]);
+      toggleSingle(items[1]);
+      toggleSingle(items[2]);
+      toggleContinuous(items[0]);
 
       expect(result.current.selected).toEqual(new Set([]));
     });
 
     it('allows multiple selections and reselections', async () => {
-      const { result, toggleSingle, toggleContinuous } = setup();
+      const { result, toggleSingle, toggleContinuous, items } = setup();
 
-      toggleSingle(item1);
-      toggleContinuous('e');
+      toggleSingle(items[0]);
+      toggleContinuous(items[4]);
 
-      expect(result.current.selected).toEqual(
-        new Set([item1, item2, 'c', 'd', 'e'])
-      );
+      expect(result.current.selected).toEqual(new Set(items));
 
-      toggleContinuous(item2);
+      toggleContinuous(items[1]);
 
-      expect(result.current.selected).toEqual(new Set([item1]));
+      expect(result.current.selected).toEqual(new Set([items[0]]));
 
-      toggleContinuous('d');
+      toggleContinuous(items[3]);
 
       expect(result.current.selected).toEqual(
-        new Set([item1, item2, 'c', 'd'])
+        new Set([items[0], items[1], items[2], items[3]])
       );
     });
 
     it('allows for selections in different directions', async () => {
-      const { result, toggleSingle, toggleContinuous } = setup();
+      const { result, toggleSingle, toggleContinuous, items } = setup();
 
-      toggleSingle('c');
-      toggleContinuous('e');
-
-      expect(result.current.selected).toEqual(new Set(['c', 'd', 'e']));
-
-      toggleContinuous(item1);
+      toggleSingle(items[2]);
+      toggleContinuous(items[4]);
 
       expect(result.current.selected).toEqual(
-        new Set([item1, item2, 'c', 'd', 'e'])
+        new Set([items[2], items[3], items[4]])
       );
+
+      toggleContinuous(items[0]);
+
+      expect(result.current.selected).toEqual(new Set(items));
     });
 
     it('when handling gap selections, sets the value to the latest checked item', async () => {
-      const { result, toggleSingle, toggleContinuous } = setup();
+      const { result, toggleSingle, toggleContinuous, items } = setup();
 
-      toggleSingle(item1);
-      toggleSingle('c');
-      toggleSingle('e');
-      toggleContinuous('c');
+      toggleSingle(items[0]);
+      toggleSingle(items[2]);
+      toggleSingle(items[4]);
+      toggleContinuous(items[2]);
 
-      expect(result.current.selected).toEqual(new Set([item1]));
+      expect(result.current.selected).toEqual(new Set([items[0]]));
     });
   });
 
   describe('toggleAll', () => {
     it('when nothing selected, selects everything', async () => {
-      const { result, toggleAll } = setup();
+      const { result, toggleAll, items } = setup();
 
       toggleAll();
 
-      expect(result.current.selected).toEqual(
-        new Set([item1, item2, 'c', 'd', 'e'])
-      );
+      expect(result.current.selected).toEqual(new Set(items));
     });
 
     it('when some thing selected, selects everything', async () => {
-      const { result, toggleAll, toggleSingle } = setup();
+      const { result, toggleAll, toggleSingle, items } = setup();
 
-      toggleSingle(item1);
+      toggleSingle(items[0]);
       toggleAll();
 
-      expect(result.current.selected).toEqual(
-        new Set([item1, item2, 'c', 'd', 'e'])
-      );
+      expect(result.current.selected).toEqual(new Set(items));
     });
 
     it('when everything selected, selects everything', async () => {
@@ -198,10 +192,10 @@ describe('useMultiSelect', () => {
 
   describe('clearAll', () => {
     it('drops the selection', async () => {
-      const { result, toggleSingle } = setup();
+      const { result, toggleSingle, clearAll, items } = setup();
 
-      toggleSingle(item1);
-      toggleSingle(item1);
+      toggleSingle(items[0]);
+      clearAll();
 
       expect(result.current.selected).toEqual(new Set());
     });
@@ -216,9 +210,9 @@ describe('useMultiSelect', () => {
     });
 
     it('for one selected - allSelected = false, indeterminate = true', async () => {
-      const { result, toggleSingle } = setup();
+      const { result, toggleSingle, items } = setup();
 
-      toggleSingle(item1);
+      toggleSingle(items[0]);
       expect(result.current.allSelected).toEqual(false);
       expect(result.current.allIndeterminate).toEqual(true);
     });

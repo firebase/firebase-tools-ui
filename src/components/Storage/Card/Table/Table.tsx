@@ -170,9 +170,10 @@ export const StorageFileTableRow: React.FC<StorageTableRowProps> = ({
         <Checkbox
           aria-labelledby={fileNameId}
           checked={selection.isSelected(item.fullPath)}
-          onChange={(event: MouseEvent<HTMLInputElement>) => {
+          onClick={(event: MouseEvent<HTMLInputElement>) => {
             event.stopPropagation();
-
+          }}
+          onChange={(event: MouseEvent<HTMLInputElement>) => {
             if (
               selection.isSelected(item.fullPath) !==
               (event.target as HTMLInputElement).checked

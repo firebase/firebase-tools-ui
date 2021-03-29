@@ -33,19 +33,22 @@ import { StorageFirebaseAppProvider } from './providers/StorageFirebaseAppProvid
 export const Storage: React.FC = () => {
   const configResult = useSelector(getStorageConfigResult);
 
+  const spinner = <Spinner span={12} message="Storage Emulator Loading..." />;
+
   return handle(configResult, {
-    onNone: () => <Spinner span={12} message="Storage Emulator Loading..." />,
+    onNone: () => spinner,
     onError: () => <StorageRouteDisabled />,
-    onData: (config) =>
-      config === undefined ? (
+    onData: (config) => {
+      return config === undefined ? (
         <StorageRouteDisabled />
       ) : (
-        <Suspense fallback={'lol'}>
+        <Suspense fallback={spinner}>
           <StorageRoute>
             <StorageWrapper />
           </StorageRoute>
         </Suspense>
-      ),
+      );
+    },
   });
 };
 
