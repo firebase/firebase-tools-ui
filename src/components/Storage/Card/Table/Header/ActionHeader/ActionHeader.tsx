@@ -23,14 +23,28 @@ import React from 'react';
 import { CardActionBar } from '../../../../../common/CardActionBar';
 import { useStorageFiles } from '../../../../api/useStorageFiles';
 import { UseMultiselectResult } from '../../../../common/useMultiselect';
+import { StorageItem } from '../../../../types';
 import styles from './ActionHeader.module.scss';
 
 interface ActionHeaderProps {
   selection: UseMultiselectResult;
 }
 
+function selectionIncludesFolders(
+  files: StorageItem[],
+  selection: Set<string>
+) {
+  return files.some(
+    (file) => selection.has(file.fullPath) && file.type === 'folder'
+  );
+}
+
 export const ActionHeader: React.FC<ActionHeaderProps> = ({ selection }) => {
-  const { openAllFiles, deleteFiles } = useStorageFiles();
+  const { files, openAllFiles, deleteFiles } = useStorageFiles();
+  const areFoldersSelected = selectionIncludesFolders(
+    files,
+    selection.selected as any
+  );
   const paths = [...(selection.selected as Set<string>)];
 
   return (
@@ -50,6 +64,7 @@ export const ActionHeader: React.FC<ActionHeaderProps> = ({ selection }) => {
           <div>
             <Button
               className={styles.openButton}
+              disabled={areFoldersSelected}
               onClick={() => {
                 return openAllFiles(paths);
               }}

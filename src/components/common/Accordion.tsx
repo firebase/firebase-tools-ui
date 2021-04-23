@@ -53,9 +53,9 @@ export const Accordion: React.FC<AccordionProps> = ({
 
         {/* TODO(kirjs): Play animations. */}
         {isAccordionExpanded ? (
-          <Icon icon="expand_more" className={styles.icon} />
-        ) : (
           <Icon icon="expand_less" className={styles.icon} />
+        ) : (
+          <Icon icon="expand_more" className={styles.icon} />
         )}
       </header>
       {isAccordionExpanded && (

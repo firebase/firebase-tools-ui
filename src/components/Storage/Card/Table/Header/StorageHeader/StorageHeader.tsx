@@ -38,7 +38,10 @@ export const StorageHeader: React.FC = () => {
       <CardActionBar>
         <div className={styles.storageHeaderWrapper}>
           <Tooltip content="Copy URL to clipboard">
-            <CopyButton textToCopy={bucketRoot + '/' + path} icon="link" />
+            {/*Without div tooltip is not displayed*/}
+            <div>
+              <CopyButton textToCopy={bucketRoot + '/' + path} icon="link" />
+            </div>
           </Tooltip>
           <div className={styles.wrapper}>
             <div className={styles.breadcrumbWrapper}>

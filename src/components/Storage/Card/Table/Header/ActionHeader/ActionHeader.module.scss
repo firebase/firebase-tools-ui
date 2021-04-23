@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+@import '../../../../../../components/common/color';
 
 .actionHeaderWrapper {
   align-items: center;
@@ -37,6 +38,11 @@
 .openButton {
   background: var(--mdc-theme-surface) !important;
   margin-right: 16px;
+
+  &:disabled {
+    background: $COLOR_WHITE_DISABLED;
+    opacity: 0.3;
+  }
 
   :global .mdc-button__label {
     color: var(--mdc-theme-primary) !important;
