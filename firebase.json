@@ -1,0 +1,5 @@
+{
+  "//": "This is needed for tests, as storage emulator requires rules",
+  "storage": { "rules": "storage.rules" },
+  "firestore": {}
+}
