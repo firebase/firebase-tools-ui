@@ -26,7 +26,7 @@ export const StorageStoreProvider: React.FC = ({ children }) => {
 
   if (!hostAndPort) {
     throw new Error(
-      'Provide storage emulator address by setting FIREBASE_STORAGE_EMULATOR_ADDRESS'
+      'Provide storage emulator address by setting FIREBASE_STORAGE_EMULATOR_HOST'
     );
   }
 
