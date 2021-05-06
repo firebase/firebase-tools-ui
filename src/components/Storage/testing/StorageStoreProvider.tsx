@@ -20,11 +20,17 @@ import configureStore from 'redux-mock-store';
 
 import { AppState } from '../../../store';
 
-export const FakeStorageStoreProvider: React.FC = ({ children }) => {
+export const StorageStoreProvider: React.FC = ({ children }) => {
   const projectId = '';
-  const host = 'localhost';
-  const port = 9199;
-  const hostAndPort = host + ':' + port;
+  const hostAndPort = process.env.FIREBASE_STORAGE_EMULATOR_HOST;
+
+  if (!hostAndPort) {
+    throw new Error(
+      'Provide storage emulator address by setting FIREBASE_STORAGE_EMULATOR_ADDRESS'
+    );
+  }
+
+  const [host, port] = hostAndPort.split(':');
 
   const store = configureStore<Pick<AppState, 'config'>>()({
     config: {

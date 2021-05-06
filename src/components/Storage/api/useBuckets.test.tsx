@@ -20,8 +20,8 @@ import React, { Suspense } from 'react';
 import { Route, Router } from 'react-router-dom';
 
 import { storagePath } from '../common/constants';
-import { FakeStorageStoreProvider } from '../testing/FakeStorageStoreProvider';
 import { mockBuckets } from '../testing/mockBuckets';
+import { StorageStoreProvider } from '../testing/StorageStoreProvider';
 import { useBuckets } from './useBuckets';
 
 const initialBucketName = 'pirojok-the-bucket';
@@ -38,9 +38,9 @@ describe('useBuckets', () => {
       return (
         <Router history={history}>
           <Route exact path={storagePath + `:bucket/:path*`}>
-            <FakeStorageStoreProvider>
+            <StorageStoreProvider>
               <Suspense fallback={'lol'}>{children}</Suspense>
-            </FakeStorageStoreProvider>
+            </StorageStoreProvider>
           </Route>
         </Router>
       );
