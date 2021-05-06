@@ -1,0 +1,81 @@
+/**
+ * Copyright 2021 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@media (max-width: 599px) {
+  .sideBarWrapper {
+    --sidebar-padding: var(--mdc-layout-grid-gutter-phone, 16px);
+  }
+}
+
+@media (min-width: 840px) {
+  .sideBarWrapper {
+    --sidebar-padding: var(--mdc-layout-grid-gutter-desktop, 24px);
+  }
+}
+
+@media (min-width: 600px) and (max-width: 839px) {
+  .sideBarWrapper {
+    --sidebar-padding: var(--mdc-layout-grid-gutter-tablet, 16px);
+  }
+}
+
+.sideBarWrapper {
+  display: block;
+  flex-shrink: 0;
+  margin-left: calc(var(--sidebar-padding) * -1);
+  border-left: 1px solid var(--fire-color-input-borders);
+
+  --accordion-spacing: var(--sidebar-padding);
+}
+
+.metadata {
+  padding: 0 var(--sidebar-padding);
+
+  :global dd {
+    margin: 0 0 16px 0;
+  }
+}
+
+.headerTitleWrapper {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.headerWrapper {
+  padding: 8px var(--sidebar-padding);
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.fileName {
+  display: inline-block;
+  flex-grow: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.openFileLink {
+  cursor: pointer;
+  overflow-wrap: break-word;
+  text-decoration: underline;
+}
+
+.location {
+  overflow-wrap: break-word;
+}

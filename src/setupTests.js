@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
+import * as base from '@rmwc/base';
+
 require('mutationobserver-shim');
 
 // reactFire has an implicit dependency on globalThis
 // https://github.com/FirebaseExtended/reactfire/blob/b82b58a8146eb044321244005f9d0eeeaf2be9e1/README.md#install
 global.globalThis = require('globalthis')();
-
-import * as base from '@rmwc/base';
 
 // <AppBar> calls window.scrollTo which jsdom does not implement. Let's mock it
 // out to silence warnings -- we don't actually need to test it.

@@ -21,7 +21,13 @@ import { IconButton } from '@rmwc/icon-button';
 import { TextField } from '@rmwc/textfield';
 import { Typography } from '@rmwc/typography';
 import useKey from '@rooks/use-key';
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, {
+  FormEvent,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 
 import { Props as BreadCrumbProps, BreadCrumbs } from './BreadCrumbs';
 import { CardActionBar } from './CardActionBar';
@@ -45,7 +51,8 @@ export const InteractiveBreadCrumbBar: React.FC<Props> = ({
   // Update input's path value if path prop changes
   useEffect(() => setValue(path), [path]);
 
-  const handleSubmit = () => {
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
     const normalizedPath = value.startsWith('/') ? value.substr(1) : value;
     onNavigate(normalizedPath);
     setIsEditing(false);
@@ -79,7 +86,7 @@ export const InteractiveBreadCrumbBar: React.FC<Props> = ({
         <Elevation z={1} wrap>
           <form
             className="InteractiveBreadCrumbBar-form"
-            onSubmit={() => handleSubmit()}
+            onSubmit={handleSubmit}
           >
             {inputPrefix && (
               <Typography
@@ -95,6 +102,7 @@ export const InteractiveBreadCrumbBar: React.FC<Props> = ({
               fullwidth
               className="value"
               type="text"
+              onBlur={handleCancel}
               value={value}
               onChange={(e) => setValue(e.currentTarget.value)}
               inputRef={inputRef}

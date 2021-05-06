@@ -39,7 +39,9 @@ export function initDatabase(
     { databaseURL },
     `Database Component: ${databaseURL} ${Math.random()}`
   );
+
   applyAdminAuth(app);
+
   const db = app.database();
   // only log the first time
   if (!(window as WindowWithDb).database) {
@@ -52,6 +54,16 @@ export function initDatabase(
   (window as WindowWithDb).database = db;
   return [db, { cleanup: () => app.delete() }];
 }
+
+export const getStorageApp = (host: string, port: string) => {
+  const app = firebase.initializeApp(
+    {},
+    `Storage Component: ${host} ${Math.random()}`
+  ) as any;
+  applyAdminAuth(app);
+  app.storage().useEmulator(host, port);
+  return app;
+};
 
 export function useEmulatedFirebaseApp(name: string, config: any) {
   const projectId = useProjectId();

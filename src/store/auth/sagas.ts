@@ -19,8 +19,9 @@ import { getType } from 'typesafe-actions';
 
 import AuthApi from '../../components/Auth/api';
 import { AuthUser } from '../../components/Auth/types';
-import { fetchSuccess } from '../config';
+import { AuthConfig, fetchSuccess } from '../config';
 import { getProjectIdResult } from '../config/selectors';
+import { DataResult, Result } from '../utils';
 import {
   authFetchUsersError,
   authFetchUsersRequest,
@@ -44,7 +45,8 @@ import {
 } from './actions';
 import { getAuthConfigResult } from './selectors';
 
-export function* fetchAuthUsers() {
+// TODO(kirjs): Figure out what's the deal with all those new anys.
+export function* fetchAuthUsers(): any {
   const authApi = yield call(configureAuthSaga);
   try {
     const users = yield call([authApi, 'fetchUsers']);
@@ -55,21 +57,24 @@ export function* fetchAuthUsers() {
 }
 
 export function* initAuth() {
-  const result = yield select(getAuthConfigResult);
-  if (result.data) {
+  const result: Result<AuthConfig> = yield select(getAuthConfigResult);
+  if ('data' in result && result.data) {
     yield put(authFetchUsersRequest());
     yield put(getAllowDuplicateEmailsRequest());
   }
 }
 
 export function* deleteUser({ payload }: ReturnType<typeof deleteUserRequest>) {
-  const authApi = yield call(configureAuthSaga);
-  yield call([authApi, 'deleteUser'], { localId: payload.localId });
+  const authApi: AuthApi = yield call(configureAuthSaga);
+
+  yield call([authApi, 'deleteUser'] as any, {
+    localId: payload.localId,
+  });
   yield put(deleteUserSuccess({ localId: payload.localId }));
 }
 
 export function* createUser({ payload }: ReturnType<typeof createUserRequest>) {
-  const authApi = yield call(configureAuthSaga);
+  const authApi: AuthApi = yield call(configureAuthSaga);
 
   try {
     yield put(setAuthUserDialogLoading(true));
@@ -102,10 +107,10 @@ export function* createUser({ payload }: ReturnType<typeof createUserRequest>) {
 }
 
 export function* updateUser({ payload }: ReturnType<typeof updateUserRequest>) {
-  const authApi = yield call(configureAuthSaga);
+  const authApi: AuthApi = yield call(configureAuthSaga);
   try {
     yield put(setAuthUserDialogLoading(true));
-    const user: AuthUser = yield call([authApi, 'updateUser'], {
+    const user: AuthUser = yield call([authApi, 'updateUser'] as any, {
       ...payload.user,
       localId: payload.localId,
     });
@@ -121,8 +126,8 @@ export function* updateUser({ payload }: ReturnType<typeof updateUserRequest>) {
 export function* setUserDisabled({
   payload,
 }: ReturnType<typeof setUserDisabledRequest>) {
-  const authApi = yield call(configureAuthSaga);
-  yield call([authApi, 'updateUser'], {
+  const authApi: AuthApi = yield call(configureAuthSaga);
+  yield call([authApi, 'updateUser'] as any, {
     disableUser: payload.disabled,
     localId: payload.localId,
   });
@@ -132,25 +137,25 @@ export function* setUserDisabled({
 export function* setAllowDuplicateEmails({
   payload,
 }: ReturnType<typeof setAllowDuplicateEmailsRequest>) {
-  const authApi = yield call(configureAuthSaga);
+  const authApi: AuthApi = yield call(configureAuthSaga);
   yield call([authApi, 'updateConfig'], payload);
   yield put(setAllowDuplicateEmailsSuccess(payload));
 }
 
 export function* getAllowDuplicateEmails() {
-  const authApi = yield call(configureAuthSaga);
-  const config = yield call([authApi, 'getConfig']);
+  const authApi: AuthApi = yield call(configureAuthSaga);
+  const config: boolean = yield call([authApi, 'getConfig']);
   yield put(setAllowDuplicateEmailsSuccess(config));
 }
 
 export function* nukeUsers() {
-  const authApi = yield call(configureAuthSaga);
+  const authApi: AuthApi = yield call(configureAuthSaga);
   yield call([authApi, 'nukeUsers']);
   yield put(nukeUsersSuccess());
 }
 
 export function* configureAuthSaga() {
-  const result = yield select(getAuthConfigResult);
+  const result: DataResult<AuthConfig> = yield select(getAuthConfigResult);
 
   const { data: projectId } = yield select(getProjectIdResult);
 

@@ -18,7 +18,7 @@ import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 
 import { Result, hasError, map } from '../utils';
-import { FirestoreConfig } from './types';
+import { EmulatorConfig, FirestoreConfig } from './types';
 import { AppState } from '..';
 
 // Get the RemoteResult wrapper for config. If you only care about result,
@@ -38,6 +38,11 @@ export const getProjectIdResult = createSelector(getConfigResult, (result) =>
 export const getDatabaseConfigResult = createSelector(
   getConfigResult,
   (result) => map(result, (config) => config.database)
+);
+
+export const getStorageConfigResult = createSelector(
+  getConfigResult,
+  (result) => map(result, (config) => config.storage)
 );
 
 export const getFirestoreConfigResult = createSelector(
@@ -63,4 +68,10 @@ export function useProjectId() {
 export function useFirestoreConfig() {
   const config = useSelector(getFirestoreConfigResult);
   return useRemoteResultData<FirestoreConfig | undefined>(config);
+}
+
+export function useStorageConfig(): EmulatorConfig {
+  const config = useSelector(getStorageConfigResult);
+  // TODO(kirjs): Use assertions
+  return useRemoteResultData<EmulatorConfig | undefined>(config)!;
 }

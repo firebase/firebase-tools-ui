@@ -1,0 +1,44 @@
+/**
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// Borrowed from go/firebase-a11y-visually-hidden
+@mixin a11y-visually-hidden {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+
+  // Avoid browsers rendering the focus ring in some cases.
+  outline: 0;
+
+  // Avoid some cases where the browser will still render the native controls (see #9049).
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+// This mixin is needed for the case when the button is not displayed until the parent element is
+// hovered or focused. Using traditional ways of hiding would make it inaccessible.
+@mixin a11y-display-on-hover($selector) {
+  &:not(:hover):not(:focus-within):not(:active) {
+    #{$selector}:not(:hover):not(:focus-within):not(:active) {
+      @include a11y-visually-hidden;
+    }
+  }
+}

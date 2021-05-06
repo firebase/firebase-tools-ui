@@ -119,7 +119,7 @@ describe('Firestore', () => {
   });
 
   it('shows no shells if 2-levels deep', async () => {
-    const { getByText, getByTestId, queryByTestId } = await renderWithFirestore(
+    const { getByText, queryByTestId } = await renderWithFirestore(
       async (firestore) => {
         const collectionRef = firestore.collection('coll');
         await collectionRef.doc('doc').set({ a: 1 });

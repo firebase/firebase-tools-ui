@@ -59,8 +59,9 @@ jobs:
       - name: Run tests against emulator
         # forceExit: something is not cleaning up - likely firebase-app that needs to be deleted, investigate
         run: |
-          npm install -g firebase-tools
-          firebase emulators:exec --only database,firestore --project sample 'npm run test:coverage -- --forceExit'
+          # TODO(kirjs): Replace below with firebase-tools
+          npm install -g https://github.com/firebase/firebase-tools.git
+          FIREBASE_CLI_PREVIEWS=storageemulator firebase emulators:exec --only database,firestore,storage --project sample 'npm run test:coverage -- --forceExit'
         env:
           CI: true
 

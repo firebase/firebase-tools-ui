@@ -20,18 +20,19 @@ import React, { useCallback, useState } from 'react';
 
 interface CopyButtonProps extends HTMLProps<IconButtonProps> {
   textToCopy: string;
+  icon?: string;
 }
 
-function useClipboard(text: string) {
+export function useClipboard() {
   const [isTextCopied, setIsTextCopied] = useState(false);
   return {
     isTextCopied,
-    writeText: useCallback(() => {
+    writeText: useCallback((text: string) => {
       return navigator.clipboard
         .writeText(text)
         .then(() => setIsTextCopied(true))
         .catch(() => setIsTextCopied((isTextCopied) => isTextCopied));
-    }, [text]),
+    }, []),
   };
 }
 
@@ -39,16 +40,17 @@ export function CopyButton({
   textToCopy: text,
   label,
   theme,
+  icon = 'content_copy',
 }: CopyButtonProps) {
   label = label || 'Copy';
   theme = theme || 'textPrimaryOnBackground';
-  const { writeText } = useClipboard(text);
+  const { writeText } = useClipboard();
   return (
     <IconButton
       theme={theme}
-      icon="content_copy"
+      icon={icon}
       label={label}
-      onClick={writeText}
+      onClick={() => writeText(text)}
     />
   );
 }
