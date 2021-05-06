@@ -106,7 +106,7 @@
   },
   "devDependencies": {
     "@firebase/auth-interop-types": "^0.1.4",
-    "@firebase/component": "^0.1.8",
+    "@firebase/component": "^0.2.0",
     "@testing-library/react": "^11.2.2",
     "@testing-library/react-hooks": "^5.0.3",
     "@types/classnames": "^2.2.10",
