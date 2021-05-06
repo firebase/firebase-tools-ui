@@ -60,6 +60,7 @@ jobs:
         # forceExit: something is not cleaning up - likely firebase-app that needs to be deleted, investigate
         run: |
           npm install -g firebase-tools
+          firebase --open-sesame storageemulator
           FIREBASE_CLI_PREVIEWS=storageemulator firebase emulators:exec --only database,firestore,storage --project sample 'npm run test:coverage -- --forceExit'
         env:
           CI: true
