@@ -31,7 +31,7 @@
   min-width: 0;
   padding: 0;
 
-  @include a11y-display-on-hover('.mdc-icon-button');
+  @include a11y-display-on-hover('.BreadCrumbs-edit .mdc-icon-button');
 
   .mdc-icon-button {
     &::before,
