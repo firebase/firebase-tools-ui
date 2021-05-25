@@ -32,21 +32,11 @@ export function delay(timeoutMs: number): Promise<void> {
 }
 
 /**
- * Render a component and wait for some async DOM changes on init.
- * This serves as a last resort to silence warnings of changing the DOM outside
- * act(...), e.g. for RMWC <Tab>s.
- *
- * - For Dialogs, use renderDialog or waitForDialogsToOpen/Close instead.
- * - To test components that change state based on Promises, use makeDeferred().
- */
-
-/**
  * Wait for MDC dialogs to be fully open, so no DOM changes happen outside
  * our control and trigger warnings of not wrapped in act(...) etc.
  */
 export async function waitForDialogsToOpen(container: ParentNode = document) {
-  // TODO: Change to waitFor once we migrate to react-testing-library@10.
-  await waitForElement(() =>
+  await waitFor(() =>
     container.querySelector('.mdc-dialog--open:not(.mdc-dialog--opening)')
   );
 }
