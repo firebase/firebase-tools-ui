@@ -299,7 +299,7 @@ it('deletes document and nested data when requested', async () => {
         name: 'Delete',
       })
     );
-    return delay(200);
+    return delay(500);
   });
 
   expect(await findByText(/This document does not exist/)).not.toBeNull();
