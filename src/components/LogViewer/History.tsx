@@ -27,20 +27,6 @@ import { CompiledGetterCache } from './CompiledGetterCache';
 import { HighlightedJSON } from './HighlightedJSON';
 import { ParsedQuery, filtersToQueryString, isQueryMatch } from './QueryBar';
 
-const formatTimestamp = (timestamp: number) => {
-  const date = new Date(timestamp);
-  const segments = [date.getHours(), date.getMinutes(), date.getSeconds()];
-
-  return segments
-    .map((segment) => {
-      const number = segment.toString();
-
-      if (number.length === 2) return number;
-      else return `0${number}`;
-    })
-    .join(':');
-};
-
 const FilterTag: React.FC<{ appendToQuery: Function; log: LogEntry }> = ({
   appendToQuery,
   log,
@@ -103,7 +89,7 @@ export const History: React.FC<Props> = ({
 
   const scrollToBottom = () => {
     if (messagesEndRef && messagesEndRef.current) {
-      (messagesEndRef.current as any).scrollIntoView();
+      (messagesEndRef.current as any).scrollIntoView?.();
     }
   };
 
@@ -122,7 +108,9 @@ export const History: React.FC<Props> = ({
         history.slice(-MAX_LOG_LINES).map((log, index) => (
           <div id={`log_${index}`} className="log-entry" key={index}>
             <span className="log-timestamp">
-              {formatTimestamp(log.timestamp)}
+              {new Date(log.timestamp).toLocaleTimeString('en-US', {
+                hour12: false,
+              })}
             </span>
             <span
               className={`log-level ${log.level}`}

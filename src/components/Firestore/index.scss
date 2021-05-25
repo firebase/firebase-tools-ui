@@ -17,21 +17,43 @@
 @import '../common/color';
 @import '../common/utils';
 @import '../App/variables';
+@import '../Firestore/variables';
 
 .Firestore {
   display: flex;
   flex-direction: column;
+  position: relative;
 
   // Each panel is individually scrollable within the panel, so we want to avoid
   // making the whole page scrollable by making stuff fit into viewport height.
   height: $app-remaining-viewport-height-for-content;
   // But keep a min-height to keep it usable (at the cost of page scrolling).
-  min-height: 400px;
+  min-height: $firestore-card-min-height;
+}
+
+.Firestore-sub-tabs {
+  margin-bottom: $firestore-sub-tabs-margin-bottom;
+  // Shadow border at bottom
+  box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12) inset;
+
+  .mdc-tab {
+    width: fit-content;
+    height: $firestore-sub-tabs-height;
+    &:not(:first-of-type) {
+      margin-left: 24px;
+    }
+  }
 }
 
 .Firestore-actions {
-  text-align: end;
-  margin-bottom: 24px;
+  position: absolute;
+  right: 0px;
+  top: $firestore-sub-tabs-margin-bottom;
+
+  button {
+    width: fit-content;
+    margin: 6px 0;
+  }
 }
 
 .Firestore-panels-wrapper {
@@ -55,7 +77,7 @@
 
   .Firestore-InlineEditor-relative-anchor {
     .Firestore-InlineEditor {
-      // default to the size of the panel + 8px overhang on each side
+      // Default to the size of the panel + 8px overhang on each side
       min-width: calc(100% + 16px);
     }
   }

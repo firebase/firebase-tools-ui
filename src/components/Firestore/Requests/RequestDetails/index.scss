@@ -1,0 +1,42 @@
+/**
+ * Copyright 2021 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@import './Header/variables.scss';
+@import '../../Requests/variables.scss';
+
+// Details content
+$content-min-height: ($requests-card-min-height - $details-header-height);
+// Since the app-...-content variable uses calc(), a SASS interpolation
+// is used in order to nest a calc() function inside another calc() function
+// css structure:            calc( calc(0px + 0px) - 0px)
+$content-viewport-height: calc(
+  #{$app-remaining-viewport-height-for-content} - #{$firestore-sub-tabs-total-height +
+    $details-header-height}
+);
+
+.Firestore-Request-Details-Content {
+  width: 100%;
+  // Flex behavior: stretch content vertically
+  display: flex;
+  justify-content: flex-start;
+  align-items: stretch;
+  // Overflow behavior: (useful to allow children components
+  // to have inner scrolling behavior)
+  position: relative;
+  overflow: hidden;
+  min-height: $content-min-height;
+  height: $content-viewport-height;
+}

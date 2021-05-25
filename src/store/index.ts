@@ -23,13 +23,24 @@ import { authReducer } from './auth/reducer';
 import { authSaga } from './auth/sagas';
 import { ConfigState, configReducer, configSaga } from './config';
 import { DatabaseState, databaseReducer, databaseSaga } from './database';
+import {
+  FirestoreRequestEvaluationsState,
+  firestoreRequestEvaluationsReducer,
+} from './firestore/requests/evaluations';
 import { LogState, logReducer } from './logviewer';
 
+export interface FirestoreRequestsState {
+  evaluations: FirestoreRequestEvaluationsState;
+}
+export interface FirestoreState {
+  requests: FirestoreRequestsState;
+}
 export interface AppState {
   config: ConfigState;
   database: DatabaseState;
   auth: AuthState;
   log: LogState;
+  firestore: FirestoreState;
 }
 
 export function* rootSaga() {
@@ -41,6 +52,11 @@ export const rootReducer = combineReducers<AppState>({
   database: databaseReducer,
   auth: authReducer,
   log: logReducer,
+  firestore: combineReducers<FirestoreState>({
+    requests: combineReducers<FirestoreRequestsState>({
+      evaluations: firestoreRequestEvaluationsReducer,
+    }),
+  }),
 });
 
 export function createStructuredSelector<T>(

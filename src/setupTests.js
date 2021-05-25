@@ -22,7 +22,7 @@ require('mutationobserver-shim');
 // https://github.com/FirebaseExtended/reactfire/blob/b82b58a8146eb044321244005f9d0eeeaf2be9e1/README.md#install
 global.globalThis = require('globalthis')();
 
-// <AppBar> calls window.scrollTo which jsdom does not implement. Let's mock it
+// <AppBar> calls window.scrollTo, which jsdom does not implement. Let's mock it
 // out to silence warnings -- we don't actually need to test it.
 Object.defineProperty(window, 'scrollTo', {
   value: () => {},
@@ -36,3 +36,35 @@ Object.defineProperty(window, 'scrollTo', {
 // own label.
 base.randomId = (prefix) =>
   `${prefix}-${(Math.random() + Math.random() + 1).toString(36).substring(2)}`;
+
+// CodeMirror calls document.createRange, which jsdom does not implement.
+// Mocking this function is necessary in order to test components
+// that render the CodeMirror component.
+// References:
+//    https://github.com/scniro/react-codemirror2/issues/23
+//    https://github.com/jsdom/jsdom/issues/3002
+global.document.createRange = () => {
+  return {
+    setEnd: jest.fn(),
+    setStart: jest.fn(),
+    getBoundingClientRect: jest.fn(),
+    getClientRects: () => {
+      return {
+        item: () => null,
+        length: 0,
+        [Symbol.iterator]: jest.fn(),
+      };
+    },
+  };
+};
+
+// Since jsdom does not implement navigator to copy to clipboard,
+// mocking this is necessary to test components that copy to clipboard.
+// NOTE: it returns a Promise that always resolves instantly
+Object.defineProperty(navigator, 'clipboard', {
+  value: {
+    writeText: (text) => {
+      return new Promise((resolve) => resolve(text));
+    },
+  },
+});

@@ -178,3 +178,12 @@ export const wrapWithForm = <P, T, F = UseFormOptions<T>>(
 
   return { ...methods, triggerValidation, submit };
 };
+
+/**
+ * Determines if a tab is active or not based on the
+ * classname of the given HTMLElement.
+ */
+export function isTabActive(labelEl: HTMLElement): boolean {
+  const tabEl = labelEl.closest('.mdc-tab');
+  return !!tabEl?.classList.contains('mdc-tab--active');
+}
