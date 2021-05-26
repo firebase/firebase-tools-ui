@@ -23,8 +23,8 @@ import { Component, ComponentType } from '@firebase/component';
 import firebase from 'firebase/app';
 import { useEffect, useState } from 'react';
 
+import { useConfig } from './components/common/EmulatorConfigProvider';
 import { DatabaseConfig } from './store/config';
-import { useProjectId } from './store/config/selectors';
 
 interface WindowWithDb extends Window {
   database?: firebase.database.Database;
@@ -87,7 +87,7 @@ export function useEmulatedFirebaseApp(
   config?: object,
   initialize?: (app: firebase.app.App) => void
 ): firebase.app.App | undefined {
-  const projectId = useProjectId();
+  const { projectId } = useConfig();
   const [app, setApp] = useState<firebase.app.App | undefined>();
 
   useEffect(() => {

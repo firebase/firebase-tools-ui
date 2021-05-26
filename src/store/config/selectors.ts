@@ -18,7 +18,7 @@ import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 
 import { Result, hasError, map } from '../utils';
-import { EmulatorConfig, FirestoreConfig } from './types';
+import { EmulatorConfig } from './types';
 import { AppState } from '..';
 
 // Get the RemoteResult wrapper for config. If you only care about result,
@@ -58,16 +58,6 @@ function useRemoteResultData<T = {}>(result: Result<T> | undefined) {
     throw new Error(result.error.message);
   }
   return result.data;
-}
-
-export function useProjectId() {
-  const projectId = useSelector(getProjectIdResult);
-  return useRemoteResultData(projectId);
-}
-
-export function useFirestoreConfig() {
-  const config = useSelector(getFirestoreConfigResult);
-  return useRemoteResultData<FirestoreConfig | undefined>(config);
 }
 
 export function useStorageConfig(): EmulatorConfig {

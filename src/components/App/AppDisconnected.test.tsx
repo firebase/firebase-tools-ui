@@ -18,13 +18,16 @@ import { render } from '@testing-library/react';
 import React from 'react';
 
 import { Config } from '../../store/config';
+import { TestEmulatorConfigProvider } from '../common/EmulatorConfigProvider';
 import { AppDisconnected } from './AppDisconnected';
 
 const disconnectedText = /All emulators for this project have stopped running/;
 
 it('shows nothing when config is loading', () => {
   const { queryByText } = render(
-    <AppDisconnected configRemote={{ loading: true }} />
+    <TestEmulatorConfigProvider config={undefined}>
+      <AppDisconnected />
+    </TestEmulatorConfigProvider>
   );
   expect(queryByText(disconnectedText)).toBe(null);
 });
@@ -32,21 +35,18 @@ it('shows nothing when config is loading', () => {
 it('shows nothing when config is successfully loaded', () => {
   const sampleConfig: Config = { projectId: 'example' };
   const { queryByText } = render(
-    <AppDisconnected
-      configRemote={{ loading: false, result: { data: sampleConfig } }}
-    />
+    <TestEmulatorConfigProvider config={sampleConfig}>
+      <AppDisconnected />
+    </TestEmulatorConfigProvider>
   );
   expect(queryByText(disconnectedText)).toBe(null);
 });
 
-it('shows alert about disconnected when config has error', () => {
+it('shows alert about disconnected when config is null', () => {
   const { getByText } = render(
-    <AppDisconnected
-      configRemote={{
-        loading: false,
-        result: { error: { message: '(ignored)' } },
-      }}
-    />
+    <TestEmulatorConfigProvider config={null}>
+      <AppDisconnected />
+    </TestEmulatorConfigProvider>
   );
   expect(getByText(disconnectedText)).not.toBe(null);
 });

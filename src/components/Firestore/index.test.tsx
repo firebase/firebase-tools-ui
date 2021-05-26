@@ -18,58 +18,41 @@ import { act, render, waitFor, waitForElement } from '@testing-library/react';
 import React from 'react';
 import { Route } from 'react-router-dom';
 
-import { FirestoreConfig } from '../../store/config';
 import { makeDeferred } from '../../test_utils';
 import { confirm } from '../common/DialogQueue';
+import { TestEmulatorConfigProvider } from '../common/EmulatorConfigProvider';
 import * as emulatedApi from './FirestoreEmulatedApiProvider';
 import { Firestore, FirestoreRoute } from './index';
 import { renderWithFirestore } from './testing/FirestoreTestProviders';
 
 jest.mock('../common/DialogQueue');
 
-const sampleConfig: FirestoreConfig = {
-  host: 'localhost',
-  port: 8080,
-  hostAndPort: 'localhost:8080',
-};
-
 describe('FirestoreRoute', () => {
-  it('renders loading when projectId is not ready', () => {
-    const { getByText } = render(
-      <FirestoreRoute
-        projectIdResult={undefined}
-        configResult={{ data: sampleConfig }}
-      />
-    );
-    expect(getByText('Firestore Emulator Loading...')).not.toBeNull();
-  });
-
   it('renders loading when config is not ready', () => {
     const { getByText } = render(
-      <FirestoreRoute
-        projectIdResult={{ data: 'foo' }}
-        configResult={undefined}
-      />
+      <TestEmulatorConfigProvider config={undefined}>
+        <FirestoreRoute />
+      </TestEmulatorConfigProvider>
     );
     expect(getByText('Firestore Emulator Loading...')).not.toBeNull();
   });
 
-  it('renders error when loading config fails', () => {
+  it('renders error when emulators are disabled', () => {
     const { getByText } = render(
-      <FirestoreRoute
-        projectIdResult={{ data: 'foo' }}
-        configResult={{ error: { message: 'Oh, snap!' } }}
-      />
+      <TestEmulatorConfigProvider config={null}>
+        <FirestoreRoute />
+      </TestEmulatorConfigProvider>
     );
     expect(getByText(/not running/)).not.toBeNull();
   });
 
   it('renders "emulator is off" when config is not present', () => {
     const { getByText } = render(
-      <FirestoreRoute
-        projectIdResult={{ data: 'foo' }}
-        configResult={{ data: undefined /* emulator absent */ }}
-      />
+      <TestEmulatorConfigProvider
+        config={{ projectId: 'example' /* no firestore */ }}
+      >
+        <FirestoreRoute />
+      </TestEmulatorConfigProvider>
     );
     expect(getByText(/not running/)).not.toBeNull();
   });

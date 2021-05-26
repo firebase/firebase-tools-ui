@@ -26,13 +26,10 @@ import { GridCell, GridRow } from '@rmwc/grid';
 import { ListDivider } from '@rmwc/list';
 import { Typography } from '@rmwc/typography';
 import React from 'react';
-import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { createStructuredSelector } from '../../store';
 import { Config, EmulatorConfig } from '../../store/config';
-import { getConfig } from '../../store/config/selectors';
-import { squash } from '../../store/utils';
+import { useConfigOptional } from '../common/EmulatorConfigProvider';
 import {
   AuthIcon,
   DatabaseIcon,
@@ -47,22 +44,16 @@ import { storagePath } from '../Storage/common/constants';
 import { LocalWarningCallout } from './LocalWarningCallout';
 import { StatusLabel } from './StatusLabel';
 
-export const mapStateToProps = createStructuredSelector({
-  configRemote: getConfig,
-});
+export const Home: React.FC = () => {
+  const config = useConfigOptional();
+  if (config === undefined /* initial loading */) {
+    return <Spinner span={12} message="Overview Page Loading..." />;
+  } else {
+    return <Overview config={config || {}} />;
+  }
+};
 
-export type PropsFromState = ReturnType<typeof mapStateToProps>;
-export type Props = PropsFromState;
-
-export const Home: React.FC<Props> = ({ configRemote }) =>
-  squash(configRemote, {
-    onNone: () => <Spinner span={12} message="Overview Page Loading..." />,
-    onData: (config) => <Overview config={config} />,
-    // Show all emulators as "off" on error.
-    onError: () => <Overview config={{}} />,
-  });
-
-export default connect(mapStateToProps)(Home);
+export default Home;
 
 const Overview: React.FC<{
   config: Partial<Config>;

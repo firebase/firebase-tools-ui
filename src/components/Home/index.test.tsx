@@ -18,12 +18,18 @@ import { getByRole, getByText, render } from '@testing-library/react';
 import React from 'react';
 import { MemoryRouter } from 'react-router';
 
+import {
+  EmulatorConfigProvider,
+  TestEmulatorConfigProvider,
+} from '../common/EmulatorConfigProvider';
 import { Home } from './index';
 
 it('renders fetching placeholder when fetching config', () => {
   const { getByText } = render(
     <MemoryRouter>
-      <Home configRemote={{ loading: true }} />
+      <TestEmulatorConfigProvider config={undefined}>
+        <Home />
+      </TestEmulatorConfigProvider>
     </MemoryRouter>
   );
   expect(getByText('Overview Page Loading...')).not.toBeNull();
@@ -32,12 +38,9 @@ it('renders fetching placeholder when fetching config', () => {
 it('renders an overview when config is loaded', () => {
   const { getByText } = render(
     <MemoryRouter>
-      <Home
-        configRemote={{
-          loading: false,
-          result: { data: { projectId: 'example' } },
-        }}
-      />
+      <TestEmulatorConfigProvider config={{ projectId: 'example' }}>
+        <Home />
+      </TestEmulatorConfigProvider>
     </MemoryRouter>
   );
   expect(getByText('Emulator overview')).not.toBeNull();
@@ -46,21 +49,18 @@ it('renders an overview when config is loaded', () => {
 it('shows port for emulator that are loaded and N/A for not loaded', () => {
   const { getByTestId } = render(
     <MemoryRouter>
-      <Home
-        configRemote={{
-          loading: false,
-          result: {
-            data: {
-              projectId: 'example',
-              database: {
-                host: 'localhost',
-                port: 9000,
-                hostAndPort: 'localhost:9000',
-              },
-            },
+      <TestEmulatorConfigProvider
+        config={{
+          projectId: 'example',
+          database: {
+            host: 'localhost',
+            port: 9000,
+            hostAndPort: 'localhost:9000',
           },
         }}
-      />
+      >
+        <Home />
+      </TestEmulatorConfigProvider>
     </MemoryRouter>
   );
   // Database Emulator is running.
@@ -77,21 +77,18 @@ it('shows port for emulator that are loaded and N/A for not loaded', () => {
 it('shows hosting emulator card', () => {
   const { getByTestId } = render(
     <MemoryRouter>
-      <Home
-        configRemote={{
-          loading: false,
-          result: {
-            data: {
-              projectId: 'example',
-              hosting: {
-                host: 'localhost',
-                port: 5000,
-                hostAndPort: 'localhost:5000',
-              },
-            },
+      <TestEmulatorConfigProvider
+        config={{
+          projectId: 'example',
+          hosting: {
+            host: 'localhost',
+            port: 5000,
+            hostAndPort: 'localhost:5000',
           },
         }}
-      />
+      >
+        <Home />
+      </TestEmulatorConfigProvider>
     </MemoryRouter>
   );
 
@@ -103,21 +100,18 @@ it('shows hosting emulator card', () => {
 it('links to the hosting website externally', () => {
   const { getByTestId } = render(
     <MemoryRouter>
-      <Home
-        configRemote={{
-          loading: false,
-          result: {
-            data: {
-              projectId: 'example',
-              hosting: {
-                host: 'localhost',
-                port: 5000,
-                hostAndPort: 'localhost:5000',
-              },
-            },
+      <TestEmulatorConfigProvider
+        config={{
+          projectId: 'example',
+          hosting: {
+            host: 'localhost',
+            port: 5000,
+            hostAndPort: 'localhost:5000',
           },
         }}
-      />
+      >
+        <Home></Home>
+      </TestEmulatorConfigProvider>
     </MemoryRouter>
   );
 
@@ -133,21 +127,18 @@ it('links to the hosting website externally', () => {
 it('shows pubsub emulator card', () => {
   const { getByTestId } = render(
     <MemoryRouter>
-      <Home
-        configRemote={{
-          loading: false,
-          result: {
-            data: {
-              projectId: 'example',
-              pubsub: {
-                host: 'localhost',
-                port: 8085,
-                hostAndPort: 'localhost:8085',
-              },
-            },
+      <TestEmulatorConfigProvider
+        config={{
+          projectId: 'example',
+          pubsub: {
+            host: 'localhost',
+            port: 8085,
+            hostAndPort: 'localhost:8085',
           },
         }}
-      />
+      >
+        <Home></Home>
+      </TestEmulatorConfigProvider>
     </MemoryRouter>
   );
 
@@ -158,21 +149,18 @@ it('shows pubsub emulator card', () => {
 it('shows storage emulator card', () => {
   const { getByTestId } = render(
     <MemoryRouter>
-      <Home
-        configRemote={{
-          loading: false,
-          result: {
-            data: {
-              projectId: 'example',
-              storage: {
-                host: 'localhost',
-                port: 9199,
-                hostAndPort: 'localhost:9199',
-              },
-            },
+      <TestEmulatorConfigProvider
+        config={{
+          projectId: 'example',
+          storage: {
+            host: 'localhost',
+            port: 9199,
+            hostAndPort: 'localhost:9199',
           },
         }}
-      />
+      >
+        <Home></Home>
+      </TestEmulatorConfigProvider>
     </MemoryRouter>
   );
 
@@ -184,21 +172,18 @@ it('shows storage emulator card', () => {
 it('shows button for function emulator logs', () => {
   const { getByTestId } = render(
     <MemoryRouter>
-      <Home
-        configRemote={{
-          loading: false,
-          result: {
-            data: {
-              projectId: 'example',
-              functions: {
-                host: 'localhost',
-                port: 5001,
-                hostAndPort: 'localhost:5001',
-              },
-            },
+      <TestEmulatorConfigProvider
+        config={{
+          projectId: 'example',
+          functions: {
+            host: 'localhost',
+            port: 5001,
+            hostAndPort: 'localhost:5001',
           },
         }}
-      />
+      >
+        <Home></Home>
+      </TestEmulatorConfigProvider>
     </MemoryRouter>
   );
   const card = getByTestId(`emulator-info-functions`);
@@ -211,12 +196,9 @@ it('renders all emulators as "off" when error loading config', () => {
   // disconnected overlay. Just keep the layout and show everything as "off".
   const { getByTestId } = render(
     <MemoryRouter>
-      <Home
-        configRemote={{
-          loading: false,
-          result: { error: { message: 'failed to fetch' } },
-        }}
-      />
+      <TestEmulatorConfigProvider config={null}>
+        <Home />
+      </TestEmulatorConfigProvider>
     </MemoryRouter>
   );
 
