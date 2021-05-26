@@ -15,12 +15,13 @@
  */
 
 import 'firebase/database';
+import 'firebase/firestore';
 
 import { _FirebaseApp } from '@firebase/app-types/private';
 import { FirebaseAuthInternal } from '@firebase/auth-interop-types';
 import { Component, ComponentType } from '@firebase/component';
 import firebase from 'firebase/app';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 
 import { DatabaseConfig } from './store/config';
 import { useProjectId } from './store/config/selectors';
@@ -65,23 +66,33 @@ export const getStorageApp = (host: string, port: string) => {
   return app;
 };
 
-export function useEmulatedFirebaseApp(name: string, config: any) {
+export function useEmulatedFirebaseApp(
+  name: string,
+  config: any,
+  initialize?: (app: firebase.app.App) => void
+) {
   const projectId = useProjectId();
-
-  const app = useMemo(() => {
-    const app = firebase.initializeApp(
-      { ...config, projectId },
-      `${name} component::${Math.random()}`
-    );
-    applyAdminAuth(app);
-    return app;
-  }, [name, config, projectId]);
+  const [app, setApp] = useState<firebase.app.App | undefined>();
 
   useEffect(() => {
+    if (!app) {
+      const app = firebase.initializeApp(
+        { ...config, projectId },
+        `${name} component::${Math.random()}`
+      );
+      applyAdminAuth(app);
+      initialize?.(app);
+      setApp(app);
+    }
+
     return () => {
-      app.delete();
+      if (app) {
+        setApp(undefined);
+        // Errors may happen if app is already deleted. Ignore them.
+        app.delete().catch(() => {});
+      }
     };
-  }, [app]);
+  }, [app, name, config, projectId, initialize]);
 
   return app;
 }
