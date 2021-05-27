@@ -78,7 +78,7 @@ export const DeleteDocumentDialog: React.FC<Props> = ({
           </div>
           {recursive && (
             <Callout aside type="note">
-              Cloud Functions triggers WON'T be executed.
+              Cloud Functions triggers <b>will not</b> be executed.
             </Callout>
           )}
         </div>
