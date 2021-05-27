@@ -15,13 +15,12 @@
  */
 
 import { Portal } from '@rmwc/base';
-import { act, fireEvent, waitForElement } from '@testing-library/react';
+import { act, waitForElement } from '@testing-library/react';
 import firebase from 'firebase';
 import React, { useEffect, useState } from 'react';
 import { Route } from 'react-router-dom';
 
 import { delay, waitForDialogsToOpen } from '../../test_utils';
-import { assert } from '../common/asserts';
 import { confirm } from '../common/DialogQueue';
 import { Document, Root } from './Document';
 import { renderWithFirestore } from './testing/FirestoreTestProviders';
@@ -189,11 +188,9 @@ it('shows the selected document-collection when there are collection and documen
 
 const TestDeleteComponent: React.FC<{
   docRef: firebase.firestore.DocumentReference;
-}> = ({ docRef }) => {
-  const [isReady, setReady] = useState(false);
+  nestedDocRef: firebase.firestore.DocumentReference;
+}> = ({ docRef, nestedDocRef }) => {
   const [nestedDocExists, setNestedDocExists] = useState(false);
-
-  const nestedDocRef = docRef.collection('nestedCollection').doc('nestedDoc');
 
   useEffect(() => {
     // Use onSnapshot to determine if nested document still exists.
@@ -202,16 +199,9 @@ const TestDeleteComponent: React.FC<{
     const unsubscribe = nestedDocRef.onSnapshot((snap) => {
       setNestedDocExists(snap.exists);
     });
-    Promise.all([
-      docRef.set({ myField: 1 }),
-      nestedDocRef.set({ myField: 2 }),
-    ]).then(() => setReady(true));
     return unsubscribe;
   }, [docRef, nestedDocRef]);
 
-  if (!isReady) {
-    return <div>Test component initializing</div>;
-  }
   return (
     <div>
       <Document reference={docRef} />
@@ -228,7 +218,16 @@ const TestDeleteComponent: React.FC<{
 it('deletes document when requested', async () => {
   const { findByText, findByRole } = await renderWithFirestore(
     async (firestore) => {
-      return <TestDeleteComponent docRef={firestore.doc('my-stuff/foo')} />;
+      const docRef = firestore.doc('my-stuff/foo');
+      const nestedDocRef = docRef
+        .collection('nestedCollection')
+        .doc('nestedDoc');
+
+      await docRef.set({ myField: 1 });
+      await nestedDocRef.set({ myField: 2 });
+      return (
+        <TestDeleteComponent docRef={docRef} nestedDocRef={nestedDocRef} />
+      );
     }
   );
 
@@ -263,14 +262,20 @@ it('deletes document when requested', async () => {
 });
 
 it('deletes document and nested data when requested', async () => {
-  const {
-    findByText,
-    findByRole,
-    getByRole,
-    getByText,
-  } = await renderWithFirestore(async (firestore) => {
-    return <TestDeleteComponent docRef={firestore.doc('your-stuff/foo')} />;
-  });
+  const { findByText, findByRole, getByRole } = await renderWithFirestore(
+    async (firestore) => {
+      const docRef = firestore.doc('your-stuff/foo');
+      const nestedDocRef = docRef
+        .collection('nestedCollection')
+        .doc('nestedDoc');
+
+      await docRef.set({ myField: 1 });
+      await nestedDocRef.set({ myField: 2 });
+      return (
+        <TestDeleteComponent docRef={docRef} nestedDocRef={nestedDocRef} />
+      );
+    }
+  );
 
   const menu = await findByRole('button', { name: 'Menu' });
   await act(() => {
@@ -291,25 +296,37 @@ it('deletes document and nested data when requested', async () => {
     name: 'Also delete nested collections and documents',
   });
 
-  await act(async () => {
-    fireEvent.click(recursiveCheckbox);
-    await delay(200);
-    fireEvent.click(
-      getByRole('button', {
-        name: 'Delete',
-      })
-    );
+  await act(() => {
+    recursiveCheckbox.click();
+    return delay(200);
+  });
+
+  expect(await findByText(/Cloud Functions triggers/)).not.toBeNull();
+
+  await act(() => {
+    getByRole('button', {
+      name: 'Delete',
+    }).click();
     return delay(500);
   });
 
   expect(await findByText(/This document does not exist/)).not.toBeNull();
   expect(await findByText('TEST_NESTED_DOC_DOES_NOT_EXIST')).not.toBeNull();
-});
+}, 10000);
 
 it('deletes document fields when requested', async () => {
   const { findByText, findByRole } = await renderWithFirestore(
     async (firestore) => {
-      return <TestDeleteComponent docRef={firestore.doc('your-stuff/foo')} />;
+      const docRef = firestore.doc('their-stuff/foo');
+      const nestedDocRef = docRef
+        .collection('nestedCollection')
+        .doc('nestedDoc');
+
+      await docRef.set({ myField: 1 });
+      await nestedDocRef.set({ myField: 2 });
+      return (
+        <TestDeleteComponent docRef={docRef} nestedDocRef={nestedDocRef} />
+      );
     }
   );
 

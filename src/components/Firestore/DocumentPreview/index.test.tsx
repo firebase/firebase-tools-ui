@@ -18,7 +18,7 @@ import {
   RenderResult,
   act,
   fireEvent,
-  wait,
+  waitFor,
   waitForElement,
 } from '@testing-library/react';
 import { firestore } from 'firebase';
@@ -165,7 +165,7 @@ describe('missing document', () => {
       fireEvent.submit(getByText('Save'));
     });
 
-    await wait(() => !queryByText('Save'));
+    await waitFor(() => !queryByText('Save'));
 
     expect(documentReference.set).toHaveBeenCalledWith({ meaningOfLife: '42' });
   });
@@ -214,7 +214,7 @@ describe('empty document', () => {
       fireEvent.submit(getByText('Save'));
     });
 
-    await wait(() => !queryByText('Save'));
+    await waitFor(() => !queryByText('Save'));
 
     expect(documentReference.update).toHaveBeenCalledWith(
       new firestore.FieldPath('meaningOfLife'),

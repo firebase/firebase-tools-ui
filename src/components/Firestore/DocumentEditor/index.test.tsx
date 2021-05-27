@@ -20,6 +20,7 @@ import {
   fireEvent,
   render,
   wait,
+  waitFor,
 } from '@testing-library/react';
 import React from 'react';
 
@@ -233,7 +234,7 @@ describe('changing types', () => {
     await act(async () => {
       setType(FieldType.ARRAY);
     });
-    await wait(() => expect(getAllByText('add').length).toBe(2));
+    await waitFor(() => expect(getAllByText('add').length).toBe(2));
   });
 
   it('switches to a boolean', async () => {
