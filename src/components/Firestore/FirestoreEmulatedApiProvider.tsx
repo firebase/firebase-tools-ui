@@ -182,6 +182,24 @@ export function useEjector() {
   };
 }
 
+export function useRecursiveDelete() {
+  const { baseEmulatorUrl } = useFirestoreRestApi();
+  const fetcher = useFetcher({
+    method: 'DELETE',
+  });
+
+  return async (
+    ref:
+      | firebase.firestore.CollectionReference
+      | firebase.firestore.DocumentReference
+  ) => {
+    mutate('*');
+    const encodedPath = encodePath(ref.path);
+    const url = `${baseEmulatorUrl}/documents/${encodedPath}`;
+    return await fetcher(url);
+  };
+}
+
 function encodePath(path: string): string {
   return path
     .split('/')

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { act, render, wait, waitForElement } from '@testing-library/react';
+import { act, render, waitFor, waitForElement } from '@testing-library/react';
 import React from 'react';
 import { Route } from 'react-router-dom';
 
@@ -155,7 +155,7 @@ describe('Firestore', () => {
       )
     );
     act(() => getByText('Clear all data').click());
-    await wait(() => expect(nukeSpy).toHaveBeenCalled());
+    await waitFor(() => expect(nukeSpy).toHaveBeenCalled());
     expect(getByTestId('firestore-loading')).not.toBeNull();
     await act(() => nuke.resolve());
     expect(queryByTestId('firestore-loading')).toBeNull();
