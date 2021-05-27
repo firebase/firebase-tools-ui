@@ -85,19 +85,47 @@ it('uses a filtered data set when query params are provided', async () => {
   expect(getByLabelText(/one:/)).toBeDefined();
 });
 
-it('fails when trying to clone the root', async () => {
-  jest.spyOn(console, 'error'); // hide expected errors
+describe('errors', () => {
+  const errorHandler = (event: ErrorEvent) => {
+    event.preventDefault();
+  };
 
-  const rootRef = fakeReference({
-    parent: null,
-    key: null,
-    path: '/',
-    data: {},
+  beforeAll(() => window.addEventListener('error', errorHandler));
+  afterAll(() => window.removeEventListener('error', errorHandler));
+
+  class ErrorBoundary extends React.Component {
+    state: any = { hasError: true, error: null };
+    static getDerivedStateFromError(error: any) {
+      return {
+        hasError: true,
+        error,
+      };
+    }
+    render() {
+      if (this.state.hasError) {
+        return <div>CAUGHT_ERROR</div>;
+      } else {
+        return this.props.children;
+      }
+    }
+  }
+
+  it('fails when trying to clone the root', async () => {
+    const rootRef = fakeReference({
+      parent: null,
+      key: null,
+      path: '/',
+      data: {},
+    });
+
+    const { getByText } = render(
+      <ErrorBoundary>
+        <CloneDialog onComplete={jest.fn()} realtimeRef={rootRef} />
+      </ErrorBoundary>
+    );
+
+    expect(getByText('CAUGHT_ERROR')).not.toBeNull();
   });
-
-  expect(() =>
-    render(<CloneDialog onComplete={jest.fn()} realtimeRef={rootRef} />)
-  ).toThrow();
 });
 
 it('shows a title with the key to clone', async () => {

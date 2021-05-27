@@ -23,7 +23,7 @@ import { List, ListItem } from '@rmwc/list';
 import { MenuSurface, MenuSurfaceAnchor } from '@rmwc/menu';
 import firebase from 'firebase';
 import get from 'lodash.get';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Route, useHistory, useRouteMatch } from 'react-router-dom';
 import { useFirestoreCollection } from 'reactfire';
 
@@ -89,9 +89,14 @@ export function withCollectionState(
       }
     };
 
+    useEffect(() => {
+      if (newDocumentId) {
+        history.push(`${url}/${encodeURIComponent(newDocumentId)}`);
+        setNewDocumentId('');
+      }
+    }, [history, url, newDocumentId, setNewDocumentId]);
+
     if (newDocumentId) {
-      history.push(`${url}/${encodeURIComponent(newDocumentId)}`);
-      setNewDocumentId('');
       return null;
     }
 

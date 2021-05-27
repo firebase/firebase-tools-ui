@@ -121,7 +121,7 @@ describe('UserTable', () => {
       });
 
       // TODO: Investigate the best way to wait for menu to fully open.
-      await act(() => delay(200));
+      await act(() => delay(400));
 
       const button = result.getByRole('menuitem', {
         name: text,
