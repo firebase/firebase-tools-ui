@@ -28,6 +28,8 @@ interface WindowWithFirestore extends Window {
   firestore?: firebase.firestore.Firestore;
 }
 
+const FIRESTORE_OPTIONS = {};
+
 /**
  * Provide a local-FirebaseApp with a FirestoreSDK connected to
  * the Emulator Hub.
@@ -39,7 +41,7 @@ export const FirestoreEmulatedApiProvider: React.FC<{
   const config = useFirestoreConfig()!;
   const app = useEmulatedFirebaseApp(
     'firestore',
-    {},
+    FIRESTORE_OPTIONS,
     useCallback(
       (app) => {
         app.firestore().useEmulator(config.host, config.port);

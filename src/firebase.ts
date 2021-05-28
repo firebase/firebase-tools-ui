@@ -66,11 +66,27 @@ export const getStorageApp = (host: string, port: string) => {
   return app;
 };
 
+/**
+ * Get an JS SDK App instance with emulator Admin auth enabled.
+ *
+ * NOTE: Please make sure parameters are relatively stable (referentially equal
+ * most of the time) or App may be recreated very often (expensive and bad UX)!
+ *
+ * For example, config should almost certainly be wrapped in useMemo, and
+ * initialize wrapped in useCallback. (Or just use MODULE-LEVEL constants.)
+ *
+ * @param name a debug tag for the component using the app
+ * @param config config passed into initializeApp. (useMemo recommended!)
+ * @param initialize function for app setup. Should contain app.foo.useEmulator
+ *   to avoid ever hitting production. (useCallback recommended!)
+ * @returns the created app or undefined (only briefly, will fix itself). You
+ *   may skip rendering children (return null) during the undefined period.
+ */
 export function useEmulatedFirebaseApp(
   name: string,
-  config: any,
+  config?: object,
   initialize?: (app: firebase.app.App) => void
-) {
+): firebase.app.App | undefined {
   const projectId = useProjectId();
   const [app, setApp] = useState<firebase.app.App | undefined>();
 
