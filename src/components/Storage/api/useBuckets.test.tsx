@@ -21,7 +21,7 @@ import { Route, Router } from 'react-router-dom';
 
 import { storagePath } from '../common/constants';
 import { mockBuckets } from '../testing/mockBuckets';
-import { StorageStoreProvider } from '../testing/StorageStoreProvider';
+import { TestStorageProvider } from '../testing/TestStorageProvider';
 import { useBuckets } from './useBuckets';
 
 const initialBucketName = 'pirojok-the-bucket';
@@ -38,9 +38,9 @@ describe('useBuckets', () => {
       return (
         <Router history={history}>
           <Route exact path={storagePath + `:bucket/:path*`}>
-            <StorageStoreProvider>
+            <TestStorageProvider>
               <Suspense fallback={'lol'}>{children}</Suspense>
-            </StorageStoreProvider>
+            </TestStorageProvider>
           </Route>
         </Router>
       );

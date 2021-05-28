@@ -16,6 +16,7 @@
 
 import 'firebase/database';
 import 'firebase/firestore';
+import 'firebase/storage';
 
 import { _FirebaseApp } from '@firebase/app-types/private';
 import { FirebaseAuthInternal } from '@firebase/auth-interop-types';
@@ -55,16 +56,6 @@ export function initDatabase(
   (window as WindowWithDb).database = db;
   return [db, { cleanup: () => app.delete() }];
 }
-
-export const getStorageApp = (host: string, port: string) => {
-  const app = firebase.initializeApp(
-    {},
-    `Storage Component: ${host} ${Math.random()}`
-  ) as any;
-  applyAdminAuth(app);
-  app.storage().useEmulator(host, port);
-  return app;
-};
 
 /**
  * Get a JS SDK App instance with emulator Admin auth enabled.

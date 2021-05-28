@@ -14,11 +14,9 @@
  * limitations under the License.
  */
 
-import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 
-import { Result, hasError, map } from '../utils';
-import { EmulatorConfig } from './types';
+import { map } from '../utils';
 import { AppState } from '..';
 
 // Get the RemoteResult wrapper for config. If you only care about result,
@@ -39,29 +37,3 @@ export const getDatabaseConfigResult = createSelector(
   getConfigResult,
   (result) => map(result, (config) => config.database)
 );
-
-export const getStorageConfigResult = createSelector(
-  getConfigResult,
-  (result) => map(result, (config) => config.storage)
-);
-
-export const getFirestoreConfigResult = createSelector(
-  getConfigResult,
-  (result) => map(result, (config) => config.firestore)
-);
-
-function useRemoteResultData<T = {}>(result: Result<T> | undefined) {
-  if (!result) {
-    throw new Error('Result data requested that is not yet populated');
-  }
-  if (hasError(result)) {
-    throw new Error(result.error.message);
-  }
-  return result.data;
-}
-
-export function useStorageConfig(): EmulatorConfig {
-  const config = useSelector(getStorageConfigResult);
-  // TODO(kirjs): Use assertions
-  return useRemoteResultData<EmulatorConfig | undefined>(config)!;
-}

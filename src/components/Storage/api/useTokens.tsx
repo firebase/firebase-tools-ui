@@ -16,17 +16,17 @@
 
 import useSWR from 'swr';
 
-import { useStorageConfig } from '../../../store/config/selectors';
+import { useEmulatorConfig } from '../../common/EmulatorConfigProvider';
 import { useBucket } from './useBucket';
 
 export function useTokens(fullPath: string) {
-  const config = useStorageConfig();
+  const config = useEmulatorConfig('storage');
   const [bucket] = useBucket();
   const key = `storage/tokens/${bucket}/${fullPath}`;
 
   const fetcher = async () => {
     const url = `http://${
-      config!.hostAndPort
+      config.hostAndPort
     }/v0/b/${bucket}/o/${encodeURIComponent(fullPath)}`;
 
     const response = await fetch(url, {
