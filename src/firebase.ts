@@ -67,7 +67,7 @@ export const getStorageApp = (host: string, port: string) => {
 };
 
 /**
- * Get an JS SDK App instance with emulator Admin auth enabled.
+ * Get a JS SDK App instance with emulator Admin auth enabled.
  *
  * NOTE: Please make sure parameters are relatively stable (referentially equal
  * most of the time) or App may be recreated very often (expensive and bad UX)!
