@@ -15,12 +15,13 @@
  */
 
 import 'firebase/database';
+import 'firebase/firestore';
 
 import { _FirebaseApp } from '@firebase/app-types/private';
 import { FirebaseAuthInternal } from '@firebase/auth-interop-types';
 import { Component, ComponentType } from '@firebase/component';
 import firebase from 'firebase/app';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 
 import { DatabaseConfig } from './store/config';
 import { useProjectId } from './store/config/selectors';
@@ -65,23 +66,49 @@ export const getStorageApp = (host: string, port: string) => {
   return app;
 };
 
-export function useEmulatedFirebaseApp(name: string, config: any) {
+/**
+ * Get a JS SDK App instance with emulator Admin auth enabled.
+ *
+ * NOTE: Please make sure parameters are relatively stable (referentially equal
+ * most of the time) or App may be recreated very often (expensive and bad UX)!
+ *
+ * For example, config should almost certainly be wrapped in useMemo, and
+ * initialize wrapped in useCallback. (Or just use MODULE-LEVEL constants.)
+ *
+ * @param name a debug tag for the component using the app
+ * @param config config passed into initializeApp. (useMemo recommended!)
+ * @param initialize function for app setup. Should contain app.foo.useEmulator
+ *   to avoid ever hitting production. (useCallback recommended!)
+ * @returns the created app or undefined (only briefly, will fix itself). You
+ *   may skip rendering children (return null) during the undefined period.
+ */
+export function useEmulatedFirebaseApp(
+  name: string,
+  config?: object,
+  initialize?: (app: firebase.app.App) => void
+): firebase.app.App | undefined {
   const projectId = useProjectId();
-
-  const app = useMemo(() => {
-    const app = firebase.initializeApp(
-      { ...config, projectId },
-      `${name} component::${Math.random()}`
-    );
-    applyAdminAuth(app);
-    return app;
-  }, [name, config, projectId]);
+  const [app, setApp] = useState<firebase.app.App | undefined>();
 
   useEffect(() => {
+    if (!app) {
+      const app = firebase.initializeApp(
+        { ...config, projectId },
+        `${name} component::${Math.random()}`
+      );
+      applyAdminAuth(app);
+      initialize?.(app);
+      setApp(app);
+    }
+
     return () => {
-      app.delete();
+      if (app) {
+        setApp(undefined);
+        // Errors may happen if app is already deleted. Ignore them.
+        app.delete().catch(() => {});
+      }
     };
-  }, [app]);
+  }, [app, name, config, projectId, initialize]);
 
   return app;
 }

@@ -20,11 +20,9 @@ import { Button } from '@rmwc/button';
 import { Card } from '@rmwc/card';
 import { Elevation } from '@rmwc/elevation';
 import { GridCell } from '@rmwc/grid';
-import firebase from 'firebase';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
-import { useFirestore } from 'reactfire';
 
 import { createStructuredSelector } from '../../store';
 import {
@@ -44,10 +42,6 @@ import {
 } from './FirestoreEmulatedApiProvider';
 import PanelHeader from './PanelHeader';
 import { FirestoreStore } from './store';
-
-interface WindowWithFirestoreDb extends Window {
-  firestore?: firebase.firestore.Firestore;
-}
 
 export const mapStateToProps = createStructuredSelector({
   projectIdResult: getProjectIdResult,
@@ -77,7 +71,6 @@ export const FirestoreRoute: React.FC<PropsFromState> = ({
 export default connect(mapStateToProps)(FirestoreRoute);
 
 export const Firestore: React.FC = React.memo(() => {
-  const firestore = useFirestore();
   const location = useLocation();
   const history = useHistory();
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -87,11 +80,6 @@ export const Firestore: React.FC = React.memo(() => {
   const path = location.pathname.replace(/^\/firestore/, '');
   const showCollectionShell = path.split('/').length < 2;
   const showDocumentShell = path.split('/').length < 3;
-
-  useEffect(() => {
-    (window as WindowWithFirestoreDb).firestore = firestore;
-    return () => ((window as WindowWithFirestoreDb).firestore = undefined);
-  }, [firestore]);
 
   async function handleClearData() {
     const shouldNuke = await promptClearAll();
