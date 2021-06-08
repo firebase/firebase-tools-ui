@@ -64,7 +64,7 @@ export const DeleteDocumentDialog: React.FC<Props> = ({
           </Callout>
           <Field
             label="Document location"
-            value={documentRef.path || '/'}
+            value={'/' + documentRef.path}
             disabled
           />
           <div>
