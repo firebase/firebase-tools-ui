@@ -22,23 +22,20 @@ import { AuthState } from '../components/Auth/types';
 import { authReducer } from './auth/reducer';
 import { authSaga } from './auth/sagas';
 import { ConfigState, configReducer, configSaga } from './config';
-import { DatabaseState, databaseReducer, databaseSaga } from './database';
 import { LogState, logReducer } from './logviewer';
 
 export interface AppState {
   config: ConfigState;
-  database: DatabaseState;
   auth: AuthState;
   log: LogState;
 }
 
 export function* rootSaga() {
-  yield all([fork(configSaga), fork(databaseSaga), fork(authSaga)]);
+  yield all([fork(configSaga), fork(authSaga)]);
 }
 
 export const rootReducer = combineReducers<AppState>({
   config: configReducer,
-  database: databaseReducer,
   auth: authReducer,
   log: logReducer,
 });

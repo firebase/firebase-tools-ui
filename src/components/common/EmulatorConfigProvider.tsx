@@ -154,7 +154,7 @@ export function useEmulatorConfig(
   return emulatorConfig;
 }
 
-export function useIsEmulatorDisabled(emulator?: keyof Config): boolean {
+export function useIsEmulatorDisabled(emulator?: Emulator): boolean {
   const config = useConfigOptional();
   if (config === undefined) {
     // Still loading, we cannot tell if emulator is disabled.

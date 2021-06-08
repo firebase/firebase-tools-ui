@@ -18,35 +18,21 @@ import { Button } from '@rmwc/button';
 import { Card } from '@rmwc/card';
 import { Elevation } from '@rmwc/elevation';
 import { GridCell } from '@rmwc/grid';
-import React, { useEffect, useState } from 'react';
-import { MapDispatchToPropsFunction, connect } from 'react-redux';
+import React, { useState } from 'react';
+import useSwr from 'swr';
 
-import { createStructuredSelector } from '../../store';
-import { databasesSubscribe, databasesUnsubscribe } from '../../store/database';
-import { getDatabaseNames } from '../../store/database/selectors';
+import { DatabaseConfig } from '../../store/config';
 import { Callout } from '../common/Callout';
+import { useEmulatorConfig } from '../common/EmulatorConfigProvider';
 import DatabasePicker from './DatabasePicker';
 
-export const mapStateToProps = createStructuredSelector({
-  databases: getDatabaseNames,
-});
-
-export interface PropsFromState {
+export type Props = {
+  children?: React.ReactNode;
   databases: string[] | undefined;
-}
-
-export interface PropsFromDispatch {
-  databasesSubscribe: () => void;
-  databasesUnsubscribe: () => void;
-}
-
-export type Props = PropsFromState &
-  PropsFromDispatch & {
-    children?: React.ReactNode;
-    current: string;
-    primary: string;
-    navigation: (db: string) => string;
-  };
+  current: string;
+  primary: string;
+  navigation: (db: string) => string;
+};
 
 export const DatabaseContainer: React.FC<Props> = ({
   current,
@@ -54,13 +40,7 @@ export const DatabaseContainer: React.FC<Props> = ({
   navigation,
   databases,
   children,
-  databasesSubscribe,
-  databasesUnsubscribe,
 }) => {
-  useEffect(() => {
-    databasesSubscribe();
-    return databasesUnsubscribe; // Unsubscribe when unmounting.
-  }, [databasesSubscribe, databasesUnsubscribe]);
   const [dbs, setDbs] = useState(databases);
 
   let hasNewDbs = false;
@@ -68,7 +48,7 @@ export const DatabaseContainer: React.FC<Props> = ({
     if (
       dbs === undefined ||
       databases === undefined ||
-      dbs.join('|') === databases.join('|') // databases from state are sorted
+      dbs.join('|') === databases.join('|') // databases are sorted
     ) {
       // Don't show reload button for initial data or unchanged.
       setDbs(databases);
@@ -113,12 +93,39 @@ export const DatabaseContainer: React.FC<Props> = ({
   );
 };
 
-export const mapDispatchToProps: MapDispatchToPropsFunction<
-  PropsFromDispatch,
-  {}
-> = (dispatch) => ({
-  databasesSubscribe: () => void dispatch(databasesSubscribe()),
-  databasesUnsubscribe: () => void dispatch(databasesUnsubscribe()),
-});
+export const DatabaseContainerWrapper: React.FC<Omit<Props, 'databases'>> = (
+  props
+) => {
+  const config = useEmulatorConfig('database');
+  const { data } = useSwr(
+    // Put config object in cache key (compared shallowly) so databases will
+    // be cleared on emulator restart as expected (even if ports don't change).
+    ['/dummy/database/databases', config, props.primary],
+    fetchDatabases,
+    { refreshWhenOffline: true, initialData: undefined, refreshInterval: 5000 }
+  );
+  return <DatabaseContainer databases={data} {...props} />;
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(DatabaseContainer);
+export interface DatabaseInfo {
+  name: string;
+}
+
+async function fetchDatabases(
+  _: unknown,
+  config: DatabaseConfig,
+  primary: string
+): Promise<string[]> {
+  const res = await fetch(
+    `http://${config.hostAndPort}/.inspect/databases.json?ns=${primary}`
+  );
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+  }
+  const databaseInfos: DatabaseInfo[] = await res.json();
+
+  // Sort databases by name to avoid unnecessary "changes".
+  return databaseInfos.map((db) => db.name).sort();
+}
+
+export default DatabaseContainerWrapper;
