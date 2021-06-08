@@ -34,7 +34,7 @@ export const promptDeleteDocumentFields = (
         </Callout>
         <Field
           label="Document location"
-          value={'/' + reference.path}
+          value={`/${reference.path}`}
           fullwidth
           disabled
         />
