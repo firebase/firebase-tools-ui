@@ -35,7 +35,7 @@ export const promptDeleteCollection = (
         </Callout>
         <Field
           label="Collection path"
-          value={'/' + reference.path}
+          value={`/${reference.path}`}
           fullwidth
           disabled
         />
