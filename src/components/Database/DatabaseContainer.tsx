@@ -112,7 +112,7 @@ export interface DatabaseInfo {
 }
 
 async function fetchDatabases(
-  _: unknown,
+  _: string, // dummy path parameter, unused for actual fetching
   config: DatabaseConfig,
   primary: string
 ): Promise<string[]> {
