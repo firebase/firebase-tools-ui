@@ -16,6 +16,7 @@
 
 import 'firebase/database';
 import 'firebase/firestore';
+import 'firebase/storage';
 
 import { _FirebaseApp } from '@firebase/app-types/private';
 import { FirebaseAuthInternal } from '@firebase/auth-interop-types';
@@ -23,8 +24,8 @@ import { Component, ComponentType } from '@firebase/component';
 import firebase from 'firebase/app';
 import { useEffect, useState } from 'react';
 
+import { useConfig } from './components/common/EmulatorConfigProvider';
 import { DatabaseConfig } from './store/config';
-import { useProjectId } from './store/config/selectors';
 
 interface WindowWithDb extends Window {
   database?: firebase.database.Database;
@@ -56,16 +57,6 @@ export function initDatabase(
   return [db, { cleanup: () => app.delete() }];
 }
 
-export const getStorageApp = (host: string, port: string) => {
-  const app = firebase.initializeApp(
-    {},
-    `Storage Component: ${host} ${Math.random()}`
-  ) as any;
-  applyAdminAuth(app);
-  app.storage().useEmulator(host, port);
-  return app;
-};
-
 /**
  * Get a JS SDK App instance with emulator Admin auth enabled.
  *
@@ -87,7 +78,7 @@ export function useEmulatedFirebaseApp(
   config?: object,
   initialize?: (app: firebase.app.App) => void
 ): firebase.app.App | undefined {
-  const projectId = useProjectId();
+  const { projectId } = useConfig();
   const [app, setApp] = useState<firebase.app.App | undefined>();
 
   useEffect(() => {

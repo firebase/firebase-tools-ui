@@ -16,11 +16,9 @@
 
 import { GridCell } from '@rmwc/grid';
 import React, { Suspense } from 'react';
-import { useSelector } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
 
-import { getStorageConfigResult } from '../../store/config/selectors';
-import { handle } from '../../store/utils';
+import { useIsEmulatorDisabled } from '../common/EmulatorConfigProvider';
 import { EmulatorDisabled } from '../common/EmulatorDisabled';
 import { Spinner } from '../common/Spinner';
 import { useBuckets } from './api/useBuckets';
@@ -31,25 +29,13 @@ import styles from './index.module.scss';
 import { StorageFirebaseAppProvider } from './providers/StorageFirebaseAppProvider';
 
 export const Storage: React.FC = () => {
-  const configResult = useSelector(getStorageConfigResult);
-
-  const spinner = <Spinner span={12} message="Storage Emulator Loading..." />;
-
-  return handle(configResult, {
-    onNone: () => spinner,
-    onError: () => <StorageRouteDisabled />,
-    onData: (config) => {
-      return config === undefined ? (
-        <StorageRouteDisabled />
-      ) : (
-        <Suspense fallback={spinner}>
-          <StorageRoute>
-            <StorageWrapper />
-          </StorageRoute>
-        </Suspense>
-      );
-    },
-  });
+  return (
+    <Suspense fallback={<StorageRouteSuspended />}>
+      <StorageRoute>
+        <StorageWrapper />
+      </StorageRoute>
+    </Suspense>
+  );
 };
 
 export const StorageWrapper: React.FC = () => {
@@ -80,6 +66,11 @@ export const StorageRoute: React.FC = ({ children }) => {
   );
 };
 
-export const StorageRouteDisabled: React.FC = () => (
-  <EmulatorDisabled productName="Storage" />
-);
+const StorageRouteSuspended: React.FC = () => {
+  const isDisabled = useIsEmulatorDisabled('storage');
+  return isDisabled ? (
+    <EmulatorDisabled productName="Storage" />
+  ) : (
+    <Spinner span={12} message="Storage Emulator Loading..." />
+  );
+};

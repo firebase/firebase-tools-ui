@@ -32,6 +32,16 @@ export interface LoggingConfig extends EmulatorConfig {}
 
 export interface AuthConfig extends EmulatorConfig {}
 
+export type Emulator =
+  | 'database'
+  | 'auth'
+  | 'firestore'
+  | 'functions'
+  | 'logging'
+  | 'hosting'
+  | 'storage'
+  | 'pubsub';
+
 export interface Config {
   projectId: string;
   database?: DatabaseConfig;

@@ -29,6 +29,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import { background, primary, secondary } from './colors';
 import App from './components/App';
+import { EmulatorConfigProvider } from './components/common/EmulatorConfigProvider';
 import configureStore from './configureStore';
 import { subscribe as subscribeToConfig } from './store/config';
 import { error } from './themes';
@@ -63,9 +64,11 @@ ReactDOM.unstable_createBlockingRoot(document.getElementById('root')!).render(
           error,
         }}
       >
-        <Provider store={store}>
-          <RouterWithInit />
-        </Provider>
+        <EmulatorConfigProvider refreshInterval={2000}>
+          <Provider store={store}>
+            <RouterWithInit />
+          </Provider>
+        </EmulatorConfigProvider>
       </ThemeProvider>
     </RMWCProvider>
   </React.StrictMode>

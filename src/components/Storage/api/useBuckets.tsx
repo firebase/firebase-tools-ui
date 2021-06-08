@@ -16,7 +16,7 @@
 
 import useSWR from 'swr';
 
-import { useStorageConfig } from '../../../store/config/selectors';
+import { useEmulatorConfig } from '../../common/EmulatorConfigProvider';
 import { useBucket } from './useBucket';
 
 export interface Bucket {
@@ -24,11 +24,11 @@ export interface Bucket {
 }
 
 export function useBuckets() {
-  const config = useStorageConfig();
+  const config = useEmulatorConfig('storage');
   const [bucket] = useBucket();
 
   const fetcher = async () => {
-    const response = await fetch('http://' + config!.hostAndPort + '/b');
+    const response = await fetch('http://' + config.hostAndPort + '/b');
     const json = await response.json();
     return json.items.map((b: Bucket) => b.name);
   };
