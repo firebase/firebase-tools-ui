@@ -19,11 +19,6 @@ import './index.scss';
 import React, { Suspense } from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 
-import { createStructuredSelector } from '../../store';
-import {
-  getDatabaseConfigResult,
-  getProjectIdResult,
-} from '../../store/config/selectors';
 import {
   useConfig,
   useEmulatorConfig,
@@ -33,13 +28,6 @@ import { EmulatorDisabled } from '../common/EmulatorDisabled';
 import { Spinner } from '../common/Spinner';
 import Database from './Database';
 import DatabaseContainer from './DatabaseContainer';
-
-export const mapStateToProps = createStructuredSelector({
-  projectIdResult: getProjectIdResult,
-  configResult: getDatabaseConfigResult,
-});
-
-export type PropsFromState = ReturnType<typeof mapStateToProps>;
 
 export const DatabaseRoute: React.FC = () => {
   return (

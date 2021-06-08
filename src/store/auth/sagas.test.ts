@@ -14,7 +14,14 @@
  * limitations under the License.
  */
 
-import { call, put, select } from 'redux-saga/effects';
+import {
+  all,
+  call,
+  getContext,
+  put,
+  select,
+  setContext,
+} from 'redux-saga/effects';
 
 import { AddAuthUserPayload, AuthUser } from '../../components/Auth/types';
 import { getProjectIdResult } from '../config/selectors';
@@ -33,10 +40,12 @@ import {
   setAuthUserDialogLoading,
   setUserDisabledRequest,
   setUserDisabledSuccess,
+  updateAuthConfig,
   updateUserRequest,
   updateUserSuccess,
 } from './actions';
 import {
+  AUTH_API_CONTEXT,
   configureAuthSaga,
   createUser,
   deleteUser,
@@ -234,11 +243,7 @@ describe('Auth sagas', () => {
 
   describe('initAuth', () => {
     it('does nothing if auth is disabled', () => {
-      const gen = initAuth();
-      expect(gen.next()).toEqual({
-        done: false,
-        value: select(getAuthConfigResult),
-      });
+      const gen = initAuth(updateAuthConfig(null));
 
       expect(gen.next({})).toEqual({
         done: true,
@@ -246,20 +251,29 @@ describe('Auth sagas', () => {
     });
 
     it('dispatches appropriate actions if auth is enabled', () => {
-      const gen = initAuth();
+      const gen = initAuth(
+        updateAuthConfig({
+          auth: {
+            hostAndPort: 'localhost:9099',
+            host: 'localhost',
+            port: 9099,
+          },
+          projectId: 'hello',
+        })
+      );
       expect(gen.next()).toEqual({
         done: false,
-        value: select(getAuthConfigResult),
-      });
-
-      expect(gen.next({ data: { hostAndPort: 'htto://lo.l' } })).toEqual({
-        done: false,
-        value: put(authFetchUsersRequest()),
+        value: setContext(expect.anything()),
       });
 
       expect(gen.next()).toEqual({
         done: false,
-        value: put(getAllowDuplicateEmailsRequest()),
+        value: all(
+          expect.arrayContaining([
+            put(authFetchUsersRequest()),
+            put(getAllowDuplicateEmailsRequest()),
+          ])
+        ),
       });
 
       expect(gen.next()).toEqual({
@@ -426,15 +440,14 @@ describe('Auth sagas', () => {
 
       expect(gen.next()).toEqual({
         done: false,
-        value: select(getAuthConfigResult),
+        value: getContext(AUTH_API_CONTEXT),
       });
 
-      expect(gen.next({ data: { hostAndPort: 'htto://lo.l' } })).toEqual({
-        done: false,
-        value: select(getProjectIdResult),
+      const fakeAuthApi = { getConfig: jest.fn() };
+      expect(gen.next(fakeAuthApi)).toEqual({
+        done: true,
+        value: fakeAuthApi,
       });
-
-      expect(gen.next({ data: 'project' }).done).toBe(true);
     });
   });
 });

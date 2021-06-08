@@ -18,10 +18,9 @@ import { RMWCProvider } from '@rmwc/provider';
 import { render } from '@testing-library/react';
 import React from 'react';
 import { Provider } from 'react-redux';
-import configureStore from 'redux-mock-store';
 
-import { AppState } from '../../store';
 import { AuthConfig } from '../../store/config';
+import { TestEmulatorConfigProvider } from '../common/EmulatorConfigProvider';
 import { AuthRoute } from './index';
 import { getMockAuthStore } from './test_utils';
 
@@ -34,35 +33,37 @@ const sampleConfig: AuthConfig = {
 };
 
 describe('AuthRoute', () => {
-  it('renders loading when projectId is not ready', () => {
-    const { getByText } = render(
-      <AuthRoute
-        authUsersResult={{ data: [] }}
-        projectIdResult={undefined}
-        authConfigResult={{ data: sampleConfig }}
-      />
-    );
-    expect(getByText('Auth Emulator Loading...')).not.toBeNull();
-  });
-
   it('renders loading when config is not ready', () => {
     const { getByText } = render(
-      <AuthRoute
-        authUsersResult={{ data: [] }}
-        projectIdResult={{ data: 'pirojok' }}
-        authConfigResult={undefined}
-      />
+      <TestEmulatorConfigProvider config={undefined}>
+        <Provider store={getMockAuthStore()}>
+          <AuthRoute />
+        </Provider>
+      </TestEmulatorConfigProvider>
     );
     expect(getByText('Auth Emulator Loading...')).not.toBeNull();
   });
 
   it('renders error when loading config fails', () => {
     const { getByText } = render(
-      <AuthRoute
-        projectIdResult={{ data: 'pirojok' }}
-        authConfigResult={{ error: { message: 'Oh, snap!' } }}
-        authUsersResult={{ data: [] }}
-      />
+      <TestEmulatorConfigProvider config={null}>
+        <Provider store={getMockAuthStore()}>
+          <AuthRoute />
+        </Provider>
+      </TestEmulatorConfigProvider>
+    );
+    expect(getByText(/not running/)).not.toBeNull();
+  });
+
+  it('renders error when auth emulator is not running', () => {
+    const { getByText } = render(
+      <TestEmulatorConfigProvider
+        config={{ projectId: 'example' /* no auth */ }}
+      >
+        <Provider store={getMockAuthStore()}>
+          <AuthRoute />
+        </Provider>
+      </TestEmulatorConfigProvider>
     );
     expect(getByText(/not running/)).not.toBeNull();
   });
@@ -72,13 +73,16 @@ describe('AuthRoute', () => {
 
     const { getByText } = render(
       <Provider store={store}>
-        // Ripples cause "not wrapped in act()" warning.
+        {/* Ripples cause "not wrapped in act()" warning. */}
         <RMWCProvider ripple={false}>
-          <AuthRoute
-            authUsersResult={{ data: [] }}
-            projectIdResult={{ data: 'pirojok' }}
-            authConfigResult={{ data: sampleConfig }}
-          />
+          <TestEmulatorConfigProvider
+            config={{
+              projectId: 'example',
+              auth: sampleConfig,
+            }}
+          >
+            <AuthRoute />
+          </TestEmulatorConfigProvider>
         </RMWCProvider>
       </Provider>
     );

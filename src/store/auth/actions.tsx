@@ -17,7 +17,13 @@
 import { createAction } from 'typesafe-actions';
 
 import { AddAuthUserPayload, AuthUser } from '../../components/Auth/types';
+import { AuthConfig } from '../config';
 import { RemoteResult } from '../utils';
+
+export const updateAuthConfig = createAction('@auth/UPDATE_AUTH_CONFIG')<{
+  projectId: string;
+  auth: AuthConfig;
+} | null>();
 
 export const createUserRequest = createAction('@auth/CREATE_USER_REQUEST')<{
   user: AddAuthUserPayload;
