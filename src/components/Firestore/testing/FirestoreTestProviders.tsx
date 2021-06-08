@@ -23,6 +23,7 @@ import { useFirestore } from 'reactfire';
 import configureStore from 'redux-mock-store';
 
 import { AppState } from '../../../store';
+import { TestEmulatorConfigProvider } from '../../common/EmulatorConfigProvider';
 import { FirestoreEmulatedApiProvider } from '../FirestoreEmulatedApiProvider';
 
 interface RenderOptions {
@@ -59,20 +60,14 @@ export const FirestoreTestProviders: React.FC<RenderOptions> = React.memo(
       throw new Error('FirestoreTestProviders requires a running Emulator');
     }
     const [host, port] = hostAndPort.split(':');
-    const store = configureStore<Pick<AppState, 'config'>>()({
-      config: {
-        loading: false,
-        result: {
-          data: {
-            projectId,
-            firestore: { hostAndPort, host, port: Number(port) },
-          },
-        },
-      },
-    });
 
     return (
-      <Provider store={store}>
+      <TestEmulatorConfigProvider
+        config={{
+          projectId,
+          firestore: { host, port: Number(port), hostAndPort },
+        }}
+      >
         <FirestoreEmulatedApiProvider disableDevTools>
           <MemoryRouter initialEntries={[path]}>
             <Suspense fallback={<h1 data-testid="fallback">Fallback</h1>}>
@@ -80,7 +75,7 @@ export const FirestoreTestProviders: React.FC<RenderOptions> = React.memo(
             </Suspense>
           </MemoryRouter>
         </FirestoreEmulatedApiProvider>
-      </Provider>
+      </TestEmulatorConfigProvider>
     );
   }
 );

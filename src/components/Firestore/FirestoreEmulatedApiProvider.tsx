@@ -20,7 +20,7 @@ import { FirebaseAppProvider, useFirestore } from 'reactfire';
 import { mutate } from 'swr';
 
 import { useEmulatedFirebaseApp } from '../../firebase';
-import { useFirestoreConfig, useProjectId } from '../../store/config/selectors';
+import { useConfig, useEmulatorConfig } from '../common/EmulatorConfigProvider';
 import { useFetcher, useRequest } from '../common/useRequest';
 import { MissingDocument } from './models';
 
@@ -37,8 +37,7 @@ const FIRESTORE_OPTIONS = {};
 export const FirestoreEmulatedApiProvider: React.FC<{
   disableDevTools?: boolean;
 }> = React.memo(({ children, disableDevTools }) => {
-  // TODO: update config to always have a firestore-config obj
-  const config = useFirestoreConfig()!;
+  const config = useEmulatorConfig('firestore');
   const app = useEmulatedFirebaseApp(
     'firestore',
     FIRESTORE_OPTIONS,
@@ -82,9 +81,8 @@ const FirestoreDevTools: React.FC = React.memo(() => {
 });
 
 function useFirestoreRestApi() {
-  // TODO: update config to always have a firestore-config obj
-  const config = useFirestoreConfig()!;
-  const projectId = useProjectId();
+  const config = useEmulatorConfig('firestore');
+  const { projectId } = useConfig();
   const databaseId = '(default)';
 
   return {

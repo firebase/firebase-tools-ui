@@ -16,20 +16,12 @@
 
 import { Dialog, DialogContent, DialogTitle } from '@rmwc/dialog';
 import React from 'react';
-import { connect } from 'react-redux';
 
-import { createStructuredSelector } from '../../store';
-import { getConfig } from '../../store/config/selectors';
-import { hasError } from '../../store/utils';
+import { useIsEmulatorDisabled } from '../common/EmulatorConfigProvider';
 
-export const mapStateToProps = createStructuredSelector({
-  configRemote: getConfig,
-});
-
-export type PropsFromState = ReturnType<typeof mapStateToProps>;
-
-export const AppDisconnected: React.FC<PropsFromState> = ({ configRemote }) => {
-  if (!hasError(configRemote.result)) {
+export const AppDisconnected: React.FC = () => {
+  const disabled = useIsEmulatorDisabled();
+  if (!disabled) {
     return null;
   }
 
@@ -45,4 +37,4 @@ export const AppDisconnected: React.FC<PropsFromState> = ({ configRemote }) => {
   );
 };
 
-export default connect(mapStateToProps)(AppDisconnected);
+export default AppDisconnected;

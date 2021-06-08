@@ -18,7 +18,7 @@ import React, { Suspense } from 'react';
 
 import { StorageFirebaseAppProvider } from '../providers/StorageFirebaseAppProvider';
 import { FakeFirebaseRouterProvider } from './FakeFirebaseRouterProvider';
-import { StorageStoreProvider } from './StorageStoreProvider';
+import { TestStorageProvider } from './TestStorageProvider';
 
 export interface StorageTestWrappersProps {
   fallbackTestId: string;
@@ -29,12 +29,12 @@ export const FakeStorageWrappers: React.FC<StorageTestWrappersProps> = ({
   fallbackTestId,
 }) => {
   return (
-    <StorageStoreProvider>
+    <TestStorageProvider>
       <Suspense fallback={<div data-testid={fallbackTestId} />}>
         <StorageFirebaseAppProvider>
           <FakeFirebaseRouterProvider>{children}</FakeFirebaseRouterProvider>
         </StorageFirebaseAppProvider>
       </Suspense>
-    </StorageStoreProvider>
+    </TestStorageProvider>
   );
 };
