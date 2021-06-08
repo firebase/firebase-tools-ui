@@ -18,14 +18,12 @@ import './History.scss';
 
 import { ThemeProvider } from '@rmwc/theme';
 import React, { useEffect, useRef } from 'react';
-import { connect } from 'react-redux';
 
 import { grey100 } from '../../colors';
-import { AppState } from '../../store';
-import { LogEntry, LogState } from '../../store/logviewer';
 import { CompiledGetterCache } from './CompiledGetterCache';
 import { HighlightedJSON } from './HighlightedJSON';
 import { ParsedQuery, filtersToQueryString, isQueryMatch } from './QueryBar';
+import { LogEntry } from './types';
 
 const formatTimestamp = (timestamp: number) => {
   const date = new Date(timestamp);
@@ -75,27 +73,22 @@ const FilterTag: React.FC<{ appendToQuery: Function; log: LogEntry }> = ({
   return <div className="log-tag">{tagButton}</div>;
 };
 
-interface PropsFromAttributes {
+interface Props {
   parsedQuery: ParsedQuery;
   setQuery: (query: string) => void;
   compiledGetters: CompiledGetterCache;
+  logs: LogEntry[];
 }
-
-interface PropsFromState {
-  log: LogState;
-}
-
-type Props = PropsFromState & PropsFromAttributes;
 
 const MAX_LOG_LINES = 100;
 
 export const History: React.FC<Props> = ({
   parsedQuery,
   setQuery,
-  log,
+  logs,
   compiledGetters,
 }) => {
-  const history = log.history.filter((log) =>
+  const history = logs.filter((log) =>
     isQueryMatch(parsedQuery, log, compiledGetters)
   );
 
@@ -152,7 +145,4 @@ export const History: React.FC<Props> = ({
   );
 };
 
-export const mapStateToProps = ({ log }: AppState) => ({ log });
-export const mapDispatchToProps = {};
-
-export default connect(mapStateToProps, mapDispatchToProps)(History);
+export default History;
