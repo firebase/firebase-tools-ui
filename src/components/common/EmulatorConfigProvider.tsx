@@ -29,6 +29,18 @@ const emulatorConfigContext = React.createContext<
 
 const CONFIG_API = '/api/config';
 
+/**
+ * Returns a promise that resolves when the data changes.
+ *
+ * Note: When the argument passed !== previously passed, the previously returned
+ * promise is resolved and a new pending promise is returned (resolved on the
+ * next change).
+ *
+ * @example
+ *   const data = useMyAwesomeDataThatMayChange();
+ *   const promise = useOnChangePromise(data);
+ *   if (!someCondition(data)) throw promise; // use with <Suspense>
+ */
 export function useOnChangePromise<T>(data: T): Promise<T> {
   // Use only one single state to prevent accidental partial updates.
   const [state, setState] = useState(() => ({
@@ -56,6 +68,8 @@ export const EmulatorConfigProvider: React.FC<{ refreshInterval: number }> = ({
   // We don't use suspense here since the provider should never be suspended --
   // it merely creates a context for hooks (e.g. useConfig) who do suspend.
   const { data } = useSwr<Config | null>(CONFIG_API, jsonFetcher, {
+    // Keep refreshing config to detect when emulators are stopped or restarted
+    // with a different config (e.g. different emulators or host / ports).
     refreshInterval,
 
     // Emulator UI works fully offline. Even if the browser cannot reach LAN or
