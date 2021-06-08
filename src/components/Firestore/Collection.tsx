@@ -20,7 +20,8 @@ import { Button } from '@rmwc/button';
 import { Icon } from '@rmwc/icon';
 import { IconButton } from '@rmwc/icon-button';
 import { List, ListItem } from '@rmwc/list';
-import { MenuSurface, MenuSurfaceAnchor } from '@rmwc/menu';
+import { Menu, MenuItem, MenuSurface, MenuSurfaceAnchor } from '@rmwc/menu';
+import classNames from 'classnames';
 import firebase from 'firebase';
 import get from 'lodash.get';
 import React, { useEffect, useState } from 'react';
@@ -35,9 +36,13 @@ import {
   AddDocumentDialog,
   AddDocumentDialogValue,
 } from './dialogs/AddDocumentDialog';
+import { promptDeleteCollection } from './dialogs/deleteCollection';
 import { Document } from './Document';
 import DocumentListItem from './DocumentListItem';
-import { useMissingDocuments } from './FirestoreEmulatedApiProvider';
+import {
+  useMissingDocuments,
+  useRecursiveDelete,
+} from './FirestoreEmulatedApiProvider';
 import {
   CollectionFilter as CollectionFilterType,
   MissingDocument,
@@ -147,8 +152,15 @@ export const CollectionPresentation: React.FC<CollectionPresentationProps> = ({
   missingDocs,
   url,
 }) => {
+  const recursiveDelete = useRecursiveDelete();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isAddDocumentDialogOpen, setAddDocumentDialogOpen] = useState(false);
+
+  const handleDeleteCollection = async () => {
+    const shouldDelete = await promptDeleteCollection(collection);
+    shouldDelete && recursiveDelete(collection);
+  };
 
   return (
     <>
@@ -170,18 +182,34 @@ export const CollectionPresentation: React.FC<CollectionPresentationProps> = ({
                 />
               )}
             </MenuSurface>
+            <Menu
+              open={isMenuOpen}
+              onClose={() => setIsMenuOpen(false)}
+              renderToPortal
+            >
+              <MenuItem onClick={handleDeleteCollection}>
+                Delete collection
+              </MenuItem>
+            </Menu>
 
-            <div className={collectionFilter && styles.badge}>
-              <CopyButton
-                textToCopy={collection.id}
-                label="Copy collection ID"
-              />
+            <CopyButton textToCopy={collection.id} label="Copy collection ID" />
+            <div
+              className={classNames(
+                styles['button-wrapper'],
+                collectionFilter && styles.badge
+              )}
+            >
               <IconButton
                 icon="filter_list"
                 label="Filter documents in this collection"
                 onClick={() => setIsFilterOpen(!isFilterOpen)}
               />
             </div>
+            <IconButton
+              icon="more_vert"
+              label="Menu"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            />
           </MenuSurfaceAnchor>
         </PanelHeader>
 

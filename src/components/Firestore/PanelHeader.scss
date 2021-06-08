@@ -19,6 +19,11 @@
     padding: 8px 12px;
     height: 44px;
   }
+
+  .CardActionBar-actions {
+    // Icon buttons are padded, so we remove the double padding on the right.
+    margin-right: -12px;
+  }
 }
 
 .Firestore-PanelHeader-title {
