@@ -22,12 +22,10 @@ import { AuthState } from '../components/Auth/types';
 import { authReducer } from './auth/reducer';
 import { authSaga } from './auth/sagas';
 import { ConfigState, configReducer, configSaga } from './config';
-import { LogState, logReducer } from './logviewer';
 
 export interface AppState {
   config: ConfigState;
   auth: AuthState;
-  log: LogState;
 }
 
 export function* rootSaga() {
@@ -37,7 +35,6 @@ export function* rootSaga() {
 export const rootReducer = combineReducers<AppState>({
   config: configReducer,
   auth: authReducer,
-  log: logReducer,
 });
 
 export function createStructuredSelector<T>(
