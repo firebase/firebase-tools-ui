@@ -14,14 +14,18 @@
  * limitations under the License.
  */
 
-import { all, call, put, select, take, takeLatest } from 'redux-saga/effects';
-import { getType } from 'typesafe-actions';
+import {
+  all,
+  call,
+  getContext,
+  put,
+  setContext,
+  takeLatest,
+} from 'redux-saga/effects';
+import { ActionType, getType } from 'typesafe-actions';
 
 import AuthApi from '../../components/Auth/api';
 import { AuthUser } from '../../components/Auth/types';
-import { AuthConfig, fetchSuccess } from '../config';
-import { getProjectIdResult } from '../config/selectors';
-import { DataResult, Result } from '../utils';
 import {
   authFetchUsersError,
   authFetchUsersRequest,
@@ -40,10 +44,10 @@ import {
   setAuthUserDialogLoading,
   setUserDisabledRequest,
   setUserDisabledSuccess,
+  updateAuthConfig,
   updateUserRequest,
   updateUserSuccess,
 } from './actions';
-import { getAuthConfigResult } from './selectors';
 
 // TODO(kirjs): Figure out what's the deal with all those new anys.
 export function* fetchAuthUsers(): any {
@@ -56,12 +60,36 @@ export function* fetchAuthUsers(): any {
   }
 }
 
-export function* initAuth() {
-  const result: Result<AuthConfig> = yield select(getAuthConfigResult);
-  if ('data' in result && result.data) {
-    yield put(authFetchUsersRequest());
-    yield put(getAllowDuplicateEmailsRequest());
+export const AUTH_API_CONTEXT = 'AUTH_API_CONTEXT';
+
+export function* initAuth({ payload }: ActionType<typeof updateAuthConfig>) {
+  if (!payload) {
+    return;
   }
+  yield setContext({
+    [AUTH_API_CONTEXT]: new AuthApi(
+      payload.auth.hostAndPort,
+      payload.projectId
+    ),
+  });
+  yield all([
+    takeLatest(getType(authFetchUsersRequest), fetchAuthUsers),
+    takeLatest(getType(createUserRequest), createUser),
+    takeLatest(getType(nukeUsersRequest), nukeUsers),
+    takeLatest(getType(deleteUserRequest), deleteUser),
+    takeLatest(getType(updateUserRequest), updateUser),
+    takeLatest(getType(setUserDisabledRequest), setUserDisabled),
+    takeLatest(
+      getType(setAllowDuplicateEmailsRequest),
+      setAllowDuplicateEmails
+    ),
+    takeLatest(
+      getType(getAllowDuplicateEmailsRequest),
+      getAllowDuplicateEmails
+    ),
+    put(authFetchUsersRequest()),
+    put(getAllowDuplicateEmailsRequest()),
+  ]);
 }
 
 export function* deleteUser({ payload }: ReturnType<typeof deleteUserRequest>) {
@@ -154,32 +182,11 @@ export function* nukeUsers() {
   yield put(nukeUsersSuccess());
 }
 
-export function* configureAuthSaga() {
-  const result: DataResult<AuthConfig> = yield select(getAuthConfigResult);
-
-  const { data: projectId } = yield select(getProjectIdResult);
-
-  return new AuthApi(result.data.hostAndPort, projectId);
+export function* configureAuthSaga(): Generator {
+  const api = yield getContext(AUTH_API_CONTEXT);
+  return api;
 }
 
 export function* authSaga() {
-  yield take(fetchSuccess);
-
-  yield all([
-    takeLatest(getType(authFetchUsersRequest), fetchAuthUsers),
-    takeLatest(getType(createUserRequest), createUser),
-    takeLatest(getType(nukeUsersRequest), nukeUsers),
-    takeLatest(getType(deleteUserRequest), deleteUser),
-    takeLatest(getType(updateUserRequest), updateUser),
-    takeLatest(getType(setUserDisabledRequest), setUserDisabled),
-    takeLatest(
-      getType(setAllowDuplicateEmailsRequest),
-      setAllowDuplicateEmails
-    ),
-    takeLatest(
-      getType(getAllowDuplicateEmailsRequest),
-      getAllowDuplicateEmails
-    ),
-    call(initAuth),
-  ]);
+  yield takeLatest(getType(updateAuthConfig), initAuth);
 }

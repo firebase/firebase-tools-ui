@@ -22,7 +22,7 @@ import './index.scss';
 
 import { RMWCProvider } from '@rmwc/provider';
 import { ThemeProvider } from '@rmwc/theme';
-import React, { useEffect } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
@@ -31,15 +31,11 @@ import { background, primary, secondary } from './colors';
 import App from './components/App';
 import { EmulatorConfigProvider } from './components/common/EmulatorConfigProvider';
 import configureStore from './configureStore';
-import { subscribe as subscribeToConfig } from './store/config';
 import { error } from './themes';
 
 const store = configureStore();
 
 const RouterWithInit = () => {
-  useEffect(() => {
-    store.dispatch(subscribeToConfig());
-  }, []); // Empty-array means "run only once on init": https://reactjs.org/docs/hooks-effect.html#tip-optimizing-performance-by-skipping-effects
   return (
     <BrowserRouter>
       <Switch>

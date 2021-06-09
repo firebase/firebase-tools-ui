@@ -21,19 +21,18 @@ import * as reselect from 'reselect';
 import { AuthState } from '../components/Auth/types';
 import { authReducer } from './auth/reducer';
 import { authSaga } from './auth/sagas';
-import { ConfigState, configReducer, configSaga } from './config';
 
+// DEPRECATED, do not add more Redux states / reducers. Instead, use `swr` for
+// simple fetches and polling, and consider keeping state locally using hooks.
 export interface AppState {
-  config: ConfigState;
-  auth: AuthState;
+  auth: AuthState; // still kept in Redux for historical reasons.
 }
 
 export function* rootSaga() {
-  yield all([fork(configSaga), fork(authSaga)]);
+  yield all([fork(authSaga)]);
 }
 
 export const rootReducer = combineReducers<AppState>({
-  config: configReducer,
   auth: authReducer,
 });
 
