@@ -29,7 +29,7 @@ const port = 5002;
 const sampleConfig: AuthConfig = {
   host,
   port,
-  hostAndPort: '${host}:${port}',
+  hostAndPort: `${host}:${port}`,
 };
 
 describe('AuthRoute', () => {
