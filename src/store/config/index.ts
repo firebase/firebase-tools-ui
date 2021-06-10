@@ -15,3 +15,8 @@
  */
 
 export * from './types';
+
+export function hostAndPort(host: string, port: number | string): string {
+  // Correctly put IPv6 addresses in brackets.
+  return host.indexOf(':') >= 0 ? `[${host}]:${port}` : `${host}:${port}`;
+}

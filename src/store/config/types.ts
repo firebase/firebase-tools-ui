@@ -22,7 +22,10 @@ export interface EmulatorConfig {
 
 export interface DatabaseConfig extends EmulatorConfig {}
 
-export interface FirestoreConfig extends EmulatorConfig {}
+export interface FirestoreConfig extends EmulatorConfig {
+  webSocketHost?: string;
+  webSocketPort?: number;
+}
 
 export interface FunctionsConfig extends EmulatorConfig {}
 
