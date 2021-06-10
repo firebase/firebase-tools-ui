@@ -30,6 +30,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { background, primary, secondary } from './colors';
 import App from './components/App';
 import { EmulatorConfigProvider } from './components/common/EmulatorConfigProvider';
+import { FirestoreRequestsProvider } from './components/Firestore/FirestoreRequestsProvider';
 import configureStore from './configureStore';
 import { error } from './themes';
 
@@ -61,9 +62,11 @@ ReactDOM.unstable_createBlockingRoot(document.getElementById('root')!).render(
         }}
       >
         <EmulatorConfigProvider refreshInterval={2000}>
-          <Provider store={store}>
-            <RouterWithInit />
-          </Provider>
+          <FirestoreRequestsProvider>
+            <Provider store={store}>
+              <RouterWithInit />
+            </Provider>
+          </FirestoreRequestsProvider>
         </EmulatorConfigProvider>
       </ThemeProvider>
     </RMWCProvider>
