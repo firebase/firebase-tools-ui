@@ -17,7 +17,7 @@
 import React, { useEffect, useState } from 'react';
 import useSwr, { mutate } from 'swr';
 
-import { Config, Emulator } from '../../store/config';
+import { Config, Emulator, hostAndPort } from '../../store/config';
 
 const emulatorConfigContext = React.createContext<
   | {
@@ -67,7 +67,7 @@ export const EmulatorConfigProvider: React.FC<{ refreshInterval: number }> = ({
 }) => {
   // We don't use suspense here since the provider should never be suspended --
   // it merely creates a context for hooks (e.g. useConfig) who do suspend.
-  const { data } = useSwr<Config | null>(CONFIG_API, jsonFetcher, {
+  const { data } = useSwr<Config | null>(CONFIG_API, configFetcher, {
     // Keep refreshing config to detect when emulators are stopped or restarted
     // with a different config (e.g. different emulators or host / ports).
     refreshInterval,
@@ -192,10 +192,64 @@ async function jsonFetcher<T>(url: string): Promise<T> {
   return response.json();
 }
 
+async function configFetcher(url: string): Promise<Config> {
+  const json = (await jsonFetcher(url)) as any;
+  const result: Config = {
+    projectId: json.projectId as string,
+  };
+  for (const [key, value] of Object.entries<any>(json)) {
+    if (key === 'projectId') {
+      continue;
+    }
+    const host = fixHostname(value.host as string);
+    result[key as Emulator] = {
+      ...value,
+      host,
+      hostAndPort: hostAndPort(host, value.port as number),
+    };
+  }
+
+  if (result.firestore?.webSocketHost) {
+    result.firestore.webSocketHost = fixHostname(
+      result.firestore.webSocketHost
+    );
+  }
+  return result;
+}
+
 function makeDeferred<T>() {
   let resolve!: (value: T) => void;
   const promise = new Promise<T>((res) => {
     resolve = res;
   });
   return { promise, resolve };
+}
+
+/**
+ * Return a connectable hostname, replacing wildcard 0.0.0.0 or :: with the best
+ * effort guess but keep the others unchanged.
+ *
+ * For emulators listening using wildcard, we assume that they can be connected
+ * using the same hostname as the current page (but different ports of course).
+ * This works for local setup as well as running the suite (emulators + UI)
+ * remotely and connect from another device. It does not work for some setups
+ * e.g. when Emulator UI is proxied but not the individual emulators.
+ */
+function fixHostname(host: string): string {
+  // We should never return 0.0.0.0 or :: since they won't work in some OSes:
+  // https://github.com/firebase/firebase-tools-ui/issues/286
+  if (host === '0.0.0.0') {
+    host = window.location.hostname;
+    // Replace localhost with IPv4 loopback since some browsers / OSes may
+    // resolve it to IPv6 and connection may fail. Ditto for IPv6 cases below.
+    if (!host || host === 'localhost') {
+      host = '127.0.0.1';
+    }
+  } else if (host === '::') {
+    host = window.location.hostname;
+    if (!host || host === 'localhost') {
+      host = '::1';
+    }
+  }
+  return host;
 }

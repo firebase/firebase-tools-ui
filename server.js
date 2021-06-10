@@ -23,6 +23,7 @@
 const express = require('express');
 const fetch = require('node-fetch').default;
 const path = require('path');
+const { URL } = require('url');
 
 /**
   Start an express app that serves both static content and APIs.
@@ -41,9 +42,7 @@ exports.startServer = function () {
   const host = process.env.HOST || 'localhost';
   const port = process.env.PORT || 3000;
   app.listen(port, host, () => {
-    console.log(
-      `Web / API server started at http://${hostAndPort(host, port)}`
-    );
+    console.log(`Web / API server started at ${host}:${port}`);
   });
   return app;
 };
@@ -71,31 +70,63 @@ exports.registerApis = function (app) {
   app.get(
     '/api/config',
     jsonHandler(async (req) => {
-      const emulatorsRes = await fetch(`http://${hubHost}/emulators`);
+      const hubDiscoveryUrl = new URL(`http://${hubHost}/emulators`);
+      hubDiscoveryUrl.hostname = fixHostname(hubDiscoveryUrl.hostname);
+      const emulatorsRes = await fetch(hubDiscoveryUrl.toString());
       const emulators = await emulatorsRes.json();
 
-      const json = { projectId };
-      Object.entries(emulators).forEach(([name, info]) => {
-        let host = info.host;
-        if (host === '0.0.0.0') {
-          host = '127.0.0.1';
-        } else if (host === '::') {
-          host = '::1';
+      const json = { projectId, ...emulators };
+
+      if (json.firestore) {
+        try {
+          const result = await discoverFirestoreWs(json.firestore);
+          Object.assign(json.firestore, result);
+        } catch (_) {
+          // ignored
         }
-        json[name] = {
-          ...info,
-          host,
-          hostAndPort: hostAndPort(host, info.port),
-        };
-      });
+      }
+
       return json;
     })
   );
 };
 
-function hostAndPort(host, port) {
-  // Correctly put IPv6 addresses in brackets.
-  return host.indexOf(':') >= 0 ? `[${host}]:${port}` : `${host}:${port}`;
+async function discoverFirestoreWs(firestore) {
+  const discoveryUrl = new URL('http://placeholder/ws/discovery');
+  discoveryUrl.hostname = fixHostname(firestore.host);
+  discoveryUrl.port = firestore.port;
+
+  const wsDiscoveryRes = await fetch(discoveryUrl.toString());
+  const { url } = await wsDiscoveryRes.json();
+  if (!url) {
+    throw new Error('Invalid discovery response (no url field).');
+  }
+  const parsed = new URL(url);
+
+  // Remove [] brackets around IPv6 addr to be consistent with other emulators.
+  const webSocketHost = parsed.hostname.replace(/\[/g, '').replace(/\]/g, '');
+  const webSocketPort = Number(parsed.port || '80');
+  if (!webSocketPort) {
+    throw new Error(`Invalid port in discovery URL: ${parsed}`);
+  }
+  return { webSocketHost, webSocketPort };
+}
+
+/**
+ * Return a connectable hostname, replacing wildcard 0.0.0.0 or :: with loopback
+ * addresses 127.0.0.1 / ::1 correspondingly. See below for why this is needed:
+ * https://github.com/firebase/firebase-tools-ui/issues/286
+ *
+ * This assumes emulators are running on the same device as the Emulator UI
+ * server, which should hold if both are started from the same CLI command.
+ */
+function fixHostname(host) {
+  if (host === '0.0.0.0') {
+    host = '127.0.0.1';
+  } else if (host === '::') {
+    host = '::1';
+  }
+  return host;
 }
 
 function jsonHandler(handler) {
