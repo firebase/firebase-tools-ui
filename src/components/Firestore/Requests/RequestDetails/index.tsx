@@ -16,12 +16,19 @@
 
 import './index.scss';
 
+import firebase from 'firebase';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
 import { AppState } from '../../../../store';
 import { getSelectedRequestEvaluationById } from '../../../../store/firestore/requests/evaluations/selectors';
+import {
+  FirestoreAny,
+  FirestoreArray,
+  FirestoreMap,
+  FirestorePrimitive,
+} from '../../models';
 import { RequestDetailsRouteParams } from '../index';
 import {
   FirestoreRulesContext,
@@ -29,12 +36,87 @@ import {
   FirestoreRulesIssue,
   OutcomeInfo,
   RulesOutcome,
+  RulesValue,
 } from '../rules_evaluation_result_model';
 import { InspectionElement, OutcomeData } from '../types';
 import { OUTCOME_DATA } from '../utils';
 import RequestDetailsCodeViewer from './CodeViewer/index';
 import RequestDetailsHeader from './Header/index';
 import RequestDetailsInspectionSection from './InspectionSection/index';
+
+function convertTimestamp(ts: string): firebase.firestore.Timestamp {
+  const date = new Date(ts);
+  return new firebase.firestore.Timestamp(
+    date.getSeconds(),
+    date.getMilliseconds() * 1000000
+  );
+}
+
+function convertPath(path: string): string {
+  // return firebase.firestore().doc(path);
+  return path;
+}
+
+function convertPrimitiveValue(primitive: RulesValue): FirestorePrimitive {
+  if ('nullValue' in primitive) {
+    return null;
+  }
+  if ('stringValue' in primitive) {
+    return primitive.stringValue as string;
+  }
+  if ('timestampValue' in primitive) {
+    return convertTimestamp(primitive.timestampValue!);
+  }
+  if ('pathValue' in primitive) {
+    return convertPath(
+      primitive.pathValue!.segments.map(({ simple }) => simple).join('/')
+    );
+  }
+  if ('boolValue' in primitive) {
+    return primitive.boolValue!;
+  }
+  if ('intValue' in primitive) {
+    return primitive.intValue!;
+  }
+  if ('floatValue' in primitive) {
+    return primitive.floatValue!;
+  }
+  throw new Error('Not a primitive type ' + JSON.stringify(primitive));
+}
+
+function convertArrayValue(array: RulesValue): FirestoreArray {
+  if (array.listValue) {
+    return array.listValue.values.map((value) => {
+      if (value.mapValue) {
+        return convertFirestoreMap(value);
+      } else {
+        return convertPrimitiveValue(value);
+      }
+    });
+  }
+  throw new Error('Not a list type');
+}
+
+function convertFirestoreMap(map: RulesValue): FirestoreMap {
+  if (map.mapValue) {
+    const out: FirestoreMap = {};
+    for (const key of Object.keys(map.mapValue.fields)) {
+      out[key] = convertRulesTypeToFirestoreAny(map.mapValue.fields[key]);
+    }
+    return out;
+  }
+  throw new Error('Not a map type: ' + JSON.stringify(map));
+}
+
+function convertRulesTypeToFirestoreAny(object: RulesValue): FirestoreAny {
+  if (object.mapValue) {
+    return convertFirestoreMap(object);
+  } else if (object.listValue) {
+    return convertArrayValue(object);
+  } else {
+    return convertPrimitiveValue(object);
+  }
+}
 
 // Combines (granularAllowOutcomes) and (issues) into one array of the same type
 function getLinesOutcome(
@@ -58,27 +140,38 @@ function getInspectionExpressions(
   if (outcome === 'admin') {
     return [];
   }
-  // TODO: delete this constant and use only the rulesContext when
-  // the server provides the corresponding elements to inspect
-  // (this is only useful for development purposes and to show in the final presentation)
-  // NOTE: the timestamp-time is formatted to avoid showing meaningless number
-  const timestamp = rulesContext.request.time * 1000;
-  const requestDate = new Date(timestamp);
-  const MOCKED_RULES_CONTEXT = {
-    ...rulesContext,
-    request: {
-      ...rulesContext.request,
-      time: requestDate.toLocaleString(),
+
+  const inspections: InspectionElement[] = [
+    // Do the special one-off ones first
+    {
+      label: 'request.method',
+      value: rulesContext.method,
     },
-  };
-  return Object.entries(MOCKED_RULES_CONTEXT).map(
-    ([key, value]): InspectionElement => {
-      return {
-        label: key,
-        value: JSON.stringify(value, null, '\t'),
-      };
-    }
-  );
+    {
+      label: 'request.path',
+      value: convertPath(rulesContext.path),
+    },
+    {
+      label: 'request.time',
+      value: convertTimestamp(rulesContext.time),
+    },
+  ];
+
+  if (rulesContext.request.resource) {
+    inspections.push({
+      label: 'request.resource',
+      value: convertRulesTypeToFirestoreAny(rulesContext.request.resource),
+    });
+  }
+
+  if (rulesContext.resource) {
+    inspections.push({
+      label: 'resource',
+      value: convertRulesTypeToFirestoreAny(rulesContext.resource),
+    });
+  }
+
+  return inspections;
 }
 interface DetailedRequestData {
   requestTimeComplete?: string;
@@ -98,24 +191,23 @@ export function getDetailsRequestData(
   if (!request) {
     return {};
   }
-  const { rulesContext, granularAllowOutcomes, data, outcome } = request;
+  const { rulesContext, granularAllowOutcomes, rules, outcome } = request;
   // (time * 1000) converts timestamp units from seconds to milliseconds
-  const timestamp = rulesContext.request.time * 1000;
-  const requestDate = new Date(timestamp);
+  const requestDate = new Date(rulesContext.time);
   return {
     requestTimeComplete: requestDate.toLocaleString(),
     requestTimeFormatted: requestDate.toLocaleTimeString('en-US', {
       hour12: false,
     }),
-    requestMethod: rulesContext.request.method,
-    resourcePath: rulesContext.request.path.replace(
+    requestMethod: rulesContext.method,
+    resourcePath: rulesContext.path.replace(
       '/databases/(default)/documents',
       ''
     ),
     outcome,
     outcomeData: OUTCOME_DATA[outcome],
-    firestoreRules: data?.rules,
-    linesOutcome: getLinesOutcome(granularAllowOutcomes, data?.issues),
+    firestoreRules: rules,
+    linesOutcome: getLinesOutcome(granularAllowOutcomes),
     inspectionExpressions: getInspectionExpressions(rulesContext, outcome),
   };
 }

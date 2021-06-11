@@ -24,7 +24,7 @@ import { SAMPLE_RULES } from './sample-rules';
 
 // TODO: Replace hardcoded websocket URL (used for development purposes only)
 //       with a function that somehow gets the proper URL
-const REQUESTS_EVALUATION_WEBSOCKET_HOST_AND_PORT = 'localhost:8888/rules/ws';
+const REQUESTS_EVALUATION_WEBSOCKET_HOST_AND_PORT = 'localhost:44327/requests';
 
 // Returns an id made out of 20 random upper- and lower-case letters and numbers
 // TODO: Remove generateId function once the backend itself generates a UID for each request
@@ -36,6 +36,7 @@ function generateId(): string {
   for (let i = 0; i < ID_SIZE; i++) {
     newId += options.charAt(Math.floor(Math.random() * options.length));
   }
+
   return newId;
 }
 
@@ -52,18 +53,6 @@ function injectMockPropertiesToEvaluationUpdateData(
   };
 }
 
-// TODO: Remove function when (requestId and firestore (rules) are received from server
-function injectMockPropertiesToEvaluation(
-  request: FirestoreRulesEvaluation
-): FirestoreRulesEvaluation {
-  const { data, outcome } = request;
-  return {
-    ...request,
-    requestId: generateId(),
-    data: injectMockPropertiesToEvaluationUpdateData(outcome, data),
-  };
-}
-
 export type OnEvaluationFn = (evaluation: FirestoreRulesEvaluation) => void;
 export type Unsubscribe = () => void;
 
@@ -73,7 +62,12 @@ export function registerForRulesEvents(callback: OnEvaluationFn): Unsubscribe {
     REQUESTS_EVALUATION_WEBSOCKET_HOST_AND_PORT
   );
   webSocket.listener = (newEvaluation: FirestoreRulesEvaluation) => {
-    callback(injectMockPropertiesToEvaluation(newEvaluation));
+    if (newEvaluation instanceof Array) {
+      // This is the initial "blast" of prior requests
+      newEvaluation.forEach(callback);
+    } else {
+      callback(newEvaluation);
+    }
   };
   return () => webSocket.cleanup();
 }

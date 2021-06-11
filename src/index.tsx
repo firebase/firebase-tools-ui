@@ -46,12 +46,7 @@ const RouterWithInit = () => {
   // Initialize global subscription to firestore requests evaluation
   useEffect(() => {
     const callbackFunction = (newRequest: FirestoreRulesEvaluation) => {
-      const { type } = newRequest;
-      if (type === 'RULES_UPDATE') {
-        // TODO: Should we do something when rules are updated?
-      } else {
-        store.dispatch(addRequestEvaluation(newRequest));
-      }
+      store.dispatch(addRequestEvaluation(newRequest));
     };
     const unsubscribeFromFirestoreRules = registerForRulesEvents(
       callbackFunction

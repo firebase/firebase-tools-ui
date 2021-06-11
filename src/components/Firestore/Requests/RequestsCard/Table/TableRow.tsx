@@ -40,16 +40,16 @@ function getTableRowRequestData(
   request: FirestoreRulesEvaluation
 ): TableRowRequestData {
   const { rulesContext, outcome } = request;
+  console.log(request);
   // time * 1000 converts timestamp units from seconds to millis
-  const timestamp = rulesContext.request.time * 1000;
-  const requestDate = new Date(timestamp);
+  const requestDate = new Date(rulesContext.time);
   return {
     requestTimeComplete: requestDate.toLocaleString(),
     requestTimeFormatted: requestDate.toLocaleTimeString('en-US', {
       hour12: false,
     }),
-    requestMethod: rulesContext.request.method,
-    resourcePath: rulesContext.request.path.replace(
+    requestMethod: rulesContext.method,
+    resourcePath: rulesContext.path.replace(
       '/databases/(default)/documents',
       ''
     ),
