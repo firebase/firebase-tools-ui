@@ -40,6 +40,7 @@ const Requests: React.FC = () => {
         options={{
           surface: grey100,
         }}
+        style={{ flex: 1 }}
       >
         <Switch>
           <Route exact path="/firestore/requests">
