@@ -24,6 +24,8 @@ import {
 import React from 'react';
 import { Route } from 'react-router-dom';
 
+import { delay } from '../../test_utils';
+import { confirm } from '../common/DialogQueue';
 import Collection, {
   CollectionPresentation,
   withCollectionState,
@@ -31,6 +33,7 @@ import Collection, {
 import { useCollectionFilter } from './store';
 import { renderWithFirestore } from './testing/FirestoreTestProviders';
 
+jest.mock('../common/DialogQueue');
 jest.mock('./store');
 
 describe('CollectionPanel', () => {
@@ -247,6 +250,42 @@ it('shows the selected sub-document', async () => {
 
   expect(getByText(/my-stuff/)).not.toBeNull();
   expect(queryAllByText(/cool-doc-1/).length).toBe(expectedDocIds);
+});
+
+it('deletes collection and nested data when requested', async () => {
+  const { findByText, findByRole, queryByText } = await renderWithFirestore(
+    async (firestore) => {
+      const collectionRef = firestore.collection('whose-stuff');
+      const docRef = collectionRef.doc('cool-doc');
+      await docRef.set({ myField: 1 });
+
+      return (
+        <>
+          <Collection collection={collectionRef} />
+          <Portal />
+        </>
+      );
+    }
+  );
+
+  const menu = await findByRole('button', { name: 'Menu' });
+  await act(() => {
+    menu.click();
+    return delay(200);
+  });
+
+  confirm.mockResolvedValueOnce(true);
+
+  const deleteDocument = await findByRole('menuitem', {
+    name: 'Delete collection',
+  });
+
+  await act(() => {
+    deleteDocument.click();
+    return delay(1000);
+  });
+
+  expect(queryByText(/cool-doc/)).toBeNull();
 });
 
 describe('withCollectionState', () => {

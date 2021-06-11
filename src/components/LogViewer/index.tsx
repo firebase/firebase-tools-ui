@@ -20,34 +20,14 @@ import { Card } from '@rmwc/card';
 import { Elevation } from '@rmwc/elevation';
 import { GridCell } from '@rmwc/grid';
 import React, { useEffect, useMemo, useState } from 'react';
-import { connect } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 
 import { ReconnectingWebSocket } from '../../reconnectingWebSocket';
-import { AppState } from '../../store';
-import { LoggingConfig } from '../../store/config';
-import {
-  LogEntry,
-  LogState,
-  logReceived,
-  logReset,
-} from '../../store/logviewer';
-import { hasData } from '../../store/utils';
+import { useConfigOptional } from '../common/EmulatorConfigProvider';
 import { CompiledGetterCache } from './CompiledGetterCache';
 import History from './History';
 import { QueryBar, parseQuery } from './QueryBar';
-
-interface PropsFromState {
-  log: LogState;
-  config?: LoggingConfig;
-}
-
-interface PropsFromDispatch {
-  logReceived: Function;
-  logReset: () => void;
-}
-
-export type Props = PropsFromState & PropsFromDispatch;
+import { LogEntry } from './types';
 
 const compiledGetters = new CompiledGetterCache();
 
@@ -56,24 +36,25 @@ function useQuery() {
   return useMemo(() => new URLSearchParams(search), [search]);
 }
 
-export const LogViewer: React.FC<Props> = ({
-  logReceived,
-  logReset,
-  config,
-}) => {
+export const LogViewer: React.FC = () => {
   const qs = useQuery();
+  const [logs, setLogs] = useState<LogEntry[]>([]);
   const [query, setQuery] = useState(qs.get('q') || '');
+
+  // This component does not suspend. Show empty logs on start and keep previous
+  // logs when emulator stops.
+  const config = useConfigOptional()?.logging;
 
   useEffect(() => {
     if (!config) return;
 
-    logReset();
+    setLogs([]);
     const webSocket = new ReconnectingWebSocket(config.hostAndPort);
     webSocket.listener = (log: LogEntry) => {
-      logReceived(log);
+      setLogs((logs) => [...logs, log]);
     };
     return () => webSocket.cleanup();
-  }, [config, logReceived, logReset]);
+  }, [config, setLogs]);
 
   const parsedQuery = parseQuery(query);
 
@@ -90,6 +71,7 @@ export const LogViewer: React.FC<Props> = ({
             parsedQuery={parsedQuery}
             setQuery={setQuery}
             compiledGetters={compiledGetters}
+            logs={logs}
           />
         </Card>
       </Elevation>
@@ -97,14 +79,4 @@ export const LogViewer: React.FC<Props> = ({
   );
 };
 
-export const mapStateToProps = ({ config }: AppState) => {
-  return {
-    config: hasData(config.result) ? config.result.data.logging : undefined,
-  };
-};
-export const mapDispatchToProps = {
-  logReceived,
-  logReset,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(LogViewer);
+export default LogViewer;

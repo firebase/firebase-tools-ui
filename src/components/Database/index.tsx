@@ -16,62 +16,33 @@
 
 import './index.scss';
 
-import React from 'react';
-import { connect } from 'react-redux';
+import React, { Suspense } from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 
-import { createStructuredSelector } from '../../store';
-import { DatabaseConfig } from '../../store/config';
 import {
-  getDatabaseConfigResult,
-  getProjectIdResult,
-} from '../../store/config/selectors';
-import { combineData, handle } from '../../store/utils';
+  useConfig,
+  useEmulatorConfig,
+  useIsEmulatorDisabled,
+} from '../common/EmulatorConfigProvider';
 import { EmulatorDisabled } from '../common/EmulatorDisabled';
 import { Spinner } from '../common/Spinner';
 import Database from './Database';
 import DatabaseContainer from './DatabaseContainer';
 
-export const mapStateToProps = createStructuredSelector({
-  projectIdResult: getProjectIdResult,
-  configResult: getDatabaseConfigResult,
-});
-
-export type PropsFromState = ReturnType<typeof mapStateToProps>;
-
-export const DatabaseRoute: React.FC<PropsFromState> = ({
-  projectIdResult,
-  configResult,
-}) => {
-  return handle(combineData(projectIdResult, configResult), {
-    onNone: () => (
-      <Spinner span={12} message="Realtime Database Emulator Loading..." />
-    ),
-    onError: () => <DatabaseRouteDisabled />,
-    onData: ([projectId, config]) =>
-      config === undefined ? (
-        <DatabaseRouteDisabled />
-      ) : (
-        <DatabaseRouteContent projectId={projectId} config={config} />
-      ),
-  });
+export const DatabaseRoute: React.FC = () => {
+  return (
+    <Suspense fallback={<DatabaseRouteSuspended />}>
+      <DatabaseRouteContent />
+    </Suspense>
+  );
 };
 
-export default connect(mapStateToProps)(DatabaseRoute);
+export default DatabaseRoute;
 
-// Components for different loading cases:
-
-export type ContentProps = {
-  projectId: string;
-  config: DatabaseConfig;
-};
-
-export const DatabaseRouteContent: React.FC<ContentProps> = ({
-  projectId,
-  config,
-}) => {
+export const DatabaseRouteContent: React.FC = () => {
+  const config = useEmulatorConfig('database');
+  const primary = useConfig().projectId;
   let { path, url } = useRouteMatch()!;
-  const primary = projectId;
 
   return (
     <Switch>
@@ -98,6 +69,11 @@ export const DatabaseRouteContent: React.FC<ContentProps> = ({
   );
 };
 
-export const DatabaseRouteDisabled: React.FC = () => (
-  <EmulatorDisabled productName="RTDB" />
-);
+const DatabaseRouteSuspended: React.FC = () => {
+  const isDisabled = useIsEmulatorDisabled('database');
+  return isDisabled ? (
+    <EmulatorDisabled productName="Realtime Database" />
+  ) : (
+    <Spinner span={12} message="Realtime Database Emulator Loading..." />
+  );
+};

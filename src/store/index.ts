@@ -21,13 +21,10 @@ import * as reselect from 'reselect';
 import { AuthState } from '../components/Auth/types';
 import { authReducer } from './auth/reducer';
 import { authSaga } from './auth/sagas';
-import { ConfigState, configReducer, configSaga } from './config';
-import { DatabaseState, databaseReducer, databaseSaga } from './database';
 import {
   FirestoreRequestEvaluationsState,
   firestoreRequestEvaluationsReducer,
 } from './firestore/requests/evaluations';
-import { LogState, logReducer } from './logviewer';
 
 export interface FirestoreRequestsState {
   evaluations: FirestoreRequestEvaluationsState;
@@ -35,23 +32,20 @@ export interface FirestoreRequestsState {
 export interface FirestoreState {
   requests: FirestoreRequestsState;
 }
+
+// DEPRECATED, do not add more Redux states / reducers. Instead, use `swr` for
+// simple fetches and polling, and consider keeping state locally using hooks.
 export interface AppState {
-  config: ConfigState;
-  database: DatabaseState;
-  auth: AuthState;
-  log: LogState;
-  firestore: FirestoreState;
+  auth: AuthState; // still kept in Redux for historical reasons.
+  firestore: FirestoreState; // in process of being refactored out.
 }
 
 export function* rootSaga() {
-  yield all([fork(configSaga), fork(databaseSaga), fork(authSaga)]);
+  yield all([fork(authSaga)]);
 }
 
 export const rootReducer = combineReducers<AppState>({
-  config: configReducer,
-  database: databaseReducer,
   auth: authReducer,
-  log: logReducer,
   firestore: combineReducers<FirestoreState>({
     requests: combineReducers<FirestoreRequestsState>({
       evaluations: firestoreRequestEvaluationsReducer,

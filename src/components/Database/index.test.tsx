@@ -18,51 +18,45 @@ import { render } from '@testing-library/react';
 import * as React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 
-import { DatabaseConfig } from '../../store/config';
+import { Config } from '../../store/config';
+import { TestEmulatorConfigProvider } from '../common/EmulatorConfigProvider';
 import { DatabaseRoute, DatabaseRouteContent } from './index';
 
 jest.mock('./DatabaseContainer', () => () => null); // Don't actually connect to db or store.
 
-const sampleConfig: DatabaseConfig = {
-  host: 'localhost',
-  port: 9000,
-  hostAndPort: 'localhost:9000',
+const sampleConfig: Config = {
+  projectId: 'example',
+  database: {
+    host: 'localhost',
+    port: 9000,
+    hostAndPort: 'localhost:9000',
+  },
 };
 
 describe('DatabaseRoute', () => {
-  it('renders loading when projectId is not ready', () => {
-    const { getByText } = render(
-      <DatabaseRoute
-        projectIdResult={undefined}
-        configResult={{ data: sampleConfig }}
-      />
-    );
-    expect(getByText('Realtime Database Emulator Loading...')).not.toBeNull();
-  });
   it('renders loading when config is not ready', () => {
     const { getByText } = render(
-      <DatabaseRoute
-        projectIdResult={{ data: 'foo' }}
-        configResult={undefined}
-      />
+      <TestEmulatorConfigProvider config={undefined}>
+        <DatabaseRoute />
+      </TestEmulatorConfigProvider>
     );
     expect(getByText('Realtime Database Emulator Loading...')).not.toBeNull();
   });
   it('renders error when loading config fails', () => {
     const { getByText } = render(
-      <DatabaseRoute
-        projectIdResult={{ data: 'foo' }}
-        configResult={{ error: { message: 'Oh, snap!' } }}
-      />
+      <TestEmulatorConfigProvider config={null}>
+        <DatabaseRoute />
+      </TestEmulatorConfigProvider>
     );
     expect(getByText(/not running/)).not.toBeNull();
   });
   it('renders "emulator is off" when config is not present', () => {
     const { getByText } = render(
-      <DatabaseRoute
-        projectIdResult={{ data: 'foo' }}
-        configResult={{ data: undefined /* emulator absent */ }}
-      />
+      <TestEmulatorConfigProvider
+        config={{ projectId: 'example' /* no database */ }}
+      >
+        <DatabaseRoute />
+      </TestEmulatorConfigProvider>
     );
     expect(getByText(/not running/)).not.toBeNull();
   });
@@ -72,10 +66,12 @@ describe('DatabaseRouteContent', () => {
   it('redirects to primary db (the one named after projectId)', () => {
     const { getByText } = render(
       <MemoryRouter initialEntries={['/']}>
-        <Route exact path="//sample/data">
+        <Route exact path={`//${sampleConfig.projectId}/data`}>
           SUCCESS
         </Route>
-        <DatabaseRouteContent projectId={'sample'} config={sampleConfig} />
+        <TestEmulatorConfigProvider config={sampleConfig}>
+          <DatabaseRouteContent />
+        </TestEmulatorConfigProvider>
       </MemoryRouter>
     );
     expect(getByText('SUCCESS')).not.toBeNull();

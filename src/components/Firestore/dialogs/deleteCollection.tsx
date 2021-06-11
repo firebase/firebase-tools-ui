@@ -22,21 +22,26 @@ import { Callout } from '../../common/Callout';
 import { confirm } from '../../common/DialogQueue';
 import { Field } from '../../common/Field';
 
-export const promptDeleteDocument = (
-  reference: firebase.firestore.DocumentReference
+export const promptDeleteCollection = (
+  reference: firebase.firestore.CollectionReference
 ) =>
   confirm({
-    title: 'Delete document',
+    title: 'Delete collection',
     body: (
       <div className="Firestore--dialog-body">
         <Callout aside type="warning">
-          This will permanently delete the document.
+          This will permanently delete the collection, including all nested
+          documents and collections.
         </Callout>
         <Field
-          label="Document location"
-          value={reference.path || '/'}
+          label="Collection path"
+          value={`/${reference.path}`}
+          fullwidth
           disabled
         />
+        <Callout aside type="note">
+          Cloud Functions triggers <b>will not</b> be executed.
+        </Callout>
       </div>
     ),
     // hide standard buttons so as to use `danger` button

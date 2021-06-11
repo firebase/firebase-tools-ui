@@ -21,7 +21,7 @@ import { IconButton } from '@rmwc/icon-button';
 import { ListDivider } from '@rmwc/list';
 import { MenuItem, SimpleMenu } from '@rmwc/menu';
 import firebase from 'firebase';
-import React, { Suspense } from 'react';
+import React, { Suspense, useState } from 'react';
 import { Route, useRouteMatch } from 'react-router-dom';
 import { useFirestore } from 'reactfire';
 
@@ -30,9 +30,10 @@ import { FirestoreIcon } from '../common/icons';
 import { Spinner } from '../common/Spinner';
 import Collection, { CollectionLoading } from './Collection';
 import { RootCollectionList, SubCollectionList } from './CollectionList';
-import { promptDeleteDocument } from './dialogs/deleteDocument';
+import { DeleteDocumentDialog } from './dialogs/DeleteDocumentDialog';
 import { promptDeleteDocumentFields } from './dialogs/deleteDocumentFields';
 import DocumentPreview from './DocumentPreview';
+import { useRecursiveDelete } from './FirestoreEmulatedApiProvider';
 import PanelHeader from './PanelHeader';
 
 const Doc: React.FC<{
@@ -88,11 +89,10 @@ export const Root: React.FC = () => {
 export const Document: React.FC<{
   reference: firebase.firestore.DocumentReference;
 }> = ({ reference }) => {
-  const handleDeleteDocument = async () => {
-    const shouldDelete = await promptDeleteDocument(reference);
-    // TODO: recursively delete sub documents
-    shouldDelete && reference.delete();
-  };
+  const recursiveDelete = useRecursiveDelete();
+  const [isDeleteDocumentDialogOpen, setDeleteDocumentDialogOpen] = useState(
+    false
+  );
 
   const handleDeleteFields = async () => {
     const shouldDelete = await promptDeleteDocumentFields(reference);
@@ -104,13 +104,28 @@ export const Document: React.FC<{
       id={reference.id}
       collectionById={(id: string) => reference.collection(id)}
     >
+      {isDeleteDocumentDialogOpen && (
+        <DeleteDocumentDialog
+          documentRef={reference}
+          open={isDeleteDocumentDialogOpen}
+          onConfirm={({ recursive }) =>
+            recursive ? recursiveDelete(reference) : reference.delete()
+          }
+          onClose={() => setDeleteDocumentDialogOpen(false)}
+        />
+      )}
       <PanelHeader
         id={reference.id}
         icon={<Icon icon={{ icon: 'insert_drive_file', size: 'small' }} />}
       >
         <CopyButton textToCopy={reference.id} label="Copy document ID" />
-        <SimpleMenu handle={<IconButton icon="more_vert" />} renderToPortal>
-          <MenuItem onClick={handleDeleteDocument}>Delete document</MenuItem>
+        <SimpleMenu
+          handle={<IconButton icon="more_vert" label="Menu" />}
+          renderToPortal
+        >
+          <MenuItem onClick={() => setDeleteDocumentDialogOpen(true)}>
+            Delete document
+          </MenuItem>
           <MenuItem onClick={handleDeleteFields}>Delete all fields</MenuItem>
         </SimpleMenu>
       </PanelHeader>

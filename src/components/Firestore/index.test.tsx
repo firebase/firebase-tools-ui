@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { act, render, wait, waitForElement } from '@testing-library/react';
+import { act, render, waitFor, waitForElement } from '@testing-library/react';
 import React from 'react';
 import { Route } from 'react-router-dom';
 
@@ -22,55 +22,39 @@ import { FirestoreConfig } from '../../store/config';
 import { delay, makeDeferred } from '../../test_utils';
 import { isTabActive } from '../../test_utils';
 import { confirm } from '../common/DialogQueue';
+import { TestEmulatorConfigProvider } from '../common/EmulatorConfigProvider';
 import * as emulatedApi from './FirestoreEmulatedApiProvider';
 import { Firestore, FirestoreRoute } from './index';
 import { renderWithFirestore } from './testing/FirestoreTestProviders';
 
 jest.mock('../common/DialogQueue');
 
-const sampleConfig: FirestoreConfig = {
-  host: 'localhost',
-  port: 8080,
-  hostAndPort: 'localhost:8080',
-};
-
 describe('FirestoreRoute', () => {
-  it('renders loading when projectId is not ready', () => {
-    const { getByText } = render(
-      <FirestoreRoute
-        projectIdResult={undefined}
-        configResult={{ data: sampleConfig }}
-      />
-    );
-    expect(getByText('Firestore Emulator Loading...')).not.toBeNull();
-  });
-
   it('renders loading when config is not ready', () => {
     const { getByText } = render(
-      <FirestoreRoute
-        projectIdResult={{ data: 'foo' }}
-        configResult={undefined}
-      />
+      <TestEmulatorConfigProvider config={undefined}>
+        <FirestoreRoute />
+      </TestEmulatorConfigProvider>
     );
     expect(getByText('Firestore Emulator Loading...')).not.toBeNull();
   });
 
-  it('renders error when loading config fails', () => {
+  it('renders error when emulators are disabled', () => {
     const { getByText } = render(
-      <FirestoreRoute
-        projectIdResult={{ data: 'foo' }}
-        configResult={{ error: { message: 'Oh, snap!' } }}
-      />
+      <TestEmulatorConfigProvider config={null}>
+        <FirestoreRoute />
+      </TestEmulatorConfigProvider>
     );
     expect(getByText(/not running/)).not.toBeNull();
   });
 
   it('renders "emulator is off" when config is not present', () => {
     const { getByText } = render(
-      <FirestoreRoute
-        projectIdResult={{ data: 'foo' }}
-        configResult={{ data: undefined /* emulator absent */ }}
-      />
+      <TestEmulatorConfigProvider
+        config={{ projectId: 'example' /* no firestore */ }}
+      >
+        <FirestoreRoute />
+      </TestEmulatorConfigProvider>
     );
     expect(getByText(/not running/)).not.toBeNull();
   });
@@ -216,6 +200,32 @@ describe('Firestore', () => {
       expect(queryByTestId(/collection-shell/)).toBeNull();
       expect(queryByTestId(/document-shell/)).toBeNull();
     });
+  });
+
+  it('triggers clearing all data', async () => {
+    const nuke = makeDeferred<void>();
+    const nukeSpy = jest.fn().mockReturnValueOnce(nuke.promise);
+    jest.spyOn(emulatedApi, 'useEjector').mockReturnValue(nukeSpy);
+    confirm.mockResolvedValueOnce(true);
+
+    const { getByTestId, getByText, queryByTestId } = await renderWithFirestore(
+      async () => (
+        <>
+          <Firestore />
+          <Route
+            path="/firestore"
+            exact
+            render={() => <div data-testid="ROOT"></div>}
+          />
+        </>
+      )
+    );
+    act(() => getByText('Clear all data').click());
+    await waitFor(() => expect(nukeSpy).toHaveBeenCalled());
+    expect(getByTestId('firestore-loading')).not.toBeNull();
+    await act(() => nuke.resolve());
+    expect(queryByTestId('firestore-loading')).toBeNull();
+    expect(getByTestId('ROOT')).not.toBeNull();
   });
 
   describe('Clear all data', () => {
