@@ -74,3 +74,12 @@
     color: var(--mdc-theme-primary);
   }
 }
+
+.Callout {
+  a,
+  a:active,
+  a:visited,
+  a:hover {
+    color: var(--mdc-theme-on-primary);
+  }
+}

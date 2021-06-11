@@ -19,6 +19,7 @@ import React, { useState } from 'react';
 import { Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
 
 import { grey100 } from '../../../colors';
+import { Callout } from '../../common/Callout';
 import CopyPathNotification from './CopyPathNotification';
 import RequestDetails from './RequestDetails';
 // import RequestsHeader from './RequestsCard/Header';
@@ -34,41 +35,57 @@ const Requests: React.FC = () => {
   );
 
   return (
-    <ThemeProvider
-      options={{
-        surface: grey100,
-      }}
-    >
-      <Switch>
-        <Route exact path="/firestore/requests">
-          <div data-testid="requests-card">
-            {/* TODO: Finish developing the RequestsHeader in order to render it */}
-            {/* <RequestsHeader /> */}
-            <RequestsTable setShowCopyNotification={setShowCopyNotification} />
-          </div>
-        </Route>
-        <Route
-          exact
-          path="/firestore/requests/:requestId"
-          render={({
-            match,
-          }: RouteComponentProps<RequestDetailsRouteParams>) => {
-            const requestId = match.params.requestId;
-            return (
-              <RequestDetails
-                requestId={requestId}
+    <>
+      <ThemeProvider
+        options={{
+          surface: grey100,
+        }}
+      >
+        <Switch>
+          <Route exact path="/firestore/requests">
+            <div data-testid="requests-card">
+              {/* TODO: Finish developing the RequestsHeader in order to render it */}
+              {/* <RequestsHeader /> */}
+              <RequestsTable
                 setShowCopyNotification={setShowCopyNotification}
               />
-            );
-          }}
+            </div>
+          </Route>
+          <Route
+            exact
+            path="/firestore/requests/:requestId"
+            render={({
+              match,
+            }: RouteComponentProps<RequestDetailsRouteParams>) => {
+              const requestId = match.params.requestId;
+              return (
+                <RequestDetails
+                  requestId={requestId}
+                  setShowCopyNotification={setShowCopyNotification}
+                />
+              );
+            }}
+          />
+          <Redirect to="/firestore/requests" />
+        </Switch>
+        <CopyPathNotification
+          showCopyNotification={showCopyNotification}
+          setShowCopyNotification={setShowCopyNotification}
         />
-        <Redirect to="/firestore/requests" />
-      </Switch>
-      <CopyPathNotification
-        showCopyNotification={showCopyNotification}
-        setShowCopyNotification={setShowCopyNotification}
-      />
-    </ThemeProvider>
+      </ThemeProvider>
+      {/* Show banner only on the table view, but as an immediate child of the Card for layout reasons. */}
+      <Route exact path="/firestore/requests">
+        <Callout type="note">
+          Only client requests are shown above.{' '}
+          <a href="https://firebase.google.com/docs/admin/setup">Admin SDK</a>{' '}
+          requests and{' '}
+          <a href="https://firebase.google.com/docs/firestore/security/rules-conditions#access_other_documents">
+            access calls initiated by Security Rules
+          </a>{' '}
+          are not listed because they bypass Security Rules.
+        </Callout>
+      </Route>
+    </>
   );
 };
 
