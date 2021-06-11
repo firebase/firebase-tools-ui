@@ -84,6 +84,9 @@ function convertPrimitiveValue(primitive: RulesValue): FirestorePrimitive {
 
 function convertArrayValue(array: RulesValue): FirestoreArray {
   if (array.listValue) {
+    if (!array.listValue.values) {
+      return [];
+    }
     return array.listValue.values.map((value) => {
       if (value.mapValue) {
         return convertFirestoreMap(value);
@@ -97,6 +100,9 @@ function convertArrayValue(array: RulesValue): FirestoreArray {
 
 function convertFirestoreMap(map: RulesValue): FirestoreMap {
   if (map.mapValue) {
+    if (!map.mapValue.fields) {
+      return {};
+    }
     const out: FirestoreMap = {};
     for (const key of Object.keys(map.mapValue.fields)) {
       out[key] = convertRulesTypeToFirestoreAny(map.mapValue.fields[key]);
@@ -154,8 +160,6 @@ function getInspectionExpressions(
       value: convertTimestamp(rulesContext.time),
     },
   ];
-
-  console.log(rulesContext);
 
   if (rulesContext.request.mapValue?.fields?.resource) {
     inspections.push({
