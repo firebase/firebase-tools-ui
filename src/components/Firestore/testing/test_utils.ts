@@ -16,12 +16,9 @@
 
 import { RenderResult } from '@testing-library/react';
 import firebase from 'firebase';
-import configureStore from 'redux-mock-store';
 
-import { AppState } from '../../../store/index';
 import { waitForDialogsToOpen } from '../../../test_utils';
 import { FirestoreRulesEvaluation } from '../Requests/rules_evaluation_result_model';
-import { SAMPLE_RULES } from '../Requests/sample-rules';
 import { renderWithFirestore } from './FirestoreTestProviders';
 
 /*
@@ -36,21 +33,6 @@ export async function renderDialogWithFirestore(
   const result = await renderWithFirestore(ui);
   await waitForDialogsToOpen(result.container);
   return result;
-}
-
-/*
- * Returns a mocked version of the firestore store, an initial
- * state value can be passed as an argument
- */
-export function getMockFirestoreStore(state?: Partial<AppState>) {
-  return configureStore<Pick<AppState, 'firestore'>>()({
-    firestore: {
-      requests: {
-        evaluations: [],
-      },
-    },
-    ...state,
-  });
 }
 
 /*
@@ -81,3 +63,12 @@ export function createFakeFirestoreRequestEvaluation(
     ...evaluation,
   };
 }
+
+const SAMPLE_RULES = `
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    allow read, write: if true;
+  }
+}
+`;

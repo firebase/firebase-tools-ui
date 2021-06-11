@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useStorageConfig } from '../../../store/config/selectors';
+import { useEmulatorConfig } from '../../common/EmulatorConfigProvider';
 import { useBucket } from './useBucket';
 
 const EMPTY_FOLDER_DATA = `--boundary
@@ -27,7 +27,7 @@ Content-Type: text/plain
 --boundary--`;
 
 export function useCreateFolder() {
-  const config = useStorageConfig();
+  const config = useEmulatorConfig('storage');
   const [bucket] = useBucket();
 
   async function createFolder(fullPath: string) {

@@ -26,6 +26,7 @@ import { useFirestoreDocData } from 'reactfire';
 import {
   useEjector,
   useMissingDocuments,
+  useRecursiveDelete,
   useRootCollections,
   useSubCollections,
 } from './FirestoreEmulatedApiProvider';
@@ -158,4 +159,48 @@ it('should clear the database', async () => {
   await waitForElementToBeRemoved(() => getByText(/"a":1/));
 
   expect(getByTestId(/data/).textContent).not.toContain('"a":1');
+});
+
+it('should recursively delete under path', async () => {
+  const TestResults = ({
+    docRef,
+    nestedRef,
+  }: {
+    docRef: firebase.firestore.DocumentReference;
+    nestedRef: firebase.firestore.DocumentReference;
+  }) => {
+    const { data } = useFirestoreDocData(docRef);
+    const nested = useFirestoreDocData(nestedRef);
+    const recursiveDelete = useRecursiveDelete();
+
+    return (
+      <>
+        <div data-testid="data">{JSON.stringify(data)}</div>
+        <div data-testid="nestedData">{JSON.stringify(nested.data)}</div>
+        <button onClick={() => recursiveDelete(docRef)}>Delete</button>
+      </>
+    );
+  };
+
+  const { getByText, getByTestId, findByText } = await renderWithFirestore(
+    async (firestore) => {
+      const docRef = firestore.doc('top/doc');
+      await docRef.set({ a: 1 });
+      const nestedRef = docRef.collection('nested').doc('nestedDoc');
+      await nestedRef.set({ b: 2 });
+      return <TestResults docRef={docRef} nestedRef={nestedRef} />;
+    }
+  );
+
+  await findByText(/"a":1/);
+  await findByText(/"b":2/);
+
+  act(() => {
+    getByText(/Delete/).click();
+  });
+
+  await waitForElementToBeRemoved(() => getByText(/"b":2/));
+
+  expect(getByTestId(/data/).textContent).not.toContain('"a":1');
+  expect(getByTestId(/nestedData/).textContent).not.toContain('"b":2');
 });

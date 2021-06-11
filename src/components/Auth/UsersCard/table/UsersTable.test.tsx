@@ -15,7 +15,7 @@
  */
 
 import { Portal } from '@rmwc/base';
-import { fireEvent, render, waitForElement } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';

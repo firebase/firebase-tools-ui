@@ -18,8 +18,8 @@ import './QueryBar.scss';
 import { Button } from '@rmwc/button';
 import React, { useEffect, useState } from 'react';
 
-import { LogEntry } from '../../store/logviewer';
 import { CompiledGetterCache } from './CompiledGetterCache';
+import { LogEntry } from './types';
 
 export const filtersToQueryString = (filters: {
   [key: string]: string | number;

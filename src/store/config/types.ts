@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import { RemoteResult } from '../utils';
-
 export interface EmulatorConfig {
   hostAndPort: string;
   host: string;
@@ -24,13 +22,26 @@ export interface EmulatorConfig {
 
 export interface DatabaseConfig extends EmulatorConfig {}
 
-export interface FirestoreConfig extends EmulatorConfig {}
+export interface FirestoreConfig extends EmulatorConfig {
+  webSocketHost?: string;
+  webSocketPort?: number;
+}
 
 export interface FunctionsConfig extends EmulatorConfig {}
 
 export interface LoggingConfig extends EmulatorConfig {}
 
 export interface AuthConfig extends EmulatorConfig {}
+
+export type Emulator =
+  | 'database'
+  | 'auth'
+  | 'firestore'
+  | 'functions'
+  | 'logging'
+  | 'hosting'
+  | 'storage'
+  | 'pubsub';
 
 export interface Config {
   projectId: string;
@@ -43,5 +54,3 @@ export interface Config {
   storage?: EmulatorConfig;
   pubsub?: EmulatorConfig;
 }
-
-export type ConfigState = RemoteResult<Config>;

@@ -19,44 +19,42 @@ import { createMemoryHistory } from 'history';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { act } from 'react-dom/test-utils';
-import { Provider } from 'react-redux';
-import { BrowserRouter, Router } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 
-import configureStore from '../../configureStore';
 import {
   delay,
   waitAlertDialogToClose,
   waitAlertDialogToOpen,
 } from '../../test_utils';
 import { alert } from '../common/DialogQueue';
-import App, { REDIRECT_LOGS_URL } from '.';
+import { TestEmulatorConfigProvider } from '../common/EmulatorConfigProvider';
+import App from '.';
 
 it('renders without crashing', async () => {
   const div = document.createElement('div');
-  const store = configureStore();
   await act(async () => {
     ReactDOM.render(
-      <Provider store={store}>
+      <TestEmulatorConfigProvider config={{ projectId: 'example' }}>
         <BrowserRouter>
           <App />
         </BrowserRouter>
-      </Provider>,
+      </TestEmulatorConfigProvider>,
       div
     );
     // Wait for async tab indicator changes.
     await delay(100);
+    expect(div.firstChild).not.toBeNull();
     ReactDOM.unmountComponentAtNode(div);
   });
 });
 
 it('shows dialogs in the queue', async () => {
-  const store = configureStore();
   const { getByText } = render(
-    <Provider store={store}>
+    <TestEmulatorConfigProvider config={{ projectId: 'example' }}>
       <BrowserRouter>
         <App />
       </BrowserRouter>
-    </Provider>
+    </TestEmulatorConfigProvider>
   );
 
   await act(() => delay(100)); // Wait for tab indicator async DOM updates.
@@ -70,25 +68,8 @@ it('shows dialogs in the queue', async () => {
   expect(getByText('wowah')).not.toBeNull();
 
   await act(async () => {
-    await fireEvent.click(getByText('OK'));
+    fireEvent.click(getByText('OK'));
   });
 
   await waitAlertDialogToClose();
-});
-
-it('redirects from url /functions to correct logs url', async () => {
-  const store = configureStore();
-  const history = createMemoryHistory({
-    initialEntries: ['/functions'],
-  });
-  render(
-    <Provider store={store}>
-      <Router history={history}>
-        <App />
-      </Router>
-    </Provider>
-  );
-  await act(() => delay(100)); // Wait for tab indicator async DOM updates.
-  const { pathname, search } = history.location;
-  expect(pathname + search).toBe(REDIRECT_LOGS_URL);
 });

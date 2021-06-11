@@ -21,9 +21,7 @@ import { Card } from '@rmwc/card';
 import { Elevation } from '@rmwc/elevation';
 import { GridCell } from '@rmwc/grid';
 import { Tab, TabBar } from '@rmwc/tabs';
-import firebase from 'firebase';
-import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
+import React, { Suspense, useState } from 'react';
 import {
   Link,
   Redirect,
@@ -33,15 +31,9 @@ import {
   useHistory,
   useLocation,
 } from 'react-router-dom';
-import { useFirestore } from 'reactfire';
 
-import { createStructuredSelector } from '../../store';
-import {
-  getFirestoreConfigResult,
-  getProjectIdResult,
-} from '../../store/config/selectors';
-import { combineData, handle } from '../../store/utils';
 import { CustomThemeProvider } from '../../themes';
+import { useIsEmulatorDisabled } from '../common/EmulatorConfigProvider';
 import { EmulatorDisabled } from '../common/EmulatorDisabled';
 import { InteractiveBreadCrumbBar } from '../common/InteractiveBreadCrumbBar';
 import { Spinner } from '../common/Spinner';
@@ -55,36 +47,17 @@ import PanelHeader from './PanelHeader';
 import FirestoreRequests from './Requests';
 import { FirestoreStore } from './store';
 
-interface WindowWithFirestoreDb extends Window {
-  firestore?: firebase.firestore.Firestore;
-}
-
-export const mapStateToProps = createStructuredSelector({
-  projectIdResult: getProjectIdResult,
-  configResult: getFirestoreConfigResult,
-});
-
-export type PropsFromState = ReturnType<typeof mapStateToProps>;
-
-export const FirestoreRoute: React.FC<PropsFromState> = ({
-  projectIdResult,
-  configResult,
-}) => {
-  return handle(combineData(projectIdResult, configResult), {
-    onNone: () => <Spinner span={12} message="Firestore Emulator Loading..." />,
-    onError: () => <FirestoreRouteDisabled />,
-    onData: ([projectId, config]) =>
-      config === undefined ? (
-        <FirestoreRouteDisabled />
-      ) : (
-        <FirestoreEmulatedApiProvider>
-          <Firestore />
-        </FirestoreEmulatedApiProvider>
-      ),
-  });
+export const FirestoreRoute: React.FC = () => {
+  return (
+    <Suspense fallback={<FirestoreRouteSuspended />}>
+      <FirestoreEmulatedApiProvider>
+        <Firestore />
+      </FirestoreEmulatedApiProvider>
+    </Suspense>
+  );
 };
 
-export default connect(mapStateToProps)(FirestoreRoute);
+export default FirestoreRoute;
 
 interface FirestoreTabRoute {
   path: string;
@@ -105,7 +78,6 @@ const firestoreRoutes: ReadonlyArray<FirestoreTabRoute> = [
 ];
 
 export const Firestore: React.FC = React.memo(() => {
-  const firestore = useFirestore();
   const location = useLocation();
   const history = useHistory();
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -131,11 +103,6 @@ export const Firestore: React.FC = React.memo(() => {
       exact: r.exact,
     })
   );
-
-  useEffect(() => {
-    (window as WindowWithFirestoreDb).firestore = firestore;
-    return () => ((window as WindowWithFirestoreDb).firestore = undefined);
-  }, [firestore]);
 
   async function handleClearData() {
     const shouldNuke = await promptClearAll();
@@ -186,10 +153,6 @@ export const Firestore: React.FC = React.memo(() => {
     </FirestoreStore>
   );
 });
-
-export const FirestoreRouteDisabled: React.FC = () => (
-  <EmulatorDisabled productName="Firestore" />
-);
 
 interface FirestoreDataCardProps {
   path: string;
@@ -249,3 +212,12 @@ const FirestoreRequestsCard: React.FC = () => (
     </Card>
   </Elevation>
 );
+
+const FirestoreRouteSuspended: React.FC = () => {
+  const isDisabled = useIsEmulatorDisabled('firestore');
+  return isDisabled ? (
+    <EmulatorDisabled productName="Firestore" />
+  ) : (
+    <Spinner span={12} message="Firestore Emulator Loading..." />
+  );
+};

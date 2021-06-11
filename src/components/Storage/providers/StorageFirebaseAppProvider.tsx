@@ -14,29 +14,30 @@
  * limitations under the License.
  */
 
-import '@firebase/storage';
-
-import React, { useEffect, useMemo } from 'react';
+import React, { useCallback } from 'react';
 import { FirebaseAppProvider } from 'reactfire';
 
-import { getStorageApp } from '../../../firebase';
-import { useStorageConfig } from '../../../store/config/selectors';
+import { useEmulatedFirebaseApp } from '../../../firebase';
+import { useEmulatorConfig } from '../../common/EmulatorConfigProvider';
 
-function useStorageApp() {
-  const { host, port } = useStorageConfig();
-  const app = useMemo(() => getStorageApp(host, port.toString()), [host, port]);
-
-  useEffect(() => {
-    return () => {
-      app.delete();
-    };
-  }, [app]);
-
-  return app;
-}
+const FIREBASE_APP_OPTIONS = {};
 
 export const StorageFirebaseAppProvider: React.FC = ({ children }) => {
-  const app = useStorageApp();
+  const { host, port } = useEmulatorConfig('storage');
+  const app = useEmulatedFirebaseApp(
+    'storage',
+    FIREBASE_APP_OPTIONS,
+    useCallback(
+      (app) => {
+        app.storage().useEmulator(host, port);
+      },
+      [host, port]
+    )
+  );
+
+  if (!app) {
+    return null;
+  }
 
   return (
     <FirebaseAppProvider firebaseApp={app}>{children}</FirebaseAppProvider>

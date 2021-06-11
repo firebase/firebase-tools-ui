@@ -18,17 +18,15 @@ import './index.scss';
 
 import firebase from 'firebase';
 import React from 'react';
-import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
-import { AppState } from '../../../../store';
-import { getSelectedRequestEvaluationById } from '../../../../store/firestore/requests/evaluations/selectors';
 import {
   FirestoreAny,
   FirestoreArray,
   FirestoreMap,
   FirestorePrimitive,
 } from '../../models';
+import { useFirestoreRequest } from '../FirestoreRequestsProvider';
 import { RequestDetailsRouteParams } from '../index';
 import {
   FirestoreRulesContext,
@@ -216,19 +214,13 @@ export function getDetailsRequestData(
   };
 }
 
-const mapStateToProps = (
-  state: AppState,
-  { requestId }: RequestDetailsRouteParams
-) => {
-  return {
-    selectedRequest: getSelectedRequestEvaluationById(state, requestId || ''),
-  };
-};
-interface PropsFromStore extends ReturnType<typeof mapStateToProps> {}
 interface PropsFromParentComponent extends RequestDetailsRouteParams {
   setShowCopyNotification: (value: boolean) => void;
 }
-interface Props extends PropsFromStore, PropsFromParentComponent {}
+
+interface Props extends PropsFromParentComponent {
+  selectedRequest: FirestoreRulesEvaluation | undefined;
+}
 
 export const RequestDetails: React.FC<Props> = ({
   selectedRequest,
@@ -280,4 +272,11 @@ export const RequestDetails: React.FC<Props> = ({
   );
 };
 
-export default connect(mapStateToProps)(RequestDetails);
+export const RequestDetailsWrapper: React.FC<PropsFromParentComponent> = (
+  props
+) => {
+  const selectedRequest = useFirestoreRequest(props.requestId);
+
+  return <RequestDetails selectedRequest={selectedRequest} {...props} />;
+};
+export default RequestDetailsWrapper;

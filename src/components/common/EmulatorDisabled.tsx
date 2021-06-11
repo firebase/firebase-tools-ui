@@ -42,7 +42,7 @@ export const EmulatorDisabled: React.FC<{
             If you are not using {productName} in your testing, everything is
             fine. If you want to use {productName} in your testing, then the
             best way to set it up and start it is to run the following command
-            initialize the {productName} Emulator:{' '}
+            to initialize the {productName} Emulator:{' '}
             <code>firebase init emulators</code>. Followed by:{' '}
             <code>firebase emulators:start</code>.
           </Typography>

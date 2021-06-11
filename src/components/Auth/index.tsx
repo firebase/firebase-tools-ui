@@ -18,59 +18,68 @@ import './index.module.scss';
 
 import { Elevation } from '@rmwc/elevation';
 import { GridCell } from '@rmwc/grid';
-import React from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { connect } from 'react-redux';
 
-import { createStructuredSelector } from '../../store';
+import { updateAuthConfig } from '../../store/auth/actions';
+import { AuthConfig } from '../../store/config/types';
 import {
-  getAuthConfigResult,
-  getAuthUsersResult,
-} from '../../store/auth/selectors';
-import { getProjectIdResult } from '../../store/config/selectors';
-import { combineData, handle } from '../../store/utils';
+  useConfig,
+  useEmulatorConfig,
+  useIsEmulatorDisabled,
+} from '../common/EmulatorConfigProvider';
 import { EmulatorDisabled } from '../common/EmulatorDisabled';
 import { Spinner } from '../common/Spinner';
 import OneAccountPerEmailCard from './OneAccountPerEmailCard/OneAccountPerEmailCard';
 import ClearAll from './UsersCard/ClearAll';
 import UsersCard from './UsersCard/UsersCard';
 
-export const mapStateToProps = createStructuredSelector({
-  projectIdResult: getProjectIdResult,
-  authConfigResult: getAuthConfigResult,
-  authUsersResult: getAuthUsersResult,
-});
-
-export type PropsFromState = ReturnType<typeof mapStateToProps>;
-
-export const AuthRoute: React.FC<PropsFromState> = ({
-  projectIdResult,
-  authConfigResult,
-}) => {
-  // HACK(yuchenshi): We do not switch on authUsersResult to make sure Auth
-  // Emulator correctly shows up as disabled (instead of forever loading).
-  // TODO(yuchenshi): Fix forever loading in store when auth is disabled.
-  return handle(combineData(projectIdResult, authConfigResult), {
-    onNone: () => <Spinner span={12} message="Auth Emulator Loading..." />,
-    onError: () => <AuthRouteDisabled />,
-    onData: ([projectId, config]) =>
-      config === undefined ? <AuthRouteDisabled /> : <Auth />,
-  });
+export const AuthRoute: React.FC = () => {
+  return (
+    <Suspense fallback={<AuthRouteSuspended />}>
+      <AuthWrapper />
+    </Suspense>
+  );
 };
 
-export const Auth: React.FC = () => (
-  <GridCell span={12} className="Auth">
-    <ClearAll />
-    <Elevation z="2" wrap>
-      <UsersCard />
-    </Elevation>
-    <Elevation z="2" wrap>
-      <OneAccountPerEmailCard />
-    </Elevation>
-  </GridCell>
-);
+export default AuthRoute;
+
+export interface AuthProps {
+  updateAuthConfig(config: { auth: AuthConfig; projectId: string }): void;
+}
+
+export const Auth: React.FC<AuthProps> = ({ updateAuthConfig }) => {
+  const auth = useEmulatorConfig('auth');
+  const { projectId } = useConfig();
+
+  useEffect(() => {
+    updateAuthConfig({ auth, projectId });
+  }, [auth, projectId, updateAuthConfig]);
+
+  return (
+    <GridCell span={12} className="Auth">
+      <ClearAll />
+      <Elevation z="2" wrap>
+        <UsersCard />
+      </Elevation>
+      <Elevation z="2" wrap>
+        <OneAccountPerEmailCard />
+      </Elevation>
+    </GridCell>
+  );
+};
+
+export const AuthWrapper = connect(null, { updateAuthConfig })(Auth);
 
 export const AuthRouteDisabled: React.FC = () => (
   <EmulatorDisabled productName="Auth" />
 );
 
-export default connect(mapStateToProps)(AuthRoute);
+const AuthRouteSuspended: React.FC = () => {
+  const isDisabled = useIsEmulatorDisabled('auth');
+  return isDisabled ? (
+    <EmulatorDisabled productName="Auth" />
+  ) : (
+    <Spinner span={12} message="Auth Emulator Loading..." />
+  );
+};

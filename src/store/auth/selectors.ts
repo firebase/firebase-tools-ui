@@ -17,9 +17,8 @@
 import { createSelector } from 'reselect';
 
 import { AuthState, AuthUser } from '../../components/Auth/types';
-import { getConfigResult } from '../config/selectors';
 import { AppState } from '../index';
-import { hasData, map, squashOrDefaut } from '../utils';
+import { hasData, squashOrDefaut } from '../utils';
 
 export const getAuth = (state: AppState) => state.auth;
 
@@ -105,9 +104,4 @@ export const getShowTable = createSelector(
   getUsers,
   getFilteredUsers,
   (users, filteredUsers) => filteredUsers.length > 0
-);
-
-export const getAuthConfigResult = createSelector(
-  getConfigResult,
-  (result): any => map(result, (config) => config.auth)
 );

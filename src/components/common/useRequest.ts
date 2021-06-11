@@ -45,5 +45,11 @@ export function useRequest<T = unknown>(
   return useSwr<T>(url, fetcher, {
     refreshInterval,
     suspense: true,
+
+    // Emulator UI works fully offline. Even if the browser cannot reach LAN or
+    // any router, this page and the CONFIG_API will still work if they are on
+    // the same physical device (e.g. localhost/127.0.0.1/containers/VMs). See:
+    // https://developer.mozilla.org/en-US/docs/Web/API/NavigatorOnLine/onLine
+    refreshWhenOffline: true,
   });
 }

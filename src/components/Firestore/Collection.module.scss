@@ -18,6 +18,10 @@
   width: 360px;
 }
 
+.button-wrapper {
+  display: inline-block;
+}
+
 .badge {
   &:after {
     content: ' ';

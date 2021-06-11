@@ -16,13 +16,10 @@
 
 import { render } from '@testing-library/react';
 import React from 'react';
-import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 
-import {
-  createFakeFirestoreRequestEvaluation,
-  getMockFirestoreStore,
-} from '../testing/test_utils';
+import { createFakeFirestoreRequestEvaluation } from '../testing/test_utils';
+import { TestFirestoreRequestsProvider } from './FirestoreRequestsProvider';
 import FirestoreRequests from '.';
 
 const FAKE_EVALUATION_ID = 'first-fake-evaluation';
@@ -32,13 +29,12 @@ const FAKE_EVALUATION = createFakeFirestoreRequestEvaluation({
 
 describe('Firestore Requests', () => {
   it('renders requests table when /firestore/requests', async () => {
-    const store = getMockFirestoreStore();
     const { getByTestId } = render(
-      <Provider store={store}>
+      <TestFirestoreRequestsProvider state={{ requests: [] }}>
         <MemoryRouter initialEntries={['/firestore/requests']}>
           <FirestoreRequests />
         </MemoryRouter>
-      </Provider>
+      </TestFirestoreRequestsProvider>
     );
 
     expect(getByTestId('requests-card')).not.toBeNull();
@@ -47,36 +43,28 @@ describe('Firestore Requests', () => {
   it('renders request details view when /firestore/requests/:requestId', async () => {
     // Make sure an evaluation with such ID exists on the store,
     // otherwise you would be redirected back to the requests table
-    const store = getMockFirestoreStore({
-      firestore: {
-        requests: {
-          evaluations: [FAKE_EVALUATION],
-        },
-      },
-    });
     const { getByTestId } = render(
-      <Provider store={store}>
+      <TestFirestoreRequestsProvider state={{ requests: [FAKE_EVALUATION] }}>
         <MemoryRouter
           initialEntries={[`/firestore/requests/${FAKE_EVALUATION_ID}`]}
         >
           <FirestoreRequests />
         </MemoryRouter>
-      </Provider>
+      </TestFirestoreRequestsProvider>
     );
 
     expect(getByTestId('request-details')).not.toBeNull();
   });
 
   it('redirects to /firestore/requests for any other /firestore/requests/:requestId/... path', async () => {
-    const store = getMockFirestoreStore();
     const { getByTestId } = render(
-      <Provider store={store}>
+      <TestFirestoreRequestsProvider state={{ requests: [] }}>
         <MemoryRouter
           initialEntries={[`/firestore/requests/${FAKE_EVALUATION_ID}/foo`]}
         >
           <FirestoreRequests />
         </MemoryRouter>
-      </Provider>
+      </TestFirestoreRequestsProvider>
     );
 
     expect(getByTestId('requests-card')).not.toBeNull();

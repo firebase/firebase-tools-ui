@@ -15,24 +15,20 @@
  */
 
 import firebase from 'firebase';
-import React, { Suspense, useEffect, useState } from 'react';
-import {
-  FirebaseAppProvider,
-  preloadFirestore,
-  useFirebaseApp,
-  useFirestore,
-} from 'reactfire';
+import React, { useCallback, useEffect } from 'react';
+import { FirebaseAppProvider, useFirestore } from 'reactfire';
 import { mutate } from 'swr';
 
 import { useEmulatedFirebaseApp } from '../../firebase';
-import { useFirestoreConfig, useProjectId } from '../../store/config/selectors';
-import { Spinner } from '../common/Spinner';
+import { useConfig, useEmulatorConfig } from '../common/EmulatorConfigProvider';
 import { useFetcher, useRequest } from '../common/useRequest';
 import { MissingDocument } from './models';
 
 interface WindowWithFirestore extends Window {
   firestore?: firebase.firestore.Firestore;
 }
+
+const FIRESTORE_OPTIONS = {};
 
 /**
  * Provide a local-FirebaseApp with a FirestoreSDK connected to
@@ -41,38 +37,27 @@ interface WindowWithFirestore extends Window {
 export const FirestoreEmulatedApiProvider: React.FC<{
   disableDevTools?: boolean;
 }> = React.memo(({ children, disableDevTools }) => {
-  const config = useFirestoreConfig();
-  const app = useEmulatedFirebaseApp('firestore', config);
+  const config = useEmulatorConfig('firestore');
+  const app = useEmulatedFirebaseApp(
+    'firestore',
+    FIRESTORE_OPTIONS,
+    useCallback(
+      (app) => {
+        app.firestore().useEmulator(config.host, config.port);
+      },
+      [config]
+    )
+  );
+  if (!app) {
+    return null;
+  }
 
   return (
     <FirebaseAppProvider firebaseApp={app}>
-      <Suspense
-        fallback={<Spinner message="Loading Firestore SDK" span={12} />}
-      >
-        <FirestoreEmulatorSettings>
-          {children}
-          {disableDevTools || <FirestoreDevTools />}
-        </FirestoreEmulatorSettings>
-      </Suspense>
+      {children}
+      {disableDevTools || <FirestoreDevTools />}
     </FirebaseAppProvider>
   );
-});
-
-// Connect FirestoreSDK to Emulator Hub
-const FirestoreEmulatorSettings: React.FC = React.memo(({ children }) => {
-  const [connected, setConnected] = useState(false);
-  const firebaseApp = useFirebaseApp();
-  // TODO: update config to always have a firestore-config obj
-  const config = useFirestoreConfig()!;
-
-  useEffect(() => {
-    preloadFirestore({
-      firebaseApp,
-      setup: (firestore) => firestore().useEmulator(config.host, config.port),
-    }).then(() => setConnected(true));
-  }, [firebaseApp, config]);
-
-  return connected ? <>{children}</> : null;
 });
 
 const FirestoreDevTools: React.FC = React.memo(() => {
@@ -96,9 +81,8 @@ const FirestoreDevTools: React.FC = React.memo(() => {
 });
 
 function useFirestoreRestApi() {
-  // TODO: update config to always have a firestore-config obj
-  const config = useFirestoreConfig()!;
-  const projectId = useProjectId();
+  const config = useEmulatorConfig('firestore');
+  const { projectId } = useConfig();
   const databaseId = '(default)';
 
   return {
@@ -194,6 +178,24 @@ export function useEjector() {
 
   return async () => {
     mutate('*');
+    return await fetcher(url);
+  };
+}
+
+export function useRecursiveDelete() {
+  const { baseEmulatorUrl } = useFirestoreRestApi();
+  const fetcher = useFetcher({
+    method: 'DELETE',
+  });
+
+  return async (
+    ref:
+      | firebase.firestore.CollectionReference
+      | firebase.firestore.DocumentReference
+  ) => {
+    mutate('*');
+    const encodedPath = encodePath(ref.path);
+    const url = `${baseEmulatorUrl}/documents/${encodedPath}`;
     return await fetcher(url);
   };
 }
