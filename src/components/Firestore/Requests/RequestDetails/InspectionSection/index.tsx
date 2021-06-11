@@ -47,7 +47,11 @@ const InspectionSection: React.FC<Props> = ({ inspectionExpressions }) => {
       data-testid="request-details-inspection-section"
       className="Firestore-Request-Details-Inspection"
     >
-      <InspectionBlock isMainBlock label={EXPRESSIONS_INSPECTION_LABEL}>
+      <InspectionBlock
+        isMainBlock
+        label={EXPRESSIONS_INSPECTION_LABEL}
+        value={''}
+      >
         {renderInspectionContent()}
       </InspectionBlock>
     </div>

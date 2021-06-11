@@ -19,9 +19,18 @@ import './InspectionBlock.scss';
 import { Icon } from '@rmwc/icon';
 import { Theme, ThemeProvider } from '@rmwc/theme';
 import classnames from 'classnames';
+import firebase from 'firebase';
 import React, { useState } from 'react';
 
 import { grey100, textBlackTertiary } from '../../../../../colors';
+import DocumentEditor from '../../../DocumentEditor';
+import {
+  FirestoreAny,
+  FirestoreArray,
+  FirestoreMap,
+  FirestorePrimitive,
+} from '../../../models';
+import { RulesValue } from '../../rules_evaluation_result_model';
 
 const INSPECT_BLOCK_CLASS = 'Firestore-Request-Details-Inspection-Block';
 const MAIN_INSPECT_BLOCK_CLASS = INSPECT_BLOCK_CLASS + '--Main';
@@ -30,7 +39,7 @@ const MAIN_INSPECT_BLOCK_BACKGROUND_COLOR = '#e2e2e2';
 
 interface Props {
   label: string;
-  value?: string;
+  value: FirestoreAny;
   isMainBlock?: boolean;
 }
 
@@ -53,8 +62,8 @@ export const InspectionBlock: React.FC<Props> = ({
     //       (string, number, boolean, object and maybe array too)
     return (
       <Theme use="secondary">
-        <div className={`${INSPECT_BLOCK_CLASS}-Value`} title={value}>
-          {value}
+        <div className={`${INSPECT_BLOCK_CLASS}-Value`} title="placeholder">
+          <DocumentEditor value={value}></DocumentEditor>
         </div>
       </Theme>
     );

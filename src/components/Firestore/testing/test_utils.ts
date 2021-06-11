@@ -63,27 +63,21 @@ export function createFakeFirestoreRequestEvaluation(
   return {
     outcome: 'allow',
     rulesContext: {
-      request: {
-        method: 'get',
-        path: 'databases/(default)/documents/users/foo',
-        time: new Date().getTime(),
-      },
+      request: {},
       resource: {
-        __name__: 'foo',
-        id: 'database/(default)/documents/users/foo',
-        data: {
-          name: 'Foo Bar',
-          accountAge: 94,
-        },
+        // id: 'database/(default)/documents/users/foo',
+        // data: {
+        //   name: 'Foo Bar',
+        //   accountAge: 94,
+        // },
       },
+      method: 'get',
+      path: 'databases/(default)/documents/users/foo',
+      time: new Date().toString(),
     },
     requestId: 'unique_id',
     granularAllowOutcomes: [],
-    data: {
-      isCompilationSuccess: true,
-      rules: SAMPLE_RULES,
-      issues: [],
-    },
+    rules: SAMPLE_RULES,
     ...evaluation,
   };
 }

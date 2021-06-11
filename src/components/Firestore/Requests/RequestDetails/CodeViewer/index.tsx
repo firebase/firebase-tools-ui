@@ -82,15 +82,16 @@ const RulesCodeViewer: React.FC<Props> = ({
   useEffect(() => {
     if (codeMirrorEditor && linesOutcome) {
       linesOutcome.forEach(({ line, outcome }) => {
+        const rulesOutcome: RulesOutcome = outcome ? 'allow' : 'deny';
         codeMirrorEditor.setGutterMarker(
           line - 1,
           'CodeMirror-gutter-elt',
-          getMarkerElement(outcome)
+          getMarkerElement(rulesOutcome)
         );
         codeMirrorEditor.addLineClass(
           line - 1,
           '',
-          `highlighted-line-of-code--${outcome}`
+          `highlighted-line-of-code--${rulesOutcome}`
         );
       });
     }

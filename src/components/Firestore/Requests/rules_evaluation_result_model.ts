@@ -33,9 +33,6 @@ export interface RulesAuthObject {
 /** The generic rules request */
 export interface RulesRequest {
   auth?: RulesAuthObject;
-  method: string;
-  path: string;
-  time: number;
 }
 
 /** A Firestore resource that is pulled into the rules context */
@@ -52,13 +49,16 @@ export interface FirestoreRulesRequest extends RulesRequest {
     offset?: number; // Not sure the type for this
     orderBy?: string;
   };
-  resource?: FirestoreResource;
+  resource?: RulesValue;
 }
 
 /** Everything that's in scope when rules are evaluated */
 export interface FirestoreRulesContext {
   request: FirestoreRulesRequest;
-  resource?: FirestoreResource;
+  resource?: RulesValue;
+  path: string;
+  method: string;
+  time: string;
 }
 
 export type RulesOutcome = 'allow' | 'deny' | 'error' | 'admin';
@@ -87,6 +87,27 @@ export interface FirestoreRulesEvaluation {
 
   // TODO: Add a more cleaned-up version of the detailed info
   granularAllowOutcomes: OutcomeInfo[];
-  type?: string;
-  data?: FirestoreRulesUpdateData;
+  rules?: string;
 }
+
+export interface RulesValue {
+  mapValue?: {
+    fields: { [key: string]: RulesValue };
+  };
+  listValue?: {
+    values: RulesValue[];
+  };
+  timestampValue?: string;
+  stringValue?: string;
+  pathValue?: {
+    segments: Array<{ simple: string }>;
+  };
+  nullValue?: null;
+  boolValue?: boolean;
+  intValue?: number;
+  floatValue?: number;
+}
+// export type RulesPrimitive = RulesTimestampValue|RulesStringValue|
+// RulesPathValue|RulesNullValue|RulesBoolValue|RulesIntValue|RulesFloatValue;
+// export type RulesValue = RulesMapValue|RulesListValue|RulesPrimitive;
+// export type
