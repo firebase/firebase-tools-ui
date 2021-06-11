@@ -30,7 +30,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { background, primary, secondary } from './colors';
 import App from './components/App';
 import { EmulatorConfigProvider } from './components/common/EmulatorConfigProvider';
-import { FirestoreRequestsProvider } from './components/Firestore/FirestoreRequestsProvider';
+import { FirestoreRequestsProvider } from './components/Firestore/Requests/FirestoreRequestsProvider';
 import configureStore from './configureStore';
 import { error } from './themes';
 

@@ -26,15 +26,8 @@ import {
 } from '@rmwc/data-table';
 import classnames from 'classnames';
 import React, { useRef } from 'react';
-import { connect } from 'react-redux';
 
-import { createStructuredSelector } from '../../../../../store';
-import {
-  getFilteredRequestsEvaluations,
-  getShowTable,
-  getShowZeroResults,
-  getShowZeroState,
-} from '../../../../../store/firestore/requests/evaluations/selectors';
+import { useFirestoreRequests } from '../../FirestoreRequestsProvider';
 import { FirestoreRulesEvaluation } from '../../rules_evaluation_result_model';
 import { usePathContainerWidth } from '../../utils';
 import RequestsNoResults from './NoResults';
@@ -44,17 +37,13 @@ import RequestsZeroState from './ZeroState';
 const TABLE_CLASS = 'Firestore-Requests-Table';
 const EMPTY_TABLE_CLASS = TABLE_CLASS + '--Empty';
 
-const mapStateToProps = createStructuredSelector({
-  filteredRequests: getFilteredRequestsEvaluations,
-  shouldShowZeroState: getShowZeroState,
-  shouldShowZeroResults: getShowZeroResults,
-  shouldShowTable: getShowTable,
-});
-interface PropsFromStore extends ReturnType<typeof mapStateToProps> {}
-interface PropsFromParentComponent {
-  setShowCopyNotification: (value: boolean) => void;
+interface Props {
+  filteredRequests: FirestoreRulesEvaluation[];
+  shouldShowZeroState: boolean;
+  shouldShowZeroResults: boolean;
+  shouldShowTable: boolean;
+  setShowCopyNotification: (show: boolean) => void;
 }
-interface Props extends PropsFromStore, PropsFromParentComponent {}
 
 export const RequestsTable: React.FC<Props> = ({
   filteredRequests,
@@ -96,7 +85,7 @@ export const RequestsTable: React.FC<Props> = ({
                 className={`${TABLE_CLASS}-Path-Header`}
                 theme="secondary"
               >
-                {/* 
+                {/*
                   (ref) is placed on an inner div to avoid the padding of the Table Header
                   from modifying the returned value of the path container's real width
                 */}
@@ -127,4 +116,25 @@ export const RequestsTable: React.FC<Props> = ({
   );
 };
 
-export default connect(mapStateToProps)(RequestsTable);
+export const RequestsTableWrapper: React.FC<{
+  setShowCopyNotification: (show: boolean) => void;
+}> = ({ setShowCopyNotification }) => {
+  const evaluations = useFirestoreRequests().requests;
+
+  // TODO: Add support for filtering.
+  const filteredEvaluations = evaluations;
+
+  return (
+    <RequestsTable
+      filteredRequests={filteredEvaluations}
+      shouldShowZeroState={evaluations.length === 0}
+      shouldShowZeroResults={
+        evaluations.length > 0 && filteredEvaluations.length === 0
+      }
+      shouldShowTable={filteredEvaluations.length > 0}
+      setShowCopyNotification={setShowCopyNotification}
+    />
+  );
+};
+
+export default RequestsTableWrapper;

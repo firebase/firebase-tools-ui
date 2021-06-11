@@ -26,21 +26,18 @@ export class ReconnectingWebSocket {
   interval: number | undefined = undefined;
   ws: WebSocket | undefined = undefined;
 
-  constructor(webSocketHostAndPort: string) {
-    this.connect(webSocketHostAndPort);
+  constructor(wsUrl: string) {
+    this.connect(wsUrl);
     // XXX: The Node.js typings for setInterval is leaking in, which causes the
     // function to be typed to return NodeJS.Timeout and thus the as-any cast.
     // TODO: Remove Node.js typings from source files for the web.
-    this.interval = setInterval(
-      () => this.connect(webSocketHostAndPort),
-      1000
-    ) as any;
+    this.interval = setInterval(() => this.connect(wsUrl), 1000) as any;
   }
 
-  private connect(webSocketHostAndPort: string) {
+  private connect(wsUrl: string) {
     if (this.state !== WebSocketState.DISCONNECTED) return;
 
-    const ws = new WebSocket(`ws://${webSocketHostAndPort}`);
+    const ws = new WebSocket(wsUrl);
     this.ws = ws;
     this.state = WebSocketState.PENDING;
 

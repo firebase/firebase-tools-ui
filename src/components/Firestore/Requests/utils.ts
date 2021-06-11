@@ -15,7 +15,7 @@
  */
 
 import debounce from 'lodash.debounce';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { RulesOutcome } from './rules_evaluation_result_model';
 import { OutcomeData } from './types';
@@ -46,20 +46,15 @@ export function usePathContainerWidth(
     number | undefined
   >();
 
-  const getPathContainerWidth = useCallback(() => {
-    return pathContainerRef?.current?.offsetWidth;
-  }, [pathContainerRef]);
-
-  // Update (pathContainerWidth), debounce helps avoiding unnecessary calls
-  const debouncedHandleWindowResize = useCallback(
-    debounce(() => {
-      setPathContainerWidth(getPathContainerWidth());
-    }, 150),
-    [setPathContainerWidth, getPathContainerWidth]
-  );
-
-  // NOTE: this code only executes the first time the component renders.
   useEffect(() => {
+    const getPathContainerWidth = () => {
+      return pathContainerRef?.current?.offsetWidth;
+    };
+    // Update (pathContainerWidth), debounce helps avoiding unnecessary calls
+    const debouncedHandleWindowResize = debounce(() => {
+      setPathContainerWidth(getPathContainerWidth());
+    }, 150);
+
     // Set the initial width of path-container
     setPathContainerWidth(getPathContainerWidth());
     // Starts the subscription to window-resizing, and sends a callback
@@ -69,7 +64,7 @@ export function usePathContainerWidth(
     // (to ensure only one subscription to window-resizing is active at a time)
     return () =>
       window?.removeEventListener('resize', debouncedHandleWindowResize);
-  }, [debouncedHandleWindowResize, getPathContainerWidth]);
+  }, [setPathContainerWidth, pathContainerRef]);
 
   return pathContainerWidth;
 }

@@ -49,7 +49,7 @@ export const LogViewer: React.FC = () => {
     if (!config) return;
 
     setLogs([]);
-    const webSocket = new ReconnectingWebSocket(config.hostAndPort);
+    const webSocket = new ReconnectingWebSocket(`ws://${config.hostAndPort}`);
     webSocket.listener = (log: LogEntry) => {
       setLogs((logs) => [...logs, log]);
     };

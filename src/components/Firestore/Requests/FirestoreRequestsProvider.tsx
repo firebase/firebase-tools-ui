@@ -16,10 +16,12 @@
 
 import React, { useEffect, useState } from 'react';
 
-import { useConfigOptional } from '../common/EmulatorConfigProvider';
+import { ReconnectingWebSocket } from '../../../reconnectingWebSocket';
+import { useConfigOptional } from '../../common/EmulatorConfigProvider';
+import { FirestoreRulesEvaluation } from './rules_evaluation_result_model';
 
 interface FirestoreRequestsState {
-  requests: unknown[]; // TODO
+  requests: FirestoreRulesEvaluation[];
 }
 
 const firestoreRequestsContext = React.createContext<
@@ -27,21 +29,43 @@ const firestoreRequestsContext = React.createContext<
 >(undefined);
 
 export const FirestoreRequestsProvider: React.FC = ({ children }) => {
-  const [requests, setRequests] = useState([]);
+  const [requests, setRequests] = useState<FirestoreRulesEvaluation[]>([]);
   const config = useConfigOptional()?.firestore;
   useEffect(() => {
     if (!config || !config.webSocketHost || !config.webSocketPort) {
       setRequests([]);
     } else {
-      const wsUrl = new URL('ws://placeholder');
+      const wsUrl = new URL('ws://placeholder/requests');
       wsUrl.host = config.webSocketHost;
       wsUrl.port = config.webSocketPort.toString();
-      console.log(wsUrl); // TODO: Connect to WS.
+
+      const webSocket = new ReconnectingWebSocket(wsUrl.toString());
+      webSocket.listener = (
+        newEvaluation: FirestoreRulesEvaluation | FirestoreRulesEvaluation[]
+      ) => {
+        if (newEvaluation instanceof Array) {
+          // This is the initial "blast" of prior requests
+          setRequests(newEvaluation);
+        } else {
+          setRequests((requests) => [...requests, newEvaluation]);
+        }
+      };
+      return () => webSocket.cleanup();
     }
   }, [config, setRequests]);
 
   return (
     <firestoreRequestsContext.Provider value={{ requests }}>
+      {children}
+    </firestoreRequestsContext.Provider>
+  );
+};
+
+export const TestFirestoreRequestsProvider: React.FC<{
+  state: FirestoreRequestsState;
+}> = ({ state, children }) => {
+  return (
+    <firestoreRequestsContext.Provider value={state}>
       {children}
     </firestoreRequestsContext.Provider>
   );
@@ -55,4 +79,11 @@ export function useFirestoreRequests(): FirestoreRequestsState {
     );
   }
   return context;
+}
+
+export function useFirestoreRequest(
+  requestId: string
+): FirestoreRulesEvaluation | undefined {
+  const { requests } = useFirestoreRequests();
+  return requests.find((req) => req.requestId === requestId);
 }
