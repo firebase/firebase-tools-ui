@@ -43,7 +43,7 @@ export interface FirestoreResource {
 }
 
 /** This corresponds to the `request` variable in rules */
-export interface FirestoreRulesRequest extends RulesRequest {
+export interface FirestoreRulesRequest extends RulesRequest, RulesValue {
   query?: {
     limit?: number;
     offset?: number; // Not sure the type for this

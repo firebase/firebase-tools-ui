@@ -157,10 +157,14 @@ function getInspectionExpressions(
     },
   ];
 
-  if (rulesContext.request.resource) {
+  console.log(rulesContext);
+
+  if (rulesContext.request.mapValue?.fields?.resource) {
     inspections.push({
       label: 'request.resource',
-      value: convertRulesTypeToFirestoreAny(rulesContext.request.resource),
+      value: convertRulesTypeToFirestoreAny(
+        rulesContext.request.mapValue.fields.resource
+      ),
     });
   }
 

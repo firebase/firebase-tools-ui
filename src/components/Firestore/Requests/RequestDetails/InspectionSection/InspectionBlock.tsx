@@ -20,10 +20,12 @@ import { Icon } from '@rmwc/icon';
 import { Theme, ThemeProvider } from '@rmwc/theme';
 import classnames from 'classnames';
 import firebase from 'firebase';
-import React, { useState } from 'react';
+import React, { ReactNode, useState } from 'react';
 
 import { grey100, textBlackTertiary } from '../../../../../colors';
 import DocumentEditor from '../../../DocumentEditor';
+import FieldPreview from '../../../DocumentPreview/FieldPreview';
+import { DocumentProvider } from '../../../DocumentPreview/store';
 import {
   FirestoreAny,
   FirestoreArray,
@@ -58,12 +60,34 @@ export const InspectionBlock: React.FC<Props> = ({
     if (children) {
       return children;
     }
+
+    if (value === null) value = 'null';
+    let mainContent: ReactNode;
+    if (typeof value !== 'object') {
+      mainContent = value;
+    } else {
+      mainContent = (
+        <>
+          {Object.entries(value as object).map(([k, v]) => {
+            return (
+              <FieldPreview
+                path={[k]}
+                documentRef={null as any}
+                maxSummaryLen={10}
+              ></FieldPreview>
+            );
+          })}
+        </>
+      );
+    }
     // TODO: improve how the value property is rendered: differ by value types
     //       (string, number, boolean, object and maybe array too)
     return (
       <Theme use="secondary">
         <div className={`${INSPECT_BLOCK_CLASS}-Value`} title="placeholder">
-          <DocumentEditor value={value}></DocumentEditor>
+          <DocumentProvider value={value as FirestoreMap}>
+            {mainContent}
+          </DocumentProvider>
         </div>
       </Theme>
     );

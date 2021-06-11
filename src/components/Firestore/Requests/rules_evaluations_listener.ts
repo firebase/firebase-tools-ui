@@ -24,7 +24,7 @@ import { SAMPLE_RULES } from './sample-rules';
 
 // TODO: Replace hardcoded websocket URL (used for development purposes only)
 //       with a function that somehow gets the proper URL
-const REQUESTS_EVALUATION_WEBSOCKET_HOST_AND_PORT = 'localhost:44327/requests';
+const REQUESTS_EVALUATION_WEBSOCKET_HOST_AND_PORT = 'localhost:32865/requests';
 
 // Returns an id made out of 20 random upper- and lower-case letters and numbers
 // TODO: Remove generateId function once the backend itself generates a UID for each request

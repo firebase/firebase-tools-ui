@@ -51,6 +51,7 @@ const FieldPreview: React.FC<{
   const [isEditing, setIsEditing] = useState(false);
   const [isExpanded, setIsExpanded] = useState(true);
   const [isAddingField, setIsAddingField] = useState(false);
+  const canEdit = !!documentRef;
 
   let childFields = null;
   if (isMap(state)) {
@@ -83,7 +84,7 @@ const FieldPreview: React.FC<{
     });
   }
 
-  return isEditing ? (
+  return canEdit && isEditing ? (
     <>
       {isArray(parentState) && (
         <InlineEditor
@@ -141,37 +142,41 @@ const FieldPreview: React.FC<{
         <span className="FieldPreview-summary">
           {summarize(state, maxSummaryLen)}
         </span>
-        <ListItemMeta className="FieldPreview-actions">
-          <span className="FieldPreview-type">({getFieldType(state)})</span>
-          {isPrimitive(state) && supportsEditing(state) && (
+        {canEdit ? (
+          <ListItemMeta className="FieldPreview-actions">
+            <span className="FieldPreview-type">({getFieldType(state)})</span>
+            {isPrimitive(state) && supportsEditing(state) && (
+              <IconButton
+                icon="edit"
+                label="Edit field"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsEditing(true);
+                }}
+              />
+            )}{' '}
+            {(isArray(state) || isMap(state)) && (
+              <IconButton
+                icon="add"
+                label="Add field"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsAddingField(true);
+                }}
+              />
+            )}
             <IconButton
-              icon="edit"
-              label="Edit field"
+              icon="delete"
+              label="Remove field"
               onClick={(e) => {
                 e.stopPropagation();
-                setIsEditing(true);
+                deleteField(documentRef, documentData, path);
               }}
             />
-          )}{' '}
-          {(isArray(state) || isMap(state)) && (
-            <IconButton
-              icon="add"
-              label="Add field"
-              onClick={(e) => {
-                e.stopPropagation();
-                setIsAddingField(true);
-              }}
-            />
-          )}
-          <IconButton
-            icon="delete"
-            label="Remove field"
-            onClick={(e) => {
-              e.stopPropagation();
-              deleteField(documentRef, documentData, path);
-            }}
-          />
-        </ListItemMeta>
+          </ListItemMeta>
+        ) : (
+          <></>
+        )}
       </ListItem>
 
       {isAddingField && isArray(state) && (
