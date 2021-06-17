@@ -30,14 +30,21 @@ const firestoreRequestsContext = React.createContext<
 
 export const FirestoreRequestsProvider: React.FC = ({ children }) => {
   const [requests, setRequests] = useState<FirestoreRulesEvaluation[]>([]);
-  const config = useConfigOptional()?.firestore;
+  const config = useConfigOptional();
+  const projectId = config?.projectId;
+  const firestore = config?.firestore;
   useEffect(() => {
-    if (!config || !config.webSocketHost || !config.webSocketPort) {
+    if (
+      !projectId ||
+      !firestore ||
+      !firestore.webSocketHost ||
+      !firestore.webSocketPort
+    ) {
       setRequests([]);
     } else {
       const wsUrl = new URL('ws://placeholder/requests');
-      wsUrl.host = config.webSocketHost;
-      wsUrl.port = config.webSocketPort.toString();
+      wsUrl.host = firestore.webSocketHost;
+      wsUrl.port = firestore.webSocketPort.toString();
 
       const webSocket = new ReconnectingWebSocket(wsUrl.toString());
       webSocket.listener = (
@@ -45,14 +52,23 @@ export const FirestoreRequestsProvider: React.FC = ({ children }) => {
       ) => {
         if (newEvaluation instanceof Array) {
           // This is the initial "blast" of prior requests
-          setRequests(newEvaluation);
-        } else {
+          setRequests(newEvaluation.filter(isCurrentProject));
+        } else if (isCurrentProject(newEvaluation)) {
           setRequests((requests) => [...requests, newEvaluation]);
         }
       };
+
       return () => webSocket.cleanup();
     }
-  }, [config, setRequests]);
+
+    function isCurrentProject(evaluation: FirestoreRulesEvaluation): boolean {
+      if (!evaluation.rulesReleaseName) {
+        // Old versions of Firestore Emulator does not send this field.
+        return true; // Let's assume the same project and hope for the best.
+      }
+      return evaluation.rulesReleaseName.startsWith(`projects/${projectId}/`);
+    }
+  }, [projectId, firestore, setRequests]);
 
   return (
     <firestoreRequestsContext.Provider value={{ requests }}>

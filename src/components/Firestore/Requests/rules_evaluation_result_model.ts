@@ -88,6 +88,7 @@ export interface FirestoreRulesEvaluation {
   // TODO: Add a more cleaned-up version of the detailed info
   granularAllowOutcomes: OutcomeInfo[];
   rules?: string;
+  rulesReleaseName?: string;
 }
 
 export interface RulesValue {
