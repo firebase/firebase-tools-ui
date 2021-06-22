@@ -170,6 +170,12 @@ function getInspectionExpressions(
     });
   }
 
+  const auth = rulesContext.request.mapValue?.fields?.auth;
+  inspections.push({
+    label: 'request.auth',
+    value: auth ? convertRulesTypeToFirestoreAny(auth) : null,
+  });
+
   if (rulesContext.resource) {
     inspections.push({
       label: 'resource',
