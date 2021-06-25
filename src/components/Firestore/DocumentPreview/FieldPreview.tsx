@@ -33,6 +33,7 @@ import {
   isArray,
   isMap,
   isPrimitive,
+  isTimestamp,
   lastFieldName,
   summarize,
 } from '../utils';
@@ -139,7 +140,10 @@ const FieldPreview: React.FC<{
         <Theme use="secondary" tag="span" className="FieldPreview-key">
           {lastFieldName(path)}
         </Theme>
-        <span className="FieldPreview-summary">
+        <span
+          className="FieldPreview-summary"
+          title={isTimestamp(state) ? state.toDate().toISOString() : ''}
+        >
           {summarize(state, maxSummaryLen)}
         </span>
         {canEdit ? (

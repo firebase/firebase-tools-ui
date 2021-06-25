@@ -43,11 +43,7 @@ import RequestDetailsHeader from './Header/index';
 import RequestDetailsInspectionSection from './InspectionSection/index';
 
 function convertTimestamp(ts: string): firebase.firestore.Timestamp {
-  const date = new Date(ts);
-  return new firebase.firestore.Timestamp(
-    date.getSeconds(),
-    date.getMilliseconds() * 1000000
-  );
+  return firebase.firestore.Timestamp.fromDate(new Date(ts));
 }
 
 function convertPath(path: string): string {
@@ -145,6 +141,9 @@ function getInspectionExpressions(
     return [];
   }
 
+  // List all fields from rules `request.*`. See doc below for details.
+  // https://firebase.google.com/docs/reference/rules/rules.firestore.Request
+
   const inspections: InspectionElement[] = [
     // Do the special one-off ones first
     {
@@ -175,6 +174,14 @@ function getInspectionExpressions(
     label: 'request.auth',
     value: auth ? convertRulesTypeToFirestoreAny(auth) : null,
   });
+
+  const query = rulesContext.request.mapValue?.fields?.query;
+  if (query) {
+    inspections.push({
+      label: 'request.query',
+      value: convertRulesTypeToFirestoreAny(query),
+    });
+  }
 
   if (rulesContext.resource) {
     inspections.push({

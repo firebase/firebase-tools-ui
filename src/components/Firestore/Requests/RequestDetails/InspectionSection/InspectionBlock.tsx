@@ -19,20 +19,13 @@ import './InspectionBlock.scss';
 import { Icon } from '@rmwc/icon';
 import { Theme, ThemeProvider } from '@rmwc/theme';
 import classnames from 'classnames';
-import firebase from 'firebase';
 import React, { ReactNode, useState } from 'react';
 
 import { grey100, textBlackTertiary } from '../../../../../colors';
-import DocumentEditor from '../../../DocumentEditor';
 import FieldPreview from '../../../DocumentPreview/FieldPreview';
 import { DocumentProvider } from '../../../DocumentPreview/store';
-import {
-  FirestoreAny,
-  FirestoreArray,
-  FirestoreMap,
-  FirestorePrimitive,
-} from '../../../models';
-import { RulesValue } from '../../rules_evaluation_result_model';
+import { FirestoreAny, FirestoreMap } from '../../../models';
+import { isArray, isMap, isTimestamp, summarize } from '../../../utils';
 
 const INSPECT_BLOCK_CLASS = 'Firestore-Request-Details-Inspection-Block';
 const MAIN_INSPECT_BLOCK_CLASS = INSPECT_BLOCK_CLASS + '--Main';
@@ -61,11 +54,8 @@ export const InspectionBlock: React.FC<Props> = ({
       return children;
     }
 
-    if (value === null) value = 'null';
     let mainContent: ReactNode;
-    if (typeof value !== 'object') {
-      mainContent = value;
-    } else {
+    if (isArray(value) || isMap(value)) {
       mainContent = (
         <>
           {Object.entries(value as object).map(([k, v]) => {
@@ -79,12 +69,18 @@ export const InspectionBlock: React.FC<Props> = ({
           })}
         </>
       );
+    } else if (isTimestamp(value)) {
+      mainContent = (
+        <span title={value.toDate().toISOString()}>{summarize(value, 20)}</span>
+      );
+    } else {
+      mainContent = summarize(value, 20);
     }
     // TODO: improve how the value property is rendered: differ by value types
     //       (string, number, boolean, object and maybe array too)
     return (
       <Theme use="secondary">
-        <div className={`${INSPECT_BLOCK_CLASS}-Value`} title="placeholder">
+        <div className={`${INSPECT_BLOCK_CLASS}-Value`}>
           <DocumentProvider value={value as FirestoreMap}>
             {mainContent}
           </DocumentProvider>
