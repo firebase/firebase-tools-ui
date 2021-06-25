@@ -33,6 +33,7 @@ import { usePathContainerWidth } from '../../utils';
 import RequestsNoResults from './NoResults';
 import RequestsTableRow from './TableRow';
 import RequestsZeroState from './ZeroState';
+import { Callout } from '../../../../common/Callout';
 
 const TABLE_CLASS = 'Firestore-Requests-Table';
 const EMPTY_TABLE_CLASS = TABLE_CLASS + '--Empty';
@@ -58,7 +59,7 @@ export const RequestsTable: React.FC<Props> = ({
   const requestPathContainerWidth = usePathContainerWidth(pathContainerRef);
 
   return (
-    <>
+    <div className={`${TABLE_CLASS}-Main-Container`}>
       <DataTable
         className={classnames(
           TABLE_CLASS,
@@ -112,7 +113,16 @@ export const RequestsTable: React.FC<Props> = ({
       </DataTable>
       {shouldShowZeroResults && <RequestsNoResults />}
       {shouldShowZeroState && <RequestsZeroState />}
-    </>
+      <Callout type="note">
+        Only client requests are shown above.{' '}
+        <a href="https://firebase.google.com/docs/admin/setup">Admin SDK</a>{' '}
+        requests and{' '}
+        <a href="https://firebase.google.com/docs/firestore/security/rules-conditions#access_other_documents">
+          access calls initiated by Security Rules
+        </a>{' '}
+        are not listed because they bypass Security Rules.
+      </Callout>
+    </div>
   );
 };
 

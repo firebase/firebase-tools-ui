@@ -27,6 +27,7 @@ import { errorTheme, successTheme } from '../../../../../themes';
 import { OutcomeInfo, RulesOutcome } from '../../rules_evaluation_result_model';
 import { ICON_SELECTOR } from '../../utils';
 import CodeViewerAdminRequest from './AdminRequest';
+import { Callout } from '../../../../common/Callout';
 
 // TODO: find a way to remove the CSSProperties cast
 // (TypeScript complains if object is not casted)
@@ -43,7 +44,7 @@ const CODE_MIRROR_OPTIONS = {
   keyMap: 'sublime',
   mode: 'jsx',
   tabSize: 2,
-  readOnly: true,
+  readOnly: false,
   gutters: ['CodeMirror-gutter-elt'],
 };
 
@@ -97,7 +98,7 @@ const RulesCodeViewer: React.FC<Props> = ({
     }
   }, [codeMirrorEditor, linesOutcome]);
 
-  const renderCodeViewer = () => {
+  function renderCodeViewer() {
     if (isAdminRequest) {
       return <CodeViewerAdminRequest />;
     }
@@ -110,12 +111,26 @@ const RulesCodeViewer: React.FC<Props> = ({
     );
   };
 
+  function renderCallout() {
+    if (!linesOutcome?.length) {
+      return (
+        <Callout type="note">
+          The request did not match any allow statements, so it was denied by
+          default.
+        </Callout>
+      )
+    } else {
+      return <></>;
+    }
+  }
+
   return (
     <div
       data-testid="request-details-code-viewer-section"
       className="Firestore-Request-Details-Code-Section"
       style={CODE_VIEWER_CUSTOM_STYLES}
     >
+      {renderCallout()}
       {renderCodeViewer()}
     </div>
   );
