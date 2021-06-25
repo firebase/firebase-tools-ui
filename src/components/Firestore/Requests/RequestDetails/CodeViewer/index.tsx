@@ -44,7 +44,7 @@ const CODE_MIRROR_OPTIONS = {
   keyMap: 'sublime',
   mode: 'jsx',
   tabSize: 2,
-  readOnly: false,
+  readOnly: true,
   gutters: ['CodeMirror-gutter-elt'],
 };
 
