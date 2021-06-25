@@ -49,6 +49,7 @@ $table-body-viewport-height: calc(
     $filters-header-height});
   display: flex;
   flex-direction: column;
+  min-height: $table-min-height;
 
   .Callout {
     border-radius: 0 0 8px 8px;
@@ -65,7 +66,12 @@ $table-body-viewport-height: calc(
   // Avoid double borders.
   margin: 0px;
   border: 0px;
-  flex: 1;
+  
+  // Make it flex if it's not empty
+  &:not(.Firestore-Requests-Table--Empty) {
+    flex: 1;
+  }
+
   // Keep a min-height to keep it usable on short-devices (at the cost of page scrolling)
   min-height: $table-min-height;
   td,
