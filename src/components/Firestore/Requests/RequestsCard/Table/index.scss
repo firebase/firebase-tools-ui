@@ -17,6 +17,7 @@
 @import '../../index.scss';
 @import '../Header/variables.scss';
 @import '../../../Requests/variables.scss';
+@import '../../../../common/radius';
 
 // Table th
 $table-header-height: 31px;
@@ -52,7 +53,7 @@ $table-body-viewport-height: calc(
   min-height: $table-min-height;
 
   .Callout {
-    border-radius: 0 0 8px 8px;
+    border-radius: $BORDER_RADIUS_CARD_BOTTOM;
   }
 
   table {

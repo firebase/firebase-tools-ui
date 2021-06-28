@@ -114,7 +114,7 @@ const RulesCodeViewer: React.FC<Props> = ({
   function renderCallout() {
     if (!linesOutcome?.length) {
       return (
-        <Callout type="note">
+        <Callout type="caution">
           The request did not match any allow statements, so it was denied by
           default.
         </Callout>
