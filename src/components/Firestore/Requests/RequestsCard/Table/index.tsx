@@ -27,13 +27,13 @@ import {
 import classnames from 'classnames';
 import React, { useRef } from 'react';
 
+import { Callout } from '../../../../common/Callout';
 import { useFirestoreRequests } from '../../FirestoreRequestsProvider';
 import { FirestoreRulesEvaluation } from '../../rules_evaluation_result_model';
 import { usePathContainerWidth } from '../../utils';
 import RequestsNoResults from './NoResults';
 import RequestsTableRow from './TableRow';
 import RequestsZeroState from './ZeroState';
-import { Callout } from '../../../../common/Callout';
 
 const TABLE_CLASS = 'Firestore-Requests-Table';
 const EMPTY_TABLE_CLASS = TABLE_CLASS + '--Empty';

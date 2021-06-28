@@ -24,11 +24,11 @@ import React, { useEffect, useRef } from 'react';
 
 import { textBlackTertiary } from '../../../../../colors';
 import { errorTheme, successTheme } from '../../../../../themes';
+import { Callout } from '../../../../common/Callout';
 import { OutcomeInfo, RulesOutcome } from '../../rules_evaluation_result_model';
 import { ICON_SELECTOR } from '../../utils';
 import CodeViewerAdminRequest from './AdminRequest';
 import { MODE_FIREBASE_RULES, defineFirebaseRulesMode } from './mode';
-import { Callout } from '../../../../common/Callout';
 
 // TODO: find a way to remove the CSSProperties cast
 // (TypeScript complains if object is not casted)
@@ -112,7 +112,7 @@ const RulesCodeViewer: React.FC<Props> = ({
       return <CodeViewerAdminRequest />;
     }
     return <textarea ref={ref} value={firestoreRules} readOnly></textarea>;
-  };
+  }
 
   function renderCallout() {
     if (!linesOutcome?.length) {
@@ -121,7 +121,7 @@ const RulesCodeViewer: React.FC<Props> = ({
           The request did not match any allow statements, so it was denied by
           default.
         </Callout>
-      )
+      );
     } else {
       return <></>;
     }
