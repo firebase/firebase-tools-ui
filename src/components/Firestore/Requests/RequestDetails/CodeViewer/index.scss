@@ -21,7 +21,9 @@
   top: 0px;
   left: 0px;
   height: 100%;
-  overflow: scroll;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
   // Hide code viewer for mobile
   @media screen and (max-width: 500px) {
     display: none;

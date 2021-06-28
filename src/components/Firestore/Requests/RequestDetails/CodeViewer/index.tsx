@@ -28,8 +28,7 @@ import { OutcomeInfo, RulesOutcome } from '../../rules_evaluation_result_model';
 import { ICON_SELECTOR } from '../../utils';
 import CodeViewerAdminRequest from './AdminRequest';
 import { MODE_FIREBASE_RULES, defineFirebaseRulesMode } from './mode';
-
-// import CodeMirror from '@uiw/react-codemirror';
+import { Callout } from '../../../../common/Callout';
 
 // TODO: find a way to remove the CSSProperties cast
 // (TypeScript complains if object is not casted)
@@ -108,12 +107,25 @@ const RulesCodeViewer: React.FC<Props> = ({
     }
   }, [ref, firestoreRules, linesOutcome]);
 
-  const renderCodeViewer = () => {
+  function renderCodeViewer() {
     if (isAdminRequest) {
       return <CodeViewerAdminRequest />;
     }
     return <textarea ref={ref} value={firestoreRules} readOnly></textarea>;
   };
+
+  function renderCallout() {
+    if (!linesOutcome?.length) {
+      return (
+        <Callout type="caution">
+          The request did not match any allow statements, so it was denied by
+          default.
+        </Callout>
+      )
+    } else {
+      return <></>;
+    }
+  }
 
   return (
     <div
@@ -121,6 +133,7 @@ const RulesCodeViewer: React.FC<Props> = ({
       className="Firestore-Request-Details-Code-Section"
       style={CODE_VIEWER_CUSTOM_STYLES}
     >
+      {renderCallout()}
       {renderCodeViewer()}
     </div>
   );

@@ -19,7 +19,6 @@ import React, { useState } from 'react';
 import { Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
 
 import { grey100 } from '../../../colors';
-import { Callout } from '../../common/Callout';
 import CopyPathNotification from './CopyPathNotification';
 import RequestDetails from './RequestDetails';
 // import RequestsHeader from './RequestsCard/Header';
@@ -74,18 +73,6 @@ const Requests: React.FC = () => {
           setShowCopyNotification={setShowCopyNotification}
         />
       </ThemeProvider>
-      {/* Show banner only on the table view, but as an immediate child of the Card for layout reasons. */}
-      <Route exact path="/firestore/requests">
-        <Callout type="note">
-          Only client requests are shown above.{' '}
-          <a href="https://firebase.google.com/docs/admin/setup">Admin SDK</a>{' '}
-          requests and{' '}
-          <a href="https://firebase.google.com/docs/firestore/security/rules-conditions#access_other_documents">
-            access calls initiated by Security Rules
-          </a>{' '}
-          are not listed because they bypass Security Rules.
-        </Callout>
-      </Route>
     </>
   );
 };
