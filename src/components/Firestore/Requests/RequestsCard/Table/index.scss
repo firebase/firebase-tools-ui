@@ -17,6 +17,7 @@
 @import '../../index.scss';
 @import '../Header/variables.scss';
 @import '../../../Requests/variables.scss';
+@import '../../../../common/radius';
 
 // Table th
 $table-header-height: 31px;
@@ -44,12 +45,34 @@ $table-body-viewport-height: calc(
     $filters-header-height + $table-header-height}
 );
 
+.Firestore-Requests-Table-Main-Container {
+  height: calc(#{$app-remaining-viewport-height-for-content} - #{$firestore-sub-tabs-total-height +
+    $filters-header-height});
+  display: flex;
+  flex-direction: column;
+  min-height: $table-min-height;
+
+  .Callout {
+    border-radius: $BORDER_RADIUS_CARD_BOTTOM;
+  }
+
+  table {
+    height: 100%;
+  }
+}
+
 // Double selector - for higher specificity to Override rmwc styles.
 .Firestore-Requests-Table.Firestore-Requests-Table {
   border-radius: $table-border-radius;
   // Avoid double borders.
   margin: 0px;
   border: 0px;
+  
+  // Make it flex if it's not empty
+  &:not(.Firestore-Requests-Table--Empty) {
+    flex: 1;
+  }
+
   // Keep a min-height to keep it usable on short-devices (at the cost of page scrolling)
   min-height: $table-min-height;
   td,
@@ -77,6 +100,8 @@ $table-body-viewport-height: calc(
       right: 0px;
       margin-right: 0px;
     }
+    top: 0;
+    z-index: 10;
   }
   td {
     height: $table-cell-height;
@@ -130,6 +155,10 @@ $table-body-viewport-height: calc(
     }
   }
 
+  thead {
+    position: absolute;
+    z-index: 10;
+  }
   // Fix body height and ensure tbody content scrollable behavior
   thead,
   tbody tr {
@@ -141,10 +170,11 @@ $table-body-viewport-height: calc(
   tbody {
     background-color: white;
     min-height: $table-body-min-height;
-    height: $table-body-viewport-height;
     // This styles are required in order to apply scrolling overflow to tbody
     display: block;
     overflow: auto;
+    margin-top: $table-header-height;
+    height: calc(100% - #{$table-header-height});
   }
 }
 
