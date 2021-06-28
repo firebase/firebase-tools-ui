@@ -125,7 +125,7 @@
     155,
     229,
     0.1
-  ); /* GMP_COLOR_PRIMARY_DEFAULT @ 10% */
+  );
 }
 
 /* extra specificity needed to overwrite other rules */
@@ -141,7 +141,7 @@
 }
 
 .cm-s-devsite-light .cm-trailingspace {
-  border-bottom: 1px dashed red; /* TODO(tstirrat): needs better style */
+  border-bottom: 1px dashed red;
 }
 
 .cm-s-devsite-light .cm-keyword {
