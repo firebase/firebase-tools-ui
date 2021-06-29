@@ -38,7 +38,7 @@ describe('Storage Route', () => {
     const history = createMemoryHistory({ initialEntries: ['/storage'] });
 
     const wrapperId = 'wrapper-id';
-    const { getByTestId } = await render(
+    const { findByTestId } = render(
       <FakeStorageWrappers fallbackTestId={'lol'}>
         <Router history={history}>
           <StorageRoute>
@@ -48,7 +48,7 @@ describe('Storage Route', () => {
       </FakeStorageWrappers>
     );
 
-    getByTestId(wrapperId);
+    await findByTestId(wrapperId);
     expect(history.location.pathname).toMatch(/storage\/bucket.*/);
   });
 });
