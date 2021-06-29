@@ -307,12 +307,15 @@ it('deletes collection and nested data when requested', async () => {
     name: 'Delete collection',
   });
 
-  await act(() => {
+  act(() => {
     deleteDocument.click();
-    return delay(1000);
   });
 
-  await waitForElementToBeRemoved(() => queryByText(/cool-doc/));
+  await waitForElementToBeRemoved(() => queryByText(/cool-doc/), {
+    timeout: 2000,
+  });
+
+  expect(queryByText(/cool-doc/)).toBeNull();
 }, 10000);
 
 describe('withCollectionState', () => {
