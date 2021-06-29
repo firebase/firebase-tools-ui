@@ -219,7 +219,7 @@ const TestDeleteComponent: React.FC<{
 it('deletes document when requested', async () => {
   const { findByText, findByRole } = await renderWithFirestore(
     async (firestore) => {
-      const docRef = firestore.doc('my-stuff/foo');
+      const docRef = firestore.doc('whose-stuff/foo');
       const nestedDocRef = docRef
         .collection('nestedCollection')
         .doc('nestedDoc');
@@ -260,7 +260,7 @@ it('deletes document when requested', async () => {
 
   // Nested collection is not deleted by default.
   expect(await findByText('TEST_NESTED_DOC_EXISTS')).not.toBeNull();
-});
+}, 10000);
 
 it('deletes document and nested data when requested', async () => {
   const { findByText, findByRole, getByRole } = await renderWithFirestore(
@@ -353,4 +353,4 @@ it('deletes document fields when requested', async () => {
 
   // Nested collection is not affected.
   expect(await findByText('TEST_NESTED_DOC_EXISTS')).not.toBeNull();
-});
+}, 10000);
