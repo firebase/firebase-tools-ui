@@ -47,11 +47,13 @@ export function createFakeFirestoreRequestEvaluation(
     rulesContext: {
       request: {},
       resource: {
-        // id: 'database/(default)/documents/users/foo',
-        // data: {
-        //   name: 'Foo Bar',
-        //   accountAge: 94,
-        // },
+        mapValue: {
+          fields: {
+            id: {
+              stringValue: 'database/(default)/documents/users/foo',
+            },
+          },
+        },
       },
       method: 'get',
       path: 'databases/(default)/documents/users/foo',
