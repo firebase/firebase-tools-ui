@@ -36,15 +36,15 @@ describe('CodeViewer', () => {
     expect(getByText(ADMIN_REQUEST_MESSAGE)).not.toBeNull();
   });
 
-  it('renders code-viewer when the request is not admin', () => {
-    const { getByText } = render(
+  it('renders code-viewer when the request is not admin', async () => {
+    const { findAllByText } = render(
       <CodeViewer
         firestoreRules={TEST_RULES}
         linesOutcome={[]}
         isAdminRequest={false}
       />
     );
-    expect(getByText(TEST_RULES)).not.toBeNull();
+    expect(await findAllByText(TEST_RULES)).not.toHaveLength(0);
   });
 
   // NOTE: a gutter-icon is the small icon placed right next to the codemirror line of code number
