@@ -116,7 +116,7 @@
     "eslint-plugin-jest": "^23.11.0",
     "eslint-plugin-react-hooks": "^4.0.0",
     "globalthis": "^1.0.1",
-    "husky": "^4.3.6",
+    "husky": "^6.0.0",
     "import-sort-config": "^6.0.0",
     "import-sort-parser-typescript": "^6.0.0",
     "import-sort-style-module": "^6.0.0",
