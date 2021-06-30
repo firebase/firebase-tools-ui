@@ -46,8 +46,10 @@ $table-body-viewport-height: calc(
 );
 
 .Firestore-Requests-Table-Main-Container {
-  height: calc(#{$app-remaining-viewport-height-for-content} - #{$firestore-sub-tabs-total-height +
-    $filters-header-height});
+  height: calc(
+    #{$app-remaining-viewport-height-for-content} - #{$firestore-sub-tabs-total-height +
+      $filters-header-height}
+  );
   display: flex;
   flex-direction: column;
   min-height: $table-min-height;
@@ -67,7 +69,7 @@ $table-body-viewport-height: calc(
   // Avoid double borders.
   margin: 0px;
   border: 0px;
-  
+
   // Make it flex if it's not empty
   &:not(.Firestore-Requests-Table--Empty) {
     flex: 1;
