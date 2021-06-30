@@ -40,10 +40,10 @@ describe('InspectionSection/InspectionBlock', () => {
     const { getByText, findByText } = render(
       <InspectionBlock label="Regular block" isMainBlock={false} />
     );
-    await act(async () => {
-      await fireEvent.click(getByText('expand_more'));
+    act(() => {
+      fireEvent.click(getByText('expand_more'));
     });
-    await expect(findByText('expand_less')).not.toBeNull();
+    expect(await findByText('expand_less')).not.toBeNull();
   });
 
   it("show block's value after expanding block", async () => {
@@ -54,10 +54,10 @@ describe('InspectionSection/InspectionBlock', () => {
         isMainBlock={false}
       />
     );
-    await act(async () => {
-      await fireEvent.click(getByText('expand_more'));
+    act(() => {
+      fireEvent.click(getByText('expand_more'));
     });
-    await expect(findByText('Inspection mocked value')).not.toBeNull();
+    expect(await findByText('"Inspection mocked value"')).not.toBeNull();
   });
 
   it("show block's html children after expanding block", async () => {
@@ -70,9 +70,9 @@ describe('InspectionSection/InspectionBlock', () => {
         <div> Inspection mocked HTML children </div>
       </InspectionBlock>
     );
-    await act(async () => {
-      await fireEvent.click(getByText('expand_more'));
+    act(() => {
+      fireEvent.click(getByText('expand_more'));
     });
-    await expect(findByText('Inspection mocked HTML children')).not.toBeNull();
+    expect(await findByText('Inspection mocked HTML children')).not.toBeNull();
   });
 });

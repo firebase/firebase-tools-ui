@@ -36,11 +36,13 @@ describe('RequestsTableRow', () => {
     });
     const { getByRole } = render(
       <Router history={history}>
-        <RequestsTableRow
-          request={FAKE_EVALUATION}
-          requestId={FAKE_EVALUATION_ID}
-          setShowCopyNotification={SET_SHOW_COPY_NOTIFICATION}
-        />
+        <table>
+          <RequestsTableRow
+            request={FAKE_EVALUATION}
+            requestId={FAKE_EVALUATION_ID}
+            setShowCopyNotification={SET_SHOW_COPY_NOTIFICATION}
+          />
+        </table>
       </Router>
     );
     await act(async () => {
