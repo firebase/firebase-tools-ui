@@ -59,7 +59,7 @@ describe('CodeViewer', () => {
     );
     // NOTE: asynchonous findByText is needed because gutter-icon
     // is added only after the code-mirror component loads
-    await expect(findByText(ICON_SELECTOR['allow'])).not.toBeNull();
+    expect(await findByText(ICON_SELECTOR['allow'])).not.toBeNull();
   });
 
   it('renders the correct gutter-icon when the request was denied', async () => {
@@ -73,11 +73,11 @@ describe('CodeViewer', () => {
     );
     // NOTE: asynchonous findByText is needed because gutter-icon
     // is added only after the code-mirror component loads
-    await expect(findByText(ICON_SELECTOR['deny'])).not.toBeNull();
+    expect(await findByText(ICON_SELECTOR['deny'])).not.toBeNull();
   });
 
   it('renders the correct gutter-icon when the request failed', async () => {
-    const MOCKED_ERROR_LINE: OutcomeInfo = { outcome: 'error', line: 3 };
+    const MOCKED_ERROR_LINE: OutcomeInfo = { outcome: 'error', line: 1 };
     const { findByText } = render(
       <CodeViewer
         firestoreRules={TEST_RULES}
@@ -87,7 +87,7 @@ describe('CodeViewer', () => {
     );
     // NOTE: asynchonous findByText is needed because gutter-icon
     // is added only after the code-mirror component loads
-    await expect(findByText(ICON_SELECTOR['error'])).not.toBeNull();
+    expect(await findByText(ICON_SELECTOR['error'])).not.toBeNull();
   });
 
   // TODO: Test that the lines of code are correctly highlighted when request is:
