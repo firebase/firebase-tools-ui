@@ -34,7 +34,7 @@ describe('DeleteAllButton', () => {
     await uploadFile('lol.txt');
 
     const button = getByText('Delete all files');
-    waitFor(() => expect(button.parentElement.disabled).not.toBe(true), {
+    await waitFor(() => expect(button.parentElement.disabled).not.toBe(true), {
       timeout: true,
     });
 

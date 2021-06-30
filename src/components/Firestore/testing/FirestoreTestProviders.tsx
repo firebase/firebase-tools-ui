@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-import { render, waitFor } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import firebase from 'firebase';
 import React, { Suspense, useEffect, useState } from 'react';
-import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import { useFirestore } from 'reactfire';
-import configureStore from 'redux-mock-store';
 
 import { AppState } from '../../../store';
+import { makeDeferred } from '../../../test_utils';
 import { TestEmulatorConfigProvider } from '../../common/EmulatorConfigProvider';
 import { FirestoreEmulatedApiProvider } from '../FirestoreEmulatedApiProvider';
 
@@ -37,22 +36,33 @@ export const renderWithFirestore = async (
   ) => Promise<React.ReactElement>,
   { path, state }: RenderOptions = {}
 ) => {
+  const errorDeferred = makeDeferred();
   const component = render(
     <FirestoreTestProviders path={path} state={state}>
-      <AsyncFirestore r={children}></AsyncFirestore>
+      <AsyncFirestore
+        r={children}
+        onError={(e) => errorDeferred.reject(e)}
+      ></AsyncFirestore>
     </FirestoreTestProviders>
   );
 
-  await waitFor(() => component.findByTestId(ASYNC_FIRESTORE_WRAPPER_TEST_ID), {
-    // Some test setup can take longer than default 1000ms (esp. cold starts).
-    timeout: 5000,
-  });
+  await Promise.race([
+    errorDeferred.promise,
+    component.findByTestId(
+      ASYNC_FIRESTORE_WRAPPER_TEST_ID,
+      {},
+      {
+        // Some test setup can take longer than default 1000ms (esp. cold starts).
+        timeout: 5000,
+      }
+    ),
+  ]);
 
   return component;
 };
 
 export const FirestoreTestProviders: React.FC<RenderOptions> = React.memo(
-  ({ children, path = '', state = {} }) => {
+  ({ children, path = '' }) => {
     const projectId = `${process.env.GCLOUD_PROJECT}-${Date.now()}`;
     const hostAndPort =
       process.env.FIRESTORE_EMULATOR_HOST ||
@@ -85,7 +95,8 @@ const ASYNC_FIRESTORE_WRAPPER_TEST_ID = 'AsyncFirestore-wrapper';
 
 const AsyncFirestore: React.FC<{
   r: (firestore: firebase.firestore.Firestore) => Promise<React.ReactElement>;
-}> = React.memo(({ r }) => {
+  onError: (e: Error) => void;
+}> = React.memo(({ r, onError }) => {
   const firestore = useFirestore();
   const [
     firestoreChildren,
@@ -93,7 +104,9 @@ const AsyncFirestore: React.FC<{
   ] = useState<React.ReactElement | null>(null);
 
   useEffect(() => {
-    r(firestore).then((c) => setFirestoreChildren(c));
+    r(firestore)
+      .then((c) => setFirestoreChildren(c))
+      .catch(onError);
   }, [r, firestore, setFirestoreChildren]);
 
   return firestoreChildren ? (
