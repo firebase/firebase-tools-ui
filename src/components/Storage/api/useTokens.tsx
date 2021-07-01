@@ -31,6 +31,7 @@ export function useTokens(fullPath: string) {
 
     const response = await fetch(url, {
       method: 'GET',
+      headers: { Authorization: 'Bearer owner' },
     });
 
     const result = await response.json();
