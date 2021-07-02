@@ -50,7 +50,7 @@ const InspectionSection: React.FC<Props> = ({ inspectionExpressions }) => {
       <InspectionBlock
         isMainBlock
         label={EXPRESSIONS_INSPECTION_LABEL}
-        value={''}
+        value={{ nullValue: null }}
       >
         {renderInspectionContent()}
       </InspectionBlock>

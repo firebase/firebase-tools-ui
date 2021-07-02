@@ -19,13 +19,12 @@ import './InspectionBlock.scss';
 import { Icon } from '@rmwc/icon';
 import { Theme, ThemeProvider } from '@rmwc/theme';
 import classnames from 'classnames';
-import React, { ReactNode, useState } from 'react';
+import React, { useState } from 'react';
 
 import { grey100, textBlackTertiary } from '../../../../../colors';
-import FieldPreview from '../../../DocumentPreview/FieldPreview';
-import { DocumentProvider } from '../../../DocumentPreview/store';
-import { FirestoreAny, FirestoreMap } from '../../../models';
-import { isArray, isMap, isTimestamp, summarize } from '../../../utils';
+import { ExpressionValue } from '../../../DocumentPreview/ExpressionValue';
+import { FieldPreview } from '../../../DocumentPreview/FieldPreview';
+import { ExpressionValueStateProvider } from '../../../DocumentPreview/store';
 
 const INSPECT_BLOCK_CLASS = 'Firestore-Request-Details-Inspection-Block';
 const MAIN_INSPECT_BLOCK_CLASS = INSPECT_BLOCK_CLASS + '--Main';
@@ -34,7 +33,7 @@ const MAIN_INSPECT_BLOCK_BACKGROUND_COLOR = '#e2e2e2';
 
 interface Props {
   label: string;
-  value: FirestoreAny;
+  value: ExpressionValue;
   isMainBlock?: boolean;
 }
 
@@ -54,36 +53,14 @@ export const InspectionBlock: React.FC<Props> = ({
       return children;
     }
 
-    let mainContent: ReactNode;
-    if (isArray(value) || isMap(value)) {
-      mainContent = (
-        <>
-          {Object.entries(value as object).map(([k, v]) => {
-            return (
-              <FieldPreview
-                path={[k]}
-                documentRef={null as any}
-                maxSummaryLen={10}
-              ></FieldPreview>
-            );
-          })}
-        </>
-      );
-    } else if (isTimestamp(value)) {
-      mainContent = (
-        <span title={value.toDate().toISOString()}>{summarize(value, 20)}</span>
-      );
-    } else {
-      mainContent = summarize(value, 20);
-    }
-    // TODO: improve how the value property is rendered: differ by value types
-    //       (string, number, boolean, object and maybe array too)
     return (
       <Theme use="secondary">
         <div className={`${INSPECT_BLOCK_CLASS}-Value`}>
-          <DocumentProvider value={value as FirestoreMap}>
-            {mainContent}
-          </DocumentProvider>
+          <ExpressionValueStateProvider value={value}>
+            <div className="Firestore-Field-List mdc-list--non-interactive">
+              <FieldPreview path={[]} maxSummaryLen={20} />
+            </div>
+          </ExpressionValueStateProvider>
         </div>
       </Theme>
     );

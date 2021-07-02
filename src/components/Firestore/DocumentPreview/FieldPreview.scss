@@ -39,6 +39,19 @@ $inline-spacing: 8px;
 
   .FieldPreview-summary {
     @include ellipsis;
+    font-family: 'Roboto Mono', monospace;
+  }
+
+  .Constraint-hint {
+    font-style: italic;
+  }
+
+  .Constraint-unknown {
+    // Use a non-monospace format to make the greek letter x more stylistic.
+    // Monospace ones look too much like English "x" (e.g. in Roboto Mono).
+    font-family: Roboto, 'Helvetica Neue', sans-serif;
+    font-style: italic;
+    font-weight: 500;
   }
 }
 

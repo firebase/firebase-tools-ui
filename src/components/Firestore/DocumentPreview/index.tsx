@@ -24,7 +24,7 @@ import { useFirestoreDoc } from 'reactfire';
 import { FirestoreMap } from '../models';
 import { compareFirestoreKeys } from '../utils';
 import { addFieldToMissingDocument, updateField } from './api';
-import FieldPreview from './FieldPreview';
+import { EditableFieldPreview } from './FieldPreview';
 import InlineEditor from './InlineEditor';
 import { DocumentProvider } from './store';
 
@@ -84,7 +84,7 @@ const DocumentPreview: React.FC<Props> = ({
               {Object.keys(data)
                 .sort(compareFirestoreKeys)
                 .map((name) => (
-                  <FieldPreview
+                  <EditableFieldPreview
                     key={name}
                     path={[name]}
                     documentRef={reference}

@@ -16,16 +16,9 @@
 
 import './index.scss';
 
-import firebase from 'firebase';
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 
-import {
-  FirestoreAny,
-  FirestoreArray,
-  FirestoreMap,
-  FirestorePrimitive,
-} from '../../models';
 import { useFirestoreRequest } from '../FirestoreRequestsProvider';
 import { RequestDetailsRouteParams } from '../index';
 import {
@@ -34,89 +27,12 @@ import {
   FirestoreRulesIssue,
   OutcomeInfo,
   RulesOutcome,
-  RulesValue,
 } from '../rules_evaluation_result_model';
 import { InspectionElement, OutcomeData } from '../types';
 import { OUTCOME_DATA } from '../utils';
 import RequestDetailsCodeViewer from './CodeViewer/index';
 import RequestDetailsHeader from './Header/index';
 import RequestDetailsInspectionSection from './InspectionSection/index';
-
-function convertTimestamp(ts: string): firebase.firestore.Timestamp {
-  return firebase.firestore.Timestamp.fromDate(new Date(ts));
-}
-
-function convertPath(path: string): string {
-  // return firebase.firestore().doc(path);
-  return path;
-}
-
-function convertPrimitiveValue(primitive: RulesValue): FirestorePrimitive {
-  if ('nullValue' in primitive) {
-    return null;
-  }
-  if ('stringValue' in primitive) {
-    return primitive.stringValue as string;
-  }
-  if ('timestampValue' in primitive) {
-    return convertTimestamp(primitive.timestampValue!);
-  }
-  if ('pathValue' in primitive) {
-    return convertPath(
-      primitive.pathValue!.segments.map(({ simple }) => simple).join('/')
-    );
-  }
-  if ('boolValue' in primitive) {
-    return primitive.boolValue!;
-  }
-  if ('intValue' in primitive) {
-    return primitive.intValue!;
-  }
-  if ('floatValue' in primitive) {
-    return primitive.floatValue!;
-  }
-  throw new Error('Not a primitive type ' + JSON.stringify(primitive));
-}
-
-function convertArrayValue(array: RulesValue): FirestoreArray {
-  if (array.listValue) {
-    if (!array.listValue.values) {
-      return [];
-    }
-    return array.listValue.values.map((value) => {
-      if (value.mapValue) {
-        return convertFirestoreMap(value);
-      } else {
-        return convertPrimitiveValue(value);
-      }
-    });
-  }
-  throw new Error('Not a list type');
-}
-
-function convertFirestoreMap(map: RulesValue): FirestoreMap {
-  if (map.mapValue) {
-    if (!map.mapValue.fields) {
-      return {};
-    }
-    const out: FirestoreMap = {};
-    for (const key of Object.keys(map.mapValue.fields)) {
-      out[key] = convertRulesTypeToFirestoreAny(map.mapValue.fields[key]);
-    }
-    return out;
-  }
-  throw new Error('Not a map type: ' + JSON.stringify(map));
-}
-
-function convertRulesTypeToFirestoreAny(object: RulesValue): FirestoreAny {
-  if (object.mapValue) {
-    return convertFirestoreMap(object);
-  } else if (object.listValue) {
-    return convertArrayValue(object);
-  } else {
-    return convertPrimitiveValue(object);
-  }
-}
 
 // Combines (granularAllowOutcomes) and (issues) into one array of the same type
 function getLinesOutcome(
@@ -141,52 +57,24 @@ function getInspectionExpressions(
     return [];
   }
 
+  const inspections: InspectionElement[] = [];
+
   // List all fields from rules `request.*`. See doc below for details.
   // https://firebase.google.com/docs/reference/rules/rules.firestore.Request
-
-  const inspections: InspectionElement[] = [
-    // Do the special one-off ones first
-    {
-      label: 'request.method',
-      value: rulesContext.method,
-    },
-    {
-      label: 'request.path',
-      value: convertPath(rulesContext.path),
-    },
-    {
-      label: 'request.time',
-      value: convertTimestamp(rulesContext.time),
-    },
-  ];
-
-  if (rulesContext.request.mapValue?.fields?.resource) {
-    inspections.push({
-      label: 'request.resource',
-      value: convertRulesTypeToFirestoreAny(
-        rulesContext.request.mapValue.fields.resource
-      ),
-    });
-  }
-
-  const auth = rulesContext.request.mapValue?.fields?.auth;
-  inspections.push({
-    label: 'request.auth',
-    value: auth ? convertRulesTypeToFirestoreAny(auth) : null,
-  });
-
-  const query = rulesContext.request.mapValue?.fields?.query;
-  if (query) {
-    inspections.push({
-      label: 'request.query',
-      value: convertRulesTypeToFirestoreAny(query),
-    });
+  for (const field of ['auth', 'method', 'path', 'query', 'resource', 'time']) {
+    const value = rulesContext.request.mapValue?.fields?.[field];
+    if (value) {
+      inspections.push({
+        label: `request.${field}`,
+        value: value,
+      });
+    }
   }
 
   if (rulesContext.resource) {
     inspections.push({
       label: 'resource',
-      value: convertRulesTypeToFirestoreAny(rulesContext.resource),
+      value: rulesContext.resource,
     });
   }
 

@@ -43,7 +43,6 @@
 .Firestore-Request-Details-Inspection-Block-Value {
   padding: 10px;
   font-size: 14px;
-  font-family: 'Roboto Mono', monospace;
   min-height: 48px;
   display: flex;
   flex-direction: column;
@@ -55,7 +54,21 @@
   // Format line-breaks
   white-space: pre;
 
+  .Firestore-Field-List,
   .FieldPreview-children {
     width: 100%;
+  }
+
+  // Top-level is a primitive: omit key and expand icon. Just value and type.
+  .Firestore-Field-List > .FieldPreview--primitive {
+    .FieldPreview-key,
+    .FieldPreview-expand-icon {
+      display: none;
+    }
+  }
+
+  // Top-level is a non-primitive: omit the top-level row.
+  .Firestore-Field-List > .FieldPreview--expanded {
+    display: none;
   }
 }

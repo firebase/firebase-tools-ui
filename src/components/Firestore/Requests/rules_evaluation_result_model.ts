@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { ExpressionValue } from '../DocumentPreview/ExpressionValue';
+
 /** The authentication object as seen by rules */
 export interface RulesAuthObject {
   uid: string;
@@ -30,11 +32,6 @@ export interface RulesAuthObject {
   };
 }
 
-/** The generic rules request */
-export interface RulesRequest {
-  auth?: RulesAuthObject;
-}
-
 /** A Firestore resource that is pulled into the rules context */
 export interface FirestoreResource {
   __name__: string;
@@ -43,19 +40,12 @@ export interface FirestoreResource {
 }
 
 /** This corresponds to the `request` variable in rules */
-export interface FirestoreRulesRequest extends RulesRequest, RulesValue {
-  query?: {
-    limit?: number;
-    offset?: number; // Not sure the type for this
-    orderBy?: string;
-  };
-  resource?: RulesValue;
-}
+export interface FirestoreRulesRequest extends ExpressionValue {}
 
 /** Everything that's in scope when rules are evaluated */
 export interface FirestoreRulesContext {
   request: FirestoreRulesRequest;
-  resource?: RulesValue;
+  resource?: ExpressionValue;
   path: string;
   method: string;
   time: string;
@@ -90,25 +80,3 @@ export interface FirestoreRulesEvaluation {
   rules?: string;
   rulesReleaseName?: string;
 }
-
-export interface RulesValue {
-  mapValue?: {
-    fields: { [key: string]: RulesValue };
-  };
-  listValue?: {
-    values: RulesValue[];
-  };
-  timestampValue?: string;
-  stringValue?: string;
-  pathValue?: {
-    segments: Array<{ simple: string }>;
-  };
-  nullValue?: null;
-  boolValue?: boolean;
-  intValue?: number;
-  floatValue?: number;
-}
-// export type RulesPrimitive = RulesTimestampValue|RulesStringValue|
-// RulesPathValue|RulesNullValue|RulesBoolValue|RulesIntValue|RulesFloatValue;
-// export type RulesValue = RulesMapValue|RulesListValue|RulesPrimitive;
-// export type

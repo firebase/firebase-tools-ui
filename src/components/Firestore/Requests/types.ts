@@ -15,7 +15,7 @@
  */
 
 import { CustomThemeType } from '../../../themes';
-import { FirestoreAny } from '../models';
+import { ExpressionValue } from '../DocumentPreview/ExpressionValue';
 
 export interface OutcomeData {
   theme: CustomThemeType;
@@ -25,5 +25,5 @@ export interface OutcomeData {
 
 export interface InspectionElement {
   label: string;
-  value: FirestoreAny;
+  value: ExpressionValue;
 }
