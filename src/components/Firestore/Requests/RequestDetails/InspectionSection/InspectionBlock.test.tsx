@@ -22,7 +22,11 @@ import InspectionBlock from './InspectionBlock';
 describe('InspectionSection/InspectionBlock', () => {
   it('renders normal inspection block when isMainBlock is falsy', () => {
     const { getByText, getByTestId } = render(
-      <InspectionBlock label="Regular block" isMainBlock={false} />
+      <InspectionBlock
+        label="Regular block"
+        isMainBlock={false}
+        value={{ nullValue: null }}
+      />
     );
     expect(getByText('Regular block')).not.toBeNull();
     expect(getByTestId('inspection-block')).not.toBeNull();
@@ -30,7 +34,11 @@ describe('InspectionSection/InspectionBlock', () => {
 
   it('renders main inspection block when isMainBlock is true', () => {
     const { getByText, getByTestId } = render(
-      <InspectionBlock label="Main block" isMainBlock={true} />
+      <InspectionBlock
+        label="Main block"
+        isMainBlock={true}
+        value={{ nullValue: null }}
+      />
     );
     expect(getByText('Main block')).not.toBeNull();
     expect(getByTestId('inspection-main-block')).not.toBeNull();
@@ -38,7 +46,11 @@ describe('InspectionSection/InspectionBlock', () => {
 
   it("toggle block's expanded-icon-indicator when icon is clicked", async () => {
     const { getByText, findByText } = render(
-      <InspectionBlock label="Regular block" isMainBlock={false} />
+      <InspectionBlock
+        label="Regular block"
+        isMainBlock={false}
+        value={{ nullValue: null }}
+      />
     );
     act(() => {
       fireEvent.click(getByText('expand_more'));
@@ -50,7 +62,7 @@ describe('InspectionSection/InspectionBlock', () => {
     const { getByText, findByText } = render(
       <InspectionBlock
         label="Regular block"
-        value="Inspection mocked value"
+        value={{ stringValue: 'Inspection mocked value' }}
         isMainBlock={false}
       />
     );
@@ -64,7 +76,7 @@ describe('InspectionSection/InspectionBlock', () => {
     const { getByText, findByText } = render(
       <InspectionBlock
         label="Regular block"
-        value="Inspection mocked value"
+        value={{ stringValue: 'Inspection mocked value' }}
         isMainBlock={false}
       >
         <div> Inspection mocked HTML children </div>
