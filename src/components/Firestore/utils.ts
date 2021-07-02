@@ -146,9 +146,13 @@ export const withFieldRemoved = produce((draft, path: string[]) => {
 export function summarize(data: FirestoreAny, maxLen: number): string {
   switch (getFieldType(data)) {
     case FieldType.ARRAY:
-      return summarizeArray(data as FirestoreAny[], maxLen);
+      return summarizeArray(data as FirestoreAny[], maxLen, summarize);
     case FieldType.MAP:
-      return summarizeMap(data as Record<string, FirestoreAny>, maxLen);
+      return summarizeMap(
+        data as Record<string, FirestoreAny>,
+        maxLen,
+        summarize
+      );
     case FieldType.BLOB:
       const base64 = (data as firebase.firestore.Blob).toBase64();
       if (base64.length < maxLen) return base64;
@@ -157,7 +161,7 @@ export function summarize(data: FirestoreAny, maxLen: number): string {
       return (data as boolean).toString();
     case FieldType.GEOPOINT:
       const value = data as firebase.firestore.GeoPoint;
-      return `[${latStr(value.latitude)}, ${longStr(value.longitude)}]`;
+      return summarizeLatLng(value.latitude, value.longitude);
     case FieldType.NULL:
       return 'null';
     case FieldType.NUMBER:
@@ -167,15 +171,26 @@ export function summarize(data: FirestoreAny, maxLen: number): string {
     case FieldType.STRING:
       return `"${data as string}"`;
     case FieldType.TIMESTAMP:
-      // TODO: Better date time formatting.
-      // Note: Not using toLocaleString() since it does not stringify timezone.
-      return (data as firebase.firestore.Timestamp).toDate().toString();
+      return summarizeDate(
+        (data as firebase.firestore.Timestamp).toDate(),
+        maxLen
+      );
     case FieldType.JSON:
       throw new Error('JSON field type is input only');
   }
 }
 
-function summarizeArray(array: FirestoreAny[], maxLen: number): string {
+export function summarizeDate(date: Date, maxLen: number): string {
+  // TODO: Better date time formatting.
+  // Note: Not using toLocaleString() since it does not stringify timezone.
+  return date.toString();
+}
+
+export function summarizeArray<E = FirestoreAny>(
+  array: E[],
+  maxLen: number,
+  summarizeElement: (element: E, maxLen: number) => string
+): string {
   let output = '[';
   for (const element of array) {
     if (output.length > 1) output += ', ';
@@ -183,15 +198,16 @@ function summarizeArray(array: FirestoreAny[], maxLen: number): string {
       output += '...';
       break;
     }
-    output += summarize(element, maxLen - output.length);
+    output += summarizeElement(element, maxLen - output.length);
   }
   output += ']';
   return output;
 }
 
-function summarizeMap(
-  map: Record<string, FirestoreAny>,
-  maxLen: number
+export function summarizeMap<V = FirestoreAny>(
+  map: Record<string, V>,
+  maxLen: number,
+  summarizeValue: (value: V, maxLen: number) => string
 ): string {
   let output = '{';
   for (const [key, value] of Object.entries(map).sort((a, b) =>
@@ -202,10 +218,14 @@ function summarizeMap(
       output += '...';
       break;
     }
-    output += `${key}: ${summarize(value, maxLen - output.length)}`;
+    output += `${key}: ${summarizeValue(value, maxLen - output.length)}`;
   }
   output += '}';
   return output;
+}
+
+export function summarizeLatLng(latitude: number, longitude: number) {
+  return `[${latStr(latitude)}, ${longStr(longitude)}]`;
 }
 
 function latStr(lat: number): string {
