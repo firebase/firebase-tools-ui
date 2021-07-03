@@ -217,7 +217,7 @@ async function configFetcher(url: string): Promise<Config> {
   return result;
 }
 
-function makeDeferred<T>() {
+export function makeDeferred<T>() {
   let resolve!: (value: T) => void;
   const promise = new Promise<T>((res) => {
     resolve = res;

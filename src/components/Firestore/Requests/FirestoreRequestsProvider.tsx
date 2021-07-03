@@ -17,11 +17,15 @@
 import React, { useEffect, useState } from 'react';
 
 import { ReconnectingWebSocket } from '../../../reconnectingWebSocket';
-import { useConfigOptional } from '../../common/EmulatorConfigProvider';
+import {
+  makeDeferred,
+  useConfigOptional,
+} from '../../common/EmulatorConfigProvider';
 import { FirestoreRulesEvaluation } from './rules_evaluation_result_model';
 
 interface FirestoreRequestsState {
-  requests: FirestoreRulesEvaluation[];
+  requests?: FirestoreRulesEvaluation[];
+  promise?: Promise<void>;
 }
 
 const firestoreRequestsContext = React.createContext<
@@ -29,7 +33,8 @@ const firestoreRequestsContext = React.createContext<
 >(undefined);
 
 export const FirestoreRequestsProvider: React.FC = ({ children }) => {
-  const [requests, setRequests] = useState<FirestoreRulesEvaluation[]>([]);
+  const [requests, setRequests] = useState<FirestoreRulesEvaluation[]>();
+  const [deferred, setDeferred] = useState(() => makeDeferred<void>());
   const config = useConfigOptional();
   const projectId = config?.projectId;
   const firestore = config?.firestore;
@@ -40,7 +45,8 @@ export const FirestoreRequestsProvider: React.FC = ({ children }) => {
       !firestore.webSocketHost ||
       !firestore.webSocketPort
     ) {
-      setRequests([]);
+      setRequests(undefined);
+      setDeferred(makeDeferred());
     } else {
       const wsUrl = new URL('ws://placeholder/requests');
       wsUrl.host = firestore.webSocketHost;
@@ -54,8 +60,9 @@ export const FirestoreRequestsProvider: React.FC = ({ children }) => {
           // This is the initial "blast" of prior requests
           setRequests(newEvaluation.filter(isCurrentProject));
         } else if (isCurrentProject(newEvaluation)) {
-          setRequests((requests) => [...requests, newEvaluation]);
+          setRequests((requests) => [...(requests || []), newEvaluation]);
         }
+        deferred.resolve();
       };
 
       return () => webSocket.cleanup();
@@ -68,10 +75,12 @@ export const FirestoreRequestsProvider: React.FC = ({ children }) => {
       }
       return evaluation.rulesReleaseName.startsWith(`projects/${projectId}/`);
     }
-  }, [projectId, firestore, setRequests]);
+  }, [projectId, firestore, setRequests, deferred]);
 
   return (
-    <firestoreRequestsContext.Provider value={{ requests }}>
+    <firestoreRequestsContext.Provider
+      value={{ requests, promise: deferred.promise }}
+    >
       {children}
     </firestoreRequestsContext.Provider>
   );
@@ -87,14 +96,19 @@ export const TestFirestoreRequestsProvider: React.FC<{
   );
 };
 
-export function useFirestoreRequests(): FirestoreRequestsState {
+export function useFirestoreRequests(): {
+  requests: FirestoreRulesEvaluation[];
+} {
   const context = React.useContext(firestoreRequestsContext);
   if (context === undefined) {
     throw new Error(
       'useFirestoreRequests must be used within a <FirestoreRequestsProvider>'
     );
   }
-  return context;
+  if (!context.requests) {
+    throw context.promise;
+  }
+  return { requests: context.requests };
 }
 
 export function useFirestoreRequest(
