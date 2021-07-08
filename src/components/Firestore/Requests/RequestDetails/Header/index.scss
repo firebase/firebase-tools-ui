@@ -1,0 +1,128 @@
+/**
+ * Copyright 2021 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@import '../../../Requests/index.scss';
+@import './variables.scss';
+
+// Header icon button
+$header-return-icon-button-width: 30px;
+
+// Header return button
+$header-return-padding-right: 12px;
+
+// Header info container
+$header-info-collapsed-width: calc(
+  100% - #{$header-return-icon-button-width + $header-return-padding-right}
+);
+$header-info-mobile-width: calc(100% - #{$header-return-icon-button-width});
+
+// Header info content
+$header-info-date-width: 63px;
+
+$header-info-outcome-width: 35px;
+
+$header-info-method-width: 60px;
+$header-info-method-mobile-width: 35px;
+
+$header-info-path-width: calc(
+  100% - #{$header-info-date-width + $header-info-outcome-width +
+    $header-info-method-width}
+);
+$header-info-path-mobile-width: calc(
+  100% - #{$header-info-date-width + $header-info-outcome-width +
+    $header-info-method-mobile-width}
+);
+
+.Firestore-Request-Details-Header {
+  border-radius: 8px 8px 0 0;
+  width: 100%;
+  height: $details-header-height;
+  padding: 0 6px;
+  position: relative;
+  // Shadow border at bottom
+  box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12) inset;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.Firestore-Request-Details-Header-Return {
+  padding-right: $header-return-padding-right;
+  display: flex;
+  justify-content: center;
+  .Firestore-Request-Details-Header-Return-Button {
+    width: $header-return-icon-button-width;
+    height: $header-return-icon-button-width;
+    padding: 4px;
+    padding-left: 8px;
+  }
+  // No padding-right for mobile
+  @media screen and (max-width: 500px) {
+    padding-right: 0px;
+  }
+}
+
+.Firestore-Request-Details-Header-Info {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  // Make space for the collapsed button
+  @media screen and (max-width: 850px) {
+    width: $header-info-collapsed-width;
+  }
+  // Width for mobile
+  @media screen and (max-width: 500px) {
+    width: $header-info-mobile-width;
+  }
+
+  .Firestore-Request-Date {
+    width: $header-info-date-width;
+  }
+  .Firestore-Request-Outcome {
+    width: $header-info-outcome-width;
+  }
+  .Firestore-Request-Method {
+    width: $header-info-method-width;
+    text-align: center;
+    // Width for mobile
+    @media screen and (max-width: 500px) {
+      width: $header-info-method-mobile-width;
+    }
+  }
+  .Firestore-Request-Path {
+    width: $header-info-path-width;
+    // Width for mobile
+    @media screen and (max-width: 500px) {
+      width: $header-info-path-mobile-width;
+    }
+
+    .Firestore-Request-Path-Container {
+      // Place the copy-icon-button next to the request-path
+      justify-content: flex-start;
+      // Avoid content to be visible outside the header
+      overflow: hidden;
+      .Firestore-Request-Path-Copy-Button {
+        // Override hover effect to show/hide
+        visibility: visible;
+        // Override position absolute to the right
+        position: relative;
+      }
+    }
+  }
+}

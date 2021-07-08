@@ -21,7 +21,7 @@ on:
   push:
     branches: [master]
   pull_request:
-    branches: '*'
+    # Intentionally left blank -- run on PRs against all branches.
 
 jobs:
   build:

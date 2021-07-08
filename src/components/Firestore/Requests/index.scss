@@ -1,0 +1,81 @@
+/**
+ * Copyright 2021 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.Firestore-Request-Date {
+  font-size: 13px;
+  font-family: 'Roboto Mono', monospace;
+  font-style: normal;
+  font-weight: normal;
+}
+.Firestore-Request-Outcome .Firestore-Request-Outcome-Icon {
+  color: var(--mdc-theme-primary);
+  // Center icon
+  display: block;
+  margin: 0 auto;
+  text-align: center;
+}
+.Firestore-Request-Method {
+  text-transform: uppercase;
+  font-size: 13px;
+  font-family: 'Roboto Mono', monospace;
+  font-style: normal;
+  font-weight: bold;
+}
+.Firestore-Request-Path {
+  position: relative;
+  // Display copy IconButton only when path is hovered
+  &:hover {
+    .Firestore-Request-Path-Container .Firestore-Request-Path-Copy-Button {
+      visibility: visible;
+    }
+  }
+  .Firestore-Request-Path-Container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .Firestore-Request-Path-String {
+      font-size: 13px;
+      font-family: 'Roboto Mono', monospace;
+      font-style: normal;
+      font-weight: normal;
+      // Ensure path only has one line
+      white-space: nowrap;
+      // NOTE: the overflow must NOT be 'hidden' to ensure the text truncation works as expected
+    }
+    .Firestore-Request-Path-Copy-Button {
+      padding: 12px 0;
+      // Avoid button's width to go below 48px when container is too narrow
+      min-width: 48px;
+      // Absolute position to the right
+      position: absolute;
+      right: 0px;
+      // Hover effects
+      // NOTE: 'visibility' is chosed instead of 'display' because './utils' needs the element to
+      // be rendered in order to calculate its width. Only in mobile is the button (display: none)
+      visibility: hidden;
+      transition: color 0.2s;
+      color: rgb(0 0 0 / 54%);
+      &:hover {
+        color: black;
+      }
+      // Do not display button on mobile
+      @media screen and (max-width: 500px) {
+        display: none;
+        min-width: 0px;
+      }
+    }
+  }
+}

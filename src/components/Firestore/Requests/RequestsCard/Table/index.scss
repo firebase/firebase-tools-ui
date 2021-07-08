@@ -1,0 +1,193 @@
+/**
+ * Copyright 2021 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@import '../../index.scss';
+@import '../Header/variables.scss';
+@import '../../../Requests/variables.scss';
+@import '../../../../common/radius';
+
+// Table th
+$table-header-height: 31px;
+
+// Table td
+$table-cell-height: 47px;
+
+// Table
+$table-min-height: ($requests-card-min-height - $filters-header-height);
+$empty-table-min-height: ($table-header-height);
+
+// Table border-radius
+$table-border-radius: 8px;
+$empty-table-border-radius: 8px 8px 0px 0px;
+
+// Table tbody
+$table-body-min-height: (
+  $requests-card-min-height - $filters-header-height - $table-header-height
+);
+// Since the app-...-content variable uses calc(), a SASS interpolation
+// is used in order to nest a calc() function inside another calc() function.
+// CSS structure:            calc( calc(0px + 0px) - 0px)
+$table-body-viewport-height: calc(
+  #{$app-remaining-viewport-height-for-content} - #{$firestore-sub-tabs-total-height +
+    $filters-header-height + $table-header-height}
+);
+
+.Firestore-Requests-Table-Main-Container {
+  height: calc(
+    #{$app-remaining-viewport-height-for-content} - #{$firestore-sub-tabs-total-height +
+      $filters-header-height}
+  );
+  display: flex;
+  flex-direction: column;
+  min-height: $table-min-height;
+
+  .Callout {
+    border-radius: $BORDER_RADIUS_CARD_BOTTOM;
+  }
+
+  table {
+    height: 100%;
+  }
+}
+
+// Double selector - for higher specificity to Override rmwc styles.
+.Firestore-Requests-Table.Firestore-Requests-Table {
+  border-radius: $table-border-radius;
+  // Avoid double borders.
+  margin: 0px;
+  border: 0px;
+
+  // Make it flex if it's not empty
+  &:not(.Firestore-Requests-Table--Empty) {
+    flex: 1;
+  }
+
+  // Keep a min-height to keep it usable on short-devices (at the cost of page scrolling)
+  min-height: $table-min-height;
+  td,
+  th {
+    padding: 0;
+    padding-left: 24px;
+    // Avoid extra text height
+    line-height: 1;
+    @media screen and (max-width: 500px) {
+      // Less padding for mobile
+      padding-left: 10px;
+    }
+  }
+  th {
+    height: $table-header-height;
+    font-size: 12px;
+    // TODO: remove this style when sorting functionality is ready
+    // (when headers are clickable)
+    &.rmwc-data-table__head-cell--sorted {
+      cursor: auto;
+    }
+    // Move sort icon to the right side
+    .rmwc-data-table__sort-icon {
+      position: absolute;
+      right: 0px;
+      margin-right: 0px;
+    }
+    top: 0;
+    z-index: 10;
+  }
+  td {
+    height: $table-cell-height;
+  }
+  thead tr {
+    // Border at bottom
+    box-shadow: 0px -1px 0 rgba(0, 0, 0, 0.12) inset;
+  }
+
+  // Clicklable rows styles
+  tbody tr {
+    cursor: pointer;
+    // Select last row
+    &:last-of-type {
+      // Border at bottom (the last one is missing the bottom border)
+      box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12) inset;
+    }
+  }
+
+  // Distribute column widths (width values include the padding-left)
+  .Firestore-Requests-Table-Date-Header,
+  .Firestore-Request-Date,
+  .Firestore-Requests-Table-Outcome-Header,
+  .Firestore-Request-Outcome,
+  .Firestore-Requests-Table-Method-Header,
+  .Firestore-Request-Method {
+    // Causes padding to be added to the width, instead of been part of it.
+    // Example (considering .Firestore-Request-Date):
+    //      width: 66px + padding-right + padding-left
+    box-sizing: content-box;
+  }
+  .Firestore-Requests-Table-Date-Header,
+  .Firestore-Request-Date {
+    width: 66px;
+  }
+  .Firestore-Requests-Table-Outcome-Header,
+  .Firestore-Request-Outcome {
+    width: 26px;
+  }
+  .Firestore-Requests-Table-Method-Header,
+  .Firestore-Request-Method {
+    width: 60px;
+  }
+
+  // Add small padding to path on mobile, since the copyIconButton is no longer displayed
+  // is important to add the padding to both the Path header and cells
+  .Firestore-Requests-Table-Path-Header,
+  .Firestore-Request-Path {
+    @media screen and (max-width: 500px) {
+      padding-right: 12px;
+    }
+  }
+
+  thead {
+    position: absolute;
+    z-index: 10;
+  }
+  // Fix body height and ensure tbody content scrollable behavior
+  thead,
+  tbody tr {
+    // This styles are required in order to apply scrolling overflow to tbody
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+  }
+  tbody {
+    background-color: white;
+    min-height: $table-body-min-height;
+    // This styles are required in order to apply scrolling overflow to tbody
+    display: block;
+    overflow: auto;
+    margin-top: $table-header-height;
+    height: calc(100% - #{$table-header-height});
+  }
+}
+
+.Firestore-Requests-Table.Firestore-Requests-Table.Firestore-Requests-Table--Empty {
+  border-radius: $empty-table-border-radius;
+  // Make table height equal to the height of the requestTableHeader,
+  // helpful to display the Zero State message
+  min-height: $empty-table-min-height;
+  tbody {
+    // No content to display
+    height: 0px;
+    min-height: 0px;
+  }
+}

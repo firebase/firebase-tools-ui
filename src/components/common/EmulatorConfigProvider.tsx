@@ -141,9 +141,9 @@ export function useConfig(): Config {
   }
 }
 
-export function useEmulatorConfig(
-  emulator: Emulator
-): NonNullable<Config[typeof emulator]> {
+export function useEmulatorConfig<E extends Emulator>(
+  emulator: E
+): NonNullable<Config[E]> {
   const config = useConfig();
   const emulatorConfig = config[emulator];
   const promise = useOnChangePromise(emulatorConfig);
@@ -151,7 +151,8 @@ export function useEmulatorConfig(
     // Emulator Suite is running, but the specified emulator is not running.
     throw promise;
   }
-  return emulatorConfig;
+  // Needed to convince TypeScript that emulatorConfig is not undefined.
+  return emulatorConfig as NonNullable<Config[E]>;
 }
 
 export function useIsEmulatorDisabled(emulator?: Emulator): boolean {
@@ -217,7 +218,7 @@ async function configFetcher(url: string): Promise<Config> {
   return result;
 }
 
-function makeDeferred<T>() {
+export function makeDeferred<T>() {
   let resolve!: (value: T) => void;
   const promise = new Promise<T>((res) => {
     resolve = res;

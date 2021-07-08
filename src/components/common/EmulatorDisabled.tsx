@@ -56,3 +56,25 @@ export const EmulatorDisabled: React.FC<{
     </GridCell>
   </>
 );
+
+export const EmulatorOutdated: React.FC<{
+  productName: string;
+}> = ({ productName }) => (
+  <div className="EmulatorDisabled">
+    <div className="EmulatorDisabled-graphics">
+      <img src="/assets/img/database.png" alt="" />
+    </div>
+    <div className="EmulatorDisabled-description">
+      <Typography use="headline6" tag="h3">
+        Please update your {productName} Emulator.
+      </Typography>
+      <Typography use="body1" tag="p">
+        This feature requires the latest {productName} Emulator. Please{' '}
+        <a href="https://firebase.google.com/docs/cli#update-cli">
+          upgrade your Firebase CLI
+        </a>{' '}
+        to the latest version and refresh this page.
+      </Typography>
+    </div>
+  </div>
+);

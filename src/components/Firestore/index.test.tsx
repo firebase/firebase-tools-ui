@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-import { act, render, waitFor, waitForElement } from '@testing-library/react';
+import { act, render, waitFor } from '@testing-library/react';
 import React from 'react';
 import { Route } from 'react-router-dom';
 
-import { makeDeferred } from '../../test_utils';
+import { delay, makeDeferred } from '../../test_utils';
+import { isTabActive } from '../../test_utils';
 import { confirm } from '../common/DialogQueue';
 import { TestEmulatorConfigProvider } from '../common/EmulatorConfigProvider';
 import * as emulatedApi from './FirestoreEmulatedApiProvider';
@@ -26,6 +27,7 @@ import { Firestore, FirestoreRoute } from './index';
 import { renderWithFirestore } from './testing/FirestoreTestProviders';
 
 jest.mock('../common/DialogQueue');
+jest.mock('./Requests', () => () => null);
 
 describe('FirestoreRoute', () => {
   it('renders loading when config is not ready', () => {
@@ -58,104 +60,169 @@ describe('FirestoreRoute', () => {
   });
 });
 
-describe('Firestore', () => {
-  it('shows the top-level collections', async () => {
-    const { getByText, queryByText } = await renderWithFirestore(
-      async (firestore) => {
-        const collectionRef = firestore.collection('cool-coll');
-        await collectionRef.doc('bar').set({ a: 1 });
+describe('Firestore sub-tabs navigation', () => {
+  it('selects the Data tab when /firestore/data', async () => {
+    const { getByText } = await renderWithFirestore(async () => <Firestore />, {
+      path: '/firestore/data',
+    });
 
-        return <Firestore />;
-      }
-    );
+    await act(() => delay(600)); // Wait for tab indicator async DOM updates.
 
-    await waitForElement(() => getByText(/cool-coll/));
-
-    expect(queryByText(/Connecting to Firestore/)).toBeNull();
-    expect(getByText(/cool-coll/)).not.toBeNull();
+    expect(isTabActive(getByText('Data'))).toBe(true);
+    expect(isTabActive(getByText('Requests'))).toBe(false);
   });
 
-  it('shows a collection-shell if at the root', async () => {
-    const { getByTestId } = await renderWithFirestore(
-      async () => <Firestore />,
-      { path: '/firestore' }
-    );
+  it('selects the Requests tab when /firestore/requests', async () => {
+    const { getByText } = await renderWithFirestore(async () => <Firestore />, {
+      path: '/firestore/requests',
+    });
 
-    await waitForElement(() => getByTestId(/collection-shell/));
+    await act(() => delay(300)); // Wait for tab indicator async DOM updates.
 
-    expect(getByTestId(/collection-shell/)).not.toBeNull();
-    expect(getByTestId(/document-shell/)).not.toBeNull();
+    expect(isTabActive(getByText('Data'))).toBe(false);
+    expect(isTabActive(getByText('Requests'))).toBe(true);
   });
 
-  it('shows a document-shell if 1-level deep', async () => {
-    const { getByTestId, queryByTestId } = await renderWithFirestore(
-      async () => <Firestore />,
-      {
-        path: '/firestore/coll',
-      }
-    );
+  it('selects the Requests tab when /firestore/requests/:id', async () => {
+    const { getByText } = await renderWithFirestore(async () => <Firestore />, {
+      path: '/firestore/requests/uniqueRequestId',
+    });
 
-    await waitForElement(() => getByTestId(/document-shell/));
+    await act(() => delay(300)); // Wait for tab indicator async DOM updates.
 
-    expect(queryByTestId(/collection-shell/)).toBeNull();
-    expect(getByTestId(/document-shell/)).not.toBeNull();
+    expect(isTabActive(getByText('Data'))).toBe(false);
+    expect(isTabActive(getByText('Requests'))).toBe(true);
   });
 
-  it('shows no shells if 2-levels deep', async () => {
-    const { getByText, queryByTestId } = await renderWithFirestore(
-      async (firestore) => {
-        const collectionRef = firestore.collection('coll');
-        await collectionRef.doc('doc').set({ a: 1 });
-        return <Firestore />;
-      },
-      {
-        path: '/firestore/coll/doc',
-      }
-    );
+  it('Redirects to /firestore/data and selects the Data tab when /firestore', async () => {
+    const { getByText } = await renderWithFirestore(async () => <Firestore />, {
+      path: '/firestore',
+    });
 
-    await waitForElement(() => getByText(/doc/));
+    await act(() => delay(600)); // Wait for tab indicator async DOM updates.
 
-    expect(queryByTestId(/collection-shell/)).toBeNull();
-    expect(queryByTestId(/document-shell/)).toBeNull();
+    expect(isTabActive(getByText('Data'))).toBe(true);
+    expect(isTabActive(getByText('Requests'))).toBe(false);
   });
 
-  it('triggers clearing all data', async () => {
-    const nuke = makeDeferred<void>();
-    const nukeSpy = jest.fn().mockReturnValueOnce(nuke.promise);
-    jest.spyOn(emulatedApi, 'useEjector').mockReturnValue(nukeSpy);
-    confirm.mockResolvedValueOnce(true);
+  describe('Show Firestore collections and documents', () => {
+    it('shows the top-level collections', async () => {
+      const {
+        getAllByText,
+        getAllByTestId,
+        queryByText,
+        findByTestId,
+      } = await renderWithFirestore(
+        async (firestore) => {
+          const collectionRef = firestore.collection('cool-coll');
+          await collectionRef.doc('bar').set({ a: 1 });
 
-    const { getByTestId, getByText, queryByTestId } = await renderWithFirestore(
-      async () => (
-        <>
-          <Firestore />
-          <Route
-            path="/firestore"
-            exact
-            render={() => <div data-testid="ROOT"></div>}
-          />
-        </>
-      )
-    );
-    act(() => getByText('Clear all data').click());
-    await waitFor(() => expect(nukeSpy).toHaveBeenCalled());
-    expect(getByTestId('firestore-loading')).not.toBeNull();
-    await act(() => nuke.resolve());
-    expect(queryByTestId('firestore-loading')).toBeNull();
-    expect(getByTestId('ROOT')).not.toBeNull();
+          return <Firestore />;
+        },
+        { path: '/firestore/data' }
+      );
+
+      await findByTestId('collection-list');
+
+      expect(queryByText(/Connecting to Firestore/)).toBeNull();
+      expect(getAllByTestId('collection-list').length).toEqual(1);
+      expect(getAllByText(/cool-coll/)).not.toBeNull();
+    });
+
+    it('shows a collection-shell if at the root', async () => {
+      const { getByTestId, findByTestId } = await renderWithFirestore(
+        async () => <Firestore />,
+        {
+          path: '/firestore/data',
+        }
+      );
+
+      expect(await findByTestId(/collection-shell/)).not.toBeNull();
+      expect(getByTestId(/document-shell/)).not.toBeNull();
+    });
+
+    it('shows a document-shell if 1-level deep', async () => {
+      const { findByTestId, queryByTestId } = await renderWithFirestore(
+        async () => <Firestore />,
+        {
+          path: '/firestore/data/coll',
+        }
+      );
+
+      expect(await findByTestId(/document-shell/)).not.toBeNull();
+      expect(queryByTestId(/collection-shell/)).toBeNull();
+    });
+
+    it('shows no shells if 2-levels deep', async () => {
+      const { queryByTestId, findByText } = await renderWithFirestore(
+        async (firestore) => {
+          const collectionRef = firestore.collection('coll');
+          await collectionRef.doc('doc').set({ a: 1 });
+          return <Firestore />;
+        },
+        {
+          path: '/firestore/data/coll/doc',
+        }
+      );
+
+      await findByText(/doc/);
+
+      expect(queryByTestId(/collection-shell/)).toBeNull();
+      expect(queryByTestId(/document-shell/)).toBeNull();
+    });
   });
 
-  it('does not trigger clearing all data if dialog is not confirmed', async () => {
-    const nukeSpy = jest.fn();
-    jest.spyOn(emulatedApi, 'useEjector').mockReturnValue(nukeSpy);
+  describe('Clear all data', () => {
+    it('triggers clearing all data', async () => {
+      const nuke = makeDeferred<void>();
+      const nukeSpy = jest.fn().mockReturnValueOnce(nuke.promise);
+      jest.spyOn(emulatedApi, 'useEjector').mockReturnValue(nukeSpy);
+      confirm.mockResolvedValueOnce(true);
 
-    const confirmDeferred = makeDeferred<boolean>();
-    confirm.mockReturnValueOnce(confirmDeferred.promise);
+      const {
+        getByTestId,
+        getByText,
+        queryByTestId,
+      } = await renderWithFirestore(
+        async () => (
+          <>
+            <Firestore />
+            <Route
+              path="/firestore/data"
+              exact
+              render={() => <div data-testid="ROOT"></div>}
+            />
+          </>
+        ),
+        {
+          path: '/firestore/data',
+        }
+      );
+      act(() => getByText('Clear all data').click());
+      await waitFor(() => expect(nukeSpy).toHaveBeenCalled());
+      expect(getByTestId('firestore-loading')).not.toBeNull();
+      await act(() => nuke.resolve());
+      expect(queryByTestId('firestore-loading')).toBeNull();
+      expect(getByTestId('ROOT')).not.toBeNull();
+    });
 
-    const { getByText } = await renderWithFirestore(async () => <Firestore />);
-    act(() => getByText('Clear all data').click());
-    // Simulate the case where user clicked on Cancel in the confirm dialog.
-    await act(() => confirmDeferred.resolve(false));
-    expect(nukeSpy).not.toHaveBeenCalled();
+    it('does not trigger clearing all data if dialog is not confirmed', async () => {
+      const nukeSpy = jest.fn();
+      jest.spyOn(emulatedApi, 'useEjector').mockReturnValue(nukeSpy);
+
+      const confirmDeferred = makeDeferred<boolean>();
+      confirm.mockReturnValueOnce(confirmDeferred.promise);
+
+      const { getByText } = await renderWithFirestore(
+        async () => <Firestore />,
+        {
+          path: '/firestore/data',
+        }
+      );
+      act(() => getByText('Clear all data').click());
+      // Simulate the case where user clicked on Cancel in the confirm dialog.
+      await act(() => confirmDeferred.resolve(false));
+      expect(nukeSpy).not.toHaveBeenCalled();
+    });
   });
 });

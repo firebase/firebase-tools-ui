@@ -1,0 +1,74 @@
+/**
+ * Copyright 2021 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.Firestore-Request-Details-Inspection-Block {
+  padding: 10px;
+  cursor: pointer;
+  height: 48px;
+  // Shadow border at left and bottom
+  box-shadow: 1px -1px 0 rgba(0, 0, 0, 0.12) inset;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.Firestore-Request-Details-Inspection-Block.Firestore-Request-Details-Inspection-Block--Main {
+  font-weight: 500;
+  padding: 5px 10px;
+  font-size: 13px;
+}
+
+.Firestore-Request-Details-Inspection-Block-Label {
+  width: 100%;
+  font-size: 14px;
+  // Truncate text
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.Firestore-Request-Details-Inspection-Block-Value {
+  padding: 10px;
+  font-size: 14px;
+  min-height: 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  overflow: scroll;
+  // Shadow border at left and bottom
+  box-shadow: 1px -1px 0 rgba(0, 0, 0, 0.12) inset;
+  // Format line-breaks
+  white-space: pre;
+
+  .Firestore-Field-List,
+  .FieldPreview-children {
+    width: 100%;
+  }
+
+  // Top-level is a primitive: omit key and expand icon. Just value and type.
+  .Firestore-Field-List > .FieldPreview--primitive {
+    .FieldPreview-key,
+    .FieldPreview-expand-icon {
+      display: none;
+    }
+  }
+
+  // Top-level is a non-primitive: omit the top-level row.
+  .Firestore-Field-List > .FieldPreview--expanded {
+    display: none;
+  }
+}

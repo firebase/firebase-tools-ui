@@ -22,66 +22,114 @@ import { ListItem, ListItemMeta } from '@rmwc/list';
 import { Theme } from '@rmwc/theme';
 import classnames from 'classnames';
 import firebase from 'firebase';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 
 import { supportsEditing } from '../DocumentEditor';
 import { FirestoreArray } from '../models';
 import {
-  compareFirestoreKeys,
-  getFieldType,
   getParentPath,
   isArray,
   isMap,
   isPrimitive,
   lastFieldName,
-  summarize,
 } from '../utils';
 import { deleteField, updateField } from './api';
 import InlineEditor from './InlineEditor';
-import { useDocumentState, useFieldState } from './store';
+import { useDocumentState, useFieldInfo, useFieldState } from './store';
 
-const FieldPreview: React.FC<{
+export interface CommonPreviewProps {
   path: string[];
-  documentRef: firebase.firestore.DocumentReference;
   maxSummaryLen: number;
-}> = ({ path, documentRef, maxSummaryLen }) => {
+}
+
+export interface FieldPreviewProps extends CommonPreviewProps {
+  actions?: React.ReactNode;
+  childComponent?: React.ComponentType<CommonPreviewProps>;
+}
+
+export const FieldPreview: React.FC<FieldPreviewProps> = ({
+  path,
+  maxSummaryLen,
+  children,
+  actions,
+  childComponent: ChildComponent = FieldPreview,
+}) => {
+  const { summary, title, typeDisp, childPaths } = useFieldInfo(path, {
+    maxSummaryLen,
+  });
+  const [isExpanded, setIsExpanded] = useState(
+    !childPaths || childPaths.length > 0
+  );
+
+  return (
+    <>
+      <ListItem
+        onClick={() => path.length && setIsExpanded(!isExpanded)}
+        className={classnames('FieldPreview', {
+          'FieldPreview--primitive': !childPaths,
+          'FieldPreview--expanded': childPaths && isExpanded,
+        })}
+      >
+        <Icon
+          className="FieldPreview-expand-icon"
+          icon={{
+            size: 'xsmall',
+            icon: isExpanded ? 'arrow_drop_down' : 'arrow_right',
+          }}
+        />
+        <Theme use="secondary" tag="span" className="FieldPreview-key">
+          {path[path.length - 1] || ''}
+        </Theme>
+        <span className="FieldPreview-summary" title={title}>
+          {summary}
+        </span>
+        <ListItemMeta className="FieldPreview-actions">
+          <span className="FieldPreview-type">({typeDisp})</span>
+          {actions}
+        </ListItemMeta>
+      </ListItem>
+
+      {children}
+
+      {childPaths && isExpanded && (
+        <div
+          className={
+            path.length
+              ? 'FieldPreview-children'
+              : 'FieldPreview-top-level-fields'
+          }
+        >
+          {childPaths.map((path) => {
+            return (
+              <ChildComponent
+                path={path}
+                key={lastFieldName(path)}
+                maxSummaryLen={maxSummaryLen}
+              />
+            );
+          })}
+        </div>
+      )}
+    </>
+  );
+};
+
+export const EditableFieldPreview: React.FC<
+  CommonPreviewProps & {
+    documentRef: firebase.firestore.DocumentReference;
+  }
+> = ({ path, documentRef, maxSummaryLen }) => {
   const documentData = useDocumentState();
   const parentState = useFieldState(path.slice(0, -1));
   const state = useFieldState(path);
   const [isEditing, setIsEditing] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(true);
   const [isAddingField, setIsAddingField] = useState(false);
-
-  let childFields = null;
-  if (isMap(state)) {
-    // Inline editor for new field will default to key: ''
-    childFields = Object.keys(state)
-      .sort(compareFirestoreKeys)
-      .map((childLeaf) => {
-        const childPath = [...path, childLeaf];
-        return (
-          <FieldPreview
-            key={childLeaf}
-            path={childPath}
-            documentRef={documentRef}
-            maxSummaryLen={maxSummaryLen}
-          />
-        );
-      });
-  } else if (isArray(state)) {
-    // Inline editor for new field will default to key: '{index}'
-    childFields = state.map((value, index) => {
-      const childPath = [...path, `${index}`];
-      return (
-        <FieldPreview
-          key={index}
-          path={childPath}
-          documentRef={documentRef}
-          maxSummaryLen={maxSummaryLen}
-        />
-      );
-    });
-  }
+  const childComponent = useCallback(
+    (props: CommonPreviewProps) => (
+      <EditableFieldPreview documentRef={documentRef} {...props} />
+    ),
+    [documentRef]
+  );
 
   return isEditing ? (
     <>
@@ -120,29 +168,12 @@ const FieldPreview: React.FC<{
       )}
     </>
   ) : (
-    <>
-      <ListItem
-        onClick={() => setIsExpanded(!isExpanded)}
-        className={classnames('FieldPreview', {
-          'FieldPreview--primitive': isPrimitive(state),
-          'FieldPreview--expanded': !isPrimitive(state) && isExpanded,
-        })}
-      >
-        <Icon
-          className="FieldPreview-expand-icon"
-          icon={{
-            size: 'xsmall',
-            icon: isExpanded ? 'arrow_drop_down' : 'arrow_right',
-          }}
-        />
-        <Theme use="secondary" tag="span" className="FieldPreview-key">
-          {lastFieldName(path)}
-        </Theme>
-        <span className="FieldPreview-summary">
-          {summarize(state, maxSummaryLen)}
-        </span>
-        <ListItemMeta className="FieldPreview-actions">
-          <span className="FieldPreview-type">({getFieldType(state)})</span>
+    <FieldPreview
+      path={path}
+      maxSummaryLen={maxSummaryLen}
+      childComponent={childComponent}
+      actions={
+        <>
           {isPrimitive(state) && supportsEditing(state) && (
             <IconButton
               icon="edit"
@@ -171,9 +202,9 @@ const FieldPreview: React.FC<{
               deleteField(documentRef, documentData, path);
             }}
           />
-        </ListItemMeta>
-      </ListItem>
-
+        </>
+      }
+    >
       {isAddingField && isArray(state) && (
         <InlineEditor
           value={['']}
@@ -206,12 +237,6 @@ const FieldPreview: React.FC<{
           firestore={documentRef.firestore}
         />
       )}
-
-      {!isPrimitive(state) && isExpanded && (
-        <div className="FieldPreview-children">{childFields}</div>
-      )}
-    </>
+    </FieldPreview>
   );
 };
-
-export default FieldPreview;

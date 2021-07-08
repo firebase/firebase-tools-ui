@@ -1,5 +1,5 @@
 /**
- * Copyright 2020 Google LLC
+ * Copyright 2021 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import { EmulatorConfig } from '../../store/config';
-
 export enum WebSocketState {
   DISCONNECTED,
   CONNECTED,
@@ -28,18 +26,18 @@ export class ReconnectingWebSocket {
   interval: number | undefined = undefined;
   ws: WebSocket | undefined = undefined;
 
-  constructor(config: EmulatorConfig) {
-    this.connect(config);
+  constructor(wsUrl: string) {
+    this.connect(wsUrl);
     // XXX: The Node.js typings for setInterval is leaking in, which causes the
     // function to be typed to return NodeJS.Timeout and thus the as-any cast.
     // TODO: Remove Node.js typings from source files for the web.
-    this.interval = setInterval(() => this.connect(config), 1000) as any;
+    this.interval = setInterval(() => this.connect(wsUrl), 1000) as any;
   }
 
-  private connect(config: EmulatorConfig) {
+  private connect(wsUrl: string) {
     if (this.state !== WebSocketState.DISCONNECTED) return;
 
-    const ws = new WebSocket(`ws://${config.hostAndPort}`);
+    const ws = new WebSocket(wsUrl);
     this.ws = ws;
     this.state = WebSocketState.PENDING;
 

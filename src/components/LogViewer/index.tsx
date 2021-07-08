@@ -22,11 +22,11 @@ import { GridCell } from '@rmwc/grid';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
+import { ReconnectingWebSocket } from '../../reconnectingWebSocket';
 import { useConfigOptional } from '../common/EmulatorConfigProvider';
 import { CompiledGetterCache } from './CompiledGetterCache';
 import History from './History';
 import { QueryBar, parseQuery } from './QueryBar';
-import { ReconnectingWebSocket } from './ReconnectingWebSocket';
 import { LogEntry } from './types';
 
 const compiledGetters = new CompiledGetterCache();
@@ -47,8 +47,9 @@ export const LogViewer: React.FC = () => {
 
   useEffect(() => {
     if (!config) return;
+
     setLogs([]);
-    const webSocket = new ReconnectingWebSocket(config);
+    const webSocket = new ReconnectingWebSocket(`ws://${config.hostAndPort}`);
     webSocket.listener = (log: LogEntry) => {
       setLogs((logs) => [...logs, log]);
     };
