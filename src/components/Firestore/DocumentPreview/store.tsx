@@ -289,7 +289,7 @@ function summarizeConstraint(
     } else if (comparator === 'LIST_CONTAINS') {
       conditions.push(
         <span>
-          ({valueStr} in ${unknown})
+          ({valueStr} in {unknown})
         </span>
       );
     } else {
