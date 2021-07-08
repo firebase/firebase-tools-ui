@@ -109,7 +109,7 @@ export function useFirestoreRequests(): {
   return { requests: context.requests };
 }
 
-export function useIsFirestoreRequestsAvailable(): boolean | undefined {
+export function useIsFirestoreRequestsAvailable(): boolean {
   const config = useEmulatorConfig('firestore');
   return !!(config.webSocketHost && config.webSocketPort);
 }

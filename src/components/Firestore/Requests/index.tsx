@@ -35,7 +35,7 @@ const Requests: React.FC = () => {
     false
   );
   const isRequestsAvailable = useIsFirestoreRequestsAvailable();
-  if (isRequestsAvailable === false) {
+  if (isRequestsAvailable) {
     return <EmulatorOutdated productName="Firestore" />;
   }
 
