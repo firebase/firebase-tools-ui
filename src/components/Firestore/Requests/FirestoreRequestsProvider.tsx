@@ -18,14 +18,16 @@ import React, { useEffect, useState } from 'react';
 
 import { ReconnectingWebSocket } from '../../../reconnectingWebSocket';
 import {
-  makeDeferred,
   useConfigOptional,
+  useEmulatorConfig,
+  useOnChangePromise,
 } from '../../common/EmulatorConfigProvider';
 import { FirestoreRulesEvaluation } from './rules_evaluation_result_model';
 
 interface FirestoreRequestsState {
   requests?: FirestoreRulesEvaluation[];
   promise?: Promise<void>;
+  isRequestsAvailable?: boolean;
 }
 
 const firestoreRequestsContext = React.createContext<
@@ -34,7 +36,6 @@ const firestoreRequestsContext = React.createContext<
 
 export const FirestoreRequestsProvider: React.FC = ({ children }) => {
   const [requests, setRequests] = useState<FirestoreRulesEvaluation[]>();
-  const [deferred, setDeferred] = useState(() => makeDeferred<void>());
   const config = useConfigOptional();
   const projectId = config?.projectId;
   const firestore = config?.firestore;
@@ -46,7 +47,6 @@ export const FirestoreRequestsProvider: React.FC = ({ children }) => {
       !firestore.webSocketPort
     ) {
       setRequests(undefined);
-      setDeferred(makeDeferred());
     } else {
       const wsUrl = new URL('ws://placeholder/requests');
       wsUrl.host = firestore.webSocketHost;
@@ -62,7 +62,6 @@ export const FirestoreRequestsProvider: React.FC = ({ children }) => {
         } else if (isCurrentProject(newEvaluation)) {
           setRequests((requests) => [...(requests || []), newEvaluation]);
         }
-        deferred.resolve();
       };
 
       return () => webSocket.cleanup();
@@ -75,12 +74,11 @@ export const FirestoreRequestsProvider: React.FC = ({ children }) => {
       }
       return evaluation.rulesReleaseName.startsWith(`projects/${projectId}/`);
     }
-  }, [projectId, firestore, setRequests, deferred]);
+  }, [projectId, firestore, setRequests]);
+  const promise = useOnChangePromise(requests) as Promise<void>;
 
   return (
-    <firestoreRequestsContext.Provider
-      value={{ requests, promise: deferred.promise }}
-    >
+    <firestoreRequestsContext.Provider value={{ requests, promise }}>
       {children}
     </firestoreRequestsContext.Provider>
   );
@@ -109,6 +107,11 @@ export function useFirestoreRequests(): {
     throw context.promise;
   }
   return { requests: context.requests };
+}
+
+export function useIsFirestoreRequestsAvailable(): boolean {
+  const config = useEmulatorConfig('firestore');
+  return !!(config.webSocketHost && config.webSocketPort);
 }
 
 export function useFirestoreRequest(
