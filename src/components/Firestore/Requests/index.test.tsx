@@ -18,6 +18,8 @@ import { render } from '@testing-library/react';
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
+import { Config } from '../../../store/config/types';
+import { TestEmulatorConfigProvider } from '../../common/EmulatorConfigProvider';
 import { createFakeFirestoreRequestEvaluation } from '../testing/test_utils';
 import { TestFirestoreRequestsProvider } from './FirestoreRequestsProvider';
 import FirestoreRequests from '.';
@@ -27,14 +29,27 @@ const FAKE_EVALUATION = createFakeFirestoreRequestEvaluation({
   requestId: FAKE_EVALUATION_ID,
 });
 
+const FAKE_CONFIG: Config = {
+  projectId: 'demo-example',
+  firestore: {
+    host: 'localhost',
+    port: 8080,
+    hostAndPort: 'localhost:8080',
+    webSocketHost: 'localhost',
+    webSocketPort: 99999,
+  },
+};
+
 describe('Firestore Requests', () => {
   it('renders requests table when /firestore/requests', async () => {
     const { getByTestId } = render(
-      <TestFirestoreRequestsProvider state={{ requests: [] }}>
-        <MemoryRouter initialEntries={['/firestore/requests']}>
-          <FirestoreRequests />
-        </MemoryRouter>
-      </TestFirestoreRequestsProvider>
+      <TestEmulatorConfigProvider config={FAKE_CONFIG}>
+        <TestFirestoreRequestsProvider state={{ requests: [] }}>
+          <MemoryRouter initialEntries={['/firestore/requests']}>
+            <FirestoreRequests />
+          </MemoryRouter>
+        </TestFirestoreRequestsProvider>
+      </TestEmulatorConfigProvider>
     );
 
     expect(getByTestId('requests-card')).not.toBeNull();
@@ -44,13 +59,15 @@ describe('Firestore Requests', () => {
     // Make sure an evaluation with such ID exists on the store,
     // otherwise you would be redirected back to the requests table
     const { getByTestId } = render(
-      <TestFirestoreRequestsProvider state={{ requests: [FAKE_EVALUATION] }}>
-        <MemoryRouter
-          initialEntries={[`/firestore/requests/${FAKE_EVALUATION_ID}`]}
-        >
-          <FirestoreRequests />
-        </MemoryRouter>
-      </TestFirestoreRequestsProvider>
+      <TestEmulatorConfigProvider config={FAKE_CONFIG}>
+        <TestFirestoreRequestsProvider state={{ requests: [FAKE_EVALUATION] }}>
+          <MemoryRouter
+            initialEntries={[`/firestore/requests/${FAKE_EVALUATION_ID}`]}
+          >
+            <FirestoreRequests />
+          </MemoryRouter>
+        </TestFirestoreRequestsProvider>
+      </TestEmulatorConfigProvider>
     );
 
     expect(getByTestId('request-details')).not.toBeNull();
@@ -58,13 +75,15 @@ describe('Firestore Requests', () => {
 
   it('redirects to /firestore/requests for any other /firestore/requests/:requestId/... path', async () => {
     const { getByTestId } = render(
-      <TestFirestoreRequestsProvider state={{ requests: [] }}>
-        <MemoryRouter
-          initialEntries={[`/firestore/requests/${FAKE_EVALUATION_ID}/foo`]}
-        >
-          <FirestoreRequests />
-        </MemoryRouter>
-      </TestFirestoreRequestsProvider>
+      <TestEmulatorConfigProvider config={FAKE_CONFIG}>
+        <TestFirestoreRequestsProvider state={{ requests: [] }}>
+          <MemoryRouter
+            initialEntries={[`/firestore/requests/${FAKE_EVALUATION_ID}/foo`]}
+          >
+            <FirestoreRequests />
+          </MemoryRouter>
+        </TestFirestoreRequestsProvider>
+      </TestEmulatorConfigProvider>
     );
 
     expect(getByTestId('requests-card')).not.toBeNull();
