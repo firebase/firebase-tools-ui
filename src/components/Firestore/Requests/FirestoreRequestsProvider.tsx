@@ -18,8 +18,8 @@ import React, { useEffect, useState } from 'react';
 
 import { ReconnectingWebSocket } from '../../../reconnectingWebSocket';
 import {
-  makeDeferred,
   useConfigOptional,
+  useEmulatorConfig,
   useOnChangePromise,
 } from '../../common/EmulatorConfigProvider';
 import { FirestoreRulesEvaluation } from './rules_evaluation_result_model';
@@ -27,6 +27,7 @@ import { FirestoreRulesEvaluation } from './rules_evaluation_result_model';
 interface FirestoreRequestsState {
   requests?: FirestoreRulesEvaluation[];
   promise?: Promise<void>;
+  isRequestsAvailable?: boolean;
 }
 
 const firestoreRequestsContext = React.createContext<
@@ -106,6 +107,11 @@ export function useFirestoreRequests(): {
     throw context.promise;
   }
   return { requests: context.requests };
+}
+
+export function useIsFirestoreRequestsAvailable(): boolean | undefined {
+  const config = useEmulatorConfig('firestore');
+  return !!(config.webSocketHost && config.webSocketPort);
 }
 
 export function useFirestoreRequest(
