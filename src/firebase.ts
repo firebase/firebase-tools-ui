@@ -16,7 +16,7 @@
 
 import 'firebase/database';
 import 'firebase/firestore';
-import 'firebase/storage';
+import 'firebase/storage/dist/index.esm.js';
 
 import { _FirebaseApp } from '@firebase/app-types/private';
 import { FirebaseAuthInternal } from '@firebase/auth-interop-types';
