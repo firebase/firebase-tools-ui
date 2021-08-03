@@ -117,7 +117,12 @@ export function useStorageFiles() {
     return Promise.all(
       files.map((file) => {
         const path = folder ? `${folder}/${file.name}` : file.name;
-        return getCurrentRef().child(path).put(file);
+        // HACK(yuchenshi): If file is a jsdom object, convert to ArrayBuffer.
+        // This is done because jsdom File/Buffer is incomplete and will not
+        // work correctly when passed into Firebase Storage JS SDK.
+        // https://github.com/jsdom/jsdom/issues/2555
+        let buffer = !file.arrayBuffer ? new Response(file).arrayBuffer() : file;
+        return getCurrentRef().child(path).put(buffer);
       })
     );
   }
