@@ -114,6 +114,8 @@ export function useStorageFiles() {
   }
 
   function uploadFiles(files: File[], folder?: string) {
+    // HACK(abehaskins): The Firebase Web SDK detects the global Blob
+    // so we remove it during calls to fall back to non-Blobs
     (global as any).blobdotbak = (global as any).blobdotbak || global.Blob;
     (global as any).Blob = undefined;
 
