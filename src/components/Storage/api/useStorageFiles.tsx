@@ -114,6 +114,9 @@ export function useStorageFiles() {
   }
 
   function uploadFiles(files: File[], folder?: string) {
+    (global as any).blobdotbak = (global as any).blobdotbak || global.Blob;
+    delete global.Blob;
+
     return Promise.all(
       files.map(async (file) => {
         const path = folder ? `${folder}/${file.name}` : file.name;
@@ -121,9 +124,14 @@ export function useStorageFiles() {
         // This is done because jsdom File/Buffer is incomplete and will not
         // work correctly when passed into Firebase Storage JS SDK.
         // https://github.com/jsdom/jsdom/issues/2555
+
+
+        global.Blob = (global as any).blobdotbak;
         let buffer = !file.arrayBuffer
           ? await new Response(file).arrayBuffer()
           : file;
+        delete global.Blob;
+        console.log(buffer.toString());
         return getCurrentRef().child(path).put(buffer);
       })
     );

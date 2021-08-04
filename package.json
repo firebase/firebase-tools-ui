@@ -45,6 +45,7 @@
     "codemirror": "^5.61.1",
     "express": "^4.17.1",
     "firebase": "^8.5.0",
+    "firebase-tools": "^9.16.0",
     "font-awesome": "^4.7.0",
     "immer": "^8.0.1",
     "keycode": "^2.2.0",
