@@ -115,7 +115,7 @@ export function useStorageFiles() {
 
   function uploadFiles(files: File[], folder?: string) {
     (global as any).blobdotbak = (global as any).blobdotbak || global.Blob;
-    delete global.Blob;
+    (global as any).Blob = undefined;
 
     return Promise.all(
       files.map(async (file) => {
@@ -129,8 +129,7 @@ export function useStorageFiles() {
         let buffer = !file.arrayBuffer
           ? await new Response(file).arrayBuffer()
           : file;
-        delete global.Blob;
-        console.log(buffer.toString());
+        (global as any).Blob = undefined;
         return getCurrentRef().child(path).put(buffer);
       })
     );
