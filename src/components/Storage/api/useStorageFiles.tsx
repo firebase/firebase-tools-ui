@@ -125,7 +125,7 @@ export function useStorageFiles() {
         // work correctly when passed into Firebase Storage JS SDK.
         // https://github.com/jsdom/jsdom/issues/2555
 
-        //global.Blob = (global as any).blobdotbak;
+        global.Blob = (global as any).blobdotbak;
         let buffer = !file.arrayBuffer
           ? await new Response(file).arrayBuffer()
           : file;
