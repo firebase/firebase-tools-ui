@@ -43,7 +43,7 @@ export function useCreateFolder() {
           'Content-Type': 'multipart/related; boundary=boundary',
         },
         method: 'POST',
-        body: new Blob([EMPTY_FOLDER_DATA]),
+        body: EMPTY_FOLDER_DATA,
       }
     );
   }
