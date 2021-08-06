@@ -16,7 +16,11 @@
 
 import 'firebase/database';
 import 'firebase/firestore';
-import 'firebase/storage';
+// Force the browser build even in Node.js + jsdom unit tests because jsdom's
+// File/Blob impl is incomplete (https://github.com/jsdom/jsdom/issues/2555)
+// and thus not recognized by node-fetch, used by the Node build of Storage SDK.
+// The browser build works because it uses XHR (also mocked by jsdom).
+import '@firebase/storage/dist/index.browser.cjs.js';
 
 import { _FirebaseApp } from '@firebase/app-types/private';
 import { FirebaseAuthInternal } from '@firebase/auth-interop-types';
