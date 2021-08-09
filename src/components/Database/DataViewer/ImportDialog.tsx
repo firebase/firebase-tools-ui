@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { Checkbox } from '@rmwc/checkbox';
 import {
   Dialog,
   DialogActions,
@@ -25,6 +26,7 @@ import * as React from 'react';
 import { useState } from 'react';
 
 import { Callout } from '../../common/Callout';
+import { useConfig } from '../../common/EmulatorConfigProvider';
 import { Field } from '../../common/Field';
 import { FileField } from '../../common/FileField';
 import { Spinner } from '../../common/Spinner';
@@ -44,7 +46,9 @@ export const ImportDialog: React.FC<Props> = ({
   onComplete,
   droppedFile,
 }) => {
+  const functionsEmulatorRunning = !!useConfig().functions;
   const [file, setFile] = useState<File | undefined>(droppedFile);
+  const [executeFunctions, setExecuteFunctions] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
   const [error, setError] = useState();
 
@@ -53,10 +57,12 @@ export const ImportDialog: React.FC<Props> = ({
     if (file) {
       try {
         setIsImporting(true);
-        await api.importFile(reference, file);
+        await api.importFile(reference, file, {
+          disableTriggers: !functionsEmulatorRunning || !executeFunctions,
+        });
         onComplete(reference, file);
-      } catch (e) {
-        setError(e.message);
+      } catch (err) {
+        setError(err.message);
       }
       setIsImporting(false);
     }
@@ -71,10 +77,6 @@ export const ImportDialog: React.FC<Props> = ({
         <DialogContent onSubmit={onSubmit}>
           <Callout aside type="warning">
             All data at this location will be overwritten
-          </Callout>
-          <Callout aside type="caution">
-            If the Functions emulator is running, database functions will be
-            executed.
           </Callout>
           <Field
             disabled
@@ -92,6 +94,17 @@ export const ImportDialog: React.FC<Props> = ({
             onFiles={(files) => setFile(files[0])}
             error={error}
           />
+          {functionsEmulatorRunning && (
+            <div>
+              <Checkbox
+                label="Also execute database triggers in the Functions emulator"
+                checked={executeFunctions}
+                onChange={(event) => {
+                  setExecuteFunctions(event.currentTarget.checked);
+                }}
+              />
+            </div>
+          )}
         </DialogContent>
         <DialogActions>
           <DialogButton action="close" type="button" theme="secondary">
