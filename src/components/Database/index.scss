@@ -16,6 +16,12 @@
 
 @import '../common/radius';
 
+.Database-Container {
+  > .Callout {
+    margin-bottom: 24px;
+  }
+}
+
 .Database {
   display: flex;
 }
