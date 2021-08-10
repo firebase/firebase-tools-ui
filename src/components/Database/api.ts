@@ -39,12 +39,20 @@ export class DatabaseApi extends RestApi {
   /**
    * Import a file at a specific path within the current database.
    */
-  async importFile(ref: firebase.database.Reference, file: File) {
+  async importFile(
+    ref: firebase.database.Reference,
+    file: File,
+    options: { disableTriggers?: boolean } = {}
+  ) {
     const params = new URLSearchParams({
       ns: this.namespace,
       // Pass token in query since headers triggers CORS.
       access_token: 'owner',
+      writeSizeLimit: 'unlimited',
     });
+    if (options.disableTriggers) {
+      params.set('disableTriggers', 'true');
+    }
     const path = getUploadPath(ref) + `?${params.toString()}`;
     return await this.postFile(`${this.baseUrl}/${path}`, file);
   }
