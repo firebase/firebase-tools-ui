@@ -59,8 +59,8 @@ export const DatabaseContainer: React.FC<Props> = ({
 
   return (
     <>
-      {hasNewDbs && (
-        <GridCell span={12}>
+      <GridCell span={12} className="Database-Container">
+        {hasNewDbs && (
           <Callout
             icon="info"
             actions={
@@ -72,9 +72,7 @@ export const DatabaseContainer: React.FC<Props> = ({
             There are new databases that have been created. Reload the page to
             view them.
           </Callout>
-        </GridCell>
-      )}
-      <GridCell span={12}>
+        )}
         <Elevation z={2} wrap>
           <Card className="canvas-card">
             <div className="Database">
