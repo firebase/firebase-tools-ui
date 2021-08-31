@@ -73,6 +73,7 @@ const InlineEditor: React.FC<{
       className="Firestore-InlineEditor-relative-anchor"
       onClickOutside={handleCancel}
       onEscapeKey={handleCancel}
+      scrollLock={false}
     >
       <Elevation z={8} wrap>
         <Card
