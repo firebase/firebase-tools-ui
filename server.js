@@ -121,10 +121,14 @@ async function discoverFirestoreWs(firestore) {
  * server, which should hold if both are started from the same CLI command.
  */
 function fixHostname(host) {
+  if (host.indexOf(':') >= 0 && host.indexOf('[') < 0) {
+    // Add brackets to IPv6 address.
+    host = `[${host}]`;
+  }
   if (host === '0.0.0.0') {
     host = '127.0.0.1';
-  } else if (host === '::') {
-    host = '::1';
+  } else if (host === '[::]') {
+    host = '[::1]';
   }
   return host;
 }
