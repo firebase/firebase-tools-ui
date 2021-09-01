@@ -46,7 +46,7 @@
     "express": "^4.17.1",
     "firebase": "^8.9.0",
     "font-awesome": "^4.7.0",
-    "immer": "^8.0.1",
+    "immer": "^9.0.0",
     "keycode": "^2.2.0",
     "lodash.debounce": "^4.0.8",
     "lodash.get": "^4.4.2",
