@@ -70,10 +70,14 @@
     "typescript": "^4.1.5"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "run-script-os",
+    "start:win32": "SASS_PATH=\"node_modules;src\" react-scripts start",
+    "start:default": "SASS_PATH=node_modules:src react-scripts start",
     "build": "npm run build:web && npm run build:server",
     "bundle": "zip -r emulator-ui-dist.zip server.bundle.js build",
-    "build:web": "react-scripts build",
+    "build:web": "run-script-os",
+    "build:web:win32": "SASS_PATH=\"node_modules;src\" react-scripts build",
+    "build:web:default": "SASS_PATH=node_modules:src react-scripts build",
     "build:server": "webpack --target=node server.js -o server.bundle.js",
     "test": "react-scripts test --env=./custom-jest-environment.js",
     "test:debug": "react-scripts --inspect-brk test --env=./custom-jest-environment.js --runInBand",
@@ -131,6 +135,7 @@
     "prettier": "^2.2.1",
     "prettier-plugin-import-sort": "0.0.6",
     "redux-mock-store": "^1.5.4",
+    "run-script-os": "^1.1.6",
     "sass": "^1.26.3",
     "webpack-cli": "^3.3.11"
   },
