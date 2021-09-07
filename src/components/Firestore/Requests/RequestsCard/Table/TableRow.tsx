@@ -40,7 +40,6 @@ function getTableRowRequestData(
   request: FirestoreRulesEvaluation
 ): TableRowRequestData {
   const { rulesContext, outcome, time } = request;
-  // time * 1000 converts timestamp units from seconds to millis
   const requestDate = new Date(time);
   return {
     requestTimeComplete: requestDate.toLocaleString(),
