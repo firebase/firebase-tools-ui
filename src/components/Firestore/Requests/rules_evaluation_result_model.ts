@@ -79,4 +79,5 @@ export interface FirestoreRulesEvaluation {
   granularAllowOutcomes: OutcomeInfo[];
   rules?: string;
   rulesReleaseName?: string;
+  time: string;
 }

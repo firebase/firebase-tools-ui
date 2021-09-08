@@ -39,9 +39,8 @@ interface TableRowRequestData {
 function getTableRowRequestData(
   request: FirestoreRulesEvaluation
 ): TableRowRequestData {
-  const { rulesContext, outcome } = request;
-  // time * 1000 converts timestamp units from seconds to millis
-  const requestDate = new Date(rulesContext.time);
+  const { rulesContext, outcome, time } = request;
+  const requestDate = new Date(time);
   return {
     requestTimeComplete: requestDate.toLocaleString(),
     requestTimeFormatted: requestDate.toLocaleTimeString('en-US', {

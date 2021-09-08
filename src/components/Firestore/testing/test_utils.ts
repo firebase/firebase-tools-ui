@@ -62,6 +62,7 @@ export function createFakeFirestoreRequestEvaluation(
     requestId: 'unique_id',
     granularAllowOutcomes: [],
     rules: SAMPLE_RULES,
+    time: new Date().toISOString(),
     ...evaluation,
   };
 }
