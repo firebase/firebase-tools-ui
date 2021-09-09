@@ -26,7 +26,7 @@ We welcome any issues and Pull Requests to improve the Emulator UI. The followin
 To run the development server with test data:
 
 ```bash
-firebase emulators:exec --project sample --only database,firestore --import test-data 'npm start'
+firebase emulators:exec --project sample --import test-data 'npm start'
 ```
 
 This will run the web app in the development mode.<br />
@@ -72,7 +72,7 @@ See the section about [running tests](https://facebook.github.io/create-react-ap
 To run the test runner with emulators, use:
 
 ```bash
-firebase emulators:exec --project sample --only firestore 'npm test'
+firebase emulators:exec --project sample 'npm test'
 ```
 
 If you get port conflict errors, make sure to stop other instances of the Firebase Emulator Suite (e.g. the one you've started for the development server above) and try again.
@@ -91,7 +91,7 @@ JS file including all dependencies, ready for execution with Node.js.
 To run the production build with emulators, use:
 
 ```bash
-firebase emulators:exec --project sample --only database,firestore --import test-data 'PORT=3000 node server.bundle.js'
+firebase emulators:exec --project sample --import test-data 'PORT=3000 node server.bundle.js'
 ```
 
 This will start a server that serves both the static files and APIs at `http://localhost:3000/`.
