@@ -15,7 +15,7 @@
  */
 
 import { RestApi } from '../common/rest_api';
-import { AddAuthUserPayload, AuthUser } from './types';
+import { AddAuthUserPayload, AuthUser, AuthState, UsageModes } from './types';
 
 const importUser = (user: AuthUser & ApiAuthUserFields) => {
   const match = user.passwordHash?.match(PASSWORD_HASH_REGEX);
@@ -87,22 +87,46 @@ export default class AuthApi extends RestApi {
     return this.fetchUser(json.localId);
   }
 
-  async updateConfig(
+  async updateAllowDuplicateEmails(
     allowDuplicateEmails: boolean
-  ): Promise<{ signIn: { allowDuplicateEmails: boolean } }> {
+  ): Promise<boolean> {
     const { json } = await this.patchRequest(`${this.baseEmulatorUrl}/config`, {
       signIn: { allowDuplicateEmails },
     });
 
-    return json;
+    return json.signIn?.allowDuplicateEmails;
   }
 
-  async getConfig(): Promise<AuthUser> {
-    const { signIn } = await (
+  async updateUsageMode(
+    usageMode: UsageModes
+  ): Promise<{ signIn: { allowDuplicateEmails: boolean } }> {
+
+    const { json } = await this.patchRequest(`${this.baseEmulatorUrl}/config`, {
+      usageMode,
+    });
+
+    return json.usageMode;
+  }
+
+  async getConfig(): Promise<{allowDuplicateEmails: AuthState["allowDuplicateEmails"], usageMode: AuthState["usageMode"]}> {
+    const config = await (
       await fetch(`${this.baseEmulatorUrl}/config`)
     ).json();
 
-    return signIn.allowDuplicateEmails;
+    return {
+      allowDuplicateEmails: config.signIn?.allowDuplicateEmails,
+      usageMode: config.usageMode
+    };
+  }
+
+  async getAllowDuplicateEmails(): Promise<boolean> {
+    const {allowDuplicateEmails} = await this.getConfig();
+    return allowDuplicateEmails;
+  }
+
+  async getUsageMode(): Promise<AuthState["usageMode"]> {
+    const {usageMode} = await this.getConfig();
+    return usageMode;
   }
 
   async updateUser(user: AddAuthUserPayload): Promise<AuthUser> {
