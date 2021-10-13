@@ -20,21 +20,23 @@ import { MapDispatchToPropsFunction, connect } from 'react-redux';
 
 import { createStructuredSelector } from '../../../store';
 import { openAuthUserDialog } from '../../../store/auth/actions';
-import { getAuthUserDialog } from '../../../store/auth/selectors';
+import { getAuthUserDialog, getUsageMode } from '../../../store/auth/selectors';
 import { RemoteResult, createRemoteDataLoaded } from '../../../store/utils';
-import { AuthUser } from '../types';
+import { AuthUser, UsageModes } from '../types';
 import UserForm from '../UserFormDialog/UserForm';
 import { AuthHeader } from './header/AuthHeader';
 import UsersTable from './table/UsersTable';
 
 export type UserCardProps = PropsFromDispatch & PropsFromState;
 export const UsersCard: React.FC<UserCardProps> = ({
+  usageMode,
   openAuthUserDialog,
   authUserDialogData,
 }) => {
   return (
     <Card>
       <AuthHeader
+        disabled={usageMode === UsageModes.PASSTHROUGH}
         onOpenNewUserDialog={() =>
           openAuthUserDialog(createRemoteDataLoaded(undefined))
         }
@@ -51,6 +53,7 @@ export interface PropsFromDispatch {
 
 export const mapStateToProps = createStructuredSelector({
   authUserDialogData: getAuthUserDialog,
+  usageMode: getUsageMode
 });
 export type PropsFromState = ReturnType<typeof mapStateToProps>;
 
