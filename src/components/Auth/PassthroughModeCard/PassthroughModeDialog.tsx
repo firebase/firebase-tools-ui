@@ -28,7 +28,10 @@ import { MapDispatchToPropsFunction, connect } from 'react-redux';
 
 import { createStructuredSelector } from '../../../store';
 import { setUsageModeRequest } from '../../../store/auth/actions';
-import { getAllowDuplicateEmails, getUsageMode } from '../../../store/auth/selectors';
+import {
+  getAllowDuplicateEmails,
+  getUsageMode,
+} from '../../../store/auth/selectors';
 import { Callout } from '../../common/Callout';
 import { UsageModes } from '../types';
 import styles from './PassthroughModeDialog.module.scss';
@@ -49,7 +52,11 @@ export const PassthroughModeDialog: React.FC<Props> = ({
       <form
         onSubmit={(e: React.FormEvent<unknown>) => {
           e.preventDefault();
-          setUsageMode(usageMode === UsageModes.PASSTHROUGH ? UsageModes.DEFAULT : UsageModes.PASSTHROUGH);
+          setUsageMode(
+            usageMode === UsageModes.PASSTHROUGH
+              ? UsageModes.DEFAULT
+              : UsageModes.PASSTHROUGH
+          );
           onClose();
         }}
       >
@@ -60,7 +67,9 @@ export const PassthroughModeDialog: React.FC<Props> = ({
             </Callout>
           </div>
           <Typography use="body2" className={styles.description}>
-            {usageMode === UsageModes.PASSTHROUGH ? 'Disabling passthrough mode means users will be saved in the Auth emulator': 'Enabling passthrough mode deletes all users currently in the Auth Emulator'}
+            {usageMode === UsageModes.PASSTHROUGH
+              ? 'Disabling passthrough mode means users will be saved in the Auth emulator'
+              : 'Enabling passthrough mode deletes all users currently in the Auth Emulator'}
           </Typography>
         </DialogContent>
         <DialogActions>
@@ -68,7 +77,9 @@ export const PassthroughModeDialog: React.FC<Props> = ({
             Cancel
           </DialogButton>
           <DialogButton type="submit" unelevated>
-          {usageMode === UsageModes.PASSTHROUGH ? 'Disable passthrough': 'Enable passthrough'}
+            {usageMode === UsageModes.PASSTHROUGH
+              ? 'Disable passthrough'
+              : 'Enable passthrough'}
           </DialogButton>
         </DialogActions>
       </form>

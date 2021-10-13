@@ -45,10 +45,14 @@ export const PassthroughModeCard: React.FC<PassthroughModeCardProps> = ({
       <Card className={styles.wrapper}>
         <div>
           <Typography use="headline6" tag="div" theme="textPrimaryOnBackground">
-            {usageMode === UsageModes.PASSTHROUGH ? ENABLED_HEADING : DISABLED_HEADING}
+            {usageMode === UsageModes.PASSTHROUGH
+              ? ENABLED_HEADING
+              : DISABLED_HEADING}
           </Typography>
           <Typography use="body2" theme="textPrimaryOnBackground">
-            {usageMode === UsageModes.PASSTHROUGH ? ENABLED_COPY : DISABLED_COPY}
+            {usageMode === UsageModes.PASSTHROUGH
+              ? ENABLED_COPY
+              : DISABLED_COPY}
             <a
               target="_blank"
               rel="noopener noreferrer"
