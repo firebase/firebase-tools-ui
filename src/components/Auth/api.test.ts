@@ -171,7 +171,7 @@ describe('API', () => {
     const allowDuplicateEmails = false;
     const mockFetchResult = { signIn: { allowDuplicateEmails } };
     const api = setup({ mockFetchResult });
-    const result = await api.updateConfig(allowDuplicateEmails);
+    const result = await api.updateAllowDuplicateEmails(allowDuplicateEmails);
     expect(global.fetch).toHaveBeenCalledWith(
       'http://foo.example.com:9002/emulator/v1/projects/pelmen-the-project/config',
       {
