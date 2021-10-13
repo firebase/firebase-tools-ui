@@ -36,14 +36,14 @@ import {
   deleteUserRequest,
   deleteUserSuccess,
   getAllowDuplicateEmailsRequest,
+  getUsageModeRequest,
+  getUsageModeSuccess,
   nukeUsersRequest,
   nukeUsersSuccess,
   setAllowDuplicateEmailsRequest,
   setAllowDuplicateEmailsSuccess,
   setAuthUserDialogError,
   setAuthUserDialogLoading,
-  getUsageModeRequest,
-  getUsageModeSuccess,
   setUsageModeRequest,
   setUsageModeSuccess,
   setUserDisabledRequest,
@@ -91,17 +91,11 @@ export function* initAuth({ payload }: ActionType<typeof updateAuthConfig>) {
       getType(getAllowDuplicateEmailsRequest),
       getAllowDuplicateEmails
     ),
-    takeLatest(
-      getType(setUsageModeRequest),
-      setUsageMode
-    ),
-    takeLatest(
-      getType(getUsageModeRequest),
-      getUsageMode
-    ),
+    takeLatest(getType(setUsageModeRequest), setUsageMode),
+    takeLatest(getType(getUsageModeRequest), getUsageMode),
     put(authFetchUsersRequest()),
     put(getAllowDuplicateEmailsRequest()),
-    put(getUsageModeRequest())
+    put(getUsageModeRequest()),
   ]);
 }
 

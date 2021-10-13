@@ -76,12 +76,9 @@ export const getAllowDuplicateEmails = createSelector(
   (state: AuthState) => state.allowDuplicateEmails
 );
 
-export const getUsageMode = createSelector(
-  getAuth,
-  (state: AuthState) => {
-    return state.usageMode;
-  }
-);
+export const getUsageMode = createSelector(getAuth, (state: AuthState) => {
+  return state.usageMode;
+});
 
 export const getFilteredUsers = createSelector(
   getUsers,
@@ -101,20 +98,23 @@ export const getFilteredUsers = createSelector(
 export const getShowPassthroughMode = createSelector(
   getUsageMode,
   (usageMode) => usageMode === UsageModes.PASSTHROUGH
-)
+);
 export const getShowZeroState = createSelector(
   getUsers,
   getShowPassthroughMode,
-  (users, passthroughModeEnabled) => !passthroughModeEnabled && users.length === 0
+  (users, passthroughModeEnabled) =>
+    !passthroughModeEnabled && users.length === 0
 );
 export const getShowZeroResults = createSelector(
   getUsers,
   getFilteredUsers,
   getShowPassthroughMode,
-  (users, filteredUsers, passthroughModeEnabled) => !passthroughModeEnabled && users.length > 0 && filteredUsers.length === 0
+  (users, filteredUsers, passthroughModeEnabled) =>
+    !passthroughModeEnabled && users.length > 0 && filteredUsers.length === 0
 );
 export const getShowTable = createSelector(
   getFilteredUsers,
   getShowPassthroughMode,
-  (filteredUsers, passthroughModeEnabled) => !passthroughModeEnabled && filteredUsers.length > 0
+  (filteredUsers, passthroughModeEnabled) =>
+    !passthroughModeEnabled && filteredUsers.length > 0
 );

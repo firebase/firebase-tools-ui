@@ -26,7 +26,7 @@ const INIT_STATE = {
   users: { loading: true },
   filter: '',
   allowDuplicateEmails: false,
-  usageMode: UsageModes.DEFAULT
+  usageMode: UsageModes.DEFAULT,
 };
 
 export const authReducer = createReducer<AuthState, Action>(INIT_STATE)
