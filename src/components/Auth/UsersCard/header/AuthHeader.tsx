@@ -32,7 +32,7 @@ export interface AuthHeaderProps {
 
 export const AuthHeader: React.FC<AuthHeaderProps> = ({
   onOpenNewUserDialog,
-  disabled
+  disabled,
 }) => {
   return (
     <>

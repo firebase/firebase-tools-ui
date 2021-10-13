@@ -53,7 +53,7 @@ export interface PropsFromDispatch {
 
 export const mapStateToProps = createStructuredSelector({
   authUserDialogData: getAuthUserDialog,
-  usageMode: getUsageMode
+  usageMode: getUsageMode,
 });
 export type PropsFromState = ReturnType<typeof mapStateToProps>;
 

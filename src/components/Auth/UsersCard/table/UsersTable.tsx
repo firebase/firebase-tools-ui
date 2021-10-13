@@ -135,7 +135,7 @@ export const UsersTable: React.FC<UsersTableProps> = ({
   openAuthUserDialog,
   shouldShowZeroResults,
   shouldShowZeroState,
-  shouldShowPassthroughMode
+  shouldShowPassthroughMode,
 }) => {
   console.log(shouldShowPassthroughMode);
   return (
