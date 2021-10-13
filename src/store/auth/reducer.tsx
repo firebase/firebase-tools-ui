@@ -17,7 +17,7 @@
 import produce from 'immer';
 import { Action, createReducer } from 'typesafe-actions';
 
-import { AuthState, AuthUser } from '../../components/Auth/types';
+import { AuthState, AuthUser, UsageModes } from '../../components/Auth/types';
 import { getUniqueId } from '../../components/Firestore/DocumentEditor/utils';
 import { mapResult } from '../utils';
 import * as authActions from './actions';
@@ -26,6 +26,7 @@ const INIT_STATE = {
   users: { loading: true },
   filter: '',
   allowDuplicateEmails: false,
+  usageMode: UsageModes.DEFAULT
 };
 
 export const authReducer = createReducer<AuthState, Action>(INIT_STATE)
@@ -138,5 +139,11 @@ export const authReducer = createReducer<AuthState, Action>(INIT_STATE)
         loading: false,
         result: { error: payload },
       };
+    })
+  )
+  .handleAction(
+    authActions.setUsageModeSuccess,
+    produce((draft, { payload }) => {
+      draft.usageMode = payload;
     })
   );

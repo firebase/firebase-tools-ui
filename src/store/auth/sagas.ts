@@ -25,7 +25,7 @@ import {
 import { ActionType, getType } from 'typesafe-actions';
 
 import AuthApi from '../../components/Auth/api';
-import { AuthUser } from '../../components/Auth/types';
+import { AuthUser, UsageModes } from '../../components/Auth/types';
 import {
   authFetchUsersError,
   authFetchUsersRequest,
@@ -42,6 +42,10 @@ import {
   setAllowDuplicateEmailsSuccess,
   setAuthUserDialogError,
   setAuthUserDialogLoading,
+  getUsageModeRequest,
+  getUsageModeSuccess,
+  setUsageModeRequest,
+  setUsageModeSuccess,
   setUserDisabledRequest,
   setUserDisabledSuccess,
   updateAuthConfig,
@@ -87,8 +91,17 @@ export function* initAuth({ payload }: ActionType<typeof updateAuthConfig>) {
       getType(getAllowDuplicateEmailsRequest),
       getAllowDuplicateEmails
     ),
+    takeLatest(
+      getType(setUsageModeRequest),
+      setUsageMode
+    ),
+    takeLatest(
+      getType(getUsageModeRequest),
+      getUsageMode
+    ),
     put(authFetchUsersRequest()),
     put(getAllowDuplicateEmailsRequest()),
+    put(getUsageModeRequest())
   ]);
 }
 
@@ -166,14 +179,29 @@ export function* setAllowDuplicateEmails({
   payload,
 }: ReturnType<typeof setAllowDuplicateEmailsRequest>) {
   const authApi: AuthApi = yield call(configureAuthSaga);
-  yield call([authApi, 'updateConfig'], payload);
+  yield call([authApi, 'updateAllowDuplicateEmails'], payload);
   yield put(setAllowDuplicateEmailsSuccess(payload));
+}
+
+export function* setUsageMode({
+  payload,
+}: ReturnType<typeof setUsageModeRequest>) {
+  const authApi: AuthApi = yield call(configureAuthSaga);
+  yield call([authApi, 'updateUsageMode'], payload);
+  yield put(setUsageModeSuccess(payload));
 }
 
 export function* getAllowDuplicateEmails() {
   const authApi: AuthApi = yield call(configureAuthSaga);
-  const config: boolean = yield call([authApi, 'getConfig']);
+  const config: boolean = yield call([authApi, 'getAllowDuplicateEmails']);
   yield put(setAllowDuplicateEmailsSuccess(config));
+}
+
+export function* getUsageMode() {
+  const authApi: AuthApi = yield call(configureAuthSaga);
+  const config: UsageModes = yield call([authApi, 'getUsageMode']);
+  console.log('saga - getUsageMode', config);
+  yield put(setUsageModeSuccess(config));
 }
 
 export function* nukeUsers() {

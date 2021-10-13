@@ -16,7 +16,7 @@
 
 import { createSelector } from 'reselect';
 
-import { AuthState, AuthUser } from '../../components/Auth/types';
+import { AuthState, AuthUser, UsageModes } from '../../components/Auth/types';
 import { AppState } from '../index';
 import { hasData, squashOrDefaut } from '../utils';
 
@@ -76,6 +76,13 @@ export const getAllowDuplicateEmails = createSelector(
   (state: AuthState) => state.allowDuplicateEmails
 );
 
+export const getUsageMode = createSelector(
+  getAuth,
+  (state: AuthState) => {
+    return state.usageMode;
+  }
+);
+
 export const getFilteredUsers = createSelector(
   getUsers,
   getFilter,
@@ -91,17 +98,23 @@ export const getFilteredUsers = createSelector(
     });
   }
 );
+export const getShowPassthroughMode = createSelector(
+  getUsageMode,
+  (usageMode) => usageMode === UsageModes.PASSTHROUGH
+)
 export const getShowZeroState = createSelector(
   getUsers,
-  (users) => users.length === 0
+  getShowPassthroughMode,
+  (users, passthroughModeEnabled) => !passthroughModeEnabled && users.length === 0
 );
 export const getShowZeroResults = createSelector(
   getUsers,
   getFilteredUsers,
-  (users, filteredUsers) => users.length > 0 && filteredUsers.length === 0
+  getShowPassthroughMode,
+  (users, filteredUsers, passthroughModeEnabled) => !passthroughModeEnabled && users.length > 0 && filteredUsers.length === 0
 );
 export const getShowTable = createSelector(
-  getUsers,
   getFilteredUsers,
-  (users, filteredUsers) => filteredUsers.length > 0
+  getShowPassthroughMode,
+  (filteredUsers, passthroughModeEnabled) => !passthroughModeEnabled && filteredUsers.length > 0
 );
