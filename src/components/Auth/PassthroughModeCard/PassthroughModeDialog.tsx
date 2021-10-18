@@ -21,7 +21,6 @@ import {
   DialogContent,
   DialogTitle,
 } from '@rmwc/dialog';
-import { Radio } from '@rmwc/radio';
 import { Typography } from '@rmwc/typography';
 import React from 'react';
 import { MapDispatchToPropsFunction, connect } from 'react-redux';
@@ -29,7 +28,6 @@ import { MapDispatchToPropsFunction, connect } from 'react-redux';
 import { createStructuredSelector } from '../../../store';
 import { setUsageModeRequest } from '../../../store/auth/actions';
 import {
-  getAllowDuplicateEmails,
   getUsageMode,
 } from '../../../store/auth/selectors';
 import { Callout } from '../../common/Callout';
