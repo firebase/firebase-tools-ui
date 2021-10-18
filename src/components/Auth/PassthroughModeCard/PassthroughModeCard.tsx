@@ -29,7 +29,7 @@ import PassthroughModeDialog from './PassthroughModeDialog';
 const ENABLED_HEADING = 'Passthrough mode enabled';
 const DISABLED_HEADING = 'Passthrough mode';
 
-export  const ENABLED_COPY =
+export const ENABLED_COPY =
   'This mode is a form of custom auth that does not persist users in Firebase Auth emulator.';
 export const DISABLED_COPY =
   'This mode is a form of custom auth that does not persist users in Firebase Auth backend.';

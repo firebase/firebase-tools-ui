@@ -137,7 +137,6 @@ export const UsersTable: React.FC<UsersTableProps> = ({
   shouldShowZeroState,
   shouldShowPassthroughMode,
 }) => {
-  console.log(shouldShowPassthroughMode);
   return (
     <>
       <DataTable className={styles.tableWrapper}>
