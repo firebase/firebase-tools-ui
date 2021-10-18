@@ -27,9 +27,7 @@ import { MapDispatchToPropsFunction, connect } from 'react-redux';
 
 import { createStructuredSelector } from '../../../store';
 import { setUsageModeRequest } from '../../../store/auth/actions';
-import {
-  getUsageMode,
-} from '../../../store/auth/selectors';
+import { getUsageMode } from '../../../store/auth/selectors';
 import { Callout } from '../../common/Callout';
 import { UsageModes } from '../types';
 import styles from './PassthroughModeDialog.module.scss';
