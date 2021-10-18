@@ -398,7 +398,7 @@ describe('Auth sagas', () => {
 
   describe('setAllowDuplicateEmails', () => {
     it('triggers appropriate API endpoint', () => {
-      const fakeAuthApi = { updateConfig: jest.fn() };
+      const fakeAuthApi = { updateAllowDuplicateEmails: jest.fn() };
       const gen = setAllowDuplicateEmails(setAllowDuplicateEmailsRequest(true));
       expect(gen.next()).toEqual({
         done: false,
@@ -406,7 +406,7 @@ describe('Auth sagas', () => {
       });
       expect(gen.next(fakeAuthApi)).toEqual({
         done: false,
-        value: call([fakeAuthApi, 'updateConfig'], true),
+        value: call([fakeAuthApi, 'updateAllowDuplicateEmails'], true),
       });
       expect(gen.next()).toEqual({
         done: false,
@@ -417,7 +417,7 @@ describe('Auth sagas', () => {
 
   describe('getAllowDuplicateEmails', () => {
     it('triggers appropriate API endpoint', () => {
-      const fakeAuthApi = { getConfig: jest.fn() };
+      const fakeAuthApi = { getAllowDuplicateEmails: jest.fn() };
       const gen = getAllowDuplicateEmails(getAllowDuplicateEmailsRequest());
       expect(gen.next()).toEqual({
         done: false,
@@ -425,7 +425,7 @@ describe('Auth sagas', () => {
       });
       expect(gen.next(fakeAuthApi)).toEqual({
         done: false,
-        value: call([fakeAuthApi, 'getConfig']),
+        value: call([fakeAuthApi, 'getAllowDuplicateEmails']),
       });
       expect(gen.next(false)).toEqual({
         done: false,
