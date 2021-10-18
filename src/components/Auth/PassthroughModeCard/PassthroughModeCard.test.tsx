@@ -23,43 +23,46 @@ import configureStore from 'redux-mock-store';
 import { AppState } from '../../../store';
 import { waitForDialogsToOpen } from '../../../test_utils';
 import { getMockAuthStore } from '../test_utils';
+import { UsageModes } from '../types';
 import {
-  OneAccountPerEmailCard,
-  OneAccountPerEmailCardProps,
-} from './OneAccountPerEmailCard';
+  DISABLED_COPY,
+  ENABLED_COPY,
+  PassthroughModeCard,
+  PassthroughModeCardProps,
+} from './PassthroughModeCard';
 
-describe('OneAccountPerEmailCard', () => {
-  function setup(props: OneAccountPerEmailCardProps) {
+describe('PassthroughModeCard', () => {
+  function setup(props: PassthroughModeCardProps) {
     const store = getMockAuthStore();
 
     return render(
       <Provider store={store}>
         <Portal />
-        <OneAccountPerEmailCard {...props} />
+        <PassthroughModeCard {...props} />
       </Provider>
     );
   }
 
   it('opens the dialog', async () => {
-    const { getByText, queryByRole } = setup({ allowDuplicateEmails: true });
+    const { getByText, queryByRole } = setup({ usageMode: UsageModes.DEFAULT });
 
     expect(queryByRole('alertdialog')).toBeNull();
-    fireEvent.click(getByText('Change'));
+    fireEvent.click(getByText('Enable'));
     await waitForDialogsToOpen();
     expect(queryByRole('alertdialog')).not.toBeNull();
   });
 
   describe('content', () => {
     it('displays appropriate text when disabled', () => {
-      const { queryByText } = setup({ allowDuplicateEmails: false });
-      expect(queryByText(/One account per email address/)).not.toBeNull();
-      expect(queryByText(/Multiple accounts per email address/)).toBeNull();
+      const { queryByText } = setup({ usageMode: UsageModes.DEFAULT });
+      expect(queryByText(DISABLED_COPY)).not.toBeNull();
+      expect(queryByText(ENABLED_COPY)).toBeNull();
     });
 
     it('displays appropriate text when enabled', () => {
-      const { queryByText } = setup({ allowDuplicateEmails: true });
-      expect(queryByText(/One account per email address/)).toBeNull();
-      expect(queryByText(/Multiple accounts per email address/)).not.toBeNull();
+      const { queryByText } = setup({ usageMode: UsageModes.PASSTHROUGH });
+      expect(queryByText(ENABLED_COPY)).not.toBeNull();
+      expect(queryByText(DISABLED_COPY)).toBeNull();
     });
   });
 });
