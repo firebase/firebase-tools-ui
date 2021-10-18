@@ -21,59 +21,50 @@ import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 
 import { AppState } from '../../../store';
-import { OneAccountPerEmailDialog } from './OneAccountPerEmailDialog';
+import { getMockAuthStore } from '../test_utils';
+import { UsageModes } from '../types';
+import { PassthroughModeDialog } from './PassthroughModeDialog';
 
-describe('OneAccountPerEmailDialog', () => {
-  function setup(allowDuplicateEmails = false) {
+describe('PassthroughModeDialog', () => {
+  function setup(usageMode: UsageModes = UsageModes.DEFAULT) {
     const onClose = jest.fn();
-    const setAllowDuplicateEmails = jest.fn();
-    const store = configureStore<Pick<AppState, 'auth'>>()({
-      auth: {
-        users: [],
-        filter: '',
-        allowDuplicateEmails: false,
-      },
-    });
+    const setUsageMode = jest.fn();
+    const store = getMockAuthStore({ usageMode });
 
     const methods = render(
       <Provider store={store}>
         <Portal />
-        <OneAccountPerEmailDialog
-          allowDuplicateEmails={allowDuplicateEmails}
+        <PassthroughModeDialog
+          usageMode={usageMode ?? UsageModes.DEFAULT}
           onClose={onClose}
-          setAllowDuplicateEmails={setAllowDuplicateEmails}
+          setUsageMode={setUsageMode}
         />
       </Provider>
     );
 
     return {
       onClose,
-      setAllowDuplicateEmails,
+      setUsageMode,
       ...methods,
     };
   }
 
-  it('calls onClose on hitting "save" button', async () => {
+  it('calls onClose on hitting "Enable passthrough" button', async () => {
     const { getByText, onClose } = setup();
-    fireEvent.submit(getByText('Save'));
+    fireEvent.submit(getByText('Enable passthrough'));
     expect(onClose).toHaveBeenCalled();
   });
 
-  it('calls setAllowDuplicateEmails on hitting "save" button', async () => {
-    const { getByText, setAllowDuplicateEmails } = setup();
-    fireEvent.submit(getByText('Save'));
-    expect(setAllowDuplicateEmails).toHaveBeenCalledWith(false);
+  it('calls setUsageMode with the correct argument after hitting the "Enable passthrough" button', async () => {
+    const { getByText, setUsageMode } = setup();
+    fireEvent.submit(getByText('Enable passthrough'));
+    expect(setUsageMode).toHaveBeenCalledWith(UsageModes.PASSTHROUGH);
   });
 
-  it('updates value', async () => {
-    const { getByText, setAllowDuplicateEmails, getByLabelText } = setup(true);
-
-    const radio = getByLabelText(/Allow creation of multiple accounts/);
-
-    fireEvent.click(radio);
-
-    fireEvent.submit(getByText('Save'));
-    expect(setAllowDuplicateEmails).toHaveBeenCalledWith(false);
+  it('calls setUsageMode with the correct argument after hitting the "Disable passthrough" button', async () => {
+    const { getByText, setUsageMode } = setup(UsageModes.PASSTHROUGH);
+    fireEvent.submit(getByText('Disable passthrough'));
+    expect(setUsageMode).toHaveBeenCalledWith(UsageModes.DEFAULT);
   });
 
   it('calls onClose on hitting "cancel" button', async () => {

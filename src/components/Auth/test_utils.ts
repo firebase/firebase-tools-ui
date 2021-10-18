@@ -20,7 +20,7 @@ import { AppState } from '../../store';
 import { createRemoteDataLoaded } from '../../store/utils';
 import { AuthState, AuthUser, UsageModes } from './types';
 
-export function getMockAuthStore(state?: Partial<AppState>) {
+export function getMockAuthStore(state?: Partial<AppState['auth']>) {
   return configureStore<Pick<AppState, 'auth'>>()({
     auth: {
       users: { loading: false, result: { data: [] } },
