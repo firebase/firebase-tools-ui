@@ -52,7 +52,7 @@ export const PassthroughModeCard: React.FC<PassthroughModeCardProps> = ({
           <Typography use="body2" theme="textPrimaryOnBackground">
             {usageMode === UsageModes.PASSTHROUGH
               ? ENABLED_COPY
-              : DISABLED_COPY}
+              : DISABLED_COPY}{' '}
             <a
               target="_blank"
               rel="noopener noreferrer"
