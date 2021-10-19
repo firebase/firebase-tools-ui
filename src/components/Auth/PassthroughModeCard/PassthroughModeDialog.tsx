@@ -44,7 +44,10 @@ export const PassthroughModeDialog: React.FC<Props> = ({
 }) => {
   return (
     <Dialog renderToPortal open onClose={onClose}>
-      <DialogTitle>Enable passthrough mode</DialogTitle>
+      <DialogTitle>
+        {usageMode === UsageModes.DEFAULT ? 'Enable' : 'Disable'} passthrough
+        mode
+      </DialogTitle>
       <form
         onSubmit={(e: React.FormEvent<unknown>) => {
           e.preventDefault();
@@ -57,11 +60,13 @@ export const PassthroughModeDialog: React.FC<Props> = ({
         }}
       >
         <DialogContent>
-          <div className={styles.description}>
-            <Callout aside type="warning">
-              All users in the Auth Emulator will be deleted
-            </Callout>
-          </div>
+          {usageMode === UsageModes.DEFAULT ? (
+            <div className={styles.description}>
+              <Callout aside type="warning">
+                All users in the Auth Emulator will be deleted
+              </Callout>
+            </div>
+          ) : null}
           <Typography use="body2" className={styles.description}>
             {usageMode === UsageModes.PASSTHROUGH
               ? 'Disabling passthrough mode means users will be saved in the Auth emulator'
