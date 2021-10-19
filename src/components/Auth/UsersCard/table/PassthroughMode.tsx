@@ -26,14 +26,16 @@ export const PassthroughMode: React.FC = () => {
       className={styles.noResultsWrapper}
       theme="textSecondaryOnBackground"
     >
-      No users persist when passthrough mode is enabled.{' '}
-      <a
-        target="_blank"
-        rel="noopener noreferrer"
-        href="https://firebase.google.com/docs/auth"
-      >
-        Learn more
-      </a>
+      <span>
+        No users persist when passthrough mode is enabled.{' '}
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://firebase.google.com/docs/auth"
+        >
+          Learn more
+        </a>
+      </span>
     </Typography>
   );
 };
