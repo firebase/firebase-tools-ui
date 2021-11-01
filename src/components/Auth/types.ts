@@ -63,12 +63,12 @@ export interface AuthUser extends AddAuthUserPayload {
 }
 
 export enum UsageMode {
+  // We shouldn't ever get this usage mode
+  USAGE_MODE_UNSPECIFIED = 'USAGE_MODE_UNSPECIFIED',
   // Passthrough mode is off
   DEFAULT = 'DEFAULT',
   // Passthrough mode is on
   PASSTHROUGH = 'PASSTHROUGH',
-  // We shouldn't ever get this usage mode
-  USAGE_MODE_UNSPECIFIED = 'USAGE_MODE_UNSPECIFIED',
 }
 
 export interface AuthState {
