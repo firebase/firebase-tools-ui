@@ -193,7 +193,6 @@ export function* getAllowDuplicateEmails() {
 export function* getUsageMode() {
   const authApi: AuthApi = yield call(configureAuthSaga);
   const config: UsageMode = yield call([authApi, 'getUsageMode']);
-  console.log('saga - getUsageMode', config);
   yield put(setUsageModeSuccess(config));
 }
 
