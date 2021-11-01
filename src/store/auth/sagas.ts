@@ -28,7 +28,6 @@ import AuthApi from '../../components/Auth/api';
 import {
   AuthUser,
   EmulatorV1ProjectsConfig,
-  UsageMode,
 } from '../../components/Auth/types';
 import {
   authFetchUsersError,

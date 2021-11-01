@@ -26,7 +26,6 @@ import {
 import {
   AddAuthUserPayload,
   AuthUser,
-  EmulatorV1ProjectsConfig,
   UsageMode,
 } from '../../components/Auth/types';
 import { getProjectIdResult } from '../config/selectors';

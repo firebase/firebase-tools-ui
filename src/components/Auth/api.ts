@@ -17,10 +17,8 @@
 import { RestApi } from '../common/rest_api';
 import {
   AddAuthUserPayload,
-  AuthState,
   AuthUser,
   EmulatorV1ProjectsConfig,
-  UsageMode,
 } from './types';
 
 const importUser = (user: AuthUser & ApiAuthUserFields) => {
