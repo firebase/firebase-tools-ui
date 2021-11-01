@@ -22,11 +22,11 @@ import configureStore from 'redux-mock-store';
 
 import { AppState } from '../../../store';
 import { getMockAuthStore } from '../test_utils';
-import { UsageModes } from '../types';
+import { UsageMode } from '../types';
 import { PassthroughModeDialog } from './PassthroughModeDialog';
 
 describe('PassthroughModeDialog', () => {
-  function setup(usageMode: UsageModes = UsageModes.DEFAULT) {
+  function setup(usageMode: UsageMode = UsageMode.DEFAULT) {
     const onClose = jest.fn();
     const setUsageMode = jest.fn();
     const store = getMockAuthStore({ usageMode });
@@ -35,7 +35,7 @@ describe('PassthroughModeDialog', () => {
       <Provider store={store}>
         <Portal />
         <PassthroughModeDialog
-          usageMode={usageMode ?? UsageModes.DEFAULT}
+          usageMode={usageMode ?? UsageMode.DEFAULT}
           onClose={onClose}
           setUsageMode={setUsageMode}
         />
@@ -58,13 +58,13 @@ describe('PassthroughModeDialog', () => {
   it('calls setUsageMode with the correct argument after hitting the "Enable passthrough" button', async () => {
     const { getByText, setUsageMode } = setup();
     fireEvent.submit(getByText('Enable passthrough'));
-    expect(setUsageMode).toHaveBeenCalledWith(UsageModes.PASSTHROUGH);
+    expect(setUsageMode).toHaveBeenCalledWith(UsageMode.PASSTHROUGH);
   });
 
   it('calls setUsageMode with the correct argument after hitting the "Disable passthrough" button', async () => {
-    const { getByText, setUsageMode } = setup(UsageModes.PASSTHROUGH);
+    const { getByText, setUsageMode } = setup(UsageMode.PASSTHROUGH);
     fireEvent.submit(getByText('Disable passthrough'));
-    expect(setUsageMode).toHaveBeenCalledWith(UsageModes.DEFAULT);
+    expect(setUsageMode).toHaveBeenCalledWith(UsageMode.DEFAULT);
   });
 
   it('calls onClose on hitting "cancel" button', async () => {

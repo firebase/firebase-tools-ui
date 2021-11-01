@@ -19,7 +19,7 @@ import { createAction } from 'typesafe-actions';
 import {
   AddAuthUserPayload,
   AuthUser,
-  UsageModes,
+  UsageMode,
 } from '../../components/Auth/types';
 import { AuthConfig } from '../config';
 import { RemoteResult } from '../utils';
@@ -58,15 +58,15 @@ export const getUsageModeRequest = createAction('@auth/GET_USAGE_MODE')();
 
 export const getUsageModeSuccess = createAction(
   '@auth/GET_USAGE_MODE_SUCCESS'
-)<UsageModes>();
+)<UsageMode>();
 
 export const setUsageModeRequest = createAction(
   '@auth/SET_USAGE_MODE'
-)<UsageModes>();
+)<UsageMode>();
 
 export const setUsageModeSuccess = createAction(
   '@auth/SET_USAGE_MODE_SUCCESS'
-)<UsageModes>();
+)<UsageMode>();
 
 export const setUserDisabledSuccess = createAction(
   '@auth/SET_USER_DISABLED_SUCCESS'

@@ -22,7 +22,7 @@ import { connect } from 'react-redux';
 
 import { createStructuredSelector } from '../../../store';
 import { getUsageMode } from '../../../store/auth/selectors';
-import { UsageModes } from '../types';
+import { UsageMode } from '../types';
 import styles from './PassthroughModeCard.module.scss';
 import PassthroughModeDialog from './PassthroughModeDialog';
 
@@ -45,12 +45,12 @@ export const PassthroughModeCard: React.FC<PassthroughModeCardProps> = ({
       <Card className={styles.wrapper}>
         <div>
           <Typography use="headline6" tag="div" theme="textPrimaryOnBackground">
-            {usageMode === UsageModes.PASSTHROUGH
+            {usageMode === UsageMode.PASSTHROUGH
               ? ENABLED_HEADING
               : DISABLED_HEADING}
           </Typography>
           <Typography use="body2" theme="textPrimaryOnBackground">
-            {usageMode === UsageModes.PASSTHROUGH
+            {usageMode === UsageMode.PASSTHROUGH
               ? ENABLED_COPY
               : DISABLED_COPY}{' '}
             <a
@@ -64,7 +64,7 @@ export const PassthroughModeCard: React.FC<PassthroughModeCardProps> = ({
         </div>
         <div>
           <Button outlined={true} onClick={() => setOpen(true)}>
-            {usageMode === UsageModes.PASSTHROUGH ? 'Disable' : 'Enable'}
+            {usageMode === UsageMode.PASSTHROUGH ? 'Disable' : 'Enable'}
           </Button>
         </div>
       </Card>

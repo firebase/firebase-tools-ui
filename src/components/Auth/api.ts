@@ -15,7 +15,7 @@
  */
 
 import { RestApi } from '../common/rest_api';
-import { AddAuthUserPayload, AuthState, AuthUser, UsageModes } from './types';
+import { AddAuthUserPayload, AuthState, AuthUser, UsageMode } from './types';
 
 const importUser = (user: AuthUser & ApiAuthUserFields) => {
   const match = user.passwordHash?.match(PASSWORD_HASH_REGEX);
@@ -98,7 +98,7 @@ export default class AuthApi extends RestApi {
   }
 
   async updateUsageMode(
-    usageMode: UsageModes
+    usageMode: UsageMode
   ): Promise<{ signIn: { allowDuplicateEmails: boolean } }> {
     const { json } = await this.patchRequest(`${this.baseEmulatorUrl}/config`, {
       usageMode,

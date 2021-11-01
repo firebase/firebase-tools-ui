@@ -22,7 +22,7 @@ import { createStructuredSelector } from '../../../store';
 import { openAuthUserDialog } from '../../../store/auth/actions';
 import { getAuthUserDialog, getUsageMode } from '../../../store/auth/selectors';
 import { RemoteResult, createRemoteDataLoaded } from '../../../store/utils';
-import { AuthUser, UsageModes } from '../types';
+import { AuthUser, UsageMode } from '../types';
 import UserForm from '../UserFormDialog/UserForm';
 import { AuthHeader } from './header/AuthHeader';
 import UsersTable from './table/UsersTable';
@@ -36,7 +36,7 @@ export const UsersCard: React.FC<UserCardProps> = ({
   return (
     <Card>
       <AuthHeader
-        disabled={usageMode === UsageModes.PASSTHROUGH}
+        disabled={usageMode === UsageMode.PASSTHROUGH}
         onOpenNewUserDialog={() =>
           openAuthUserDialog(createRemoteDataLoaded(undefined))
         }

@@ -23,7 +23,7 @@ import configureStore from 'redux-mock-store';
 import { AppState } from '../../../store';
 import { waitForDialogsToOpen } from '../../../test_utils';
 import { getMockAuthStore } from '../test_utils';
-import { UsageModes } from '../types';
+import { UsageMode } from '../types';
 import {
   DISABLED_COPY,
   ENABLED_COPY,
@@ -44,7 +44,7 @@ describe('PassthroughModeCard', () => {
   }
 
   it('opens the dialog', async () => {
-    const { getByText, queryByRole } = setup({ usageMode: UsageModes.DEFAULT });
+    const { getByText, queryByRole } = setup({ usageMode: UsageMode.DEFAULT });
 
     expect(queryByRole('alertdialog')).toBeNull();
     fireEvent.click(getByText('Enable'));
@@ -54,13 +54,13 @@ describe('PassthroughModeCard', () => {
 
   describe('content', () => {
     it('displays appropriate text when disabled', () => {
-      const { queryByText } = setup({ usageMode: UsageModes.DEFAULT });
+      const { queryByText } = setup({ usageMode: UsageMode.DEFAULT });
       expect(queryByText(DISABLED_COPY)).not.toBeNull();
       expect(queryByText(ENABLED_COPY)).toBeNull();
     });
 
     it('displays appropriate text when enabled', () => {
-      const { queryByText } = setup({ usageMode: UsageModes.PASSTHROUGH });
+      const { queryByText } = setup({ usageMode: UsageMode.PASSTHROUGH });
       expect(queryByText(ENABLED_COPY)).not.toBeNull();
       expect(queryByText(DISABLED_COPY)).toBeNull();
     });

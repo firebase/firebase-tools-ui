@@ -62,7 +62,7 @@ export interface AuthUser extends AddAuthUserPayload {
   providerUserInfo: AuthProviderInfo[];
 }
 
-export enum UsageModes {
+export enum UsageMode {
   // Passthrough mode is off
   DEFAULT = 'DEFAULT',
   // Passthrough mode is on
@@ -76,5 +76,5 @@ export interface AuthState {
   users: RemoteResult<AuthUser[]>;
   filter: string;
   allowDuplicateEmails: boolean;
-  usageMode: UsageModes;
+  usageMode: UsageMode;
 }

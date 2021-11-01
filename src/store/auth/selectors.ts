@@ -16,7 +16,7 @@
 
 import { createSelector } from 'reselect';
 
-import { AuthState, AuthUser, UsageModes } from '../../components/Auth/types';
+import { AuthState, AuthUser, UsageMode } from '../../components/Auth/types';
 import { AppState } from '../index';
 import { hasData, squashOrDefaut } from '../utils';
 
@@ -97,7 +97,7 @@ export const getFilteredUsers = createSelector(
 );
 export const getShowPassthroughMode = createSelector(
   getUsageMode,
-  (usageMode) => usageMode === UsageModes.PASSTHROUGH
+  (usageMode) => usageMode === UsageMode.PASSTHROUGH
 );
 export const getShowZeroState = createSelector(
   getUsers,
