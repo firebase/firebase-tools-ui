@@ -25,7 +25,11 @@ import {
 import { ActionType, getType } from 'typesafe-actions';
 
 import AuthApi from '../../components/Auth/api';
-import { AuthUser, UsageMode } from '../../components/Auth/types';
+import {
+  AuthUser,
+  EmulatorV1ProjectsConfig,
+  UsageMode,
+} from '../../components/Auth/types';
 import {
   authFetchUsersError,
   authFetchUsersRequest,
@@ -172,7 +176,9 @@ export function* setAllowDuplicateEmails({
   payload,
 }: ReturnType<typeof setAllowDuplicateEmailsRequest>) {
   const authApi: AuthApi = yield call(configureAuthSaga);
-  yield call([authApi, 'updateAllowDuplicateEmails'], payload);
+  yield call([authApi, 'updateConfig'], {
+    signIn: { allowDuplicateEmails: payload },
+  });
   yield put(setAllowDuplicateEmailsSuccess(payload));
 }
 
@@ -180,20 +186,33 @@ export function* setUsageMode({
   payload,
 }: ReturnType<typeof setUsageModeRequest>) {
   const authApi: AuthApi = yield call(configureAuthSaga);
-  yield call([authApi, 'updateUsageMode'], payload);
+  yield call([authApi, 'updateConfig'], { usageMode: payload });
   yield put(setUsageModeSuccess(payload));
 }
 
 export function* getAllowDuplicateEmails() {
   const authApi: AuthApi = yield call(configureAuthSaga);
-  const config: boolean = yield call([authApi, 'getAllowDuplicateEmails']);
-  yield put(setAllowDuplicateEmailsSuccess(config));
+  const config: EmulatorV1ProjectsConfig = yield call([authApi, 'getConfig']);
+  const allowDuplicateEmails = config.signIn?.allowDuplicateEmails;
+
+  if (allowDuplicateEmails === undefined) {
+    throw new Error(
+      'Did not get a "signIn.allowDuplicateEmails" setting from config API'
+    );
+  }
+
+  yield put(setAllowDuplicateEmailsSuccess(config.signIn.allowDuplicateEmails));
 }
 
 export function* getUsageMode() {
   const authApi: AuthApi = yield call(configureAuthSaga);
-  const config: UsageMode = yield call([authApi, 'getUsageMode']);
-  yield put(setUsageModeSuccess(config));
+  const config: EmulatorV1ProjectsConfig = yield call([authApi, 'getConfig']);
+  const usageMode = config.usageMode;
+  if (config === undefined) {
+    throw new Error('Did not get a "usageMode" setting from config API');
+  }
+
+  yield put(setUsageModeSuccess(usageMode));
 }
 
 export function* nukeUsers() {

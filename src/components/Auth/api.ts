@@ -15,7 +15,13 @@
  */
 
 import { RestApi } from '../common/rest_api';
-import { AddAuthUserPayload, AuthState, AuthUser, UsageMode } from './types';
+import {
+  AddAuthUserPayload,
+  AuthState,
+  AuthUser,
+  EmulatorV1ProjectsConfig,
+  UsageMode,
+} from './types';
 
 const importUser = (user: AuthUser & ApiAuthUserFields) => {
   const match = user.passwordHash?.match(PASSWORD_HASH_REGEX);
@@ -87,46 +93,20 @@ export default class AuthApi extends RestApi {
     return this.fetchUser(json.localId);
   }
 
-  async updateAllowDuplicateEmails(
-    allowDuplicateEmails: boolean
-  ): Promise<boolean> {
-    const { json } = await this.patchRequest(`${this.baseEmulatorUrl}/config`, {
-      signIn: { allowDuplicateEmails },
-    });
-
-    return json.signIn?.allowDuplicateEmails;
+  async updateConfig(newConfig: {
+    signIn?: EmulatorV1ProjectsConfig['signIn'];
+    usageMode?: EmulatorV1ProjectsConfig['usageMode'];
+  }): Promise<EmulatorV1ProjectsConfig> {
+    const { json: updatedConfig } = await this.patchRequest(
+      `${this.baseEmulatorUrl}/config`,
+      newConfig
+    );
+    return updatedConfig;
   }
 
-  async updateUsageMode(
-    usageMode: UsageMode
-  ): Promise<{ signIn: { allowDuplicateEmails: boolean } }> {
-    const { json } = await this.patchRequest(`${this.baseEmulatorUrl}/config`, {
-      usageMode,
-    });
-
-    return json.usageMode;
-  }
-
-  async getConfig(): Promise<{
-    allowDuplicateEmails: AuthState['allowDuplicateEmails'];
-    usageMode: AuthState['usageMode'];
-  }> {
+  async getConfig(): Promise<EmulatorV1ProjectsConfig> {
     const config = await (await fetch(`${this.baseEmulatorUrl}/config`)).json();
-
-    return {
-      allowDuplicateEmails: config.signIn?.allowDuplicateEmails,
-      usageMode: config.usageMode,
-    };
-  }
-
-  async getAllowDuplicateEmails(): Promise<boolean> {
-    const { allowDuplicateEmails } = await this.getConfig();
-    return allowDuplicateEmails;
-  }
-
-  async getUsageMode(): Promise<AuthState['usageMode']> {
-    const { usageMode } = await this.getConfig();
-    return usageMode;
+    return config;
   }
 
   async updateUser(user: AddAuthUserPayload): Promise<AuthUser> {

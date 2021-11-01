@@ -78,3 +78,10 @@ export interface AuthState {
   allowDuplicateEmails: boolean;
   usageMode: UsageMode;
 }
+
+// Similar the emulator config object of the same name in the Firebase CLI,
+// but without optional types
+export interface EmulatorV1ProjectsConfig {
+  signIn: { allowDuplicateEmails: boolean };
+  usageMode: UsageMode;
+}
