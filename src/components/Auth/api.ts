@@ -91,10 +91,9 @@ export default class AuthApi extends RestApi {
     return this.fetchUser(json.localId);
   }
 
-  async updateConfig(newConfig: {
-    signIn?: EmulatorV1ProjectsConfig['signIn'];
-    usageMode?: EmulatorV1ProjectsConfig['usageMode'];
-  }): Promise<EmulatorV1ProjectsConfig> {
+  async updateConfig(
+    newConfig: Partial<EmulatorV1ProjectsConfig>
+  ): Promise<EmulatorV1ProjectsConfig> {
     const { json: updatedConfig } = await this.patchRequest(
       `${this.baseEmulatorUrl}/config`,
       newConfig
