@@ -1,3 +1,6 @@
+import { Card } from '@rmwc/card';
+import { Elevation } from '@rmwc/elevation';
+import { GridCell } from '@rmwc/grid';
 import React, { Suspense, useEffect, useMemo, useState } from 'react';
 
 import { useTemplate, useTemplateUpdater } from './api';
@@ -21,10 +24,10 @@ function RemoteConfig() {
   }
 
   return (
-    <>
+    <GridCell span={12}>
       <button onClick={updateTemplate}>Update template</button>
       <pre>{JSON.stringify(template, null, 2)}</pre>
-    </>
+    </GridCell>
   );
 }
 
