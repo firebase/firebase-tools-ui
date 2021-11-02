@@ -1,3 +1,4 @@
+import { Button } from '@rmwc/button';
 import { Card } from '@rmwc/card';
 import { Elevation } from '@rmwc/elevation';
 import { GridCell } from '@rmwc/grid';
@@ -25,7 +26,9 @@ function RemoteConfig() {
 
   return (
     <GridCell span={12}>
-      <button onClick={updateTemplate}>Update template</button>
+      <Button onClick={updateTemplate} outlined={true}>
+        Update template
+      </Button>
       <pre>{JSON.stringify(template, null, 2)}</pre>
     </GridCell>
   );
