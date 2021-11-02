@@ -38,6 +38,7 @@ import {
   FunctionsIcon,
   HostingIcon,
   PubSubIcon,
+  RemoteConfigIcon,
   StorageIcon,
 } from '../common/icons';
 import { Spinner } from '../common/Spinner';
@@ -90,6 +91,13 @@ const Overview: React.FC<
           config={config.database}
           linkTo="/database"
           testId="emulator-info-database"
+        />
+        <EmulatorCard
+          name="Remote Config emulator"
+          icon={<RemoteConfigIcon theme="secondary" />}
+          config={config["remote config"]}
+          linkTo="/remote-config"
+          testId="emulator-info-remote-config"
         />
         <EmulatorCard
           name="Functions emulator"

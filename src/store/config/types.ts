@@ -81,4 +81,5 @@ export interface Config {
   hosting?: EmulatorConfig;
   storage?: EmulatorConfig;
   pubsub?: EmulatorConfig;
+  ["remote config"]?: EmulatorConfig;
 }
