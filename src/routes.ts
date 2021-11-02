@@ -23,8 +23,8 @@ import { ExtensionsRoute } from './components/Extensions';
 import Firestore from './components/Firestore';
 import Home from './components/Home';
 import LogsViewer from './components/LogViewer';
-import { Storage } from './components/Storage';
 import RemoteConfig from './components/RemoteConfig';
+import { Storage } from './components/Storage';
 
 export interface Route {
   path: string;
