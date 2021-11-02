@@ -110,6 +110,19 @@ export const HostingIcon = svgIcon(
   </svg>
 );
 
+export const RemoteConfigIcon = svgIcon(
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
+    <g fill="none">
+      <path d="M0 0h192v192H0z" />
+      <path
+        d="M136 128v-24l32 32-32 32v-24H88v-16zm-8-80H72c-8.84.024-16 7.24-16 16v64c0-.024-31.984 0-32 0v16h32c8.84 0 16-7.216 16-16V64c0 .056 63.984.024 64 0v24l32-32-32-32v24z"
+        fill="currentColor"
+        fillRule="evenodd"
+      />
+    </g>
+  </svg>
+);
+
 export const StorageIcon = svgIcon(
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
     <path

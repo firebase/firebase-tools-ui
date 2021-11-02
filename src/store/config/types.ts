@@ -82,4 +82,5 @@ export interface Config {
   storage?: EmulatorConfig;
   pubsub?: EmulatorConfig;
   experiments: Array<string>;
+  ["remote config"]?: EmulatorConfig;
 }
