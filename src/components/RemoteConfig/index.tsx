@@ -13,8 +13,13 @@ function RemoteConfig() {
   async function updateTemplate() {
     // generate an updated template for testing
     const newTemplate = JSON.parse(JSON.stringify(template));
-    newTemplate.parameters['welcome_message'].defaultValue.value =
-      'I am a new template';
+    newTemplate.parameters = newTemplate.parameters || {};
+
+    newTemplate.parameters['welcome_message'] = {
+      defaultValue: {
+        value: 'Hello world!',
+      },
+    };
 
     try {
       await templateUpdater(newTemplate);

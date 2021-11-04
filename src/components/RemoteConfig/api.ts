@@ -1,4 +1,4 @@
-import { RemoteConfigTemplate } from 'firebase-admin/remote-config';
+import { RemoteConfigTemplate } from 'firebase-admin/lib/remote-config';
 
 /**
  * Copyright 2019 Google LLC
@@ -44,6 +44,9 @@ export function useTemplateUpdater() {
   return async function updateTemplate(newTemplate: Object) {
     const response = await fetch(url, {
       method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify(newTemplate),
     });
     return response.ok;

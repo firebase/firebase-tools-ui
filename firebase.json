@@ -28,6 +28,12 @@
     },
     "pubsub": {
       "port": 8085
+    },
+    "remote config": {
+      "port": 9200
     }
+  },
+  "remoteconfig": {
+    "template": "remoteconfig.template.json"
   }
 }
