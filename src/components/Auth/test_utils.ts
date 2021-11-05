@@ -18,14 +18,15 @@ import configureStore from 'redux-mock-store';
 
 import { AppState } from '../../store';
 import { createRemoteDataLoaded } from '../../store/utils';
-import { AuthState, AuthUser } from './types';
+import { AuthState, AuthUser, UsageMode } from './types';
 
-export function getMockAuthStore(state?: Partial<AppState>) {
+export function getMockAuthStore(state?: Partial<AppState['auth']>) {
   return configureStore<Pick<AppState, 'auth'>>()({
     auth: {
       users: { loading: false, result: { data: [] } },
       filter: '',
       allowDuplicateEmails: false,
+      usageMode: UsageMode.DEFAULT,
       ...state,
     },
   });
@@ -49,6 +50,7 @@ export function createFakeState(state: Partial<AuthState>): AuthState {
     filter: '',
     allowDuplicateEmails: true,
     users: createRemoteDataLoaded([]),
+    usageMode: UsageMode.DEFAULT,
     ...state,
   };
 }

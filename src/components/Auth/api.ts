@@ -15,7 +15,11 @@
  */
 
 import { RestApi } from '../common/rest_api';
-import { AddAuthUserPayload, AuthUser } from './types';
+import {
+  AddAuthUserPayload,
+  AuthUser,
+  EmulatorV1ProjectsConfig,
+} from './types';
 
 const importUser = (user: AuthUser & ApiAuthUserFields) => {
   const match = user.passwordHash?.match(PASSWORD_HASH_REGEX);
@@ -88,21 +92,18 @@ export default class AuthApi extends RestApi {
   }
 
   async updateConfig(
-    allowDuplicateEmails: boolean
-  ): Promise<{ signIn: { allowDuplicateEmails: boolean } }> {
-    const { json } = await this.patchRequest(`${this.baseEmulatorUrl}/config`, {
-      signIn: { allowDuplicateEmails },
-    });
-
-    return json;
+    newConfig: Partial<EmulatorV1ProjectsConfig>
+  ): Promise<EmulatorV1ProjectsConfig> {
+    const { json: updatedConfig } = await this.patchRequest(
+      `${this.baseEmulatorUrl}/config`,
+      newConfig
+    );
+    return updatedConfig;
   }
 
-  async getConfig(): Promise<AuthUser> {
-    const { signIn } = await (
-      await fetch(`${this.baseEmulatorUrl}/config`)
-    ).json();
-
-    return signIn.allowDuplicateEmails;
+  async getConfig(): Promise<EmulatorV1ProjectsConfig> {
+    const config = await (await fetch(`${this.baseEmulatorUrl}/config`)).json();
+    return config;
   }
 
   async updateUser(

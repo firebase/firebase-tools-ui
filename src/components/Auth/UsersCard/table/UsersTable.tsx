@@ -36,6 +36,7 @@ import {
 } from '../../../../store/auth/actions';
 import {
   getFilteredUsers,
+  getShowPassthroughMode,
   getShowTable,
   getShowZeroResults,
   getShowZeroState,
@@ -45,6 +46,7 @@ import { AuthUser } from '../../types';
 import { AuthZeroState } from './AuthZeroState';
 import { confirmDeleteUser } from './confirmDeleteUser';
 import { NoResults } from './NoResults';
+import { PassthroughMode } from './PassthroughMode';
 import { ProviderCell } from './ProviderCell';
 import styles from './UsersTable.module.scss';
 
@@ -130,6 +132,7 @@ export const UsersTable: React.FC<React.PropsWithChildren<UsersTableProps>> = ({
   openAuthUserDialog,
   shouldShowZeroResults,
   shouldShowZeroState,
+  shouldShowPassthroughMode,
 }) => {
   return (
     <>
@@ -169,6 +172,7 @@ export const UsersTable: React.FC<React.PropsWithChildren<UsersTableProps>> = ({
           </DataTableBody>
         </DataTableContent>
       </DataTable>
+      {shouldShowPassthroughMode && <PassthroughMode />}
       {shouldShowZeroResults && <NoResults />}
       {shouldShowZeroState && <AuthZeroState />}
     </>
@@ -179,6 +183,7 @@ export const mapStateToProps = createStructuredSelector({
   shouldShowTable: getShowTable,
   shouldShowZeroResults: getShowZeroResults,
   shouldShowZeroState: getShowZeroState,
+  shouldShowPassthroughMode: getShowPassthroughMode,
   filteredUsers: getFilteredUsers,
 });
 
