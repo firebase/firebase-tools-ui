@@ -27,10 +27,12 @@ import RefreshButton from './RefreshButton';
 
 export interface AuthHeaderProps {
   onOpenNewUserDialog: () => void;
+  disabled: boolean;
 }
 
 export const AuthHeader: React.FC<AuthHeaderProps> = ({
   onOpenNewUserDialog,
+  disabled,
 }) => {
   return (
     <>
@@ -41,6 +43,7 @@ export const AuthHeader: React.FC<AuthHeaderProps> = ({
             <RefreshButton />
             <Button
               className={styles.addUserButton}
+              disabled={disabled}
               unelevated
               onClick={() => onOpenNewUserDialog()}
             >
