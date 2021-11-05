@@ -33,9 +33,14 @@ export const getAuthUserDialog = createSelector(getAuth, (state: AuthState) => {
 export const getCurrentEditedUser = createSelector(
   getAuthUserDialog,
   (authUserDialogData) => {
-    return authUserDialogData && hasData(authUserDialogData.result)
-      ? authUserDialogData.result.data
-      : undefined;
+    const user =
+      authUserDialogData && hasData(authUserDialogData.result)
+        ? authUserDialogData.result.data
+        : undefined;
+
+    if (user?.emailVerified !== undefined) {
+      user.emailVerified = !!user.emailVerified ? ['on'] : [];
+    }
   }
 );
 

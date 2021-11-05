@@ -106,7 +106,6 @@ export function* createUser({ payload }: ReturnType<typeof createUserRequest>) {
 
   try {
     yield put(setAuthUserDialogLoading(true));
-
     const newUser: AuthUser = yield call([authApi, 'createUser'], payload.user);
 
     const user = {

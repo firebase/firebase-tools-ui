@@ -64,6 +64,7 @@ export const EmailPassword: React.FC<
   const password = watch('password');
 
   useEffect(() => {
+    console.log(email);
     if (
       (email === '' && password === '') ||
       (email !== '' && (password !== '' || isEditing))

@@ -42,6 +42,7 @@ import { Field } from '../../common/Field';
 import { AddAuthUserPayload } from '../types';
 import { CustomAttributes } from './controls/CustomAttributes';
 import { ImageUrlInput } from './controls/ImageUrlInput';
+import { MultiFactor } from './controls/MultiFactorAuth';
 import { SignInMethod } from './controls/SignInMethod';
 
 export type UserFormProps = PropsFromState & PropsFromDispatch;
@@ -70,6 +71,8 @@ export const UserForm: React.FC<UserFormProps> = ({
     },
     [isEditing, updateUser, createUser, localId]
   );
+
+  console.log(user);
 
   const { register, handleSubmit, formState, reset, errors } = form;
 
@@ -105,6 +108,7 @@ export const UserForm: React.FC<UserFormProps> = ({
           <ImageUrlInput {...form} />
           <CustomAttributes {...form} />
           <SignInMethod {...form} user={user} />
+          <MultiFactor {...form} user={user} />
           {hasError(authUserDialogData?.result) && (
             <Callout type="warning">
               Error: {authUserDialogData?.result.error}
@@ -155,8 +159,20 @@ export const mapDispatchToProps: MapDispatchToPropsFunction<
 > = (dispatch) => {
   return {
     clearAuthUserDialogData: () => dispatch(clearAuthUserDialogData()),
-    updateUser: (d) => dispatch(updateUserRequest(d)),
-    createUser: (d) => dispatch(createUserRequest(d)),
+    updateUser: (d) => {
+      d.user.emailVerified =
+        ((d.user.emailVerified as unknown) as String[]).length === 0
+          ? false
+          : true;
+      return dispatch(updateUserRequest(d));
+    },
+    createUser: (d) => {
+      d.user.emailVerified =
+        ((d.user.emailVerified as unknown) as String[]).length === 0
+          ? false
+          : true;
+      return dispatch(createUserRequest(d));
+    },
   };
 };
 

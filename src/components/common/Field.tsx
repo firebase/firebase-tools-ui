@@ -17,6 +17,7 @@
 import './Field.scss';
 
 import { randomId } from '@rmwc/base';
+import { Checkbox, CheckboxProps } from '@rmwc/checkbox';
 import { Select, SelectProps } from '@rmwc/select';
 import { TextField, TextFieldHTMLProps, TextFieldProps } from '@rmwc/textfield';
 import { HTMLProps } from '@rmwc/types';
@@ -115,6 +116,51 @@ export const SelectField: React.FC<SelectFieldProps> = ({
         {label}
       </Typography>
       <Select outlined {...selectProps} id={id} />
+      <div className="Field-subtext">
+        {error ? (
+          <Typography className="Field-tip" use="body2" theme="error">
+            {error}
+          </Typography>
+        ) : (
+          tip && (
+            <Typography className="Field-tip" use="body2" theme="secondary">
+              {tip}
+            </Typography>
+          )
+        )}
+      </div>
+    </div>
+  );
+};
+
+type CheckboxFieldProps = {
+  fieldClassName?: string;
+  tip?: string;
+  error?: string;
+} & CheckboxProps &
+  HTMLProps<HTMLSelectElement>;
+
+export const CheckboxField: React.FC<CheckboxFieldProps> = ({
+  fieldClassName,
+  label,
+  tip,
+  theme, // TODO: 5.0 theme, incompatible with 6.0 remove at 6.0
+  error,
+  ...checkboxProps
+}) => {
+  const [id] = useState(randomId());
+  return (
+    <div className={classnames('Field', fieldClassName)}>
+      <Typography
+        className="Field-label"
+        use="body2"
+        theme="secondary"
+        tag="label"
+        htmlFor={id}
+      >
+        {label}
+      </Typography>
+      <Checkbox {...checkboxProps} id={id} />
       <div className="Field-subtext">
         {error ? (
           <Typography className="Field-tip" use="body2" theme="error">

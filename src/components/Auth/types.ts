@@ -34,6 +34,7 @@ export interface AddAuthUserPayload {
   email?: string;
   password?: string;
   phoneNumber?: string;
+  emailVerified?: boolean;
 }
 
 export const providerToIconMap = {
