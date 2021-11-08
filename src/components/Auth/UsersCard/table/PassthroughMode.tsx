@@ -27,8 +27,8 @@ export const PassthroughMode: React.FC = () => {
       theme="textSecondaryOnBackground"
     >
       <span>
-        The emulator does not save user information when passthrough mode is enabled{' '}
-        {/* TODO(jhuleatt): Add a better link */}
+        The emulator does not save user information when passthrough mode is
+        enabled {/* TODO(jhuleatt): Add a better link */}
         <a
           target="_blank"
           rel="noopener noreferrer"
