@@ -138,7 +138,7 @@ type CheckboxFieldProps = {
   tip?: string;
   error?: string;
 } & CheckboxProps &
-  HTMLProps<HTMLSelectElement>;
+  HTMLProps<HTMLInputElement>;
 
 export const CheckboxField: React.FC<CheckboxFieldProps> = ({
   fieldClassName,

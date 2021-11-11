@@ -34,8 +34,8 @@ export const getCurrentEditedUser = createSelector(
   getAuthUserDialog,
   (authUserDialogData) => {
     return authUserDialogData && hasData(authUserDialogData.result)
-        ? authUserDialogData.result.data
-        : undefined;
+      ? authUserDialogData.result.data
+      : undefined;
   }
 );
 
