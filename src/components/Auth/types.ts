@@ -22,6 +22,14 @@ export interface CustomAttribute {
   value: string;
 }
 
+export type MfaEnrollment = {
+  displayName?: string;
+  enrolledAt?: string;
+  mfaEnrollmentId?: string;
+  phoneInfo?: string;
+  unobfuscatedPhoneInfo?: string;
+};
+
 /**
  * Field names are consistent with:
  * https://github.com/FirebasePrivate/firebase-tools/blob/d6b584da9f852313064d32dd219a6f23b7800d66/src/emulator/auth/schema.ts#L1670-L1779
@@ -35,6 +43,7 @@ export interface AddAuthUserPayload {
   password?: string;
   phoneNumber?: string;
   emailVerified?: boolean;
+  mfaInfo?: MfaEnrollment[];
 }
 
 // The form library can't handle booleans,
