@@ -19,7 +19,7 @@ import React from 'react';
 import { FormContextValues } from 'react-hook-form/dist/contextTypes';
 
 import { Field } from '../../../common/Field';
-import { AddAuthUserPayload } from '../../types';
+import { AuthFormUser } from '../../types';
 import styles from './controls.module.scss';
 import { validateSerializedCustomClaims } from './customClaimsValidation';
 
@@ -48,9 +48,10 @@ function validate(attributes: string) {
 
 const CUSTOM_ATTRIBUTES_CONTROL_NAME = 'customAttributes';
 
-export const CustomAttributes: React.FC<
-  FormContextValues<AddAuthUserPayload>
-> = ({ errors, register }) => {
+export const CustomAttributes: React.FC<FormContextValues<AuthFormUser>> = ({
+  errors,
+  register,
+}) => {
   const label = (
     <label>
       <Typography use="subtitle2" tag="div" theme="textPrimaryOnBackground">

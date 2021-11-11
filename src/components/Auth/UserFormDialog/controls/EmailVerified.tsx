@@ -23,12 +23,12 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from '../../../../store';
 import { getAllEmails, isEditingUser } from '../../../../store/auth/selectors';
 import { CheckboxField, Field } from '../../../common/Field';
-import { AddAuthUserPayload } from '../../types';
+import { AuthFormUser } from '../../types';
 import styles from './controls.module.scss';
 
 export type EmailVerifiedProps = PropsFromState;
 export const EmailVerified: React.FC<
-  EmailVerifiedProps & FormContextValues<AddAuthUserPayload>
+  EmailVerifiedProps & FormContextValues<AuthFormUser>
 > = ({
   register,
   watch,

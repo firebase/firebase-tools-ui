@@ -19,7 +19,7 @@ import { Typography } from '@rmwc/typography';
 import React, { useEffect } from 'react';
 import { FormContextValues } from 'react-hook-form/dist/contextTypes';
 
-import { AddAuthUserPayload } from '../../types';
+import { AddAuthUserPayload, AuthFormUser } from '../../types';
 import styles from './controls.module.scss';
 import EmailVerified from './EmailVerified';
 import PhoneControl from './PhoneControl';
@@ -30,7 +30,7 @@ export type MultiFactorProps = {
   user?: AddAuthUserPayload;
 };
 export const MultiFactor: React.FC<
-  MultiFactorProps & FormContextValues<AddAuthUserPayload>
+  MultiFactorProps & FormContextValues<AuthFormUser>
 > = (form) => {
   const { watch, setError, clearError, formState, errors, user } = form;
 

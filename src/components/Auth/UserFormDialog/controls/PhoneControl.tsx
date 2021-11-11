@@ -22,7 +22,7 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from '../../../../store';
 import { getAllPhoneNumbers } from '../../../../store/auth/selectors';
 import { Field } from '../../../common/Field';
-import { AddAuthUserPayload } from '../../types';
+import { AuthFormUser } from '../../types';
 import styles from './controls.module.scss';
 
 // Consistent with the back-end validation. We want to be as loose as possible in
@@ -34,7 +34,7 @@ export type PhoneControlProps = PropsFromState & {
 };
 
 export const PhoneControl: React.FC<
-  PhoneControlProps & FormContextValues<AddAuthUserPayload>
+  PhoneControlProps & FormContextValues<AuthFormUser>
 > = ({ register, errors, allPhoneNumbers, editedUserPhoneNumber }) => {
   function validate(value: string) {
     return editedUserPhoneNumber === value || !allPhoneNumbers.has(value);

@@ -37,6 +37,13 @@ export interface AddAuthUserPayload {
   emailVerified?: boolean;
 }
 
+// The form library can't handle booleans,
+// so we need to change the type of emailVerified
+// to something the form supports
+export type AuthFormUser = Omit<AddAuthUserPayload, 'emailVerified'> & {
+  emailVerified: [] | ['on'];
+};
+
 export const providerToIconMap = {
   'gc.apple.com': 'assets/provider-icons/auth_service_game_center.svg',
   'apple.com': 'assets/provider-icons/auth_service_apple.svg',

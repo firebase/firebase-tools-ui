@@ -39,11 +39,22 @@ import {
 import { hasError } from '../../../store/utils';
 import { Callout } from '../../common/Callout';
 import { Field } from '../../common/Field';
-import { AddAuthUserPayload } from '../types';
+import { AddAuthUserPayload, AuthFormUser, AuthUser } from '../types';
 import { CustomAttributes } from './controls/CustomAttributes';
 import { ImageUrlInput } from './controls/ImageUrlInput';
 import { MultiFactor } from './controls/MultiFactorAuth';
 import { SignInMethod } from './controls/SignInMethod';
+
+function convertToFormUser(user?: AuthUser): AuthFormUser | undefined {
+  return user && { ...user, emailVerified: !!user.emailVerified ? ['on'] : [] };
+}
+
+function convertFromFormUser(formUser: AuthFormUser): AddAuthUserPayload {
+  return {
+    ...formUser,
+    emailVerified: formUser.emailVerified.length > 0 ? true : false,
+  };
+}
 
 export type UserFormProps = PropsFromState & PropsFromDispatch;
 export const UserForm: React.FC<UserFormProps> = ({
@@ -56,13 +67,16 @@ export const UserForm: React.FC<UserFormProps> = ({
   const isEditing = !!user;
   const localId = user?.localId!;
 
-  const form = useForm<AddAuthUserPayload>({
-    defaultValues: user,
+  const formUser = convertToFormUser(user);
+
+  const form = useForm<AuthFormUser>({
+    defaultValues: formUser,
     mode: 'onChange',
   });
 
   const save = useCallback(
-    (user: AddAuthUserPayload, keepDialogOpen?: boolean) => {
+    (formUser: AuthFormUser, keepDialogOpen?: boolean) => {
+      const user = convertFromFormUser(formUser);
       if (isEditing) {
         updateUser({ user, localId });
       } else {
@@ -72,17 +86,15 @@ export const UserForm: React.FC<UserFormProps> = ({
     [isEditing, updateUser, createUser, localId]
   );
 
-  console.log(user);
-
   const { register, handleSubmit, formState, reset, errors } = form;
 
   const canSubmit = !authUserDialogData?.loading && formState.isValid;
 
   const submit = useCallback(
-    (user: AddAuthUserPayload) => {
+    (formUser: AuthFormUser) => {
       // Take into account multi-field errors.
       if (Object.values(errors).length === 0) {
-        save(user);
+        save(formUser);
       }
     },
     [errors, save]
@@ -123,7 +135,7 @@ export const UserForm: React.FC<UserFormProps> = ({
             <Button
               onClick={handleSubmit((result) => {
                 save(result, /* keepDialogOpen */ true);
-                reset(user);
+                reset(formUser);
               })}
               disabled={!canSubmit}
               type="button"
@@ -159,20 +171,8 @@ export const mapDispatchToProps: MapDispatchToPropsFunction<
 > = (dispatch) => {
   return {
     clearAuthUserDialogData: () => dispatch(clearAuthUserDialogData()),
-    updateUser: (d) => {
-      d.user.emailVerified =
-        ((d.user.emailVerified as unknown) as String[]).length === 0
-          ? false
-          : true;
-      return dispatch(updateUserRequest(d));
-    },
-    createUser: (d) => {
-      d.user.emailVerified =
-        ((d.user.emailVerified as unknown) as String[]).length === 0
-          ? false
-          : true;
-      return dispatch(createUserRequest(d));
-    },
+    updateUser: (d) => dispatch(updateUserRequest(d)),
+    createUser: (d) => dispatch(createUserRequest(d)),
   };
 };
 

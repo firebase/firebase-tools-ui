@@ -21,7 +21,7 @@ import { Provider } from 'react-redux';
 
 import { wrapWithForm } from '../../../../test_utils';
 import { getMockAuthStore } from '../../test_utils';
-import { AddAuthUserPayload } from '../../types';
+import { AddAuthUserPayload, AuthFormUser } from '../../types';
 import { SignInMethod, SignInMethodProps } from './SignInMethod';
 
 describe('SignInMethod', () => {
@@ -31,7 +31,7 @@ describe('SignInMethod', () => {
   async function setup(defaultValues: Partial<AddAuthUserPayload>) {
     const store = getMockAuthStore();
     const methods = wrapWithForm(
-      (props: SignInMethodProps & FormContextValues<AddAuthUserPayload>) => (
+      (props: SignInMethodProps & FormContextValues<AuthFormUser>) => (
         <Provider store={store}>
           <SignInMethod {...props} />
         </Provider>
