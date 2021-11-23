@@ -94,7 +94,7 @@ export const UserForm: React.FC<UserFormProps> = ({
   );
 
   const { register, handleSubmit, formState, reset, errors } = form;
-  
+
   const canSubmit = !authUserDialogData?.loading && formState.isValid;
 
   const submit = useCallback(

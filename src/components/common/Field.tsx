@@ -151,16 +151,7 @@ export const CheckboxField: React.FC<CheckboxFieldProps> = ({
   const [id] = useState(randomId());
   return (
     <div className={classnames('Field', fieldClassName)}>
-      <Typography
-        className="Field-label"
-        use="body2"
-        theme="secondary"
-        tag="label"
-        htmlFor={id}
-      >
-        {label}
-      </Typography>
-      <Checkbox {...checkboxProps} id={id} />
+      <Checkbox {...checkboxProps} id={id} label={label} />
       <div className="Field-subtext">
         {error ? (
           <Typography className="Field-tip" use="body2" theme="error">
