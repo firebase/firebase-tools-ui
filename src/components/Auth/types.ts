@@ -22,6 +22,10 @@ export interface CustomAttribute {
   value: string;
 }
 
+/**
+ * Field names are consistent with:
+ * https://github.com/firebase/firebase-tools/blob/f413eb9eb6940ee20dea748b18bb25ce185e7d7f/src/emulator/auth/schema.ts#L617
+ */
 export type MfaEnrollment = {
   displayName?: string;
   enrolledAt?: string;
@@ -46,11 +50,18 @@ export interface AddAuthUserPayload {
   mfaInfo?: MfaEnrollment[];
 }
 
+// `mfaInfo` name is changed to `mfa` only for user update:
+// https://github.com/FirebasePrivate/firebase-tools/blob/d6b584da9f852313064d32dd219a6f23b7800d66/src/emulator/auth/schema.ts#L879
+export type UpdateAuthUserPayload = Omit<AddAuthUserPayload, 'mfaInfo'> & {
+  mfa?: MfaEnrollment[];
+};
+
 // The form library can't handle booleans,
 // so we need to change the type of emailVerified
 // to something the form supports
 export type AuthFormUser = Omit<AddAuthUserPayload, 'emailVerified'> & {
   emailVerified: [] | ['on'];
+  mfaEnabled: [] | ['on'];
 };
 
 export const providerToIconMap = {

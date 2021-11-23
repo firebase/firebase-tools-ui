@@ -15,7 +15,7 @@
  */
 
 import { RestApi } from '../common/rest_api';
-import { AddAuthUserPayload, AuthUser } from './types';
+import { AddAuthUserPayload, AuthUser, UpdateAuthUserPayload } from './types';
 
 const importUser = (user: AuthUser & ApiAuthUserFields) => {
   const match = user.passwordHash?.match(PASSWORD_HASH_REGEX);
@@ -106,9 +106,13 @@ export default class AuthApi extends RestApi {
   }
 
   async updateUser(user: AddAuthUserPayload): Promise<AuthUser> {
+    // AddAuthUserPayload isn't always a valid update payload.
+    // Convert to valid update payload.
+    const userUpdate: UpdateAuthUserPayload = { ...user, mfa: user.mfaInfo };
+
     const { json } = await this.jsonRequest(
       `${this.baseUrl}/accounts:update`,
-      user,
+      userUpdate,
       'POST'
     );
 
