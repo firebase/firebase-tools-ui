@@ -17,22 +17,62 @@
 import { ListDivider } from '@rmwc/list';
 import { Typography } from '@rmwc/typography';
 import React, { useEffect } from 'react';
+import { useFieldArray } from 'react-hook-form';
 import { FormContextValues } from 'react-hook-form/dist/contextTypes';
 
+import { CheckboxField, Field } from '../../../common/Field';
 import { AddAuthUserPayload, AuthFormUser } from '../../types';
 import styles from './controls.module.scss';
-import EmailVerified from './EmailVerified';
 import PhoneControl from './PhoneControl';
 
-const ERROR_AT_LEAST_ONE_METHOD_REQUIRED = 'atLeastOneMethodRequired';
+// Consistent with the back-end validation. We want to be as loose as possible in
+// the emulator to avoid false negatives.
+const PHONE_REGEX = /^\+/;
 
 export type MultiFactorProps = {
   user?: AddAuthUserPayload;
 };
+
 export const MultiFactor: React.FC<
   MultiFactorProps & FormContextValues<AuthFormUser>
 > = (form) => {
-  const { watch, setError, clearError, formState, errors, user } = form;
+  const {
+    control,
+    watch,
+    setError,
+    clearError,
+    formState,
+    errors,
+    user,
+    register,
+    setValue,
+  } = form;
+
+  // https://react-hook-form.com/v5/api#useFieldArray
+  const { fields, append } = useFieldArray({
+    control,
+    name: 'mfaInfo',
+  });
+
+  const emailVerified = watch('emailVerified');
+  const mfaEnabled = watch('mfaEnabled');
+  const mfaInfo = watch('mfaInfo');
+
+  function getErrorText() {
+    if (errors.phoneNumber) {
+      if (errors.phoneNumber.type === 'pattern') {
+        return 'Phone number must be in international format and start with a "+"';
+      }
+    }
+  }
+
+  function addNewMfaNumber() {
+    append({
+      enrolledAt: new Date().toISOString(),
+      phoneInfo: '',
+      mfaEnrollmentId: 'PLACEHOLDER' + Math.random() * 200,
+    });
+  }
 
   return (
     <div className={styles.signInWrapper}>
@@ -41,12 +81,40 @@ export const MultiFactor: React.FC<
         <Typography use="body1" theme="textPrimaryOnBackground">
           Multi-factor Authentication
         </Typography>
-
-        <Typography use="body2" tag="div">
-          Make sign-in more secure
-        </Typography>
       </div>
-      <EmailVerified {...form} />
+      <CheckboxField
+        name="mfaEnabled"
+        label="Enabled"
+        defaultChecked={false}
+        disabled={!emailVerified || emailVerified.length === 0}
+        inputRef={register()}
+      />
+
+      <Typography use="body2" tag="div">
+        SMS settings
+      </Typography>
+      {mfaEnabled &&
+        mfaEnabled.length > 0 &&
+        fields.map((item, index) => {
+          return (
+            <Field
+              key={item.id}
+              name={`mfaInfo.${index}.phoneInfo`}
+              label="Phone"
+              placeholder="Enter phone number"
+              type="tel"
+              error={getErrorText()}
+              inputRef={register({ pattern: PHONE_REGEX })}
+            />
+          );
+        })}
+      <button
+        type="button"
+        disabled={!mfaEnabled || mfaEnabled.length === 0}
+        onClick={addNewMfaNumber}
+      >
+        Add new
+      </button>
     </div>
   );
 };

@@ -41,12 +41,19 @@ import { Callout } from '../../common/Callout';
 import { Field } from '../../common/Field';
 import { AddAuthUserPayload, AuthFormUser, AuthUser } from '../types';
 import { CustomAttributes } from './controls/CustomAttributes';
+import { EmailVerified } from './controls/EmailVerified';
 import { ImageUrlInput } from './controls/ImageUrlInput';
 import { MultiFactor } from './controls/MultiFactorAuth';
 import { SignInMethod } from './controls/SignInMethod';
 
 function convertToFormUser(user?: AuthUser): AuthFormUser | undefined {
-  return user && { ...user, emailVerified: !!user.emailVerified ? ['on'] : [] };
+  return (
+    user && {
+      ...user,
+      emailVerified: !!user.emailVerified ? ['on'] : [],
+      mfaEnabled: user.mfaInfo ? ['on'] : [],
+    }
+  );
 }
 
 function convertFromFormUser(formUser: AuthFormUser): AddAuthUserPayload {
@@ -87,7 +94,7 @@ export const UserForm: React.FC<UserFormProps> = ({
   );
 
   const { register, handleSubmit, formState, reset, errors } = form;
-
+  
   const canSubmit = !authUserDialogData?.loading && formState.isValid;
 
   const submit = useCallback(
@@ -116,6 +123,14 @@ export const UserForm: React.FC<UserFormProps> = ({
             error={errors?.displayName && 'Display name is required'}
             inputRef={register({})}
           />
+          <Field
+            name="email"
+            placeholder="Enter email (optional)"
+            label="Email (optional)"
+            type="text"
+            inputRef={register({})}
+          />
+          <EmailVerified {...form} />
 
           <ImageUrlInput {...form} />
           <CustomAttributes {...form} />

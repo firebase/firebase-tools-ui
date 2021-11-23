@@ -26,47 +26,24 @@ import { CheckboxField, Field } from '../../../common/Field';
 import { AuthFormUser } from '../../types';
 import styles from './controls.module.scss';
 
-export type EmailVerifiedProps = PropsFromState;
-export const EmailVerified: React.FC<
-  EmailVerifiedProps & FormContextValues<AuthFormUser>
-> = ({
+export const EmailVerified: React.FC<FormContextValues<AuthFormUser>> = ({
   register,
   watch,
   setError,
   clearError,
   errors,
-  allEmails,
-  isEditing,
   formState,
 }) => {
-  const newEmailVerified = watch('emailVerified');
-
+  const email = watch('email');
   return (
     <>
-      <Typography
-        use="body1"
-        tag="div"
-        className={styles.authKindLabel}
-        theme="textPrimaryOnBackground"
-      >
-        Verified email
-      </Typography>
-      <div className={styles.emailWrapper}>
-        <CheckboxField
-          name="emailVerified"
-          label="Email Verified?"
-          defaultChecked={false}
-          inputRef={register()}
-        />
-      </div>
+      <CheckboxField
+        name="emailVerified"
+        label="Verified email"
+        defaultChecked={false}
+        disabled={!email}
+        inputRef={register()}
+      />
     </>
   );
 };
-
-export const mapStateToProps = createStructuredSelector({
-  allEmails: getAllEmails,
-  isEditing: isEditingUser,
-});
-export type PropsFromState = ReturnType<typeof mapStateToProps>;
-
-export default connect(mapStateToProps)(EmailVerified);

@@ -91,11 +91,12 @@ export const EmailPassword: React.FC<
       </Typography>
       <div className={styles.emailWrapper}>
         <Field
+          disabled
           name="email"
-          placeholder="Enter email"
+          placeholder="Enter email above"
           label="Email"
           type="text"
-          inputRef={register({ validate, pattern: EMAIL_REGEX })}
+          value={email}
         />
         <Field
           name="password"
