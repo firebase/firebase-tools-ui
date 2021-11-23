@@ -39,7 +39,7 @@ export const EmailVerified: React.FC<FormContextValues<AuthFormUser>> = ({
     <>
       <CheckboxField
         name="emailVerified"
-        label="Verified email"
+        label="Email verified"
         defaultChecked={false}
         disabled={!email}
         inputRef={register()}
