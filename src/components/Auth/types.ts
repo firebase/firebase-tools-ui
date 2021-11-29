@@ -90,9 +90,26 @@ export interface AuthUser extends AddAuthUserPayload {
   providerUserInfo: AuthProviderInfo[];
 }
 
+export enum UsageMode {
+  // We shouldn't ever get this usage mode
+  USAGE_MODE_UNSPECIFIED = 'USAGE_MODE_UNSPECIFIED',
+  // Passthrough mode is off
+  DEFAULT = 'DEFAULT',
+  // Passthrough mode is on
+  PASSTHROUGH = 'PASSTHROUGH',
+}
+
 export interface AuthState {
   authUserDialogData?: RemoteResult<AuthUser | undefined>;
   users: RemoteResult<AuthUser[]>;
   filter: string;
   allowDuplicateEmails: boolean;
+  usageMode: UsageMode;
+}
+
+// Similar the emulator config object of the same name in the Firebase CLI,
+// but without optional types
+export interface EmulatorV1ProjectsConfig {
+  signIn: { allowDuplicateEmails: boolean };
+  usageMode: UsageMode;
 }

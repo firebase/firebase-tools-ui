@@ -23,7 +23,11 @@ import {
   setContext,
 } from 'redux-saga/effects';
 
-import { AddAuthUserPayload, AuthUser } from '../../components/Auth/types';
+import {
+  AddAuthUserPayload,
+  AuthUser,
+  UsageMode,
+} from '../../components/Auth/types';
 import { getProjectIdResult } from '../config/selectors';
 import {
   authFetchUsersRequest,
@@ -399,25 +403,32 @@ describe('Auth sagas', () => {
   describe('setAllowDuplicateEmails', () => {
     it('triggers appropriate API endpoint', () => {
       const fakeAuthApi = { updateConfig: jest.fn() };
-      const gen = setAllowDuplicateEmails(setAllowDuplicateEmailsRequest(true));
+      const duplicateEmailsAllowed = true;
+      const gen = setAllowDuplicateEmails(
+        setAllowDuplicateEmailsRequest(duplicateEmailsAllowed)
+      );
       expect(gen.next()).toEqual({
         done: false,
         value: call(configureAuthSaga),
       });
       expect(gen.next(fakeAuthApi)).toEqual({
         done: false,
-        value: call([fakeAuthApi, 'updateConfig'], true),
+        value: call([fakeAuthApi, 'updateConfig'], {
+          signIn: { allowDuplicateEmails: duplicateEmailsAllowed },
+        }),
       });
       expect(gen.next()).toEqual({
         done: false,
-        value: put(setAllowDuplicateEmailsSuccess(true)),
+        value: put(setAllowDuplicateEmailsSuccess(duplicateEmailsAllowed)),
       });
     });
   });
 
   describe('getAllowDuplicateEmails', () => {
     it('triggers appropriate API endpoint', () => {
-      const fakeAuthApi = { getConfig: jest.fn() };
+      const fakeAuthApi = {
+        getConfig: jest.fn(),
+      };
       const gen = getAllowDuplicateEmails(getAllowDuplicateEmailsRequest());
       expect(gen.next()).toEqual({
         done: false,
@@ -427,7 +438,12 @@ describe('Auth sagas', () => {
         done: false,
         value: call([fakeAuthApi, 'getConfig']),
       });
-      expect(gen.next(false)).toEqual({
+      expect(
+        gen.next({
+          signIn: { allowDuplicateEmails: false },
+          usageMode: UsageMode.DEFAULT,
+        })
+      ).toEqual({
         done: false,
         value: put(setAllowDuplicateEmailsSuccess(false)),
       });

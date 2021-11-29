@@ -25,7 +25,10 @@ import {
 import { ActionType, getType } from 'typesafe-actions';
 
 import AuthApi from '../../components/Auth/api';
-import { AuthUser } from '../../components/Auth/types';
+import {
+  AuthUser,
+  EmulatorV1ProjectsConfig,
+} from '../../components/Auth/types';
 import {
   authFetchUsersError,
   authFetchUsersRequest,
@@ -36,12 +39,15 @@ import {
   deleteUserRequest,
   deleteUserSuccess,
   getAllowDuplicateEmailsRequest,
+  getUsageModeRequest,
   nukeUsersRequest,
   nukeUsersSuccess,
   setAllowDuplicateEmailsRequest,
   setAllowDuplicateEmailsSuccess,
   setAuthUserDialogError,
   setAuthUserDialogLoading,
+  setUsageModeRequest,
+  setUsageModeSuccess,
   setUserDisabledRequest,
   setUserDisabledSuccess,
   updateAuthConfig,
@@ -87,8 +93,11 @@ export function* initAuth({ payload }: ActionType<typeof updateAuthConfig>) {
       getType(getAllowDuplicateEmailsRequest),
       getAllowDuplicateEmails
     ),
+    takeLatest(getType(setUsageModeRequest), setUsageMode),
+    takeLatest(getType(getUsageModeRequest), getUsageMode),
     put(authFetchUsersRequest()),
     put(getAllowDuplicateEmailsRequest()),
+    put(getUsageModeRequest()),
   ]);
 }
 
@@ -165,14 +174,43 @@ export function* setAllowDuplicateEmails({
   payload,
 }: ReturnType<typeof setAllowDuplicateEmailsRequest>) {
   const authApi: AuthApi = yield call(configureAuthSaga);
-  yield call([authApi, 'updateConfig'], payload);
+  yield call([authApi, 'updateConfig'], {
+    signIn: { allowDuplicateEmails: payload },
+  });
   yield put(setAllowDuplicateEmailsSuccess(payload));
+}
+
+export function* setUsageMode({
+  payload,
+}: ReturnType<typeof setUsageModeRequest>) {
+  const authApi: AuthApi = yield call(configureAuthSaga);
+  yield call([authApi, 'updateConfig'], { usageMode: payload });
+  yield put(setUsageModeSuccess(payload));
 }
 
 export function* getAllowDuplicateEmails() {
   const authApi: AuthApi = yield call(configureAuthSaga);
-  const config: boolean = yield call([authApi, 'getConfig']);
-  yield put(setAllowDuplicateEmailsSuccess(config));
+  const config: EmulatorV1ProjectsConfig = yield call([authApi, 'getConfig']);
+  const allowDuplicateEmails = config.signIn?.allowDuplicateEmails;
+
+  if (allowDuplicateEmails === undefined) {
+    throw new Error(
+      'Did not get a "signIn.allowDuplicateEmails" setting from config API'
+    );
+  }
+
+  yield put(setAllowDuplicateEmailsSuccess(config.signIn.allowDuplicateEmails));
+}
+
+export function* getUsageMode() {
+  const authApi: AuthApi = yield call(configureAuthSaga);
+  const config: EmulatorV1ProjectsConfig = yield call([authApi, 'getConfig']);
+  const usageMode = config.usageMode;
+  if (config === undefined) {
+    throw new Error('Did not get a "usageMode" setting from config API');
+  }
+
+  yield put(setUsageModeSuccess(usageMode));
 }
 
 export function* nukeUsers() {
