@@ -108,7 +108,10 @@ export default class AuthApi extends RestApi {
   async updateUser(user: AddAuthUserPayload): Promise<AuthUser> {
     // AddAuthUserPayload isn't always a valid update payload.
     // Convert to valid update payload.
-    const userUpdate: UpdateAuthUserPayload = { ...user, mfa: user.mfaInfo };
+    const userUpdate: UpdateAuthUserPayload = {
+      ...user,
+      mfa: user.mfaInfo ? { enrollments: user.mfaInfo } : undefined,
+    };
 
     const { json } = await this.jsonRequest(
       `${this.baseUrl}/accounts:update`,
