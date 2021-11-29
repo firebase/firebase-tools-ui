@@ -51,12 +51,11 @@ export const MultiFactor: React.FC<
   // https://react-hook-form.com/v5/api#useFieldArray
   const { fields, append } = useFieldArray({
     control,
-    name: 'mfaInfo',
+    name: 'mfaPhoneInfo',
   });
 
   const emailVerified = watch('emailVerified');
   const mfaEnabled = watch('mfaEnabled');
-  const mfaInfo = watch('mfaInfo');
 
   function getErrorText() {
     if (errors.phoneNumber) {
@@ -67,11 +66,7 @@ export const MultiFactor: React.FC<
   }
 
   function addNewMfaNumber() {
-    append({
-      enrolledAt: new Date().toISOString(),
-      phoneInfo: '',
-      mfaEnrollmentId: 'PLACEHOLDER' + Math.random() * 200,
-    });
+    append({ phoneInfo: '' });
   }
 
   return (
@@ -99,7 +94,7 @@ export const MultiFactor: React.FC<
           return (
             <Field
               key={item.id}
-              name={`mfaInfo.${index}.phoneInfo`}
+              name={`mfaPhoneInfo.${index}.phoneInfo`}
               label="Phone"
               placeholder="Enter phone number"
               type="tel"

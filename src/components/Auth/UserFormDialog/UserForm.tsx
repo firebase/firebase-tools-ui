@@ -52,6 +52,11 @@ function convertToFormUser(user?: AuthUser): AuthFormUser | undefined {
       ...user,
       emailVerified: !!user.emailVerified ? ['on'] : [],
       mfaEnabled: user.mfaInfo ? ['on'] : [],
+      mfaPhoneInfo: user.mfaInfo
+        ? user.mfaInfo.map((mfaEnrollment) => ({
+            phoneInfo: mfaEnrollment.phoneInfo,
+          }))
+        : [],
     }
   );
 }
@@ -60,6 +65,23 @@ function convertFromFormUser(formUser: AuthFormUser): AddAuthUserPayload {
   return {
     ...formUser,
     emailVerified: formUser.emailVerified.length > 0 ? true : false,
+    // match mfaPhoneInfo array members to an existing enrollment, or create a new enrollment
+    mfaInfo: formUser.mfaPhoneInfo
+      ? formUser.mfaPhoneInfo.map((mfaPhoneInfo) => {
+          const existingEnrollment = formUser.mfaInfo?.find(
+            (mfaEnrollment) =>
+              mfaEnrollment.phoneInfo === mfaPhoneInfo.phoneInfo
+          );
+          return (
+            existingEnrollment || {
+              ...mfaPhoneInfo,
+              enrolledAt: new Date().toISOString(),
+              mfaEnrollmentId:
+                'AUTH-EMULATOR-UI:' + Math.random().toString(36).substring(5),
+            }
+          );
+        })
+      : undefined,
   };
 }
 
