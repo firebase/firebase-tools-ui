@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { Button } from '@rmwc/button';
 import { ListDivider } from '@rmwc/list';
 import { Typography } from '@rmwc/typography';
 import React, { useEffect } from 'react';
@@ -103,13 +104,14 @@ export const MultiFactor: React.FC<
             />
           );
         })}
-      <button
+      <Button
         type="button"
+        outlined={true}
         disabled={!mfaEnabled || mfaEnabled.length === 0}
         onClick={addNewMfaNumber}
       >
         Add new
-      </button>
+      </Button>
     </div>
   );
 };
