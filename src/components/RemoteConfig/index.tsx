@@ -3,26 +3,18 @@ import { Card } from '@rmwc/card';
 import { Chip } from '@rmwc/chip';
 import { Elevation } from '@rmwc/elevation';
 import { GridCell } from '@rmwc/grid';
-import {
-  CollapsibleList,
-  List,
-  ListItem,
-  ListItemMeta
-} from '@rmwc/list';
+import { CollapsibleList, List, ListItem, ListItemMeta } from '@rmwc/list';
 import { TextField } from '@rmwc/textfield';
 import {
   RemoteConfigCondition,
   RemoteConfigParameterValue,
-  RemoteConfigTemplate
+  RemoteConfigTemplate,
 } from 'firebase-admin/remote-config';
-import React, {
-  Suspense, useLayoutEffect, useRef,
-  useState
-} from 'react';
+import React, { Suspense, useLayoutEffect, useRef, useState } from 'react';
+
 import { CardActionBar } from '../common/CardActionBar';
 import { useTemplate, useTemplateUpdater } from './api';
 import styles from './RemoteConfig.module.scss';
-
 
 const ParamFilter: React.FunctionComponent<{
   filter: string;
