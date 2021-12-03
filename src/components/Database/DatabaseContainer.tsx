@@ -115,7 +115,7 @@ async function fetchDatabases(
   primary: string
 ): Promise<string[]> {
   const res = await fetch(
-    `http://${config.hostAndPort}/.inspect/databases.json?ns=${primary}`
+    `${document.location.protocol}//${config.hostAndPort}/.inspect/databases.json?ns=${primary}`
   );
   if (!res.ok) {
     throw new Error(`HTTP ${res.status}: ${res.statusText}`);
