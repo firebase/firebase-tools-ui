@@ -31,16 +31,23 @@ export const ProviderCell: React.FC<ProviderCellProps> = ({
   return (
     <Theme use="secondary">
       <div className={styles.iconWrapper}>
-        {user.providerUserInfo.map(
-          (providerInfo) =>
-            providerToIconMap[providerInfo.providerId] && (
+        {user.providerUserInfo.map((providerInfo) => {
+          let provider = providerInfo.providerId;
+          if (provider.match(/^saml\./)) {
+            provider = 'saml';
+          } else if (provider.match(/^oidc\./)) {
+            provider = 'oidc';
+          }
+          return (
+            providerToIconMap[provider] && (
               <Icon
-                icon={providerToIconMap[providerInfo.providerId]}
+                icon={providerToIconMap[provider]}
                 key={providerInfo.providerId}
                 aria-label={providerInfo.providerId}
               />
             )
-        )}
+          );
+        })}
       </div>
     </Theme>
   );
