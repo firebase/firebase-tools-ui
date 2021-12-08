@@ -21,12 +21,28 @@ We welcome any issues and Pull Requests to improve the Emulator UI. The followin
 
 (If you're looking forward to use the Emulator UI as a user, please refer to the Usage section above.)
 
+### Setting up your development environment
+
+Clone the repo and install any dependencies:
+
+```bash
+git clone git@github.com:firebase/firebase-tools-ui.git
+cd firebase-tools
+npm install # must be run the first time you clone
+```
+
 ### Start the Development Server
+
+Select the emulators that you will be interacting with in the UI by executing the command below and following the inline prompts:
+
+```bash
+firebase init emulators
+```
 
 To run the development server with test data:
 
 ```bash
-firebase emulators:exec --project sample --only database,firestore --import test-data 'npm start'
+firebase emulators:exec --project sample --import test-data 'npm start'
 ```
 
 This will run the web app in the development mode.<br />
