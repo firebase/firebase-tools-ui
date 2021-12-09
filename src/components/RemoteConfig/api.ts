@@ -21,27 +21,30 @@ import { useRequest } from '../common/useRequest';
 function useRemoteConfigAdminUrl() {
   const { projectId } = useConfig();
   const config = useEmulatorConfig('remote config');
-  return `http://${config.hostAndPort}/v1/projects/${projectId}/remoteConfig`;
+  return `http://${config.hostAndPort}/v1/projects/${projectId}/remoteConfig?clientType=emulator`;
+}
+
+function useRemoteConfigClientUrl() {
+  const { projectId } = useConfig();
+  const config = useEmulatorConfig('remote config');
+  return `http://${config.hostAndPort}/v1/projects/${projectId}/namespaces/firebase:fetch`;
 }
 
 export function useTemplate(): {
   template: RemoteConfigTemplate;
-  fetchNewTemplate: () => void;
+  refetchTemplate: () => void;
+  updateTemplate: (newTemplate: RemoteConfigTemplate) => void;
 } {
   const url = useRemoteConfigAdminUrl();
-  const { data: template, mutate: fetchNewTemplate } = useRequest(
+  const { data: template, mutate, isValidating } = useRequest(
     url,
-    {},
+    { method: 'GET' },
     // disable auto refresh
     { refreshInterval: 0 }
   );
-  return { template: template as RemoteConfigTemplate, fetchNewTemplate };
-}
 
-export function useTemplateUpdater() {
-  const url = useRemoteConfigAdminUrl();
-
-  return async function updateTemplate(newTemplate: Object) {
+  const refetchTemplate = () => mutate();
+  const updateTemplate = async (newTemplate: RemoteConfigTemplate) => {
     const response = await fetch(url, {
       method: 'PUT',
       headers: {
@@ -49,6 +52,17 @@ export function useTemplateUpdater() {
       },
       body: JSON.stringify(newTemplate),
     });
-    return response.ok;
+
+    if (!response.ok) {
+      console.error(response.status);
+    }
+
+    mutate();
+  };
+
+  return {
+    template: template as RemoteConfigTemplate,
+    refetchTemplate,
+    updateTemplate,
   };
 }
