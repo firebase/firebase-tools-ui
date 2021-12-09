@@ -33,12 +33,6 @@ npm install # must be run the first time you clone
 
 ### Start the Development Server
 
-Select the emulators that you will be interacting with in the UI by executing the command below and following the inline prompts:
-
-```bash
-firebase init emulators
-```
-
 To run the development server with test data:
 
 ```bash
