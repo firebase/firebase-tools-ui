@@ -14,28 +14,27 @@
  * limitations under the License.
  */
 
+.rcListItem {
+  padding: 8px 16px 8px 16px;
+  gap: 8px;
+}
 
- .rcListItem {
-    padding: 8px 16px 8px 16px;
-    gap: 8px;
- }
+.filterForm {
+  width: 100%;
 
- .filterForm {
-    width: 100%;
-  
-    :global
-      .mdc-text-field:not(.mdc-text-field--outlined):not(.mdc-text-field--textarea) {
-      input.mdc-text-field__input {
-        padding-left: 50px;
-  
-        &::placeholder {
-          text-overflow: ellipsis;
-        }
-      }
-  
-      // Get rid of material line in the bottom of the input.
-      .mdc-line-ripple {
-        display: none;
+  :global
+    .mdc-text-field:not(.mdc-text-field--outlined):not(.mdc-text-field--textarea) {
+    input.mdc-text-field__input {
+      padding-left: 50px;
+
+      &::placeholder {
+        text-overflow: ellipsis;
       }
     }
+
+    // Get rid of material line in the bottom of the input.
+    .mdc-line-ripple {
+      display: none;
+    }
   }
+}

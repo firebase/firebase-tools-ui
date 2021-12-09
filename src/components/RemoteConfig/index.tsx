@@ -5,15 +5,18 @@ import { Elevation } from '@rmwc/elevation';
 import { GridCell } from '@rmwc/grid';
 import { CollapsibleList, List, ListItem, ListItemMeta } from '@rmwc/list';
 import { TextField } from '@rmwc/textfield';
+import { Tooltip } from '@rmwc/tooltip';
 import {
+  ExplicitParameterValue,
   RemoteConfigCondition,
+  RemoteConfigParameter,
   RemoteConfigParameterValue,
   RemoteConfigTemplate,
 } from 'firebase-admin/remote-config';
 import React, { Suspense, useLayoutEffect, useRef, useState } from 'react';
 
 import { CardActionBar } from '../common/CardActionBar';
-import { useTemplate, useTemplateUpdater } from './api';
+import { useTemplate } from './api';
 import styles from './RemoteConfig.module.scss';
 
 const ParamFilter: React.FunctionComponent<{
@@ -83,42 +86,49 @@ type ConditionDetails = RemoteConfigCondition & {
 
 const ParamConditionListItem: React.FunctionComponent<
   ConditionDetails & {
-    selectedCondition: string;
-    setSelectedCondition: (conditionName: string) => void;
+    isSelected: boolean;
+    setSelectedCondition: Function;
   }
-> = ({ name, value, expression, selectedCondition, setSelectedCondition }) => {
+> = ({ name, value, expression, isSelected, setSelectedCondition }) => {
   return (
     <ListItem className={styles.rcListItem}>
+      {/* <Tooltip content={<pre>{expression}</pre>} enterDelay={500}> */}
       <Chip
-        label={expression}
-        selected={name === selectedCondition}
-        checkmark={name === selectedCondition}
-        onInteraction={() => setSelectedCondition(name)}
+        label={name}
+        selected={isSelected}
+        checkmark={isSelected}
+        onInteraction={() => setSelectedCondition()}
       />
+      {/* </Tooltip> */}
       <span>Value: "{remoteConfigParameterValueToString(value)}"</span>
     </ListItem>
   );
 };
 
+function checkEqual(
+  a: RemoteConfigParameterValue,
+  b: RemoteConfigParameterValue
+) {
+  return (
+    (a as ExplicitParameterValue).value === (b as ExplicitParameterValue).value
+  );
+}
+
 const ParamDetails: React.FunctionComponent<{
   name: string;
   defaultValue?: RemoteConfigParameterValue;
-  conditions?: ConditionDetails[];
+  conditions: ConditionDetails[];
   open: boolean;
 }> = ({ name, defaultValue, conditions, open: defaultOpen }) => {
   if (!defaultValue && !conditions) {
     throw new Error('Parameter needs at least one value (I think)');
   }
 
-  const [open, setOpen] = useState<boolean | undefined>(undefined);
+  let servedValue: RemoteConfigParameterValue = (conditions.find(
+    (conditionDetails) => conditionDetails.name === '!isEmulator'
+  ) as ConditionDetails).value;
 
-  const [selectedConditionName, setSelectedCondition] = useState(() => {
-    if (defaultValue) {
-      return 'Default';
-    } else {
-      return (conditions as ConditionDetails[])[0].name;
-    }
-  });
+  const [open, setOpen] = useState<boolean | undefined>(undefined);
 
   if (defaultValue) {
     conditions = [
@@ -131,9 +141,20 @@ const ParamDetails: React.FunctionComponent<{
     ];
   }
 
-  const selectedConditionValue = conditions?.find(
-    (condition) => condition.name === selectedConditionName
-  )?.value;
+  const { template: currentTemplate, updateTemplate } = useTemplate();
+  const setSelectedValue = async (value: RemoteConfigParameterValue) => {
+    const newTemplate = { ...currentTemplate };
+    // @ts-expect-error
+    (newTemplate.parameters[name] as RemoteConfigParameter).conditionalValues[
+      '!isEmulator'
+    ] = value;
+
+    try {
+      updateTemplate(newTemplate);
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   return (
     <CollapsibleList
@@ -146,35 +167,26 @@ const ParamDetails: React.FunctionComponent<{
           }}
         >
           <strong>{name}</strong>
-          {defaultValue ? (
-            <span>
-              Default: "{remoteConfigParameterValueToString(defaultValue)}"
-            </span>
-          ) : (
-            <></>
-          )}
           <span>
-            Active value: "
-            {remoteConfigParameterValueToString(
-              selectedConditionValue as RemoteConfigParameterValue
-            )}
-            "
+            Active value: "{remoteConfigParameterValueToString(servedValue)}"
           </span>
           <ListItemMeta icon="chevron_right" />
         </ListItem>
       }
     >
       {conditions ? (
-        conditions.map((condition) => {
-          return (
-            <ParamConditionListItem
-              selectedCondition={selectedConditionName}
-              setSelectedCondition={setSelectedCondition}
-              key={condition.name}
-              {...condition}
-            />
-          );
-        })
+        conditions
+          .filter((condition) => condition.name !== '!isEmulator')
+          .map((condition) => {
+            return (
+              <ParamConditionListItem
+                isSelected={checkEqual(condition.value, servedValue)}
+                setSelectedCondition={() => setSelectedValue(condition.value)}
+                key={condition.name}
+                {...condition}
+              />
+            );
+          })
       ) : (
         <></>
       )}
@@ -198,16 +210,30 @@ const ParamTable: React.FunctionComponent<{
           paramName
         ];
 
-        const conditions = conditionalValues
-          ? Object.keys(conditionalValues).map((conditionName) => {
-              return {
-                ...(rcTemplate.conditions.find(
-                  (rcCondition) => rcCondition.name === conditionName
-                ) as RemoteConfigCondition),
-                value: conditionalValues[conditionName],
-              };
-            })
-          : undefined;
+        const conditions = Object.keys(
+          conditionalValues as {
+            [key: string]: RemoteConfigParameterValue;
+          }
+        ).map((conditionName) => {
+          let condition = rcTemplate.conditions.find(
+            (rcCondition) => rcCondition.name === conditionName
+          );
+
+          if (!condition) {
+            return {
+              name: conditionName,
+              value: (conditionalValues as {
+                [key: string]: RemoteConfigParameterValue;
+              })[conditionName],
+            } as ConditionDetails;
+          }
+          return {
+            ...condition,
+            value: (conditionalValues as {
+              [key: string]: RemoteConfigParameterValue;
+            })[conditionName],
+          };
+        });
 
         return (
           <ParamDetails
@@ -224,29 +250,9 @@ const ParamTable: React.FunctionComponent<{
 };
 
 function RemoteConfig() {
-  const { template, fetchNewTemplate } = useTemplate();
-  const templateUpdater = useTemplateUpdater();
+  const { template } = useTemplate();
 
   const [paramNameFilter, setParamNameFilter] = useState('');
-
-  async function updateTemplate() {
-    // generate an updated template for testing
-    const newTemplate = JSON.parse(JSON.stringify(template));
-    newTemplate.parameters = newTemplate.parameters || {};
-
-    newTemplate.parameters['welcome_message'] = {
-      defaultValue: {
-        value: 'Hello world!',
-      },
-    };
-
-    try {
-      await templateUpdater(newTemplate);
-      fetchNewTemplate();
-    } catch (e) {
-      console.error(e);
-    }
-  }
 
   return (
     <GridCell span={12}>
@@ -261,10 +267,6 @@ function RemoteConfig() {
           <ParamTable rcTemplate={template} paramNameFilter={paramNameFilter} />
         </Card>
       </Elevation>
-      <Button onClick={updateTemplate} outlined={true}>
-        Update template
-      </Button>
-
       <pre>{JSON.stringify(template, null, 2)}</pre>
     </GridCell>
   );
