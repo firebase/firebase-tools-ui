@@ -45,7 +45,7 @@ const ParamFilter: React.FunctionComponent<{
         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
           setFilter(event.target.value);
         }}
-        placeholder="Filter parameters"
+        placeholder="Search parameters"
         value={filter}
         aria-label="filter"
         fullwidth
@@ -189,6 +189,7 @@ const ParamTable: React.FunctionComponent<{
   return (
     <List>
       {Object.keys(rcTemplate.parameters).map((paramName) => {
+        // TODO: Filter on everything, not just paramName
         const openByDefault =
           paramNameFilter === '' ||
           paramName.toLowerCase().includes(paramNameFilter.toLowerCase());
