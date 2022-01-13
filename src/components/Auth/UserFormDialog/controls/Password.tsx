@@ -54,13 +54,10 @@ export const Password: React.FC<
   const password = watch('password');
 
   useEffect(() => {
-    if (
-      (email === '' && password === '') ||
-      (email !== '' && (password !== '' || isEditing))
-    ) {
-      clearError('emailpassword' as any);
-    } else {
+    if (password !== '' && email === '') {
       setError('emailpassword' as any, 'both');
+    } else {
+      clearError('emailpassword' as any);
     }
   }, [email, password, clearError, setError, isEditing]);
 
