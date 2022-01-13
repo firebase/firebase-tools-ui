@@ -21,7 +21,7 @@ import { FormContextValues } from 'react-hook-form/dist/contextTypes';
 
 import { AddAuthUserPayload, AuthFormUser } from '../../types';
 import styles from './controls.module.scss';
-import EmailPassword from './EmailPassword';
+import Password from './Password';
 import PhoneControl from './PhoneControl';
 
 const ERROR_AT_LEAST_ONE_METHOD_REQUIRED = 'atLeastOneMethodRequired';
@@ -75,7 +75,7 @@ export const SignInMethod: React.FC<
           </Typography>
         )}
       </div>
-      <EmailPassword {...form} editedUserEmail={user?.email} />
+      <Password {...form} />
       <PhoneControl {...form} editedUserPhoneNumber={user?.phoneNumber} />
     </div>
   );

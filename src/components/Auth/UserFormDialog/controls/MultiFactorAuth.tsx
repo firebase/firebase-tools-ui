@@ -15,16 +15,17 @@
  */
 
 import { Button } from '@rmwc/button';
+import { IconButton } from '@rmwc/icon-button';
 import { ListDivider } from '@rmwc/list';
 import { Typography } from '@rmwc/typography';
+import classNames from 'classnames';
 import React, { useEffect } from 'react';
 import { useFieldArray } from 'react-hook-form';
 import { FormContextValues } from 'react-hook-form/dist/contextTypes';
 
-import { CheckboxField, Field } from '../../../common/Field';
+import { Field, SwitchField } from '../../../common/Field';
 import { AddAuthUserPayload, AuthFormUser } from '../../types';
 import styles from './controls.module.scss';
-import PhoneControl from './PhoneControl';
 
 // Consistent with the back-end validation. We want to be as loose as possible in
 // the emulator to avoid false negatives.
@@ -33,6 +34,10 @@ const PHONE_REGEX = /^\+/;
 export type MultiFactorProps = {
   user?: AddAuthUserPayload;
 };
+
+function addNewMfaNumber(add: (newMfaInfo: { phoneInfo: string }) => void) {
+  return add({ phoneInfo: '' });
+}
 
 export const MultiFactor: React.FC<
   MultiFactorProps & FormContextValues<AuthFormUser>
@@ -46,29 +51,36 @@ export const MultiFactor: React.FC<
     errors,
     user,
     register,
-    setValue,
   } = form;
 
+  const isZeroState =
+    !formState.touched.mfaEnabled ||
+    (user?.mfaInfo && user?.mfaInfo.length > 0);
+
   // https://react-hook-form.com/v5/api#useFieldArray
-  const { fields, append } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control,
     name: 'mfaPhoneInfo',
   });
 
-  const emailVerified = watch('emailVerified');
-  const mfaEnabled = watch('mfaEnabled');
+  const emailVerifiedArr = watch('emailVerified');
+  const mfaEnabledArr = watch('mfaEnabled');
 
-  function getErrorText() {
-    if (errors.phoneNumber) {
-      if (errors.phoneNumber.type === 'pattern') {
-        return 'Phone number must be in international format and start with a "+"';
+  const emailVerified = emailVerifiedArr && emailVerifiedArr.length > 0;
+  const mfaEnabled = mfaEnabledArr && mfaEnabledArr.length > 0;
+
+  useEffect(() => {
+    if (mfaEnabled) {
+      if (emailVerified) {
+        clearError('verifyEmail');
+        if (fields.length === 0) {
+          addNewMfaNumber(append);
+        }
+      } else {
+        setError('verifyEmail', 'notverified');
       }
     }
-  }
-
-  function addNewMfaNumber() {
-    append({ phoneInfo: '' });
-  }
+  }, [fields, mfaEnabled, emailVerified, setError, clearError, append]);
 
   return (
     <div className={styles.signInWrapper}>
@@ -78,39 +90,68 @@ export const MultiFactor: React.FC<
           Multi-factor Authentication
         </Typography>
       </div>
-      <CheckboxField
+
+      <SwitchField
         name="mfaEnabled"
-        label="Enabled"
+        label=""
+        switchLabel={mfaEnabled ? 'Enabled' : 'Disabled'}
         defaultChecked={false}
-        disabled={!emailVerified || emailVerified.length === 0}
         inputRef={register()}
       />
 
-      <Typography use="body2" tag="div">
+      {(errors as any).verifyEmail ? (
+        <Typography use="body2" theme="error" tag="div" role="alert">
+          Email needs to be verified to enroll in multi-factor authentication
+        </Typography>
+      ) : null}
+
+      <Typography use="body1" tag="div" theme="textSecondaryOnBackground">
         SMS settings
       </Typography>
-      {mfaEnabled &&
-        mfaEnabled.length > 0 &&
+      {(mfaEnabled || isZeroState) &&
         fields.map((item, index) => {
+          const fieldName = `mfaPhoneInfo.${index}.phoneInfo`;
+
+          const getPhoneErrorText = () => {
+            const error = errors.mfaPhoneInfo?.[index];
+            if (error && (error as any).phoneInfo) {
+              return 'Phone number must be in international format and start with a "+"';
+            }
+          };
+
           return (
-            <Field
+            <div
               key={item.id}
-              name={`mfaPhoneInfo.${index}.phoneInfo`}
-              label="Phone"
-              placeholder="Enter phone number"
-              type="tel"
-              error={getErrorText()}
-              inputRef={register({ pattern: PHONE_REGEX })}
-            />
+              className={classNames(
+                styles.smsWrapper,
+                getPhoneErrorText() && styles.showError
+              )}
+            >
+              <Field
+                name={fieldName}
+                label="Phone number"
+                placeholder="Enter phone number"
+                type="tel"
+                error={getPhoneErrorText()}
+                inputRef={register({ pattern: PHONE_REGEX })}
+              />
+              <div className={styles.deleteButtonContainer}>
+                <IconButton
+                  type="button"
+                  icon="delete_outline"
+                  onClick={() => remove(index)}
+                />
+              </div>
+            </div>
           );
         })}
       <Button
         type="button"
         outlined={true}
-        disabled={!mfaEnabled || mfaEnabled.length === 0}
-        onClick={addNewMfaNumber}
+        disabled={!mfaEnabled}
+        onClick={() => addNewMfaNumber(append)}
       >
-        Add new
+        Add another phone number
       </Button>
     </div>
   );

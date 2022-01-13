@@ -26,19 +26,9 @@ import { AuthFormUser } from '../../types';
 import styles from './controls.module.scss';
 
 // Consistent with the Auth JS SDK and the Auth Emulator.
-const EMAIL_REGEX = /^[^@]+@[^@]+$/;
 const PASSWORD_MIN_LENGTH = 6;
 
 function getErrorText(errors: any) {
-  if (errors.email) {
-    if (errors.email.type === 'pattern') {
-      return 'Invalid email';
-    }
-    if (errors.email.type === 'validate') {
-      return 'User with this email already exists';
-    }
-  }
-
   if (errors.emailpassword) {
     return 'Both email and password should be present';
   }
@@ -47,9 +37,9 @@ function getErrorText(errors: any) {
   }
 }
 
-export type EmailPasswordProps = PropsFromState & { editedUserEmail?: string };
-export const EmailPassword: React.FC<
-  EmailPasswordProps & FormContextValues<AuthFormUser>
+export type PasswordProps = PropsFromState & { editedUserEmail?: string };
+export const Password: React.FC<
+  PasswordProps & FormContextValues<AuthFormUser>
 > = ({
   register,
   watch,
@@ -74,10 +64,6 @@ export const EmailPassword: React.FC<
     }
   }, [email, password, clearError, setError, isEditing]);
 
-  function validate(value: string) {
-    return value === editedUserEmail || !allEmails.has(value);
-  }
-
   return (
     <>
       <Typography
@@ -86,25 +72,15 @@ export const EmailPassword: React.FC<
         className={styles.authKindLabel}
         theme="textPrimaryOnBackground"
       >
-        Email authentication
+        Password authentication
       </Typography>
-      <div className={styles.emailWrapper}>
-        <Field
-          disabled
-          name="email"
-          placeholder="Enter email above"
-          label="Email"
-          type="text"
-          value={email}
-        />
-        <Field
-          name="password"
-          type="text"
-          label="Password"
-          placeholder="Enter password"
-          inputRef={register({ minLength: PASSWORD_MIN_LENGTH })}
-        />
-      </div>
+      <Field
+        name="password"
+        type="text"
+        label="Password"
+        placeholder="Enter password"
+        inputRef={register({ minLength: PASSWORD_MIN_LENGTH })}
+      />
       <Typography
         className={styles.error}
         use="body2"
@@ -123,4 +99,4 @@ export const mapStateToProps = createStructuredSelector({
 });
 export type PropsFromState = ReturnType<typeof mapStateToProps>;
 
-export default connect(mapStateToProps)(EmailPassword);
+export default connect(mapStateToProps)(Password);

@@ -17,8 +17,8 @@
 import './Field.scss';
 
 import { randomId } from '@rmwc/base';
-import { Checkbox, CheckboxProps } from '@rmwc/checkbox';
 import { Select, SelectProps } from '@rmwc/select';
+import { Switch, SwitchProps } from '@rmwc/switch';
 import { TextField, TextFieldHTMLProps, TextFieldProps } from '@rmwc/textfield';
 import { HTMLProps } from '@rmwc/types';
 import { Typography } from '@rmwc/typography';
@@ -40,6 +40,7 @@ export const Field: React.FC<Props> = ({
   outlined,
   tip,
   error,
+  key,
   ...textFieldProps
 }) => {
   const [id] = useState(randomId('field'));
@@ -133,28 +134,45 @@ export const SelectField: React.FC<SelectFieldProps> = ({
   );
 };
 
-type CheckboxFieldProps = {
+type SwitchFieldProps = {
   fieldClassName?: string;
+  switchLabel?: string;
   tip?: string;
   error?: string;
-} & CheckboxProps &
+} & SwitchProps &
   HTMLProps<HTMLInputElement>;
 
-export const CheckboxField: React.FC<CheckboxFieldProps> = ({
+export const SwitchField: React.FC<SwitchFieldProps> = ({
   fieldClassName,
   label,
+  switchLabel,
   tip,
   theme, // TODO: 5.0 theme, incompatible with 6.0 remove at 6.0
   error,
   ...checkboxProps
 }) => {
   const [id] = useState(randomId());
+  const [subtextId] = useState(randomId('field-subtext'));
   return (
     <div className={classnames('Field', fieldClassName)}>
-      <Checkbox {...checkboxProps} id={id} label={label} />
-      <div className="Field-subtext">
+      <Typography
+        className="Field-label"
+        use="body2"
+        theme="secondary"
+        tag="label"
+        htmlFor={id}
+      >
+        {label}
+      </Typography>
+      <Switch {...checkboxProps} id={id} label={switchLabel} />
+      <div className="Field-subtext" id={subtextId}>
         {error ? (
-          <Typography className="Field-tip" use="body2" theme="error">
+          <Typography
+            className="Field-tip"
+            role="alert"
+            use="body2"
+            theme="error"
+          >
             {error}
           </Typography>
         ) : (

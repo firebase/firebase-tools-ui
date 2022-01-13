@@ -41,7 +41,7 @@ import { Callout } from '../../common/Callout';
 import { Field } from '../../common/Field';
 import { AddAuthUserPayload, AuthFormUser, AuthUser } from '../types';
 import { CustomAttributes } from './controls/CustomAttributes';
-import { EmailVerified } from './controls/EmailVerified';
+import Email from './controls/Email';
 import { ImageUrlInput } from './controls/ImageUrlInput';
 import { MultiFactor } from './controls/MultiFactorAuth';
 import { SignInMethod } from './controls/SignInMethod';
@@ -145,14 +145,7 @@ export const UserForm: React.FC<UserFormProps> = ({
             error={errors?.displayName && 'Display name is required'}
             inputRef={register({})}
           />
-          <Field
-            name="email"
-            placeholder="Enter email (optional)"
-            label="Email (optional)"
-            type="text"
-            inputRef={register({})}
-          />
-          <EmailVerified {...form} />
+          <Email editedUserEmail={user?.email} {...form} />
 
           <ImageUrlInput {...form} />
           <CustomAttributes {...form} />
