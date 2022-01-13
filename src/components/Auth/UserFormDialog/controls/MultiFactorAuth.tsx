@@ -105,56 +105,59 @@ export const MultiFactor: React.FC<
         </Typography>
       ) : null}
 
-      <Typography use="body1" tag="div" theme="textSecondaryOnBackground">
-        SMS settings
-      </Typography>
-      <div>
-        {(mfaEnabled || isZeroState) &&
-          fields.map((item, index) => {
-            const fieldName = `mfaPhoneInfo.${index}.phoneInfo`;
+      {(mfaEnabled || !isZeroState) && (
+        <>
+          <Typography use="body1" tag="div" theme="textSecondaryOnBackground">
+            SMS settings
+          </Typography>
+          <div>
+            {fields.map((item, index) => {
+              const fieldName = `mfaPhoneInfo.${index}.phoneInfo`;
 
-            const getPhoneErrorText = () => {
-              const error = errors.mfaPhoneInfo?.[index];
-              if (error && (error as any).phoneInfo) {
-                return 'Phone number must be in international format and start with a "+"';
-              }
-            };
+              const getPhoneErrorText = () => {
+                const error = errors.mfaPhoneInfo?.[index];
+                if (error && (error as any).phoneInfo) {
+                  return 'Phone number must be in international format and start with a "+"';
+                }
+              };
 
-            return (
-              <div
-                key={item.id}
-                className={classNames(
-                  styles.smsWrapper,
-                  getPhoneErrorText() && styles.showError
-                )}
-              >
-                <Field
-                  name={fieldName}
-                  label="Phone number"
-                  placeholder="Enter phone number"
-                  type="tel"
-                  error={getPhoneErrorText()}
-                  inputRef={register({ pattern: PHONE_REGEX })}
-                />
-                <div className={styles.deleteButtonContainer}>
-                  <IconButton
-                    type="button"
-                    icon="delete_outline"
-                    onClick={() => remove(index)}
+              return (
+                <div
+                  key={item.id}
+                  className={classNames(
+                    styles.smsWrapper,
+                    getPhoneErrorText() && styles.showError
+                  )}
+                >
+                  <Field
+                    name={fieldName}
+                    label="Phone number"
+                    placeholder="Enter phone number"
+                    type="tel"
+                    error={getPhoneErrorText()}
+                    inputRef={register({ pattern: PHONE_REGEX })}
                   />
+                  <div className={styles.deleteButtonContainer}>
+                    <IconButton
+                      type="button"
+                      icon="delete_outline"
+                      onClick={() => remove(index)}
+                    />
+                  </div>
                 </div>
-              </div>
-            );
-          })}
-      </div>
-      <Button
-        type="button"
-        outlined={true}
-        disabled={!mfaEnabled}
-        onClick={() => addNewMfaNumber(append)}
-      >
-        Add another phone number
-      </Button>
+              );
+            })}
+          </div>
+          <Button
+            type="button"
+            outlined={true}
+            disabled={!mfaEnabled}
+            onClick={() => addNewMfaNumber(append)}
+          >
+            Add another phone number
+          </Button>
+        </>
+      )}
     </div>
   );
 };
