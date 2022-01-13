@@ -108,6 +108,7 @@ export const MultiFactor: React.FC<
       <Typography use="body1" tag="div" theme="textSecondaryOnBackground">
         SMS settings
       </Typography>
+      <div>
       {(mfaEnabled || isZeroState) &&
         fields.map((item, index) => {
           const fieldName = `mfaPhoneInfo.${index}.phoneInfo`;
@@ -145,6 +146,7 @@ export const MultiFactor: React.FC<
             </div>
           );
         })}
+        </div>
       <Button
         type="button"
         outlined={true}

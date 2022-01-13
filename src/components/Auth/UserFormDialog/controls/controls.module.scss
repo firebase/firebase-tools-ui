@@ -39,11 +39,7 @@
   display: flex;
   align-items: center;
 
-  &:nth-of-type(1) {
-    background-color: red;
-  }
-
-  &:hover {
+  &:hover:not(:only-child) {
     .deleteButtonContainer {
       visibility: visible; // reveal delete button on hover
     }
