@@ -72,11 +72,12 @@ export const MultiFactor: React.FC<
 
   useEffect(() => {
     if (mfaEnabled) {
+      if (fields.length === 0) {
+        addNewMfaNumber(append);
+      }
+
       if (emailVerified) {
         clearError('verifyEmail');
-        if (fields.length === 0) {
-          addNewMfaNumber(append);
-        }
       } else {
         setError('verifyEmail', 'notverified');
       }
@@ -118,7 +119,13 @@ export const MultiFactor: React.FC<
               const getPhoneErrorText = () => {
                 const error = errors.mfaPhoneInfo?.[index];
                 if (error && (error as any).phoneInfo) {
-                  return 'Phone number must be in international format and start with a "+"';
+                  if ((error as any).phoneInfo.type === 'pattern') {
+                    return 'Phone number must be in international format and start with a "+"';
+                  } else if ((error as any).phoneInfo.type === 'required') {
+                    return 'Phone number is required';
+                  } else {
+                    return error.message;
+                  }
                 }
               };
 
@@ -136,7 +143,10 @@ export const MultiFactor: React.FC<
                     placeholder="Enter phone number"
                     type="tel"
                     error={getPhoneErrorText()}
-                    inputRef={register({ pattern: PHONE_REGEX })}
+                    inputRef={register({
+                      pattern: PHONE_REGEX,
+                      required: true,
+                    })}
                   />
                   <div className={styles.deleteButtonContainer}>
                     <IconButton
