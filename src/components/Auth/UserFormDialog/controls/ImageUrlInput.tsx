@@ -19,7 +19,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { FormContextValues } from 'react-hook-form/dist/contextTypes';
 
 import { Field } from '../../../common/Field';
-import { AddAuthUserPayload } from '../../types';
+import { AuthFormUser } from '../../types';
 import styles from '../UserFormDialog.module.scss';
 
 enum ImagePreviewStatus {
@@ -29,7 +29,7 @@ enum ImagePreviewStatus {
   ERROR = 'ERROR',
 }
 
-export type ImageUrlInputProps = FormContextValues<AddAuthUserPayload> & {
+export type ImageUrlInputProps = FormContextValues<AuthFormUser> & {
   ImageConstructor?: typeof Image;
 };
 
