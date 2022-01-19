@@ -147,9 +147,8 @@ export const SwitchField: React.FC<SwitchFieldProps> = ({
   label,
   switchLabel,
   tip,
-  theme, // TODO: 5.0 theme, incompatible with 6.0 remove at 6.0
   error,
-  ...checkboxProps
+  ...switchProps
 }) => {
   const [id] = useState(randomId());
   const [subtextId] = useState(randomId('field-subtext'));
@@ -164,7 +163,7 @@ export const SwitchField: React.FC<SwitchFieldProps> = ({
       >
         {label}
       </Typography>
-      <Switch {...checkboxProps} id={id} label={switchLabel} />
+      <Switch {...switchProps} id={id} label={switchLabel} />
       <div className="Field-subtext" id={subtextId}>
         {error ? (
           <Typography
