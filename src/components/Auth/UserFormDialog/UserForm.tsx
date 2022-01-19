@@ -39,10 +39,51 @@ import {
 import { hasError } from '../../../store/utils';
 import { Callout } from '../../common/Callout';
 import { Field } from '../../common/Field';
-import { AddAuthUserPayload } from '../types';
+import { AddAuthUserPayload, AuthFormUser, AuthUser } from '../types';
 import { CustomAttributes } from './controls/CustomAttributes';
+import Email from './controls/Email';
 import { ImageUrlInput } from './controls/ImageUrlInput';
+import { MultiFactor } from './controls/MultiFactorAuth';
 import { SignInMethod } from './controls/SignInMethod';
+
+function convertToFormUser(user?: AuthUser): AuthFormUser | undefined {
+  return (
+    user && {
+      ...user,
+      emailVerified: !!user.emailVerified ? ['on'] : [],
+      mfaEnabled: user.mfaInfo ? ['on'] : [],
+      mfaPhoneInfo: user.mfaInfo
+        ? user.mfaInfo.map((mfaEnrollment) => ({
+            phoneInfo: mfaEnrollment.phoneInfo,
+          }))
+        : [],
+    }
+  );
+}
+
+function convertFromFormUser(formUser: AuthFormUser): AddAuthUserPayload {
+  return {
+    ...formUser,
+    emailVerified: formUser.emailVerified.length > 0 ? true : false,
+    // match mfaPhoneInfo array members to an existing enrollment, or create a new enrollment
+    mfaInfo: formUser.mfaPhoneInfo
+      ? formUser.mfaPhoneInfo.map((mfaPhoneInfo) => {
+          const existingEnrollment = formUser.mfaInfo?.find(
+            (mfaEnrollment) =>
+              mfaEnrollment.phoneInfo === mfaPhoneInfo.phoneInfo
+          );
+          return (
+            existingEnrollment || {
+              ...mfaPhoneInfo,
+              enrolledAt: new Date().toISOString(),
+              mfaEnrollmentId:
+                'AUTH-EMULATOR-UI:' + Math.random().toString(36).substring(5),
+            }
+          );
+        })
+      : undefined,
+  };
+}
 
 export type UserFormProps = PropsFromState & PropsFromDispatch;
 export const UserForm: React.FC<UserFormProps> = ({
@@ -55,13 +96,16 @@ export const UserForm: React.FC<UserFormProps> = ({
   const isEditing = !!user;
   const localId = user?.localId!;
 
-  const form = useForm<AddAuthUserPayload>({
-    defaultValues: user,
+  const formUser = convertToFormUser(user);
+
+  const form = useForm<AuthFormUser>({
+    defaultValues: formUser,
     mode: 'onChange',
   });
 
   const save = useCallback(
-    (user: AddAuthUserPayload, keepDialogOpen?: boolean) => {
+    (formUser: AuthFormUser, keepDialogOpen?: boolean) => {
+      const user = convertFromFormUser(formUser);
       if (isEditing) {
         updateUser({ user, localId });
       } else {
@@ -76,10 +120,10 @@ export const UserForm: React.FC<UserFormProps> = ({
   const canSubmit = !authUserDialogData?.loading && formState.isValid;
 
   const submit = useCallback(
-    (user: AddAuthUserPayload) => {
+    (formUser: AuthFormUser) => {
       // Take into account multi-field errors.
       if (Object.values(errors).length === 0) {
-        save(user);
+        save(formUser);
       }
     },
     [errors, save]
@@ -101,10 +145,12 @@ export const UserForm: React.FC<UserFormProps> = ({
             error={errors?.displayName && 'Display name is required'}
             inputRef={register({})}
           />
+          <Email editedUserEmail={user?.email} {...form} />
 
           <ImageUrlInput {...form} />
           <CustomAttributes {...form} />
           <SignInMethod {...form} user={user} />
+          <MultiFactor {...form} user={user} />
           {hasError(authUserDialogData?.result) && (
             <Callout type="warning">
               Error: {authUserDialogData?.result.error}
@@ -119,7 +165,7 @@ export const UserForm: React.FC<UserFormProps> = ({
             <Button
               onClick={handleSubmit((result) => {
                 save(result, /* keepDialogOpen */ true);
-                reset(user);
+                reset(formUser);
               })}
               disabled={!canSubmit}
               type="button"
