@@ -44,7 +44,7 @@ export const AuthRoute: React.FC = () => {
   return (
     <Suspense fallback={<AuthRouteSuspended />}>
       <Switch>
-        <Route path={'/auth/' + `:tenantId*`}>
+        <Route path={authPath + `:tenantId*`}>
           <AuthWrapper />
         </Route>
       </Switch>
@@ -73,31 +73,27 @@ export const Auth: React.FC<AuthProps> = ({ updateAuthConfig }) => {
   }, [auth, projectId, updateAuthConfig, tenantId]);
 
   return (
-    <Switch>
-      <Route path={authPath + `:tenantId*`}>
-        <GridCell span={12} className="Auth">
-          <GridRow className={styles.topActions}>
-            <GridCell span={2}>
-              <TenantPicker />
-            </GridCell>
-            <GridCell span={8} />
-            <GridCell span={2}>
-              <ClearAll />
-            </GridCell>
-          </GridRow>
-
-          <Elevation z="2" wrap>
-            <UsersCard />
-          </Elevation>
-          <Elevation z="2" wrap>
-            <OneAccountPerEmailCard />
-          </Elevation>
-          <Elevation z="2" wrap>
-            <PassthroughModeCard />
-          </Elevation>
+    <GridCell span={12} className="Auth">
+      <GridRow className={styles.topActions}>
+        <GridCell span={2}>
+          <TenantPicker />
         </GridCell>
-      </Route>
-    </Switch>
+        <GridCell span={8} />
+        <GridCell span={2}>
+          <ClearAll />
+        </GridCell>
+      </GridRow>
+
+      <Elevation z="2" wrap>
+        <UsersCard />
+      </Elevation>
+      <Elevation z="2" wrap>
+        <OneAccountPerEmailCard />
+      </Elevation>
+      <Elevation z="2" wrap>
+        <PassthroughModeCard />
+      </Elevation>
+    </GridCell>
   );
 };
 
