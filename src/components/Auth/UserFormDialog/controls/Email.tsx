@@ -78,6 +78,7 @@ const Email: React.FC<EmailProps & FormContextValues<AuthFormUser>> = ({
           label="Email (optional)"
           type="text"
           inputRef={register({ validate, pattern: EMAIL_REGEX })}
+          error={getErrorText(errors)}
         />
         <SwitchField
           name="emailVerified"
@@ -87,7 +88,6 @@ const Email: React.FC<EmailProps & FormContextValues<AuthFormUser>> = ({
           inputRef={register()}
           className={styles.switchField}
           fieldClassName={styles.switch}
-          error={getErrorText(errors)}
         />
       </div>
     </>
