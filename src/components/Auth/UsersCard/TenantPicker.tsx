@@ -20,7 +20,7 @@ import { connect } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 
 import { createStructuredSelector } from '../../../store';
-import { getTenants } from '../../../store/auth/selectors';
+import { getTenants, getTenantsLoading } from '../../../store/auth/selectors';
 import { MultiTenancyIcon } from '../../common/icons';
 import styles from './UsersCard.module.scss';
 import { authPath } from '..';
@@ -36,11 +36,23 @@ export function useTenantFromUrl(): [string, (tenantId: string) => void] {
   return [tenant, setTenant];
 }
 
-const TenantPicker: React.FC<PropsFromStore> = ({ tenants }) => {
+const TenantPicker: React.FC<PropsFromStore> = ({ tenants, loading }) => {
   const [tenant, setTenant] = useTenantFromUrl();
+
+  if (loading) {
+    return (
+      <Select
+        disabled={true}
+        icon={<MultiTenancyIcon />}
+        className={styles.tenantPicker}
+        aria-label="Tenant picker loading"
+      />
+    );
+  }
 
   return (
     <Select
+      disabled={false}
       icon={<MultiTenancyIcon />}
       className={styles.tenantPicker}
       value={tenant ?? 'Default tenant'}
@@ -59,6 +71,7 @@ const TenantPicker: React.FC<PropsFromStore> = ({ tenants }) => {
 
 export const mapStateToProps = createStructuredSelector({
   tenants: getTenants,
+  loading: getTenantsLoading,
 });
 
 export type PropsFromStore = ReturnType<typeof mapStateToProps>;

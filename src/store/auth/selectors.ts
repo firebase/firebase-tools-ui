@@ -18,7 +18,7 @@ import { createSelector } from 'reselect';
 
 import { AuthState, AuthUser, UsageMode } from '../../components/Auth/types';
 import { AppState } from '../index';
-import { hasData, squashOrDefaut } from '../utils';
+import { hasData, squashOrDefault } from '../utils';
 
 export const getAuth = (state: AppState) => state.auth;
 
@@ -48,7 +48,7 @@ export const getAuthUsersResult = createSelector(getAuthUsers, (users) => {
 });
 
 export const getUsers = createSelector(getAuthUsers, (users) => {
-  return [...squashOrDefaut(users, [])].sort(
+  return [...squashOrDefault(users, [])].sort(
     (a, b) => Number(new Date(b.createdAt)) - Number(new Date(a.createdAt || 0))
   );
 });
@@ -119,5 +119,8 @@ export const getShowTable = createSelector(
     !passthroughModeEnabled && filteredUsers.length > 0
 );
 export const getTenants = createSelector(getAuth, (state: AuthState) => {
-  return state.tenants?.map((tenant) => tenant.tenantId);
+  return squashOrDefault(state.tenants, []).map((tenant) => tenant.tenantId);
+});
+export const getTenantsLoading = createSelector(getAuth, (state: AuthState) => {
+  return state.tenants.loading;
 });

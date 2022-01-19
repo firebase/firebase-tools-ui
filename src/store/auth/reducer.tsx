@@ -27,6 +27,7 @@ const INIT_STATE = {
   filter: '',
   allowDuplicateEmails: false,
   usageMode: UsageMode.DEFAULT,
+  tenants: { loading: true },
 };
 
 export const authReducer = createReducer<AuthState, Action>(INIT_STATE)
@@ -150,6 +151,17 @@ export const authReducer = createReducer<AuthState, Action>(INIT_STATE)
   .handleAction(
     authActions.authFetchTenantsSuccess,
     produce((draft: AuthState, { payload }) => {
-      draft.tenants = payload;
+      draft.tenants = {
+        loading: false,
+        result: { data: payload },
+      };
+    })
+  )
+  .handleAction(
+    authActions.authFetchTenantsRequest,
+    produce((draft: AuthState) => {
+      draft.tenants = {
+        loading: true,
+      };
     })
   );
