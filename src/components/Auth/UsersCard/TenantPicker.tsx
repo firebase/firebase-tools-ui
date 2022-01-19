@@ -43,12 +43,12 @@ const TenantPicker: React.FC<PropsFromStore> = ({ tenants }) => {
     <Select
       icon={<MultiTenancyIcon />}
       className={styles.tenantPicker}
-      value={tenant ?? 'Default Tenant'}
+      value={tenant ?? 'Default tenant'}
       aria-label="Select tenant"
-      options={['Default Tenant', ...(tenants ? tenants : [])]}
+      options={['Default tenant', ...(tenants ? tenants : [])]}
       onChange={(event: ChangeEvent<HTMLSelectElement>) => {
         let selectedTenant: string = event.target.value;
-        if (selectedTenant === 'Default Tenant') {
+        if (selectedTenant === 'Default tenant') {
           selectedTenant = '';
         }
         setTenant(selectedTenant);
