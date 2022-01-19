@@ -19,6 +19,7 @@ import {
   AddAuthUserPayload,
   AuthUser,
   EmulatorV1ProjectsConfig,
+  UpdateAuthUserPayload,
 } from './types';
 
 const importUser = (user: AuthUser & ApiAuthUserFields) => {
@@ -109,9 +110,16 @@ export default class AuthApi extends RestApi {
   async updateUser(
     user: AddAuthUserPayload & { localId: string }
   ): Promise<AuthUser> {
+    // AddAuthUserPayload isn't always a valid update payload.
+    // Convert to valid update payload.
+    const userUpdate: UpdateAuthUserPayload = {
+      ...user,
+      mfa: user.mfaInfo ? { enrollments: user.mfaInfo } : undefined,
+    };
+
     const { json } = await this.jsonRequest(
       `${this.baseUrl}/accounts:update`,
-      user,
+      userUpdate,
       'POST'
     );
 

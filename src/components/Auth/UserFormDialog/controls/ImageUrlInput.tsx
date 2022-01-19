@@ -19,7 +19,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 
 import { Field } from '../../../common/Field';
-import { AddAuthUserPayload } from '../../types';
+import { AuthFormUser } from '../../types';
 import styles from '../UserFormDialog.module.scss';
 
 enum ImagePreviewStatus {
@@ -35,7 +35,7 @@ export type ImageUrlInputProps = {
 
 export const ImageUrlInput: React.FC<
   React.PropsWithChildren<
-    UseFormReturn<AddAuthUserPayload> & ImageUrlInputProps
+    UseFormReturn<AuthFormUser> & ImageUrlInputProps
   >
 > = ({ register, watch, trigger, formState: { errors }, ImageConstructor }) => {
   ImageConstructor = ImageConstructor || Image;

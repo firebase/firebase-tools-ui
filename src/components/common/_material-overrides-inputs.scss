@@ -60,6 +60,11 @@ $input-height: 36px;
   }
 }
 
+@import '@material/switch/mdc-switch';
+.mdc-switch {
+  margin-right: 8px; // more space between the switch and its label
+}
+
 .mdc-select--outlined,
 .mdc-text-field--outlined {
   .mdc-notched-outline {

@@ -1,0 +1,92 @@
+/**
+ * Copyright 2021 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { Typography } from '@rmwc/typography';
+import React from 'react';
+import { FieldError, UseFormReturn } from 'react-hook-form';
+import { connect } from 'react-redux';
+
+import { createStructuredSelector } from '../../../../store';
+import { getAllEmails, isEditingUser } from '../../../../store/auth/selectors';
+import { Field } from '../../../common/Field';
+import { AuthFormUser } from '../../types';
+import styles from './controls.module.scss';
+
+// Consistent with the Auth JS SDK and the Auth Emulator.
+const PASSWORD_MIN_LENGTH = 6;
+
+function getErrorText(errors: any) {
+  if (errors.password?.type === 'both') {
+    return 'Email is required for password authentication';
+  }
+
+  if (errors.password?.type === 'minLength') {
+    return `Password should be at least ${PASSWORD_MIN_LENGTH} characters`;
+  }
+}
+
+export type PasswordProps = PropsFromState & { editedUserEmail?: string };
+export const Password: React.FC<
+  React.PropsWithChildren<PasswordProps & UseFormReturn<AuthFormUser>>
+> = ({
+  register,
+  getValues,
+  formState: { errors },
+  allEmails,
+  editedUserEmail,
+  isEditing,
+}) => {
+  const { ref: passwordRef, ...passwordState } = register('password', {
+    minLength: PASSWORD_MIN_LENGTH,
+    validate: {
+      both: (value) => {
+        const { email } = getValues();
+
+        // Email should be present if password is present
+        return !!email || !value;
+      },
+    },
+  });
+
+  return (
+    <>
+      <Typography
+        use="body1"
+        tag="div"
+        className={styles.sectionSubHeader}
+        theme="textPrimaryOnBackground"
+      >
+        Password authentication
+      </Typography>
+      <Field
+        type="text"
+        label="Password"
+        placeholder="Enter password"
+        inputRef={passwordRef}
+        error={getErrorText(errors)}
+        {...passwordState}
+      />
+    </>
+  );
+};
+
+export const mapStateToProps = createStructuredSelector({
+  allEmails: getAllEmails,
+  isEditing: isEditingUser,
+});
+export type PropsFromState = ReturnType<typeof mapStateToProps>;
+
+export default connect(mapStateToProps)(Password);

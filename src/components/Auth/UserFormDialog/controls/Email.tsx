@@ -14,22 +14,20 @@
  * limitations under the License.
  */
 
-import { Typography } from '@rmwc/typography';
 import React from 'react';
 import { FieldError, UseFormReturn } from 'react-hook-form';
 import { connect } from 'react-redux';
 
 import { createStructuredSelector } from '../../../../store';
 import { getAllEmails, isEditingUser } from '../../../../store/auth/selectors';
-import { Field } from '../../../common/Field';
-import { AddAuthUserPayload } from '../../types';
+import { Field, SwitchField } from '../../../common/Field';
+import { AuthFormUser } from '../../types';
 import styles from './controls.module.scss';
 
 // Consistent with the Auth JS SDK and the Auth Emulator.
 const EMAIL_REGEX = /^[^@]+@[^@]+$/;
-const PASSWORD_MIN_LENGTH = 6;
 
-function getErrorText(errors: { [key: string]: FieldError | undefined }) {
+function getErrorText(errors: any) {
   if (errors.email) {
     if (errors.email.type === 'pattern') {
       return 'Invalid email';
@@ -37,22 +35,25 @@ function getErrorText(errors: { [key: string]: FieldError | undefined }) {
     if (errors.email.type === 'unique') {
       return 'User with this email already exists';
     }
-  }
-
-  if (errors.email?.type === 'both' || errors.password?.type === 'both') {
-    return 'Both email and password should be present';
-  }
-
-  if (errors.password?.type === 'minLength') {
-    return `Password should be at least ${PASSWORD_MIN_LENGTH} characters`;
+    if (errors.email.type === 'emailPresent') {
+      return 'Email required for verification';
+    }
   }
 }
 
-export type EmailPasswordProps = PropsFromState & { editedUserEmail?: string };
-export const EmailPassword: React.FC<
-  React.PropsWithChildren<
-    EmailPasswordProps & UseFormReturn<AddAuthUserPayload>
-  >
+function getVerifiedStatus(emailVerifiedError: [] | [FieldError?] | undefined) {
+  if (!emailVerifiedError) {
+    return 'Verified';
+  }
+
+  return emailVerifiedError[0]?.type === 'verified'
+    ? 'Not verified'
+    : 'Verified';
+}
+
+export type EmailProps = PropsFromState & { editedUserEmail?: string };
+export const Email: React.FC<
+  React.PropsWithChildren<EmailProps & UseFormReturn<AuthFormUser>>
 > = ({
   register,
   getValues,
@@ -61,69 +62,49 @@ export const EmailPassword: React.FC<
   editedUserEmail,
   isEditing,
 }) => {
-  const { ref: passwordRef, ...passwordState } = register('password', {
-    minLength: PASSWORD_MIN_LENGTH,
-    validate: {
-      both: (value) => {
-        const { email } = getValues();
-
-        if (!!value || isEditing) {
-          return !!email;
-        }
-
-        return !email || 'both';
-      },
-    },
-  });
-
   const { ref: emailRef, ...emailState } = register('email', {
     validate: {
       unique: (value) => value === editedUserEmail || !allEmails.has(value),
-      both: (value) => {
-        const { password } = getValues();
+      emailPresent: (value) => {
+        const { emailVerified: emailVerifiedArr } = getValues();
+        const emailVerified = emailVerifiedArr && emailVerifiedArr.length > 0;
 
-        if (!!value) return !!password;
-
-        return !password || 'both';
+        return !!value || !emailVerified;
       },
     },
     pattern: EMAIL_REGEX,
   });
 
+  const { ref: emailVerifiedRef, ...emailVerifiedState } = register(
+    'emailVerified',
+    {
+      validate: {
+        verified: (value) => !!value,
+      },
+    }
+  );
+
   return (
     <>
-      <Typography
-        use="body1"
-        tag="div"
-        className={styles.authKindLabel}
-        theme="textPrimaryOnBackground"
-      >
-        Email authentication
-      </Typography>
       <div className={styles.emailWrapper}>
         <Field
-          placeholder="Enter email"
-          label="Email"
+          placeholder="Enter email (optional)"
+          label="Email (optional)"
           type="text"
           inputRef={emailRef}
+          error={getErrorText(errors)}
           {...emailState}
         />
-        <Field
-          type="text"
-          label="Password"
-          placeholder="Enter password"
-          inputRef={passwordRef}
-          {...passwordState}
+        <SwitchField
+          label="Verified email?"
+          switchLabel={getVerifiedStatus(errors.emailVerified)}
+          defaultChecked={false}
+          inputRef={emailVerifiedRef}
+          className={styles.switchField}
+          fieldClassName={styles.switch}
+          {...emailVerifiedState}
         />
       </div>
-      <Typography
-        className={styles.error}
-        use="body2"
-        role="alert"
-        theme="error"
-      >
-        {getErrorText(errors)}
-      </Typography>
     </>
   );
 };
@@ -134,4 +115,4 @@ export const mapStateToProps = createStructuredSelector({
 });
 export type PropsFromState = ReturnType<typeof mapStateToProps>;
 
-export default connect(mapStateToProps)(EmailPassword);
+export default connect(mapStateToProps)(Email);

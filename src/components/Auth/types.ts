@@ -24,7 +24,19 @@ export interface CustomAttribute {
 
 /**
  * Field names are consistent with:
- * https://github.com/FirebasePrivate/firebase-tools/blob/d6b584da9f852313064d32dd219a6f23b7800d66/src/emulator/auth/schema.ts#L1670-L1779
+ * https://github.com/firebase/firebase-tools/blob/f413eb9eb6940ee20dea748b18bb25ce185e7d7f/src/emulator/auth/schema.ts#L617
+ */
+export type MfaEnrollment = {
+  displayName?: string;
+  enrolledAt?: string;
+  mfaEnrollmentId?: string;
+  phoneInfo?: string;
+  unobfuscatedPhoneInfo?: string;
+};
+
+/**
+ * Field names are consistent with:
+ * https://github.com/firebase/firebase-tools/blob/a8ccc7afec817389a7ab5565a1bbf59f24bd68bd/src/emulator/auth/schema.ts#L1724-L1833
  */
 export interface AddAuthUserPayload {
   customAttributes?: string;
@@ -34,7 +46,23 @@ export interface AddAuthUserPayload {
   email?: string;
   password?: string;
   phoneNumber?: string;
+  emailVerified?: boolean;
+  mfaInfo?: MfaEnrollment[];
 }
+
+// `mfaInfo` name is changed to `mfa.enrollments` only for user update:
+// https://github.com/firebase/firebase-tools/blob/a8ccc7afec817389a7ab5565a1bbf59f24bd68bd/src/emulator/auth/schema.ts#L932
+export type UpdateAuthUserPayload = Omit<AddAuthUserPayload, 'mfaInfo'> & {
+  mfa?: { enrollments: MfaEnrollment[] };
+};
+
+// The form library can't handle booleans or object arrays,
+// so we need to change the types to something the form supports
+export type AuthFormUser = Omit<AddAuthUserPayload, 'emailVerified'> & {
+  emailVerified: [] | ['on'];
+  mfaEnabled: [] | ['on'];
+  mfaPhoneInfo: { phoneInfo?: string }[];
+};
 
 export const providerToIconMap = {
   'gc.apple.com': 'assets/provider-icons/auth_service_game_center.svg',
