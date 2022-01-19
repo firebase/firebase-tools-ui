@@ -56,7 +56,7 @@ export const PhoneControl: React.FC<
       <Typography
         use="body1"
         tag="div"
-        className={styles.authKindLabel}
+        className={styles.sectionSubHeader}
         theme="textPrimaryOnBackground"
       >
         Phone authentication

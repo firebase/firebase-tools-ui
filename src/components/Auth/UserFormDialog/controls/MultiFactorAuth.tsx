@@ -87,7 +87,7 @@ export const MultiFactor: React.FC<
   return (
     <div className={styles.signInWrapper}>
       <ListDivider tag="div" />
-      <div className={styles.signInHeader}>
+      <div className={styles.sectionHeader}>
         <Typography use="body1" theme="textPrimaryOnBackground">
           Multi-factor Authentication
         </Typography>
@@ -109,9 +109,14 @@ export const MultiFactor: React.FC<
 
       {(mfaEnabled || !isZeroState) && (
         <>
-          <Typography use="body1" tag="div" theme="textSecondaryOnBackground">
-            SMS settings
-          </Typography>
+        <Typography
+        use="body1"
+        tag="div"
+        className={styles.sectionSubHeader}
+        theme="textPrimaryOnBackground"
+      >
+        SMS Settings
+      </Typography>
           <div>
             {fields.map((item, index) => {
               const fieldName = `mfaPhoneInfo.${index}.phoneInfo`;

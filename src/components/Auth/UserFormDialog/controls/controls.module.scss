@@ -45,10 +45,6 @@
     }
   }
 
-  &.showError {
-    margin-bottom: 40px;
-  }
-
   > {
     flex-grow: 0;
     flex-shrink: 0;
@@ -65,7 +61,7 @@
     padding-bottom: 0;
 
     &:first-child {
-      flex-basis: 70%;
+      flex-basis: 90%;
       margin-right: 8px;
     }
   }
@@ -114,7 +110,7 @@
   }
 }
 
-.signInHeader {
+.sectionHeader {
   margin-bottom: 20px;
 
   :global .mdc-typography--body1 {
@@ -123,7 +119,7 @@
   }
 }
 
-.authKindLabel {
+.sectionSubHeader {
   font-weight: 500;
   margin-bottom: 8px;
 }

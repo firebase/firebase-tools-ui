@@ -66,7 +66,7 @@ export const Password: React.FC<
       <Typography
         use="body1"
         tag="div"
-        className={styles.authKindLabel}
+        className={styles.sectionSubHeader}
         theme="textPrimaryOnBackground"
       >
         Password authentication
@@ -77,15 +77,8 @@ export const Password: React.FC<
         label="Password"
         placeholder="Enter password"
         inputRef={register({ minLength: PASSWORD_MIN_LENGTH })}
+        error={getErrorText(errors)}
       />
-      <Typography
-        className={styles.error}
-        use="body2"
-        role="alert"
-        theme="error"
-      >
-        {getErrorText(errors)}
-      </Typography>
     </>
   );
 };
