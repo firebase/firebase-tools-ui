@@ -99,12 +99,23 @@ export enum UsageMode {
   PASSTHROUGH = 'PASSTHROUGH',
 }
 
+export interface Tenant {
+  allowPasswordSignup: boolean;
+  disableAuth: boolean;
+  enableAnonymousUser: boolean;
+  enableEmailLinkSignin: boolean;
+  mfaConfig: { state: string; enabledProviders: string[] };
+  name: string;
+  tenantId: string;
+}
+
 export interface AuthState {
   authUserDialogData?: RemoteResult<AuthUser | undefined>;
   users: RemoteResult<AuthUser[]>;
   filter: string;
   allowDuplicateEmails: boolean;
   usageMode: UsageMode;
+  tenants?: Tenant[];
 }
 
 // Similar the emulator config object of the same name in the Firebase CLI,

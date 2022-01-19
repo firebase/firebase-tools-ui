@@ -27,6 +27,7 @@ import { RemoteResult } from '../utils';
 export const updateAuthConfig = createAction('@auth/UPDATE_AUTH_CONFIG')<{
   projectId: string;
   auth: AuthConfig;
+  tenantId: string;
 } | null>();
 
 export const createUserRequest = createAction('@auth/CREATE_USER_REQUEST')<{
@@ -134,3 +135,11 @@ export const setAuthUserDialogError = createAction(
 export const clearAuthUserDialogData = createAction(
   '@auth/CLEAR_AUTH_USER_DIALOG_DATA'
 )();
+
+export const authFetchTenantsRequest = createAction(
+  '@auth/AUTH_FETCH_TENANTS_REQUEST'
+)();
+
+export const authFetchTenantsSuccess = createAction(
+  '@auth/AUTH_FETCH_TENANTS_SUCCESS'
+)<string[]>();

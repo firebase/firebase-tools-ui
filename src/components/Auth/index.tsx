@@ -17,9 +17,10 @@
 import './index.module.scss';
 
 import { Elevation } from '@rmwc/elevation';
-import { GridCell } from '@rmwc/grid';
+import { GridCell, GridRow } from '@rmwc/grid';
 import React, { Suspense, useEffect } from 'react';
 import { connect } from 'react-redux';
+import { Route, Switch } from 'react-router-dom';
 
 import { updateAuthConfig } from '../../store/auth/actions';
 import { AuthConfig } from '../../store/config/types';
@@ -30,15 +31,23 @@ import {
 } from '../common/EmulatorConfigProvider';
 import { EmulatorDisabled } from '../common/EmulatorDisabled';
 import { Spinner } from '../common/Spinner';
+import styles from './index.module.scss';
 import OneAccountPerEmailCard from './OneAccountPerEmailCard/OneAccountPerEmailCard';
 import PassthroughModeCard from './PassthroughModeCard/PassthroughModeCard';
 import ClearAll from './UsersCard/ClearAll';
+import TenantPicker, { useTenantFromUrl } from './UsersCard/TenantPicker';
 import UsersCard from './UsersCard/UsersCard';
+
+export const authPath = '/auth/';
 
 export const AuthRoute: React.FC = () => {
   return (
     <Suspense fallback={<AuthRouteSuspended />}>
-      <AuthWrapper />
+      <Switch>
+        <Route path={'/auth/' + `:tenantId*`}>
+          <AuthWrapper />
+        </Route>
+      </Switch>
     </Suspense>
   );
 };
@@ -46,30 +55,49 @@ export const AuthRoute: React.FC = () => {
 export default AuthRoute;
 
 export interface AuthProps {
-  updateAuthConfig(config: { auth: AuthConfig; projectId: string }): void;
+  updateAuthConfig(config: {
+    auth: AuthConfig;
+    projectId: string;
+    tenantId: string;
+  }): void;
 }
 
 export const Auth: React.FC<AuthProps> = ({ updateAuthConfig }) => {
   const auth = useEmulatorConfig('auth');
   const { projectId } = useConfig();
 
+  const [tenantId] = useTenantFromUrl();
+
   useEffect(() => {
-    updateAuthConfig({ auth, projectId });
-  }, [auth, projectId, updateAuthConfig]);
+    updateAuthConfig({ auth, projectId, tenantId });
+  }, [auth, projectId, updateAuthConfig, tenantId]);
 
   return (
-    <GridCell span={12} className="Auth">
-      <ClearAll />
-      <Elevation z="2" wrap>
-        <UsersCard />
-      </Elevation>
-      <Elevation z="2" wrap>
-        <OneAccountPerEmailCard />
-      </Elevation>
-      <Elevation z="2" wrap>
-        <PassthroughModeCard />
-      </Elevation>
-    </GridCell>
+    <Switch>
+      <Route path={authPath + `:tenantId*`}>
+        <GridCell span={12} className="Auth">
+          <GridRow className={styles.topActions}>
+            <GridCell span={2}>
+              <TenantPicker />
+            </GridCell>
+            <GridCell span={8} />
+            <GridCell span={2}>
+              <ClearAll />
+            </GridCell>
+          </GridRow>
+
+          <Elevation z="2" wrap>
+            <UsersCard />
+          </Elevation>
+          <Elevation z="2" wrap>
+            <OneAccountPerEmailCard />
+          </Elevation>
+          <Elevation z="2" wrap>
+            <PassthroughModeCard />
+          </Elevation>
+        </GridCell>
+      </Route>
+    </Switch>
   );
 };
 

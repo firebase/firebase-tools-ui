@@ -43,11 +43,13 @@ export default class AuthApi extends RestApi {
 
   // https://cloud.google.com/identity-platform/docs/reference/rest/v1/projects.accounts
   private readonly baseUrl = `http://${this.hostAndPort}/identitytoolkit.googleapis.com/v1/projects/${this.projectId}`;
+  private readonly baseUrlV2 = `http://${this.hostAndPort}/identitytoolkit.googleapis.com/v2/projects/${this.projectId}`;
   private readonly baseEmulatorUrl = `http://${this.hostAndPort}/emulator/v1/projects/${this.projectId}`;
 
   constructor(
     private readonly hostAndPort: string,
-    private readonly projectId: string
+    private readonly projectId: string,
+    private readonly tenantId: string | undefined
   ) {
     super();
   }
@@ -60,17 +62,22 @@ export default class AuthApi extends RestApi {
   async fetchUsers(): Promise<AuthUser[]> {
     const { json } = await this.jsonRequest(
       `${this.baseUrl}/accounts:query`,
-      {},
+      { tenantId: this.tenantId },
       'POST'
     );
 
     return json.userInfo.map(importUser);
   }
 
+  async fetchTenants() {
+    const { json } = await this.jsonRequest(`${this.baseUrlV2}/tenants`);
+    return json.tenants;
+  }
+
   async fetchUser(localId: string): Promise<AuthUser> {
     const { json } = await this.jsonRequest(
       `${this.baseUrl}/accounts:lookup`,
-      { localId: [localId] },
+      { localId: [localId], tenantId: this.tenantId },
       'POST'
     );
 
@@ -85,7 +92,7 @@ export default class AuthApi extends RestApi {
   async createUser(user: AddAuthUserPayload): Promise<AuthUser> {
     const { json } = await this.jsonRequest(
       `${this.baseUrl}/accounts`,
-      { ...user },
+      { ...user, tenantId: this.tenantId },
       'POST'
     );
 

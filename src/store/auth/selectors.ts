@@ -118,3 +118,6 @@ export const getShowTable = createSelector(
   (filteredUsers, passthroughModeEnabled) =>
     !passthroughModeEnabled && filteredUsers.length > 0
 );
+export const getTenants = createSelector(getAuth, (state: AuthState) => {
+  return state.tenants?.map((tenant) => tenant.tenantId);
+});

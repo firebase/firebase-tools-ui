@@ -146,4 +146,10 @@ export const authReducer = createReducer<AuthState, Action>(INIT_STATE)
     produce((draft, { payload }) => {
       draft.usageMode = payload;
     })
+  )
+  .handleAction(
+    authActions.authFetchTenantsSuccess,
+    produce((draft: AuthState, { payload }) => {
+      draft.tenants = payload;
+    })
   );

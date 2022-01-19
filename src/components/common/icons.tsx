@@ -56,6 +56,15 @@ export const AuthIcon = svgIcon(
   </svg>
 );
 
+export const MultiTenancyIcon = svgIcon(
+  <svg viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+      d="M14 4C14 2.58 13.5 1.27 12.67 0.24C13.09 0.0999998 13.53 0 14 0C16.21 0 18 1.79 18 4C18 6.21 16.21 8 14 8C13.57 8 13.16 7.91 12.77 7.79C12.74 7.78 12.71 7.77 12.67 7.76C13.5 6.73 14 5.42 14 4ZM15.66 9.13C17.03 10.06 18 11.32 18 13V16H22V13C22 10.82 18.42 9.53 15.66 9.13ZM8 2C6.9 2 6 2.9 6 4C6 5.1 6.9 6 8 6C9.1 6 10 5.1 10 4C10 2.9 9.1 2 8 2ZM8 11C5.3 11 2.2 12.29 2 13.01V14H14V13C13.8 12.29 10.7 11 8 11ZM8 0C10.21 0 12 1.79 12 4C12 6.21 10.21 8 8 8C5.79 8 4 6.21 4 4C4 1.79 5.79 0 8 0ZM8 9C10.67 9 16 10.34 16 13V16H0V13C0 10.34 5.33 9 8 9Z"
+      fill="currentColor"
+    />
+  </svg>
+);
+
 export const DatabaseIcon = svgIcon(
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
     <g fill="none">
