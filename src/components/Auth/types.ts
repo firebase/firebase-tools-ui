@@ -51,7 +51,7 @@ export interface AddAuthUserPayload {
 }
 
 // `mfaInfo` name is changed to `mfa.enrollments` only for user update:
-// https://github.com/FirebasePrivate/firebase-tools/blob/d6b584da9f852313064d32dd219a6f23b7800d66/src/emulator/auth/schema.ts#L879
+// https://github.com/firebase/firebase-tools/blob/a8ccc7afec817389a7ab5565a1bbf59f24bd68bd/src/emulator/auth/schema.ts#L932
 export type UpdateAuthUserPayload = Omit<AddAuthUserPayload, 'mfaInfo'> & {
   mfa?: { enrollments: MfaEnrollment[] };
 };
