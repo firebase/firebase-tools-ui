@@ -30,7 +30,7 @@ const PASSWORD_MIN_LENGTH = 6;
 
 function getErrorText(errors: any) {
   if (errors.emailpassword) {
-    return 'Both email and password should be present';
+    return 'Email is required for password authentication';
   }
   if (errors.password) {
     return `Password should be at least ${PASSWORD_MIN_LENGTH} characters`;
