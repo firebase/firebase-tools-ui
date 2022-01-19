@@ -109,14 +109,14 @@ export const MultiFactor: React.FC<
 
       {(mfaEnabled || !isZeroState) && (
         <>
-        <Typography
-        use="body1"
-        tag="div"
-        className={styles.sectionSubHeader}
-        theme="textPrimaryOnBackground"
-      >
-        SMS Settings
-      </Typography>
+          <Typography
+            use="body1"
+            tag="div"
+            className={styles.sectionSubHeader}
+            theme="textPrimaryOnBackground"
+          >
+            SMS Settings
+          </Typography>
           <div>
             {fields.map((item, index) => {
               const fieldName = `mfaPhoneInfo.${index}.phoneInfo`;

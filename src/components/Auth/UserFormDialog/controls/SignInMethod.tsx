@@ -54,7 +54,6 @@ export const SignInMethod: React.FC<
     }
   }, [email, password, clearError, setError, phoneNumber, errors, isTouched]);
 
-  
   const isOnlyError =
     ERROR_AT_LEAST_ONE_METHOD_REQUIRED in errors &&
     Object.values(errors).length === 1;
