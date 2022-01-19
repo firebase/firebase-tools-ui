@@ -36,7 +36,7 @@ export type MfaEnrollment = {
 
 /**
  * Field names are consistent with:
- * https://github.com/FirebasePrivate/firebase-tools/blob/d6b584da9f852313064d32dd219a6f23b7800d66/src/emulator/auth/schema.ts#L1670-L1779
+ * https://github.com/firebase/firebase-tools/blob/a8ccc7afec817389a7ab5565a1bbf59f24bd68bd/src/emulator/auth/schema.ts#L1724-L1833
  */
 export interface AddAuthUserPayload {
   customAttributes?: string;
