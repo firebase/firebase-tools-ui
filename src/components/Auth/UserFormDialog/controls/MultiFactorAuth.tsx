@@ -53,9 +53,10 @@ export const MultiFactor: React.FC<
     register,
   } = form;
 
-  const isZeroState =
-    !formState.touched.mfaEnabled ||
-    (user?.mfaInfo && user?.mfaInfo.length > 0);
+  const isZeroState = !(
+    formState.touched.mfaEnabled ||
+    (user?.mfaInfo && user?.mfaInfo.length > 0)
+  );
 
   // https://react-hook-form.com/v5/api#useFieldArray
   const { fields, append, remove } = useFieldArray({
