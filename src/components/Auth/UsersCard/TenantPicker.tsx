@@ -39,7 +39,14 @@ export function useTenantFromUrl(): [string, (tenantId: string) => void] {
 const TenantPicker: React.FC<PropsFromStore> = ({ tenants, loading }) => {
   const [tenant, setTenant] = useTenantFromUrl();
 
-  if (loading) {
+  // hide picker if no tenants exist in the emulator
+  if (tenants.length === 0) {
+    return null;
+  }
+
+  // only show loading state if currently selected tenant doesn't exist yet
+  // otherwise, loading can happen in the background
+  if (loading === true && !tenants.includes(tenant)) {
     return (
       <Select
         disabled={true}

@@ -160,8 +160,8 @@ export const authReducer = createReducer<AuthState, Action>(INIT_STATE)
   .handleAction(
     authActions.authFetchTenantsRequest,
     produce((draft: AuthState) => {
-      draft.tenants = {
-        loading: true,
-      };
+      // intentionally don't wipe out the old tenants list
+      // so that components that rely on tenants list don't flicker
+      draft.tenants.loading = true;
     })
   );
