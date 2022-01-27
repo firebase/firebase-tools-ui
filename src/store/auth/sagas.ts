@@ -188,6 +188,7 @@ export function* setUsageMode({
   // passthrough mode can't be enabled until all users are deleted
   if (payload === 'PASSTHROUGH') {
     yield put(nukeUsersRequest());
+    yield take(getType(nukeUsersSuccess));
   }
 
   yield call([authApi, 'updateConfig'], { usageMode: payload });
