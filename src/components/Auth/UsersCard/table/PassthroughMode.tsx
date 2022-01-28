@@ -27,11 +27,11 @@ export const PassthroughMode: React.FC = () => {
       theme="textSecondaryOnBackground"
     >
       <span>
-        No users persist when passthrough mode is enabled.{' '}
+        The emulator does not save user data when passthrough mode is enabled.{' '}
         <a
           target="_blank"
           rel="noopener noreferrer"
-          href="https://firebase.google.com/docs/auth"
+          href="https://firebase.google.com/docs/auth/passthrough"
         >
           Learn more
         </a>
