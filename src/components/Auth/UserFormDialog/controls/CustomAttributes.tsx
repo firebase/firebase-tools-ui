@@ -55,7 +55,7 @@ export const CustomAttributes: React.FC<FormContextValues<AuthFormUser>> = ({
   const label = (
     <label>
       <Typography use="subtitle2" tag="div" theme="textPrimaryOnBackground">
-        Custom Claims (optional)
+        Custom claims (optional)
       </Typography>
     </label>
   );
@@ -71,7 +71,7 @@ export const CustomAttributes: React.FC<FormContextValues<AuthFormUser>> = ({
       />
       <Typography use="body2">
         These custom key:value attributes can be used with Rules to implement
-        various access control strategies (e.g. based on roles){' '}
+        various access control strategies (e.g. based on roles).{' '}
         <a
           target="_blank"
           rel="noopener noreferrer"

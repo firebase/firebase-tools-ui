@@ -76,6 +76,8 @@ export const providerToIconMap = {
   'yahoo.com': 'assets/provider-icons/auth_service_yahoo.svg',
   phone: 'assets/provider-icons/auth_service_phone.svg',
   password: 'assets/provider-icons/auth_service_email.svg',
+  oidc: 'assets/provider-icons/auth_service_oidc.svg',
+  saml: 'assets/provider-icons/auth_service_saml.svg',
 };
 
 export interface AuthProviderInfo {

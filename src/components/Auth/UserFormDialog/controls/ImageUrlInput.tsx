@@ -92,7 +92,7 @@ export const ImageUrlInput: React.FC<ImageUrlInputProps> = ({
     <>
       <Field
         name="photoUrl"
-        label="User Photo URL (optional)"
+        label="User photo URL (optional)"
         placeholder="Enter URL"
         error={
           status.current === ImagePreviewStatus.ERROR && 'Error loading image'
