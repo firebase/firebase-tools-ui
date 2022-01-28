@@ -30,9 +30,12 @@ const ENABLED_HEADING = 'Passthrough mode enabled';
 const DISABLED_HEADING = 'Passthrough mode';
 
 export const ENABLED_COPY =
-  'This mode is a form of custom auth that does not persist users in Firebase Auth emulator.';
+  'All sign-in methods are disabled except Custom Token. User data is not saved in the emulator.';
+
 export const DISABLED_COPY =
-  'This mode is a form of custom auth that does not persist users in Firebase Auth backend.';
+  'This mode lets you test custom auth systems managed by you, in which all ' +
+  'user account records are under your control and no user data is stored ' +
+  'in your Firebase project.';
 
 export type PassthroughModeCardProps = PropsFromStore;
 export const PassthroughModeCard: React.FC<PassthroughModeCardProps> = ({
@@ -51,11 +54,10 @@ export const PassthroughModeCard: React.FC<PassthroughModeCardProps> = ({
           </Typography>
           <Typography use="body2" theme="textPrimaryOnBackground">
             {usageMode === UsageMode.PASSTHROUGH ? ENABLED_COPY : DISABLED_COPY}{' '}
-            {/* TODO(jhuleatt): Add a better link */}
             <a
               target="_blank"
               rel="noopener noreferrer"
-              href="https://firebase.google.com/docs/auth"
+              href="https://firebase.google.com/docs/auth/passthrough"
             >
               Learn more
             </a>
