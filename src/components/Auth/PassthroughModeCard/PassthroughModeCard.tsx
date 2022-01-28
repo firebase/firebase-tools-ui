@@ -33,9 +33,9 @@ export const ENABLED_COPY =
   'All sign-in methods are disabled except Custom Token. User data is not saved in the emulator.';
 
 export const DISABLED_COPY =
-   'This mode lets you test custom auth systems managed by you, in which all ' +
-      'user account records are under your control and no user data is ' +
-      'stored in your Firebase project.'
+  'This mode lets you test custom auth systems managed by you, in which all ' +
+  'user account records are under your control and no user data is stored ' +
+  'in your Firebase project.';
 
 export type PassthroughModeCardProps = PropsFromStore;
 export const PassthroughModeCard: React.FC<PassthroughModeCardProps> = ({
