@@ -32,8 +32,6 @@ const DISABLED_HEADING = 'Passthrough mode';
 export const ENABLED_COPY =
   'All sign-in methods are disabled except Custom Token. User data is not saved in the emulator.';
 
-// Consider updating the copy with the canonical short description of
-// passthrough mode, once published in Firebase Auth docs.
 export const DISABLED_COPY =
    'This mode lets you test custom auth systems managed by you, in which all ' +
       'user account records are under your control and no user data is ' +
