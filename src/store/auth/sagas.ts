@@ -20,6 +20,7 @@ import {
   getContext,
   put,
   setContext,
+  take,
   takeLatest,
 } from 'redux-saga/effects';
 import { ActionType, getType } from 'typesafe-actions';
@@ -195,6 +196,13 @@ export function* setUsageMode({
   payload,
 }: ReturnType<typeof setUsageModeRequest>) {
   const authApi: AuthApi = yield call(configureAuthSaga);
+
+  // passthrough mode can't be enabled until all users are deleted
+  if (payload === 'PASSTHROUGH') {
+    yield put(nukeUsersRequest());
+    yield take(getType(nukeUsersSuccess));
+  }
+
   yield call([authApi, 'updateConfig'], { usageMode: payload });
   yield put(setUsageModeSuccess(payload));
 }
