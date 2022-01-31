@@ -27,6 +27,7 @@ const INIT_STATE = {
   filter: '',
   allowDuplicateEmails: false,
   usageMode: UsageMode.DEFAULT,
+  tenants: { loading: true },
 };
 
 export const authReducer = createReducer<AuthState, Action>(INIT_STATE)
@@ -145,5 +146,22 @@ export const authReducer = createReducer<AuthState, Action>(INIT_STATE)
     authActions.setUsageModeSuccess,
     produce((draft, { payload }) => {
       draft.usageMode = payload;
+    })
+  )
+  .handleAction(
+    authActions.authFetchTenantsSuccess,
+    produce((draft: AuthState, { payload }) => {
+      draft.tenants = {
+        loading: false,
+        result: { data: payload },
+      };
+    })
+  )
+  .handleAction(
+    authActions.authFetchTenantsRequest,
+    produce((draft: AuthState) => {
+      // intentionally don't wipe out the old tenants list
+      // so that components that rely on tenants list don't flicker
+      draft.tenants.loading = true;
     })
   );

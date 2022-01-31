@@ -20,7 +20,7 @@ import {
   createFakeUser,
 } from '../../components/Auth/test_utils';
 import { AuthUser } from '../../components/Auth/types';
-import { squashOrDefaut } from '../utils';
+import { squashOrDefault } from '../utils';
 import {
   authFetchUsersError,
   authFetchUsersSuccess,
@@ -100,7 +100,7 @@ describe('auth reducers', () => {
         const action = setUserDisabledSuccess({ localId, disabled: true });
 
         const result = authReducer(state, action);
-        expect(squashOrDefaut(result.users, [])[0].disabled).toEqual(true);
+        expect(squashOrDefault(result.users, [])[0].disabled).toEqual(true);
       });
 
       it(`${setUserDisabledSuccess} => enables the user`, () => {
@@ -109,7 +109,7 @@ describe('auth reducers', () => {
         const action = setUserDisabledSuccess({ localId, disabled: false });
 
         const result = authReducer(state, action);
-        expect(squashOrDefaut(result.users, [])[0].disabled).toEqual(false);
+        expect(squashOrDefault(result.users, [])[0].disabled).toEqual(false);
       });
     });
   });
