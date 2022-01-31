@@ -30,6 +30,8 @@ import {
   EmulatorV1ProjectsConfig,
 } from '../../components/Auth/types';
 import {
+  authFetchTenantsRequest,
+  authFetchTenantsSuccess,
   authFetchUsersError,
   authFetchUsersRequest,
   authFetchUsersSuccess,
@@ -66,6 +68,12 @@ export function* fetchAuthUsers(): any {
   }
 }
 
+export function* fetchTenants(): any {
+  const authApi = yield call(configureAuthSaga);
+  const tenants = yield call([authApi, 'fetchTenants']);
+  yield put(authFetchTenantsSuccess(tenants));
+}
+
 export const AUTH_API_CONTEXT = 'AUTH_API_CONTEXT';
 
 export function* initAuth({ payload }: ActionType<typeof updateAuthConfig>) {
@@ -75,11 +83,13 @@ export function* initAuth({ payload }: ActionType<typeof updateAuthConfig>) {
   yield setContext({
     [AUTH_API_CONTEXT]: new AuthApi(
       payload.auth.hostAndPort,
-      payload.projectId
+      payload.projectId,
+      payload.tenantId
     ),
   });
   yield all([
     takeLatest(getType(authFetchUsersRequest), fetchAuthUsers),
+    takeLatest(getType(authFetchTenantsRequest), fetchTenants),
     takeLatest(getType(createUserRequest), createUser),
     takeLatest(getType(nukeUsersRequest), nukeUsers),
     takeLatest(getType(deleteUserRequest), deleteUser),
@@ -96,6 +106,7 @@ export function* initAuth({ payload }: ActionType<typeof updateAuthConfig>) {
     takeLatest(getType(setUsageModeRequest), setUsageMode),
     takeLatest(getType(getUsageModeRequest), getUsageMode),
     put(authFetchUsersRequest()),
+    put(authFetchTenantsRequest()),
     put(getAllowDuplicateEmailsRequest()),
     put(getUsageModeRequest()),
   ]);
