@@ -28,6 +28,7 @@ import { MapDispatchToPropsFunction, connect } from 'react-redux';
 import { createStructuredSelector } from '../../../store';
 import { setUsageModeRequest } from '../../../store/auth/actions';
 import { getUsageMode } from '../../../store/auth/selectors';
+import { CustomThemeProvider } from '../../../themes';
 import { Callout } from '../../common/Callout';
 import { UsageMode } from '../types';
 import styles from './PassthroughModeDialog.module.scss';
@@ -77,11 +78,16 @@ export const PassthroughModeDialog: React.FC<Props> = ({
           <DialogButton action="close" type="button" theme="secondary">
             Cancel
           </DialogButton>
-          <DialogButton type="submit" unelevated>
-            {usageMode === UsageMode.PASSTHROUGH
-              ? 'Disable passthrough'
-              : 'Enable passthrough'}
-          </DialogButton>
+          <CustomThemeProvider
+            use={usageMode === UsageMode.PASSTHROUGH ? 'tip' : 'warning'}
+            wrap
+          >
+            <DialogButton type="submit" unelevated>
+              {usageMode === UsageMode.PASSTHROUGH
+                ? 'Disable passthrough'
+                : 'Enable passthrough'}
+            </DialogButton>
+          </CustomThemeProvider>
         </DialogActions>
       </form>
     </Dialog>
