@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import classNames from 'classnames';
 import React, { useEffect } from 'react';
 import { FormContextValues } from 'react-hook-form/dist/contextTypes';
 import { connect } from 'react-redux';
@@ -71,7 +72,12 @@ const Email: React.FC<EmailProps & FormContextValues<AuthFormUser>> = ({
 
   return (
     <>
-      <div className={styles.emailWrapper}>
+      <div
+        className={classNames(
+          styles.emailWrapper,
+          getErrorText(errors) && styles.showError
+        )}
+      >
         <Field
           name="email"
           placeholder="Enter email (optional)"
