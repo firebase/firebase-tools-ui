@@ -33,18 +33,18 @@ export const SignInMethod: React.FC<
   SignInMethodProps & FormContextValues<AuthFormUser>
 > = (form) => {
   const { watch, setError, clearError, formState, errors, user } = form;
-  const email = watch('email');
   const password = watch('password');
   const phoneNumber = watch('phoneNumber');
 
-  const isTouched =
-    formState.touched['email'] || formState.touched['phoneNumber'];
+  const isTouched: boolean = !!(
+    formState.touched['password'] || formState.touched['phoneNumber']
+  );
 
   useEffect(() => {
-    const hasEmail = email !== '';
+    const hasPassword = password !== '';
     const hasPhone = !!phoneNumber;
 
-    if (hasEmail || hasPhone) {
+    if (hasPassword || hasPhone) {
       // According to docs ClearError should accept arbitrary key
       // to allow cross-field validation, but it's not the case here for some
       // reason.
@@ -52,7 +52,7 @@ export const SignInMethod: React.FC<
     } else {
       setError(ERROR_AT_LEAST_ONE_METHOD_REQUIRED as any);
     }
-  }, [email, password, clearError, setError, phoneNumber, errors]);
+  }, [password, clearError, setError, phoneNumber, errors]);
 
   const isOnlyError =
     ERROR_AT_LEAST_ONE_METHOD_REQUIRED in errors &&
@@ -65,7 +65,7 @@ export const SignInMethod: React.FC<
         <Typography use="body1" theme="textPrimaryOnBackground">
           Authentication method
         </Typography>
-        {isOnlyError ? (
+        {isTouched && isOnlyError ? (
           <Typography use="body2" theme="error" tag="div" role="alert">
             One method is required. Please enter either an email/password or
             phone number.

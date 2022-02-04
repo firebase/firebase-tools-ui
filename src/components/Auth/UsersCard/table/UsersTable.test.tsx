@@ -46,6 +46,7 @@ describe('UserTable', () => {
       shouldShowTable: true,
       shouldShowZeroResults: false,
       shouldShowZeroState: false,
+      shouldShowPassthroughMode: false,
       setUserDisabled: jest.fn(),
       openAuthUserDialog: jest.fn(),
       deleteUser: jest.fn(),

@@ -14,59 +14,55 @@
  * limitations under the License.
  */
 
+import { fireEvent } from '@testing-library/react';
 import React from 'react';
+import { FormContextValues } from 'react-hook-form';
+import { Provider } from 'react-redux';
 
 import { wrapWithForm } from '../../../../test_utils';
-import { AddAuthUserPayload } from '../../types';
-import { EmailPassword, EmailPasswordProps } from './EmailPassword';
+import { createFakeUser, getMockAuthStore } from '../../test_utils';
+import { AddAuthUserPayload, AuthFormUser, AuthState } from '../../types';
+import Email from './Email';
+import Password from './Password';
 
 describe('EmailPassword', () => {
   const validEmail = 'pir@j.k';
 
   function setup(
     defaultValues: Partial<AddAuthUserPayload>,
-    props: EmailPasswordProps = {
-      allEmails: new Set(),
-      editedUserEmail: undefined,
-      isEditing: false,
-    }
+    state?: Partial<AuthState>
   ) {
-    return wrapWithForm(EmailPassword, { defaultValues }, props);
+    const store = getMockAuthStore(state);
+
+    return wrapWithForm(
+      (props: FormContextValues<AuthFormUser>) => (
+        <Provider store={store}>
+          <Email {...props} />
+          <Password {...props} />
+        </Provider>
+      ),
+      { defaultValues },
+      {}
+    );
   }
 
   describe('requiring both values or none', () => {
-    const errorText = 'Both email and password should be present';
+    const emailRequiredErrorText =
+      'Email is required for password authentication';
 
     it('is valid when both empty', () => {
       const { queryByText } = setup({ email: '', password: '' });
-      expect(queryByText(errorText)).toBeNull();
+      expect(queryByText(emailRequiredErrorText)).toBeNull();
     });
 
     it('is valid when both present', () => {
       const { queryByText } = setup({ email: validEmail, password: 'pelmeni' });
-      expect(queryByText(errorText)).toBeNull();
+      expect(queryByText(emailRequiredErrorText)).toBeNull();
     });
 
     it('is invalid if just password is present', () => {
       const { getByText } = setup({ email: '', password: 'pelmeni' });
-      getByText(errorText);
-    });
-
-    it('is invalid if just email is present', () => {
-      const { getByText } = setup({ email: validEmail, password: '' });
-      getByText(errorText);
-    });
-
-    it('is valid if just email is present in editing mode', () => {
-      const { queryByText } = setup(
-        { email: validEmail, password: '' },
-        {
-          allEmails: new Set(),
-          editedUserEmail: undefined,
-          isEditing: true,
-        }
-      );
-      expect(queryByText(errorText)).toBeNull();
+      expect(getByText(emailRequiredErrorText)).not.toBeNull();
     });
   });
 
@@ -88,13 +84,25 @@ describe('EmailPassword', () => {
     });
 
     it('invalid for duplicate email', async () => {
-      const { getByText, triggerValidation } = setup(
+      const { getByText, triggerValidation, getByLabelText } = setup(
         {
-          email: validEmail,
+          email: '',
           password: 'lollol',
         },
-        { allEmails: new Set([validEmail]) }
+        {
+          users: {
+            loading: false,
+            result: {
+              data: [createFakeUser({ email: validEmail })],
+            },
+          },
+        }
       );
+      const emailInput = getByLabelText('Email (optional)');
+      fireEvent.change(emailInput, {
+        target: { value: validEmail },
+      });
+
       await triggerValidation();
       expect(getByText('User with this email already exists')).not.toBeNull();
     });
@@ -105,7 +113,14 @@ describe('EmailPassword', () => {
           email: validEmail,
           password: 'lollol',
         },
-        { allEmails: new Set([validEmail]), editedUserEmail: validEmail }
+        {
+          users: {
+            loading: false,
+            result: {
+              data: [createFakeUser({ email: validEmail })],
+            },
+          },
+        }
       );
       await triggerValidation();
       expect(queryByText('User with this email already exists')).toBeNull();

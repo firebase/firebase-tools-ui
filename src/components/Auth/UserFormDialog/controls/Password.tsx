@@ -37,19 +37,9 @@ function getErrorText(errors: any) {
   }
 }
 
-export type PasswordProps = PropsFromState & { editedUserEmail?: string };
 export const Password: React.FC<
-  PasswordProps & FormContextValues<AuthFormUser>
-> = ({
-  register,
-  watch,
-  setError,
-  clearError,
-  errors,
-  allEmails,
-  editedUserEmail,
-  isEditing,
-}) => {
+  PropsFromState & FormContextValues<AuthFormUser>
+> = ({ register, watch, setError, clearError, errors, isEditing }) => {
   const email = watch('email');
   const password = watch('password');
 
