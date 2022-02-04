@@ -38,15 +38,12 @@ function getErrorText(errors: any) {
   }
 }
 
-export type PasswordProps = PropsFromState & { editedUserEmail?: string };
 export const Password: React.FC<
-  React.PropsWithChildren<PasswordProps & UseFormReturn<AuthFormUser>>
+  React.PropsWithChildren<PropsFromState & UseFormReturn<AuthFormUser>>
 > = ({
   register,
   getValues,
   formState: { errors },
-  allEmails,
-  editedUserEmail,
   isEditing,
 }) => {
   const { ref: passwordRef, ...passwordState } = register('password', {

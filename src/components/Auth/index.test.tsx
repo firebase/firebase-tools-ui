@@ -16,8 +16,10 @@
 
 import { RMWCProvider } from '@rmwc/provider';
 import { render } from '@testing-library/react';
+import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Provider } from 'react-redux';
+import { Router } from 'react-router-dom';
 
 import { AuthConfig } from '../../store/config';
 import { TestEmulatorConfigProvider } from '../common/EmulatorConfigProvider';
@@ -34,10 +36,14 @@ const sampleConfig: AuthConfig = {
 
 describe('AuthRoute', () => {
   it('renders loading when config is not ready', () => {
+    const history = createMemoryHistory({ initialEntries: ['/auth'] });
+
     const { getByText } = render(
       <TestEmulatorConfigProvider config={undefined}>
         <Provider store={getMockAuthStore()}>
-          <AuthRoute />
+          <Router history={history}>
+            <AuthRoute />
+          </Router>
         </Provider>
       </TestEmulatorConfigProvider>
     );
@@ -45,10 +51,14 @@ describe('AuthRoute', () => {
   });
 
   it('renders error when loading config fails', () => {
+    const history = createMemoryHistory({ initialEntries: ['/auth'] });
+
     const { getByText } = render(
       <TestEmulatorConfigProvider config={null}>
         <Provider store={getMockAuthStore()}>
-          <AuthRoute />
+          <Router history={history}>
+            <AuthRoute />
+          </Router>
         </Provider>
       </TestEmulatorConfigProvider>
     );
@@ -56,12 +66,16 @@ describe('AuthRoute', () => {
   });
 
   it('renders error when auth emulator is not running', () => {
+    const history = createMemoryHistory({ initialEntries: ['/auth'] });
+
     const { getByText } = render(
       <TestEmulatorConfigProvider
         config={{ projectId: 'example' /* no auth */ }}
       >
         <Provider store={getMockAuthStore()}>
-          <AuthRoute />
+          <Router history={history}>
+            <AuthRoute />
+          </Router>
         </Provider>
       </TestEmulatorConfigProvider>
     );
@@ -69,6 +83,8 @@ describe('AuthRoute', () => {
   });
 
   it('displays auth', async () => {
+    const history = createMemoryHistory({ initialEntries: ['/auth'] });
+
     const store = getMockAuthStore();
 
     const { getByText } = render(
@@ -81,7 +97,9 @@ describe('AuthRoute', () => {
               auth: sampleConfig,
             }}
           >
-            <AuthRoute />
+            <Router history={history}>
+              <AuthRoute />
+            </Router>
           </TestEmulatorConfigProvider>
         </RMWCProvider>
       </Provider>

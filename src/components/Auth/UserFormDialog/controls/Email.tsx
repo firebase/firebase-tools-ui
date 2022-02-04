@@ -52,20 +52,21 @@ function getVerifiedStatus(emailVerifiedError: [] | [FieldError?] | undefined) {
     : 'Verified';
 }
 
-export type EmailProps = PropsFromState & { editedUserEmail?: string };
 export const Email: React.FC<
-  React.PropsWithChildren<EmailProps & UseFormReturn<AuthFormUser>>
+  React.PropsWithChildren<PropsFromState & UseFormReturn<AuthFormUser>>
 > = ({
   register,
   getValues,
   formState: { errors },
   allEmails,
-  editedUserEmail,
   isEditing,
 }) => {
   const { ref: emailRef, ...emailState } = register('email', {
     validate: {
-      unique: (value) => value === editedUserEmail || !allEmails.has(value),
+      unique: (value) => {
+        const { email } = getValues();
+        return value === email || !allEmails.has(value);
+      },
       emailPresent: (value) => {
         const { emailVerified: emailVerifiedArr } = getValues();
         const emailVerified = emailVerifiedArr && emailVerifiedArr.length > 0;
