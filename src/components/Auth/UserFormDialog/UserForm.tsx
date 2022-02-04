@@ -147,7 +147,7 @@ export const UserForm: React.FC<React.PropsWithChildren<UserFormProps>> = ({
             inputRef={displayNameRef}
             {...displayNameField}
           />
-          <Email editedUserEmail={user?.email} {...form} />
+          <Email {...form} />
 
           <ImageUrlInput {...form} />
           <CustomAttributes {...form} />
