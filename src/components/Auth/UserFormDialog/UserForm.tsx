@@ -145,7 +145,7 @@ export const UserForm: React.FC<UserFormProps> = ({
             error={errors?.displayName && 'Display name is required'}
             inputRef={register({})}
           />
-          <Email editedUserEmail={user?.email} {...form} />
+          <Email {...form} />
 
           <ImageUrlInput {...form} />
           <CustomAttributes {...form} />

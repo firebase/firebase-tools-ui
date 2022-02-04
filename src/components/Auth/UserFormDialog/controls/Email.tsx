@@ -43,15 +43,13 @@ function getErrorText(errors: any) {
   }
 }
 
-export type EmailProps = PropsFromState & { editedUserEmail?: string };
-const Email: React.FC<EmailProps & FormContextValues<AuthFormUser>> = ({
+const Email: React.FC<PropsFromState & FormContextValues<AuthFormUser>> = ({
   register,
   watch,
   setError,
   clearError,
   errors,
   allEmails,
-  editedUserEmail,
 }) => {
   const email = watch('email');
 
@@ -59,7 +57,7 @@ const Email: React.FC<EmailProps & FormContextValues<AuthFormUser>> = ({
   const emailVerified = emailVerifiedArr && emailVerifiedArr.length > 0;
 
   function validate(value: string) {
-    return value === editedUserEmail || !allEmails.has(value);
+    return value === email || !allEmails.has(value);
   }
 
   useEffect(() => {
