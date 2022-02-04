@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import classNames from 'classnames';
 import React from 'react';
 import { FieldError, UseFormReturn } from 'react-hook-form';
 import { connect } from 'react-redux';
@@ -86,7 +87,12 @@ export const Email: React.FC<
 
   return (
     <>
-      <div className={styles.emailWrapper}>
+      <div
+        className={classNames(
+          styles.emailWrapper,
+          getErrorText(errors) && styles.showError
+        )}
+      >
         <Field
           placeholder="Enter email (optional)"
           label="Email (optional)"
