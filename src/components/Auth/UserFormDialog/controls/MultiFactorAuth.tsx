@@ -19,7 +19,7 @@ import { IconButton } from '@rmwc/icon-button';
 import { ListDivider } from '@rmwc/list';
 import { Typography } from '@rmwc/typography';
 import classNames from 'classnames';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useFieldArray } from 'react-hook-form';
 import { FormContextValues } from 'react-hook-form/dist/contextTypes';
 
@@ -42,24 +42,12 @@ function addNewMfaNumber(add: (newMfaInfo: { phoneInfo: string }) => void) {
 export const MultiFactor: React.FC<
   MultiFactorProps & FormContextValues<AuthFormUser>
 > = (form) => {
-  const {
-    control,
-    watch,
-    setError,
-    clearError,
-    formState,
-    errors,
-    user,
-    register,
-  } = form;
-
-  const isZeroState = !(
-    formState.touched.mfaEnabled ||
-    (user?.mfaInfo && user?.mfaInfo.length > 0)
-  );
+  const { control, watch, setError, clearError, errors, user, register } = form;
 
   // https://react-hook-form.com/v5/api#useFieldArray
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove } = useFieldArray<
+    AuthFormUser['mfaPhoneInfo'][0]
+  >({
     control,
     name: 'mfaPhoneInfo',
   });
@@ -70,8 +58,14 @@ export const MultiFactor: React.FC<
   const emailVerified = emailVerifiedArr && emailVerifiedArr.length > 0;
   const mfaEnabled = mfaEnabledArr && mfaEnabledArr.length > 0;
 
+  const [isZeroState, setIsZeroState] = useState(
+    !(user?.mfaInfo && user?.mfaInfo.length > 0)
+  );
+
   useEffect(() => {
     if (mfaEnabled) {
+      setIsZeroState(false);
+
       if (fields.length === 0) {
         addNewMfaNumber(append);
       }
@@ -81,6 +75,8 @@ export const MultiFactor: React.FC<
       } else {
         setError('verifyEmail', 'notverified');
       }
+    } else {
+      clearError('verifyEmail');
     }
   }, [fields, mfaEnabled, emailVerified, setError, clearError, append]);
 
@@ -148,9 +144,10 @@ export const MultiFactor: React.FC<
                     placeholder="Enter phone number"
                     type="tel"
                     error={getPhoneErrorText()}
+                    disabled={mfaEnabled === false}
                     inputRef={register({
                       pattern: PHONE_REGEX,
-                      required: true,
+                      required: mfaEnabled === true,
                     })}
                   />
                   <div className={styles.deleteButtonContainer}>
