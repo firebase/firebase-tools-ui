@@ -62,26 +62,34 @@ function convertToFormUser(user?: AuthUser): AuthFormUser | undefined {
 }
 
 function convertFromFormUser(formUser: AuthFormUser): AddAuthUserPayload {
+  // remove any empty MFA phoneInfo fields
+  const filteredMfaPhoneInfo =
+    formUser.mfaPhoneInfo &&
+    formUser.mfaPhoneInfo.filter(
+      (mfaPhoneInfo) => mfaPhoneInfo.phoneInfo !== ''
+    );
+
   return {
     ...formUser,
     emailVerified: formUser.emailVerified.length > 0 ? true : false,
-    // match mfaPhoneInfo array members to an existing enrollment, or create a new enrollment
-    mfaInfo: formUser.mfaPhoneInfo
-      ? formUser.mfaPhoneInfo.map((mfaPhoneInfo) => {
-          const existingEnrollment = formUser.mfaInfo?.find(
-            (mfaEnrollment) =>
-              mfaEnrollment.phoneInfo === mfaPhoneInfo.phoneInfo
-          );
-          return (
-            existingEnrollment || {
-              ...mfaPhoneInfo,
-              enrolledAt: new Date().toISOString(),
-              mfaEnrollmentId:
-                'AUTH-EMULATOR-UI:' + Math.random().toString(36).substring(5),
-            }
-          );
-        })
-      : undefined,
+    mfaInfo:
+      filteredMfaPhoneInfo.length > 0
+        ? // match mfaPhoneInfo array members to an existing enrollment, or create a new enrollment
+          filteredMfaPhoneInfo.map((mfaPhoneInfo) => {
+            const existingEnrollment = formUser.mfaInfo?.find(
+              (mfaEnrollment) =>
+                mfaEnrollment.phoneInfo === mfaPhoneInfo.phoneInfo
+            );
+            return (
+              existingEnrollment || {
+                ...mfaPhoneInfo,
+                enrolledAt: new Date().toISOString(),
+                mfaEnrollmentId:
+                  'AUTH-EMULATOR-UI:' + Math.random().toString(36).substring(5),
+              }
+            );
+          })
+        : undefined,
   };
 }
 
