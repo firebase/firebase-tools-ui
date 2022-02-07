@@ -62,20 +62,12 @@ function convertToFormUser(user?: AuthUser): AuthFormUser | undefined {
 }
 
 function convertFromFormUser(formUser: AuthFormUser): AddAuthUserPayload {
-  // remove any empty MFA phoneInfo fields
-  const filteredMfaPhoneInfo =
-    formUser.mfaPhoneInfo &&
-    formUser.mfaPhoneInfo.filter(
-      (mfaPhoneInfo) => mfaPhoneInfo.phoneInfo !== ''
-    );
-
   return {
     ...formUser,
     emailVerified: formUser.emailVerified.length > 0 ? true : false,
     mfaInfo:
-      filteredMfaPhoneInfo.length > 0
-        ? // match mfaPhoneInfo array members to an existing enrollment, or create a new enrollment
-          filteredMfaPhoneInfo.map((mfaPhoneInfo) => {
+      formUser.mfaEnabled[0] === 'on'
+        ? formUser.mfaPhoneInfo.map((mfaPhoneInfo) => {
             const existingEnrollment = formUser.mfaInfo?.find(
               (mfaEnrollment) =>
                 mfaEnrollment.phoneInfo === mfaPhoneInfo.phoneInfo
