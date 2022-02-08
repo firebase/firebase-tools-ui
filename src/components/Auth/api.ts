@@ -105,7 +105,9 @@ export default class AuthApi extends RestApi {
     return signIn.allowDuplicateEmails;
   }
 
-  async updateUser(user: AddAuthUserPayload): Promise<AuthUser> {
+  async updateUser(
+    user: AddAuthUserPayload & { localId: string }
+  ): Promise<AuthUser> {
     const { json } = await this.jsonRequest(
       `${this.baseUrl}/accounts:update`,
       user,
