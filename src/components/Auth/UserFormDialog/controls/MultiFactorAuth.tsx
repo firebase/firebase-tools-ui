@@ -115,7 +115,7 @@ export const MultiFactor: React.FC<
           </Typography>
           <div>
             {fields.map((item, index) => {
-              const fieldName = `mfaPhoneInfo.${index}.phoneInfo`;
+              const fieldName = `mfaPhoneInfo[${index}].phoneInfo`;
 
               const getPhoneErrorText = () => {
                 const error = errors.mfaPhoneInfo?.[index];
@@ -149,6 +149,7 @@ export const MultiFactor: React.FC<
                       pattern: PHONE_REGEX,
                       required: mfaEnabled === true,
                     })}
+                    defaultValue={item.phoneInfo}
                   />
                   <div className={styles.deleteButtonContainer}>
                     <IconButton
