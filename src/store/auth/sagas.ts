@@ -107,22 +107,18 @@ export function* createUser({ payload }: ReturnType<typeof createUserRequest>) {
   try {
     yield put(setAuthUserDialogLoading(true));
 
-    const newUser: AuthUser = yield call([authApi, 'createUser'], payload.user);
+    let user: AuthUser = yield call([authApi, 'createUser'], payload.user);
 
-    const user = {
-      ...newUser,
-      ...payload.user,
-    };
-
+    // Auth API doesn't allow setting customAttributes on creation, so we set
+    // it immediately via an update request.
     if (payload.user.customAttributes) {
-      yield call([authApi, 'updateUser'], user);
+      user = yield call([authApi, 'updateUser'], {
+        localId: user.localId,
+        customAttributes: payload.user.customAttributes,
+      });
     }
 
-    yield put(
-      createUserSuccess({
-        user: newUser,
-      })
-    );
+    yield put(createUserSuccess({ user }));
 
     if (!payload.keepDialogOpen) {
       yield put(clearAuthUserDialogData());
@@ -138,11 +134,11 @@ export function* updateUser({ payload }: ReturnType<typeof updateUserRequest>) {
   const authApi: AuthApi = yield call(configureAuthSaga);
   try {
     yield put(setAuthUserDialogLoading(true));
-    const user: AuthUser = yield call([authApi, 'updateUser'] as any, {
+    const user: AuthUser = yield call([authApi, 'updateUser'], {
       ...payload.user,
       localId: payload.localId,
     });
-    yield put(updateUserSuccess({ user: { ...user, ...payload.user } }));
+    yield put(updateUserSuccess({ user }));
     yield put(clearAuthUserDialogData());
   } catch (e) {
     yield put(setAuthUserDialogError(e.message));

@@ -120,7 +120,7 @@ describe('Auth sagas', () => {
       expect(gen.next().done).toBe(true);
     });
 
-    it('makes a separate ', () => {
+    it('makes a separate call to update customAttributes', () => {
       const user = {
         displayName: 'lol',
         customAttributes: '{"a": 1}',
@@ -147,14 +147,22 @@ describe('Auth sagas', () => {
         value: call([fakeAuthApi, 'createUser'], user),
       });
 
-      const newUser = { localId: 'lol' } as AuthUser;
+      const newUser = {
+        localId: 'lol',
+        displayName: user.displayName,
+      } as AuthUser;
 
       expect(gen.next(newUser)).toEqual({
         done: false,
-        value: call([fakeAuthApi, 'updateUser'], { ...user, ...newUser }),
+        value: call([fakeAuthApi, 'updateUser'], {
+          localId: newUser.localId,
+          customAttributes: user.customAttributes,
+        }),
       });
 
-      expect(gen.next()).toEqual({
+      newUser.customAttributes = user.customAttributes;
+
+      expect(gen.next(newUser)).toEqual({
         done: false,
         value: put(createUserSuccess({ user: newUser })),
       });
