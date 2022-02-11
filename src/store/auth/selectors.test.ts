@@ -15,12 +15,14 @@
  */
 
 import {
+  createFakeAuthStateWithTenants,
   createFakeAuthStateWithUsers,
+  createFakeTenant,
   createFakeUser,
 } from '../../components/Auth/test_utils';
 import { AuthUser } from '../../components/Auth/types';
 import { AppState } from '../index';
-import { getFilteredUsers } from './selectors';
+import { getFilteredUsers, getTenants, getTenantsLoading } from './selectors';
 
 describe('Auth selectors', () => {
   function createState(users: AuthUser[], filter: string) {
@@ -52,6 +54,35 @@ describe('Auth selectors', () => {
       expect(getFilteredUsers(createState(createUsers(), 'PIROJOK'))).toEqual([
         createUsers()[0],
       ]);
+    });
+  });
+
+  describe('getTenants', () => {
+    it('gets tenant IDs', () => {
+      const authState = {
+        ...createFakeAuthStateWithTenants([
+          createFakeTenant({ tenantId: 'tenant-id-1' }),
+          createFakeTenant({ tenantId: 'tenant-id-2' }),
+        ]),
+      };
+      const appState = { auth: authState } as AppState;
+
+      expect(getTenants(appState)).toEqual(['tenant-id-1', 'tenant-id-2']);
+    });
+  });
+
+  describe('getTenantsLoading', () => {
+    it('gets tenant loading state', () => {
+      const authState = {
+        ...createFakeAuthStateWithTenants([
+          createFakeTenant({ tenantId: 'tenant-id-1' }),
+          createFakeTenant({ tenantId: 'tenant-id-2' }),
+        ]),
+      };
+      authState.tenants.loading = true;
+      const appState = { auth: authState } as AppState;
+
+      expect(getTenantsLoading(appState)).toBe(true);
     });
   });
 });
