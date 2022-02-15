@@ -17,6 +17,7 @@
 import { all, call, getContext, put, setContext } from 'redux-saga/effects';
 
 import AuthApi from '../../components/Auth/api';
+import { createFakeTenant } from '../../components/Auth/test_utils';
 import {
   AddAuthUserPayload,
   AuthUser,
@@ -24,6 +25,8 @@ import {
   UsageMode,
 } from '../../components/Auth/types';
 import {
+  authFetchTenantsRequest,
+  authFetchTenantsSuccess,
   authFetchUsersRequest,
   authFetchUsersSuccess,
   clearAuthUserDialogData,
@@ -48,6 +51,7 @@ import {
   createUser,
   deleteUser,
   fetchAuthUsers,
+  fetchTenants,
   getAllowDuplicateEmails,
   initAuth,
   nukeUsers,
@@ -56,8 +60,9 @@ import {
   updateUser,
 } from './sagas';
 
+// TODO: fix compiler errors in this file
 describe('Auth sagas', () => {
-  describe('authFetchUsers', () => {
+  describe('fetchAuthUsers', () => {
     it('dispatches authFetchUsersSuccess action with the resulting info', () => {
       const gen = fetchAuthUsers();
       const fakeAuthApi = { fetchUsers: jest.fn() };
@@ -73,6 +78,31 @@ describe('Auth sagas', () => {
       expect(gen.next(fakeUsers)).toEqual({
         done: false,
         value: put(authFetchUsersSuccess(fakeUsers)),
+      });
+      expect(gen.next().done).toBe(true);
+    });
+  });
+
+  describe('fetchTenants', () => {
+    it('dispatches authFetchTenantsSuccess action with the resulting info', () => {
+      const gen = fetchTenants();
+      const fakeAuthApi = { fetchTenants: jest.fn() };
+      const fakeTenants = [
+        createFakeTenant({ tenantId: 'tenant-id-1' }),
+        createFakeTenant({ tenantId: 'tenant-id-2' }),
+      ];
+
+      expect(gen.next()).toEqual({
+        done: false,
+        value: call(configureAuthSaga),
+      });
+      expect(gen.next(fakeAuthApi)).toEqual({
+        done: false,
+        value: call([fakeAuthApi, 'fetchTenants']),
+      });
+      expect(gen.next(fakeTenants)).toEqual({
+        done: false,
+        value: put(authFetchTenantsSuccess(fakeTenants)),
       });
       expect(gen.next().done).toBe(true);
     });
@@ -264,6 +294,7 @@ describe('Auth sagas', () => {
             port: 9099,
           },
           projectId: 'hello',
+          tenantId: 'tenant-id',
         })
       );
       expect(gen.next()).toEqual({
@@ -277,6 +308,7 @@ describe('Auth sagas', () => {
           expect.arrayContaining([
             put(authFetchUsersRequest()),
             put(getAllowDuplicateEmailsRequest()),
+            put(authFetchTenantsRequest()),
           ])
         ),
       });
