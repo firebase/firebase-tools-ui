@@ -49,7 +49,7 @@ export default class AuthApi extends RestApi {
   constructor(
     private readonly hostAndPort: string,
     private readonly projectId: string,
-    private readonly tenantId: string | undefined
+    private readonly tenantId?: string
   ) {
     super();
   }

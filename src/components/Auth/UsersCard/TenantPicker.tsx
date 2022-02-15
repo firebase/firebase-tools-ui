@@ -22,8 +22,8 @@ import { useHistory, useParams } from 'react-router-dom';
 import { createStructuredSelector } from '../../../store';
 import { getTenants, getTenantsLoading } from '../../../store/auth/selectors';
 import { MultiTenancyIcon } from '../../common/icons';
+import { authPath } from '../index';
 import styles from './UsersCard.module.scss';
-import { authPath } from '..';
 
 export function useTenantFromUrl(): [string, (tenantId: string) => void] {
   const history = useHistory();
