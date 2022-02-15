@@ -29,6 +29,9 @@ $input-height: 36px;
   $outlined-input-padding-top: $input-default-padding,
   $outlined-input-padding-bottom: $input-default-padding,
 );
+@use '@material/switch' with (
+  $baseline-theme-color: primary,
+);
 
 // TODO: uncomment for 6.0.9, when fixed
 // @use '@material/select/_index' as select with (
