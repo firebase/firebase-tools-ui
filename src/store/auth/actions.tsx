@@ -19,6 +19,7 @@ import { createAction } from 'typesafe-actions';
 import {
   AddAuthUserPayload,
   AuthUser,
+  Tenant,
   UsageMode,
 } from '../../components/Auth/types';
 import { AuthConfig } from '../config';
@@ -27,7 +28,7 @@ import { RemoteResult } from '../utils';
 export const updateAuthConfig = createAction('@auth/UPDATE_AUTH_CONFIG')<{
   projectId: string;
   auth: AuthConfig;
-  tenantId: string;
+  tenantId?: string;
 } | null>();
 
 export const createUserRequest = createAction('@auth/CREATE_USER_REQUEST')<{
@@ -142,4 +143,4 @@ export const authFetchTenantsRequest = createAction(
 
 export const authFetchTenantsSuccess = createAction(
   '@auth/AUTH_FETCH_TENANTS_SUCCESS'
-)<string[]>();
+)<Tenant[]>();
