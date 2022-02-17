@@ -62,26 +62,26 @@ function convertToFormUser(user?: AuthUser): AuthFormUser | undefined {
 }
 
 function convertFromFormUser(formUser: AuthFormUser): AddAuthUserPayload {
+  let mfaInfo: AddAuthUserPayload['mfaInfo'];
+  if (formUser.mfaEnabled[0] === 'on') {
+    mfaInfo = formUser.mfaPhoneInfo.map((mfaPhoneInfo) => {
+      const existingEnrollment = formUser.mfaInfo?.find(
+        (mfaEnrollment) => mfaEnrollment.phoneInfo === mfaPhoneInfo.phoneInfo
+      );
+      return (
+        existingEnrollment || {
+          ...mfaPhoneInfo,
+          enrolledAt: new Date().toISOString(),
+          mfaEnrollmentId:
+            'AUTH-EMULATOR-UI:' + Math.random().toString(36).substring(5),
+        }
+      );
+    });
+  }
   return {
     ...formUser,
     emailVerified: formUser.emailVerified.length > 0 ? true : false,
-    mfaInfo:
-      formUser.mfaEnabled[0] === 'on'
-        ? formUser.mfaPhoneInfo.map((mfaPhoneInfo) => {
-            const existingEnrollment = formUser.mfaInfo?.find(
-              (mfaEnrollment) =>
-                mfaEnrollment.phoneInfo === mfaPhoneInfo.phoneInfo
-            );
-            return (
-              existingEnrollment || {
-                ...mfaPhoneInfo,
-                enrolledAt: new Date().toISOString(),
-                mfaEnrollmentId:
-                  'AUTH-EMULATOR-UI:' + Math.random().toString(36).substring(5),
-              }
-            );
-          })
-        : undefined,
+    mfaInfo,
   };
 }
 
