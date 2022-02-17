@@ -144,10 +144,10 @@ export const MultiFactor: React.FC<
                     placeholder="Enter phone number"
                     type="tel"
                     error={getPhoneErrorText()}
-                    disabled={mfaEnabled === false}
+                    disabled={!mfaEnabled}
                     inputRef={register({
                       pattern: PHONE_REGEX,
-                      required: mfaEnabled === true,
+                      required: !!mfaEnabled,
                     })}
                     defaultValue={item.phoneInfo}
                   />
