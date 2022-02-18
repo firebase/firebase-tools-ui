@@ -47,18 +47,38 @@ import { MultiFactor } from './controls/MultiFactorAuth';
 import { SignInMethod } from './controls/SignInMethod';
 
 function convertToFormUser(user?: AuthUser): AuthFormUser | undefined {
-  return (
-    user && {
-      ...user,
-      emailVerified: !!user.emailVerified ? ['on'] : [],
-      mfaEnabled: user.mfaInfo ? ['on'] : [],
-      mfaPhoneInfo: user.mfaInfo
-        ? user.mfaInfo.map((mfaEnrollment) => ({
-            phoneInfo: mfaEnrollment.phoneInfo,
-          }))
-        : [],
-    }
-  );
+  if (!user) {
+    return;
+  }
+
+  let mfaEnabled: AuthFormUser['mfaEnabled'] = [];
+  let mfaPhoneInfo: AuthFormUser['mfaInfo'] = [];
+  let emailVerified: AuthFormUser['emailVerified'] = [];
+
+  if (user.mfaInfo) {
+    mfaEnabled = ['on'];
+    mfaPhoneInfo = user.mfaInfo.map((mfaEnrollment) => ({
+      phoneInfo: mfaEnrollment.phoneInfo,
+    }));
+  }
+
+  if (!!user.emailVerified) {
+    emailVerified = ['on'];
+  }
+
+  return {
+    customAttributes: user.customAttributes,
+    displayName: user.displayName,
+    photoUrl: user.photoUrl,
+    screenName: user.screenName,
+    email: user.email,
+    password: user.password,
+    phoneNumber: user.phoneNumber,
+    mfaInfo: user.mfaInfo,
+    emailVerified,
+    mfaEnabled,
+    mfaPhoneInfo,
+  };
 }
 
 function convertFromFormUser(formUser: AuthFormUser): AddAuthUserPayload {
@@ -79,7 +99,13 @@ function convertFromFormUser(formUser: AuthFormUser): AddAuthUserPayload {
     });
   }
   return {
-    ...formUser,
+    customAttributes: formUser.customAttributes,
+    displayName: formUser.displayName,
+    photoUrl: formUser.photoUrl,
+    screenName: formUser.screenName,
+    email: formUser.email,
+    password: formUser.password,
+    phoneNumber: formUser.phoneNumber,
     emailVerified: formUser.emailVerified.length > 0 ? true : false,
     mfaInfo,
   };
