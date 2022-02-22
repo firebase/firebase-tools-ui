@@ -14,21 +14,30 @@
  * limitations under the License.
  */
 
-import { act, fireEvent, prettyDOM, queryByLabelText } from '@testing-library/react';
+import {
+  act,
+  fireEvent,
+  prettyDOM,
+  queryByLabelText,
+} from '@testing-library/react';
 import React from 'react';
 
 import { wrapWithForm } from '../../../../test_utils';
 import { createFakeUser } from '../../test_utils';
 import { AuthFormUser } from '../../types';
 import { convertToFormUser } from '../UserForm';
-import { MFA_VERIFIED_EMAIL_REQUIRED_ERROR, MultiFactor, MultiFactorProps } from './MultiFactorAuth';
+import {
+  MFA_VERIFIED_EMAIL_REQUIRED_ERROR,
+  MultiFactor,
+  MultiFactorProps,
+} from './MultiFactorAuth';
 import { PhoneControl, PhoneControlProps } from './PhoneControl';
 
 describe('MultiFactorAuth', () => {
   function setup(formUser: AuthFormUser, props?: Partial<MultiFactorProps>) {
     return wrapWithForm(
       MultiFactor,
-      { defaultValues: formUser,mode: 'onChange',},
+      { defaultValues: formUser, mode: 'onChange' },
       props
     );
   }
@@ -36,7 +45,13 @@ describe('MultiFactorAuth', () => {
   it('shows an error if email is not verified', async () => {
     const user = createFakeUser({});
 
-    const { getByRole, queryByLabelText, queryByText, triggerValidation, findByLabelText} = setup((convertToFormUser(user) as AuthFormUser), {user});
+    const {
+      getByRole,
+      queryByLabelText,
+      queryByText,
+      triggerValidation,
+      findByLabelText,
+    } = setup(convertToFormUser(user) as AuthFormUser, { user });
 
     // make sure we start with MFA disabled
     expect(queryByLabelText('Disabled')).not.toBeNull();
@@ -47,7 +62,7 @@ describe('MultiFactorAuth', () => {
     console.log(prettyDOM(mfaSwitch));
     mfaSwitch.click();
     await triggerValidation();
-    await findByLabelText('Enabled', undefined, {timeout: 1_000});
+    await findByLabelText('Enabled', undefined, { timeout: 1_000 });
 
     // make sure switch shows MFA enabled
     expect(queryByLabelText('Disabled')).toBeNull();
