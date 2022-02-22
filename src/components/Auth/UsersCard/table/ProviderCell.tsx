@@ -41,7 +41,7 @@ export const ProviderCell: React.FC<ProviderCellProps> = ({
           return (
             providerToIconMap[provider] && (
               <Icon
-                icon={providerToIconMap[provider]}
+                icon={`${window.location.origin}/${providerToIconMap[provider]}`}
                 key={providerInfo.providerId}
                 aria-label={providerInfo.providerId}
               />
