@@ -77,6 +77,7 @@ export const MultiFactor: React.FC<
       }
     } else {
       clearError('verifyEmail');
+      clearError('mfaPhoneInfo');
     }
   }, [fields, mfaEnabled, emailVerified, setError, clearError, append]);
 

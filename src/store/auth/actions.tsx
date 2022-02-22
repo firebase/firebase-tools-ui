@@ -89,6 +89,14 @@ export const updateFilter = createAction('@auth/UPDATE_FILTER')<{
   filter: string;
 }>();
 
+export const nukeUsersForAllTenantsRequest = createAction(
+  '@auth/NUKE_USERS_FOR_ALL_TENANTS_REQUEST'
+)();
+
+export const nukeUsersForAllTenantsSuccess = createAction(
+  '@auth/NUKE_USERS_FOR_ALL_TENANTS_SUCCESS'
+)();
+
 export const nukeUsersRequest = createAction('@auth/NUKE_USERS_REQUEST')();
 
 export const nukeUsersSuccess = createAction('@auth/NUKE_USERS_SUCCESS')();

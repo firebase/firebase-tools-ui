@@ -43,6 +43,8 @@ import {
   deleteUserSuccess,
   getAllowDuplicateEmailsRequest,
   getUsageModeRequest,
+  nukeUsersForAllTenantsRequest,
+  nukeUsersForAllTenantsSuccess,
   nukeUsersRequest,
   nukeUsersSuccess,
   setAllowDuplicateEmailsRequest,
@@ -93,6 +95,7 @@ export function* initAuth({ payload }: ActionType<typeof updateAuthConfig>) {
     takeLatest(getType(authFetchTenantsRequest), fetchTenants),
     takeLatest(getType(createUserRequest), createUser),
     takeLatest(getType(nukeUsersRequest), nukeUsers),
+    takeLatest(getType(nukeUsersForAllTenantsRequest), nukeUsersForAllTenants),
     takeLatest(getType(deleteUserRequest), deleteUser),
     takeLatest(getType(updateUserRequest), updateUser),
     takeLatest(getType(setUserDisabledRequest), setUserDisabled),
@@ -199,8 +202,8 @@ export function* setUsageMode({
 
   // passthrough mode can't be enabled until all users are deleted
   if (payload === 'PASSTHROUGH') {
-    yield put(nukeUsersRequest());
-    yield take(getType(nukeUsersSuccess));
+    yield put(nukeUsersForAllTenantsRequest());
+    yield take(getType(nukeUsersForAllTenantsSuccess));
   }
 
   yield call([authApi, 'updateConfig'], { usageMode: payload });
@@ -236,6 +239,12 @@ export function* nukeUsers() {
   const authApi: AuthApi = yield call(configureAuthSaga);
   yield call([authApi, 'nukeUsers']);
   yield put(nukeUsersSuccess());
+}
+
+export function* nukeUsersForAllTenants() {
+  const authApi: AuthApi = yield call(configureAuthSaga);
+  yield call([authApi, 'nukeUsersForAllTenants']);
+  yield put(nukeUsersForAllTenantsSuccess());
 }
 
 export function* configureAuthSaga(): Generator {

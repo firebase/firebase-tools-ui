@@ -19,6 +19,7 @@ import {
   AddAuthUserPayload,
   AuthUser,
   EmulatorV1ProjectsConfig,
+  Tenant,
   UpdateAuthUserPayload,
 } from './types';
 
@@ -54,8 +55,33 @@ export default class AuthApi extends RestApi {
     super();
   }
 
+  async nukeUsersForAllTenants(): Promise<void> {
+    const deletePromises = [];
+
+    // clear users from default tenant
+    deletePromises.push(this.deleteRequest(`${this.baseEmulatorUrl}/accounts`));
+
+    // clear users from all other tenants
+    const tenants = await this.fetchTenants();
+    const tenantDeletes = tenants.map(({ tenantId }) => {
+      return this.deleteRequest(
+        `${this.baseEmulatorUrl}/tenants/${tenantId}/accounts`
+      );
+    });
+    deletePromises.concat(tenantDeletes);
+
+    await Promise.all(deletePromises);
+  }
+
   async nukeUsers() {
-    await this.deleteRequest(`${this.baseEmulatorUrl}/accounts`);
+    if (this.tenantId) {
+      await this.deleteRequest(
+        `${this.baseEmulatorUrl}/tenants/${this.tenantId}/accounts`
+      );
+    } else {
+      await this.deleteRequest(`${this.baseEmulatorUrl}/accounts`);
+    }
+
     return [];
   }
 
@@ -69,7 +95,7 @@ export default class AuthApi extends RestApi {
     return json.userInfo.map(importUser);
   }
 
-  async fetchTenants() {
+  async fetchTenants(): Promise<Tenant[]> {
     const { json } = await this.jsonRequest(`${this.baseUrlV2}/tenants`);
     return json.tenants;
   }
@@ -124,7 +150,7 @@ export default class AuthApi extends RestApi {
 
     const { json } = await this.jsonRequest(
       `${this.baseUrl}/accounts:update`,
-      userUpdate,
+      { ...userUpdate, tenantId: this.tenantId },
       'POST'
     );
 
@@ -132,7 +158,11 @@ export default class AuthApi extends RestApi {
   }
 
   async deleteUser(user: AuthUser): Promise<void> {
-    await this.jsonRequest(`${this.baseUrl}/accounts:delete`, user, 'POST');
+    await this.jsonRequest(
+      `${this.baseUrl}/accounts:delete`,
+      { ...user, tenantId: this.tenantId },
+      'POST'
+    );
   }
 }
 
