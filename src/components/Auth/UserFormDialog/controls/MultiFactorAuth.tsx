@@ -30,10 +30,11 @@ import styles from './controls.module.scss';
 // Consistent with the back-end validation. We want to be as loose as possible in
 // the emulator to avoid false negatives.
 const PHONE_REGEX = /^\+/;
+export const MFA_VERIFIED_EMAIL_REQUIRED_ERROR = "Email needs to be verified to enroll in multi-factor authentication";
 
 export type MultiFactorProps = {
   user?: AddAuthUserPayload;
-};
+} & FormContextValues<AuthFormUser>;
 
 function addNewMfaNumber(add: (newMfaInfo: { phoneInfo: string }) => void) {
   return add({ phoneInfo: '' });
@@ -103,7 +104,7 @@ export const MultiFactor: React.FC<
 
       {(errors as any).verifyEmail ? (
         <Typography use="body2" theme="error" tag="div" role="alert">
-          Email needs to be verified to enroll in multi-factor authentication
+          {MFA_VERIFIED_EMAIL_REQUIRED_ERROR}
         </Typography>
       ) : null}
 
