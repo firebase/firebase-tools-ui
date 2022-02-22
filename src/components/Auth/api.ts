@@ -150,7 +150,7 @@ export default class AuthApi extends RestApi {
 
     const { json } = await this.jsonRequest(
       `${this.baseUrl}/accounts:update`,
-      userUpdate,
+      { ...userUpdate, tenantId: this.tenantId },
       'POST'
     );
 
@@ -158,7 +158,11 @@ export default class AuthApi extends RestApi {
   }
 
   async deleteUser(user: AuthUser): Promise<void> {
-    await this.jsonRequest(`${this.baseUrl}/accounts:delete`, user, 'POST');
+    await this.jsonRequest(
+      `${this.baseUrl}/accounts:delete`,
+      { ...user, tenantId: this.tenantId },
+      'POST'
+    );
   }
 }
 
