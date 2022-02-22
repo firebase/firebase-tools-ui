@@ -53,6 +53,12 @@ export const authReducer = createReducer<AuthState, Action>(INIT_STATE)
     });
   })
   .handleAction(
+    authActions.nukeUsersForAllTenantsSuccess,
+    produce((draft) => {
+      draft.users = mapResult(draft.users, () => []);
+    })
+  )
+  .handleAction(
     authActions.setAllowDuplicateEmailsSuccess,
     (state, { payload }) => {
       return produce(state, (draft) => {
