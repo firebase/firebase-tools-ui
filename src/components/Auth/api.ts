@@ -55,7 +55,7 @@ export default class AuthApi extends RestApi {
     super();
   }
 
-  async nukeUsersForAllTenants() {
+  async nukeUsersForAllTenants(): Promise<void> {
     const deletePromises = [];
 
     // clear users from default tenant
@@ -71,7 +71,6 @@ export default class AuthApi extends RestApi {
     deletePromises.concat(tenantDeletes);
 
     await Promise.all(deletePromises);
-    return [];
   }
 
   async nukeUsers() {
