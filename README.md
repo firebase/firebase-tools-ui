@@ -36,7 +36,7 @@ npm install # must be run the first time you clone
 To run the development server with test data:
 
 ```bash
-firebase emulators:exec --project sample --import test-data 'npm start'
+firebase emulators:exec --project demo-example --import test-data 'npm start'
 ```
 
 This will run the web app in the development mode.<br />
