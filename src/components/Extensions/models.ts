@@ -14,29 +14,42 @@
  * limitations under the License.
  */
 
-export type ExtensionName = `publishers/${string}/extensions/${string}`;
+// TODO(tjlav5): re-enable name-types when new babel version lands
 
-export type ExtensionRef = `${string}/${string}`;
+// export type ExtensionName = `publishers/${string}/extensions/${string}`;
+
+// export type ExtensionRef = `${string}/${string}`;
 
 export interface Extension {
-  name: ExtensionName;
-  ref: ExtensionRef;
-  state: 'STATE_UNSPECIFIED' | 'PUBLISHED' | 'DEPRECATED';
-  spec: ExtensionSpec;
-  hash: string;
-  sourceDownloadUri: string;
-  releaseNotes?: string;
-  createTime?: string;
-  deprecationMessage?: string;
+  name: string; // ExtensionName;
+  ref: string; // ExtensionRef;
+  visibility: Visibility;
+  registryLaunchStage: RegistryLaunchStage;
+  createTime: string;
+  latestVersion?: string;
+  latestVersionCreateTime?: string;
 }
 
-export type ExtensionVersionName = `${ExtensionName}/versions/${string}`;
+export enum RegistryLaunchStage {
+  EXPERIMENTAL = 'EXPERIMENTAL',
+  BETA = 'BETA',
+  GA = 'GA',
+  DEPRECATED = 'DEPRECATED',
+  REGISTRY_LAUNCH_STAGE_UNSPECIFIED = 'REGISTRY_LAUNCH_STAGE_UNSPECIFIED',
+}
 
-export type ExtensionVersionRef = `${ExtensionRef}@${string}`;
+export enum Visibility {
+  UNLISTED = 'unlisted',
+  PUBLIC = 'public',
+}
+
+// export type ExtensionVersionName = `${ExtensionName}/versions/${string}`;
+
+// export type ExtensionVersionRef = `${ExtensionRef}@${string}`;
 
 export interface ExtensionVersion {
-  name: ExtensionVersionName;
-  ref: ExtensionVersionRef;
+  name: string; // ExtensionVersionName;
+  ref: string; // ExtensionVersionRef;
   state: 'STATE_UNSPECIFIED' | 'PUBLISHED' | 'DEPRECATED';
   spec: ExtensionSpec;
   hash: string;
@@ -46,10 +59,10 @@ export interface ExtensionVersion {
   deprecationMessage?: string;
 }
 
-export type ExtensionInstanceName = `projects/${string}/instances/${string}`;
+// export type ExtensionInstanceName = `projects/${string}/instances/${string}`;
 
 export interface ExtensionInstance {
-  name: ExtensionInstanceName;
+  name: string; // ExtensionInstanceName;
   createTime: string;
   updateTime: string;
   state:
@@ -68,10 +81,10 @@ export interface ExtensionInstance {
   extensionVersion?: string;
 }
 
-export type ExtensionInstanceConfigName = `${ExtensionInstanceName}/configs/${string}`;
+// export type ExtensionInstanceConfigName = `${ExtensionInstanceName}/configs/${string}`;
 
 export interface ExtensionInstanceConfig {
-  name: ExtensionInstanceConfigName;
+  name: string; // ExtensionInstanceConfigName;
   createTime: string;
   source: ExtensionSource;
   params: {
@@ -82,10 +95,10 @@ export interface ExtensionInstanceConfig {
   extensionVersion?: string;
 }
 
-export type ExtensionSourceName = `projects/${string}/sources/${string}`;
+// export type ExtensionSourceName = `projects/${string}/sources/${string}`;
 
 export interface ExtensionSource {
-  name: ExtensionSourceName;
+  name: string; // ExtensionSourceName;
   state: 'STATE_UNSPECIFIED' | 'ACTIVE' | 'DELETED';
   packageUri: string;
   hash: string;
@@ -109,7 +122,6 @@ export interface ExtensionSpec {
   contributors?: Author[];
   license?: string;
   releaseNotesUrl?: string;
-  sourceUrl: string;
   params: Param[];
   preinstallContent?: string;
   postinstallContent?: string;
