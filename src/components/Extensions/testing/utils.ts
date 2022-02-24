@@ -68,4 +68,11 @@ export const EXTENSION: Extension = {
   visibility: Visibility.PUBLIC,
   registryLaunchStage: RegistryLaunchStage.GA,
   createTime: '2021-10-27T00:00:00.000Z',
+  iconUri:
+    'https://www.gstatic.com/mobilesdk/211001_mobilesdk/google-pay-logo.svg',
+  publisher: {
+    displayName: 'Awesome Inc.',
+    iconUri:
+      'https://www.gstatic.com/mobilesdk/160503_mobilesdk/logo/2x/firebase_128dp.png',
+  },
 };

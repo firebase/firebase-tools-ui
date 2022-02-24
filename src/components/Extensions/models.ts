@@ -28,6 +28,8 @@ export interface Extension {
   createTime: string;
   latestVersion?: string;
   latestVersionCreateTime?: string;
+  iconUri?: string;
+  publisher?: PublisherSummary;
 }
 
 export enum RegistryLaunchStage {
@@ -41,6 +43,11 @@ export enum RegistryLaunchStage {
 export enum Visibility {
   UNLISTED = 'unlisted',
   PUBLIC = 'public',
+}
+
+export interface PublisherSummary {
+  displayName: string;
+  iconUri?: string;
 }
 
 // export type ExtensionVersionName = `${ExtensionName}/versions/${string}`;
