@@ -14,49 +14,13 @@
  * limitations under the License.
  */
 
-// TODO(tjlav5): re-enable name-types when new babel version lands
+export type ExtensionName = `publishers/${string}/extensions/${string}`;
 
-// export type ExtensionName = `publishers/${string}/extensions/${string}`;
+export type ExtensionRef = `${string}/${string}`;
 
-// export type ExtensionRef = `${string}/${string}`;
-
-export interface BackendExtension {
-  name: string; // ExtensionName;
-  ref: string; // ExtensionRef;
-  visibility: Visibility;
-  registryLaunchStage: RegistryLaunchStage;
-  createTime: string;
-  latestVersion?: string;
-  latestVersionCreateTime?: string;
-  iconUri?: string;
-  publisher?: PublisherSummary;
-}
-
-export enum RegistryLaunchStage {
-  EXPERIMENTAL = 'EXPERIMENTAL',
-  BETA = 'BETA',
-  GA = 'GA',
-  DEPRECATED = 'DEPRECATED',
-  REGISTRY_LAUNCH_STAGE_UNSPECIFIED = 'REGISTRY_LAUNCH_STAGE_UNSPECIFIED',
-}
-
-export enum Visibility {
-  UNLISTED = 'unlisted',
-  PUBLIC = 'public',
-}
-
-export interface PublisherSummary {
-  displayName: string;
-  iconUri?: string;
-}
-
-// export type ExtensionVersionName = `${ExtensionName}/versions/${string}`;
-
-// export type ExtensionVersionRef = `${ExtensionRef}@${string}`;
-
-export interface ExtensionVersion {
-  name: string; // ExtensionVersionName;
-  ref: string; // ExtensionVersionRef;
+export interface Extension {
+  name: ExtensionName;
+  ref: ExtensionRef;
   state: 'STATE_UNSPECIFIED' | 'PUBLISHED' | 'DEPRECATED';
   spec: ExtensionSpec;
   hash: string;
@@ -66,19 +30,35 @@ export interface ExtensionVersion {
   deprecationMessage?: string;
 }
 
-// export type ExtensionInstanceName = `projects/${string}/instances/${string}`;
+export type ExtensionVersionName = `${ExtensionName}/versions/${string}`;
+
+export type ExtensionVersionRef = `${ExtensionRef}@${string}`;
+
+export interface ExtensionVersion {
+  name: ExtensionVersionName;
+  ref: ExtensionVersionRef;
+  state: 'STATE_UNSPECIFIED' | 'PUBLISHED' | 'DEPRECATED';
+  spec: ExtensionSpec;
+  hash: string;
+  sourceDownloadUri: string;
+  releaseNotes?: string;
+  createTime?: string;
+  deprecationMessage?: string;
+}
+
+export type ExtensionInstanceName = `projects/${string}/instances/${string}`;
 
 export interface ExtensionInstance {
-  name: string; // ExtensionInstanceName;
+  name: ExtensionInstanceName;
   createTime: string;
   updateTime: string;
   state:
-    | 'STATE_UNSPECIFIED'
-    | 'DEPLOYING'
-    | 'UNINSTALLING'
-    | 'ACTIVE'
-    | 'ERRORED'
-    | 'PAUSED';
+      | 'STATE_UNSPECIFIED'
+      | 'DEPLOYING'
+      | 'UNINSTALLING'
+      | 'ACTIVE'
+      | 'ERRORED'
+      | 'PAUSED';
   config: ExtensionInstanceConfig;
   serviceAccountEmail: string;
   errorStatus?: string;
@@ -88,10 +68,10 @@ export interface ExtensionInstance {
   extensionVersion?: string;
 }
 
-// export type ExtensionInstanceConfigName = `${ExtensionInstanceName}/configs/${string}`;
+export type ExtensionInstanceConfigName = `${ExtensionInstanceName}/configs/${string}`;
 
 export interface ExtensionInstanceConfig {
-  name: string; // ExtensionInstanceConfigName;
+  name: ExtensionInstanceConfigName;
   createTime: string;
   source: ExtensionSource;
   params: {
@@ -102,10 +82,10 @@ export interface ExtensionInstanceConfig {
   extensionVersion?: string;
 }
 
-// export type ExtensionSourceName = `projects/${string}/sources/${string}`;
+export type ExtensionSourceName = `projects/${string}/sources/${string}`;
 
 export interface ExtensionSource {
-  name: string; // ExtensionSourceName;
+  name: ExtensionSourceName;
   state: 'STATE_UNSPECIFIED' | 'ACTIVE' | 'DELETED';
   packageUri: string;
   hash: string;
@@ -129,18 +109,12 @@ export interface ExtensionSpec {
   contributors?: Author[];
   license?: string;
   releaseNotesUrl?: string;
+  sourceUrl: string;
   params: Param[];
   preinstallContent?: string;
   postinstallContent?: string;
   readmeContent?: string;
   externalServices?: ExternalService[];
-}
-
-// TODO(kirjs): Consider composing instead of extending here.
-export interface Extension extends ExtensionSpec {
-  iconUri?: string;
-  publisherIconUri?: string;
-  id: string;
 }
 
 export interface ExternalService {
