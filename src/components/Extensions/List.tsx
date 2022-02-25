@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import { Link } from 'react-router-dom';
-
 import { useExtensions } from './api/useExtensions';
 import { ExtensionLink } from './Route';
 
