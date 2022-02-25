@@ -1,5 +1,5 @@
 /**
- * Copyright 2020 Google LLC
+ * Copyright 2022 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +14,25 @@
  * limitations under the License.
  */
 
-import { Link } from 'react-router-dom';
+import { createContext, useContext } from 'react';
 
-import { useExtensions } from './api/useExtensions';
-import { ExtensionLink } from './Route';
+import { useExtensions } from './useExtensions';
 
-export const ExtensionsList: React.FC = () => {
-  const extensionBackends = useExtensions();
+const InstanceIdContext = createContext('');
 
+export const InstanceIdProvider: React.FC<{ instanceId: string }> = ({
+  children,
+  instanceId,
+}) => {
   return (
-    <ul>
-      {extensionBackends.map((b) => (
-        <li key={b.extensionInstanceId}>
-          <ExtensionLink instanceId={b.extensionInstanceId}>
-            {b.extensionInstanceId}
-          </ExtensionLink>
-        </li>
-      ))}
-    </ul>
+    <InstanceIdContext.Provider value={instanceId}>
+      {children}
+    </InstanceIdContext.Provider>
   );
 };
+
+export function useExtension() {
+  const extensions = useExtensions();
+  const instanceId = useContext(InstanceIdContext);
+  return extensions.find((e) => e.extensionInstanceId === instanceId);
+}

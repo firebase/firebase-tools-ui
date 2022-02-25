@@ -14,22 +14,14 @@
  * limitations under the License.
  */
 
-import { Redirect, useParams } from 'react-router-dom';
-
-import { useExtensionBackends } from './api';
-
-function useExtensionBackend() {
-  const extensionBackends = useExtensionBackends();
-  const { instanceId } = useParams<{ instanceId: string }>();
-
-  return extensionBackends.find((b) => b.extensionInstanceId === instanceId);
-}
+import { useExtension } from './api/useExtension';
+import { RedirectToList } from './Route';
 
 export const ExtensionDetails: React.FC = () => {
-  const extensionBackend = useExtensionBackend();
+  const extensionBackend = useExtension();
 
   // Redirect to list-view if there is no matching instance-id
-  if (!extensionBackend) return <Redirect to="/extensions" />;
+  if (!extensionBackend) return <RedirectToList />;
 
-  return <div>{JSON.stringify(extensionBackend)}</div>;
+  return <div>{extensionBackend.extensionInstanceId}</div>;
 };
