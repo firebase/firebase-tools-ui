@@ -15,7 +15,7 @@
  */
 
 import { useExtensions } from './api/useExtensions';
-import { ExtensionLink } from './Route';
+import { ExtensionLink } from '.';
 
 export const ExtensionsList: React.FC = () => {
   const extensionBackends = useExtensions();

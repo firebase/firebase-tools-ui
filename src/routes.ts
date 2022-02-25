@@ -18,7 +18,7 @@ import React from 'react';
 
 import Auth from './components/Auth';
 import Database from './components/Database';
-import { ExtensionsRoute } from './components/Extensions/Route';
+import { ExtensionsRoute } from './components/Extensions';
 import Firestore from './components/Firestore';
 import Home from './components/Home';
 import LogsViewer from './components/LogViewer';

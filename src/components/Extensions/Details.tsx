@@ -15,7 +15,7 @@
  */
 
 import { useExtension } from './api/useExtension';
-import { RedirectToList } from './Route';
+import { RedirectToList } from '.';
 
 export const ExtensionDetails: React.FC = () => {
   const extensionBackend = useExtension();

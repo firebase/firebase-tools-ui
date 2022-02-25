@@ -20,13 +20,8 @@ import { MemoryRouter, useLocation } from 'react-router-dom';
 
 import { Config } from '../../store/config/types';
 import { TestEmulatorConfigProvider } from '../common/EmulatorConfigProvider';
-import {
-  Backend,
-  ExtensionLink,
-  ExtensionsRoute,
-  RedirectToList,
-} from './Route';
 import { EXTENSION, EXTENSION_SPEC, EXTENSION_VERSION } from './testing/utils';
+import { Backend, ExtensionLink, ExtensionsRoute, RedirectToList } from '.';
 
 const TestWrapper: React.FC<{
   emulatorConfig?: Config | null;

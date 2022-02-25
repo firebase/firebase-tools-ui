@@ -18,17 +18,17 @@ import { createContext, useContext } from 'react';
 
 import { Extension, ExtensionSpec, ExtensionVersion } from '../models';
 
-interface RootExtensionBackend {
+interface CommonExtensionBackend {
   env: Record<string, string>;
   extensionInstanceId: string;
 }
 
-interface PublishedExtensionBackend extends RootExtensionBackend {
+interface PublishedExtensionBackend extends CommonExtensionBackend {
   extension: Extension;
   extensionVersion: ExtensionVersion;
 }
 
-interface LocalExtensionBackend extends RootExtensionBackend {
+interface LocalExtensionBackend extends CommonExtensionBackend {
   extensionSpec: ExtensionSpec;
 }
 
