@@ -41,7 +41,8 @@ export type Emulator =
   | 'logging'
   | 'hosting'
   | 'storage'
-  | 'pubsub';
+  | 'pubsub'
+  | 'extensions';
 
 export interface Config {
   projectId: string;
@@ -49,6 +50,7 @@ export interface Config {
   auth?: AuthConfig;
   firestore?: FirestoreConfig;
   functions?: FunctionsConfig;
+  extensions?: EmulatorConfig;
   logging?: LoggingConfig;
   hosting?: EmulatorConfig;
   storage?: EmulatorConfig;
