@@ -37,7 +37,7 @@ export const TestExtensionsProvider: React.FC<{
   return (
     <MemoryRouter initialEntries={[pagePath]}>
       <TestEmulatorConfigProvider config={emulatorConfig}>
-        <ExtensionsProvider extensions={extensions}>
+        <ExtensionsProvider extensionBackends={extensions}>
           {children}
         </ExtensionsProvider>
       </TestEmulatorConfigProvider>
