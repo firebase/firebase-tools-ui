@@ -22,6 +22,7 @@ import Firestore from './components/Firestore';
 import Home from './components/Home';
 import LogsViewer from './components/LogViewer';
 import { Storage } from './components/Storage';
+import { Extensions } from './components/Extensions';
 
 export interface Route {
   path: string;
@@ -43,6 +44,13 @@ export const routes: ReadonlyArray<Route> = [
     path: '/auth',
     component: Auth,
     label: 'Authentication',
+    exact: false,
+    showInNav: true,
+  },
+  {
+    path: '/extensions',
+    component: Extensions,
+    label: 'Extensions',
     exact: false,
     showInNav: true,
   },
