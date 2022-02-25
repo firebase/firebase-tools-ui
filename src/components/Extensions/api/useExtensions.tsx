@@ -18,19 +18,23 @@ import { createContext, useContext } from 'react';
 
 import { Extension, ExtensionSpec, ExtensionVersion } from '../models';
 
-interface PublishedExtensionBackend {
+interface RootExtensionBackend {
+  env: Record<string, string>;
+  extensionInstanceId: string;
+}
+
+interface PublishedExtensionBackend extends RootExtensionBackend {
   extension: Extension;
   extensionVersion: ExtensionVersion;
 }
 
-interface LocalExtensionBackend {
+interface LocalExtensionBackend extends RootExtensionBackend {
   extensionSpec: ExtensionSpec;
 }
 
-export type ExtensionBackend = {
-  env: Record<string, string>;
-  extensionInstanceId: string;
-} & (PublishedExtensionBackend | LocalExtensionBackend);
+export type ExtensionBackend =
+  | PublishedExtensionBackend
+  | LocalExtensionBackend;
 
 export const ExtensionsContext = createContext<ExtensionBackend[]>([]);
 
@@ -46,4 +50,16 @@ export const ExtensionsProvider: React.FC<{
 
 export function useExtensions() {
   return useContext(ExtensionsContext);
+}
+
+export function isPublishedExtension(
+  backend: ExtensionBackend
+): backend is PublishedExtensionBackend {
+  return backend.hasOwnProperty('extension');
+}
+
+export function isLocalExtension(
+  backend: ExtensionBackend
+): backend is LocalExtensionBackend {
+  return backend.hasOwnProperty('extensionSpec');
 }
