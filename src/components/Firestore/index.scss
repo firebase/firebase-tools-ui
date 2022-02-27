@@ -59,6 +59,7 @@
 .Firestore-panels-wrapper {
   flex: 1;
   min-width: 0;
+  overflow: hidden;
 }
 
 .Firestore-panels {
@@ -66,14 +67,16 @@
   flex-direction: row !important;
   min-width: 0;
   flex: 1 1 auto; // grow panels to bottom of card
+  overflow: hidden;
 }
 
 // TODO: Remove this wrapper and merge everything in document into a big list.
 .Firestore-Document-Fields {
   display: flex;
   flex-direction: column;
-  flex: 1;
+  flex: 2;
   min-width: 0;
+  overflow: scroll;
 
   .Firestore-InlineEditor-relative-anchor {
     .Firestore-InlineEditor {
@@ -92,10 +95,26 @@
   }
 }
 
+.Firestore-CollectionList {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  .mdc-list:not(.List-Actions) {
+    flex: 1;
+    overflow: scroll;
+  }
+}
+
+.Firestore-CollectionList:not(.Firestore-CollectionList-Empty) {
+  flex: 1;
+}
+
 .Firestore-Document-List,
 .Firestore-Field-List {
   flex: 1;
   min-width: 0;
+  overflow: scroll;
 }
 
 /** Only show at most 3 panels (Documents/Collections) */

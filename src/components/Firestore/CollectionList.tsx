@@ -18,6 +18,7 @@ import './index.scss';
 
 import { Button } from '@rmwc/button';
 import { List, ListItem } from '@rmwc/list';
+import classnames from 'classnames';
 import firebase from 'firebase';
 import React, { useState } from 'react';
 import { NavLink, useHistory, useRouteMatch } from 'react-router-dom';
@@ -83,7 +84,15 @@ const CollectionList: React.FC<Props> = ({ collections, reference }) => {
   };
 
   return (
-    <div className="Firestore-CollectionList" data-testid="collection-list">
+    <div
+      className={classnames(
+        'Firestore-CollectionList',
+        collections &&
+          collections.length === 0 &&
+          'Firestore-CollectionList-Empty'
+      )}
+      data-testid="collection-list"
+    >
       {redirectIfAutoSelectable}
 
       {isAddCollectionDialogOpen && (
