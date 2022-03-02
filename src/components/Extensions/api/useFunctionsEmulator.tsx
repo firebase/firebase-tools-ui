@@ -13,26 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { useEmulatorConfig } from '../../common/EmulatorConfigProvider';
 
-import { createContext, useContext } from 'react';
-
-import { ExtensionsContext } from './useExtensions';
-
-const InstanceIdContext = createContext('');
-
-export const InstanceIdProvider: React.FC<{ instanceId: string }> = ({
-  children,
-  instanceId,
-}) => {
-  return (
-    <InstanceIdContext.Provider value={instanceId}>
-      {children}
-    </InstanceIdContext.Provider>
-  );
-};
-
-export function useExtension() {
-  const extensions = useContext(ExtensionsContext);
-  const instanceId = useContext(InstanceIdContext);
-  return extensions.find((e) => e.extensionInstanceId === instanceId);
+export function useFunctionsEmulator() {
+  const config = useEmulatorConfig('extensions');
+  return `http://${config.hostAndPort}`;
 }

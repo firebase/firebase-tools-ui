@@ -1,5 +1,5 @@
 /**
- * Copyright 2020 Google LLC
+ * Copyright 2022 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,24 +14,26 @@
  * limitations under the License.
  */
 
-import { Card } from '@rmwc/card';
-import { Elevation } from '@rmwc/elevation';
-import { GridCell } from '@rmwc/grid';
+import { DataTable, DataTableBody, DataTableContent } from '@rmwc/data-table';
 import React from 'react';
 
-import { useExtensions } from './api/useExtensions';
-import { ExtensionsTable } from './ExtensionsCard/ExtensionTable';
+import { ExtensionRowSpec } from '../models';
+import { ExtensionsTableRow } from './ExtensionTableRow';
 
-export const ExtensionsList: React.FC = () => {
-  const specs = useExtensions();
+export interface ExtensionsTableProps {
+  specs: ExtensionRowSpec[];
+}
 
+export const ExtensionsTable: React.FC<ExtensionsTableProps> = ({ specs }) => {
   return (
-    <GridCell span={12} className="Extensions">
-      <Elevation z="2" wrap>
-        <Card>
-          <ExtensionsTable specs={specs} />
-        </Card>
-      </Elevation>
-    </GridCell>
+    <DataTable>
+      <DataTableContent>
+        <DataTableBody>
+          {specs.map((spec) => (
+            <ExtensionsTableRow key={spec.id} spec={spec} />
+          ))}
+        </DataTableBody>
+      </DataTableContent>
+    </DataTable>
   );
 };

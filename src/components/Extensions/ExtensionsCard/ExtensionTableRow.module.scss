@@ -14,25 +14,30 @@
  * limitations under the License.
  */
 
-import { createContext, useContext } from 'react';
+.iconCell, .infoCell {
+  padding: 8px 16px;
+}
+.iconCell {
+  align-items: center;
+  display: flex;
+  height: 100px;
+  width: 72px;
 
-import { ExtensionsContext } from './useExtensions';
+  img {
+    width: 52px;
+  }
+}
 
-const InstanceIdContext = createContext('');
+.infoHeader {
+  align-items: center;
+  display: flex;
 
-export const InstanceIdProvider: React.FC<{ instanceId: string }> = ({
-  children,
-  instanceId,
-}) => {
-  return (
-    <InstanceIdContext.Provider value={instanceId}>
-      {children}
-    </InstanceIdContext.Provider>
-  );
-};
+  img {
+    height: 16px;
+    width: 16px;
+  }
+}
 
-export function useExtension() {
-  const extensions = useContext(ExtensionsContext);
-  const instanceId = useContext(InstanceIdContext);
-  return extensions.find((e) => e.extensionInstanceId === instanceId);
+.infoCell {
+  width: 100%;
 }

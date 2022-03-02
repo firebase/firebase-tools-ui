@@ -16,7 +16,12 @@
 
 import { createContext, useContext } from 'react';
 
-import { Extension, ExtensionSpec, ExtensionVersion } from '../models';
+import {
+  Extension,
+  ExtensionRowSpec,
+  ExtensionSpec,
+  ExtensionVersion,
+} from '../models';
 
 interface CommonExtensionBackend {
   env: Record<string, string>;
@@ -37,6 +42,7 @@ export type ExtensionBackend =
   | LocalExtensionBackend;
 
 export const ExtensionsContext = createContext<ExtensionBackend[]>([]);
+export const ExtensionsSpecContext = createContext<ExtensionRowSpec[]>([]);
 
 export const ExtensionsProvider: React.FC<{
   extensionBackends: ExtensionBackend[];
@@ -48,8 +54,18 @@ export const ExtensionsProvider: React.FC<{
   );
 };
 
+export const ExtensionsSpecProvider: React.FC<{
+  extensionRowSpecs: ExtensionRowSpec[];
+}> = ({ children, extensionRowSpecs }) => {
+  return (
+    <ExtensionsSpecContext.Provider value={extensionRowSpecs}>
+      {children}
+    </ExtensionsSpecContext.Provider>
+  );
+};
+
 export function useExtensions() {
-  return useContext(ExtensionsContext);
+  return useContext(ExtensionsSpecContext);
 }
 
 export function isPublishedExtension(

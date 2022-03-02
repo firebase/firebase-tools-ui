@@ -136,6 +136,12 @@ export interface ExtensionSpec {
   externalServices?: ExternalService[];
 }
 
+export interface ExtensionRowSpec extends ExtensionSpec {
+  iconUri?: string;
+  publisherIconUri?: string;
+  id: string;
+}
+
 export interface ExternalService {
   name: string;
   pricingUri: string;

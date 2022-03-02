@@ -15,37 +15,23 @@
  */
 
 import { render } from '@testing-library/react';
-import { MemoryRouter, Router } from 'react-router-dom';
 
-import { ExtensionsContext } from './api/useExtensions';
+import { isExtensionBackend } from './api/useExtensionBackends';
 import { ExtensionsList } from './List';
 import { TestExtensionsProvider } from './testing/TestExtensionsProvider';
-import { EXTENSION, EXTENSION_VERSION } from './testing/utils';
+import { BACKEND_LIST } from './testing/utils';
 
 describe('ExtensionsList', () => {
   it('renders list of extensions', () => {
     const { getByText } = render(
       <TestExtensionsProvider
-        extensions={[
-          {
-            env: {},
-            extensionInstanceId: 'foo-bar',
-            extension: EXTENSION,
-            extensionVersion: EXTENSION_VERSION,
-          },
-          {
-            env: {},
-            extensionInstanceId: 'foo-other',
-            extension: EXTENSION,
-            extensionVersion: EXTENSION_VERSION,
-          },
-        ]}
+        extensions={BACKEND_LIST.filter(isExtensionBackend)}
       >
         <ExtensionsList />
       </TestExtensionsProvider>
     );
 
-    expect(getByText('foo-bar')).not.toBeNull();
-    expect(getByText('foo-other')).not.toBeNull();
+    expect(getByText('Good Tool')).not.toBeNull();
+    expect(getByText('Pirojok-the-tool')).not.toBeNull();
   });
 });
