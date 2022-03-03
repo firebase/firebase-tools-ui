@@ -15,6 +15,7 @@
  */
 
 import './index.scss';
+import './CollectionList.scss';
 
 import { Button } from '@rmwc/button';
 import { List, ListItem } from '@rmwc/list';
@@ -87,9 +88,7 @@ const CollectionList: React.FC<Props> = ({ collections, reference }) => {
     <div
       className={classnames(
         'Firestore-CollectionList',
-        collections &&
-          collections.length === 0 &&
-          'Firestore-CollectionList-Empty'
+        collections.length === 0 && 'Firestore-CollectionList-empty'
       )}
       data-testid="collection-list"
     >

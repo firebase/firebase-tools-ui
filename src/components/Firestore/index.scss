@@ -95,21 +95,6 @@
   }
 }
 
-.Firestore-CollectionList {
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-
-  .mdc-list:not(.List-Actions) {
-    flex: 1;
-    overflow: scroll;
-  }
-}
-
-.Firestore-CollectionList:not(.Firestore-CollectionList-Empty) {
-  flex: 1;
-}
-
 .Firestore-Document-List,
 .Firestore-Field-List {
   flex: 1;
