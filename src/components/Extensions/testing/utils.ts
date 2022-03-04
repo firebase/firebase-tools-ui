@@ -16,7 +16,7 @@
 
 import { ExtensionBackend } from '../api/useExtensions';
 import {
-  Extension,
+  BackendExtension,
   ExtensionSpec,
   ExtensionVersion,
   RegistryLaunchStage,
@@ -79,7 +79,7 @@ export const EXTENSION_VERSION: ExtensionVersion = {
   createTime: '2021-10-27T00:00:00.000Z',
 };
 
-export const EXTENSION: Extension = {
+export const EXTENSION: BackendExtension = {
   name: 'publishers/awesome-inc/extensions/good-tool',
   ref: 'awesome-inc/good-tool',
   visibility: Visibility.PUBLIC,

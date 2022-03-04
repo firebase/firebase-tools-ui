@@ -17,13 +17,13 @@
 import { renderHook } from '@testing-library/react-hooks';
 import React, { Suspense } from 'react';
 
-import { TestEmulatorConfigProvider } from '../../common/EmulatorConfigProvider';
-import { mockExtensionBackends } from '../testing/mockExtensionBackend';
-import { BACKEND_LIST, CONFIG_WITH_EXTENSION } from '../testing/utils';
-import { useExtensionRowSpecs } from './useExtensionRowSpec';
+import { TestEmulatorConfigProvider } from '../../../common/EmulatorConfigProvider';
+import { mockExtensionBackends } from '../../testing/mockExtensionBackend';
+import { BACKEND_LIST, CONFIG_WITH_EXTENSION } from '../../testing/utils';
+import { useExtensionData } from './useExtensionData';
 
-describe('useExtensionRowSpecs', () => {
-  it('returns the list of extension row specs', async () => {
+describe('useExtensionDatas', () => {
+  it('returns the list of extension row extensions', async () => {
     mockExtensionBackends(BACKEND_LIST);
     const wrapper: React.FC = ({ children }) => {
       return (
@@ -33,10 +33,9 @@ describe('useExtensionRowSpecs', () => {
       );
     };
 
-    const { result, waitForNextUpdate } = renderHook(
-      () => useExtensionRowSpecs(),
-      { wrapper }
-    );
+    const { result, waitForNextUpdate } = renderHook(() => useExtensionData(), {
+      wrapper,
+    });
     await waitForNextUpdate();
 
     expect(result.current).toEqual([

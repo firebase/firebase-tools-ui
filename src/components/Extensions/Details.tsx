@@ -23,5 +23,5 @@ export const ExtensionDetails: React.FC = () => {
   // Redirect to list-view if there is no matching instance-id
   if (!extensionBackend) return <RedirectToList />;
 
-  return <div>{extensionBackend.extensionInstanceId}</div>;
+  return <div>{extensionBackend.id}</div>;
 };

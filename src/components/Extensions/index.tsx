@@ -20,16 +20,12 @@ import { Link, Redirect, Route, Switch, useParams } from 'react-router-dom';
 import { useIsEmulatorDisabled } from '../common/EmulatorConfigProvider';
 import { EmulatorDisabled } from '../common/EmulatorDisabled';
 import { Spinner } from '../common/Spinner';
+import { useExtensionData } from './api/internal/useExtensionData';
 import { InstanceIdProvider } from './api/useExtension';
-import { useExtensionBackends } from './api/useExtensionBackends';
-import { useExtensionRowSpecs } from './api/useExtensionRowSpec';
-import {
-  ExtensionsProvider,
-  ExtensionsSpecProvider,
-} from './api/useExtensions';
+import { ExtensionsProvider } from './api/useExtensions';
 import { ExtensionDetails } from './Details';
 import { ExtensionsList } from './List';
-import { Extension, ExtensionSpec, ExtensionVersion } from './models';
+import { BackendExtension, ExtensionSpec, ExtensionVersion } from './models';
 
 export const ExtensionsRoute: React.FC = () => {
   return (
@@ -44,21 +40,16 @@ export const ExtensionsRoute: React.FC = () => {
 export interface Backend {
   env: Record<string, string>;
   extensionInstanceId?: string;
-  extension?: Extension;
+  extension?: BackendExtension;
   extensionVersion?: ExtensionVersion;
   extensionSpec?: ExtensionSpec;
 }
 
 const HydrateExtensions: React.FC = ({ children }) => {
-  const backends = useExtensionBackends();
-  const specs = useExtensionRowSpecs();
+  const extensions = useExtensionData();
 
   return (
-    <ExtensionsSpecProvider extensionRowSpecs={specs}>
-      <ExtensionsProvider extensionBackends={backends}>
-        {children}
-      </ExtensionsProvider>
-    </ExtensionsSpecProvider>
+    <ExtensionsProvider extensions={extensions}>{children}</ExtensionsProvider>
   );
 };
 

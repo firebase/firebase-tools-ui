@@ -13,31 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { useEmulatorConfig } from '../../../common/EmulatorConfigProvider';
 
-.iconCell, .infoCell {
-  padding: 8px 16px;
-}
-.iconCell {
-  align-items: center;
-  display: flex;
-  height: 100px;
-  width: 72px;
-
-  img {
-    width: 52px;
-  }
-}
-
-.infoHeader {
-  align-items: center;
-  display: flex;
-
-  img {
-    height: 16px;
-    width: 16px;
-  }
-}
-
-.infoCell {
-  width: 100%;
+export function useFunctionsEmulator() {
+  const config = useEmulatorConfig('extensions');
+  return `http://${config.hostAndPort}`;
 }

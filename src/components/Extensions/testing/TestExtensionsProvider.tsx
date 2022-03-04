@@ -17,14 +17,10 @@
 import React, { Suspense } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
-import { Config } from '../../../store/config/types';
+import { Config } from '../../../store/config';
 import { TestEmulatorConfigProvider } from '../../common/EmulatorConfigProvider';
-import { convertBackendsToRawSpecs } from '../api/useExtensionRowSpec';
-import {
-  ExtensionBackend,
-  ExtensionsProvider,
-  ExtensionsSpecProvider,
-} from '../api/useExtensions';
+import { convertBackendsToExtensions } from '../api/internal/useExtensionData';
+import { ExtensionBackend, ExtensionsProvider } from '../api/useExtensions';
 
 export const TestExtensionsProvider: React.FC<{
   instanceId?: string;
@@ -43,12 +39,10 @@ export const TestExtensionsProvider: React.FC<{
   return (
     <MemoryRouter initialEntries={[pagePath]}>
       <TestEmulatorConfigProvider config={emulatorConfig}>
-        <ExtensionsProvider extensionBackends={extensions}>
-          <ExtensionsSpecProvider
-            extensionRowSpecs={convertBackendsToRawSpecs(extensions)}
-          >
-            <Suspense fallback={null}>{children}</Suspense>
-          </ExtensionsSpecProvider>
+        <ExtensionsProvider
+          extensions={convertBackendsToExtensions(extensions)}
+        >
+          <Suspense fallback={null}>{children}</Suspense>
         </ExtensionsProvider>
       </TestEmulatorConfigProvider>
     </MemoryRouter>

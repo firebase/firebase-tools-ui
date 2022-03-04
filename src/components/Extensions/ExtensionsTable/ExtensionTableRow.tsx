@@ -20,40 +20,44 @@ import { Typography } from '@rmwc/typography';
 import React from 'react';
 
 import { ExtensionLink } from '../index';
-import { ExtensionRowSpec } from '../models';
+import { Extension } from '../models';
 import styles from './ExtensionTableRow.module.scss';
 
 export interface ExtensionsTableRowProps {
-  spec: ExtensionRowSpec;
+  extension: Extension;
 }
 
 export const ExtensionsTableRow: React.FC<ExtensionsTableRowProps> = ({
-  spec,
+  extension,
 }) => {
   return (
-    <DataTableRow key={spec.name}>
+    <DataTableRow key={extension.name}>
       <DataTableCell className={styles.iconCell}>
-        <img src={spec.iconUri} aria-hidden={true} alt="Extension logo" />
+        <img
+          src={extension.iconUri}
+          aria-hidden={true}
+          alt="BackendExtension logo"
+        />
       </DataTableCell>
       <DataTableCell className={styles.infoCell}>
         <div className={styles.infoHeader}>
           <img
             aria-hidden={true}
             alt="Publisher logo"
-            src={spec.publisherIconUri}
+            src={extension.publisherIconUri}
           />
           <Typography use="body1" theme="textPrimaryOnBackground">
-            {spec.displayName}
+            {extension.displayName}
           </Typography>
         </div>
         <div>
           <Typography use="body2" theme="textSecondaryOnBackground">
-            {spec.name}@{spec.specVersion}
+            {extension.name}@{extension.specVersion}
           </Typography>
         </div>
       </DataTableCell>
       <DataTableCell>
-        <ExtensionLink instanceId={spec.id}>
+        <ExtensionLink instanceId={extension.id}>
           <IconButton theme="primary" icon="arrow_forward" />
         </ExtensionLink>
       </DataTableCell>

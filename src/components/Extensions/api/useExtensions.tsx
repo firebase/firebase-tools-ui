@@ -17,8 +17,8 @@
 import { createContext, useContext } from 'react';
 
 import {
+  BackendExtension,
   Extension,
-  ExtensionRowSpec,
   ExtensionSpec,
   ExtensionVersion,
 } from '../models';
@@ -29,7 +29,7 @@ interface CommonExtensionBackend {
 }
 
 interface PublishedExtensionBackend extends CommonExtensionBackend {
-  extension: Extension;
+  extension: BackendExtension;
   extensionVersion: ExtensionVersion;
 }
 
@@ -41,31 +41,20 @@ export type ExtensionBackend =
   | PublishedExtensionBackend
   | LocalExtensionBackend;
 
-export const ExtensionsContext = createContext<ExtensionBackend[]>([]);
-export const ExtensionsSpecContext = createContext<ExtensionRowSpec[]>([]);
+export const ExtensionsContext = createContext<Extension[]>([]);
 
 export const ExtensionsProvider: React.FC<{
-  extensionBackends: ExtensionBackend[];
-}> = ({ children, extensionBackends }) => {
+  extensions: Extension[];
+}> = ({ children, extensions }) => {
   return (
-    <ExtensionsContext.Provider value={extensionBackends}>
+    <ExtensionsContext.Provider value={extensions}>
       {children}
     </ExtensionsContext.Provider>
   );
 };
 
-export const ExtensionsSpecProvider: React.FC<{
-  extensionRowSpecs: ExtensionRowSpec[];
-}> = ({ children, extensionRowSpecs }) => {
-  return (
-    <ExtensionsSpecContext.Provider value={extensionRowSpecs}>
-      {children}
-    </ExtensionsSpecContext.Provider>
-  );
-};
-
 export function useExtensions() {
-  return useContext(ExtensionsSpecContext);
+  return useContext(ExtensionsContext);
 }
 
 export function isPublishedExtension(

@@ -17,20 +17,22 @@
 import { DataTable, DataTableBody, DataTableContent } from '@rmwc/data-table';
 import React from 'react';
 
-import { ExtensionRowSpec } from '../models';
+import { Extension } from '../models';
 import { ExtensionsTableRow } from './ExtensionTableRow';
 
 export interface ExtensionsTableProps {
-  specs: ExtensionRowSpec[];
+  extensions: Extension[];
 }
 
-export const ExtensionsTable: React.FC<ExtensionsTableProps> = ({ specs }) => {
+export const ExtensionsTable: React.FC<ExtensionsTableProps> = ({
+  extensions,
+}) => {
   return (
     <DataTable>
       <DataTableContent>
         <DataTableBody>
-          {specs.map((spec) => (
-            <ExtensionsTableRow key={spec.id} spec={spec} />
+          {extensions.map((extension) => (
+            <ExtensionsTableRow key={extension.id} extension={extension} />
           ))}
         </DataTableBody>
       </DataTableContent>

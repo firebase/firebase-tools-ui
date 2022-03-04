@@ -15,8 +15,8 @@
  */
 import useSwr from 'swr';
 
-import { Backend } from '../index';
-import { ExtensionBackend } from './useExtensions';
+import { Backend } from '../../index';
+import { ExtensionBackend } from '../useExtensions';
 import { useFunctionsEmulator } from './useFunctionsEmulator';
 
 export function isExtensionBackend(

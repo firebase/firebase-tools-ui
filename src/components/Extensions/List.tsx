@@ -20,7 +20,7 @@ import { GridCell } from '@rmwc/grid';
 import React from 'react';
 
 import { useExtensions } from './api/useExtensions';
-import { ExtensionsTable } from './ExtensionsCard/ExtensionTable';
+import { ExtensionsTable } from './ExtensionsTable/ExtensionTable';
 
 export const ExtensionsList: React.FC = () => {
   const specs = useExtensions();
@@ -29,7 +29,7 @@ export const ExtensionsList: React.FC = () => {
     <GridCell span={12} className="Extensions">
       <Elevation z="2" wrap>
         <Card>
-          <ExtensionsTable specs={specs} />
+          <ExtensionsTable extensions={specs} />
         </Card>
       </Elevation>
     </GridCell>

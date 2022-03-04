@@ -34,5 +34,5 @@ export const InstanceIdProvider: React.FC<{ instanceId: string }> = ({
 export function useExtension() {
   const extensions = useContext(ExtensionsContext);
   const instanceId = useContext(InstanceIdContext);
-  return extensions.find((e) => e.extensionInstanceId === instanceId);
+  return extensions.find((e) => e.id === instanceId);
 }

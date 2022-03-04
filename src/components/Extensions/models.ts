@@ -20,7 +20,7 @@
 
 // export type ExtensionRef = `${string}/${string}`;
 
-export interface Extension {
+export interface BackendExtension {
   name: string; // ExtensionName;
   ref: string; // ExtensionRef;
   visibility: Visibility;
@@ -136,7 +136,7 @@ export interface ExtensionSpec {
   externalServices?: ExternalService[];
 }
 
-export interface ExtensionRowSpec extends ExtensionSpec {
+export interface Extension extends ExtensionSpec {
   iconUri?: string;
   publisherIconUri?: string;
   id: string;

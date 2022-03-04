@@ -17,10 +17,10 @@
 import { renderHook } from '@testing-library/react-hooks';
 
 import { EXTENSION, EXTENSION_SPEC, EXTENSION_VERSION } from '../testing/utils';
-import { convertBackendsToRawSpecs } from './useExtensionRowSpec';
+import { convertBackendsToExtensions } from './internal/useExtensionData';
 import {
   ExtensionBackend,
-  ExtensionsSpecProvider,
+  ExtensionsProvider,
   useExtensions,
 } from './useExtensions';
 
@@ -41,11 +41,9 @@ describe('useExtensions', () => {
     ];
 
     const wrapper: React.FC = ({ children }) => (
-      <ExtensionsSpecProvider
-        extensionRowSpecs={convertBackendsToRawSpecs(want)}
-      >
+      <ExtensionsProvider extensions={convertBackendsToExtensions(want)}>
         {children}
-      </ExtensionsSpecProvider>
+      </ExtensionsProvider>
     );
 
     const { result } = renderHook(() => useExtensions(), { wrapper });

@@ -16,7 +16,7 @@
 
 import { render } from '@testing-library/react';
 
-import { isExtensionBackend } from './api/useExtensionBackends';
+import { isExtensionBackend } from './api/internal/useExtensionBackends';
 import { ExtensionsList } from './List';
 import { TestExtensionsProvider } from './testing/TestExtensionsProvider';
 import { BACKEND_LIST } from './testing/utils';

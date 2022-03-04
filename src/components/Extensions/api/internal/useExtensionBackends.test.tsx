@@ -17,31 +17,30 @@
 import { renderHook } from '@testing-library/react-hooks';
 import React, { Suspense } from 'react';
 
-import { TestEmulatorConfigProvider } from '../../common/EmulatorConfigProvider';
-import { useFunctionsEmulator } from './useFunctionsEmulator';
+import { mockExtensionBackends } from '../../testing/mockExtensionBackend';
+import { TestExtensionsProvider } from '../../testing/TestExtensionsProvider';
+import { BACKEND_LIST } from '../../testing/utils';
+import { useExtensionBackends } from './useExtensionBackends';
 
-const hostAndPort = 'pirojok:689';
-
-describe('useFunctionsEmulator', () => {
-  it('returns the emulator URL', () => {
+describe('useExtensionBackends', () => {
+  it('returns the list of extension backends', async () => {
+    mockExtensionBackends(BACKEND_LIST);
     const wrapper: React.FC = ({ children }) => {
       return (
-        <TestEmulatorConfigProvider
-          config={{
-            projectId: '',
-            extensions: {
-              hostAndPort,
-              host: 'pirojok',
-              port: 689,
-            },
-          }}
-        >
+        <TestExtensionsProvider>
           <Suspense fallback={null}>{children}</Suspense>
-        </TestEmulatorConfigProvider>
+        </TestExtensionsProvider>
       );
     };
 
-    const { result } = renderHook(() => useFunctionsEmulator(), { wrapper });
-    expect(result.current).toEqual(`http://${hostAndPort}`);
+    const { result, waitForNextUpdate } = renderHook(
+      () => useExtensionBackends(),
+      {
+        wrapper,
+      }
+    );
+
+    await waitForNextUpdate();
+    expect(result.current).toEqual([BACKEND_LIST[0], BACKEND_LIST[1]]);
   });
 });
