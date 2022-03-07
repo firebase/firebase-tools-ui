@@ -20,9 +20,9 @@ import React, { Suspense } from 'react';
 import { TestEmulatorConfigProvider } from '../../../common/EmulatorConfigProvider';
 import { mockExtensionBackends } from '../../testing/mockExtensionBackend';
 import { BACKEND_LIST, CONFIG_WITH_EXTENSION } from '../../testing/utils';
-import { useExtensionData } from './useExtensionData';
+import { useExtensionsData } from './useExtensionsData';
 
-describe('useExtensionDatas', () => {
+describe('useExtensionsData', () => {
   it('returns the list of extension row extensions', async () => {
     mockExtensionBackends(BACKEND_LIST);
     const wrapper: React.FC = ({ children }) => {
@@ -33,9 +33,12 @@ describe('useExtensionDatas', () => {
       );
     };
 
-    const { result, waitForNextUpdate } = renderHook(() => useExtensionData(), {
-      wrapper,
-    });
+    const { result, waitForNextUpdate } = renderHook(
+      () => useExtensionsData(),
+      {
+        wrapper,
+      }
+    );
     await waitForNextUpdate();
 
     expect(result.current).toEqual([

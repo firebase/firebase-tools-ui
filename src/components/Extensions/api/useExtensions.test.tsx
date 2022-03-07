@@ -17,7 +17,7 @@
 import { renderHook } from '@testing-library/react-hooks';
 
 import { EXTENSION, EXTENSION_SPEC, EXTENSION_VERSION } from '../testing/utils';
-import { convertBackendsToExtensions } from './internal/useExtensionData';
+import { convertBackendsToExtensions } from './internal/useExtensionsData';
 import {
   ExtensionBackend,
   ExtensionsProvider,

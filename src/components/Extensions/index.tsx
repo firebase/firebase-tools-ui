@@ -20,7 +20,7 @@ import { Link, Redirect, Route, Switch, useParams } from 'react-router-dom';
 import { useIsEmulatorDisabled } from '../common/EmulatorConfigProvider';
 import { EmulatorDisabled } from '../common/EmulatorDisabled';
 import { Spinner } from '../common/Spinner';
-import { useExtensionData } from './api/internal/useExtensionData';
+import { useExtensionsData } from './api/internal/useExtensionsData';
 import { InstanceIdProvider } from './api/useExtension';
 import { ExtensionsProvider } from './api/useExtensions';
 import { ExtensionDetails } from './Details';
@@ -46,7 +46,7 @@ export interface Backend {
 }
 
 const HydrateExtensions: React.FC = ({ children }) => {
-  const extensions = useExtensionData();
+  const extensions = useExtensionsData();
 
   return (
     <ExtensionsProvider extensions={extensions}>{children}</ExtensionsProvider>

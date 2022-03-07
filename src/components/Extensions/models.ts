@@ -136,6 +136,7 @@ export interface ExtensionSpec {
   externalServices?: ExternalService[];
 }
 
+// TODO(kirjs): Consider composing instead of extending here.
 export interface Extension extends ExtensionSpec {
   iconUri?: string;
   publisherIconUri?: string;

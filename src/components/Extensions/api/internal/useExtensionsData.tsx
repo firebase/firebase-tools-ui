@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 import { Extension } from '../../models';
-import { ExtensionBackend } from '../useExtensions';
+import { ExtensionBackend, isLocalExtension } from '../useExtensions';
 import { useExtensionBackends } from './useExtensionBackends';
 
-export function useExtensionData(): Extension[] {
+export function useExtensionsData(): Extension[] {
   const backends = useExtensionBackends();
 
   return convertBackendsToExtensions(backends);
 }
 
 export function convertBackendToExtension(backend: ExtensionBackend) {
-  if ('extensionSpec' in backend) {
+  if (isLocalExtension(backend)) {
     return {
       id: backend.extensionInstanceId,
       ...backend.extensionSpec,

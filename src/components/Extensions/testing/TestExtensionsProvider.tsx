@@ -19,7 +19,7 @@ import { MemoryRouter } from 'react-router-dom';
 
 import { Config } from '../../../store/config';
 import { TestEmulatorConfigProvider } from '../../common/EmulatorConfigProvider';
-import { convertBackendsToExtensions } from '../api/internal/useExtensionData';
+import { convertBackendsToExtensions } from '../api/internal/useExtensionsData';
 import { ExtensionBackend, ExtensionsProvider } from '../api/useExtensions';
 
 export const TestExtensionsProvider: React.FC<{
