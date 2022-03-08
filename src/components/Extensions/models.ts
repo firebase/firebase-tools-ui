@@ -20,7 +20,7 @@
 
 // export type ExtensionRef = `${string}/${string}`;
 
-export interface Extension {
+export interface BackendExtension {
   name: string; // ExtensionName;
   ref: string; // ExtensionRef;
   visibility: Visibility;
@@ -134,6 +134,13 @@ export interface ExtensionSpec {
   postinstallContent?: string;
   readmeContent?: string;
   externalServices?: ExternalService[];
+}
+
+// TODO(kirjs): Consider composing instead of extending here.
+export interface Extension extends ExtensionSpec {
+  iconUri?: string;
+  publisherIconUri?: string;
+  id: string;
 }
 
 export interface ExternalService {

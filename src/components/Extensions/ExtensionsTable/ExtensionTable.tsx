@@ -14,25 +14,28 @@
  * limitations under the License.
  */
 
-import { createContext, useContext } from 'react';
+import { DataTable, DataTableBody, DataTableContent } from '@rmwc/data-table';
+import React from 'react';
 
-import { ExtensionsContext } from './useExtensions';
+import { Extension } from '../models';
+import { ExtensionsTableRow } from './ExtensionTableRow';
 
-const InstanceIdContext = createContext('');
+export interface ExtensionsTableProps {
+  extensions: Extension[];
+}
 
-export const InstanceIdProvider: React.FC<{ instanceId: string }> = ({
-  children,
-  instanceId,
+export const ExtensionsTable: React.FC<ExtensionsTableProps> = ({
+  extensions,
 }) => {
   return (
-    <InstanceIdContext.Provider value={instanceId}>
-      {children}
-    </InstanceIdContext.Provider>
+    <DataTable>
+      <DataTableContent>
+        <DataTableBody>
+          {extensions.map((extension) => (
+            <ExtensionsTableRow key={extension.id} extension={extension} />
+          ))}
+        </DataTableBody>
+      </DataTableContent>
+    </DataTable>
   );
 };
-
-export function useExtension() {
-  const extensions = useContext(ExtensionsContext);
-  const instanceId = useContext(InstanceIdContext);
-  return extensions.find((e) => e.id === instanceId);
-}
