@@ -14,21 +14,24 @@
  * limitations under the License.
  */
 
+import { Card } from '@rmwc/card';
+import { Elevation } from '@rmwc/elevation';
+import { GridCell } from '@rmwc/grid';
+import React from 'react';
+
 import { useExtensions } from './api/useExtensions';
-import { ExtensionLink } from '.';
+import { ExtensionsTable } from './ExtensionsTable/ExtensionTable';
 
 export const ExtensionsList: React.FC = () => {
-  const extensionBackends = useExtensions();
+  const specs = useExtensions();
 
   return (
-    <ul>
-      {extensionBackends.map((b) => (
-        <li key={b.extensionInstanceId}>
-          <ExtensionLink instanceId={b.extensionInstanceId}>
-            {b.extensionInstanceId}
-          </ExtensionLink>
-        </li>
-      ))}
-    </ul>
+    <GridCell span={12} className="Extensions">
+      <Elevation z="2" wrap>
+        <Card>
+          <ExtensionsTable extensions={specs} />
+        </Card>
+      </Elevation>
+    </GridCell>
   );
 };

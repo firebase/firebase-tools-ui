@@ -15,42 +15,35 @@
  */
 
 import { renderHook } from '@testing-library/react-hooks';
+import React, { Suspense } from 'react';
 
-import { EXTENSION, EXTENSION_SPEC, EXTENSION_VERSION } from '../testing/utils';
-import { convertBackendsToExtensions } from './internal/useExtensionsData';
-import {
-  ExtensionBackend,
-  ExtensionsProvider,
-  useExtensions,
-} from './useExtensions';
+import { TestEmulatorConfigProvider } from '../../../common/EmulatorConfigProvider';
+import { mockExtensionBackends } from '../../testing/mockExtensionBackend';
+import { BACKEND_LIST, CONFIG_WITH_EXTENSION } from '../../testing/utils';
+import { useExtensionsData } from './useExtensionsData';
 
-describe('useExtensions', () => {
-  it('returns the list of extension backends', () => {
-    const want: ExtensionBackend[] = [
+describe('useExtensionsData', () => {
+  it('returns the list of extension row extensions', async () => {
+    mockExtensionBackends(BACKEND_LIST);
+    const wrapper: React.FC = ({ children }) => {
+      return (
+        <TestEmulatorConfigProvider config={CONFIG_WITH_EXTENSION}>
+          <Suspense fallback={null}>{children}</Suspense>
+        </TestEmulatorConfigProvider>
+      );
+    };
+
+    const { result, waitForNextUpdate } = renderHook(
+      () => useExtensionsData(),
       {
-        env: {},
-        extensionInstanceId: 'foo-published',
-        extension: EXTENSION,
-        extensionVersion: EXTENSION_VERSION,
-      },
-      {
-        env: {},
-        extensionInstanceId: 'foo-local',
-        extensionSpec: EXTENSION_SPEC,
-      },
-    ];
-
-    const wrapper: React.FC = ({ children }) => (
-      <ExtensionsProvider extensions={convertBackendsToExtensions(want)}>
-        {children}
-      </ExtensionsProvider>
+        wrapper,
+      }
     );
-
-    const { result } = renderHook(() => useExtensions(), { wrapper });
+    await waitForNextUpdate();
 
     expect(result.current).toEqual([
       {
-        id: 'foo-published',
+        id: 'pirojok-the-published-extension',
         specVersion: 'v1beta',
         name: 'good-tool',
         version: '0.0.1',
@@ -100,7 +93,7 @@ describe('useExtensions', () => {
           'https://www.gstatic.com/mobilesdk/160503_mobilesdk/logo/2x/firebase_128dp.png',
       },
       {
-        id: 'foo-local',
+        id: 'pirojok-the-local-extension',
         specVersion: 'v1beta',
         name: 'good-tool',
         version: '0.0.1',
