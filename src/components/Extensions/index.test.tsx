@@ -98,8 +98,8 @@ describe('ExtensionsRoute', () => {
         />
       ),
     });
-    expect(await findByText(/foo-bar-published/)).not.toBeNull();
-    expect(await findByText(/foo-bar-local/)).not.toBeNull();
+    expect(await findByText(/Good Tool/)).not.toBeNull();
+    expect(await findByText(/Pirojok-the-tool/)).not.toBeNull();
   });
 
   it('renders details of extension with a given instance-id', async () => {

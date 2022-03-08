@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
+import { ExtensionBackend } from '../api/useExtensions';
 import {
-  Extension,
+  BackendExtension,
   ExtensionSpec,
   ExtensionVersion,
   RegistryLaunchStage,
@@ -71,14 +72,14 @@ export const EXTENSION_VERSION: ExtensionVersion = {
   name: 'publishers/awesome-inc/extensions/good-tool/versions/0.0.1',
   ref: 'awesome-inc/good-tool@0.0.1',
   state: 'PUBLISHED',
-  spec: EXTENSION_SPEC,
+  spec: { ...EXTENSION_SPEC, displayName: 'Pirojok-the-tool' },
   hash: '12345',
   sourceDownloadUri: 'https://google.com/asdf',
   releaseNotes: 'Hello world! Say hi to a good tool',
   createTime: '2021-10-27T00:00:00.000Z',
 };
 
-export const EXTENSION: Extension = {
+export const EXTENSION: BackendExtension = {
   name: 'publishers/awesome-inc/extensions/good-tool',
   ref: 'awesome-inc/good-tool',
   visibility: Visibility.PUBLIC,
@@ -92,3 +93,33 @@ export const EXTENSION: Extension = {
       'https://www.gstatic.com/mobilesdk/160503_mobilesdk/logo/2x/firebase_128dp.png',
   },
 };
+
+export const CONFIG_WITH_EXTENSION = {
+  projectId: '',
+  extensions: {
+    hostAndPort: 'lol',
+    host: 'pirojok',
+    port: 689,
+  },
+};
+
+export const BACKEND_LIST = [
+  // published extension
+  {
+    env: {},
+    extensionInstanceId: 'pirojok-the-published-extension',
+    extension: EXTENSION,
+    extensionVersion: EXTENSION_VERSION,
+  },
+  // local extension
+  {
+    extensionInstanceId: 'pirojok-the-local-extension',
+    env: {},
+    extensionSpec: EXTENSION_SPEC,
+  },
+  // Not and extension back-end
+  {
+    env: {},
+    extensionSpec: EXTENSION_SPEC,
+  } as ExtensionBackend,
+];

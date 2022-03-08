@@ -16,7 +16,12 @@
 
 import { createContext, useContext } from 'react';
 
-import { Extension, ExtensionSpec, ExtensionVersion } from '../models';
+import {
+  BackendExtension,
+  Extension,
+  ExtensionSpec,
+  ExtensionVersion,
+} from '../models';
 
 interface CommonExtensionBackend {
   env: Record<string, string>;
@@ -24,7 +29,7 @@ interface CommonExtensionBackend {
 }
 
 interface PublishedExtensionBackend extends CommonExtensionBackend {
-  extension: Extension;
+  extension: BackendExtension;
   extensionVersion: ExtensionVersion;
 }
 
@@ -36,13 +41,13 @@ export type ExtensionBackend =
   | PublishedExtensionBackend
   | LocalExtensionBackend;
 
-export const ExtensionsContext = createContext<ExtensionBackend[]>([]);
+export const ExtensionsContext = createContext<Extension[]>([]);
 
 export const ExtensionsProvider: React.FC<{
-  extensionBackends: ExtensionBackend[];
-}> = ({ children, extensionBackends }) => {
+  extensions: Extension[];
+}> = ({ children, extensions }) => {
   return (
-    <ExtensionsContext.Provider value={extensionBackends}>
+    <ExtensionsContext.Provider value={extensions}>
       {children}
     </ExtensionsContext.Provider>
   );

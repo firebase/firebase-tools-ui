@@ -14,25 +14,23 @@
  * limitations under the License.
  */
 
-import { createContext, useContext } from 'react';
+import { ExtensionBackend } from '../api/useExtensions';
 
-import { ExtensionsContext } from './useExtensions';
+export function mockExtensionBackends(backends: ExtensionBackend[] = []) {
+  const actualFetch = global.fetch;
+  jest
+    .spyOn(global, 'fetch')
+    .mockImplementation((input: RequestInfo, init?: RequestInit) => {
+      if (/^http?:\/\/.*\/backends$/.test(input.toString())) {
+        return Promise.resolve(({
+          json: () => {
+            return {
+              backends,
+            };
+          },
+        } as unknown) as Response);
+      }
 
-const InstanceIdContext = createContext('');
-
-export const InstanceIdProvider: React.FC<{ instanceId: string }> = ({
-  children,
-  instanceId,
-}) => {
-  return (
-    <InstanceIdContext.Provider value={instanceId}>
-      {children}
-    </InstanceIdContext.Provider>
-  );
-};
-
-export function useExtension() {
-  const extensions = useContext(ExtensionsContext);
-  const instanceId = useContext(InstanceIdContext);
-  return extensions.find((e) => e.id === instanceId);
+      return actualFetch(input, init);
+    });
 }

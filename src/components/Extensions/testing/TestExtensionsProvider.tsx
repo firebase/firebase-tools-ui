@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
+import React, { Suspense } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
-import { Config } from '../../../store/config/types';
+import { Config } from '../../../store/config';
 import { TestEmulatorConfigProvider } from '../../common/EmulatorConfigProvider';
+import { convertBackendsToExtensions } from '../api/internal/useExtensionsData';
 import { ExtensionBackend, ExtensionsProvider } from '../api/useExtensions';
 
 export const TestExtensionsProvider: React.FC<{
@@ -37,8 +39,10 @@ export const TestExtensionsProvider: React.FC<{
   return (
     <MemoryRouter initialEntries={[pagePath]}>
       <TestEmulatorConfigProvider config={emulatorConfig}>
-        <ExtensionsProvider extensionBackends={extensions}>
-          {children}
+        <ExtensionsProvider
+          extensions={convertBackendsToExtensions(extensions)}
+        >
+          <Suspense fallback={null}>{children}</Suspense>
         </ExtensionsProvider>
       </TestEmulatorConfigProvider>
     </MemoryRouter>

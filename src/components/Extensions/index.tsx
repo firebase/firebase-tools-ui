@@ -14,19 +14,18 @@
  * limitations under the License.
  */
 
-import { Suspense } from 'react';
+import React, { Suspense } from 'react';
 import { Link, Redirect, Route, Switch, useParams } from 'react-router-dom';
-import useSwr from 'swr';
 
 import { useIsEmulatorDisabled } from '../common/EmulatorConfigProvider';
-import { useEmulatorConfig } from '../common/EmulatorConfigProvider';
 import { EmulatorDisabled } from '../common/EmulatorDisabled';
 import { Spinner } from '../common/Spinner';
+import { useExtensionsData } from './api/internal/useExtensionsData';
 import { InstanceIdProvider } from './api/useExtension';
-import { ExtensionBackend, ExtensionsProvider } from './api/useExtensions';
+import { ExtensionsProvider } from './api/useExtensions';
 import { ExtensionDetails } from './Details';
 import { ExtensionsList } from './List';
-import { Extension, ExtensionSpec, ExtensionVersion } from './models';
+import { BackendExtension, ExtensionSpec, ExtensionVersion } from './models';
 
 export const ExtensionsRoute: React.FC = () => {
   return (
@@ -41,44 +40,16 @@ export const ExtensionsRoute: React.FC = () => {
 export interface Backend {
   env: Record<string, string>;
   extensionInstanceId?: string;
-  extension?: Extension;
+  extension?: BackendExtension;
   extensionVersion?: ExtensionVersion;
   extensionSpec?: ExtensionSpec;
 }
 
-function useFunctionsEmulator() {
-  const config = useEmulatorConfig('extensions');
-  return `http://${config.hostAndPort}`;
-}
-
-function useExtensionBackends(): ExtensionBackend[] {
-  const functionsEmulator = useFunctionsEmulator();
-
-  const fetcher = async () => {
-    const response = await fetch(`${functionsEmulator}/backends`);
-    const json = await response.json();
-    return json.backends;
-  };
-
-  const backends = useSwr(`list_backends`, fetcher, { suspense: true }).data;
-  return backends.filter(isExtensionBackend);
-}
-
-function isExtensionBackend(backend: Backend): backend is ExtensionBackend {
-  return (
-    !!backend.extensionInstanceId &&
-    ((!!backend.extension && !!backend.extensionVersion) ||
-      !!backend.extensionSpec)
-  );
-}
-
 const HydrateExtensions: React.FC = ({ children }) => {
-  const backends = useExtensionBackends();
+  const extensions = useExtensionsData();
 
   return (
-    <ExtensionsProvider extensionBackends={backends}>
-      {children}
-    </ExtensionsProvider>
+    <ExtensionsProvider extensions={extensions}>{children}</ExtensionsProvider>
   );
 };
 

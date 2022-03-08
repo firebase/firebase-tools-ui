@@ -16,26 +16,28 @@
 
 import { renderHook } from '@testing-library/react-hooks';
 
+import { Extension } from '../models';
 import { EXTENSION, EXTENSION_SPEC, EXTENSION_VERSION } from '../testing/utils';
+import { convertBackendToExtension } from './internal/useExtensionsData';
 import { InstanceIdProvider, useExtension } from './useExtension';
-import { ExtensionBackend, ExtensionsProvider } from './useExtensions';
+import { ExtensionsProvider } from './useExtensions';
 
 describe('useExtension', () => {
   it('returns the unique extension backend with instance-id', () => {
-    const want: ExtensionBackend = {
+    const want: Extension = convertBackendToExtension({
       env: {},
       extensionInstanceId: 'foo-published',
       extension: EXTENSION,
       extensionVersion: EXTENSION_VERSION,
-    };
-    const other: ExtensionBackend = {
+    });
+    const other: Extension = convertBackendToExtension({
       env: {},
       extensionInstanceId: 'foo-local',
       extensionSpec: EXTENSION_SPEC,
-    };
+    });
 
     const wrapper: React.FC = ({ children }) => (
-      <ExtensionsProvider extensionBackends={[want, other]}>
+      <ExtensionsProvider extensions={[want, other]}>
         <InstanceIdProvider instanceId="foo-published">
           {children}
         </InstanceIdProvider>
