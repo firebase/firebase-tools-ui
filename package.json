@@ -1,6 +1,6 @@
 {
   "name": "firebase-tools-ui",
-  "version": "1.6.4",
+  "version": "1.6.5",
   "private": true,
   "engines": {
     "node": ">= 12.0.0"
@@ -51,7 +51,7 @@
     "lodash.debounce": "^4.0.8",
     "lodash.get": "^4.4.2",
     "lodash.isequal": "^4.5.0",
-    "node-fetch": "^2.6.1",
+    "node-fetch": "^2.6.7",
     "react": "0.0.0-experimental-4ead6b530",
     "react-dom": "0.0.0-experimental-4ead6b530",
     "react-dropzone": "^11.0.1",
@@ -74,7 +74,7 @@
     "start:win32": "SASS_PATH=\"node_modules;src\" react-scripts start",
     "start:default": "SASS_PATH=node_modules:src react-scripts start",
     "build": "npm run build:web && npm run build:server",
-    "bundle": "zip -r emulator-ui-dist.zip server.bundle.js build",
+    "bundle": "rm -f emulator-ui-dist.zip && zip -r emulator-ui-dist.zip server.bundle.js build",
     "build:web": "run-script-os",
     "build:web:win32": "SASS_PATH=\"node_modules;src\" react-scripts build",
     "build:web:default": "SASS_PATH=node_modules:src react-scripts build",

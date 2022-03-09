@@ -140,7 +140,9 @@ export default class AuthApi extends RestApi {
     return config;
   }
 
-  async updateUser(user: AddAuthUserPayload): Promise<AuthUser> {
+  async updateUser(
+    user: AddAuthUserPayload & { localId: string }
+  ): Promise<AuthUser> {
     // AddAuthUserPayload isn't always a valid update payload.
     // Convert to valid update payload.
     const userUpdate: UpdateAuthUserPayload = {

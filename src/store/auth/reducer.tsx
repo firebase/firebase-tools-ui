@@ -18,7 +18,6 @@ import produce from 'immer';
 import { Action, createReducer } from 'typesafe-actions';
 
 import { AuthState, AuthUser, UsageMode } from '../../components/Auth/types';
-import { getUniqueId } from '../../components/Firestore/DocumentEditor/utils';
 import { mapResult } from '../utils';
 import * as authActions from './actions';
 
@@ -36,13 +35,7 @@ export const authReducer = createReducer<AuthState, Action>(INIT_STATE)
     produce((draft, { payload }) => {
       draft.users = mapResult(draft.users, (users: AuthUser[]) => [
         ...users,
-        {
-          createdAt: new Date().getTime().toString(),
-          lastLoginAt: new Date().getTime().toString(),
-          localId: getUniqueId().toString(),
-          disabled: false,
-          ...payload.user,
-        },
+        payload.user,
       ]);
     })
   )
@@ -51,9 +44,7 @@ export const authReducer = createReducer<AuthState, Action>(INIT_STATE)
     produce((draft: AuthState, { payload }) => {
       draft.users = mapResult(draft.users, (users) =>
         users.map((user: AuthUser) => {
-          return user.localId === payload.user.localId
-            ? { ...user, ...payload.user }
-            : user;
+          return user.localId === payload.user.localId ? payload.user : user;
         })
       );
     })
