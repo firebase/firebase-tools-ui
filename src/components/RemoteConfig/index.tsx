@@ -209,6 +209,58 @@ const ParamDetails: React.FunctionComponent<{
   );
 };
 
+/**
+ * returns whether a parameter contains a search term in its name, condition names, or condition values
+ *
+ * @param searchTerm the search string
+ * @param paramName the name of the RC parameter
+ * @param param the RC parameter to search through
+ * @returns whether or not the search term was found
+ */
+function paramContainsSearchTerm(
+  searchTerm: string,
+  paramName: string,
+  param: RemoteConfigParameter
+): boolean {
+  function matchesSearch(str: string) {
+    if (!str || !searchTerm) {
+      debugger;
+    }
+    return str.toLowerCase().includes(searchTerm.toLowerCase());
+  }
+
+  if (matchesSearch(paramName)) {
+    return true;
+  }
+
+  if (
+    matchesSearch(
+      remoteConfigParameterValueToString(
+        param.defaultValue as RemoteConfigParameterValue
+      )
+    )
+  ) {
+    return true;
+  }
+
+  for (let conditionName in param.conditionalValues) {
+    if (matchesSearch(conditionName)) {
+      return true;
+    }
+
+    if (
+      matchesSearch(
+        remoteConfigParameterValueToString(
+          param.conditionalValues[conditionName] as RemoteConfigParameterValue
+        )
+      )
+    ) {
+      return true;
+    }
+  }
+  return false;
+}
+
 const ParamTable: React.FunctionComponent<{
   rcTemplate: RemoteConfigTemplate;
   paramNameFilter: string;
@@ -217,14 +269,13 @@ const ParamTable: React.FunctionComponent<{
   return (
     <List>
       {Object.keys(rcTemplate.parameters).map((paramName) => {
+        const param = rcTemplate.parameters[paramName];
+        const { defaultValue, conditionalValues } = param;
+
         // TODO: Filter on everything, not just paramName
         const openByDefault =
           paramNameFilter === '' ||
-          paramName.toLowerCase().includes(paramNameFilter.toLowerCase());
-
-        const { defaultValue, conditionalValues } = rcTemplate.parameters[
-          paramName
-        ];
+          paramContainsSearchTerm(paramNameFilter, paramName, param);
 
         const conditions = Object.keys(
           conditionalValues as {
@@ -269,22 +320,19 @@ const ParamTable: React.FunctionComponent<{
 function RemoteConfig() {
   const { template, updateTemplate } = useTemplate();
 
-  const [paramNameFilter, setParamNameFilter] = useState('');
+  const [searchText, setSearchText] = useState('');
   const [paramBeingEdited, editParam] = useState<string | undefined>(undefined);
-  console.log(paramBeingEdited);
+
   return (
     <GridCell span={12}>
       <Elevation z="2" wrap>
         <Card>
           <CardActionBar>
-            <ParamFilter
-              filter={paramNameFilter}
-              setFilter={setParamNameFilter}
-            />
+            <ParamFilter filter={searchText} setFilter={setSearchText} />
           </CardActionBar>
           <ParamTable
             rcTemplate={template}
-            paramNameFilter={paramNameFilter}
+            paramNameFilter={searchText}
             editParam={(paramName: string) => editParam(paramName)}
           />
           {paramBeingEdited !== undefined ? (
