@@ -173,7 +173,7 @@ const ParamDetails: React.FunctionComponent<{
             icon="chevron_right"
             className={styles.listItemExpandIndicator}
           />
-          <strong>{name}</strong>
+          <strong className={styles.remoteConfigParameterName}>{name}</strong>
           <span>
             Active value: "{remoteConfigParameterValueToString(servedValue)}"
           </span>
