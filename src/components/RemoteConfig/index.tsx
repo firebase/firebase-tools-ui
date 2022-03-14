@@ -1,11 +1,10 @@
-import { Button } from '@rmwc/button';
 import { Card } from '@rmwc/card';
 import { Chip } from '@rmwc/chip';
 import { Elevation } from '@rmwc/elevation';
 import { GridCell } from '@rmwc/grid';
+import { IconButton } from '@rmwc/icon-button';
 import { CollapsibleList, List, ListItem, ListItemMeta } from '@rmwc/list';
 import { TextField } from '@rmwc/textfield';
-import { Tooltip } from '@rmwc/tooltip';
 import {
   ExplicitParameterValue,
   RemoteConfigCondition,
@@ -17,6 +16,7 @@ import React, { Suspense, useLayoutEffect, useRef, useState } from 'react';
 
 import { CardActionBar } from '../common/CardActionBar';
 import { useTemplate } from './api';
+import EditDialog from './EditDialog';
 import styles from './RemoteConfig.module.scss';
 
 const ParamFilter: React.FunctionComponent<{
@@ -119,7 +119,8 @@ const ParamDetails: React.FunctionComponent<{
   defaultValue?: RemoteConfigParameterValue;
   conditions: ConditionDetails[];
   open: boolean;
-}> = ({ name, defaultValue, conditions, open: defaultOpen }) => {
+  edit: () => {};
+}> = ({ name, defaultValue, conditions, open: defaultOpen, edit }) => {
   if (!defaultValue && !conditions) {
     throw new Error('Parameter needs at least one value (I think)');
   }
@@ -128,7 +129,7 @@ const ParamDetails: React.FunctionComponent<{
     (conditionDetails) => conditionDetails.name === '!isEmulator'
   ) as ConditionDetails).value;
 
-  const [open, setOpen] = useState<boolean | undefined>(undefined);
+  const [expanded, setExpanded] = useState<boolean | undefined>(undefined);
 
   if (defaultValue) {
     conditions = [
@@ -158,19 +159,33 @@ const ParamDetails: React.FunctionComponent<{
 
   return (
     <CollapsibleList
-      open={open !== undefined ? open : defaultOpen}
+      open={expanded !== undefined ? expanded : defaultOpen}
       handle={
         <ListItem
           className={styles.rcListItem}
           onClick={() => {
-            return setOpen(open !== undefined ? !open : !defaultOpen);
+            return setExpanded(
+              expanded !== undefined ? !expanded : !defaultOpen
+            );
           }}
         >
+          <ListItemMeta
+            icon="chevron_right"
+            className={styles.listItemExpandIndicator}
+          />
           <strong>{name}</strong>
           <span>
             Active value: "{remoteConfigParameterValueToString(servedValue)}"
           </span>
-          <ListItemMeta icon="chevron_right" />
+          <IconButton
+            className={styles.conditionEditButton}
+            icon="edit"
+            aria-label="edit"
+            onClick={(e) => {
+              e.stopPropagation();
+              edit();
+            }}
+          />
         </ListItem>
       }
     >
@@ -197,7 +212,8 @@ const ParamDetails: React.FunctionComponent<{
 const ParamTable: React.FunctionComponent<{
   rcTemplate: RemoteConfigTemplate;
   paramNameFilter: string;
-}> = ({ rcTemplate, paramNameFilter }) => {
+  editParam: (paramName: string) => any;
+}> = ({ rcTemplate, paramNameFilter, editParam }) => {
   return (
     <List>
       {Object.keys(rcTemplate.parameters).map((paramName) => {
@@ -242,6 +258,7 @@ const ParamTable: React.FunctionComponent<{
             defaultValue={defaultValue}
             conditions={conditions}
             open={openByDefault}
+            edit={() => editParam(paramName)}
           />
         );
       })}
@@ -250,10 +267,11 @@ const ParamTable: React.FunctionComponent<{
 };
 
 function RemoteConfig() {
-  const { template } = useTemplate();
+  const { template, updateTemplate } = useTemplate();
 
   const [paramNameFilter, setParamNameFilter] = useState('');
-
+  const [paramBeingEdited, editParam] = useState<string | undefined>(undefined);
+  console.log(paramBeingEdited);
   return (
     <GridCell span={12}>
       <Elevation z="2" wrap>
@@ -264,7 +282,25 @@ function RemoteConfig() {
               setFilter={setParamNameFilter}
             />
           </CardActionBar>
-          <ParamTable rcTemplate={template} paramNameFilter={paramNameFilter} />
+          <ParamTable
+            rcTemplate={template}
+            paramNameFilter={paramNameFilter}
+            editParam={(paramName: string) => editParam(paramName)}
+          />
+          {paramBeingEdited !== undefined ? (
+            <EditDialog
+              open={paramBeingEdited !== undefined}
+              close={() => editParam(undefined)}
+              parameterName={paramBeingEdited as string}
+              param={template.parameters[paramBeingEdited]}
+              save={async (updatedParam: RemoteConfigParameter) => {
+                const newTemplate: RemoteConfigTemplate = { ...template };
+                newTemplate.parameters[paramBeingEdited] = updatedParam;
+                await updateTemplate({ ...template });
+                editParam(undefined);
+              }}
+            />
+          ) : null}
         </Card>
       </Elevation>
       <pre>{JSON.stringify(template, null, 2)}</pre>
