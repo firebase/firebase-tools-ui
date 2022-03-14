@@ -351,7 +351,6 @@ function RemoteConfig() {
           ) : null}
         </Card>
       </Elevation>
-      <pre>{JSON.stringify(template, null, 2)}</pre>
     </GridCell>
   );
 }
