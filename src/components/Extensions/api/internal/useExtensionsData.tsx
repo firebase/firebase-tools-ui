@@ -17,25 +17,54 @@ import { Extension } from '../../models';
 import { ExtensionBackend, isLocalExtension } from '../useExtensions';
 import { useExtensionBackends } from './useExtensionBackends';
 
+const EXTENSION_DETAILS_URL_BASE =
+  'https://firebase.google.com/products/extensions/';
+
 export function useExtensionsData(): Extension[] {
   const backends = useExtensionBackends();
 
   return convertBackendsToExtensions(backends);
 }
 
-export function convertBackendToExtension(backend: ExtensionBackend) {
+export function convertBackendToExtension(
+  backend: ExtensionBackend
+): Extension {
+  const spec = isLocalExtension(backend)
+    ? backend.extensionSpec
+    : backend.extensionVersion.spec;
+
+  const shared = {
+    authorName: spec.author?.authorName || '',
+    authorUrl: spec.author?.url || '',
+    params: spec.params.map((p) => {
+      return { ...p, value: backend.env[p.param] };
+    }),
+    name: spec.name || '',
+    displayName: spec.displayName || '',
+    specVersion: spec.specVersion || '',
+    env: backend.env,
+    apis: spec.apis || [],
+    resources: spec.resources || [],
+    roles: spec.roles || [],
+    readmeContent: spec.readmeContent || '',
+    postinstallContent: spec.postinstallContent || '',
+    sourceUrl: spec.sourceUrl || '',
+    extensionDetailsUrl: EXTENSION_DETAILS_URL_BASE + spec.name,
+  };
+
   if (isLocalExtension(backend)) {
     return {
+      ...shared,
       id: backend.extensionInstanceId,
-      ...backend.extensionSpec,
     };
   }
 
   return {
+    ...shared,
     id: backend.extensionInstanceId,
-    ...backend.extensionVersion.spec,
-    // TODO(kirjs): Use default icon for local extensions
-    iconUri: backend.extension.iconUri,
+    ref: backend.extensionVersion.ref,
+    iconUri:
+      backend.extension.iconUri || '/assets/extensions/default-extension.png',
     publisherIconUri: backend.extension.publisher?.iconUri,
   };
 }

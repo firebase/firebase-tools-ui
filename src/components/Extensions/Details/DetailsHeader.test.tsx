@@ -16,29 +16,20 @@
 
 import { render } from '@testing-library/react';
 
-import { InstanceIdProvider } from './api/useExtension';
-import { ExtensionDetails } from './Details';
-import { TestExtensionsProvider } from './testing/TestExtensionsProvider';
-import { EXTENSION, EXTENSION_VERSION } from './testing/utils';
+import { Extension } from '../models';
+import { TestExtensionsProvider } from '../testing/TestExtensionsProvider';
+import { DetailsHeader } from './DetailsHeader';
 
-describe('ExtensionDetails', () => {
-  it('renders details of extension', () => {
+describe('ExtensionDetailsHeader', () => {
+  it('renders header of extension', () => {
+    const displayName = 'Pirojok-the-extension';
+    const extension: Extension = { id: 'pirojok', displayName } as Extension;
+
     const { getByText } = render(
-      <TestExtensionsProvider
-        extensions={[
-          {
-            env: {},
-            extensionInstanceId: 'foo-bar',
-            extension: EXTENSION,
-            extensionVersion: EXTENSION_VERSION,
-          },
-        ]}
-      >
-        <InstanceIdProvider instanceId="foo-bar">
-          <ExtensionDetails />
-        </InstanceIdProvider>
+      <TestExtensionsProvider extensions={[]}>
+        <DetailsHeader extension={extension} />
       </TestExtensionsProvider>
     );
-    expect(getByText('foo-bar')).not.toBeNull();
+    expect(getByText('Pirojok-the-extension')).not.toBeNull();
   });
 });

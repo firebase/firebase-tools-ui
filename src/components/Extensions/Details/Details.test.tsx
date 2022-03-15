@@ -16,19 +16,22 @@
 
 import { render } from '@testing-library/react';
 
-import { isExtensionBackend } from './api/internal/useExtensionBackends';
-import { ExtensionsList } from './List';
-import { TestExtensionsProvider } from './testing/TestExtensionsProvider';
-import { BACKEND_EXTENSION, BACKEND_LIST, EXTENSION } from './testing/utils';
+import { TestExtensionsProvider } from '../testing/TestExtensionsProvider';
+import { EXTENSION } from '../testing/utils';
+import { ExtensionDetails } from './Details';
 
-describe('ExtensionsList', () => {
-  it('renders list of extensions', () => {
+describe('ExtensionDetails', () => {
+  it('renders details of extension', () => {
     const { getByText } = render(
-      <TestExtensionsProvider extensions={[EXTENSION]}>
-        <ExtensionsList />
+      <TestExtensionsProvider
+        extensions={[EXTENSION]}
+        instanceId={EXTENSION.id}
+      >
+        <ExtensionDetails />
       </TestExtensionsProvider>
     );
 
     expect(getByText(EXTENSION.displayName)).not.toBeNull();
+    expect(getByText(EXTENSION.ref)).not.toBeNull();
   });
 });

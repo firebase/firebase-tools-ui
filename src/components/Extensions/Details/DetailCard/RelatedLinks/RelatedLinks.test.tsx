@@ -15,20 +15,27 @@
  */
 
 import { render } from '@testing-library/react';
+import React from 'react';
 
-import { isExtensionBackend } from './api/internal/useExtensionBackends';
-import { ExtensionsList } from './List';
-import { TestExtensionsProvider } from './testing/TestExtensionsProvider';
-import { BACKEND_EXTENSION, BACKEND_LIST, EXTENSION } from './testing/utils';
+import { Extension } from '../../../models';
+import { TestExtensionsProvider } from '../../../testing/TestExtensionsProvider';
+import { RelatedLinks } from './RelatedLinks';
 
-describe('ExtensionsList', () => {
-  it('renders list of extensions', () => {
+describe('RelatedLinks', () => {
+  it('renders list of related links', () => {
+    const AUTHOR_NAME = 'pirojok-the-author';
+    const extension: Extension = {
+      id: 'pirojok',
+      authorName: AUTHOR_NAME,
+    } as Extension;
+
     const { getByText } = render(
-      <TestExtensionsProvider extensions={[EXTENSION]}>
-        <ExtensionsList />
+      <TestExtensionsProvider extensions={[]}>
+        <RelatedLinks extension={extension} />
       </TestExtensionsProvider>
     );
-
-    expect(getByText(EXTENSION.displayName)).not.toBeNull();
+    expect(getByText('Extension details')).not.toBeNull();
+    expect(getByText('Source code')).not.toBeNull();
+    expect(getByText(AUTHOR_NAME)).not.toBeNull();
   });
 });

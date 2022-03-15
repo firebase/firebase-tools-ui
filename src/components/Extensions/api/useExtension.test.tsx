@@ -17,7 +17,11 @@
 import { renderHook } from '@testing-library/react-hooks';
 
 import { Extension } from '../models';
-import { EXTENSION, EXTENSION_SPEC, EXTENSION_VERSION } from '../testing/utils';
+import {
+  BACKEND_EXTENSION,
+  EXTENSION_SPEC,
+  EXTENSION_VERSION,
+} from '../testing/utils';
 import { convertBackendToExtension } from './internal/useExtensionsData';
 import { InstanceIdProvider, useExtension } from './useExtension';
 import { ExtensionsProvider } from './useExtensions';
@@ -27,7 +31,7 @@ describe('useExtension', () => {
     const want: Extension = convertBackendToExtension({
       env: {},
       extensionInstanceId: 'foo-published',
-      extension: EXTENSION,
+      extension: BACKEND_EXTENSION,
       extensionVersion: EXTENSION_VERSION,
     });
     const other: Extension = convertBackendToExtension({

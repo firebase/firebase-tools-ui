@@ -15,8 +15,11 @@
  */
 
 .accordion {
-  border-top: 1px var(--fire-color-input-borders) solid;
-  --spacing: var(--accordion-spacing, 40px);
+  --focus-background: var(--accordion-focus-background, var(--fire-color-input-borders));
+  --border-size: var(--accordion-border-size, 1px);
+  --horizontal-spacing: var(--accordion-horizontal-spacing, 40px);
+  --vertical-spacing: var(--accordion-vertical-spacing, 8px);
+  border-top: var(--border-size) var(--fire-color-input-borders) solid;
 }
 
 .header {
@@ -24,15 +27,20 @@
   cursor: pointer;
   align-items: center;
   justify-content: space-between;
-  padding: 16px var(--spacing);
+  padding: var(--vertical-spacing) var(--horizontal-spacing);
+}
+
+.expandHeader {
+  display: flex;
+  align-items: center;
 }
 
 .header:focus {
-  background: var(--fire-color-input-borders);
+  background: var(--focus-background);
 }
 
 .content {
-  padding: 8px var(--spacing) var(--spacing) var(--spacing);
+  padding: 8px var(--horizontal-spacing) var(--horizontal-spacing) var(--horizontal-spacing);
 }
 
 .icon {

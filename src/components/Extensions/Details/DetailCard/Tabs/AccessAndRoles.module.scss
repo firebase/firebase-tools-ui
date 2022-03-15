@@ -1,5 +1,5 @@
 /**
- * Copyright 2020 Google LLC
+ * Copyright 2022 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,20 @@
  * limitations under the License.
  */
 
-import { useExtension } from './api/useExtension';
-import { RedirectToList } from '.';
+.wrapper {
+  padding: 16px;
+  display: block;
+}
 
-export const ExtensionDetails: React.FC = () => {
-  const extensionBackend = useExtension();
+.headerWrapper {
+  align-items: center;
+  display: flex;
 
-  // Redirect to list-view if there is no matching instance-id
-  if (!extensionBackend) return <RedirectToList />;
+  h4 {
+    margin: 0 8px;
+  }
+}
 
-  return <div>{extensionBackend.id}</div>;
-};
+.explanation {
+  padding: 16px;
+}

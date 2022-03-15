@@ -16,19 +16,27 @@
 
 import { render } from '@testing-library/react';
 
-import { isExtensionBackend } from './api/internal/useExtensionBackends';
-import { ExtensionsList } from './List';
-import { TestExtensionsProvider } from './testing/TestExtensionsProvider';
-import { BACKEND_EXTENSION, BACKEND_LIST, EXTENSION } from './testing/utils';
+import { Extension } from '../../../models';
+import { TestExtensionsProvider } from '../../../testing/TestExtensionsProvider';
+import { Readme } from './Readme';
 
-describe('ExtensionsList', () => {
-  it('renders list of extensions', () => {
+describe('Readme', () => {
+  it('Renders markdown', () => {
+    const displayName = 'Pirojok-the-extension';
+    const id = 'pirojok';
+    const POST_INSTALL_CONTENT = 'CONTENT';
+    const extension: Extension = {
+      id,
+      displayName,
+      postinstallContent: POST_INSTALL_CONTENT,
+    } as Extension;
+
     const { getByText } = render(
-      <TestExtensionsProvider extensions={[EXTENSION]}>
-        <ExtensionsList />
+      <TestExtensionsProvider extensions={[extension]} instanceId={id}>
+        <Readme />
       </TestExtensionsProvider>
     );
-
-    expect(getByText(EXTENSION.displayName)).not.toBeNull();
+    expect(getByText(/Markdown/)).not.toBeNull();
+    expect(getByText(new RegExp(POST_INSTALL_CONTENT))).not.toBeNull();
   });
 });

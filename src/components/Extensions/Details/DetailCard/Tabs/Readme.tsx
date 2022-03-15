@@ -14,26 +14,18 @@
  * limitations under the License.
  */
 
-import { createContext, useContext } from 'react';
+import React from 'react';
+import ReactMarkdown from 'react-markdown';
 
-import { Extension } from '../models';
-import { ExtensionsContext } from './useExtensions';
+import { useExtension } from '../../../api/useExtension';
+import style from './Readme.module.scss';
 
-const InstanceIdContext = createContext('');
+export function Readme() {
+  const extension = useExtension()!;
 
-export const InstanceIdProvider: React.FC<{ instanceId: string }> = ({
-  children,
-  instanceId,
-}) => {
   return (
-    <InstanceIdContext.Provider value={instanceId}>
-      {children}
-    </InstanceIdContext.Provider>
+    <div className={style.wrapper}>
+      <ReactMarkdown>{extension.postinstallContent}</ReactMarkdown>
+    </div>
   );
-};
-
-export function useExtension(): Extension | undefined {
-  const extensions = useContext(ExtensionsContext);
-  const instanceId = useContext(InstanceIdContext);
-  return extensions.find((e) => e.id === instanceId);
 }

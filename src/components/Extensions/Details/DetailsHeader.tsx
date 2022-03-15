@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Google LLC
+ * Copyright 2020 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,26 +14,25 @@
  * limitations under the License.
  */
 
-import { createContext, useContext } from 'react';
+import './DetailsHeader.scss';
 
+import { Card } from '@rmwc/card';
+import { Elevation } from '@rmwc/elevation';
+import React from 'react';
+
+import { ExtensionsTable } from '../ExtensionsTable/ExtensionTable';
 import { Extension } from '../models';
-import { ExtensionsContext } from './useExtensions';
 
-const InstanceIdContext = createContext('');
+export interface DetailsHeaderProps {
+  extension: Extension;
+}
 
-export const InstanceIdProvider: React.FC<{ instanceId: string }> = ({
-  children,
-  instanceId,
-}) => {
+export const DetailsHeader: React.FC<DetailsHeaderProps> = ({ extension }) => {
   return (
-    <InstanceIdContext.Provider value={instanceId}>
-      {children}
-    </InstanceIdContext.Provider>
+    <Card className="detailsHeader">
+      <Elevation z="2" wrap>
+        <ExtensionsTable extensions={[extension]}></ExtensionsTable>
+      </Elevation>
+    </Card>
   );
 };
-
-export function useExtension(): Extension | undefined {
-  const extensions = useContext(ExtensionsContext);
-  const instanceId = useContext(InstanceIdContext);
-  return extensions.find((e) => e.id === instanceId);
-}

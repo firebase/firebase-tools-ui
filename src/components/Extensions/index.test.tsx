@@ -20,7 +20,11 @@ import { MemoryRouter, useLocation } from 'react-router-dom';
 
 import { Config } from '../../store/config/types';
 import { TestEmulatorConfigProvider } from '../common/EmulatorConfigProvider';
-import { EXTENSION, EXTENSION_SPEC, EXTENSION_VERSION } from './testing/utils';
+import {
+  BACKEND_EXTENSION,
+  EXTENSION_SPEC,
+  EXTENSION_VERSION,
+} from './testing/utils';
 import { Backend, ExtensionLink, ExtensionsRoute, RedirectToList } from '.';
 
 const TestWrapper: React.FC<{
@@ -73,7 +77,7 @@ describe('ExtensionsRoute', () => {
       {
         env: {},
         extensionInstanceId: 'foo-bar-published',
-        extension: EXTENSION,
+        extension: BACKEND_EXTENSION,
         extensionVersion: EXTENSION_VERSION,
       },
       {
@@ -108,7 +112,7 @@ describe('ExtensionsRoute', () => {
       {
         env: {},
         extensionInstanceId: 'foo-bar-published',
-        extension: EXTENSION,
+        extension: BACKEND_EXTENSION,
         extensionVersion: EXTENSION_VERSION,
       },
       {
@@ -134,8 +138,7 @@ describe('ExtensionsRoute', () => {
         />
       ),
     });
-    expect(await findByText(/foo-bar-published/)).not.toBeNull();
-    expect(await queryByText(/foo-bar-local/)).toBeNull();
+    expect(await findByText('Pirojok-the-tool')).not.toBeNull();
   });
 });
 
@@ -147,7 +150,7 @@ describe('ExtensionsLink', () => {
       return <>{location.pathname}</>;
     };
 
-    const { getByText, findByText } = render(
+    const { getByText } = render(
       <MemoryRouter>
         <ExtensionLink instanceId="foo-bar">click me</ExtensionLink>
         <TestCurrentPathname />
