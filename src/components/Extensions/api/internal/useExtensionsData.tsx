@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Extension } from '../../models';
+import { Extension, ExtensionResource, Resource } from '../../models';
 import { ExtensionBackend, isLocalExtension } from '../useExtensions';
 import { useExtensionBackends } from './useExtensionBackends';
 
@@ -33,17 +33,33 @@ export function convertBackendToExtension(
     ? backend.extensionSpec
     : backend.extensionVersion.spec;
 
+  const importResources = (r: Resource): ExtensionResource => {
+    const trigger = (backend.functionTriggers ?? []).find(
+      (t) => t.entryPoint === r.name
+    );
+
+    return trigger
+      ? {
+          ...r,
+          functionName: trigger.regions[0] + '-' + trigger.name,
+        }
+      : r;
+  };
+
   const shared = {
     authorUrl: spec.author?.url ?? '',
     params: spec.params.map((p) => {
-      return { ...p, value: backend.env[p.param] };
+      return {
+        ...p,
+        value: backend.env[p.param],
+      };
     }),
     name: spec.name,
     displayName: spec.displayName ?? '',
     specVersion: spec.specVersion ?? '',
     env: backend.env,
     apis: spec.apis ?? [],
-    resources: spec.resources ?? [],
+    resources: (spec.resources ?? []).map(importResources),
     roles: spec.roles ?? [],
     readmeContent: spec.readmeContent ?? '',
     postinstallContent: spec.postinstallContent ?? '',

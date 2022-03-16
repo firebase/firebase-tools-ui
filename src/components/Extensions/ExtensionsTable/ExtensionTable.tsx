@@ -18,8 +18,9 @@ import { DataTable, DataTableBody, DataTableContent } from '@rmwc/data-table';
 import React from 'react';
 
 import { Extension } from '../models';
-import { ExtensionsTableRow } from './ExtensionTableRow';
 import styles from './ExtensionTable.module.scss';
+import { ExtensionsTableRow } from './ExtensionTableRow';
+
 export interface ExtensionsTableProps {
   extensions: Extension[];
 }

@@ -34,6 +34,11 @@
   justify-content: flex-end;
 }
 
+.paramValue {
+  display: flex;
+  align-items: center;
+}
+
 .description {
   margin-top: -8px;
 }

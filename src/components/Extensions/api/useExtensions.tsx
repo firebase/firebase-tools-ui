@@ -21,11 +21,13 @@ import {
   Extension,
   ExtensionSpec,
   ExtensionVersion,
+  FunctionTrigger,
 } from '../models';
 
 interface CommonExtensionBackend {
   env: Record<string, string>;
   extensionInstanceId: string;
+  functionTriggers: FunctionTrigger[];
 }
 
 interface PublishedExtensionBackend extends CommonExtensionBackend {

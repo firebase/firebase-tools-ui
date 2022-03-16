@@ -18,8 +18,9 @@ import { Icon } from '@rmwc/icon';
 import { Theme } from '@rmwc/theme';
 import { Typography } from '@rmwc/typography';
 import React from 'react';
-import style from './RelatedLinks.module.scss';
+
 import { useExtension } from '../../../api/useExtension';
+import style from './RelatedLinks.module.scss';
 
 export const RelatedLinks: React.FC = () => {
   const extension = useExtension()!;

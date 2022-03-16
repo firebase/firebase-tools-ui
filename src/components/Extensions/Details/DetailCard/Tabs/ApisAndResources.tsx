@@ -56,17 +56,19 @@ const Apis: React.FC = () => {
 const Resources: React.FC = () => {
   const extension = useExtension()!;
 
-  const functions = (extension.resources || []).map((e) => {
+  const functions = (extension.resources || []).map((r) => {
     return (
-      <article key={e.name} className={styles.resourceItem}>
+      <article key={r.name} className={styles.resourceItem}>
         <div className={styles.resourceItemHeader}>
-          <div>{e.name}</div>
-          {/*TODO(kirjs): link to the actual function*/}
-          <Link to={'/logs'} className={styles.viewLogsLink}>
+          <div>{r.name}</div>
+          <Link
+            to={`/logs?q=metadata.function.name="${r.functionName}"`}
+            className={styles.viewLogsLink}
+          >
             <Button>View logs</Button>
           </Link>
         </div>
-        <div>{e.description}</div>
+        <div>{r.description}</div>
       </article>
     );
   });
@@ -91,7 +93,10 @@ const Resources: React.FC = () => {
                   Cloud Functions
                 </Typography>
               </div>
-              <Link to={'/logs'} className={styles.viewLogsLink}>
+              <Link
+                to={`/logs?q=metadata.extension.instanceId="${extension.id}"`}
+                className={styles.viewLogsLink}
+              >
                 <Button outlined={true} theme={'secondary'}>
                   View all logs
                 </Button>

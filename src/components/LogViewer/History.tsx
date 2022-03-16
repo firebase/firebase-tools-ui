@@ -22,7 +22,7 @@ import React, { useEffect, useRef } from 'react';
 import { grey100 } from '../../colors';
 import { CompiledGetterCache } from './CompiledGetterCache';
 import { HighlightedJSON } from './HighlightedJSON';
-import { filtersToQueryString, isQueryMatch, ParsedQuery } from './QueryBar';
+import { ParsedQuery, filtersToQueryString, isQueryMatch } from './QueryBar';
 import { LogEntry } from './types';
 
 const FilterTag: React.FC<{ appendToQuery: Function; log: LogEntry }> = ({

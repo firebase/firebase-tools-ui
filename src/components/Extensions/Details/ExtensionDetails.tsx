@@ -18,10 +18,10 @@ import { GridCell } from '@rmwc/grid';
 import React from 'react';
 
 import { useExtension } from '../api/useExtension';
+import { ExtensionFeatureBar } from '../FeatureBar/FeatureBar';
 import { RedirectToList } from '../index';
 import { DetailsCard } from './DetailCard/DetailsCard';
 import { DetailsHeader } from './DetailsHeader';
-import { ExtensionFeatureBar } from '../FeatureBar/FeatureBar';
 
 export const ExtensionDetails: React.FC = () => {
   const extension = useExtension();

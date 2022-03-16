@@ -150,7 +150,7 @@ export interface Extension {
   authorUrl: string;
   apis?: Api[];
   roles?: Role[];
-  resources?: Resource[];
+  resources?: ExtensionResource[];
   params?: ExtensionParam[];
   displayName: string;
   specVersion: string;
@@ -183,6 +183,9 @@ export interface Resource {
   propertiesYaml?: string;
 }
 
+export interface ExtensionResource extends Resource {
+  functionName?: string;
+}
 export interface Author {
   authorName: string;
   url?: string;
@@ -212,4 +215,10 @@ export enum ParamType {
 export interface ParamOption {
   value: string;
   label?: string;
+}
+
+export interface FunctionTrigger {
+  entryPoint: string;
+  regions: string[];
+  name: string;
 }

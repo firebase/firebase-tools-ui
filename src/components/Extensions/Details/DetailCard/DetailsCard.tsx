@@ -18,6 +18,7 @@ import { Card } from '@rmwc/card';
 import { Elevation } from '@rmwc/elevation';
 import React from 'react';
 
+import { useMainDetail } from '../../../common/useMainDetail/useMainDetail';
 import { Extension } from '../../models';
 import styles from './DetailsCard.module.scss';
 import { RelatedLinks } from './RelatedLinks/RelatedLinks';
@@ -25,7 +26,6 @@ import { AccessAndRoles } from './Tabs/AccessAndRoles';
 import { ApisAndResources } from './Tabs/ApisAndResources';
 import ParamList from './Tabs/ParamList';
 import { Readme } from './Tabs/Readme';
-import { useMainDetail } from '../../../common/useMainDetail/useMainDetail';
 
 export interface DetailsCardProps {
   extension: Extension;

@@ -22,6 +22,7 @@ import ReactMarkdown from 'react-markdown';
 import { Accordion } from '../../../../common/Accordion';
 import { useExtension } from '../../../api/useExtension';
 import styles from './ParamList.module.scss';
+import { ParamValue } from './ParamValue';
 
 function ParamList() {
   const extension = useExtension()!;
@@ -60,7 +61,11 @@ function ParamList() {
                 <ReactMarkdown>{param.description || ''}</ReactMarkdown>
               </Typography>
             </Accordion>
-            <div>{param.value || param.default}</div>
+
+            <ParamValue
+              value={param.value || param.default || ''}
+              type={param.type}
+            />
           </div>
         );
       })}
