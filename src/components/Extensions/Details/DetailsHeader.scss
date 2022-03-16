@@ -20,6 +20,11 @@
     font-size: 22px;
   }
 
+  // Do not change background on hover
+  .rmwc-data-table__row:hover {
+    background: transparent;
+  }
+
   .iconCell {
     width: 92px;
   }
@@ -28,7 +33,7 @@
     display: none;
   }
 
-  img.extensionLogo,  {
+  img.extensionLogo, {
     width: 72px;
     height: 72px;
   }

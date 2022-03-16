@@ -18,11 +18,11 @@ import { render } from '@testing-library/react';
 
 import { TestExtensionsProvider } from '../testing/TestExtensionsProvider';
 import { EXTENSION } from '../testing/utils';
-import { ExtensionDetails } from './Details';
+import { ExtensionDetails } from './ExtensionDetails';
 
 describe('ExtensionDetails', () => {
   it('renders details of extension', () => {
-    const { getByText } = render(
+    const { getByText, getAllByRole } = render(
       <TestExtensionsProvider
         extensions={[EXTENSION]}
         instanceId={EXTENSION.id}
@@ -31,7 +31,8 @@ describe('ExtensionDetails', () => {
       </TestExtensionsProvider>
     );
 
-    expect(getByText(EXTENSION.displayName)).not.toBeNull();
-    expect(getByText(EXTENSION.ref)).not.toBeNull();
+    expect(getByText(EXTENSION.ref!)).not.toBeNull();
+    expect(getByText(/Markdown/)).not.toBeNull();
+    expect(getAllByRole('tab').length).toBe(4);
   });
 });

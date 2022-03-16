@@ -17,13 +17,13 @@
 import { getByLabelText, render } from '@testing-library/react';
 import React from 'react';
 
-import { useMasterDetail } from './useMasterDetail';
+import { useMainDetail } from './useMainDetail';
 
 const TAB1_CONTENT = 'pirojok-the-content';
 const TAB1_LABEL = 'pirojok-the-label';
 const TAB2_CONTENT = 'buterbrod-the-content';
 const TAB2_LABEL = 'buterbrod-the-label';
-const masterDetailConfig = {
+const mainDetailConfig = {
   tabs: [
     {
       label: TAB1_LABEL,
@@ -36,10 +36,10 @@ const masterDetailConfig = {
   ],
 };
 
-describe('useMasterDetail', () => {
+describe('useMainDetail', () => {
   function setup() {
     const Wrapper: React.FC = () => {
-      const { tabs, content } = useMasterDetail(masterDetailConfig);
+      const { tabs, content } = useMainDetail(mainDetailConfig);
       return (
         <div>
           {tabs}

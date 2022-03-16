@@ -42,12 +42,14 @@ export const ExtensionsTableRow: React.FC<ExtensionsTableRowProps> = ({
       </DataTableCell>
       <DataTableCell className={styles.infoCell}>
         <div className={styles.infoHeader}>
-          <img
-            className="publisherLogo"
-            aria-hidden={true}
-            alt="Publisher logo"
-            src={extension.publisherIconUri}
-          />
+          {extension.publisherIconUri && (
+            <img
+              className="publisherLogo"
+              aria-hidden={true}
+              alt="Publisher logo"
+              src={extension.publisherIconUri}
+            />
+          )}
           <Typography
             use="body1"
             theme="textPrimaryOnBackground"

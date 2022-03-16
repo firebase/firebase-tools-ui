@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+@import '../../../common/color';
 
 .detailsCard {
   margin-top: 24px;
@@ -29,8 +30,9 @@
 }
 
 .detailsAside {
-  background: #fafafa;
+  background: $COLOR_PANEL_BACKGROUND;
   border-right: 1px var(--fire-color-input-borders) solid;
+  border-radius: 8px 0 0 8px;
   flex-basis: 300px;
   flex-shrink: 0;
 }

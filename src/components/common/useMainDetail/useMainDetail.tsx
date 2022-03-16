@@ -19,23 +19,23 @@ import { List, ListItem } from '@rmwc/list';
 import { Typography } from '@rmwc/typography';
 import React, { useState } from 'react';
 
-import style from './useMasterDetail.module.scss';
+import style from './useMainDetail.module.scss';
 
-export interface MasterDetailTabConfig {
+export interface MainDetailTabConfig {
   label: string;
   tab: JSX.Element;
 }
 
-export interface MasterDetailConfig {
-  tabs: MasterDetailTabConfig[];
+export interface MainDetailConfig {
+  tabs: MainDetailTabConfig[];
 }
 
-export function useMasterDetail(config: MasterDetailConfig) {
-  const [idPrefix] = useState(randomId('master-detail'));
+export function useMainDetail(config: MainDetailConfig) {
+  const [idPrefix] = useState(randomId('main-detail'));
   const [index, setIndex] = useState(0);
 
   const tabs = (
-    <List role="tablist" className={style.masterDetailWrapper}>
+    <List role="tablist" className={style.mainDetailWrapper}>
       {config.tabs.map((tab, i) => (
         <ListItem
           className={style.listItem}

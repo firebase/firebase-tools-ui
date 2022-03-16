@@ -25,7 +25,7 @@ import { AccessAndRoles } from './Tabs/AccessAndRoles';
 import { ApisAndResources } from './Tabs/ApisAndResources';
 import ParamList from './Tabs/ParamList';
 import { Readme } from './Tabs/Readme';
-import { useMasterDetail } from './useMasterDetail/useMasterDetail';
+import { useMainDetail } from '../../../common/useMainDetail/useMainDetail';
 
 export interface DetailsCardProps {
   extension: Extension;
@@ -53,13 +53,13 @@ export const DetailsCard: React.FC<DetailsCardProps> = ({ extension }) => {
     ],
   };
 
-  const { tabs, content } = useMasterDetail(config);
+  const { tabs, content } = useMainDetail(config);
   return (
     <Card className={styles.detailsCard}>
       <Elevation z="2" wrap>
         <div className={styles.detailsWrapper}>
           <aside className={styles.detailsAside}>
-            <RelatedLinks extension={extension} />
+            <RelatedLinks />
             <div>{tabs}</div>
           </aside>
           <div className={styles.content}>{content}</div>

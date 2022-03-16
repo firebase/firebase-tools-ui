@@ -26,7 +26,7 @@ import { ReconnectingWebSocket } from '../../reconnectingWebSocket';
 import { useConfigOptional } from '../common/EmulatorConfigProvider';
 import { CompiledGetterCache } from './CompiledGetterCache';
 import History from './History';
-import { QueryBar, parseQuery } from './QueryBar';
+import { parseQuery, QueryBar } from './QueryBar';
 import { LogEntry } from './types';
 
 const compiledGetters = new CompiledGetterCache();

@@ -34,27 +34,27 @@ export function convertBackendToExtension(
     : backend.extensionVersion.spec;
 
   const shared = {
-    authorName: spec.author?.authorName || '',
-    authorUrl: spec.author?.url || '',
+    authorUrl: spec.author?.url ?? '',
     params: spec.params.map((p) => {
       return { ...p, value: backend.env[p.param] };
     }),
-    name: spec.name || '',
-    displayName: spec.displayName || '',
-    specVersion: spec.specVersion || '',
+    name: spec.name,
+    displayName: spec.displayName ?? '',
+    specVersion: spec.specVersion ?? '',
     env: backend.env,
-    apis: spec.apis || [],
-    resources: spec.resources || [],
-    roles: spec.roles || [],
-    readmeContent: spec.readmeContent || '',
-    postinstallContent: spec.postinstallContent || '',
-    sourceUrl: spec.sourceUrl || '',
+    apis: spec.apis ?? [],
+    resources: spec.resources ?? [],
+    roles: spec.roles ?? [],
+    readmeContent: spec.readmeContent ?? '',
+    postinstallContent: spec.postinstallContent ?? '',
+    sourceUrl: spec.sourceUrl ?? '',
     extensionDetailsUrl: EXTENSION_DETAILS_URL_BASE + spec.name,
   };
 
   if (isLocalExtension(backend)) {
     return {
       ...shared,
+      authorName: spec.author?.authorName ?? '',
       id: backend.extensionInstanceId,
     };
   }
@@ -63,8 +63,12 @@ export function convertBackendToExtension(
     ...shared,
     id: backend.extensionInstanceId,
     ref: backend.extensionVersion.ref,
+    authorName:
+      spec.author?.authorName ??
+      backend.extensionVersion.ref.match(/^[^/]+/)?.[0] ??
+      '',
     iconUri:
-      backend.extension.iconUri || '/assets/extensions/default-extension.png',
+      backend.extension.iconUri ?? '/assets/extensions/default-extension.png',
     publisherIconUri: backend.extension.publisher?.iconUri,
   };
 }

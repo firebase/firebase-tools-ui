@@ -22,7 +22,7 @@ import React, { useEffect, useRef } from 'react';
 import { grey100 } from '../../colors';
 import { CompiledGetterCache } from './CompiledGetterCache';
 import { HighlightedJSON } from './HighlightedJSON';
-import { ParsedQuery, filtersToQueryString, isQueryMatch } from './QueryBar';
+import { filtersToQueryString, isQueryMatch, ParsedQuery } from './QueryBar';
 import { LogEntry } from './types';
 
 const FilterTag: React.FC<{ appendToQuery: Function; log: LogEntry }> = ({
@@ -34,13 +34,28 @@ const FilterTag: React.FC<{ appendToQuery: Function; log: LogEntry }> = ({
 
   if (metadata?.function?.name) {
     tagButton = (
-      <div
-        className="log-tag-button"
-        onClick={() =>
-          appendToQuery('metadata.function.name', metadata.function?.name)
-        }
-      >
-        function[{metadata.function.name}]
+      <div>
+        <div
+          className="log-tag-button"
+          onClick={() =>
+            appendToQuery('metadata.function.name', metadata.function?.name)
+          }
+        >
+          function[{metadata.function.name}]
+        </div>
+        {metadata.extension?.instanceId && (
+          <div
+            className="log-tag-button"
+            onClick={() =>
+              appendToQuery(
+                'metadata.extension.instanceId',
+                metadata.extension?.instanceId
+              )
+            }
+          >
+            extension[{metadata.extension?.instanceId}]
+          </div>
+        )}
       </div>
     );
   } else if (metadata?.emulator?.name) {

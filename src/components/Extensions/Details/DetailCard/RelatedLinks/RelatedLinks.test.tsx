@@ -22,20 +22,38 @@ import { TestExtensionsProvider } from '../../../testing/TestExtensionsProvider'
 import { RelatedLinks } from './RelatedLinks';
 
 describe('RelatedLinks', () => {
+  const AUTHOR_NAME = 'pirojok-the-author';
+
+  function setup(extension: Extension) {
+    return render(
+      <TestExtensionsProvider
+        extensions={[extension]}
+        instanceId={extension.id}
+      >
+        <RelatedLinks />
+      </TestExtensionsProvider>
+    );
+  }
+
   it('renders list of related links', () => {
-    const AUTHOR_NAME = 'pirojok-the-author';
+    const extension: Extension = {
+      id: 'pirojok',
+      authorName: AUTHOR_NAME,
+      extensionDetailsUrl: 'detail.url',
+      authorUrl: 'author.url',
+    } as Extension;
+    const { getByText } = setup(extension);
+    expect(getByText('Source code')).not.toBeNull();
+    expect(getByText('Extension details')).not.toBeNull();
+    expect(getByText(AUTHOR_NAME)).not.toBeNull();
+  });
+
+  it('hides extension details if URL not present', async () => {
     const extension: Extension = {
       id: 'pirojok',
       authorName: AUTHOR_NAME,
     } as Extension;
-
-    const { getByText } = render(
-      <TestExtensionsProvider extensions={[]}>
-        <RelatedLinks extension={extension} />
-      </TestExtensionsProvider>
-    );
-    expect(getByText('Extension details')).not.toBeNull();
-    expect(getByText('Source code')).not.toBeNull();
-    expect(getByText(AUTHOR_NAME)).not.toBeNull();
+    const { queryByText } = setup(extension);
+    expect(queryByText('Extension details')).toBeNull();
   });
 });

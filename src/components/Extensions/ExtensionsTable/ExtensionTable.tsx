@@ -19,7 +19,7 @@ import React from 'react';
 
 import { Extension } from '../models';
 import { ExtensionsTableRow } from './ExtensionTableRow';
-
+import styles from './ExtensionTable.module.scss';
 export interface ExtensionsTableProps {
   extensions: Extension[];
 }
@@ -28,7 +28,7 @@ export const ExtensionsTable: React.FC<ExtensionsTableProps> = ({
   extensions,
 }) => {
   return (
-    <DataTable>
+    <DataTable className={styles.extensionTable}>
       <DataTableContent>
         <DataTableBody>
           {extensions.map((extension) => (

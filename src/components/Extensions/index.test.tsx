@@ -138,7 +138,7 @@ describe('ExtensionsRoute', () => {
         />
       ),
     });
-    expect(await findByText('Pirojok-the-tool')).not.toBeNull();
+    expect(await findByText('awesome-inc/good-tool@0.0.1')).not.toBeNull();
   });
 });
 

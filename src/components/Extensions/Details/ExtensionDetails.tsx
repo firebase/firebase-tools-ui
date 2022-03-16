@@ -21,6 +21,7 @@ import { useExtension } from '../api/useExtension';
 import { RedirectToList } from '../index';
 import { DetailsCard } from './DetailCard/DetailsCard';
 import { DetailsHeader } from './DetailsHeader';
+import { ExtensionFeatureBar } from '../FeatureBar/FeatureBar';
 
 export const ExtensionDetails: React.FC = () => {
   const extension = useExtension();
@@ -30,6 +31,7 @@ export const ExtensionDetails: React.FC = () => {
 
   return (
     <GridCell span={12} className="Extensions">
+      <ExtensionFeatureBar name={extension.displayName || ''} />
       <DetailsHeader extension={extension}></DetailsHeader>
       <DetailsCard extension={extension}></DetailsCard>
     </GridCell>

@@ -17,6 +17,7 @@ import { Button } from '@rmwc/button';
 import { Icon } from '@rmwc/icon';
 import { Typography } from '@rmwc/typography';
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import { useExtension } from '../../../api/useExtension';
 import { DetailItemCard } from '../DetailItemCard/DetailItemCard';
@@ -60,7 +61,10 @@ const Resources: React.FC = () => {
       <article key={e.name} className={styles.resourceItem}>
         <div className={styles.resourceItemHeader}>
           <div>{e.name}</div>
-          <Button>View logs</Button>
+          {/*TODO(kirjs): link to the actual function*/}
+          <Link to={'/logs'} className={styles.viewLogsLink}>
+            <Button>View logs</Button>
+          </Link>
         </div>
         <div>{e.description}</div>
       </article>
@@ -87,9 +91,11 @@ const Resources: React.FC = () => {
                   Cloud Functions
                 </Typography>
               </div>
-              <Button outlined={true} theme={'secondary'}>
-                View all logs
-              </Button>
+              <Link to={'/logs'} className={styles.viewLogsLink}>
+                <Button outlined={true} theme={'secondary'}>
+                  View all logs
+                </Button>
+              </Link>
             </div>
           }
           content={<>{functions}</>}
