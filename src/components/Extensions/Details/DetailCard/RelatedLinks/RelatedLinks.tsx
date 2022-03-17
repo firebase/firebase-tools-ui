@@ -50,7 +50,13 @@ export const RelatedLinks: React.FC = () => {
           <li>
             <Icon icon="newsmode" />
             <Typography use="body2" theme="secondary">
-              <a href={extension.extensionDetailsUrl}>Extension details</a>
+              <a
+                href={extension.extensionDetailsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Extension details
+              </a>
             </Typography>
           </li>
         )}

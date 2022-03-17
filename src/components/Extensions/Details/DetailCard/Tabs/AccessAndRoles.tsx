@@ -29,7 +29,11 @@ export const AccessAndRoles: React.FC = () => {
     <>
       <Typography use="body2" tag="div" className={styles.explanation}>
         This extension has an associated{' '}
-        <a href="https://firebase.google.com/docs/extensions/permissions-granted-to-extension">
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://firebase.google.com/docs/extensions/permissions-granted-to-extension"
+        >
           service account
         </a>{' '}
         that has the following access to your project and resources:

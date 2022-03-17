@@ -15,7 +15,7 @@
  */
 
 import { DataTableCell, DataTableRow } from '@rmwc/data-table';
-import { IconButton } from '@rmwc/icon-button';
+import { Icon } from '@rmwc/icon';
 import { Typography } from '@rmwc/typography';
 import React from 'react';
 
@@ -66,7 +66,7 @@ export const ExtensionsTableRow: React.FC<ExtensionsTableRowProps> = ({
       </DataTableCell>
       <DataTableCell className="actionCell">
         <ExtensionLink instanceId={extension.id}>
-          <IconButton theme="primary" icon="arrow_forward" />
+          <Icon theme="primary" icon="arrow_forward" />
         </ExtensionLink>
       </DataTableCell>
     </DataTableRow>

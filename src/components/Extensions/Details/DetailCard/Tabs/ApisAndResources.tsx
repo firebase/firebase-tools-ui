@@ -64,6 +64,8 @@ const Resources: React.FC = () => {
           <Link
             to={`/logs?q=metadata.function.name="${r.functionName}"`}
             className={styles.viewLogsLink}
+            target="_blank"
+            rel="noopener noreferrer"
           >
             <Button>View logs</Button>
           </Link>
@@ -94,6 +96,8 @@ const Resources: React.FC = () => {
                 </Typography>
               </div>
               <Link
+                target="_blank"
+                rel="noopener noreferrer"
                 to={`/logs?q=metadata.extension.instanceId="${extension.id}"`}
                 className={styles.viewLogsLink}
               >
