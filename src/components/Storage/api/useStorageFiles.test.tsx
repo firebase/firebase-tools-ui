@@ -78,7 +78,7 @@ describe('useStorageFiles', () => {
       expect.objectContaining({
         type: 'folder',
         name: folderName,
-        fullPath: '/' + folderName,
+        fullPath: folderName,
       })
     );
 
@@ -112,7 +112,7 @@ describe('useStorageFiles', () => {
     await uploadFile('other.file', folderName);
 
     await act(async () => {
-      await deleteFiles(['/' + folderName, fileName]);
+      await deleteFiles([folderName, fileName]);
     });
 
     await waitForNFiles(1);

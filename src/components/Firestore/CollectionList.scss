@@ -1,5 +1,5 @@
 /**
- * Copyright 2021 Google LLC
+ * Copyright 2022 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,17 @@
  * limitations under the License.
  */
 
-// firestore card
-$firestore-card-min-height: 600px;
+.Firestore-CollectionList {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 
-// firestore sub tabs
-$firestore-sub-tabs-height: 48px;
-$firestore-sub-tabs-margin-bottom: 48px;
-$firestore-sub-tabs-total-height: (
-  $firestore-sub-tabs-height + $firestore-sub-tabs-margin-bottom
-);
+  .mdc-list:not(.List-Actions) {
+    flex: 1;
+    overflow: scroll;
+  }
+}
+
+.Firestore-CollectionList:not(.Firestore-CollectionList-empty) {
+  flex: 1;
+}
