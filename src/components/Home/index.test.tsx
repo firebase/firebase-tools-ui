@@ -124,6 +124,29 @@ it('links to the hosting website externally', () => {
   expect(link.target).toBe('_blank');
 });
 
+it('shows extensions emulator card', () => {
+  const { getByTestId } = render(
+    <MemoryRouter>
+      <TestEmulatorConfigProvider
+        config={{
+          projectId: 'example',
+          extensions: {
+            host: 'localhost',
+            port: 1234,
+            hostAndPort: 'localhost:1234',
+          },
+        }}
+      >
+        <Home></Home>
+      </TestEmulatorConfigProvider>
+    </MemoryRouter>
+  );
+
+  const card = getByTestId(`emulator-info-extensions`);
+  expect(getByText(card, '1234')).not.toBeNull();
+  expect(getByText(card, 'Extensions emulator')).not.toBeNull();
+});
+
 it('shows pubsub emulator card', () => {
   const { getByTestId } = render(
     <MemoryRouter>
@@ -146,6 +169,7 @@ it('shows pubsub emulator card', () => {
   expect(getByText(card, '8085')).not.toBeNull();
   expect(getByText(card, 'PubSub emulator')).not.toBeNull();
 });
+
 it('shows storage emulator card', () => {
   const { getByTestId } = render(
     <MemoryRouter>
@@ -202,7 +226,7 @@ it('renders all emulators as "off" when error loading config', () => {
     </MemoryRouter>
   );
 
-  for (const emulator of ['database', 'firestore', 'functions']) {
+  for (const emulator of ['database', 'firestore', 'functions', 'extensions']) {
     const card = getByTestId(`emulator-info-${emulator}`);
     expect(getByText(card, 'Off')).not.toBeNull();
     expect(getByText(card, 'N/A')).not.toBeNull(); // Port is N/A
