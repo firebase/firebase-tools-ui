@@ -19,12 +19,13 @@ import { MemoryRouter } from 'react-router-dom';
 
 import { Config } from '../../../store/config';
 import { TestEmulatorConfigProvider } from '../../common/EmulatorConfigProvider';
-import { convertBackendsToExtensions } from '../api/internal/useExtensionsData';
-import { ExtensionBackend, ExtensionsProvider } from '../api/useExtensions';
+import { InstanceIdProvider } from '../api/useExtension';
+import { ExtensionsProvider } from '../api/useExtensions';
+import { Extension } from '../models';
 
 export const TestExtensionsProvider: React.FC<{
   instanceId?: string;
-  extensions?: ExtensionBackend[];
+  extensions?: Extension[];
 }> = ({ children, instanceId, extensions = [] }) => {
   const pagePath = `/extensions${instanceId ? `/${instanceId}` : ''}`;
   const emulatorConfig: Config = {
@@ -39,10 +40,10 @@ export const TestExtensionsProvider: React.FC<{
   return (
     <MemoryRouter initialEntries={[pagePath]}>
       <TestEmulatorConfigProvider config={emulatorConfig}>
-        <ExtensionsProvider
-          extensions={convertBackendsToExtensions(extensions)}
-        >
-          <Suspense fallback={null}>{children}</Suspense>
+        <ExtensionsProvider extensions={extensions}>
+          <InstanceIdProvider instanceId={instanceId || ''}>
+            <Suspense fallback={null}>{children}</Suspense>
+          </InstanceIdProvider>
         </ExtensionsProvider>
       </TestEmulatorConfigProvider>
     </MemoryRouter>

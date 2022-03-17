@@ -22,13 +22,15 @@ import React, { useState } from 'react';
 import styles from './Accordion.module.scss';
 
 export interface AccordionProps {
-  title: string;
+  title: string | JSX.Element;
+  expansionLabel?: string;
   isExpanded?: boolean;
 }
 
 export const Accordion: React.FC<AccordionProps> = ({
   isExpanded = false,
   title,
+  expansionLabel,
   children,
 }) => {
   const [isAccordionExpanded, setIsAccordionExpanded] = useState(isExpanded);
@@ -52,11 +54,16 @@ export const Accordion: React.FC<AccordionProps> = ({
         <Typography use="body1">{title}</Typography>
 
         {/* TODO(kirjs): Play animations. */}
-        {isAccordionExpanded ? (
-          <Icon icon="expand_less" className={styles.icon} />
-        ) : (
-          <Icon icon="expand_more" className={styles.icon} />
-        )}
+        <div className={styles.expandHeader}>
+          {expansionLabel && (
+            <Typography use="body2">{expansionLabel}</Typography>
+          )}
+          {isAccordionExpanded ? (
+            <Icon icon="expand_less" className={styles.icon} />
+          ) : (
+            <Icon icon="expand_more" className={styles.icon} />
+          )}
+        </div>
       </header>
       {isAccordionExpanded && (
         <div

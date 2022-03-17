@@ -16,22 +16,18 @@
 
 import { render } from '@testing-library/react';
 
-import { isExtensionBackend } from './api/internal/useExtensionBackends';
 import { ExtensionsList } from './List';
 import { TestExtensionsProvider } from './testing/TestExtensionsProvider';
-import { BACKEND_LIST } from './testing/utils';
+import { EXTENSION } from './testing/utils';
 
 describe('ExtensionsList', () => {
   it('renders list of extensions', () => {
     const { getByText } = render(
-      <TestExtensionsProvider
-        extensions={BACKEND_LIST.filter(isExtensionBackend)}
-      >
+      <TestExtensionsProvider extensions={[EXTENSION]}>
         <ExtensionsList />
       </TestExtensionsProvider>
     );
 
-    expect(getByText('Good Tool')).not.toBeNull();
-    expect(getByText('Pirojok-the-tool')).not.toBeNull();
+    expect(getByText(EXTENSION.displayName)).not.toBeNull();
   });
 });

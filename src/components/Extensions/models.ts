@@ -133,14 +133,31 @@ export interface ExtensionSpec {
   preinstallContent?: string;
   postinstallContent?: string;
   readmeContent?: string;
+  sourceUrl?: string;
   externalServices?: ExternalService[];
 }
 
-// TODO(kirjs): Consider composing instead of extending here.
-export interface Extension extends ExtensionSpec {
+export interface ExtensionParam extends Param {
+  value: string;
+}
+
+export interface Extension {
   iconUri?: string;
   publisherIconUri?: string;
   id: string;
+  ref?: string;
+  authorName: string;
+  authorUrl: string;
+  apis?: Api[];
+  roles?: Role[];
+  resources?: ExtensionResource[];
+  params?: ExtensionParam[];
+  displayName: string;
+  specVersion: string;
+  readmeContent: string;
+  sourceUrl: string;
+  postinstallContent: string;
+  extensionDetailsUrl: string;
 }
 
 export interface ExternalService {
@@ -166,6 +183,9 @@ export interface Resource {
   propertiesYaml?: string;
 }
 
+export interface ExtensionResource extends Resource {
+  functionName?: string;
+}
 export interface Author {
   authorName: string;
   url?: string;
@@ -195,4 +215,10 @@ export enum ParamType {
 export interface ParamOption {
   value: string;
   label?: string;
+}
+
+export interface FunctionTrigger {
+  entryPoint: string;
+  regions: string[];
+  name: string;
 }
