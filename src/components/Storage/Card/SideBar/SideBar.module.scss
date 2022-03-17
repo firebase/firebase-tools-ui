@@ -38,7 +38,7 @@
   margin-left: calc(var(--sidebar-padding) * -1);
   border-left: 1px solid var(--fire-color-input-borders);
 
-  --accordion-spacing: var(--sidebar-padding);
+  --accordion-horizontal-spacing: var(--sidebar-padding);
 }
 
 .metadata {

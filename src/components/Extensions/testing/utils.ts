@@ -17,6 +17,7 @@
 import { ExtensionBackend } from '../api/useExtensions';
 import {
   BackendExtension,
+  Extension,
   ExtensionSpec,
   ExtensionVersion,
   RegistryLaunchStage,
@@ -79,7 +80,7 @@ export const EXTENSION_VERSION: ExtensionVersion = {
   createTime: '2021-10-27T00:00:00.000Z',
 };
 
-export const EXTENSION: BackendExtension = {
+export const BACKEND_EXTENSION: BackendExtension = {
   name: 'publishers/awesome-inc/extensions/good-tool',
   ref: 'awesome-inc/good-tool',
   visibility: Visibility.PUBLIC,
@@ -108,7 +109,7 @@ export const BACKEND_LIST = [
   {
     env: {},
     extensionInstanceId: 'pirojok-the-published-extension',
-    extension: EXTENSION,
+    extension: BACKEND_EXTENSION,
     extensionVersion: EXTENSION_VERSION,
   },
   // local extension
@@ -123,3 +124,27 @@ export const BACKEND_LIST = [
     extensionSpec: EXTENSION_SPEC,
   } as ExtensionBackend,
 ];
+
+export const EXTENSION_ID = 'pirojok';
+
+export const EXTENSION: Extension = {
+  id: EXTENSION_ID,
+  postinstallContent: 'LOL',
+  ref: 'pirojok-the-ref',
+  displayName: 'Pirojok the extension',
+  authorUrl: 'https://author.url',
+  authorName: 'Pirojok the author',
+  specVersion: '1.0.0',
+  readmeContent: '# Readme',
+  sourceUrl: 'https://source.url',
+  extensionDetailsUrl: 'https://extension.details.url',
+  roles: [
+    {
+      role: 'storage.admin',
+      reason: 'Allows the extension to store resized images in Cloud Storage',
+    },
+  ],
+  params: [{ param: 'pirojok', label: 'label', value: 'param=value' }],
+  resources: [{ name: 'resource', description: 'description', type: '' }],
+  apis: [{ apiName: 'api-name', reason: 'reason' }],
+};

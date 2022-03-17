@@ -15,7 +15,7 @@
  */
 
 import { DataTableCell, DataTableRow } from '@rmwc/data-table';
-import { IconButton } from '@rmwc/icon-button';
+import { Icon } from '@rmwc/icon';
 import { Typography } from '@rmwc/typography';
 import React from 'react';
 
@@ -31,34 +31,42 @@ export const ExtensionsTableRow: React.FC<ExtensionsTableRowProps> = ({
   extension,
 }) => {
   return (
-    <DataTableRow key={extension.name}>
-      <DataTableCell className={styles.iconCell}>
+    <DataTableRow key={extension.ref}>
+      <DataTableCell className={styles.iconCell + ' iconCell'}>
         <img
           src={extension.iconUri}
           aria-hidden={true}
-          alt="BackendExtension logo"
+          className="extensionLogo"
+          alt="Extension logo"
         />
       </DataTableCell>
       <DataTableCell className={styles.infoCell}>
         <div className={styles.infoHeader}>
-          <img
-            aria-hidden={true}
-            alt="Publisher logo"
-            src={extension.publisherIconUri}
-          />
-          <Typography use="body1" theme="textPrimaryOnBackground">
+          {extension.publisherIconUri && (
+            <img
+              className="publisherLogo"
+              aria-hidden={true}
+              alt="Publisher logo"
+              src={extension.publisherIconUri}
+            />
+          )}
+          <Typography
+            use="body1"
+            theme="textPrimaryOnBackground"
+            className="extensionName"
+          >
             {extension.displayName}
           </Typography>
         </div>
         <div>
           <Typography use="body2" theme="textSecondaryOnBackground">
-            {extension.name}@{extension.specVersion}
+            {extension.ref}
           </Typography>
         </div>
       </DataTableCell>
-      <DataTableCell>
+      <DataTableCell className="actionCell">
         <ExtensionLink instanceId={extension.id}>
-          <IconButton theme="primary" icon="arrow_forward" />
+          <Icon theme="primary" icon="arrow_forward" />
         </ExtensionLink>
       </DataTableCell>
     </DataTableRow>

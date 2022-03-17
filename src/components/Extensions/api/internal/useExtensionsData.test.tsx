@@ -43,23 +43,17 @@ describe('useExtensionsData', () => {
 
     expect(result.current).toEqual([
       {
-        id: 'pirojok-the-published-extension',
-        specVersion: 'v1beta',
+        authorName: 'Awesome Inc',
+        authorUrl: 'https://google.com/awesome',
+        params: [],
         name: 'good-tool',
-        version: '0.0.1',
         displayName: 'Pirojok-the-tool',
-        description: 'Does something really useful',
+        specVersion: 'v1beta',
+        env: {},
         apis: [
           {
             apiName: 'storage-component.googleapis.com',
             reason: 'Needed to use Cloud Storage',
-          },
-        ],
-        roles: [
-          {
-            role: 'storage.admin',
-            reason:
-              'Allows the extension to store resized images in Cloud Storage',
           },
         ],
         resources: [
@@ -72,44 +66,37 @@ describe('useExtensionsData', () => {
               'availableMemoryMb: 1024\neventTrigger:\n  eventType: google.storage.object.finalize\n  resource: projects/_/buckets/${param:IMG_BUCKET}\nlocation: ${param:LOCATION}\nruntime: nodejs14\n',
           },
         ],
-        billingRequired: true,
-        author: {
-          authorName: 'Awesome Inc',
-          url: 'https://google.com/awesome',
-        },
-        license: 'MIT',
-        releaseNotesUrl: 'https://google.com/awesome/release-notes',
-        params: [],
-        postinstallContent: '### See it in action',
-        externalServices: [
+        roles: [
           {
-            name: 'blockchain co.',
-            pricingUri: 'https://google.com/blockchain',
+            role: 'storage.admin',
+            reason:
+              'Allows the extension to store resized images in Cloud Storage',
           },
         ],
+        readmeContent: '',
+        postinstallContent: '### See it in action',
+        sourceUrl: '',
+        extensionDetailsUrl:
+          'https://firebase.google.com/products/extensions/good-tool',
+        id: 'pirojok-the-published-extension',
+        ref: 'awesome-inc/good-tool@0.0.1',
         iconUri:
           'https://www.gstatic.com/mobilesdk/211001_mobilesdk/google-pay-logo.svg',
         publisherIconUri:
           'https://www.gstatic.com/mobilesdk/160503_mobilesdk/logo/2x/firebase_128dp.png',
       },
       {
-        id: 'pirojok-the-local-extension',
-        specVersion: 'v1beta',
+        authorName: 'Awesome Inc',
+        authorUrl: 'https://google.com/awesome',
+        params: [],
         name: 'good-tool',
-        version: '0.0.1',
         displayName: 'Good Tool',
-        description: 'Does something really useful',
+        specVersion: 'v1beta',
+        env: {},
         apis: [
           {
             apiName: 'storage-component.googleapis.com',
             reason: 'Needed to use Cloud Storage',
-          },
-        ],
-        roles: [
-          {
-            role: 'storage.admin',
-            reason:
-              'Allows the extension to store resized images in Cloud Storage',
           },
         ],
         resources: [
@@ -122,21 +109,19 @@ describe('useExtensionsData', () => {
               'availableMemoryMb: 1024\neventTrigger:\n  eventType: google.storage.object.finalize\n  resource: projects/_/buckets/${param:IMG_BUCKET}\nlocation: ${param:LOCATION}\nruntime: nodejs14\n',
           },
         ],
-        billingRequired: true,
-        author: {
-          authorName: 'Awesome Inc',
-          url: 'https://google.com/awesome',
-        },
-        license: 'MIT',
-        releaseNotesUrl: 'https://google.com/awesome/release-notes',
-        params: [],
-        postinstallContent: '### See it in action',
-        externalServices: [
+        roles: [
           {
-            name: 'blockchain co.',
-            pricingUri: 'https://google.com/blockchain',
+            role: 'storage.admin',
+            reason:
+              'Allows the extension to store resized images in Cloud Storage',
           },
         ],
+        readmeContent: '',
+        postinstallContent: '### See it in action',
+        sourceUrl: '',
+        extensionDetailsUrl:
+          'https://firebase.google.com/products/extensions/good-tool',
+        id: 'pirojok-the-local-extension',
       },
     ]);
   });

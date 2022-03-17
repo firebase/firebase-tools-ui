@@ -16,29 +16,25 @@
 
 import { render } from '@testing-library/react';
 
-import { InstanceIdProvider } from './api/useExtension';
-import { ExtensionDetails } from './Details';
-import { TestExtensionsProvider } from './testing/TestExtensionsProvider';
-import { EXTENSION, EXTENSION_VERSION } from './testing/utils';
+import { Extension } from '../../models';
+import { TestExtensionsProvider } from '../../testing/TestExtensionsProvider';
+import { EXTENSION, EXTENSION_ID } from '../../testing/utils';
+import { DetailsCard } from './DetailsCard';
 
-describe('ExtensionDetails', () => {
-  it('renders details of extension', () => {
-    const { getByText } = render(
+describe('DetailsCard', () => {
+  it('renders the card', () => {
+    const displayName = 'Pirojok-the-extension';
+    const extension: Extension = { id: 'pirojok', displayName } as Extension;
+
+    const { getAllByRole, getByText } = render(
       <TestExtensionsProvider
-        extensions={[
-          {
-            env: {},
-            extensionInstanceId: 'foo-bar',
-            extension: EXTENSION,
-            extensionVersion: EXTENSION_VERSION,
-          },
-        ]}
+        extensions={[EXTENSION]}
+        instanceId={EXTENSION_ID}
       >
-        <InstanceIdProvider instanceId="foo-bar">
-          <ExtensionDetails />
-        </InstanceIdProvider>
+        <DetailsCard extension={extension} />
       </TestExtensionsProvider>
     );
-    expect(getByText('foo-bar')).not.toBeNull();
+    expect(getAllByRole('tab').length).toBe(4);
+    expect(getByText('Source code')).not.toBeNull();
   });
 });
