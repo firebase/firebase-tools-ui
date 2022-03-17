@@ -25,7 +25,7 @@ import { renderWithStorage } from '../../../../../testing/renderWithStorage';
 import { CreateFolder } from './CreateFolder';
 
 describe('CreateFolder', () => {
-  it.skip('opens folder dialog and then creates folder', async () => {
+  it('opens folder dialog and then creates folder', async () => {
     const {
       getByLabelText,
       getByText,

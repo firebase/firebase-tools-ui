@@ -17,14 +17,15 @@
 import { useEmulatorConfig } from '../../common/EmulatorConfigProvider';
 import { useBucket } from './useBucket';
 
-const EMPTY_FOLDER_DATA = `--boundary
-Content-Type: application/json
-
-{"contentType":"text/plain"}
---boundary
-Content-Type: text/plain
-
---boundary--`;
+const EMPTY_FOLDER_DATA = `--boundary\r
+Content-Type: application/json\r
+\r
+{"contentType":"text/plain"}\r
+--boundary\r
+Content-Type: text/plain\r
+\r
+--boundary--\r
+`;
 
 export function useCreateFolder() {
   const config = useEmulatorConfig('storage');
