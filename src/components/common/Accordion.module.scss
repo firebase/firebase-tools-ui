@@ -15,7 +15,10 @@
  */
 
 .accordion {
-  --focus-background: var(--accordion-focus-background, var(--fire-color-input-borders));
+  --focus-background: var(
+    --accordion-focus-background,
+    var(--fire-color-input-borders)
+  );
   --border-size: var(--accordion-border-size, 1px);
   --horizontal-spacing: var(--accordion-horizontal-spacing, 40px);
   --vertical-spacing: var(--accordion-vertical-spacing, 8px);
@@ -40,7 +43,8 @@
 }
 
 .content {
-  padding: 8px var(--horizontal-spacing) var(--horizontal-spacing) var(--horizontal-spacing);
+  padding: 8px var(--horizontal-spacing) var(--horizontal-spacing)
+    var(--horizontal-spacing);
 }
 
 .icon {

@@ -73,12 +73,12 @@ export interface ExtensionInstance {
   createTime: string;
   updateTime: string;
   state:
-      | 'STATE_UNSPECIFIED'
-      | 'DEPLOYING'
-      | 'UNINSTALLING'
-      | 'ACTIVE'
-      | 'ERRORED'
-      | 'PAUSED';
+    | 'STATE_UNSPECIFIED'
+    | 'DEPLOYING'
+    | 'UNINSTALLING'
+    | 'ACTIVE'
+    | 'ERRORED'
+    | 'PAUSED';
   config: ExtensionInstanceConfig;
   serviceAccountEmail: string;
   errorStatus?: string;
