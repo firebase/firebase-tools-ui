@@ -23,7 +23,7 @@ import { Spinner } from '../common/Spinner';
 import { useExtensionsData } from './api/internal/useExtensionsData';
 import { InstanceIdProvider } from './api/useExtension';
 import { ExtensionsProvider } from './api/useExtensions';
-import { ExtensionDetails } from './Details';
+import { ExtensionDetails } from './Details/ExtensionDetails';
 import { ExtensionsList } from './List';
 import { BackendExtension, ExtensionSpec, ExtensionVersion } from './models';
 

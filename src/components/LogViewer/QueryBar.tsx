@@ -84,9 +84,11 @@ const queryFields = [
   'search',
   'metadata.emulator',
   'metadata.emulator.name',
+  'metadata.extension.instanceId',
   'metadata.function',
   'metadata.function.name',
 ];
+
 export function parseQuery(query: string): ParsedQuery {
   let escapedQuery = '';
   let isEscaped = false;

@@ -18,6 +18,7 @@ import { DataTable, DataTableBody, DataTableContent } from '@rmwc/data-table';
 import React from 'react';
 
 import { Extension } from '../models';
+import styles from './ExtensionTable.module.scss';
 import { ExtensionsTableRow } from './ExtensionTableRow';
 
 export interface ExtensionsTableProps {
@@ -28,7 +29,7 @@ export const ExtensionsTable: React.FC<ExtensionsTableProps> = ({
   extensions,
 }) => {
   return (
-    <DataTable>
+    <DataTable className={styles.extensionTable}>
       <DataTableContent>
         <DataTableBody>
           {extensions.map((extension) => (

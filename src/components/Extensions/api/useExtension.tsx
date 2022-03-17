@@ -16,6 +16,7 @@
 
 import { createContext, useContext } from 'react';
 
+import { Extension } from '../models';
 import { ExtensionsContext } from './useExtensions';
 
 const InstanceIdContext = createContext('');
@@ -31,7 +32,7 @@ export const InstanceIdProvider: React.FC<{ instanceId: string }> = ({
   );
 };
 
-export function useExtension() {
+export function useExtension(): Extension | undefined {
   const extensions = useContext(ExtensionsContext);
   const instanceId = useContext(InstanceIdContext);
   return extensions.find((e) => e.id === instanceId);

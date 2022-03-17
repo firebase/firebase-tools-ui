@@ -21,12 +21,14 @@ import React from 'react';
 
 import { useExtensions } from './api/useExtensions';
 import { ExtensionsTable } from './ExtensionsTable/ExtensionTable';
+import { ExtensionsFeatureBar } from './FeatureBar/FeatureBar';
 
 export const ExtensionsList: React.FC = () => {
   const specs = useExtensions();
 
   return (
     <GridCell span={12} className="Extensions">
+      <ExtensionsFeatureBar></ExtensionsFeatureBar>
       <Elevation z="2" wrap>
         <Card>
           <ExtensionsTable extensions={specs} />
