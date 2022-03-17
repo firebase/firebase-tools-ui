@@ -122,7 +122,7 @@ describe('ExtensionsRoute', () => {
       },
     ]);
 
-    const { findByText, queryByText } = render(<ExtensionsRoute />, {
+    const { findByText } = render(<ExtensionsRoute />, {
       wrapper: (props) => (
         <TestWrapper
           {...props}

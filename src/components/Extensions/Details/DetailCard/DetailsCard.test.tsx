@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { getByText, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
 
 import { Extension } from '../../models';
 import { TestExtensionsProvider } from '../../testing/TestExtensionsProvider';

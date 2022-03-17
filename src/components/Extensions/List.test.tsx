@@ -16,10 +16,9 @@
 
 import { render } from '@testing-library/react';
 
-import { isExtensionBackend } from './api/internal/useExtensionBackends';
 import { ExtensionsList } from './List';
 import { TestExtensionsProvider } from './testing/TestExtensionsProvider';
-import { BACKEND_EXTENSION, BACKEND_LIST, EXTENSION } from './testing/utils';
+import { EXTENSION } from './testing/utils';
 
 describe('ExtensionsList', () => {
   it('renders list of extensions', () => {

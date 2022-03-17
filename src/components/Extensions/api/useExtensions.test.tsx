@@ -16,18 +16,8 @@
 
 import { renderHook } from '@testing-library/react-hooks';
 
-import {
-  BACKEND_EXTENSION,
-  EXTENSION,
-  EXTENSION_SPEC,
-  EXTENSION_VERSION,
-} from '../testing/utils';
-import { convertBackendsToExtensions } from './internal/useExtensionsData';
-import {
-  ExtensionBackend,
-  ExtensionsProvider,
-  useExtensions,
-} from './useExtensions';
+import { EXTENSION } from '../testing/utils';
+import { ExtensionsProvider, useExtensions } from './useExtensions';
 
 describe('useExtensions', () => {
   it('returns the list of extension backends', () => {
