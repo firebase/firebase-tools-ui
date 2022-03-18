@@ -5,6 +5,8 @@ import { GridCell } from '@rmwc/grid';
 import { IconButton } from '@rmwc/icon-button';
 import { CollapsibleList, List, ListItem, ListItemMeta } from '@rmwc/list';
 import { TextField } from '@rmwc/textfield';
+import { Theme, ThemeProvider } from '@rmwc/theme';
+import { Typography } from '@rmwc/typography';
 import {
   ExplicitParameterValue,
   RemoteConfigCondition,
@@ -13,6 +15,7 @@ import {
   RemoteConfigTemplate,
 } from 'firebase-admin/remote-config';
 import React, { Suspense, useLayoutEffect, useRef, useState } from 'react';
+import { grey100 } from '../../colors';
 
 import { CardActionBar } from '../common/CardActionBar';
 import { useTemplate } from './api';
@@ -267,6 +270,18 @@ const ParamTable: React.FunctionComponent<{
   editParam: (paramName: string) => any;
 }> = ({ rcTemplate, paramNameFilter, editParam }) => {
   return (
+    <>
+    <ThemeProvider
+      options={{ surface: grey100 }}
+      className={styles.paramListHeader}
+    >
+      <Theme use={['surface']} className={styles.paramListHeaderInner} tag="div">
+      <Typography use="subtitle2">Name</Typography>
+      <Typography use="subtitle2">Conditions</Typography>
+      <Typography use="subtitle2">Value</Typography>
+      <Typography use="subtitle2">Actions</Typography>
+      </Theme>
+    </ThemeProvider>
     <List>
       {Object.keys(rcTemplate.parameters).map((paramName) => {
         const param = rcTemplate.parameters[paramName];
@@ -313,7 +328,7 @@ const ParamTable: React.FunctionComponent<{
           />
         );
       })}
-    </List>
+    </List></>
   );
 };
 
