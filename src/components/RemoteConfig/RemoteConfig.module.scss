@@ -55,3 +55,16 @@
 .remoteConfigParameterName {
   font-family: 'Roboto Mono', monospace;
 }
+
+.paramListHeader {
+  height: 28px;
+
+  .paramListHeaderInner {
+    height: 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
