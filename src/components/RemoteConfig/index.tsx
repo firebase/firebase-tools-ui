@@ -21,6 +21,7 @@ import { CardActionBar } from '../common/CardActionBar';
 import { useTemplate } from './api';
 import EditDialog from './EditDialog';
 import styles from './RemoteConfig.module.scss';
+import ResetButton from './Reset';
 
 const ParamFilter: React.FunctionComponent<{
   filter: string;
@@ -291,7 +292,6 @@ const ParamTable: React.FunctionComponent<{
           const param = rcTemplate.parameters[paramName];
           const { defaultValue, conditionalValues } = param;
 
-          // TODO: Filter on everything, not just paramName
           const openByDefault =
             paramNameFilter === '' ||
             paramContainsSearchTerm(paramNameFilter, paramName, param);
@@ -338,13 +338,16 @@ const ParamTable: React.FunctionComponent<{
 };
 
 function RemoteConfig() {
-  const { template, updateTemplate } = useTemplate();
+  const { template, updateTemplate, revertTemplate } = useTemplate();
 
   const [searchText, setSearchText] = useState('');
   const [paramBeingEdited, editParam] = useState<string | undefined>(undefined);
 
   return (
     <GridCell span={12}>
+      <div className={styles.topActions}>
+        <ResetButton reset={revertTemplate} />
+      </div>
       <Elevation z="2" wrap>
         <Card>
           <CardActionBar>

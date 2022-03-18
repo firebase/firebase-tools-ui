@@ -18,24 +18,31 @@ import { RemoteConfigTemplate } from 'firebase-admin/lib/remote-config';
 import { useConfig, useEmulatorConfig } from '../common/EmulatorConfigProvider';
 import { useRequest } from '../common/useRequest';
 
+function useRemoteConfigRevertUrl() {
+  const config = useEmulatorConfig('remoteconfig');
+  return `http://${config.hostAndPort}/revert`;
+}
+
 function useRemoteConfigAdminUrl() {
   const { projectId } = useConfig();
-  const config = useEmulatorConfig('remote config');
+  const config = useEmulatorConfig('remoteconfig');
   return `http://${config.hostAndPort}/v1/projects/${projectId}/remoteConfig?clientType=emulator`;
 }
 
 function useRemoteConfigClientUrl() {
   const { projectId } = useConfig();
-  const config = useEmulatorConfig('remote config');
+  const config = useEmulatorConfig('remoteconfig');
   return `http://${config.hostAndPort}/v1/projects/${projectId}/namespaces/firebase:fetch`;
 }
 
 export function useTemplate(): {
   template: RemoteConfigTemplate;
   refetchTemplate: () => void;
-  updateTemplate: (newTemplate: RemoteConfigTemplate) => void;
+  updateTemplate: (newTemplate: RemoteConfigTemplate) => Promise<void>;
+  revertTemplate: () => Promise<void>;
 } {
   const url = useRemoteConfigAdminUrl();
+  const revertUrl = useRemoteConfigRevertUrl();
   const { data: template, mutate, isValidating } = useRequest(
     url,
     { method: 'GET' },
@@ -57,12 +64,30 @@ export function useTemplate(): {
       console.error(response.status);
     }
 
-    mutate();
+    await mutate();
+  };
+
+  const revertTemplate = async () => {
+    const response = await fetch(revertUrl, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({}),
+    });
+
+    if (!response.ok) {
+      console.error(response.status);
+    }
+
+    // see if we can just use the response from the put
+    await mutate();
   };
 
   return {
     template: template as RemoteConfigTemplate,
     refetchTemplate,
     updateTemplate,
+    revertTemplate,
   };
 }

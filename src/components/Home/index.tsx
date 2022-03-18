@@ -95,7 +95,7 @@ const Overview: React.FC<
         <EmulatorCard
           name="Remote Config emulator"
           icon={<RemoteConfigIcon theme="secondary" />}
-          config={config['remote config']}
+          config={config['remoteconfig']}
           linkTo="/remote-config"
           testId="emulator-info-remote-config"
         />
