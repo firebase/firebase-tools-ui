@@ -15,8 +15,8 @@ import {
   RemoteConfigTemplate,
 } from 'firebase-admin/remote-config';
 import React, { Suspense, useLayoutEffect, useRef, useState } from 'react';
-import { grey100 } from '../../colors';
 
+import { grey100 } from '../../colors';
 import { CardActionBar } from '../common/CardActionBar';
 import { useTemplate } from './api';
 import EditDialog from './EditDialog';
@@ -271,64 +271,69 @@ const ParamTable: React.FunctionComponent<{
 }> = ({ rcTemplate, paramNameFilter, editParam }) => {
   return (
     <>
-    <ThemeProvider
-      options={{ surface: grey100 }}
-      className={styles.paramListHeader}
-    >
-      <Theme use={['surface']} className={styles.paramListHeaderInner} tag="div">
-      <Typography use="subtitle2">Name</Typography>
-      <Typography use="subtitle2">Conditions</Typography>
-      <Typography use="subtitle2">Value</Typography>
-      <Typography use="subtitle2">Actions</Typography>
-      </Theme>
-    </ThemeProvider>
-    <List>
-      {Object.keys(rcTemplate.parameters).map((paramName) => {
-        const param = rcTemplate.parameters[paramName];
-        const { defaultValue, conditionalValues } = param;
+      <ThemeProvider
+        options={{ surface: grey100 }}
+        className={styles.paramListHeader}
+      >
+        <Theme
+          use={['surface']}
+          className={styles.paramListHeaderInner}
+          tag="div"
+        >
+          <Typography use="subtitle2">Name</Typography>
+          <Typography use="subtitle2">Conditions</Typography>
+          <Typography use="subtitle2">Value</Typography>
+          <Typography use="subtitle2">Actions</Typography>
+        </Theme>
+      </ThemeProvider>
+      <List>
+        {Object.keys(rcTemplate.parameters).map((paramName) => {
+          const param = rcTemplate.parameters[paramName];
+          const { defaultValue, conditionalValues } = param;
 
-        // TODO: Filter on everything, not just paramName
-        const openByDefault =
-          paramNameFilter === '' ||
-          paramContainsSearchTerm(paramNameFilter, paramName, param);
+          // TODO: Filter on everything, not just paramName
+          const openByDefault =
+            paramNameFilter === '' ||
+            paramContainsSearchTerm(paramNameFilter, paramName, param);
 
-        const conditions = Object.keys(
-          conditionalValues as {
-            [key: string]: RemoteConfigParameterValue;
-          }
-        ).map((conditionName) => {
-          let condition = rcTemplate.conditions.find(
-            (rcCondition) => rcCondition.name === conditionName
-          );
+          const conditions = Object.keys(
+            conditionalValues as {
+              [key: string]: RemoteConfigParameterValue;
+            }
+          ).map((conditionName) => {
+            let condition = rcTemplate.conditions.find(
+              (rcCondition) => rcCondition.name === conditionName
+            );
 
-          if (!condition) {
+            if (!condition) {
+              return {
+                name: conditionName,
+                value: (conditionalValues as {
+                  [key: string]: RemoteConfigParameterValue;
+                })[conditionName],
+              } as ConditionDetails;
+            }
             return {
-              name: conditionName,
+              ...condition,
               value: (conditionalValues as {
                 [key: string]: RemoteConfigParameterValue;
               })[conditionName],
-            } as ConditionDetails;
-          }
-          return {
-            ...condition,
-            value: (conditionalValues as {
-              [key: string]: RemoteConfigParameterValue;
-            })[conditionName],
-          };
-        });
+            };
+          });
 
-        return (
-          <ParamDetails
-            key={paramName}
-            name={paramName}
-            defaultValue={defaultValue}
-            conditions={conditions}
-            open={openByDefault}
-            edit={() => editParam(paramName)}
-          />
-        );
-      })}
-    </List></>
+          return (
+            <ParamDetails
+              key={paramName}
+              name={paramName}
+              defaultValue={defaultValue}
+              conditions={conditions}
+              open={openByDefault}
+              edit={() => editParam(paramName)}
+            />
+          );
+        })}
+      </List>
+    </>
   );
 };
 
