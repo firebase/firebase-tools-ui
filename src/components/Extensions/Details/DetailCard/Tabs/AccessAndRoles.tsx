@@ -18,6 +18,7 @@ import { Icon } from '@rmwc/icon';
 import { Typography } from '@rmwc/typography';
 import React from 'react';
 
+import { DocsLink } from '../../../../common/links/DocsLink';
 import { useExtension } from '../../../api/useExtension';
 import { DetailItemCard } from '../DetailItemCard/DetailItemCard';
 import styles from './AccessAndRoles.module.scss';
@@ -29,13 +30,9 @@ export const AccessAndRoles: React.FC = () => {
     <>
       <Typography use="body2" tag="div" className={styles.explanation}>
         This extension has an associated{' '}
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://firebase.google.com/docs/extensions/permissions-granted-to-extension"
-        >
+        <DocsLink href="extensions/permissions-granted-to-extension">
           service account
-        </a>{' '}
+        </DocsLink>{' '}
         that has the following access to your project and resources:
       </Typography>
       <section className={styles.wrapper}>

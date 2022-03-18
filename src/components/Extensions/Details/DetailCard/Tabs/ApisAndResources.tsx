@@ -115,10 +115,12 @@ const Resources: React.FC = () => {
 };
 
 export const ApisAndResources: React.FC = () => {
+  const extension = useExtension()!;
+
   return (
     <>
-      <Resources />
-      <Apis />
+      {extension.resources?.length && <Resources />}
+      {extension.apis?.length && <Apis />}
     </>
   );
 };

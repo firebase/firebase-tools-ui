@@ -19,28 +19,26 @@ import { Theme } from '@rmwc/theme';
 import { Typography } from '@rmwc/typography';
 import React from 'react';
 
+import { DocsLink } from '../../../../common/links/DocsLink';
+import { ExternalLink } from '../../../../common/links/ExternalLink';
 import { useExtension } from '../../../api/useExtension';
-import style from './RelatedLinks.module.scss';
+import styles from './RelatedLinks.module.scss';
 
 export const RelatedLinks: React.FC = () => {
   const extension = useExtension()!;
 
   return (
     <Theme use="secondary">
-      <ul className={style.links}>
+      <ul className={styles.links}>
         <li>
-          <Icon icon="person" />
+          <Icon icon="person" className={styles.pic} />
 
           <Typography use="body2" theme="secondary">
             Made by{' '}
             {extension.authorUrl ? (
-              <a
-                href={extension.authorUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <ExternalLink href={extension.authorUrl}>
                 {extension.authorName}
-              </a>
+              </ExternalLink>
             ) : (
               extension.authorName
             )}
@@ -48,40 +46,24 @@ export const RelatedLinks: React.FC = () => {
         </li>
         {extension.extensionDetailsUrl && (
           <li>
-            <Icon icon="newsmode" />
+            <Icon icon="newsmode" className={styles.pic} />
             <Typography use="body2" theme="secondary">
-              <a
-                href={extension.extensionDetailsUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <ExternalLink href={extension.extensionDetailsUrl}>
                 Extension details
-              </a>
+              </ExternalLink>
             </Typography>
           </li>
         )}
         <li>
-          <Icon icon="developer_mode_tv" />
+          <Icon icon="developer_mode_tv" className={styles.pic} />
           <Typography use="body2" theme="secondary">
-            <a
-              href={extension.sourceUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Source code
-            </a>
+            <ExternalLink href={extension.sourceUrl}>Source code</ExternalLink>
           </Typography>
         </li>
         <li>
-          <Icon icon="subject" />
+          <Icon icon="subject" className={styles.pic} />
           <Typography use="body2" theme="secondary">
-            <a
-              href="https://firebase.google.com/docs/extensions"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Firebase extension docs
-            </a>
+            <DocsLink href="extensions"> Firebase extension docs</DocsLink>
           </Typography>
         </li>
       </ul>
