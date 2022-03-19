@@ -235,9 +235,7 @@ export const CollectionPresentation: React.FC<CollectionPresentationProps> = ({
           dense
           className="Firestore-Document-List"
           tag="div"
-          twoLine={
-            collectionFilter && isSortableCollectionFilter(collectionFilter)
-          }
+          twoLine={collectionFilter?.operator}
         >
           {docs.map((doc) => (
             <DocumentListItem
@@ -245,7 +243,7 @@ export const CollectionPresentation: React.FC<CollectionPresentationProps> = ({
               url={url}
               docId={doc.ref.id}
               queryFieldValue={
-                collectionFilter && isSortableCollectionFilter(collectionFilter)
+                collectionFilter?.operator
                   ? get(doc.data(), collectionFilter.field)
                   : undefined
               }
