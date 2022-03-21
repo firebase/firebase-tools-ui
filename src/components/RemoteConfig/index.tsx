@@ -1,9 +1,10 @@
 import { Card } from '@rmwc/card';
 import { Chip } from '@rmwc/chip';
 import { Elevation } from '@rmwc/elevation';
-import { GridCell } from '@rmwc/grid';
+import { Grid, GridCell } from '@rmwc/grid';
 import { IconButton } from '@rmwc/icon-button';
 import { CollapsibleList, List, ListItem, ListItemMeta } from '@rmwc/list';
+import { Radio } from '@rmwc/radio';
 import { TextField } from '@rmwc/textfield';
 import { Theme, ThemeProvider } from '@rmwc/theme';
 import { Typography } from '@rmwc/typography';
@@ -96,15 +97,25 @@ const ParamConditionListItem: React.FunctionComponent<
 > = ({ name, value, expression, isSelected, setSelectedCondition }) => {
   return (
     <ListItem className={styles.rcListItem}>
-      {/* <Tooltip content={<pre>{expression}</pre>} enterDelay={500}> */}
-      <Chip
-        label={name}
-        selected={isSelected}
-        checkmark={isSelected}
-        onInteraction={() => setSelectedCondition()}
-      />
-      {/* </Tooltip> */}
-      <span>Value: "{remoteConfigParameterValueToString(value)}"</span>
+      <Grid className={styles.parameterListItemGrid}>
+        <GridCell span={1} />
+        <GridCell span={2} />
+
+        <GridCell span={3} className={styles.paramListHeaderGridItem}>
+          <Chip label={name} selected={isSelected} disabled />
+        </GridCell>
+
+        <GridCell span={5} className={styles.paramListHeaderGridItem}>
+          <Radio
+            value={remoteConfigParameterValueToString(value)}
+            checked={isSelected}
+            onChange={() => setSelectedCondition()}
+          >
+            {remoteConfigParameterValueToString(value)}
+          </Radio>
+        </GridCell>
+        <GridCell span={1} />
+      </Grid>
     </ListItem>
   );
 };
@@ -122,9 +133,8 @@ const ParamDetails: React.FunctionComponent<{
   name: string;
   defaultValue?: RemoteConfigParameterValue;
   conditions: ConditionDetails[];
-  open: boolean;
   edit: () => {};
-}> = ({ name, defaultValue, conditions, open: defaultOpen, edit }) => {
+}> = ({ name, defaultValue, conditions, edit }) => {
   if (!defaultValue && !conditions) {
     throw new Error('Parameter needs at least one value (I think)');
   }
@@ -133,7 +143,7 @@ const ParamDetails: React.FunctionComponent<{
     (conditionDetails) => conditionDetails.name === '!isEmulator'
   ) as ConditionDetails).value;
 
-  const [expanded, setExpanded] = useState<boolean | undefined>(undefined);
+  const [expanded, setExpanded] = useState<boolean>(false);
 
   if (defaultValue) {
     conditions = [
@@ -163,33 +173,51 @@ const ParamDetails: React.FunctionComponent<{
 
   return (
     <CollapsibleList
-      open={expanded !== undefined ? expanded : defaultOpen}
+      open={expanded}
       handle={
         <ListItem
           className={styles.rcListItem}
           onClick={() => {
-            return setExpanded(
-              expanded !== undefined ? !expanded : !defaultOpen
-            );
+            return setExpanded(!expanded);
           }}
         >
-          <ListItemMeta
-            icon="chevron_right"
-            className={styles.listItemExpandIndicator}
-          />
-          <strong className={styles.remoteConfigParameterName}>{name}</strong>
-          <span>
-            Active value: "{remoteConfigParameterValueToString(servedValue)}"
-          </span>
-          <IconButton
-            className={styles.conditionEditButton}
-            icon="edit"
-            aria-label="edit"
-            onClick={(e) => {
-              e.stopPropagation();
-              edit();
-            }}
-          />
+          <Grid className={styles.parameterListItemGrid}>
+            <GridCell span={3} className={styles.paramListHeaderGridItem}>
+              <ListItemMeta
+                icon="chevron_right"
+                className={styles.listItemExpandIndicator}
+              />
+              <Typography
+                use="body1"
+                className={styles.remoteConfigParameterName}
+              >
+                {name}
+              </Typography>
+            </GridCell>
+            <GridCell span={3} className={styles.paramListHeaderGridItem}>
+              <Chip
+                label={'Default'}
+                selected={true}
+                checkmark={true}
+                onInteraction={console.log}
+              />
+            </GridCell>
+
+            <GridCell span={5} className={styles.paramListHeaderGridItem}>
+              {remoteConfigParameterValueToString(servedValue)}
+            </GridCell>
+            <GridCell span={1} className={styles.paramListHeaderGridItem}>
+              <IconButton
+                className={styles.conditionEditButton}
+                icon="edit"
+                aria-label="edit"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  edit();
+                }}
+              />
+            </GridCell>
+          </Grid>
         </ListItem>
       }
     >
@@ -281,57 +309,71 @@ const ParamTable: React.FunctionComponent<{
           className={styles.paramListHeaderInner}
           tag="div"
         >
-          <Typography use="subtitle2">Name</Typography>
-          <Typography use="subtitle2">Conditions</Typography>
-          <Typography use="subtitle2">Value</Typography>
-          <Typography use="subtitle2">Actions</Typography>
+          <Grid align="left" className={styles.paramListHeaderGrid}>
+            <GridCell span={1} />
+            <GridCell span={2} className={styles.paramListHeaderGridItem}>
+              <Typography use="subtitle2">Name</Typography>
+            </GridCell>
+            <GridCell span={3} className={styles.paramListHeaderGridItem}>
+              <Typography use="subtitle2">Conditions</Typography>
+            </GridCell>
+            <GridCell span={5} className={styles.paramListHeaderGridItem}>
+              <Typography use="subtitle2">Value</Typography>
+            </GridCell>
+            <GridCell span={1} className={styles.paramListHeaderGridItem}>
+              <Typography use="subtitle2">Actions</Typography>
+            </GridCell>
+          </Grid>
         </Theme>
       </ThemeProvider>
-      <List>
-        {Object.keys(rcTemplate.parameters).map((paramName) => {
-          const param = rcTemplate.parameters[paramName];
-          const { defaultValue, conditionalValues } = param;
-
-          const openByDefault =
-            paramNameFilter === '' ||
-            paramContainsSearchTerm(paramNameFilter, paramName, param);
-
-          const conditions = Object.keys(
-            conditionalValues as {
-              [key: string]: RemoteConfigParameterValue;
-            }
-          ).map((conditionName) => {
-            let condition = rcTemplate.conditions.find(
-              (rcCondition) => rcCondition.name === conditionName
+      <List className={styles.paramListContents}>
+        {Object.keys(rcTemplate.parameters)
+          .filter((paramName) => {
+            const param = rcTemplate.parameters[paramName];
+            return (
+              paramNameFilter === '' ||
+              paramContainsSearchTerm(paramNameFilter, paramName, param)
             );
+          })
+          .map((paramName) => {
+            const param = rcTemplate.parameters[paramName];
+            const { defaultValue, conditionalValues } = param;
 
-            if (!condition) {
+            const conditions = Object.keys(
+              conditionalValues as {
+                [key: string]: RemoteConfigParameterValue;
+              }
+            ).map((conditionName) => {
+              let condition = rcTemplate.conditions.find(
+                (rcCondition) => rcCondition.name === conditionName
+              );
+
+              if (!condition) {
+                return {
+                  name: conditionName,
+                  value: (conditionalValues as {
+                    [key: string]: RemoteConfigParameterValue;
+                  })[conditionName],
+                } as ConditionDetails;
+              }
               return {
-                name: conditionName,
+                ...condition,
                 value: (conditionalValues as {
                   [key: string]: RemoteConfigParameterValue;
                 })[conditionName],
-              } as ConditionDetails;
-            }
-            return {
-              ...condition,
-              value: (conditionalValues as {
-                [key: string]: RemoteConfigParameterValue;
-              })[conditionName],
-            };
-          });
+              };
+            });
 
-          return (
-            <ParamDetails
-              key={paramName}
-              name={paramName}
-              defaultValue={defaultValue}
-              conditions={conditions}
-              open={openByDefault}
-              edit={() => editParam(paramName)}
-            />
-          );
-        })}
+            return (
+              <ParamDetails
+                key={paramName}
+                name={paramName}
+                defaultValue={defaultValue}
+                conditions={conditions}
+                edit={() => editParam(paramName)}
+              />
+            );
+          })}
       </List>
     </>
   );
