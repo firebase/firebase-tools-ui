@@ -46,6 +46,7 @@ function ParamList() {
         return (
           <div key={param.param} className={styles.paramWrapper}>
             <Accordion
+              expansionLabel="Description"
               title={
                 <Typography use="body2" theme="secondary">
                   {param.label}

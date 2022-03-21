@@ -14,20 +14,21 @@
  * limitations under the License.
  */
 
-.wrapper {
-  padding: var(--tab-spacing);
-  display: block;
-}
+import React from 'react';
 
-.headerWrapper {
-  align-items: center;
-  display: flex;
+import { ExternalLink } from './ExternalLink';
 
-  h4 {
-    margin: 0 8px;
-  }
-}
+const DOCS_BASE = 'https://firebase.google.com/docs/';
 
-.explanation {
-  padding: var(--tab-spacing) var(--tab-spacing) 0 var(--tab-spacing);
+export function DocsLink(
+  props: React.DetailedHTMLProps<
+    React.AnchorHTMLAttributes<HTMLAnchorElement>,
+    HTMLAnchorElement
+  >
+) {
+  return (
+    <ExternalLink {...props} href={DOCS_BASE + props.href}>
+      {props.children}
+    </ExternalLink>
+  );
 }

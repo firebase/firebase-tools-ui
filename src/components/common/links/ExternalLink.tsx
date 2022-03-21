@@ -14,20 +14,26 @@
  * limitations under the License.
  */
 
-.wrapper {
-  padding: var(--tab-spacing);
-  display: block;
-}
+import { Icon } from '@rmwc/icon';
+import React from 'react';
 
-.headerWrapper {
-  align-items: center;
-  display: flex;
+import styles from './Link.module.scss';
 
-  h4 {
-    margin: 0 8px;
-  }
-}
-
-.explanation {
-  padding: var(--tab-spacing) var(--tab-spacing) 0 var(--tab-spacing);
+export function ExternalLink(
+  props: React.DetailedHTMLProps<
+    React.AnchorHTMLAttributes<HTMLAnchorElement>,
+    HTMLAnchorElement
+  >
+) {
+  return (
+    <a
+      {...props}
+      className={styles.link}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <span className={styles.content}>{props.children}</span>
+      <Icon icon="open_in_new" className={styles.icon} />
+    </a>
+  );
 }

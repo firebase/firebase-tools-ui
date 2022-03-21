@@ -49,14 +49,16 @@ export const Accordion: React.FC<AccordionProps> = ({
           (e.key === ' ' || e.key === 'Enter') &&
           setIsAccordionExpanded(!isAccordionExpanded)
         }
-        className={styles.header}
+        className={`${styles.header} accordion-header`}
       >
         <Typography use="body1">{title}</Typography>
 
         {/* TODO(kirjs): Play animations. */}
         <div className={styles.expandHeader}>
           {expansionLabel && (
-            <Typography use="body2">{expansionLabel}</Typography>
+            <Typography use="body2" className={styles.expansionLabel}>
+              {expansionLabel}
+            </Typography>
           )}
           {isAccordionExpanded ? (
             <Icon icon="expand_less" className={styles.icon} />

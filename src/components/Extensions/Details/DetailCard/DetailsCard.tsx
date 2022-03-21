@@ -42,16 +42,21 @@ export const DetailsCard: React.FC<DetailsCardProps> = ({ extension }) => {
         label: 'Extension configuration',
         tab: <ParamList />,
       },
-      {
-        label: 'APIs and resources',
-        tab: <ApisAndResources />,
-      },
-      {
-        label: 'Access and roles',
-        tab: <AccessAndRoles />,
-      },
     ],
   };
+
+  if (extension.apis?.length || extension.resources?.length) {
+    config.tabs.push({
+      label: 'APIs and resources',
+      tab: <ApisAndResources />,
+    });
+  }
+  if (extension.roles) {
+    config.tabs.push({
+      label: 'Access and roles',
+      tab: <AccessAndRoles />,
+    });
+  }
 
   const { tabs, content } = useMainDetail(config);
   return (

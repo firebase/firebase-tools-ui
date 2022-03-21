@@ -21,19 +21,28 @@ import { TestExtensionsProvider } from '../../testing/TestExtensionsProvider';
 import { EXTENSION, EXTENSION_ID } from '../../testing/utils';
 import { DetailsCard } from './DetailsCard';
 
+function setup(extension: Extension) {
+  return render(
+    <TestExtensionsProvider extensions={[EXTENSION]} instanceId={EXTENSION_ID}>
+      <DetailsCard extension={extension} />
+    </TestExtensionsProvider>
+  );
+}
+
 describe('DetailsCard', () => {
-  it('renders the card', () => {
+  it('displays 2 tabs if there is only basic info', () => {
     const displayName = 'Pirojok-the-extension';
     const extension: Extension = { id: 'pirojok', displayName } as Extension;
 
-    const { getAllByRole, getByText } = render(
-      <TestExtensionsProvider
-        extensions={[EXTENSION]}
-        instanceId={EXTENSION_ID}
-      >
-        <DetailsCard extension={extension} />
-      </TestExtensionsProvider>
-    );
+    const { getAllByRole, getByText } = setup(extension);
+
+    expect(getAllByRole('tab').length).toBe(2);
+    expect(getByText('Source code')).not.toBeNull();
+  });
+
+  it('displays 4 tabs if all info is present', () => {
+    const { getAllByRole, getByText } = setup(EXTENSION);
+
     expect(getAllByRole('tab').length).toBe(4);
     expect(getByText('Source code')).not.toBeNull();
   });

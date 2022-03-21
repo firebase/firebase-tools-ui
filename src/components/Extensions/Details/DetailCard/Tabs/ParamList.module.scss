@@ -18,8 +18,9 @@
   --accordion-horizontal-spacing: 0;
   --accordion-vertical-spacing: 0;
   --accordion-focus-background: transparent;
+  --accordion-header-justification: flex-start;
 
-  padding: 8px 16px;
+  padding: 8px var(--tab-spacing);
   margin-bottom: 16px;
 
   p:first-child {
@@ -29,9 +30,10 @@
 
 .paramHeader {
   border-bottom: 1px var(--fire-color-input-borders) solid;
-  padding: 16px;
+  padding: var(--tab-spacing);
   display: flex;
   justify-content: flex-end;
+  margin-bottom: 16px;
 }
 
 .paramValue {
