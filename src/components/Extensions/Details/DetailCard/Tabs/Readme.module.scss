@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 .wrapper {
-  padding: 20px;
+  padding: var(--tab-spacing);
   display: block;
   margin-bottom: 16px;
 }

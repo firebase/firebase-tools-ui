@@ -22,6 +22,7 @@
   --border-size: var(--accordion-border-size, 1px);
   --horizontal-spacing: var(--accordion-horizontal-spacing, 40px);
   --vertical-spacing: var(--accordion-vertical-spacing, 8px);
+  --header-justification: var(--accordion-header-justification, space-between);
   border-top: var(--border-size) var(--fire-color-input-borders) solid;
 }
 
@@ -29,7 +30,7 @@
   display: flex;
   cursor: pointer;
   align-items: center;
-  justify-content: space-between;
+  justify-content: var(--header-justification);
   padding: var(--vertical-spacing) var(--horizontal-spacing);
 }
 
@@ -48,5 +49,11 @@
 }
 
 .icon {
-  padding: 0 12px;
+  padding-right: 12px;
+}
+
+.expansionLabel {
+  color: var(--mdc-theme-primary);
+  text-decoration: underline;
+  margin-left: 8px;
 }

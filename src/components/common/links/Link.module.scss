@@ -14,20 +14,18 @@
  * limitations under the License.
  */
 
-.wrapper {
-  padding: var(--tab-spacing);
-  display: block;
-}
-
-.headerWrapper {
+.link {
+  display: inline-flex;
   align-items: center;
-  display: flex;
-
-  h4 {
-    margin: 0 8px;
-  }
+  text-decoration: none;
+  margin-left: 1px;
 }
 
-.explanation {
-  padding: var(--tab-spacing) var(--tab-spacing) 0 var(--tab-spacing);
+.icon {
+  font-size: 16px;
+  margin-left: 1px;
+}
+
+.content {
+  text-decoration: underline;
 }
