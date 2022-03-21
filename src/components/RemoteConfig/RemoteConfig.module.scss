@@ -41,6 +41,7 @@
 
 .listItemExpandIndicator {
   margin-left: 0px;
+  margin-right: 24px;
 }
 
 .conditionEditButton {
@@ -67,10 +68,36 @@
 
   .paramListHeaderInner {
     height: 28px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-left: 20px;
-    padding-right: 20px;
+
+    .paramListHeaderGrid {
+      height: 100%;
+      width: 100%;
+      margin: 0px;
+      padding-left: 16px;
+      padding-right: 16px;
+      padding-top: 0px;
+      padding-bottom: 0px;
+
+      :global(.mdc-layout-grid__inner) {
+        height: 100%;
+      }
+    }
   }
+}
+
+.paramListContents {
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
+.paramListHeaderGridItem {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+.parameterListItemGrid {
+  width: 100%;
+  margin: 0px;
+  padding: 0px;
 }
