@@ -13,6 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+@import '../../common/color';
+
 .featureBar {
   border-bottom: 1px var(--fire-color-input-borders) solid;
   padding-bottom: 24px;
@@ -25,4 +28,8 @@
 
 h2 {
   margin: 0;
+}
+
+.extensionsLink:hover {
+  color: $COLOR_TEXT_PRIMARY !important;
 }

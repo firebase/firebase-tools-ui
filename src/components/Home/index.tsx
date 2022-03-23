@@ -125,6 +125,7 @@ const Overview: React.FC<{
           name="Extensions emulator"
           icon={<ExtensionsIcon theme="secondary" />}
           config={config.extensions}
+          linkTo="/extensions"
           testId="emulator-info-extensions"
         />
       </GridRow>
