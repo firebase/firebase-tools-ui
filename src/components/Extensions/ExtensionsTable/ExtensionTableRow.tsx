@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
+import { Button } from '@rmwc/button';
 import { DataTableCell, DataTableRow } from '@rmwc/data-table';
-import { Icon } from '@rmwc/icon';
 import { Typography } from '@rmwc/typography';
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 
-import { ExtensionLink } from '../index';
 import { Extension } from '../models';
 import styles from './ExtensionTableRow.module.scss';
 
@@ -30,9 +30,11 @@ export interface ExtensionsTableRowProps {
 export const ExtensionsTableRow: React.FC<ExtensionsTableRowProps> = ({
   extension,
 }) => {
+  const history = useHistory();
+
   return (
-    <DataTableRow key={extension.ref}>
-      <DataTableCell className={styles.iconCell + ' iconCell'}>
+    <DataTableRow key={extension.ref} className={styles.extensionRow}>
+      <DataTableCell className={`${styles.iconCell} iconCell`}>
         <img
           src={extension.iconUri}
           aria-hidden={true}
@@ -64,10 +66,15 @@ export const ExtensionsTableRow: React.FC<ExtensionsTableRowProps> = ({
           </Typography>
         </div>
       </DataTableCell>
-      <DataTableCell className="actionCell">
-        <ExtensionLink instanceId={extension.id}>
-          <Icon theme="primary" icon="arrow_forward" />
-        </ExtensionLink>
+      <DataTableCell className={`${styles.actionCell} actionCell`}>
+        <Button
+          onClick={() => {
+            history.push(`/extensions/${extension.id}`);
+          }}
+          className={styles.manageButton}
+          label={<div className={styles.manageButtonText}>Manage</div>}
+          trailingIcon="arrow_forward"
+        />
       </DataTableCell>
     </DataTableRow>
   );

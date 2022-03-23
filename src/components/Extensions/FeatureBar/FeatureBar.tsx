@@ -39,7 +39,12 @@ export const ExtensionFeatureBar: React.FC<ExtensionFeatureBarProps> = ({
   return (
     <header className={styles.featureBar}>
       <Link to="/extensions">
-        <Typography use="body1" theme="secondary" tag="div">
+        <Typography
+          use="body1"
+          theme="secondary"
+          tag="div"
+          className={styles.extensionsLink}
+        >
           Extensions
         </Typography>
       </Link>
