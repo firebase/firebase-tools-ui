@@ -31,7 +31,7 @@ export const ValueDisplay = React.memo<Props>(function ValueDisplay$({
 }) {
   const trimmedValue =
     typeof value === 'string' && value.length >= 24
-      ? `${value.substr(0, 21)}...`
+      ? `${value.slice(0, 21)}...`
       : value;
 
   const getClass = (value: Props['value']) =>
