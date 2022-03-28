@@ -86,7 +86,7 @@ function truncateRequestPathFromLeft(
   // the space of the '...' characters ('...' replaces the first 3 characters of the truncated path)
   const newTruncatedPathString =
     newPathStart > 0
-      ? `...${fullRequestPath.substr(newPathStart + 3)}`
+      ? `...${fullRequestPath.slice(newPathStart + 3)}`
       : fullRequestPath;
   // Only update the HTMLElement's inner-text if the string value changed
   // after truncation (to avoid unnecessary rerenders of component)

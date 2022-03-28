@@ -156,7 +156,7 @@ export function summarize(data: FirestoreAny, maxLen: number): string {
     case FieldType.BLOB:
       const base64 = (data as firebase.firestore.Blob).toBase64();
       if (base64.length < maxLen) return base64;
-      else return base64.substr(0, maxLen) + '...';
+      else return base64.slice(0, maxLen) + '...';
     case FieldType.BOOLEAN:
       return (data as boolean).toString();
     case FieldType.GEOPOINT:
