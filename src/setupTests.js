@@ -34,8 +34,15 @@ Object.defineProperty(window, 'scrollTo', {
 // labels are assigned to an element with a random-id, but if all inputs have
 // the same ID then all inputs will use the first found label as opposed to its
 // own label.
-base.randomId = (prefix) =>
-  `${prefix}-${(Math.random() + Math.random() + 1).toString(36).substring(2)}`;
+jest.mock('@rmwc/base', () => {
+  const originalModule = jest.requireActual('@rmwc/base');
+
+  return {
+    __esModule: true,
+    ...originalModule,
+    randomId: (prefix) => `${prefix}-${(Math.random() + Math.random() + 1).toString(36).substring(2)}`,
+  };
+});
 
 // CodeMirror calls document.createRange, which jsdom does not implement.
 // Mocking this function is necessary in order to test components
