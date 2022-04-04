@@ -23,7 +23,7 @@ import './index.scss';
 import { RMWCProvider } from '@rmwc/provider';
 import { ThemeProvider } from '@rmwc/theme';
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
@@ -46,7 +46,8 @@ const RouterWithInit = () => {
   );
 };
 
-ReactDOM.unstable_createBlockingRoot(document.getElementById('root')!).render(
+const root = createRoot(document.getElementById('root')!);
+root.render(
   <React.StrictMode>
     <RMWCProvider
       // Globally disable ripples
