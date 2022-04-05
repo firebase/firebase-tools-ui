@@ -17,9 +17,9 @@ import { Button } from '@rmwc/button';
 import { Tooltip } from '@rmwc/tooltip';
 import { Typography } from '@rmwc/typography';
 import React from 'react';
-import ReactMarkdown from 'react-markdown';
 
 import { Accordion } from '../../../../common/Accordion';
+import { Markdown } from '../../../../common/Markdown';
 import { useExtension } from '../../../api/useExtension';
 import styles from './ParamList.module.scss';
 import { ParamValue } from './ParamValue';
@@ -59,7 +59,7 @@ function ParamList() {
                 tag="div"
                 theme="secondary"
               >
-                <ReactMarkdown>{param.description || ''}</ReactMarkdown>
+                <Markdown>{param.description || ''}</Markdown>
               </Typography>
             </Accordion>
 

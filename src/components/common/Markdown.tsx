@@ -15,17 +15,29 @@
  */
 
 import React from 'react';
+import ReactMarkdown from 'react-markdown';
+import { ReactMarkdownOptions } from 'react-markdown/lib/react-markdown';
 
-import { Markdown } from '../../../../common/Markdown';
-import { useExtension } from '../../../api/useExtension';
-import style from './Readme.module.scss';
-
-export function Readme() {
-  const extension = useExtension()!;
-
+export const Markdown = ({
+  children,
+  components,
+  ...props
+}: ReactMarkdownOptions) => {
   return (
-    <div className={style.wrapper}>
-      <Markdown>{extension.postinstallContent}</Markdown>
-    </div>
+    <ReactMarkdown
+      components={{
+        ...components,
+        a: (props) => {
+          return (
+            <a href={props.href} target="_blank" rel="noreferrer">
+              {props.children}
+            </a>
+          );
+        },
+      }}
+      {...props}
+    >
+      {children}
+    </ReactMarkdown>
   );
-}
+};
