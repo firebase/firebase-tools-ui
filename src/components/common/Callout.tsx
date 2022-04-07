@@ -54,7 +54,6 @@ export const Callout: React.FC<CalloutProps> = ({
   const asideClass = aside ? ' Callout-aside' : '';
   const classes = `Callout Callout-${type}${asideClass}`;
 
-  console.log(actions);
   return (
     <CustomThemeProvider use={type} wrap>
       <Theme

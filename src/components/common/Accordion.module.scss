@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 .accordion {
   --focus-background: var(
     --accordion-focus-background,
@@ -33,8 +32,6 @@
   align-items: center;
   justify-content: var(--header-justification);
   padding: var(--vertical-spacing) var(--horizontal-spacing);
-
-
 }
 
 .expandHeader {
@@ -61,7 +58,6 @@
   margin-left: 8px;
 }
 
-
 .collapsed {
   .title {
     white-space: nowrap;
@@ -69,5 +65,3 @@
     text-overflow: ellipsis;
   }
 }
-
-

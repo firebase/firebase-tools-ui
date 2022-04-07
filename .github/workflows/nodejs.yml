@@ -80,7 +80,7 @@ jobs:
       - run: npm i -g npm@8
       # Use `npm install` which fixes package-lock.json in place if it is not
       # already matching package.json. The resulting diff is caught below.
-      - run: npm install # Not using `npm ci`, which won't touch lock files.
+      - run: npm install --legacy-peer-deps # Not using `npm ci`, which won't touch lock files.
       - name: Lint package-lock.json
         run: "git diff --exit-code -- package-lock.json || (echo 'Error: package-lock.json is changed during npm install! Please make sure to use npm >= 8 and commit package-lock.json.' && false)"
       - name: Lint source files
@@ -94,7 +94,7 @@ jobs:
         with:
           go-version: '^1.16.0'
       - name: Install google/addlicense
-        run: go get -u github.com/google/addlicense
+        run: go install github.com/google/addlicense@latest
       - uses: actions/checkout@v2
       - name: Check license headers
         run: env BASHOPTS=extglob bash -c 'addlicense -check -c "Google LLC" -l apache !(node_modules)'
