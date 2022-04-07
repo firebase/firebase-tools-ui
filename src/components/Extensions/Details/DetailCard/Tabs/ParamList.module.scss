@@ -29,11 +29,11 @@
 }
 
 .paramHeader {
-  border-bottom: 1px var(--fire-color-input-borders) solid;
-  padding: var(--tab-spacing);
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 16px;
+  --accordion-border-size: 0;
+  --accordion-horizontal-spacing: 0;
+  --accordion-vertical-spacing: 0;
+  --accordion-focus-background: trasparent;
+  margin-bottom: 32px;
 }
 
 .paramValue {
@@ -43,4 +43,13 @@
 
 .description {
   margin-top: -8px;
+}
+
+.learnButton {
+  display: flex;
+  justify-content: flex-end;
+
+  a {
+    text-decoration: none;
+  }
 }

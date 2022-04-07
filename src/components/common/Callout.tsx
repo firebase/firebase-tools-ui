@@ -54,6 +54,7 @@ export const Callout: React.FC<CalloutProps> = ({
   const asideClass = aside ? ' Callout-aside' : '';
   const classes = `Callout Callout-${type}${asideClass}`;
 
+  console.log(actions);
   return (
     <CustomThemeProvider use={type} wrap>
       <Theme
@@ -70,13 +71,21 @@ export const Callout: React.FC<CalloutProps> = ({
                 className="Callout-icon"
               />
             )}
-            <Typography use="subtitle2">{children}</Typography>
+            <Typography
+              use="subtitle2"
+              tag="div"
+              className="Callout-header-wrapper"
+            >
+              {children}
+            </Typography>
           </div>
         </div>
         {/* Make "white" the new primary, just to invert buttons from props */}
-        <ThemeProvider wrap options={aside ? {} : { primary: '#fff' }}>
-          <div className="Callout-actions">{actions}</div>
-        </ThemeProvider>
+        {actions && (
+          <ThemeProvider wrap options={aside ? {} : { primary: '#fff' }}>
+            <div className="Callout-actions">{actions}</div>
+          </ThemeProvider>
+        )}
       </Theme>
     </CustomThemeProvider>
   );

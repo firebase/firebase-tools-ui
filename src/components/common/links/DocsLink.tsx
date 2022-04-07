@@ -18,7 +18,7 @@ import React from 'react';
 
 import { ExternalLink } from './ExternalLink';
 
-const DOCS_BASE = 'https://firebase.google.com/docs/';
+export const DOCS_BASE = 'https://firebase.google.com/docs/';
 
 export function DocsLink(
   props: React.DetailedHTMLProps<
