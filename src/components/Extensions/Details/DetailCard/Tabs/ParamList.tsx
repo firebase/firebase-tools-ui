@@ -39,7 +39,7 @@ function ParamList() {
               </Typography>
             }
           >
-            <code>firebase emulators:start</code>
+            <code>firebase ext:configure {extension.id} --local</code>
             <div className={styles.learnButton}>
               <a
                 href={DOCS_BASE + 'extensions/manifest'}
