@@ -1,3 +1,4 @@
+import { Button } from '@rmwc/button';
 /**
  * Copyright 2022 Google LLC
  *
@@ -13,13 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Button } from '@rmwc/button';
-import { Tooltip } from '@rmwc/tooltip';
 import { Typography } from '@rmwc/typography';
 import React from 'react';
-import ReactMarkdown from 'react-markdown';
 
 import { Accordion } from '../../../../common/Accordion';
+import { Callout } from '../../../../common/Callout';
+import { DOCS_BASE } from '../../../../common/links/DocsLink';
+import { Markdown } from '../../../../common/Markdown';
 import { useExtension } from '../../../api/useExtension';
 import styles from './ParamList.module.scss';
 import { ParamValue } from './ParamValue';
@@ -29,18 +30,28 @@ function ParamList() {
   return (
     <div>
       <div className={styles.paramHeader}>
-        <Tooltip
-          content={
-            <div style={{ width: '400px' }}>
-              Reconfigure is not available on emulated experiences. You can
-              however reconfigure parameters by updating your .env files.
+        <Callout aside type="note">
+          <Accordion
+            title={
+              <Typography use="body2">
+                Reconfigure is not available on emulated experiences. You can
+                reconfigure parameters by <b>updating your .env files</b> with:
+              </Typography>
+            }
+          >
+            <code>firebase emulators:start</code>
+            <div className={styles.learnButton}>
+              <a
+                href={DOCS_BASE + 'extensions/manifest'}
+                target="_blank"
+                rel="noopener noreferrer"
+                tabIndex={-1}
+              >
+                <Button>Learn more</Button>
+              </a>
             </div>
-          }
-        >
-          <Button outlined theme="secondary">
-            Reconfigure extension
-          </Button>
-        </Tooltip>
+          </Accordion>
+        </Callout>
       </div>
       {(extension.params || []).map((param) => {
         return (
@@ -59,7 +70,7 @@ function ParamList() {
                 tag="div"
                 theme="secondary"
               >
-                <ReactMarkdown>{param.description || ''}</ReactMarkdown>
+                <Markdown>{param.description || ''}</Markdown>
               </Typography>
             </Accordion>
 

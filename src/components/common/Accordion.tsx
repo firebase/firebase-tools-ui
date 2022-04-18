@@ -49,9 +49,13 @@ export const Accordion: React.FC<AccordionProps> = ({
           (e.key === ' ' || e.key === 'Enter') &&
           setIsAccordionExpanded(!isAccordionExpanded)
         }
-        className={`${styles.header} accordion-header`}
+        className={`${styles.header} ${
+          isAccordionExpanded ? '' : styles.collapsed
+        } accordion-header`}
       >
-        <Typography use="body1">{title}</Typography>
+        <Typography use="body1" className={styles.title}>
+          {title}
+        </Typography>
 
         {/* TODO(kirjs): Play animations. */}
         <div className={styles.expandHeader}>

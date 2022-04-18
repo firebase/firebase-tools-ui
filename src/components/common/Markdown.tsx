@@ -15,20 +15,29 @@
  */
 
 import React from 'react';
+import ReactMarkdown from 'react-markdown';
+import { ReactMarkdownOptions } from 'react-markdown/lib/react-markdown';
 
-import { ExternalLink } from './ExternalLink';
-
-export const DOCS_BASE = 'https://firebase.google.com/docs/';
-
-export function DocsLink(
-  props: React.DetailedHTMLProps<
-    React.AnchorHTMLAttributes<HTMLAnchorElement>,
-    HTMLAnchorElement
-  >
-) {
+export const Markdown = ({
+  children,
+  components,
+  ...props
+}: ReactMarkdownOptions) => {
   return (
-    <ExternalLink {...props} href={DOCS_BASE + props.href}>
-      {props.children}
-    </ExternalLink>
+    <ReactMarkdown
+      components={{
+        ...components,
+        a: (props) => {
+          return (
+            <a href={props.href} target="_blank" rel="noreferrer">
+              {props.children}
+            </a>
+          );
+        },
+      }}
+      {...props}
+    >
+      {children}
+    </ReactMarkdown>
   );
-}
+};

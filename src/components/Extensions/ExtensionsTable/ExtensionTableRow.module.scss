@@ -15,6 +15,10 @@
  */
 
 .extensionRow {
+  &:first-child {
+    border: 0 solid;
+  }
+
   &:hover {
     border-color: var(--fire-color-input-borders);
   }
