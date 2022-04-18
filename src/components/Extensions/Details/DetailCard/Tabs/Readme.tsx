@@ -15,8 +15,8 @@
  */
 
 import React from 'react';
-import ReactMarkdown from 'react-markdown';
 
+import { Markdown } from '../../../../common/Markdown';
 import { useExtension } from '../../../api/useExtension';
 import style from './Readme.module.scss';
 
@@ -25,7 +25,7 @@ export function Readme() {
 
   return (
     <div className={style.wrapper}>
-      <ReactMarkdown>{extension.postinstallContent}</ReactMarkdown>
+      <Markdown>{extension.postinstallContent}</Markdown>
     </div>
   );
 }

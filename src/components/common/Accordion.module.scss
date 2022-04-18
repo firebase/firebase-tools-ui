@@ -57,3 +57,11 @@
   text-decoration: underline;
   margin-left: 8px;
 }
+
+.collapsed {
+  .title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
