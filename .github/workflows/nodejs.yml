@@ -37,7 +37,7 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm ci
+      - run: npm ci --legacy-peer-deps # TODO: Upgrade React and remove this flag
       - run: npm run build
         env:
           CI: true
@@ -77,10 +77,9 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm i -g npm@8
       # Use `npm install` which fixes package-lock.json in place if it is not
       # already matching package.json. The resulting diff is caught below.
-      - run: npm install # Not using `npm ci`, which won't touch lock files.
+      - run: npm install --legacy-peer-deps # Not using `npm ci`, which won't touch lock files.
       - name: Lint package-lock.json
         run: "git diff --exit-code -- package-lock.json || (echo 'Error: package-lock.json is changed during npm install! Please make sure to use npm >= 8 and commit package-lock.json.' && false)"
       - name: Lint source files
