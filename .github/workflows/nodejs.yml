@@ -93,7 +93,7 @@ jobs:
         with:
           go-version: '^1.16.0'
       - name: Install google/addlicense
-        run: go get -u github.com/google/addlicense
+        run: go install github.com/google/addlicense@latest
       - uses: actions/checkout@v2
       - name: Check license headers
         run: env BASHOPTS=extglob bash -c 'addlicense -check -c "Google LLC" -l apache !(node_modules)'
