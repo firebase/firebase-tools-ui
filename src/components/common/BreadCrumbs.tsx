@@ -40,7 +40,7 @@ export const BreadCrumbs: React.FC<Props> = ({
   children,
   homeElement = <IconButton icon={'home'} />,
 }) => {
-  const normalizedPath = path.startsWith('/') ? path.substr(1) : path;
+  const normalizedPath = path.startsWith('/') ? path.slice(1) : path;
   const keys = normalizedPath ? normalizedPath.split('/') : EMPTY_KEYS;
 
   const hrefs = keys.reduce<string[]>((acc, key) => {

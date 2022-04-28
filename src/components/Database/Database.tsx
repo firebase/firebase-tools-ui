@@ -72,7 +72,7 @@ export const Database: React.FC<Props> = ({ config, namespace, path }) => {
   const urlBase = `/database/${namespace}/data`;
   const handleNavigate = (newPath: string) => {
     if (newPath.startsWith('/')) {
-      newPath = newPath.substr(1);
+      newPath = newPath.slice(1);
     }
     history.push(`${urlBase}/${newPath}`);
   };
