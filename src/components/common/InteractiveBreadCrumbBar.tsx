@@ -53,7 +53,7 @@ export const InteractiveBreadCrumbBar: React.FC<Props> = ({
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    const normalizedPath = value.startsWith('/') ? value.substr(1) : value;
+    const normalizedPath = value.startsWith('/') ? value.slice(1) : value;
     onNavigate(normalizedPath);
     setIsEditing(false);
   };
