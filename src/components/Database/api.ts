@@ -29,7 +29,7 @@ export class DatabaseApi extends RestApi {
     const [database, { cleanup }] = initDatabase(config, this.namespace);
     this.database = database;
     this.cleanup = cleanup;
-    this.baseUrl = `${document.location.protocol}//${config.hostAndPort}`;
+    this.baseUrl = `//${config.hostAndPort}`;
   }
 
   delete(): Promise<void> {

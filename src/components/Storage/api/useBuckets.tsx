@@ -29,7 +29,7 @@ export function useBuckets() {
 
   const fetcher = async () => {
     const response = await fetch(
-      `${document.location.protocol}//${config.hostAndPort}/b`
+      `//${config.hostAndPort}/b`
     );
     const json = await response.json();
     return json.items.map((b: Bucket) => b.name);
