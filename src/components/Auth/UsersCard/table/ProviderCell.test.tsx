@@ -72,6 +72,20 @@ describe('ProviderCell', () => {
     expect(queryByLabelText('microsoft.com')).not.toBeNull();
   });
 
+  it('supports generic OIDC and SAML providers', () => {
+    const user = createFakeUser({
+      phoneNumber,
+      email,
+      providerUserInfo: [
+        { providerId: 'oidc.oidcProvider' as any },
+        { providerId: 'saml.samlProvider' as any },
+      ],
+    });
+    const { queryByLabelText } = render(<ProviderCell user={user} />);
+    expect(queryByLabelText('oidc.oidcProvider')).not.toBeNull();
+    expect(queryByLabelText('saml.samlProvider')).not.toBeNull();
+  });
+
   it('ignores unsupported providers', () => {
     const user = createFakeUser({
       phoneNumber,

@@ -167,7 +167,7 @@ const CollectionFilterTheme: React.FC = ({ children }) => (
 const ConditionPreview: React.FC<{ cf: CollectionFilterType }> = ({ cf }) => {
   const operator = `"${cf.operator}"`;
   if (isSingleValueCollectionFilter(cf)) {
-    return <span>{`${operator}, "${cf.value}"`}</span>;
+    return <span>{`${operator}, ${JSON.stringify(cf.value)}`}</span>;
   }
   if (isMultiValueCollectionFilter(cf)) {
     return <span>{`${operator}, ${JSON.stringify(cf.values)}`}</span>;
