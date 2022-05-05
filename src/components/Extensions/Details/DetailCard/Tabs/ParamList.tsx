@@ -34,7 +34,7 @@ function ParamList() {
           <Accordion
             title={
               <Typography use="body2">
-                Reconfigure is not available on emulated experiences. You can
+                Reconfigure is not available in the emulator. You can
                 reconfigure parameters by <b>updating your .env files</b> with:
               </Typography>
             }

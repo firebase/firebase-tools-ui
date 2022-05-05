@@ -13,21 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import { render } from '@testing-library/react';
 
-import { ExtensionsList } from './List';
-import { TestExtensionsProvider } from './testing/TestExtensionsProvider';
-import { EXTENSION } from './testing/utils';
+import { ZeroState } from './ZeroState';
 
-describe('ExtensionsList', () => {
-  it('renders list of extensions', () => {
-    const { getByText } = render(
-      <TestExtensionsProvider extensions={[EXTENSION]}>
-        <ExtensionsList />
-      </TestExtensionsProvider>
-    );
-
-    expect(getByText(EXTENSION.displayName)).not.toBeNull();
+describe('ZeroState', () => {
+  it('renders the text', () => {
+    const { getByText } = render(<ZeroState />);
+    expect(getByText('No extensions for this project yet')).not.toBeNull();
   });
 });

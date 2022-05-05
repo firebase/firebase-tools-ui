@@ -1,5 +1,5 @@
 /**
- * Copyright 2020 Google LLC
+ * Copyright 2022 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,26 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import './DetailsHeader.scss';
-
-import { Card } from '@rmwc/card';
-import { Elevation } from '@rmwc/elevation';
+import { Typography } from '@rmwc/typography';
 import React from 'react';
 
-import { ExtensionsTable } from '../List/ExtensionsTable/ExtensionTable';
-import { Extension } from '../models';
+import styles from './ZeroState.module.scss';
 
-export interface DetailsHeaderProps {
-  extension: Extension;
-}
-
-export const DetailsHeader: React.FC<DetailsHeaderProps> = ({ extension }) => {
+export const ZeroState: React.FC = () => {
   return (
-    <Card className="detailsHeader">
-      <Elevation z="2" wrap>
-        <ExtensionsTable extensions={[extension]}></ExtensionsTable>
-      </Elevation>
-    </Card>
+    <div className={styles.wrapper}>
+      <Typography
+        use="body2"
+        className={styles.noResultsWrapper}
+        theme="textSecondaryOnBackground"
+      >
+        No extensions for this project yet
+      </Typography>
+    </div>
   );
 };
