@@ -1,5 +1,5 @@
 /**
- * Copyright 2020 Google LLC
+ * Copyright 2022 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,26 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import './DetailsHeader.scss';
-
-import { Card } from '@rmwc/card';
-import { Elevation } from '@rmwc/elevation';
+import { render } from '@testing-library/react';
 import React from 'react';
 
-import { ExtensionsTable } from '../List/ExtensionsTable/ExtensionTable';
-import { Extension } from '../models';
+import { ExtensionCallout } from './ExtensionsCallout';
 
-export interface DetailsHeaderProps {
-  extension: Extension;
-}
-
-export const DetailsHeader: React.FC<DetailsHeaderProps> = ({ extension }) => {
-  return (
-    <Card className="detailsHeader">
-      <Elevation z="2" wrap>
-        <ExtensionsTable extensions={[extension]}></ExtensionsTable>
-      </Elevation>
-    </Card>
-  );
-};
+describe('ExtensionsCallout', () => {
+  it('renders the callout', () => {
+    const { getByText } = render(<ExtensionCallout />);
+    expect(getByText(/Extensions in the emulator show up here/)).not.toBeNull();
+  });
+});

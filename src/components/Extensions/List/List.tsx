@@ -19,9 +19,11 @@ import { Elevation } from '@rmwc/elevation';
 import { GridCell } from '@rmwc/grid';
 import React from 'react';
 
-import { useExtensions } from './api/useExtensions';
+import { useExtensions } from '../api/useExtensions';
+import { ExtensionCallout } from './ExtensionsCallout';
 import { ExtensionsTable } from './ExtensionsTable/ExtensionTable';
-import { ExtensionsFeatureBar } from './FeatureBar/FeatureBar';
+import { ExtensionsFeatureBar } from './FeatureBar';
+import { ZeroState } from './ZeroState';
 
 export const ExtensionsList: React.FC = () => {
   const specs = useExtensions();
@@ -29,9 +31,14 @@ export const ExtensionsList: React.FC = () => {
   return (
     <GridCell span={12} className="Extensions">
       <ExtensionsFeatureBar></ExtensionsFeatureBar>
+      <ExtensionCallout />
       <Elevation z="2" wrap>
         <Card>
-          <ExtensionsTable extensions={specs} />
+          {specs.length ? (
+            <ExtensionsTable extensions={specs} />
+          ) : (
+            <ZeroState></ZeroState>
+          )}
         </Card>
       </Elevation>
     </GridCell>

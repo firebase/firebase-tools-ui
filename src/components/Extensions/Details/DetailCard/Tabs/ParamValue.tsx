@@ -1,6 +1,7 @@
 import { IconButton } from '@rmwc/icon-button';
 import { Theme } from '@rmwc/theme';
-import { useState } from 'react';
+import { Typography } from '@rmwc/typography';
+import React, { useState } from 'react';
 
 /**
  * Copyright 2022 Google LLC
@@ -27,6 +28,14 @@ interface ParamValueProps {
 
 export const ParamValue: React.FC<ParamValueProps> = ({ value, type }) => {
   const [showValue, setShowValue] = useState(false);
+
+  if (!value) {
+    return (
+      <Typography use="body1" theme="secondary">
+        Not specified
+      </Typography>
+    );
+  }
 
   if (type !== ParamType.SECRET) {
     return <div>{value}</div>;

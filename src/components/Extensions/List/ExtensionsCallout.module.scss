@@ -14,22 +14,11 @@
  * limitations under the License.
  */
 
-@import '../../common/color';
-
-.featureBar {
-  border-bottom: 1px var(--fire-color-input-borders) solid;
-  padding-bottom: 24px;
-  margin-bottom: 48px;
-
-  a {
-    text-decoration: none;
-  }
+.callout {
+  margin-bottom: 32px;
 }
 
-h2 {
-  margin: 0;
-}
-
-.extensionsLink:hover {
-  color: $COLOR_TEXT_PRIMARY !important;
+.link {
+  --mdc-theme-on-primary: var(--mdc-theme-primary);
+  white-space: nowrap;
 }
