@@ -18,8 +18,8 @@ import { GridCell } from '@rmwc/grid';
 import React from 'react';
 
 import { useExtension } from '../api/useExtension';
-import { ExtensionFeatureBar } from '../FeatureBar/FeatureBar';
 import { RedirectToList } from '../index';
+import { ExtensionFeatureBar } from '../List/FeatureBar';
 import { DetailsCard } from './DetailCard/DetailsCard';
 import { DetailsHeader } from './DetailsHeader';
 

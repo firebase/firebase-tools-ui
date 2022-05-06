@@ -20,7 +20,7 @@ import { Typography } from '@rmwc/typography';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { Extension } from '../models';
+import { Extension } from '../../models';
 import styles from './ExtensionTableRow.module.scss';
 
 export interface ExtensionsTableRowProps {
