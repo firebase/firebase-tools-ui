@@ -26,6 +26,9 @@ export interface LogEntry {
       function?: {
         name: string;
       };
+      extension?: {
+        instanceId: string;
+      };
       emulator?: {
         name: string;
       };

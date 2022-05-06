@@ -33,6 +33,7 @@ import { useConfigOptional } from '../common/EmulatorConfigProvider';
 import {
   AuthIcon,
   DatabaseIcon,
+  ExtensionsIcon,
   FirestoreIcon,
   FunctionsIcon,
   HostingIcon,
@@ -119,6 +120,13 @@ const Overview: React.FC<{
           icon={<PubSubIcon theme="secondary" />}
           config={config.pubsub}
           testId="emulator-info-pubsub"
+        />
+        <EmulatorCard
+          name="Extensions emulator"
+          icon={<ExtensionsIcon theme="secondary" />}
+          config={config.extensions}
+          linkTo="/extensions"
+          testId="emulator-info-extensions"
         />
       </GridRow>
     </GridCell>

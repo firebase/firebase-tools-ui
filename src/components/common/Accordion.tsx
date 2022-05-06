@@ -22,13 +22,15 @@ import React, { useState } from 'react';
 import styles from './Accordion.module.scss';
 
 export interface AccordionProps {
-  title: string;
+  title: string | JSX.Element;
+  expansionLabel?: string;
   isExpanded?: boolean;
 }
 
 export const Accordion: React.FC<AccordionProps> = ({
   isExpanded = false,
   title,
+  expansionLabel,
   children,
 }) => {
   const [isAccordionExpanded, setIsAccordionExpanded] = useState(isExpanded);
@@ -47,16 +49,27 @@ export const Accordion: React.FC<AccordionProps> = ({
           (e.key === ' ' || e.key === 'Enter') &&
           setIsAccordionExpanded(!isAccordionExpanded)
         }
-        className={styles.header}
+        className={`${styles.header} ${
+          isAccordionExpanded ? '' : styles.collapsed
+        } accordion-header`}
       >
-        <Typography use="body1">{title}</Typography>
+        <Typography use="body1" className={styles.title}>
+          {title}
+        </Typography>
 
         {/* TODO(kirjs): Play animations. */}
-        {isAccordionExpanded ? (
-          <Icon icon="expand_less" className={styles.icon} />
-        ) : (
-          <Icon icon="expand_more" className={styles.icon} />
-        )}
+        <div className={styles.expandHeader}>
+          {expansionLabel && (
+            <Typography use="body2" className={styles.expansionLabel}>
+              {expansionLabel}
+            </Typography>
+          )}
+          {isAccordionExpanded ? (
+            <Icon icon="expand_less" className={styles.icon} />
+          ) : (
+            <Icon icon="expand_more" className={styles.icon} />
+          )}
+        </div>
       </header>
       {isAccordionExpanded && (
         <div
