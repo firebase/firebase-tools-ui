@@ -17,7 +17,7 @@
 import './index.scss';
 
 import React, { Suspense } from 'react';
-import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Route, useMatch } from 'react-router-dom';
 
 import {
   useConfig,
@@ -42,7 +42,7 @@ export default DatabaseRoute;
 export const DatabaseRouteContent: React.FC = () => {
   const config = useEmulatorConfig('database');
   const primary = useConfig().projectId;
-  let { path, url } = useRouteMatch()!;
+  let { path, url } = useMatch({})!;
 
   return (
     <Switch>
