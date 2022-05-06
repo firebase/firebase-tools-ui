@@ -21,7 +21,7 @@ import { DialogQueue } from '@rmwc/dialog';
 import { Grid } from '@rmwc/grid';
 import { Theme } from '@rmwc/theme';
 import React from 'react';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Navigate, Route, Routes} from 'react-router-dom';
 
 import { routes } from '../../routes';
 import { dialogs } from '../common/DialogQueue';
@@ -41,18 +41,17 @@ const App: React.FC = () => {
         <div className="App">
           <AppBar routes={routes} />
           <Grid className="App-main">
-            <Switch>
+            <Routes>
               {routes.map((r) => (
                 <Route
                   key={r.path}
                   path={r.path}
-                  component={r.component}
-                  exact={r.exact}
+                  element={<r.component />}
                 />
               ))}
-              <Redirect from="/functions" to={REDIRECT_LOGS_URL} />
-              <Redirect to="/" /> {/* Fallback to redirect to overview. */}
-            </Switch>
+              <Route path="/functions" element={<Navigate to={REDIRECT_LOGS_URL} />} />
+              <Navigate to="/" /> {/* Fallback to redirect to overview. */}
+            </Routes>
           </Grid>
         </div>
       </Theme>

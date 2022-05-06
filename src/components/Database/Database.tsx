@@ -123,7 +123,7 @@ export default Database;
  * Renders child content inside a dropzone that will show a scrim and accept
  * JSON files
  */
-const DatabaseDropZone: React.FC<{ onDrop: (file: File) => void }> = ({
+const DatabaseDropZone: React.FC<React.PropsWithChildren<{ onDrop: (file: File) => void }>> = ({
   onDrop,
   children,
 }) => {

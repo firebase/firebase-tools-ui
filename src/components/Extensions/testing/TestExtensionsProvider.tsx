@@ -23,10 +23,10 @@ import { InstanceIdProvider } from '../api/useExtension';
 import { ExtensionsProvider } from '../api/useExtensions';
 import { Extension } from '../models';
 
-export const TestExtensionsProvider: React.FC<{
+export const TestExtensionsProvider: React.FC<React.PropsWithChildren<{
   instanceId?: string;
   extensions?: Extension[];
-}> = ({ children, instanceId, extensions = [] }) => {
+}>> = ({ children, instanceId, extensions = [] }) => {
   const pagePath = `/extensions${instanceId ? `/${instanceId}` : ''}`;
   const emulatorConfig: Config = {
     projectId: 'example',

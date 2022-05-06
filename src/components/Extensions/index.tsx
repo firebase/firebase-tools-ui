@@ -45,7 +45,7 @@ export interface Backend {
   extensionSpec?: ExtensionSpec;
 }
 
-const HydrateExtensions: React.FC = ({ children }) => {
+const HydrateExtensions: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   const extensions = useExtensionsData();
 
   return (
@@ -84,7 +84,7 @@ const ExtensionsRouteSuspended: React.FC = () => {
   );
 };
 
-export const ExtensionLink: React.FC<{ instanceId: string }> = ({
+export const ExtensionLink: React.FC<React.PropsWithChildren<{ instanceId: string }>> = ({
   children,
   instanceId,
 }) => <Link to={`/extensions/${instanceId}`}>{children}</Link>;

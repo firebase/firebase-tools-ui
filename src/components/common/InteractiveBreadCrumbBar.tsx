@@ -38,7 +38,7 @@ interface Props extends BreadCrumbProps {
   onNavigate: (path: string) => void;
 }
 
-export const InteractiveBreadCrumbBar: React.FC<Props> = ({
+export const InteractiveBreadCrumbBar: React.FC<React.PropsWithChildren<Props>> = ({
   onNavigate,
   children,
   inputPrefix,

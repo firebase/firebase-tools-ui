@@ -27,7 +27,7 @@ export interface AccordionProps {
   isExpanded?: boolean;
 }
 
-export const Accordion: React.FC<AccordionProps> = ({
+export const Accordion: React.FC<React.PropsWithChildren<AccordionProps>> = ({
   isExpanded = false,
   title,
   expansionLabel,

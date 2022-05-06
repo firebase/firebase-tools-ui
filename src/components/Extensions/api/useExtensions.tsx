@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { createContext, useContext } from 'react';
+import React, { createContext, useContext } from 'react';
 
 import {
   BackendExtension,
@@ -45,9 +45,9 @@ export type ExtensionBackend =
 
 export const ExtensionsContext = createContext<Extension[]>([]);
 
-export const ExtensionsProvider: React.FC<{
+export const ExtensionsProvider: React.FC<React.PropsWithChildren<{
   extensions: Extension[];
-}> = ({ children, extensions }) => {
+}>> = ({ children, extensions }) => {
   return (
     <ExtensionsContext.Provider value={extensions}>
       {children}

@@ -33,13 +33,16 @@ function validate(attributes: string) {
     validateSerializedCustomClaims(attributes);
     return true;
   } catch (e) {
-    if (e.message === 'INVALID_CLAIMS') {
+    // TODO(react18): remove any
+    if ((e as any).message === 'INVALID_CLAIMS') {
       return 'Custom claims must be a valid JSON object';
     }
-    if (e.message === 'CLAIMS_TOO_LARGE') {
+    // TODO(react18): remove any
+    if ((e as any).message === 'CLAIMS_TOO_LARGE') {
       return 'Custom claims length must not exceed 1000 characters';
     }
-    const forbiddenClaim = e.message.match(/FORBIDDEN_CLAIM : (\w+)$/);
+    // TODO(react18): remove any
+    const forbiddenClaim = (e as any).message.match(/FORBIDDEN_CLAIM : (\w+)$/);
     if (forbiddenClaim && forbiddenClaim[1]) {
       return 'Custom claims must not have forbidden key: ' + forbiddenClaim[1];
     }

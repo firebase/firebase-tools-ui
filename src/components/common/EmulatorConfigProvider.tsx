@@ -61,7 +61,7 @@ export function useOnChangePromise<T>(data: T): Promise<T> {
   return state.deferred.promise;
 }
 
-export const EmulatorConfigProvider: React.FC<{ refreshInterval: number }> = ({
+export const EmulatorConfigProvider: React.FC<React.PropsWithChildren<{ refreshInterval: number }>> = ({
   refreshInterval,
   children,
 }) => {
@@ -109,9 +109,9 @@ export const EmulatorConfigProvider: React.FC<{ refreshInterval: number }> = ({
   );
 };
 
-export const TestEmulatorConfigProvider: React.FC<{
+export const TestEmulatorConfigProvider: React.FC<React.PropsWithChildren<{
   config: Config | null | undefined;
-}> = ({ config, children }) => {
+}>> = ({ config, children }) => {
   const promise = useOnChangePromise(config);
   return (
     <emulatorConfigContext.Provider

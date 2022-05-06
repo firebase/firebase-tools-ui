@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-import { createContext, useContext } from 'react';
+import React, { createContext, useContext } from 'react';
 
 import { Extension } from '../models';
 import { ExtensionsContext } from './useExtensions';
 
 const InstanceIdContext = createContext('');
 
-export const InstanceIdProvider: React.FC<{ instanceId: string }> = ({
+export const InstanceIdProvider: React.FC<React.PropsWithChildren<{ instanceId: string }>> = ({
   children,
   instanceId,
 }) => {

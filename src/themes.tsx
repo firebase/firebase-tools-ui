@@ -108,6 +108,7 @@ export type CustomThemeType =
 interface Props {
   use: CustomThemeType;
   wrap?: boolean;
+  children?: React.ReactNode;
 }
 
 export const CustomThemeProvider: React.FC<Props> = ({

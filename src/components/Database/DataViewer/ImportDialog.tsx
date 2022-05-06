@@ -62,7 +62,8 @@ export const ImportDialog: React.FC<Props> = ({
         });
         onComplete(reference, file);
       } catch (err) {
-        setError(err.message);
+        // TODO(react18): remove any
+        setError((err as any).message);
       }
       setIsImporting(false);
     }

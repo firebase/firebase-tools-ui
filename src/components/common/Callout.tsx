@@ -24,6 +24,7 @@ import React, { ReactNode } from 'react';
 import { CustomThemeProvider, CustomThemeType, Type } from '../../themes';
 
 export interface CalloutProps {
+  children?: React.ReactNode;
   /** Custom icon to override the default */
   icon?: string;
   /** Show a lighter version of the callout */
