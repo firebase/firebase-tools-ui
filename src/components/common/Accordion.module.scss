@@ -15,26 +15,53 @@
  */
 
 .accordion {
-  border-top: 1px var(--fire-color-input-borders) solid;
-  --spacing: var(--accordion-spacing, 40px);
+  --focus-background: var(
+    --accordion-focus-background,
+    var(--fire-color-input-borders)
+  );
+  --border-size: var(--accordion-border-size, 1px);
+  --horizontal-spacing: var(--accordion-horizontal-spacing, 40px);
+  --vertical-spacing: var(--accordion-vertical-spacing, 8px);
+  --header-justification: var(--accordion-header-justification, space-between);
+  border-top: var(--border-size) var(--fire-color-input-borders) solid;
 }
 
 .header {
   display: flex;
   cursor: pointer;
   align-items: center;
-  justify-content: space-between;
-  padding: 16px var(--spacing);
+  justify-content: var(--header-justification);
+  padding: var(--vertical-spacing) var(--horizontal-spacing);
+}
+
+.expandHeader {
+  display: flex;
+  align-items: center;
 }
 
 .header:focus {
-  background: var(--fire-color-input-borders);
+  background: var(--focus-background);
 }
 
 .content {
-  padding: 8px var(--spacing) var(--spacing) var(--spacing);
+  padding: 8px var(--horizontal-spacing) var(--horizontal-spacing)
+    var(--horizontal-spacing);
 }
 
 .icon {
-  padding: 0 12px;
+  padding-right: 12px;
+}
+
+.expansionLabel {
+  color: var(--mdc-theme-primary);
+  text-decoration: underline;
+  margin-left: 8px;
+}
+
+.collapsed {
+  .title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
