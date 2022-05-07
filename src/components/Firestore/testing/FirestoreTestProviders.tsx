@@ -98,10 +98,8 @@ const AsyncFirestore: React.FC<{
   onError: (e: Error) => void;
 }> = React.memo(({ r, onError }) => {
   const firestore = useFirestore();
-  const [
-    firestoreChildren,
-    setFirestoreChildren,
-  ] = useState<React.ReactElement | null>(null);
+  const [firestoreChildren, setFirestoreChildren] =
+    useState<React.ReactElement | null>(null);
 
   useEffect(() => {
     r(firestore)

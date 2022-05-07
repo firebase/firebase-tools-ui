@@ -17,7 +17,7 @@
 // mixins and config
 @use '@material/card/_index' as card;
 @use '@material/tab/_index' as tab with (
-  $height: 40px,
+  $height: 40px
 );
 @use '@material/tab-indicator/_index' as tab-indicator;
 @use '@material/dialog/_index' as dialog;

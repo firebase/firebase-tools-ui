@@ -122,14 +122,15 @@ const DocumentEditor: React.FC<{
   const [store, dispatch] = React.useReducer(storeReducer, initialState);
   const methods = useForm({ mode: 'onChange' });
 
-  const denormalizedStore = React.useMemo(() => denormalize(store, firestore), [
-    store,
-    firestore,
-  ]);
+  const denormalizedStore = React.useMemo(
+    () => denormalize(store, firestore),
+    [store, firestore]
+  );
 
-  const errorCount = React.useMemo(() => Object.keys(methods.errors).length, [
-    methods,
-  ]);
+  const errorCount = React.useMemo(
+    () => Object.keys(methods.errors).length,
+    [methods]
+  );
 
   useEffect(() => {
     if (errorCount === 0) {

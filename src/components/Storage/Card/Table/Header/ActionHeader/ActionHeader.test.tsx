@@ -27,17 +27,13 @@ describe('ActionHeader', () => {
     const selected = new Set(['lol.jpg']);
 
     const clearAll = jest.fn();
-    const selection = ({
+    const selection = {
       selected,
       clearAll,
-    } as unknown) as UseMultiselectResult;
+    } as unknown as UseMultiselectResult;
 
-    const {
-      uploadFile,
-      waitForNFiles,
-      waitForFilesToBeUploaded,
-      getByText,
-    } = await renderWithStorage(<ActionHeader selection={selection} />);
+    const { uploadFile, waitForNFiles, waitForFilesToBeUploaded, getByText } =
+      await renderWithStorage(<ActionHeader selection={selection} />);
 
     await uploadFile('lol.jpg');
     await waitForFilesToBeUploaded(1);

@@ -19,7 +19,8 @@ $input-height: 36px;
 
 @use '@material/notched-outline/_index' as notched-outline;
 @use '@material/textfield/_index' as textfield with (
-  $height: 40px, // wow, cant set to 36px
+  $height: 40px,
+  // wow, cant set to 36px
   $input-padding: $input-default-padding,
   $input-padding-top: $input-default-padding,
   $input-padding-bottom: $input-default-padding,
@@ -27,7 +28,7 @@ $input-height: 36px;
   $outlined-idle-border: var(--fire-color-input-borders),
   $outlined-hover-border: var(--fire-color-input-borders),
   $outlined-input-padding-top: $input-default-padding,
-  $outlined-input-padding-bottom: $input-default-padding,
+  $outlined-input-padding-bottom: $input-default-padding
 );
 
 // TODO: uncomment for 6.0.9, when fixed

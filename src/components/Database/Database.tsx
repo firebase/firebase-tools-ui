@@ -127,16 +127,12 @@ const DatabaseDropZone: React.FC<{ onDrop: (file: File) => void }> = ({
   onDrop,
   children,
 }) => {
-  const {
-    getInputProps,
-    getRootProps,
-    isDragActive,
-    isDragAccept,
-  } = useDropzone({
-    onDrop: (files) => onDrop(files[0]),
-    noClick: true,
-    accept: 'application/json',
-  });
+  const { getInputProps, getRootProps, isDragActive, isDragAccept } =
+    useDropzone({
+      onDrop: (files) => onDrop(files[0]),
+      noClick: true,
+      accept: 'application/json',
+    });
 
   return (
     <div className="Database-Content" {...getRootProps()}>

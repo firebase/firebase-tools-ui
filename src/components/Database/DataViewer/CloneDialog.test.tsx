@@ -36,13 +36,10 @@ const setup = async () => {
   ref.root = ROOT_REF;
   ref.child.mockReturnValue(ref);
 
-  const {
-    getByText,
-    getByLabelText,
-    getByTestId,
-  } = await renderDialogWithFirestore(async (firestore) => (
-    <CloneDialog onComplete={onComplete} realtimeRef={ref} />
-  ));
+  const { getByText, getByLabelText, getByTestId } =
+    await renderDialogWithFirestore(async (firestore) => (
+      <CloneDialog onComplete={onComplete} realtimeRef={ref} />
+    ));
   return { ref, onComplete, getByLabelText, getByText, getByTestId };
 };
 

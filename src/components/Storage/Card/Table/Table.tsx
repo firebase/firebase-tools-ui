@@ -66,10 +66,8 @@ export const StorageTable: React.FC<StorageTableProps> = ({
                   checked={selection.allSelected}
                   indeterminate={selection.allIndeterminate}
                   onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                    const {
-                      checked,
-                      indeterminate,
-                    } = event.target as HTMLInputElement;
+                    const { checked, indeterminate } =
+                      event.target as HTMLInputElement;
                     if (
                       checked !== selection.allSelected ||
                       indeterminate !== selection.allIndeterminate
