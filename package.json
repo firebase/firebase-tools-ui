@@ -84,10 +84,10 @@
     "test:debug": "react-scripts --inspect-brk test --env=./custom-jest-environment.js --runInBand",
     "test:coverage": "react-scripts test --coverage --watchAll=false --env=./custom-jest-environment.js",
     "eject": "react-scripts eject",
-    "lint": "prettier --check . && eslint 'src/**/*.{ts,tsx}'",
+    "lint": "prettier --check . --config .prettierrc && eslint 'src/**/*.{ts,tsx}'",
     "lint:fix": "eslint --fix 'src/**/*.{ts,tsx}' && npm run format",
     "fmt": "npm run format",
-    "format": "prettier --write ."
+    "format": "prettier --write . --config .prettierrc"
   },
   "eslintConfig": {
     "extends": [
