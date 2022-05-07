@@ -26,11 +26,8 @@ import { CreateFolder } from './CreateFolder';
 
 describe('CreateFolder', () => {
   it('opens folder dialog and then creates folder', async () => {
-    const {
-      getByLabelText,
-      getByText,
-      waitForNFiles,
-    } = await renderWithStorage(<CreateFolder />);
+    const { getByLabelText, getByText, waitForNFiles } =
+      await renderWithStorage(<CreateFolder />);
     const folderName = 'Pirojok the folder';
     const newFolder = getByLabelText('Create new folder');
     await act(async () => {

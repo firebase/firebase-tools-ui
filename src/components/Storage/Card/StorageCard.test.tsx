@@ -26,11 +26,8 @@ describe('StorageCard', () => {
   beforeEach(() => mockTokens());
 
   it('displays regular header by default', async () => {
-    const {
-      getByText,
-      getByLabelText,
-      defaultBucket,
-    } = await renderWithStorage(<StorageCard />);
+    const { getByText, getByLabelText, defaultBucket } =
+      await renderWithStorage(<StorageCard />);
 
     expect(getByText(`gs://${defaultBucket}`)).toBeDefined();
     expect(getByLabelText('Copy')).toBeDefined();

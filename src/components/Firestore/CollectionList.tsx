@@ -58,9 +58,8 @@ const CollectionList: React.FC<Props> = ({ collections, reference }) => {
   const firestore = useFirestore();
   const redirectIfAutoSelectable = useAutoSelect(collections);
 
-  const [isAddCollectionDialogOpen, setAddCollectionDialogOpen] = useState(
-    false
-  );
+  const [isAddCollectionDialogOpen, setAddCollectionDialogOpen] =
+    useState(false);
 
   const addCollection = async (value: AddCollectionDialogValue | null) => {
     if (value?.collectionId && value?.document.id) {

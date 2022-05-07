@@ -131,7 +131,8 @@ export function useSubCollections(
   return collectionIds.map((id) => docRef.collection(id));
 }
 
-const DOCUMENT_PATH_RE = /projects\/(?<project>.*)\/databases\/(?<database>.*)\/documents\/(?<path>.*)/;
+const DOCUMENT_PATH_RE =
+  /projects\/(?<project>.*)\/databases\/(?<database>.*)\/documents\/(?<path>.*)/;
 
 export function useMissingDocuments(
   collection: firebase.firestore.CollectionReference
