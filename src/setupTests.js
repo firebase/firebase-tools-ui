@@ -25,7 +25,7 @@ global.globalThis = require('globalthis')();
 // <AppBar> calls window.scrollTo, which jsdom does not implement. Let's mock it
 // out to silence warnings -- we don't actually need to test it.
 Object.defineProperty(window, 'scrollTo', {
-  value: () => {},
+  value: () => { },
   writable: true,
 });
 
@@ -38,8 +38,8 @@ Object.defineProperty(window, 'scrollTo', {
 //   `${prefix}-${(Math.random() + Math.random() + 1).toString(36).substring(2)}`;
 jest.mock('@rmwc/base', () => ({
   ...jest.requireActual('@rmwc/base'),
-  randomId: (prefix) => 
-  `${prefix}-${(Math.random() + Math.random() + 1).toString(36).substring(2)}`,
+  randomId: (prefix) =>
+    `${prefix}-${(Math.random() + Math.random() + 1).toString(36).substring(2)}`,
 }));
 
 // CodeMirror calls document.createRange, which jsdom does not implement.
