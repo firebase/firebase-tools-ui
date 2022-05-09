@@ -167,6 +167,8 @@ describe('missing document', () => {
 
     await waitFor(() => !queryByText('Save'));
 
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
     expect(documentReference.set).toHaveBeenCalledWith({ meaningOfLife: '42' });
   });
 }); // missing document
