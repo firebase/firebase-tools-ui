@@ -129,7 +129,10 @@ describe('with basic root fields', () => {
   it('removes root-fields', () => {
     const { getByText } = result;
 
-    getByText('delete').click();
+    act(() => {
+      getByText('delete').click();
+    });
+
     expect(onChange).toHaveBeenCalledWith({});
   });
 });
@@ -164,7 +167,10 @@ it('allows nested-arrays by default', async () => {
 
   act(() => getByText('add').click());
 
-  await act(async () => {
+  // Wait for selects to be stable
+  await new Promise((resolve) => setTimeout(resolve, 500));
+
+  act(() => {
     fireEvent.change(getAllByLabelText(/Type/)[1], {
       target: { value: FieldType.ARRAY },
     });
@@ -185,6 +191,9 @@ it('conditionally does not allow nested-arrays', async () => {
   );
 
   act(() => getByText('add').click());
+
+  // Wait for selects to be stable
+  await new Promise((resolve) => setTimeout(resolve, 500));
 
   await act(async () => {
     fireEvent.change(getAllByLabelText(/Type/)[1], {
@@ -222,6 +231,9 @@ describe('changing types', () => {
       ));
     });
 
+    // Wait for selects to be stable
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
     const { getByLabelText } = result;
     setType = (fieldType: FieldType) =>
       fireEvent.change(getByLabelText(/Type/), {
@@ -250,7 +262,7 @@ describe('changing types', () => {
     await act(async () => {
       setType(FieldType.GEOPOINT);
     });
-    expect(getByLabelText('Latitude')).not.toBe(null);
+    expect(getByLabelText('Latitude')).not.toBeNull();
   });
 
   it('switches to a map', async () => {
@@ -266,7 +278,7 @@ describe('changing types', () => {
     await act(async () => {
       setType(FieldType.NULL);
     });
-    expect(queryByLabelText(/Value/)).toBe(null);
+    expect(queryByLabelText(/Value/)).toBeNull();
   });
 
   it('switches to a number', async () => {
@@ -291,6 +303,10 @@ describe('changing types', () => {
     await act(async () => {
       setType(FieldType.NUMBER);
     });
+
+    // Wait for selects to be stable
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
     await act(async () => {
       setType(FieldType.STRING);
     });

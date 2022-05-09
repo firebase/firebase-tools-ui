@@ -16,18 +16,24 @@
 
 import { fireEvent, render } from '@testing-library/react';
 import React from 'react';
+import { act } from 'react-dom/test-utils';
 
 import BooleanEditor from './BooleanEditor';
 
-it('renders an editor for a boolean', () => {
+it('renders an editor for a boolean', async () => {
   const onChange = jest.fn();
   const { getByLabelText } = render(
     <BooleanEditor value={true} onChange={onChange} />
   );
 
+  // Wait for selects to be stable
+  await new Promise((resolve) => setTimeout(resolve, 500));
+
   expect(getByLabelText('Value').value).toBe('true');
 
-  fireEvent.change(getByLabelText('Value'), { target: { value: 'false' } });
+  act(() => {
+    fireEvent.change(getByLabelText('Value'), { target: { value: 'false' } });
+  });
 
   expect(onChange).toHaveBeenCalledWith(false);
 });

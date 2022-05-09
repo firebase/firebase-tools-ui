@@ -16,6 +16,7 @@
 
 import { fireEvent, render } from '@testing-library/react';
 import React from 'react';
+import { act } from 'react-dom/test-utils';
 
 import { Field, SelectField } from './Field';
 
@@ -73,7 +74,7 @@ describe('<SelectField>', () => {
   });
 
   it('renders a select with given value', () => {
-    const { getByLabelText, getByText } = render(
+    const { getByLabelText, getAllByText } = render(
       <SelectField
         label="My label"
         value="val"
@@ -83,7 +84,7 @@ describe('<SelectField>', () => {
     );
 
     expect(getByLabelText('My label').value).toBe('val');
-    expect(getByText('Val!')).not.toBeNull();
+    expect(getAllByText('Val!')).not.toBeNull();
   });
 
   it('shows a tip below', () => {
@@ -101,7 +102,7 @@ describe('<SelectField>', () => {
     expect(getByText('Missing!')).not.toBeNull();
   });
 
-  it('passes through onChange', () => {
+  it('passes through onChange', async () => {
     const onChange = jest.fn();
     const { getByLabelText } = render(
       <SelectField label="My label" onChange={onChange} value="initial" />
@@ -109,8 +110,13 @@ describe('<SelectField>', () => {
 
     expect(onChange).not.toHaveBeenCalled();
 
-    fireEvent.change(getByLabelText('My label'), {
-      target: { value: 'updated value' },
+    // Wait for selects to be stable
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    act(() => {
+      fireEvent.change(getByLabelText('My label'), {
+        target: { value: 'new' },
+      });
     });
 
     expect(onChange).toHaveBeenCalled();

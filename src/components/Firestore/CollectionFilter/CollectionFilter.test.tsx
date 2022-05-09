@@ -77,7 +77,10 @@ it('unsets sorting when switching to an operator that does not support it', asyn
 
   expect(getByLabelText(/Ascending/).checked).toBe(true);
 
-  await act(async () => {
+  // Wait for selects to be stable
+  await new Promise((resolve) => setTimeout(resolve, 500));
+
+  act(async () => {
     fireEvent.change(getByLabelText(/Only show/), {
       target: { value: '==' },
     });
@@ -104,7 +107,10 @@ it('supports multi-value operators', async () => {
     getByText(/Add value/).click();
   });
 
-  await act(async () => {
+  // Wait for selects to be stable
+  await new Promise((resolve) => setTimeout(resolve, 500));
+
+  act(() => {
     const allValueFields = getAllByLabelText(/Value/);
     fireEvent.change(allValueFields[1], {
       target: { value: 'bravo' },
@@ -115,9 +121,15 @@ it('supports multi-value operators', async () => {
     /where\("__field__", "in", \["alpha","bravo"\]\)/
   );
 
-  await act(async () => {
+  // Wait for selects to be stable
+  await new Promise((resolve) => setTimeout(resolve, 500));
+
+  act(() => {
     getAllByLabelText(/Remove filter/)[0].click();
   });
+
+  // Wait for selects to be stable
+  await new Promise((resolve) => setTimeout(resolve, 500));
 
   expect(getByLabelText(/Code preview/).textContent).toMatch(
     /where\("__field__", "in", \["bravo"\]\)/

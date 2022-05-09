@@ -98,7 +98,6 @@ export const SelectField: React.FC<SelectFieldProps> = ({
   // strip outlined bool, always use outlined
   outlined,
   tip,
-  theme, // TODO: 5.0 theme, incompatible with 6.0 remove at 6.0
   error,
   ...selectProps
 }) => {
