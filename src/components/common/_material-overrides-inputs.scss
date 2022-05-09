@@ -30,63 +30,17 @@ $input-height: 36px;
   $outlined-input-padding-bottom: $input-default-padding,
 );
 
-// TODO: uncomment for 6.0.9, when fixed
-// @use '@material/select/_index' as select with (
-//   $height: $input-height,
-//   $label-padding: $input-default-padding,
-//   $arrow-padding: $input-default-padding,
-//   $outline-label-offset: $input-default-padding,
-//   $outlined-idle-border: var(--fire-color-input-borders),
-//   $outlined-hover-border: var(--fire-color-input-borders),
-// );
+@use '@material/select/_index' as select with (
+  $height: $input-height,
+  $label-padding: $input-default-padding,
+  $arrow-padding: $input-default-padding,
+  $outline-label-offset: $input-default-padding,
+  $outlined-idle-border: var(--fire-color-input-borders),
+  $outlined-hover-border: var(--fire-color-input-borders),
+);
 
 @import './color';
 @import './z';
-
-// TODO: remove below for select 6.0.9
-$mdc-select-height: $input-height;
-$mdc-select-label-padding: $input-default-padding;
-$mdc-select-arrow-padding: $input-default-padding;
-$mdc-select-outline-label-offset: $input-default-padding;
-$mdc-select-outlined-idle-border: var(--fire-color-input-borders);
-$mdc-select-outlined-hover-border: var(--fire-color-input-borders);
-@import '@material/select/dist/mdc.select';
-// @import '@rmwc/select/select'; // 6.0.9, when fixed
-
-// TODO: Cannot use mixins because the mixins deps are 6.0.9 and select is 5.7.2
-// @link https://github.com/jamesmfriedman/rmwc/issues/596
-.mdc-select {
-  height: $input-height;
-
-  &.mdc-select--outlined {
-    .mdc-notched-outline {
-      @include notched-outline.color($mdc-select-outlined-idle-border);
-    }
-
-    &:not(.mdc-select--disabled) {
-      &:not(.mdc-select--focused) .mdc-select__native-control:hover ~,
-      &:not(.mdc-select--focused) .mdc-select__selected-text:hover ~ {
-        .mdc-notched-outline {
-          @include notched-outline.color($mdc-select-outlined-hover-border);
-        }
-      }
-    }
-  }
-
-  .mdc-select__native-control,
-  .mdc-select__selected-text {
-    height: $input-height;
-    line-height: normal;
-    min-width: 0;
-    padding: $input-default-padding; // base component doesnt do this yet
-  }
-
-  .mdc-select__dropdown-icon,
-  .mdc-select__icon {
-    bottom: $input-default-padding - 2px; // base component doesnt do this yet
-    z-index: $ZINDEX_MEDIUM;
-  }
-}
 
 @import '@material/textfield/mdc-text-field';
 
