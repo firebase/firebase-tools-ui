@@ -42,10 +42,21 @@ $input-height: 36px;
 @import './color';
 @import './z';
 
+@import '@material/select/mdc-select';
 @import '@material/textfield/mdc-text-field';
 
 .mdc-text-field {
   @include textfield.height(36px); // lol, but this works
+}
+
+.mdc-select {
+  .mdc-select__dropdown-icon {
+    bottom: 8px;
+  }
+
+  .mdc-select__selected-text {
+    padding-top: 4px !important;
+  }
 }
 
 .mdc-select--outlined,
