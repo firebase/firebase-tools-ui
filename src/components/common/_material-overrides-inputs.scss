@@ -51,11 +51,11 @@ $input-height: 36px;
 
 .mdc-select {
   .mdc-select__dropdown-icon {
-    bottom: 8px;
+    bottom: 8px; // Changing height does not affect the dropdown-icon placement
   }
 
   .mdc-select__selected-text {
-    padding-top: 4px !important;
+    padding-top: 4px !important; // Chnanging height does not affect the trigger-text placement
   }
 }
 
