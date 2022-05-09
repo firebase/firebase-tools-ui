@@ -26,6 +26,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { CompatRouter } from 'react-router-dom-v5-compat';
 
 import { background, primary, secondary } from './colors';
 import App from './components/App';
@@ -39,9 +40,11 @@ const store = configureStore();
 const RouterWithInit = () => {
   return (
     <BrowserRouter>
-      <Switch>
-        <Route component={App} />
-      </Switch>
+      <CompatRouter>
+        <Switch>
+          <Route component={App} />
+        </Switch>
+      </CompatRouter>
     </BrowserRouter>
   );
 };
