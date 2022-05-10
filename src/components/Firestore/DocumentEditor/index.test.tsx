@@ -19,7 +19,6 @@ import {
   act,
   fireEvent,
   render,
-  wait,
   waitFor,
 } from '@testing-library/react';
 import React from 'react';
@@ -225,24 +224,22 @@ describe('changing types', () => {
   let setType: (fieldType: FieldType) => void;
 
   beforeEach(async () => {
-    await act(async () => {
-      result = await renderWithFirestore(async () => (
-        <DocumentEditor value={{ hello: 'world' }} />
-      ));
-    });
+    result = await renderWithFirestore(async () => (
+      <DocumentEditor value={{ hello: 'world' }} />
+    ));
 
     // Wait for selects to be stable
     await new Promise((resolve) => setTimeout(resolve, 500));
 
     const { getByLabelText } = result;
-    setType = (fieldType: FieldType) =>
+    setType = async (fieldType: FieldType) =>
       fireEvent.change(getByLabelText(/Type/), {
         target: { value: fieldType },
       });
   });
 
   it('switches to an array', async () => {
-    const { getByLabelText, getAllByText } = result;
+    const { getAllByText } = result;
     await act(async () => {
       setType(FieldType.ARRAY);
     });
