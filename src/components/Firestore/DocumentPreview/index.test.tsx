@@ -14,13 +14,7 @@
  * limitations under the License.
  */
 
-import {
-  RenderResult,
-  act,
-  fireEvent,
-  waitFor,
-  waitForElement,
-} from '@testing-library/react';
+import { RenderResult, act, fireEvent, waitFor } from '@testing-library/react';
 import { firestore } from 'firebase';
 import React from 'react';
 
@@ -39,7 +33,7 @@ describe('loaded document', () => {
       return <DocumentPreview reference={documentReference} />;
     });
 
-    await waitForElement(() => result.getByText(/foo/));
+    await waitFor(() => result.getByText(/foo/));
   });
 
   it('adds a new field', async () => {
@@ -135,7 +129,7 @@ describe('missing document', () => {
       return <DocumentPreview reference={documentReference} />;
     });
 
-    await waitForElement(() => result.getByText(/Add field/));
+    await waitFor(() => result.getByText(/Add field/));
   });
 
   it('shows a warning', async () => {
@@ -186,7 +180,7 @@ describe('empty document', () => {
       return <DocumentPreview reference={documentReference} />;
     });
 
-    await waitForElement(() => result.getByText(/Add field/));
+    await waitFor(() => result.getByText(/Add field/));
   });
 
   it('shows message about no data', async () => {
@@ -242,7 +236,7 @@ describe('loaded array', () => {
       );
     });
 
-    await waitForElement(() => result.getByText(/foo/));
+    await waitFor(() => result.getByText(/foo/));
   });
 
   it('renders a field', () => {
@@ -343,7 +337,7 @@ describe('loaded map', () => {
       );
     });
 
-    await waitForElement(() => result.getAllByText(/harry/).length > 0);
+    await waitFor(() => result.getAllByText(/harry/).length > 0);
   });
 
   it('renders a field, in the lexicographical order', () => {
