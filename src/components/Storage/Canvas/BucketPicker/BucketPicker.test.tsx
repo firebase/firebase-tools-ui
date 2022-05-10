@@ -32,6 +32,8 @@ describe('Bucket Picker', () => {
       await fireEvent.change(select, { target: { value: defaultBucket } });
     });
 
-    expect(current.history.location.pathname).toBe(`/storage/${defaultBucket}`);
+    expect(current.history.location.pathname).toBe(
+      `/storage/${defaultBucket}/`
+    );
   });
 });

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { getByLabelText, render } from '@testing-library/react';
+import { act, getByLabelText, render } from '@testing-library/react';
 import React from 'react';
 
 import { useMainDetail } from './useMainDetail';
@@ -63,10 +63,12 @@ describe('useMainDetail', () => {
     expect(getByText(TAB1_CONTENT)).not.toBeNull();
   });
 
-  it('Allows to switch tabpanel', async () => {
+  it('Allows to switch tabpanel', () => {
     const { getByText, getByRole, getByLabelText } = setup();
 
-    await getByText(TAB2_LABEL).click();
+    act(() => {
+      getByText(TAB2_LABEL).click();
+    });
 
     getByLabelText(TAB2_LABEL);
 
@@ -74,11 +76,13 @@ describe('useMainDetail', () => {
     expect(tabPanel.textContent).toContain(TAB2_CONTENT);
   });
 
-  it('Properly labels the tabs', async () => {
+  it('Properly labels the tabs', () => {
     const { getByText, getByRole, getByLabelText } = setup();
 
     expect(getByRole('tabpanel')).toBe(getByLabelText(TAB1_LABEL));
-    await getByText(TAB2_LABEL).click();
+    act(() => {
+      getByText(TAB2_LABEL).click();
+    });
     expect(getByRole('tabpanel')).toBe(getByLabelText(TAB2_LABEL));
   });
 });
