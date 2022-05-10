@@ -28,3 +28,14 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+@mixin scrollable {
+  overflow: scroll;
+
+  // Remove scrollbar
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}

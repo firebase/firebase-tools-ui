@@ -72,11 +72,11 @@
 
 // TODO: Remove this wrapper and merge everything in document into a big list.
 .Firestore-Document-Fields {
+  @include scrollable;
   display: flex;
   flex-direction: column;
   flex: 2;
   min-width: 0;
-  overflow: scroll;
 
   .Firestore-InlineEditor-relative-anchor {
     .Firestore-InlineEditor {
@@ -97,9 +97,9 @@
 
 .Firestore-Document-List,
 .Firestore-Field-List {
+  @include scrollable;
   flex: 1;
   min-width: 0;
-  overflow: scroll;
 }
 
 /** Only show at most 3 panels (Documents/Collections) */
