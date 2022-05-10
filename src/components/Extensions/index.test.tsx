@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { render } from '@testing-library/react';
+import { act, render } from '@testing-library/react';
 import { renderHook } from '@testing-library/react-hooks';
 import { MemoryRouter, useLocation } from 'react-router-dom';
 
@@ -161,7 +161,9 @@ describe('ExtensionsLink', () => {
       </MemoryRouter>
     );
 
-    getByText('click me').click();
+    act(() => {
+      getByText('click me').click();
+    });
 
     expect(getByText(/foo/)).not.toBeNull();
   });
