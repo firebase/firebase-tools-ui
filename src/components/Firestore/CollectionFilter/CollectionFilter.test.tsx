@@ -14,7 +14,13 @@
  * limitations under the License.
  */
 
-import { act, fireEvent, render } from '@testing-library/react';
+import {
+  RenderResult,
+  act,
+  fireEvent,
+  render,
+  waitFor,
+} from '@testing-library/react';
 import React from 'react';
 
 import { CollectionFilter as CollectionFilterType } from '../models';
@@ -78,12 +84,12 @@ it('unsets sorting when switching to an operator that does not support it', asyn
   expect(getByLabelText(/Ascending/).checked).toBe(true);
 
   // Wait for selects to be stable
-  await new Promise((resolve) => setTimeout(resolve, 500));
+  await act(async () => {
+    await new Promise((resolve) => setTimeout(resolve, 500));
+  });
 
-  act(async () => {
-    fireEvent.change(getByLabelText(/Only show/), {
-      target: { value: '==' },
-    });
+  fireEvent.change(getByLabelText(/Only show/), {
+    target: { value: '==' },
   });
 
   expect(getByLabelText(/Ascending/).disabled).toBe(true);
@@ -103,18 +109,18 @@ it('supports multi-value operators', async () => {
     /where\("__field__", "in", \["alpha"\]\)/
   );
 
-  await act(async () => {
+  act(() => {
     getByText(/Add value/).click();
   });
 
   // Wait for selects to be stable
-  await new Promise((resolve) => setTimeout(resolve, 500));
+  await act(async () => {
+    await new Promise((resolve) => setTimeout(resolve, 500));
+  });
 
-  act(() => {
-    const allValueFields = getAllByLabelText(/Value/);
-    fireEvent.change(allValueFields[1], {
-      target: { value: 'bravo' },
-    });
+  const allValueFields = getAllByLabelText(/Value/);
+  fireEvent.change(allValueFields[1], {
+    target: { value: 'bravo' },
   });
 
   expect(getByLabelText(/Code preview/).textContent).toMatch(
@@ -147,9 +153,10 @@ const StorePreview: React.FC<React.PropsWithChildren<{ path: string }>> = ({
 };
 
 it('requires a field-name', async () => {
+  const promise = Promise.resolve();
   const onCloseSpy = jest.fn();
 
-  const { getByTestId, getByLabelText, getByText } = setup({
+  const { getByLabelText, getByText, getByTestId } = setup({
     path: '/foo/bar',
     collectionFilter: {
       field: '__field__',
@@ -161,23 +168,22 @@ it('requires a field-name', async () => {
     onClose: onCloseSpy,
   });
 
-  await act(async () => {
-    fireEvent.change(getByLabelText(/Enter field/), {
-      target: { value: '' },
-    });
+  fireEvent.change(getByLabelText(/Enter field/), {
+    target: { value: '' },
   });
 
-  await act(async () => {
-    fireEvent.submit(getByText(/Apply/));
-  });
+  fireEvent.submit(getByText(/Apply/));
 
-  expect(getByTestId('store-preview').textContent).toContain(
-    '"field":"__field__"'
+  await waitFor(
+    () => getByTestId('store-preview').textContent === '{"field":"__field__"}'
   );
+  await waitFor(() => promise);
+
   expect(onCloseSpy).not.toHaveBeenCalled();
 });
 
 it('dispatches the collection-filter to the store', async () => {
+  const promise = Promise.resolve();
   const onCloseSpy = jest.fn();
 
   const { getByTestId, getByLabelText, getByText } = setup({
@@ -186,21 +192,21 @@ it('dispatches the collection-filter to the store', async () => {
     onClose: onCloseSpy,
   });
 
-  await act(async () => {
-    fireEvent.change(getByLabelText(/Enter field/), {
-      target: { value: 'alpha' },
-    });
+  fireEvent.change(getByLabelText(/Enter field/), {
+    target: { value: 'alpha' },
   });
 
-  await act(async () => {
-    fireEvent.submit(getByText(/Apply/));
-  });
+  fireEvent.submit(getByText(/Apply/));
 
-  expect(getByTestId('store-preview').textContent).toBe('{"field":"alpha"}');
+  await waitFor(
+    () => getByTestId('store-preview').textContent === '{"field":"alpha"}'
+  );
+  await waitFor(() => promise);
+
   expect(onCloseSpy).toHaveBeenCalled();
 
   onCloseSpy.mockReset();
-  await act(async () => {
+  act(() => {
     fireEvent.click(getByText(/Clear/));
   });
 
