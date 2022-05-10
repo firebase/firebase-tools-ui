@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { act, fireEvent, render, waitForElement } from '@testing-library/react';
+import { act, fireEvent, render, waitFor } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Route, Router } from 'react-router-dom';
@@ -33,7 +33,7 @@ it('shows the root-collection list', async () => {
     return <RootCollectionList />;
   });
 
-  await waitForElement(() => getByText(/coll-1/));
+  await waitFor(() => getByText(/coll-1/));
 
   expect(getByText(/coll-1/)).not.toBeNull();
   expect(getByText(/coll-2/)).not.toBeNull();
@@ -47,7 +47,7 @@ it('shows the sub-collection list', async () => {
     return <SubCollectionList reference={docRef} />;
   });
 
-  await waitForElement(() => getByText(/coll-1/));
+  await waitFor(() => getByText(/coll-1/));
 
   expect(getByText(/coll-1/)).not.toBeNull();
   expect(getByText(/coll-2/)).not.toBeNull();
@@ -108,7 +108,7 @@ it('triggers a redirect to a new collection at the root', async () => {
     }
   );
 
-  await waitForElement(() => getByText(/coll-1/));
+  await waitFor(() => getByText(/coll-1/));
 
   act(() => getByText(/Start collection/).click());
 
@@ -130,7 +130,7 @@ it('triggers a redirect to a new collection at the root', async () => {
     getByText(/Save/).click();
   });
 
-  await waitForElement(() => getByText(/_redirected_to_foo/));
+  await waitFor(() => getByText(/_redirected_to_foo/));
 
   expect(getByText(/_redirected_to_foo/)).not.toBeNull();
 });
@@ -154,7 +154,7 @@ it('triggers a redirect to a new collection at the root when there are special c
     }
   );
 
-  await waitForElement(() => getByText(/coll-1/));
+  await waitFor(() => getByText(/coll-1/));
 
   act(() => getByText(/Start collection/).click());
 
@@ -176,7 +176,7 @@ it('triggers a redirect to a new collection at the root when there are special c
     getByText(/Save/).click();
   });
 
-  await waitForElement(() => getByText(/_redirected_to_foo/));
+  await waitFor(() => getByText(/_redirected_to_foo/));
 
   expect(getByText(/_redirected_to_foo/)).not.toBeNull();
 });
@@ -203,7 +203,7 @@ it('triggers a redirect to a new collection in a document', async () => {
     }
   );
 
-  await waitForElement(() => getByText(/coll-1/));
+  await waitFor(() => getByText(/coll-1/));
 
   act(() => getByText(/Start collection/).click());
 
@@ -225,7 +225,7 @@ it('triggers a redirect to a new collection in a document', async () => {
     getByText(/Save/).click();
   });
 
-  await waitForElement(() => getByText(/_redirected_to_sub_document_/));
+  await waitFor(() => getByText(/_redirected_to_sub_document_/));
 
   expect(getByText(/_redirected_to_sub_document_/)).not.toBeNull();
 });
@@ -252,7 +252,7 @@ it('triggers a redirect to a new collection in a document when there are special
     }
   );
 
-  await waitForElement(() => getByText(/coll-1/));
+  await waitFor(() => getByText(/coll-1/));
 
   act(() => getByText(/Start collection/).click());
 
@@ -274,7 +274,7 @@ it('triggers a redirect to a new collection in a document when there are special
     getByText(/Save/).click();
   });
 
-  await waitForElement(() => getByText(/_redirected_to_sub_document_/));
+  await waitFor(() => getByText(/_redirected_to_sub_document_/));
 
   expect(getByText(/_redirected_to_sub_document_/)).not.toBeNull();
 });
