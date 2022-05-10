@@ -100,7 +100,7 @@ export const DatabaseContainerWrapper: React.FC<
     // be cleared on emulator restart as expected (even if ports don't change).
     ['/dummy/database/databases', config, props.primary],
     fetchDatabases,
-    { refreshWhenOffline: true, initialData: undefined, refreshInterval: 5000 }
+    { refreshWhenOffline: true, fallbackData: undefined, refreshInterval: 5000 }
   );
   return <DatabaseContainer databases={data} {...props} />;
 };
