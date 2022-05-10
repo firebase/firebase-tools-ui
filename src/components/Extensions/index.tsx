@@ -50,9 +50,7 @@ export interface Backend {
 const HydrateExtensions: React.FC<React.PropsWithChildren<unknown>> = ({
   children,
 }) => {
-  console.log('hydrating!');
   const extensions = useExtensionsData();
-  console.log({ extensions });
 
   return (
     <ExtensionsProvider extensions={extensions}>{children}</ExtensionsProvider>
