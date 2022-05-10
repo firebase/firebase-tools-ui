@@ -15,7 +15,7 @@
  */
 
 import { Portal } from '@rmwc/base';
-import { act, waitForElement } from '@testing-library/react';
+import { act, waitFor } from '@testing-library/react';
 import firebase from 'firebase';
 import React, { useEffect, useState } from 'react';
 import { Route } from 'react-router-dom';
@@ -30,7 +30,7 @@ jest.mock('../common/DialogQueue');
 it('shows the root-id', async () => {
   const { getByText } = await renderWithFirestore(async () => <Root />);
 
-  await waitForElement(() => getByText(/Root/));
+  await waitFor(() => getByText(/Root/));
 
   expect(getByText(/Root/)).not.toBeNull();
 });
@@ -47,7 +47,7 @@ it('shows the document-id', async () => {
     );
   });
 
-  await waitForElement(() => getByText(/foo/));
+  await waitFor(() => getByText(/foo/));
 
   expect(getByText(/foo/)).not.toBeNull();
 });
@@ -65,7 +65,7 @@ it('shows the root collection-list', async () => {
     }
   );
 
-  await waitForElement(() => getByTestId('collection-list'));
+  await waitFor(() => getByTestId('collection-list'));
 
   expect(getByTestId('collection-list')).not.toBeNull();
   expect(getByText('foo')).not.toBeNull();
@@ -85,7 +85,7 @@ it('shows the document collection-list', async () => {
     }
   );
 
-  await waitForElement(() => getByTestId('collection-list'));
+  await waitFor(() => getByTestId('collection-list'));
 
   expect(getByTestId('collection-list')).not.toBeNull();
   expect(getByText('sub')).not.toBeNull();
@@ -107,8 +107,8 @@ it('shows the selected root-collection', async () => {
     }
   );
 
-  await waitForElement(() => getAllByTestId('collection-list').length > 0);
-  await waitForElement(() => getAllByText('bar').length > 0);
+  await waitFor(() => getAllByTestId('collection-list').length > 0);
+  await waitFor(() => getAllByText('bar').length > 0);
 
   expect(getAllByTestId('collection-list').length).toBeGreaterThan(0);
   expect(getAllByText('bar').length).toBeGreaterThan(0);
@@ -130,8 +130,8 @@ it('shows the selected root-collection when the collection id has special charac
     }
   );
 
-  await waitForElement(() => getAllByTestId('collection-list').length > 0);
-  await waitForElement(() => getAllByText('bar').length > 0);
+  await waitFor(() => getAllByTestId('collection-list').length > 0);
+  await waitFor(() => getAllByText('bar').length > 0);
 
   expect(getAllByTestId('collection-list').length).toBeGreaterThan(0);
   expect(getAllByText('bar').length).toBeGreaterThan(0);
@@ -154,7 +154,7 @@ it('shows the selected document-collection', async () => {
     }
   );
 
-  await waitForElement(() => getAllByTestId('collection-list').length > 1);
+  await waitFor(() => getAllByTestId('collection-list').length > 1);
 
   expect(getAllByTestId('collection-list').length).toBe(2);
   expect(getByText(/eggs/)).not.toBeNull();
@@ -181,7 +181,7 @@ it('shows the selected document-collection when there are collection and documen
     }
   );
 
-  await waitForElement(() => getAllByTestId('collection-list').length > 1);
+  await waitFor(() => getAllByTestId('collection-list').length > 1);
 
   expect(getAllByTestId('collection-list').length).toBe(2);
   expect(getByText(/eggs/)).not.toBeNull();
