@@ -52,29 +52,29 @@ const RouterWithInit = () => {
 const container = document.getElementById('root');
 const root = createRoot(container!);
 
+// TODO: Enable strict-mode after upgrading to router-v6
+// https://github.com/remix-run/react-router/issues/7870
 root.render(
-  <React.StrictMode>
-    <RMWCProvider
-      // Globally disable ripples
-      ripple={false}
+  <RMWCProvider
+    // Globally disable ripples
+    ripple={false}
+  >
+    <ThemeProvider
+      options={{
+        background,
+        primary,
+        primaryRgb: '104, 29, 168',
+        secondary,
+        error,
+      }}
     >
-      <ThemeProvider
-        options={{
-          background,
-          primary,
-          primaryRgb: '104, 29, 168',
-          secondary,
-          error,
-        }}
-      >
-        <EmulatorConfigProvider refreshInterval={2000}>
-          <FirestoreRequestsProvider>
-            <Provider store={store}>
-              <RouterWithInit />
-            </Provider>
-          </FirestoreRequestsProvider>
-        </EmulatorConfigProvider>
-      </ThemeProvider>
-    </RMWCProvider>
-  </React.StrictMode>
+      <EmulatorConfigProvider refreshInterval={2000}>
+        <FirestoreRequestsProvider>
+          <Provider store={store}>
+            <RouterWithInit />
+          </Provider>
+        </FirestoreRequestsProvider>
+      </EmulatorConfigProvider>
+    </ThemeProvider>
+  </RMWCProvider>
 );
