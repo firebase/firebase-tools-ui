@@ -23,13 +23,15 @@ import classnames from 'classnames';
 import React from 'react';
 
 export const Spinner: React.FC<
-  {
-    message?: string;
-    span?: number;
-    cover?: boolean;
-    scrim?: boolean;
-    size?: 'xsmall' | 'small' | 'medium' | 'large' | 'xlarge' | number;
-  } & React.HTMLProps<HTMLDivElement>
+  React.PropsWithChildren<
+    {
+      message?: string;
+      span?: number;
+      cover?: boolean;
+      scrim?: boolean;
+      size?: 'xsmall' | 'small' | 'medium' | 'large' | 'xlarge' | number;
+    } & React.HTMLProps<HTMLDivElement>
+  >
 > = ({ message, size, span, cover, scrim, ...props }) => {
   const children = (
     <>

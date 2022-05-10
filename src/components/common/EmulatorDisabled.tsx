@@ -22,9 +22,11 @@ import React from 'react';
 
 import { HintIcon } from './icons';
 
-export const EmulatorDisabled: React.FC<{
-  productName: string;
-}> = ({ productName }) => (
+export const EmulatorDisabled: React.FC<
+  React.PropsWithChildren<{
+    productName: string;
+  }>
+> = ({ productName }) => (
   <>
     <GridCell desktop={2} tablet={0} phone={0}>
       {/* Spacing */}
@@ -57,9 +59,11 @@ export const EmulatorDisabled: React.FC<{
   </>
 );
 
-export const EmulatorOutdated: React.FC<{
-  productName: string;
-}> = ({ productName }) => (
+export const EmulatorOutdated: React.FC<
+  React.PropsWithChildren<{
+    productName: string;
+  }>
+> = ({ productName }) => (
   <div className="EmulatorDisabled">
     <div className="EmulatorDisabled-graphics">
       <img src="/assets/img/database.png" alt="" />

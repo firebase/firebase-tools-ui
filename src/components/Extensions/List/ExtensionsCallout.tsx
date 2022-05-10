@@ -20,7 +20,9 @@ import { Callout } from '../../common/Callout';
 import { DocsLink } from '../../common/links/DocsLink';
 import styles from './ExtensionsCallout.module.scss';
 
-export const ExtensionCallout: React.FC = () => {
+export const ExtensionCallout: React.FC<
+  React.PropsWithChildren<unknown>
+> = () => {
   return (
     <div className={styles.callout}>
       <Callout

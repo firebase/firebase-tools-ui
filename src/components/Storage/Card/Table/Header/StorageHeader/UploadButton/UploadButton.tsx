@@ -21,7 +21,7 @@ import { useDropzone } from 'react-dropzone';
 import { useStorageFiles } from '../../../../../api/useStorageFiles';
 import styles from './UploadButton.module.scss';
 
-export const UploadButton: React.FC = () => {
+export const UploadButton: React.FC<React.PropsWithChildren<unknown>> = () => {
   const { uploadFiles } = useStorageFiles();
 
   const { getInputProps, getRootProps } = useDropzone({

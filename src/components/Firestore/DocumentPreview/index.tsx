@@ -33,7 +33,7 @@ export interface Props {
   maxSummaryLen?: number;
 }
 
-const DocumentPreview: React.FC<Props> = ({
+const DocumentPreview: React.FC<React.PropsWithChildren<Props>> = ({
   reference,
   maxSummaryLen = 20,
 }) => {
@@ -108,7 +108,9 @@ const DocumentPreview: React.FC<Props> = ({
   );
 };
 
-const DocumentWarning: React.FC<{}> = ({ children }) => (
+const DocumentWarning: React.FC<React.PropsWithChildren<{}>> = ({
+  children,
+}) => (
   <Typography
     theme="secondary"
     use="body2"

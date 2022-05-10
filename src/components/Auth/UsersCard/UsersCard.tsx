@@ -28,7 +28,7 @@ import { AuthHeader } from './header/AuthHeader';
 import UsersTable from './table/UsersTable';
 
 export type UserCardProps = PropsFromDispatch & PropsFromState;
-export const UsersCard: React.FC<UserCardProps> = ({
+export const UsersCard: React.FC<React.PropsWithChildren<UserCardProps>> = ({
   openAuthUserDialog,
   authUserDialogData,
 }) => {

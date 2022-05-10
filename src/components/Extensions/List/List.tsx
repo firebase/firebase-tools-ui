@@ -25,7 +25,9 @@ import { ExtensionsTable } from './ExtensionsTable/ExtensionTable';
 import { ExtensionsFeatureBar } from './FeatureBar';
 import { ZeroState } from './ZeroState';
 
-export const ExtensionsList: React.FC = () => {
+export const ExtensionsList: React.FC<
+  React.PropsWithChildren<unknown>
+> = () => {
   const specs = useExtensions();
 
   return (

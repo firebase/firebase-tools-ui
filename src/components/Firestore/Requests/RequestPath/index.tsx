@@ -101,7 +101,7 @@ interface Props {
   requestPathContainerWidth?: number;
 }
 
-const RequestPath: React.FC<Props> = ({
+const RequestPath: React.FC<React.PropsWithChildren<Props>> = ({
   resourcePath,
   setShowCopyNotification,
   requestPathContainerWidth,

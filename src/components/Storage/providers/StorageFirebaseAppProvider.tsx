@@ -22,13 +22,15 @@ import { useEmulatorConfig } from '../../common/EmulatorConfigProvider';
 
 const FIREBASE_APP_OPTIONS = {};
 
-export const StorageFirebaseAppProvider: React.FC = ({ children }) => {
+export const StorageFirebaseAppProvider: React.FC<
+  React.PropsWithChildren<unknown>
+> = ({ children }) => {
   const { host, port } = useEmulatorConfig('storage');
   const app = useEmulatedFirebaseApp(
     'storage',
     FIREBASE_APP_OPTIONS,
     useCallback(
-      (app) => {
+      (app: any) => {
         app.storage().useEmulator(host, port);
       },
       [host, port]

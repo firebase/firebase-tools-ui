@@ -45,9 +45,11 @@ export type ExtensionBackend =
 
 export const ExtensionsContext = createContext<Extension[]>([]);
 
-export const ExtensionsProvider: React.FC<{
-  extensions: Extension[];
-}> = ({ children, extensions }) => {
+export const ExtensionsProvider: React.FC<
+  React.PropsWithChildren<{
+    extensions: Extension[];
+  }>
+> = ({ children, extensions }) => {
   return (
     <ExtensionsContext.Provider value={extensions}>
       {children}

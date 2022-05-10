@@ -31,7 +31,7 @@ import AppDisconnected from './AppDisconnected';
 export const REDIRECT_LOGS_URL =
   '/logs?q=metadata.emulator.name%3D%22functions%22';
 
-const App: React.FC = () => {
+const App: React.FC<React.PropsWithChildren<unknown>> = () => {
   return (
     <>
       <DialogQueue dialogs={dialogs} />

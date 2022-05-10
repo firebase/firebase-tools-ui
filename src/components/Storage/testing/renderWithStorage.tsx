@@ -67,7 +67,9 @@ export async function renderWithStorage(children: ReactElement) {
     await waitForNFiles(filesBeforeUpload + 1);
   };
 
-  const Component: React.FC = ({ children }) => {
+  const Component: React.FC<React.PropsWithChildren<unknown>> = ({
+    children,
+  }) => {
     current.storage = useStorageFiles();
     current.history = useHistory();
     current.bucket = useBucket();

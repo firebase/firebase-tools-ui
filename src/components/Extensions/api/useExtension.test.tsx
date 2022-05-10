@@ -40,7 +40,9 @@ describe('useExtension', () => {
       extensionSpec: EXTENSION_SPEC,
     });
 
-    const wrapper: React.FC = ({ children }) => (
+    const wrapper: React.FC<React.PropsWithChildren<unknown>> = ({
+      children,
+    }) => (
       <ExtensionsProvider extensions={[want, other]}>
         <InstanceIdProvider instanceId="foo-published">
           {children}

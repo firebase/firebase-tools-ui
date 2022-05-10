@@ -69,7 +69,7 @@ export interface Props {
   compiledGetters: CompiledGetterCache;
 }
 
-export const HighlightedJSON: React.FC<Props> = ({
+export const HighlightedJSON: React.FC<React.PropsWithChildren<Props>> = ({
   data,
   appendToQuery,
   compiledGetters,
@@ -77,7 +77,11 @@ export const HighlightedJSON: React.FC<Props> = ({
   const lines = JSON.stringify(data, null, 2).split('\n');
 
   if (lines.length === 1)
-    return <div className="log-message-single">{data}</div>;
+    return (
+      <div className="log-message-single">
+        <>{data}</>
+      </div>
+    );
 
   let isObject = false;
 

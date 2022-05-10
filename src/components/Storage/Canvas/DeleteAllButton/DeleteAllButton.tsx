@@ -22,7 +22,9 @@ import { useStorageFiles } from '../../api/useStorageFiles';
 import { confirmDeleteAllFiles } from './confirmDeleteAllFiles';
 import styles from './DeleteAllButton.module.scss';
 
-export const DeleteAllButton: React.FC = () => {
+export const DeleteAllButton: React.FC<
+  React.PropsWithChildren<unknown>
+> = () => {
   return (
     // While we don't know the state of the button, show it as disabled.
     <Suspense
@@ -35,7 +37,9 @@ export const DeleteAllButton: React.FC = () => {
   );
 };
 
-const DeleteAllButtonWithHooks: React.FC = () => {
+const DeleteAllButtonWithHooks: React.FC<
+  React.PropsWithChildren<unknown>
+> = () => {
   const { deleteAllFiles, bucketHasAnyFiles } = useStorageFiles();
 
   return (
@@ -51,10 +55,9 @@ interface DeleteAllButtonUnwrappedProps {
   disabled: boolean;
 }
 
-const DeleteAllButtonUnwrapped: React.FC<DeleteAllButtonUnwrappedProps> = ({
-  deleteAllFiles,
-  disabled,
-}) => {
+const DeleteAllButtonUnwrapped: React.FC<
+  React.PropsWithChildren<DeleteAllButtonUnwrappedProps>
+> = ({ deleteAllFiles, disabled }) => {
   return (
     <CustomThemeProvider use="warning" wrap>
       <Button

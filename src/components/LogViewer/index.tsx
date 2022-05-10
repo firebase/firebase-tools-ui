@@ -36,7 +36,7 @@ function useQuery() {
   return useMemo(() => new URLSearchParams(search), [search]);
 }
 
-export const LogViewer: React.FC = () => {
+export const LogViewer: React.FC<React.PropsWithChildren<unknown>> = () => {
   const qs = useQuery();
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [query, setQuery] = useState(qs.get('q') || '');

@@ -29,7 +29,7 @@ export interface AuthHeaderProps {
   onOpenNewUserDialog: () => void;
 }
 
-export const AuthHeader: React.FC<AuthHeaderProps> = ({
+export const AuthHeader: React.FC<React.PropsWithChildren<AuthHeaderProps>> = ({
   onOpenNewUserDialog,
 }) => {
   return (

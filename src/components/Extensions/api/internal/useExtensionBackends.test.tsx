@@ -25,7 +25,9 @@ import { useExtensionBackends } from './useExtensionBackends';
 describe('useExtensionBackends', () => {
   it('returns the list of extension backends', async () => {
     mockExtensionBackends(BACKEND_LIST);
-    const wrapper: React.FC = ({ children }) => {
+    const wrapper: React.FC<React.PropsWithChildren<unknown>> = ({
+      children,
+    }) => {
       return (
         <TestExtensionsProvider>
           <Suspense fallback={null}>{children}</Suspense>

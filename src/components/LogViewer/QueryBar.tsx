@@ -197,7 +197,10 @@ interface Props {
   compiledGetters: CompiledGetterCache;
 }
 
-export const QueryBar: React.FC<Props> = ({ query, setQuery }) => {
+export const QueryBar: React.FC<React.PropsWithChildren<Props>> = ({
+  query,
+  setQuery,
+}) => {
   const [temporaryQuery, setTemporaryQuery] = useState('');
 
   useEffect(() => {

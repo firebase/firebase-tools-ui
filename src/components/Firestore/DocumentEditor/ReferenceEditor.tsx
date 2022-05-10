@@ -21,11 +21,13 @@ import { useFirestore } from 'reactfire';
 import { Field } from '../../common/Field';
 import { DocumentPath } from './types';
 
-const ReferenceEditor: React.FC<{
-  value: DocumentPath;
-  onChange: (value: DocumentPath) => void;
-  name: string;
-}> = ({ value, onChange, name }) => {
+const ReferenceEditor: React.FC<
+  React.PropsWithChildren<{
+    value: DocumentPath;
+    onChange: (value: DocumentPath) => void;
+    name: string;
+  }>
+> = ({ value, onChange, name }) => {
   const [path] = useState(value.path);
   const firestore = useFirestore();
   const {

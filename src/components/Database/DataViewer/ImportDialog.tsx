@@ -40,7 +40,7 @@ export interface Props {
   onComplete: (reference?: firebase.database.Reference, file?: File) => void;
 }
 
-export const ImportDialog: React.FC<Props> = ({
+export const ImportDialog: React.FC<React.PropsWithChildren<Props>> = ({
   api,
   reference,
   onComplete,

@@ -34,7 +34,9 @@ export type PhoneControlProps = PropsFromState & {
 };
 
 export const PhoneControl: React.FC<
-  PhoneControlProps & FormContextValues<AddAuthUserPayload>
+  React.PropsWithChildren<
+    PhoneControlProps & FormContextValues<AddAuthUserPayload>
+  >
 > = ({ register, errors, allPhoneNumbers, editedUserPhoneNumber }) => {
   function validate(value: string) {
     return editedUserPhoneNumber === value || !allPhoneNumbers.has(value);

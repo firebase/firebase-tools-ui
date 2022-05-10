@@ -21,10 +21,9 @@ import { ExtensionsContext } from './useExtensions';
 
 const InstanceIdContext = createContext('');
 
-export const InstanceIdProvider: React.FC<{ instanceId: string }> = ({
-  children,
-  instanceId,
-}) => {
+export const InstanceIdProvider: React.FC<
+  React.PropsWithChildren<{ instanceId: string }>
+> = ({ children, instanceId }) => {
   return (
     <InstanceIdContext.Provider value={instanceId}>
       {children}

@@ -29,7 +29,7 @@ import { Spinner } from '../common/Spinner';
 import Database from './Database';
 import DatabaseContainer from './DatabaseContainer';
 
-export const DatabaseRoute: React.FC = () => {
+export const DatabaseRoute: React.FC<React.PropsWithChildren<unknown>> = () => {
   return (
     <Suspense fallback={<DatabaseRouteSuspended />}>
       <DatabaseRouteContent />
@@ -39,7 +39,9 @@ export const DatabaseRoute: React.FC = () => {
 
 export default DatabaseRoute;
 
-export const DatabaseRouteContent: React.FC = () => {
+export const DatabaseRouteContent: React.FC<
+  React.PropsWithChildren<unknown>
+> = () => {
   const config = useEmulatorConfig('database');
   const primary = useConfig().projectId;
   let { path, url } = useRouteMatch()!;
@@ -69,7 +71,9 @@ export const DatabaseRouteContent: React.FC = () => {
   );
 };
 
-const DatabaseRouteSuspended: React.FC = () => {
+const DatabaseRouteSuspended: React.FC<
+  React.PropsWithChildren<unknown>
+> = () => {
   const isDisabled = useIsEmulatorDisabled('database');
   return isDisabled ? (
     <EmulatorDisabled productName="Realtime Database" />

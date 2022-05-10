@@ -47,7 +47,9 @@ import PanelHeader from './PanelHeader';
 import FirestoreRequests from './Requests';
 import { FirestoreStore } from './store';
 
-export const FirestoreRoute: React.FC = () => {
+export const FirestoreRoute: React.FC<
+  React.PropsWithChildren<unknown>
+> = () => {
   return (
     <Suspense fallback={<FirestoreRouteSuspended />}>
       <FirestoreEmulatedApiProvider>
@@ -77,82 +79,86 @@ const firestoreRoutes: ReadonlyArray<FirestoreTabRoute> = [
   },
 ];
 
-export const Firestore: React.FC = React.memo(() => {
-  const location = useLocation();
-  const history = useHistory();
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  const eject = useEjector();
+export const Firestore: React.FC<React.PropsWithChildren<unknown>> = React.memo(
+  () => {
+    const location = useLocation();
+    const history = useHistory();
+    const [isRefreshing, setIsRefreshing] = useState(false);
+    const eject = useEjector();
 
-  // TODO: do something better here!
-  const path = location.pathname.replace(/^\/firestore\/data/, '');
-  const showCollectionShell = path.split('/').length < 2;
-  const showDocumentShell = path.split('/').length < 3;
+    // TODO: do something better here!
+    const path = location.pathname.replace(/^\/firestore\/data/, '');
+    const showCollectionShell = path.split('/').length < 2;
+    const showDocumentShell = path.split('/').length < 3;
 
-  const subTabs = firestoreRoutes.map(({ path, label }: FirestoreTabRoute) => (
-    <Tab
-      key={label}
-      className="mdc-tab--min-width"
-      {...{ tag: Link, to: path }}
-    >
-      {label}
-    </Tab>
-  ));
-  const activeTabIndex = firestoreRoutes.findIndex((r) =>
-    matchPath(location.pathname, {
-      path: r.path,
-      exact: r.exact,
-    })
-  );
+    const subTabs = firestoreRoutes.map(
+      ({ path, label }: FirestoreTabRoute) => (
+        <Tab
+          key={label}
+          className="mdc-tab--min-width"
+          {...{ tag: Link, to: path }}
+        >
+          {label}
+        </Tab>
+      )
+    );
+    const activeTabIndex = firestoreRoutes.findIndex((r) =>
+      matchPath(location.pathname, {
+        path: r.path,
+        exact: r.exact,
+      })
+    );
 
-  async function handleClearData() {
-    const shouldNuke = await promptClearAll();
-    if (!shouldNuke) return;
-    setIsRefreshing(true);
-    await eject();
-    handleNavigate();
-    setIsRefreshing(false);
-  }
-
-  function handleNavigate(path?: string) {
-    // TODO: move to routing constants
-    const root = '/firestore/data';
-    if (path === undefined) {
-      history.push(root);
-    } else {
-      history.push(`${root}/${path}`);
+    async function handleClearData() {
+      const shouldNuke = await promptClearAll();
+      if (!shouldNuke) return;
+      setIsRefreshing(true);
+      await eject();
+      handleNavigate();
+      setIsRefreshing(false);
     }
+
+    function handleNavigate(path?: string) {
+      // TODO: move to routing constants
+      const root = '/firestore/data';
+      if (path === undefined) {
+        history.push(root);
+      } else {
+        history.push(`${root}/${path}`);
+      }
+    }
+
+    return isRefreshing ? (
+      <Spinner span={12} data-testid="firestore-loading" />
+    ) : (
+      <FirestoreStore>
+        <GridCell span={12} className="Firestore">
+          <div className="Firestore-sub-tabs">
+            <TabBar theme="onSurface" activeTabIndex={activeTabIndex}>
+              {subTabs}
+            </TabBar>
+          </div>
+
+          <Switch>
+            <Route path="/firestore/data">
+              <FirestoreDataCard
+                path={path}
+                handleClearData={handleClearData}
+                handleNavigate={handleNavigate}
+                showCollectionShell={showCollectionShell}
+                showDocumentShell={showDocumentShell}
+              />
+            </Route>
+            <Route path="/firestore/requests">
+              <FirestoreRequestsCard />
+            </Route>
+            <Redirect from="/firestore" to="/firestore/data" />
+          </Switch>
+        </GridCell>
+      </FirestoreStore>
+    );
   }
-
-  return isRefreshing ? (
-    <Spinner span={12} data-testid="firestore-loading" />
-  ) : (
-    <FirestoreStore>
-      <GridCell span={12} className="Firestore">
-        <div className="Firestore-sub-tabs">
-          <TabBar theme="onSurface" activeTabIndex={activeTabIndex}>
-            {subTabs}
-          </TabBar>
-        </div>
-
-        <Switch>
-          <Route path="/firestore/data">
-            <FirestoreDataCard
-              path={path}
-              handleClearData={handleClearData}
-              handleNavigate={handleNavigate}
-              showCollectionShell={showCollectionShell}
-              showDocumentShell={showDocumentShell}
-            />
-          </Route>
-          <Route path="/firestore/requests">
-            <FirestoreRequestsCard />
-          </Route>
-          <Redirect from="/firestore" to="/firestore/data" />
-        </Switch>
-      </GridCell>
-    </FirestoreStore>
-  );
-});
+);
 
 interface FirestoreDataCardProps {
   path: string;
@@ -162,7 +168,9 @@ interface FirestoreDataCardProps {
   showDocumentShell: boolean;
 }
 
-const FirestoreDataCard: React.FC<FirestoreDataCardProps> = ({
+const FirestoreDataCard: React.FC<
+  React.PropsWithChildren<FirestoreDataCardProps>
+> = ({
   path,
   handleClearData,
   handleNavigate,
@@ -205,7 +213,9 @@ const FirestoreDataCard: React.FC<FirestoreDataCardProps> = ({
   </>
 );
 
-const FirestoreRequestsCard: React.FC = () => (
+const FirestoreRequestsCard: React.FC<
+  React.PropsWithChildren<unknown>
+> = () => (
   <Elevation z="2" wrap>
     <Card className="Firestore-panels-wrapper">
       <FirestoreRequests />
@@ -213,7 +223,9 @@ const FirestoreRequestsCard: React.FC = () => (
   </Elevation>
 );
 
-const FirestoreRouteSuspended: React.FC = () => {
+const FirestoreRouteSuspended: React.FC<
+  React.PropsWithChildren<unknown>
+> = () => {
   const isDisabled = useIsEmulatorDisabled('firestore');
   return isDisabled ? (
     <EmulatorDisabled productName="Firestore" />

@@ -38,13 +38,9 @@ interface Props extends BreadCrumbProps {
   onNavigate: (path: string) => void;
 }
 
-export const InteractiveBreadCrumbBar: React.FC<Props> = ({
-  onNavigate,
-  children,
-  inputPrefix,
-  path,
-  ...breadCrumbProps
-}) => {
+export const InteractiveBreadCrumbBar: React.FC<
+  React.PropsWithChildren<Props>
+> = ({ onNavigate, children, inputPrefix, path, ...breadCrumbProps }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [value, setValue] = useState(path);
 

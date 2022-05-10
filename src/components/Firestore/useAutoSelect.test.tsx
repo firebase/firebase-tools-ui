@@ -25,7 +25,9 @@ import { FIRESTORE_DATA_URL, useAutoSelect } from './useAutoSelect';
 interface TestData {
   id: string;
 }
-const Test: React.FC<{ list: TestData[] | null }> = ({ list }) => {
+const Test: React.FC<React.PropsWithChildren<{ list: TestData[] | null }>> = ({
+  list,
+}) => {
   const redirect = useAutoSelect(list);
   return <>{redirect}</>;
 };

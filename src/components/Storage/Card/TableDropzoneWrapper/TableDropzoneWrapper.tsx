@@ -21,7 +21,9 @@ import { useDropzone } from 'react-dropzone';
 import { useStorageFiles } from '../../api/useStorageFiles';
 import styles from './TableDropzoneWrapper.module.scss';
 
-export const TableDropzoneWrapper: React.FC = ({ children }) => {
+export const TableDropzoneWrapper: React.FC<
+  React.PropsWithChildren<unknown>
+> = ({ children }) => {
   const { uploadFiles } = useStorageFiles();
 
   const { getInputProps, getRootProps, isDragActive } = useDropzone({

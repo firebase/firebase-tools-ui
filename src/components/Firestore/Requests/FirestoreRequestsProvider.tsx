@@ -34,7 +34,9 @@ const firestoreRequestsContext = React.createContext<
   FirestoreRequestsState | undefined
 >(undefined);
 
-export const FirestoreRequestsProvider: React.FC = ({ children }) => {
+export const FirestoreRequestsProvider: React.FC<
+  React.PropsWithChildren<unknown>
+> = ({ children }) => {
   const [requests, setRequests] = useState<FirestoreRulesEvaluation[]>();
   const config = useConfigOptional();
   const projectId = config?.projectId;
@@ -84,9 +86,11 @@ export const FirestoreRequestsProvider: React.FC = ({ children }) => {
   );
 };
 
-export const TestFirestoreRequestsProvider: React.FC<{
-  state: FirestoreRequestsState;
-}> = ({ state, children }) => {
+export const TestFirestoreRequestsProvider: React.FC<
+  React.PropsWithChildren<{
+    state: FirestoreRequestsState;
+  }>
+> = ({ state, children }) => {
   return (
     <firestoreRequestsContext.Provider value={state}>
       {children}

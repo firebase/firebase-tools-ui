@@ -32,11 +32,13 @@ function dateToLocale(date: Date): string {
 }
 
 // TODO: update to a date-picker that potentially supports time-zones
-const TimestampEditor: React.FC<{
-  value: firebase.firestore.Timestamp;
-  onChange: (value: firebase.firestore.Timestamp) => void;
-  name: string;
-}> = ({ value, onChange, name }) => {
+const TimestampEditor: React.FC<
+  React.PropsWithChildren<{
+    value: firebase.firestore.Timestamp;
+    onChange: (value: firebase.firestore.Timestamp) => void;
+    name: string;
+  }>
+> = ({ value, onChange, name }) => {
   const [date, setDate] = useState(value.toDate());
 
   const {

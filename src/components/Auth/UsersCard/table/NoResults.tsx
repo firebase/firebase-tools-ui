@@ -19,7 +19,7 @@ import React from 'react';
 
 import styles from './UsersTable.module.scss';
 
-export const NoResults: React.FC = () => {
+export const NoResults: React.FC<React.PropsWithChildren<unknown>> = () => {
   return (
     <Typography
       use="body2"

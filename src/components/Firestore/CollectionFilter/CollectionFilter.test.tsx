@@ -136,7 +136,9 @@ it('supports multi-value operators', async () => {
   );
 });
 
-const StorePreview: React.FC<{ path: string }> = ({ path }) => {
+const StorePreview: React.FC<React.PropsWithChildren<{ path: string }>> = ({
+  path,
+}) => {
   const collectionFilter = useCollectionFilter(path);
 
   return (

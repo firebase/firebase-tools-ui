@@ -28,7 +28,7 @@ describe('Table', () => {
 
   async function setup() {
     const selectFile = jest.fn();
-    const FakeComponent: React.FC = () => {
+    const FakeComponent: React.FC<React.PropsWithChildren<unknown>> = () => {
       const selection = useMultiselect([fileName, file2, file3]);
       return (
         <StorageTable

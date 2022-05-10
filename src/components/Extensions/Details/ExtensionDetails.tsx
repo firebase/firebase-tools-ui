@@ -23,7 +23,9 @@ import { ExtensionFeatureBar } from '../List/FeatureBar';
 import { DetailsCard } from './DetailCard/DetailsCard';
 import { DetailsHeader } from './DetailsHeader';
 
-export const ExtensionDetails: React.FC = () => {
+export const ExtensionDetails: React.FC<
+  React.PropsWithChildren<unknown>
+> = () => {
   const extension = useExtension();
 
   // Redirect to list-view if there is no matching instance-id

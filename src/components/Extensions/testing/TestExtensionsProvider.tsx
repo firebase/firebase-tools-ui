@@ -15,7 +15,7 @@
  */
 
 import React, { Suspense } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom-v5-compat';
 
 import { Config } from '../../../store/config';
 import { TestEmulatorConfigProvider } from '../../common/EmulatorConfigProvider';
@@ -23,10 +23,12 @@ import { InstanceIdProvider } from '../api/useExtension';
 import { ExtensionsProvider } from '../api/useExtensions';
 import { Extension } from '../models';
 
-export const TestExtensionsProvider: React.FC<{
-  instanceId?: string;
-  extensions?: Extension[];
-}> = ({ children, instanceId, extensions = [] }) => {
+export const TestExtensionsProvider: React.FC<
+  React.PropsWithChildren<{
+    instanceId?: string;
+    extensions?: Extension[];
+  }>
+> = ({ children, instanceId, extensions = [] }) => {
   const pagePath = `/extensions${instanceId ? `/${instanceId}` : ''}`;
   const emulatorConfig: Config = {
     projectId: 'example',

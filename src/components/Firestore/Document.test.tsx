@@ -187,10 +187,12 @@ it('shows the selected document-collection when there are collection and documen
   expect(getByText(/eggs/)).not.toBeNull();
 });
 
-const TestDeleteComponent: React.FC<{
-  docRef: firebase.firestore.DocumentReference;
-  nestedDocRef: firebase.firestore.DocumentReference;
-}> = ({ docRef, nestedDocRef }) => {
+const TestDeleteComponent: React.FC<
+  React.PropsWithChildren<{
+    docRef: firebase.firestore.DocumentReference;
+    nestedDocRef: firebase.firestore.DocumentReference;
+  }>
+> = ({ docRef, nestedDocRef }) => {
   const [nestedDocExists, setNestedDocExists] = useState(false);
 
   useEffect(() => {

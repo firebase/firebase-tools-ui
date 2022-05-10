@@ -31,7 +31,9 @@ type Props = {
   routes: ReadonlyArray<Route>;
 };
 
-export const AppBar: React.FC<Props> = ({ routes }) => {
+export const AppBar: React.FC<React.PropsWithChildren<Props>> = ({
+  routes,
+}) => {
   let location = useLocation();
 
   const navRoutes = routes.filter((r) => r.showInNav);

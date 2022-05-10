@@ -26,7 +26,10 @@ import { confirmClearAll } from './confirmClearAllData';
 import styles from './UsersCard.module.scss';
 
 export type Props = PropsFromState & PropsFromDispatch;
-export const ClearAll: React.FC<Props> = ({ hasUsers, clearAllData }) => {
+export const ClearAll: React.FC<React.PropsWithChildren<Props>> = ({
+  hasUsers,
+  clearAllData,
+}) => {
   return (
     <>
       {hasUsers && (

@@ -39,7 +39,7 @@ interface Props extends DialogProps {
   onConfirm: (options: DeleteDocumentOptions) => void;
 }
 
-export const DeleteDocumentDialog: React.FC<Props> = ({
+export const DeleteDocumentDialog: React.FC<React.PropsWithChildren<Props>> = ({
   documentRef,
   onConfirm,
   onClose,

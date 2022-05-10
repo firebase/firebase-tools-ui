@@ -25,9 +25,9 @@ export interface ProviderCellProps {
   user: AuthUser;
 }
 
-export const ProviderCell: React.FC<ProviderCellProps> = ({
-  user,
-}: ProviderCellProps) => {
+export const ProviderCell: React.FC<
+  React.PropsWithChildren<ProviderCellProps>
+> = ({ user }: ProviderCellProps) => {
   return (
     <Theme use="secondary">
       <div className={styles.iconWrapper}>

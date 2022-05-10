@@ -24,7 +24,7 @@ import { ExternalLink } from '../../../../common/links/ExternalLink';
 import { useExtension } from '../../../api/useExtension';
 import styles from './RelatedLinks.module.scss';
 
-export const RelatedLinks: React.FC = () => {
+export const RelatedLinks: React.FC<React.PropsWithChildren<unknown>> = () => {
   const extension = useExtension()!;
 
   return (

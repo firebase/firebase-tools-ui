@@ -99,16 +99,18 @@ export function supportsEditing(value: FirestoreAny): boolean {
  *     once a field has been persisted via the SDK.
  * areRootFielsMutable: can a root field be added/removed.
  */
-const DocumentEditor: React.FC<{
-  value: FirestoreAny;
-  onChange?: (value?: FirestoreMap) => void;
-  areRootNamesMutable?: boolean;
-  areRootFieldsMutable?: boolean;
-  rtdb?: boolean;
-  startingIndex?: number;
-  supportNestedArrays?: boolean;
-  firestore?: firebase.firestore.Firestore;
-}> = ({
+const DocumentEditor: React.FC<
+  React.PropsWithChildren<{
+    value: FirestoreAny;
+    onChange?: (value?: FirestoreMap) => void;
+    areRootNamesMutable?: boolean;
+    areRootFieldsMutable?: boolean;
+    rtdb?: boolean;
+    startingIndex?: number;
+    supportNestedArrays?: boolean;
+    firestore?: firebase.firestore.Firestore;
+  }>
+> = ({
   value,
   onChange,
   areRootNamesMutable,
@@ -166,15 +168,17 @@ const DocumentEditor: React.FC<{
 /**
  * Field with call-to-actions for editing as well as rendering applicable child-nodes
  */
-const FieldEditor: React.FC<{
-  uuid: number;
-  isRtdb: boolean;
-  areNamesMutable?: boolean;
-  areFieldsMutable?: boolean;
-  startingIndex?: number;
-  supportNestedArrays?: boolean;
-  isJson?: boolean;
-}> = ({
+const FieldEditor: React.FC<
+  React.PropsWithChildren<{
+    uuid: number;
+    isRtdb: boolean;
+    areNamesMutable?: boolean;
+    areFieldsMutable?: boolean;
+    startingIndex?: number;
+    supportNestedArrays?: boolean;
+    isJson?: boolean;
+  }>
+> = ({
   uuid,
   isRtdb,
   areNamesMutable = true,
@@ -355,10 +359,12 @@ const FieldEditor: React.FC<{
   }
 };
 
-const ChildTypeSelect: React.FC<{
-  uuid: number;
-  allowedTypes: FieldType[];
-}> = ({ uuid, allowedTypes }) => {
+const ChildTypeSelect: React.FC<
+  React.PropsWithChildren<{
+    uuid: number;
+    allowedTypes: FieldType[];
+  }>
+> = ({ uuid, allowedTypes }) => {
   const field = useField(uuid);
   const dispatch = useDispatch();
 
@@ -377,12 +383,14 @@ const ChildTypeSelect: React.FC<{
   );
 };
 
-const NameEditor: React.FC<{
-  uuid: number;
-  field: MapField;
-  childId: number;
-  readonly: boolean;
-}> = ({ uuid, field, childId, readonly }) => {
+const NameEditor: React.FC<
+  React.PropsWithChildren<{
+    uuid: number;
+    field: MapField;
+    childId: number;
+    readonly: boolean;
+  }>
+> = ({ uuid, field, childId, readonly }) => {
   const {
     register,
     unregister,
