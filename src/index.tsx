@@ -25,8 +25,8 @@ import { ThemeProvider } from '@rmwc/theme';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
-import { Route, Switch } from 'react-router-dom';
-import { BrowserRouter, CompatRouter } from 'react-router-dom-v5-compat';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { CompatRouter } from 'react-router-dom-v5-compat';
 
 import { background, primary, secondary } from './colors';
 import App from './components/App';
@@ -52,29 +52,29 @@ const RouterWithInit = () => {
 const container = document.getElementById('root');
 const root = createRoot(container!);
 
+// TODO: re-enable strict-mode when upgraded to react-router@6
+// https://github.com/remix-run/react-router/issues/7870
 root.render(
-  <React.StrictMode>
-    <RMWCProvider
-      // Globally disable ripples
-      ripple={false}
+  <RMWCProvider
+    // Globally disable ripples
+    ripple={false}
+  >
+    <ThemeProvider
+      options={{
+        background,
+        primary,
+        primaryRgb: '104, 29, 168',
+        secondary,
+        error,
+      }}
     >
-      <ThemeProvider
-        options={{
-          background,
-          primary,
-          primaryRgb: '104, 29, 168',
-          secondary,
-          error,
-        }}
-      >
-        <EmulatorConfigProvider refreshInterval={2000}>
-          <FirestoreRequestsProvider>
-            {/* <Provider store={store}> */}
+      <EmulatorConfigProvider refreshInterval={2000}>
+        <FirestoreRequestsProvider>
+          <Provider store={store}>
             <RouterWithInit />
-            {/* </Provider> */}
-          </FirestoreRequestsProvider>
-        </EmulatorConfigProvider>
-      </ThemeProvider>
-    </RMWCProvider>
-  </React.StrictMode>
+          </Provider>
+        </FirestoreRequestsProvider>
+      </EmulatorConfigProvider>
+    </ThemeProvider>
+  </RMWCProvider>
 );
