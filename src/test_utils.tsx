@@ -21,7 +21,6 @@ import {
   render,
   screen,
   waitFor,
-  waitForElement,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import React from 'react';
