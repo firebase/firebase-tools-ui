@@ -87,10 +87,14 @@ describe('loaded document', () => {
   it('updates a field-value', () => {
     const { getByLabelText, getByText } = result;
 
-    getByText('edit').click();
+    act(() => {
+      getByText('edit').click();
+    });
+
     fireEvent.change(getByLabelText('Value'), {
       target: { value: 'new' },
     });
+
     fireEvent.submit(getByText('Save'));
 
     expect(documentReference.update).toHaveBeenCalledWith(
@@ -112,7 +116,7 @@ describe('loaded document', () => {
   });
 
   it('does not show `add` a field', () => {
-    const { getByText, queryAllByText } = result;
+    const { queryAllByText } = result;
 
     expect(queryAllByText('add').length).toBe(1);
   });
@@ -141,7 +145,7 @@ describe('missing document', () => {
   it('calls ref.set() when adding a field', async () => {
     const { queryByText, getByText, getByLabelText } = result;
 
-    await act(async () => getByText('Add field').click());
+    act(() => getByText('Add field').click());
 
     act(() => {
       fireEvent.change(getByLabelText('Field'), {
@@ -282,7 +286,9 @@ describe('loaded array', () => {
   it('updates a top-level array element', () => {
     const { getByLabelText, getByText, queryAllByText } = result;
     // update the bravo-element
-    queryAllByText('edit')[1].click();
+    act(() => {
+      queryAllByText('edit')[1].click();
+    });
     fireEvent.change(getByLabelText('Value'), {
       target: { value: 'new' },
     });
@@ -299,7 +305,9 @@ describe('loaded array', () => {
   it('adds a top-level array element', () => {
     const { getByLabelText, getByText, queryAllByText } = result;
     // ignore top-level add
-    queryAllByText('add')[1].click();
+    act(() => {
+      queryAllByText('add')[1].click();
+    });
 
     expect(getByLabelText('Index').value).toBe('3');
 
@@ -355,7 +363,9 @@ describe('loaded map', () => {
     expect(getByText('first_name')).not.toBe(null);
     expect(getByText('last_name')).not.toBe(null);
 
-    getByText('{first_name: "harry", last_name: "potter"}').click();
+    act(() => {
+      getByText('{first_name: "harry", last_name: "potter"}').click();
+    });
 
     expect(queryByText('first_name')).toBe(null);
     expect(queryByText('last_name')).toBe(null);
@@ -372,18 +382,14 @@ describe('loaded map', () => {
   it('updates a map element', async () => {
     const { getByLabelText, getByText, queryAllByText } = result;
 
-    await act(async () => {
+    act(() => {
       // Edit first-name
       queryAllByText('edit')[0].click();
     });
-    await act(async () => {
-      fireEvent.change(getByLabelText('Value'), {
-        target: { value: 'new' },
-      });
+    fireEvent.change(getByLabelText('Value'), {
+      target: { value: 'new' },
     });
-    await act(async () => {
-      fireEvent.submit(getByText('Save'));
-    });
+    fireEvent.submit(getByText('Save'));
     expect(documentReference.update).toHaveBeenCalledWith(
       new firestore.FieldPath('foo', 'first_name'),
       'new'
@@ -393,7 +399,9 @@ describe('loaded map', () => {
   it('adds a map element', () => {
     const { getByLabelText, getByText, queryAllByText } = result;
     // ignore top-level add
-    queryAllByText('add')[1].click();
+    act(() => {
+      queryAllByText('add')[1].click();
+    });
     fireEvent.change(getByLabelText('Field'), {
       target: { value: 'wow' },
     });
