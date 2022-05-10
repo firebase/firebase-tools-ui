@@ -16,6 +16,8 @@
 import { useEmulatorConfig } from '../../../common/EmulatorConfigProvider';
 
 export function useFunctionsEmulator() {
+  console.log('hiya');
   const config = useEmulatorConfig('extensions');
+  console.log({ config });
   return `http://${config.hostAndPort}`;
 }

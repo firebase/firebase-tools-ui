@@ -64,9 +64,11 @@ export function useOnChangePromise<T>(data: T): Promise<T> {
 export const EmulatorConfigProvider: React.FC<
   React.PropsWithChildren<{ refreshInterval: number }>
 > = ({ refreshInterval, children }) => {
+  console.log({ refreshInterval });
+
   // We don't use suspense here since the provider should never be suspended --
   // it merely creates a context for hooks (e.g. useConfig) who do suspend.
-  const { data } = useSwr<Config | null>(CONFIG_API, configFetcher, {
+  const { data, error } = useSwr<Config | null>(CONFIG_API, configFetcher, {
     // Keep refreshing config to detect when emulators are stopped or restarted
     // with a different config (e.g. different emulators or host / ports).
     refreshInterval,
@@ -93,6 +95,8 @@ export const EmulatorConfigProvider: React.FC<
       }
     },
   });
+
+  console.log({ data, error });
 
   const promise = useOnChangePromise(data);
 
@@ -128,6 +132,7 @@ export const TestEmulatorConfigProvider: React.FC<
 
 export function useConfig(): Config {
   const context = React.useContext(emulatorConfigContext);
+  console.log(context);
   if (context === undefined) {
     throw new Error('useConfig must be used within a <EmulatorConfigProvider>');
   }
@@ -146,7 +151,9 @@ export function useEmulatorConfig<E extends Emulator>(
   emulator: E
 ): NonNullable<Config[E]> {
   const config = useConfig();
+  console.log({ config });
   const emulatorConfig = config[emulator];
+  console.log({ emulatorConfig });
   const promise = useOnChangePromise(emulatorConfig);
   if (emulatorConfig === undefined) {
     // Emulator Suite is running, but the specified emulator is not running.
