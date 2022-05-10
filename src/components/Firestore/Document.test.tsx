@@ -15,7 +15,11 @@
  */
 
 import { Portal } from '@rmwc/base';
-import { act, waitFor } from '@testing-library/react';
+import {
+  act,
+  waitFor,
+  waitForElementToBeRemoved,
+} from '@testing-library/react';
 import firebase from 'firebase';
 import React, { useEffect, useState } from 'react';
 import { Route } from 'react-router-dom';
@@ -154,6 +158,7 @@ it('shows the selected document-collection', async () => {
     }
   );
 
+  await waitForElementToBeRemoved(() => getByText(/Loading collection$/));
   await waitFor(() => getAllByTestId('collection-list').length > 1);
 
   expect(getAllByTestId('collection-list').length).toBe(2);
@@ -181,6 +186,7 @@ it('shows the selected document-collection when there are collection and documen
     }
   );
 
+  await waitForElementToBeRemoved(() => getByText(/Loading collection$/));
   await waitFor(() => getAllByTestId('collection-list').length > 1);
 
   expect(getAllByTestId('collection-list').length).toBe(2);
