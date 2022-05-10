@@ -30,7 +30,7 @@ export const StorageFirebaseAppProvider: React.FC<
     'storage',
     FIREBASE_APP_OPTIONS,
     useCallback(
-      (app) => {
+      (app: any) => {
         app.storage().useEmulator(host, port);
       },
       [host, port]

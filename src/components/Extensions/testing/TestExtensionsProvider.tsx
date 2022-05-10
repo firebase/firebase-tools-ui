@@ -15,7 +15,7 @@
  */
 
 import React, { Suspense } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom-v5-compat';
 
 import { Config } from '../../../store/config';
 import { TestEmulatorConfigProvider } from '../../common/EmulatorConfigProvider';

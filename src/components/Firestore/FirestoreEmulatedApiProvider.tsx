@@ -44,7 +44,7 @@ export const FirestoreEmulatedApiProvider: React.FC<
     'firestore',
     FIRESTORE_OPTIONS,
     useCallback(
-      (app) => {
+      (app: any) => {
         app.firestore().useEmulator(config.host, config.port);
       },
       [config]

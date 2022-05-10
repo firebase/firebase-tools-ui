@@ -54,7 +54,7 @@ export const BreadCrumbs: React.FC<React.PropsWithChildren<Props>> = ({
       <li className="BreadCrumbs-crumb BreadCrumbs-homeCrumb">
         <Link to={base}>
           <Typography use="body2" theme="secondary">
-            {homeElement}
+            <>{homeElement}</>
           </Typography>
         </Link>
       </li>

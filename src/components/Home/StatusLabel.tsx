@@ -15,6 +15,7 @@
  */
 
 import { Icon } from '@rmwc/icon';
+import { IconSizeT } from '@rmwc/types';
 import { Typography } from '@rmwc/typography';
 import React from 'react';
 
@@ -23,12 +24,12 @@ import styles from './StatusLabel.module.scss';
 
 const ACTIVE_ICON = {
   icon: 'check_circle',
-  size: 'xsmall',
+  size: 'small' as IconSizeT,
 };
 
 const INACTIVE_ICON = {
   icon: 'block',
-  size: 'xsmall',
+  size: 'xsmall' as IconSizeT,
 };
 
 /** A basic On/Off label with icon */

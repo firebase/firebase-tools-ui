@@ -15,7 +15,7 @@
  */
 
 import { Icon, IconProps } from '@rmwc/icon';
-import { ComponentProps } from '@rmwc/types';
+import { ComponentProps, IconSizeT } from '@rmwc/types';
 import React from 'react';
 
 // Firebase products from https://firebase.google.com/brand-guidelines?hl=en
@@ -165,7 +165,7 @@ function svgIcon(
   svgElement: JSX.Element
 ): React.FC<
   React.PropsWithChildren<
-    { size?: string } & ComponentProps<Omit<IconProps, 'size'>, {}, 'svg'>
+    { size?: IconSizeT } & ComponentProps<Omit<IconProps, 'size'>, {}, 'svg'>
   >
 > {
   return ({ size = 'small', ...props }) => {

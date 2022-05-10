@@ -77,7 +77,11 @@ export const HighlightedJSON: React.FC<React.PropsWithChildren<Props>> = ({
   const lines = JSON.stringify(data, null, 2).split('\n');
 
   if (lines.length === 1)
-    return <div className="log-message-single">{data}</div>;
+    return (
+      <div className="log-message-single">
+        <>{data}</>
+      </div>
+    );
 
   let isObject = false;
 

@@ -17,7 +17,7 @@
 import { render } from '@testing-library/react';
 import firebase from 'firebase';
 import React, { Suspense, useEffect, useState } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom-v5-compat';
 import { useFirestore } from 'reactfire';
 
 import { AppState } from '../../../store';
