@@ -40,19 +40,26 @@ export interface Props {
   reference?: firebase.firestore.DocumentReference;
 }
 
-export const RootCollectionList: React.FC = () => {
+export const RootCollectionList: React.FC<
+  React.PropsWithChildren<unknown>
+> = () => {
   const rootCollections = useRootCollections();
   return <CollectionList collections={rootCollections} />;
 };
 
-export const SubCollectionList: React.FC<{
-  reference: firebase.firestore.DocumentReference;
-}> = ({ reference }) => {
+export const SubCollectionList: React.FC<
+  React.PropsWithChildren<{
+    reference: firebase.firestore.DocumentReference;
+  }>
+> = ({ reference }) => {
   const subCollections = useSubCollections(reference);
   return <CollectionList collections={subCollections} reference={reference} />;
 };
 
-const CollectionList: React.FC<Props> = ({ collections, reference }) => {
+const CollectionList: React.FC<React.PropsWithChildren<Props>> = ({
+  collections,
+  reference,
+}) => {
   const { url } = useRouteMatch()!;
   const history = useHistory();
   const firestore = useFirestore();
@@ -127,10 +134,12 @@ const CollectionList: React.FC<Props> = ({ collections, reference }) => {
   );
 };
 
-export const CollectionListItem: React.FC<{
-  collectionId: string;
-  routeMatchUrl: string;
-}> = ({ collectionId, routeMatchUrl }) => {
+export const CollectionListItem: React.FC<
+  React.PropsWithChildren<{
+    collectionId: string;
+    routeMatchUrl: string;
+  }>
+> = ({ collectionId, routeMatchUrl }) => {
   return (
     <ListItem
       key={collectionId}

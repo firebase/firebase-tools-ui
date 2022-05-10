@@ -69,7 +69,7 @@ export interface Props {
   compiledGetters: CompiledGetterCache;
 }
 
-export const HighlightedJSON: React.FC<Props> = ({
+export const HighlightedJSON: React.FC<React.PropsWithChildren<Props>> = ({
   data,
   appendToQuery,
   compiledGetters,

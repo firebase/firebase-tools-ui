@@ -25,10 +25,9 @@ import { HighlightedJSON } from './HighlightedJSON';
 import { ParsedQuery, filtersToQueryString, isQueryMatch } from './QueryBar';
 import { LogEntry } from './types';
 
-const FilterTag: React.FC<{ appendToQuery: Function; log: LogEntry }> = ({
-  appendToQuery,
-  log,
-}) => {
+const FilterTag: React.FC<
+  React.PropsWithChildren<{ appendToQuery: Function; log: LogEntry }>
+> = ({ appendToQuery, log }) => {
   const metadata = log.data.metadata;
   let tagButton;
 
@@ -83,7 +82,7 @@ interface Props {
 
 const MAX_LOG_LINES = 100;
 
-export const History: React.FC<Props> = ({
+export const History: React.FC<React.PropsWithChildren<Props>> = ({
   parsedQuery,
   setQuery,
   logs,

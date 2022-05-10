@@ -28,7 +28,7 @@ import { storagePath } from './common/constants';
 import styles from './index.module.scss';
 import { StorageFirebaseAppProvider } from './providers/StorageFirebaseAppProvider';
 
-export const Storage: React.FC = () => {
+export const Storage: React.FC<React.PropsWithChildren<unknown>> = () => {
   return (
     <Suspense fallback={<StorageRouteSuspended />}>
       <StorageRoute>
@@ -38,7 +38,9 @@ export const Storage: React.FC = () => {
   );
 };
 
-export const StorageWrapper: React.FC = () => {
+export const StorageWrapper: React.FC<
+  React.PropsWithChildren<unknown>
+> = () => {
   return (
     <StorageFirebaseAppProvider>
       <GridCell span={12} className={styles.storageWrapper}>
@@ -51,7 +53,9 @@ export const StorageWrapper: React.FC = () => {
   );
 };
 
-export const StorageRoute: React.FC = ({ children }) => {
+export const StorageRoute: React.FC<React.PropsWithChildren<unknown>> = ({
+  children,
+}) => {
   const [bucket] = useBuckets();
 
   return (
@@ -66,7 +70,9 @@ export const StorageRoute: React.FC = ({ children }) => {
   );
 };
 
-const StorageRouteSuspended: React.FC = () => {
+const StorageRouteSuspended: React.FC<
+  React.PropsWithChildren<unknown>
+> = () => {
   const isDisabled = useIsEmulatorDisabled('storage');
   return isDisabled ? (
     <EmulatorDisabled productName="Storage" />

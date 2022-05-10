@@ -18,7 +18,9 @@ import { Icon } from '@rmwc/icon';
 import { IconSizeT } from '@rmwc/types';
 import React from 'react';
 
-export const FirestoreLogo: React.FC<{ size?: IconSizeT }> = ({ size }) => {
+export const FirestoreLogo: React.FC<
+  React.PropsWithChildren<{ size?: IconSizeT }>
+> = ({ size }) => {
   return (
     <Icon
       icon={{

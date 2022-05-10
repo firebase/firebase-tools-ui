@@ -29,12 +29,14 @@ import styles from './DocumentListItem.module.scss';
 import { FirestoreAny } from './models';
 import { summarize } from './utils';
 
-const DocumentListItem: React.FC<{
-  docId: string;
-  url: string;
-  queryFieldValue: FirestoreAny | undefined;
-  missing?: boolean;
-}> = ({ docId, url, queryFieldValue, missing }) => {
+const DocumentListItem: React.FC<
+  React.PropsWithChildren<{
+    docId: string;
+    url: string;
+    queryFieldValue: FirestoreAny | undefined;
+    missing?: boolean;
+  }>
+> = ({ docId, url, queryFieldValue, missing }) => {
   const maxSummaryLen = 20;
 
   const listItemClass = classNames('Firestore-List-Item', {

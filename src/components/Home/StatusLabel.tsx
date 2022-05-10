@@ -32,9 +32,11 @@ const INACTIVE_ICON = {
 };
 
 /** A basic On/Off label with icon */
-export const StatusLabel: React.FC<{
-  isActive: boolean;
-}> = ({ isActive }) => {
+export const StatusLabel: React.FC<
+  React.PropsWithChildren<{
+    isActive: boolean;
+  }>
+> = ({ isActive }) => {
   return (
     <CustomThemeProvider use={isActive ? 'success' : 'note'} wrap>
       <Typography

@@ -20,7 +20,9 @@ import { MapDispatchToPropsFunction, connect } from 'react-redux';
 
 import { authFetchUsersRequest } from '../../../../store/auth/actions';
 
-export const RefreshButton: React.FC<PropsFromDispatch> = ({ refresh }) => {
+export const RefreshButton: React.FC<
+  React.PropsWithChildren<PropsFromDispatch>
+> = ({ refresh }) => {
   return (
     <IconButton
       onClick={refresh}

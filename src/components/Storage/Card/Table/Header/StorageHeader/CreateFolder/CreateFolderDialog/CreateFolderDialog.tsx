@@ -34,11 +34,9 @@ interface NewFolderDialogProps {
 // This is the limit on the back-end.
 const MAX_FOLDER_NAME_LENGTH = 252;
 
-export const CreateFolderDialog: React.FC<NewFolderDialogProps> = ({
-  confirm,
-  isOpen,
-  close,
-}) => {
+export const CreateFolderDialog: React.FC<
+  React.PropsWithChildren<NewFolderDialogProps>
+> = ({ confirm, isOpen, close }) => {
   const [name, setName] = useReducer(
     (s: string, value: string) => value.trim(),
     ''

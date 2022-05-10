@@ -19,7 +19,9 @@ import React from 'react';
 
 import { useIsEmulatorDisabled } from '../common/EmulatorConfigProvider';
 
-export const AppDisconnected: React.FC = () => {
+export const AppDisconnected: React.FC<
+  React.PropsWithChildren<unknown>
+> = () => {
   const disabled = useIsEmulatorDisabled();
   if (!disabled) {
     return null;

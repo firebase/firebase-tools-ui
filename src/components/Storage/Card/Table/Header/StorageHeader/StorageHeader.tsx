@@ -27,7 +27,7 @@ import { CreateFolder } from './CreateFolder/CreateFolder';
 import styles from './StorageHeader.module.scss';
 import { UploadButton } from './UploadButton/UploadButton';
 
-export const StorageHeader: React.FC = () => {
+export const StorageHeader: React.FC<React.PropsWithChildren<unknown>> = () => {
   const [path, setPath] = usePath();
   const [bucket] = useBucket();
 

@@ -123,7 +123,7 @@ function applyAdminAuth(app: firebase.app.App): void {
         },
         removeAuthTokenListener: () => {},
       } as FirebaseAuthInternal),
-    'PRIVATE' as ComponentType
+    'PRIVATE' as ComponentType<React.PropsWithChildren<unknown>>
   );
 
   ((app as unknown) as _FirebaseApp)._addOrOverwriteComponent(

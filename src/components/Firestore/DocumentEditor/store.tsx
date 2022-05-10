@@ -163,10 +163,12 @@ export const storeReducer: React.Reducer<Store, Action> = (state, action) => {
   return (reducer.handlers as any)[action.type](state, action);
 };
 
-export const DocumentStore: React.FC<{
-  store: Store;
-  dispatch: React.Dispatch<Action>;
-}> = ({ store, dispatch, children }) => {
+export const DocumentStore: React.FC<
+  React.PropsWithChildren<{
+    store: Store;
+    dispatch: React.Dispatch<Action>;
+  }>
+> = ({ store, dispatch, children }) => {
   return (
     <documentStoreContext.Provider value={{ store, dispatch }}>
       {children}

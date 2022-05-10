@@ -164,7 +164,9 @@ export const HintIcon = svgIcon(
 function svgIcon(
   svgElement: JSX.Element
 ): React.FC<
-  { size?: string } & ComponentProps<Omit<IconProps, 'size'>, {}, 'svg'>
+  React.PropsWithChildren<
+    { size?: string } & ComponentProps<Omit<IconProps, 'size'>, {}, 'svg'>
+  >
 > {
   return ({ size = 'small', ...props }) => {
     return (

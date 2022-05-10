@@ -22,7 +22,7 @@ import JsonEditor from './JsonEditor';
 
 const GOOD_PATH = '/wow/cool';
 
-const TestForm: React.FC = ({ children }) => {
+const TestForm: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
   const methods = useForm();
   return <FormContext {...methods}>{children}</FormContext>;
 };

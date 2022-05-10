@@ -20,7 +20,9 @@ import { Router } from 'react-router-dom';
 
 import { StorageRoute } from '../index';
 
-export const FakeFirebaseRouterProvider: React.FC = ({ children }) => {
+export const FakeFirebaseRouterProvider: React.FC<
+  React.PropsWithChildren<unknown>
+> = ({ children }) => {
   const history = createMemoryHistory({
     initialEntries: [`/storage/`],
   });

@@ -20,7 +20,7 @@ import { FormContext, useForm } from 'react-hook-form';
 
 import NumberEditor from './NumberEditor';
 
-const TestForm: React.FC = ({ children }) => {
+const TestForm: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
   const methods = useForm();
   return <FormContext {...methods}>{children}</FormContext>;
 };

@@ -37,7 +37,7 @@ interface Props {
   isMainBlock?: boolean;
 }
 
-export const InspectionBlock: React.FC<Props> = ({
+export const InspectionBlock: React.FC<React.PropsWithChildren<Props>> = ({
   label,
   value,
   isMainBlock,

@@ -25,7 +25,9 @@ import { useExtensionsData } from './useExtensionsData';
 describe('useExtensionsData', () => {
   it('returns the list of extension row extensions', async () => {
     mockExtensionBackends(BACKEND_LIST);
-    const wrapper: React.FC = ({ children }) => {
+    const wrapper: React.FC<React.PropsWithChildren<unknown>> = ({
+      children,
+    }) => {
       return (
         <TestEmulatorConfigProvider config={CONFIG_WITH_EXTENSION}>
           <Suspense fallback={null}>{children}</Suspense>

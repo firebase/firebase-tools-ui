@@ -20,11 +20,13 @@ import { useFormContext } from 'react-hook-form';
 import { Field } from '../../common/Field';
 import { FirestoreAny } from '../models';
 
-const JsonEditor: React.FC<{
-  value: FirestoreAny;
-  onChange: (value: FirestoreAny) => void;
-  name: string;
-}> = ({ value, onChange, name }) => {
+const JsonEditor: React.FC<
+  React.PropsWithChildren<{
+    value: FirestoreAny;
+    onChange: (value: FirestoreAny) => void;
+    name: string;
+  }>
+> = ({ value, onChange, name }) => {
   const [initialValue] = useState(JSON.stringify(value));
   const {
     errors,

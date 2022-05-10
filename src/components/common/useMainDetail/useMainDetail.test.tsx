@@ -38,7 +38,7 @@ const mainDetailConfig = {
 
 describe('useMainDetail', () => {
   function setup() {
-    const Wrapper: React.FC = () => {
+    const Wrapper: React.FC<React.PropsWithChildren<unknown>> = () => {
       const { tabs, content } = useMainDetail(mainDetailConfig);
       return (
         <div>

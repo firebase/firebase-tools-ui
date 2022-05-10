@@ -30,7 +30,9 @@ export type SignInMethodProps = {
   user?: AddAuthUserPayload;
 };
 export const SignInMethod: React.FC<
-  SignInMethodProps & FormContextValues<AddAuthUserPayload>
+  React.PropsWithChildren<
+    SignInMethodProps & FormContextValues<AddAuthUserPayload>
+  >
 > = (form) => {
   const { watch, setError, clearError, formState, errors, user } = form;
   const email = watch('email');

@@ -21,7 +21,7 @@ import React from 'react';
 
 export const NO_RESULTS_MESSAGE = 'No results';
 
-const RequestsNoResults: React.FC = () => {
+const RequestsNoResults: React.FC<React.PropsWithChildren<unknown>> = () => {
   return (
     <Typography
       use="body2"

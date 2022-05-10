@@ -33,7 +33,7 @@ export interface Props {
 
 const EMPTY_KEYS: string[] = [];
 
-export const BreadCrumbs: React.FC<Props> = ({
+export const BreadCrumbs: React.FC<React.PropsWithChildren<Props>> = ({
   base,
   path,
   onEdit,

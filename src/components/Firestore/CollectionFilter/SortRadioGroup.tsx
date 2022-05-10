@@ -18,10 +18,9 @@ import { Radio } from '@rmwc/radio';
 import React, { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-export const SortRadioGroup: React.FC<{ name: string; disabled: boolean }> = ({
-  name,
-  disabled,
-}) => {
+export const SortRadioGroup: React.FC<
+  React.PropsWithChildren<{ name: string; disabled: boolean }>
+> = ({ name, disabled }) => {
   const { register, setValue, unregister, watch } = useFormContext();
 
   useEffect(() => {

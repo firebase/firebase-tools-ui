@@ -34,9 +34,11 @@ const FIRESTORE_OPTIONS = {};
  * Provide a local-FirebaseApp with a FirestoreSDK connected to
  * the Emulator Hub.
  */
-export const FirestoreEmulatedApiProvider: React.FC<{
-  disableDevTools?: boolean;
-}> = React.memo(({ children, disableDevTools }) => {
+export const FirestoreEmulatedApiProvider: React.FC<
+  React.PropsWithChildren<{
+    disableDevTools?: boolean;
+  }>
+> = React.memo(({ children, disableDevTools }) => {
   const config = useEmulatorConfig('firestore');
   const app = useEmulatedFirebaseApp(
     'firestore',
@@ -60,7 +62,9 @@ export const FirestoreEmulatedApiProvider: React.FC<{
   );
 });
 
-const FirestoreDevTools: React.FC = React.memo(() => {
+const FirestoreDevTools: React.FC<
+  React.PropsWithChildren<unknown>
+> = React.memo(() => {
   const firestore = useFirestore();
 
   useEffect(() => {

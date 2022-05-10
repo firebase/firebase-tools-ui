@@ -45,7 +45,7 @@ import { ImageUrlInput } from './controls/ImageUrlInput';
 import { SignInMethod } from './controls/SignInMethod';
 
 export type UserFormProps = PropsFromState & PropsFromDispatch;
-export const UserForm: React.FC<UserFormProps> = ({
+export const UserForm: React.FC<React.PropsWithChildren<UserFormProps>> = ({
   authUserDialogData,
   clearAuthUserDialogData,
   updateUser,

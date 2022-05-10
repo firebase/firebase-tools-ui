@@ -24,10 +24,9 @@ export interface DetailItemCardProps {
   content: JSX.Element | string;
 }
 
-export const DetailItemCard: React.FC<DetailItemCardProps> = ({
-  header,
-  content,
-}: DetailItemCardProps) => {
+export const DetailItemCard: React.FC<
+  React.PropsWithChildren<DetailItemCardProps>
+> = ({ header, content }: DetailItemCardProps) => {
   return (
     <Card className={styles.card}>
       <header className={styles.header}>{header}</header>

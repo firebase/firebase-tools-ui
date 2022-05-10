@@ -24,7 +24,9 @@ const hostAndPort = 'pirojok:689';
 
 describe('useFunctionsEmulator', () => {
   it('returns the emulator URL', () => {
-    const wrapper: React.FC = ({ children }) => {
+    const wrapper: React.FC<React.PropsWithChildren<unknown>> = ({
+      children,
+    }) => {
       return (
         <TestEmulatorConfigProvider
           config={{

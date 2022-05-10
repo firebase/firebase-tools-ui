@@ -45,7 +45,7 @@ import { storagePath } from '../Storage/common/constants';
 import { LocalWarningCallout } from './LocalWarningCallout';
 import { StatusLabel } from './StatusLabel';
 
-export const Home: React.FC = () => {
+export const Home: React.FC<React.PropsWithChildren<unknown>> = () => {
   const config = useConfigOptional();
   if (config === undefined /* initial loading */) {
     return <Spinner span={12} message="Overview Page Loading..." />;
@@ -56,9 +56,11 @@ export const Home: React.FC = () => {
 
 export default Home;
 
-const Overview: React.FC<{
-  config: Partial<Config>;
-}> = ({ config }) => {
+const Overview: React.FC<
+  React.PropsWithChildren<{
+    config: Partial<Config>;
+  }>
+> = ({ config }) => {
   return (
     <GridCell span={12}>
       <GridRow>
@@ -133,15 +135,17 @@ const Overview: React.FC<{
   );
 };
 
-export const EmulatorCard: React.FC<{
-  name: string;
-  icon: React.ReactElement;
-  config: EmulatorConfig | undefined;
-  linkTo?: string;
-  linkToExternal?: string;
-  linkLabel?: string;
-  testId?: string;
-}> = ({ name, icon, config, linkTo, linkLabel, linkToExternal, testId }) => (
+export const EmulatorCard: React.FC<
+  React.PropsWithChildren<{
+    name: string;
+    icon: React.ReactElement;
+    config: EmulatorConfig | undefined;
+    linkTo?: string;
+    linkToExternal?: string;
+    linkLabel?: string;
+    testId?: string;
+  }>
+> = ({ name, icon, config, linkTo, linkLabel, linkToExternal, testId }) => (
   <GridCell span={4}>
     <Card className="Home-EmulatorCard" data-testid={testId}>
       <div className="Home-EmulatorCard-Info">

@@ -37,11 +37,13 @@ import { ConditionEntries } from './ConditionEntries';
 import { ConditionEntry } from './ConditionEntry';
 import { SortRadioGroup } from './SortRadioGroup';
 
-export const CollectionFilter: React.FC<{
-  className?: string;
-  path: string;
-  onClose?: () => void;
-}> = ({ className, path, onClose }) => {
+export const CollectionFilter: React.FC<
+  React.PropsWithChildren<{
+    className?: string;
+    path: string;
+    onClose?: () => void;
+  }>
+> = ({ className, path, onClose }) => {
   const collectionFilter = useCollectionFilter(path);
   const dispatch = useDispatch();
 
@@ -156,7 +158,9 @@ export const CollectionFilter: React.FC<{
   );
 };
 
-const CollectionFilterTheme: React.FC = ({ children }) => (
+const CollectionFilterTheme: React.FC<React.PropsWithChildren<unknown>> = ({
+  children,
+}) => (
   <ThemeProvider options={{ background: grey100, surface: '#fff' }}>
     <Theme use={['background']} tag="div">
       {children}
@@ -164,7 +168,9 @@ const CollectionFilterTheme: React.FC = ({ children }) => (
   </ThemeProvider>
 );
 
-const ConditionPreview: React.FC<{ cf: CollectionFilterType }> = ({ cf }) => {
+const ConditionPreview: React.FC<
+  React.PropsWithChildren<{ cf: CollectionFilterType }>
+> = ({ cf }) => {
   const operator = `"${cf.operator}"`;
   if (isSingleValueCollectionFilter(cf)) {
     return <span>{`${operator}, ${JSON.stringify(cf.value)}`}</span>;
@@ -175,10 +181,9 @@ const ConditionPreview: React.FC<{ cf: CollectionFilterType }> = ({ cf }) => {
   return null;
 };
 
-const Preview: React.FC<{ path: string; cf: CollectionFilterType }> = ({
-  path,
-  cf,
-}) => {
+const Preview: React.FC<
+  React.PropsWithChildren<{ path: string; cf: CollectionFilterType }>
+> = ({ path, cf }) => {
   const collectionId = path.split('/').pop();
   return (
     <code className={styles.preview} aria-label="Code preview">
@@ -198,7 +203,9 @@ const Preview: React.FC<{ path: string; cf: CollectionFilterType }> = ({
   );
 };
 
-const ConditionSelect: React.FC = ({ children }) => {
+const ConditionSelect: React.FC<React.PropsWithChildren<unknown>> = ({
+  children,
+}) => {
   const options: Array<{
     label: string;
     value: firebase.firestore.WhereFilterOp;
@@ -261,11 +268,13 @@ const ConditionSelect: React.FC = ({ children }) => {
 };
 
 // Accordian-view for expanding/collapsing panels in the query-view
-const FilterItem: React.FC<{
-  title: string;
-  preview?: React.ReactNode;
-  defaultOpen: boolean;
-}> = ({ title, preview, defaultOpen, children }) => {
+const FilterItem: React.FC<
+  React.PropsWithChildren<{
+    title: string;
+    preview?: React.ReactNode;
+    defaultOpen: boolean;
+  }>
+> = ({ title, preview, defaultOpen, children }) => {
   const [expanded, setExpanded] = useState(defaultOpen);
 
   return (

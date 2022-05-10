@@ -102,9 +102,11 @@ it('should get sub-collections with special characters inside URI', async () => 
 });
 
 it('should get missing-documents', async () => {
-  const TestResults: React.FC<{
-    collection: firebase.firestore.CollectionReference;
-  }> = ({ collection }) => {
+  const TestResults: React.FC<
+    React.PropsWithChildren<{
+      collection: firebase.firestore.CollectionReference;
+    }>
+  > = ({ collection }) => {
     const documents = useMissingDocuments(collection);
     return (
       <div data-testid="documents">{documents.map((d) => d.path).join()}</div>

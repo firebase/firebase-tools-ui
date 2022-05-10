@@ -34,7 +34,9 @@ describe('useBuckets', () => {
     });
 
     mockBuckets(buckets);
-    const Wrapper: React.FC = ({ children }) => {
+    const Wrapper: React.FC<React.PropsWithChildren<unknown>> = ({
+      children,
+    }) => {
       return (
         <Router history={history}>
           <Route exact path={storagePath + `:bucket/:path*`}>

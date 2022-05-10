@@ -65,7 +65,7 @@ interface Props {
   isAdminRequest: boolean;
 }
 
-const RulesCodeViewer: React.FC<Props> = ({
+const RulesCodeViewer: React.FC<React.PropsWithChildren<Props>> = ({
   firestoreRules,
   linesOutcome,
   isAdminRequest,

@@ -40,7 +40,11 @@ const getPrefix = (ref: firebase.database.Reference) => {
   return base.substring(0, base.length - 1);
 };
 
-export const Database: React.FC<Props> = ({ config, namespace, path }) => {
+export const Database: React.FC<React.PropsWithChildren<Props>> = ({
+  config,
+  namespace,
+  path,
+}) => {
   const [ref, setRef] = useState<firebase.database.Reference | undefined>(
     undefined
   );
@@ -123,10 +127,9 @@ export default Database;
  * Renders child content inside a dropzone that will show a scrim and accept
  * JSON files
  */
-const DatabaseDropZone: React.FC<{ onDrop: (file: File) => void }> = ({
-  onDrop,
-  children,
-}) => {
+const DatabaseDropZone: React.FC<
+  React.PropsWithChildren<{ onDrop: (file: File) => void }>
+> = ({ onDrop, children }) => {
   const {
     getInputProps,
     getRootProps,
