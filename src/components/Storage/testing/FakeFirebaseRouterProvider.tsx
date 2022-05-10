@@ -14,23 +14,17 @@
  * limitations under the License.
  */
 
-import { createMemoryHistory } from 'history';
 import React from 'react';
-import { Router } from 'react-router-dom-v5-compat';
+import { MemoryRouter } from 'react-router-dom-v5-compat';
 
 import { StorageRoute } from '../index';
 
 export const FakeFirebaseRouterProvider: React.FC<
   React.PropsWithChildren<unknown>
 > = ({ children }) => {
-  const history = createMemoryHistory({
-    initialEntries: [`/storage/`],
-  });
-
   return (
-    // TODO
-    // <Router>
-    <StorageRoute>{children}</StorageRoute>
-    // </Router>
+    <MemoryRouter initialEntries={['/storage']}>
+      <StorageRoute>{children}</StorageRoute>
+    </MemoryRouter>
   );
 };
