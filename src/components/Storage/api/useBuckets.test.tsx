@@ -52,7 +52,7 @@ describe('useBuckets', () => {
       wrapper: Wrapper,
     });
 
-    await waitFor(() => delay(0));
+    await waitFor(() => delay(100));
 
     return { buckets: result.current };
   }

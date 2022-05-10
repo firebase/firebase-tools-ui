@@ -40,7 +40,7 @@ describe('useExtensionsData', () => {
       wrapper,
     });
 
-    await waitFor(() => delay(0));
+    await waitFor(() => delay(100));
 
     expect(result.current).toEqual([
       {
