@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook, waitFor } from '@testing-library/react';
 import React, { Suspense } from 'react';
 
+import { delay } from '../../../../test_utils';
 import { mockExtensionBackends } from '../../testing/mockExtensionBackend';
 import { TestExtensionsProvider } from '../../testing/TestExtensionsProvider';
 import { BACKEND_LIST } from '../../testing/utils';
@@ -35,14 +36,13 @@ describe('useExtensionBackends', () => {
       );
     };
 
-    const { result, waitForNextUpdate } = renderHook(
-      () => useExtensionBackends(),
-      {
-        wrapper,
-      }
-    );
+    const { result } = renderHook(() => useExtensionBackends(), {
+      wrapper,
+    });
 
-    await waitForNextUpdate();
+    await waitFor(() => result.current !== null);
+    await waitFor(() => delay(0));
+
     expect(result.current).toEqual([BACKEND_LIST[0], BACKEND_LIST[1]]);
   });
 });
