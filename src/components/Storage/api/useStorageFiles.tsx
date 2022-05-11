@@ -178,6 +178,7 @@ export function useStorageFiles() {
     },
     async deleteAllFiles() {
       await result.mutate([], false);
+      console.log({ count: result.data?.length });
       setPath('');
       await deleteAllFiles();
       await result.mutate();

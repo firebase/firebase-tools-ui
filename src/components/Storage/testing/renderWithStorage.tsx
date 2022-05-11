@@ -41,7 +41,7 @@ export async function renderWithStorage(children: ReactElement) {
   async function waitForNFiles(n: number) {
     await waitFor(
       () => {
-        expect(current.storage.files!.length).toBe(n);
+        return current.storage.files!.length === 0;
       },
       { timeout: 5000 }
     );
