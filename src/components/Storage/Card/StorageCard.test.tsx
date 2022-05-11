@@ -25,7 +25,7 @@ describe('StorageCard', () => {
   const fileName = 'pirojok.txt';
   beforeEach(() => mockTokens());
 
-  it.skip('displays regular header by default', async () => {
+  it('displays regular header by default', async () => {
     const {
       getByText,
       getByLabelText,
@@ -54,9 +54,7 @@ describe('StorageCard', () => {
       <StorageCard />
     );
 
-    await uploadFile(`${fileName}-foo`);
-
-    getByText('foooo');
+    await uploadFile(fileName);
 
     fireEvent.click(getByText(fileName));
 

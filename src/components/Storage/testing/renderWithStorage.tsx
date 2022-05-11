@@ -86,14 +86,14 @@ export async function renderWithStorage(children: ReactElement) {
 
   await waitFor(
     () => {
-      expect(element.queryByTestId(fallbackTestId)).toBeNull();
+      return element.queryByTestId(fallbackTestId) === null;
     },
     { timeout: 5000 }
   );
 
   await deleteAllFiles();
 
-  await waitFor(() => expect(current.storage.files).toBeDefined());
+  await waitFor(() => !current.storage.files);
 
   async function waitForFilesToBeUploaded() {
     return await waitFor(
