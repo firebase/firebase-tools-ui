@@ -43,9 +43,7 @@ describe('StorageCard', () => {
 
     await uploadFile(fileName);
 
-    await act(async () => {
-      await fireEvent.click(getByLabelText(fileName));
-    });
+    fireEvent.click(getByLabelText(fileName));
 
     // Action header
     expect(getByText('1 item(s)')).toBeDefined();
@@ -58,9 +56,7 @@ describe('StorageCard', () => {
 
     await uploadFile(fileName);
 
-    await act(async () => {
-      await fireEvent.click(getByText(fileName));
-    });
+    fireEvent.click(getByText(fileName));
 
     expect(getByRole('complementary')).toBeDefined();
   });

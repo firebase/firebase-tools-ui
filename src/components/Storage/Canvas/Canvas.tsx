@@ -20,7 +20,7 @@ import { BucketPicker } from './BucketPicker/BucketPicker';
 import styles from './Canvas.module.scss';
 import { DeleteAllButton } from './DeleteAllButton/DeleteAllButton';
 
-export const StorageCanvas: React.FC = () => (
+export const StorageCanvas: React.FC<React.PropsWithChildren<unknown>> = () => (
   <div className={styles.canvasWrapper}>
     <BucketPicker />
     <DeleteAllButton />

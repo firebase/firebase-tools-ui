@@ -22,7 +22,9 @@ import { DatabaseContainer } from './DatabaseContainer';
 
 it('renders prompt to refresh when new dbs are added', async () => {
   let triggerAddDbs: () => void | undefined;
-  const DatabasesPickerTest: React.FC = () => {
+  const DatabasesPickerTest: React.FC<
+    React.PropsWithChildren<unknown>
+  > = () => {
     const [databases, setDatabases] = useState(['foo', 'bar']);
     triggerAddDbs = () => setDatabases(['foo', 'bar', 'baz']);
     return (

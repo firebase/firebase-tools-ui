@@ -33,12 +33,9 @@ export type ImageUrlInputProps = FormContextValues<AddAuthUserPayload> & {
   ImageConstructor?: typeof Image;
 };
 
-export const ImageUrlInput: React.FC<ImageUrlInputProps> = ({
-  register,
-  watch,
-  triggerValidation,
-  ImageConstructor,
-}) => {
+export const ImageUrlInput: React.FC<
+  React.PropsWithChildren<ImageUrlInputProps>
+> = ({ register, watch, triggerValidation, ImageConstructor }) => {
   ImageConstructor = ImageConstructor || Image;
   const [previewUrl, setPreviewUrl] = useState('');
   const image = useRef(new ImageConstructor());

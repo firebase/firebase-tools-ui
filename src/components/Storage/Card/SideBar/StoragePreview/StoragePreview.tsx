@@ -25,7 +25,9 @@ interface StoragePreviewProps {
   file: StorageFile;
 }
 
-export const StoragePreview: React.FC<StoragePreviewProps> = ({ file }) => {
+export const StoragePreview: React.FC<
+  React.PropsWithChildren<StoragePreviewProps>
+> = ({ file }) => {
   if (!shouldShowPreview(file.contentType)) {
     return null;
   }
@@ -36,9 +38,9 @@ export const StoragePreview: React.FC<StoragePreviewProps> = ({ file }) => {
   );
 };
 
-export const StoragePreviewUnwrapped: React.FC<StoragePreviewProps> = ({
-  file,
-}) => {
+export const StoragePreviewUnwrapped: React.FC<
+  React.PropsWithChildren<StoragePreviewProps>
+> = ({ file }) => {
   const url = usePreviewUrl(file);
 
   if (!url) {

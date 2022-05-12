@@ -20,7 +20,7 @@ import React, { useState } from 'react';
 import { useStorageFiles } from '../../../../../api/useStorageFiles';
 import { CreateFolderDialog } from './CreateFolderDialog/CreateFolderDialog';
 
-export const CreateFolder: React.FC = () => {
+export const CreateFolder: React.FC<React.PropsWithChildren<unknown>> = () => {
   const { createFolder } = useStorageFiles();
   const [shouldShowDialog, setShouldShowDialog] = useState(false);
 

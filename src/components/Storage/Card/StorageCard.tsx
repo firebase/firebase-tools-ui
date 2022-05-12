@@ -33,7 +33,7 @@ import { TableDropzoneWrapper } from './TableDropzoneWrapper/TableDropzoneWrappe
 import { useSelectedFile } from './useSelectedFile/useSelectedFile';
 
 type File = StorageItem;
-export const StorageCard: React.FC = () => {
+export const StorageCard: React.FC<React.PropsWithChildren<unknown>> = () => {
   const { files } = useStorageFiles();
   const paths = files.map((file: File) => file.fullPath);
   const selection = useMultiselect<string>(paths);

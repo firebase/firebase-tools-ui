@@ -39,7 +39,9 @@ function selectionIncludesFolders(
   );
 }
 
-export const ActionHeader: React.FC<ActionHeaderProps> = ({ selection }) => {
+export const ActionHeader: React.FC<
+  React.PropsWithChildren<ActionHeaderProps>
+> = ({ selection }) => {
   const { files, openAllFiles, deleteFiles } = useStorageFiles();
   const areFoldersSelected = selectionIncludesFolders(
     files,

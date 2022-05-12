@@ -18,10 +18,12 @@ import React from 'react';
 
 import { Field } from '../../common/Field';
 
-const StringEditor: React.FC<{
-  value: string;
-  onChange: (value: string) => void;
-}> = ({ value, onChange }) => {
+const StringEditor: React.FC<
+  React.PropsWithChildren<{
+    value: string;
+    onChange: (value: string) => void;
+  }>
+> = ({ value, onChange }) => {
   return (
     <Field
       value={value}

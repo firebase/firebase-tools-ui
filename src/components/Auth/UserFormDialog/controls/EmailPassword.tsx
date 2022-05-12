@@ -49,7 +49,9 @@ function getErrorText(errors: any) {
 
 export type EmailPasswordProps = PropsFromState & { editedUserEmail?: string };
 export const EmailPassword: React.FC<
-  EmailPasswordProps & FormContextValues<AddAuthUserPayload>
+  React.PropsWithChildren<
+    EmailPasswordProps & FormContextValues<AddAuthUserPayload>
+  >
 > = ({
   register,
   watch,

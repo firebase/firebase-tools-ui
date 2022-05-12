@@ -23,7 +23,9 @@ import { useExtension } from '../../../api/useExtension';
 import { DetailItemCard } from '../DetailItemCard/DetailItemCard';
 import styles from './AccessAndRoles.module.scss';
 
-export const AccessAndRoles: React.FC = () => {
+export const AccessAndRoles: React.FC<
+  React.PropsWithChildren<unknown>
+> = () => {
   const extension = useExtension()!;
 
   return (

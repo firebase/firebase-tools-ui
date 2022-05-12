@@ -110,7 +110,7 @@ interface Props {
   wrap?: boolean;
 }
 
-export const CustomThemeProvider: React.FC<Props> = ({
+export const CustomThemeProvider: React.FC<React.PropsWithChildren<Props>> = ({
   use,
   wrap,
   children,

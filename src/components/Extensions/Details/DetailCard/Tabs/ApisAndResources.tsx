@@ -23,7 +23,7 @@ import { useExtension } from '../../../api/useExtension';
 import { DetailItemCard } from '../DetailItemCard/DetailItemCard';
 import styles from './ApisAndResources.module.scss';
 
-const Apis: React.FC = () => {
+const Apis: React.FC<React.PropsWithChildren<unknown>> = () => {
   const extension = useExtension()!;
 
   return (
@@ -53,7 +53,7 @@ const Apis: React.FC = () => {
 
 // TODO(kirjs): Secrets
 
-const Resources: React.FC = () => {
+const Resources: React.FC<React.PropsWithChildren<unknown>> = () => {
   const extension = useExtension()!;
 
   const functions = (extension.resources || []).map((r) => {
@@ -114,7 +114,9 @@ const Resources: React.FC = () => {
   );
 };
 
-export const ApisAndResources: React.FC = () => {
+export const ApisAndResources: React.FC<
+  React.PropsWithChildren<unknown>
+> = () => {
   const extension = useExtension()!;
 
   return (

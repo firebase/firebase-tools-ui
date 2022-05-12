@@ -14,11 +14,7 @@
  * limitations under the License.
  */
 
-import {
-  RenderResult,
-  fireEvent,
-  waitForElement,
-} from '@testing-library/react';
+import { RenderResult, fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 
@@ -35,7 +31,7 @@ it('shows correct title', async () => {
     <AddCollectionDialog open={true} onValue={onValue} />
   ));
 
-  await waitForElement(() => getByText(/Start a collection/));
+  await waitFor(() => getByText(/Start a collection/));
 });
 
 describe('step 1', () => {

@@ -37,7 +37,10 @@ function formatDate(dateString: string) {
   return date.toLocaleDateString() + ', ' + date.toLocaleTimeString();
 }
 
-export const SideBar: React.FC<SideBarProps> = ({ file, closeSidebar }) => {
+export const SideBar: React.FC<React.PropsWithChildren<SideBarProps>> = ({
+  file,
+  closeSidebar,
+}) => {
   const { openAllFiles } = useStorageFiles();
   return (
     <aside className={styles.sideBarWrapper}>

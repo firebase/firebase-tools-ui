@@ -22,7 +22,9 @@ import { useFieldArray, useFormContext } from 'react-hook-form';
 import styles from './CollectionFilter.module.scss';
 import { ConditionEntry } from './ConditionEntry';
 
-export const ConditionEntries: React.FC<{ name: string }> = ({ name }) => {
+export const ConditionEntries: React.FC<
+  React.PropsWithChildren<{ name: string }>
+> = ({ name }) => {
   const {
     errors,
     formState: { touched },

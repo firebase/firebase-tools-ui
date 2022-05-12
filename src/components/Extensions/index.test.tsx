@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { render } from '@testing-library/react';
+import { act, render } from '@testing-library/react';
 import { renderHook } from '@testing-library/react-hooks';
 import { MemoryRouter, useLocation } from 'react-router-dom';
 
@@ -27,10 +27,12 @@ import {
 } from './testing/utils';
 import { Backend, ExtensionLink, ExtensionsRoute, RedirectToList } from '.';
 
-const TestWrapper: React.FC<{
-  emulatorConfig?: Config | null;
-  instanceId?: string;
-}> = ({ children, emulatorConfig, instanceId }) => (
+const TestWrapper: React.FC<
+  React.PropsWithChildren<{
+    emulatorConfig?: Config | null;
+    instanceId?: string;
+  }>
+> = ({ children, emulatorConfig, instanceId }) => (
   <MemoryRouter
     initialEntries={[`/extensions${instanceId ? `/${instanceId}` : ''}`]}
   >
@@ -144,7 +146,9 @@ describe('ExtensionsRoute', () => {
 
 describe('ExtensionsLink', () => {
   it('redirects to details page', async () => {
-    const TestCurrentPathname: React.FC = () => {
+    const TestCurrentPathname: React.FC<
+      React.PropsWithChildren<unknown>
+    > = () => {
       const location = useLocation();
 
       return <>{location.pathname}</>;
@@ -157,7 +161,9 @@ describe('ExtensionsLink', () => {
       </MemoryRouter>
     );
 
-    getByText('click me').click();
+    act(() => {
+      getByText('click me').click();
+    });
 
     expect(getByText(/foo/)).not.toBeNull();
   });
@@ -165,7 +171,9 @@ describe('ExtensionsLink', () => {
 
 describe('ExtensionsRedirect', () => {
   it('redirects to list page', () => {
-    const wrapper: React.FC = ({ children }) => {
+    const wrapper: React.FC<React.PropsWithChildren<unknown>> = ({
+      children,
+    }) => {
       return (
         <MemoryRouter>
           <RedirectToList />

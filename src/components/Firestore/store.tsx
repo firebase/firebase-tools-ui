@@ -55,10 +55,9 @@ const storeReducer: React.Reducer<Store, Action> = (state, action) => {
   return (reducer.handlers as any)[action.type](state, action);
 };
 
-export const FirestoreStore: React.FC<{ initState?: Store }> = ({
-  initState = INIT_STATE,
-  children,
-}) => {
+export const FirestoreStore: React.FC<
+  React.PropsWithChildren<{ initState?: Store }>
+> = ({ initState = INIT_STATE, children }) => {
   const [store, dispatch] = React.useReducer(storeReducer, initState);
   return (
     <firestoreStoreContext.Provider value={{ store, dispatch }}>

@@ -22,7 +22,9 @@ import React from 'react';
 
 export const ADMIN_REQUEST_MESSAGE = 'Admin requests bypass Firestore rules';
 
-const CodeViewerAdminRequest: React.FC = () => {
+const CodeViewerAdminRequest: React.FC<
+  React.PropsWithChildren<unknown>
+> = () => {
   return (
     <Theme use="surface" wrap>
       <div className="Firestore-Requests-Details-Code-Admin-Request-Container">

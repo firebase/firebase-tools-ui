@@ -99,6 +99,9 @@ describe('Firestore sub-tabs navigation', () => {
       path: '/firestore',
     });
 
+    // This seems pretty flaky
+    await act(() => delay(600)); // Wait for tab indicator async DOM updates.
+    await waitFor(() => isTabActive(getByText('Data')));
     await act(() => delay(600)); // Wait for tab indicator async DOM updates.
 
     expect(isTabActive(getByText('Data'))).toBe(true);

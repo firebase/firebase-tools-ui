@@ -61,8 +61,10 @@ export interface Props {
 }
 
 export function withCollectionState(
-  Presentation: React.ComponentType<CollectionPresentationProps>
-): React.ComponentType<Props> {
+  Presentation: React.ComponentType<
+    React.PropsWithChildren<CollectionPresentationProps>
+  >
+): React.ComponentType<React.PropsWithChildren<Props>> {
   return ({ collection }) => {
     const [newDocumentId, setNewDocumentId] = useState<string>();
     const collectionFilter = useCollectionFilter(collection.path);
@@ -123,9 +125,11 @@ export function withCollectionState(
 }
 
 // TODO: create a CollectionSkeleton that the loading+loaded state can utilize
-export const CollectionLoading: React.FC<{
-  collection: firebase.firestore.CollectionReference<firebase.firestore.DocumentData>;
-}> = ({ collection }) => (
+export const CollectionLoading: React.FC<
+  React.PropsWithChildren<{
+    collection: firebase.firestore.CollectionReference<firebase.firestore.DocumentData>;
+  }>
+> = ({ collection }) => (
   <div className="Firestore-Collection">
     <PanelHeader
       id={collection.id}
@@ -144,14 +148,9 @@ interface CollectionPresentationProps {
   url: string;
 }
 
-export const CollectionPresentation: React.FC<CollectionPresentationProps> = ({
-  collection,
-  collectionFilter,
-  addDocument,
-  docs,
-  missingDocs,
-  url,
-}) => {
+export const CollectionPresentation: React.FC<
+  React.PropsWithChildren<CollectionPresentationProps>
+> = ({ collection, collectionFilter, addDocument, docs, missingDocs, url }) => {
   const recursiveDelete = useRecursiveDelete();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);

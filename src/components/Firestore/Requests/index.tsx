@@ -30,7 +30,7 @@ export interface RequestDetailsRouteParams {
   requestId: string;
 }
 
-const Requests: React.FC = () => {
+const Requests: React.FC<React.PropsWithChildren<unknown>> = () => {
   const [showCopyNotification, setShowCopyNotification] = useState<boolean>(
     false
   );
