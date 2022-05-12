@@ -52,7 +52,7 @@ const RouterWithInit = () => {
 const container = document.getElementById('root');
 const root = createRoot(container!);
 
-// TODO: Enable strict-mode after upgrading to router-v6
+// TODO: Enable strict-mode after upgrading to router-v6 (or upcoming v5 backport)
 // https://github.com/remix-run/react-router/issues/7870
 root.render(
   <RMWCProvider
