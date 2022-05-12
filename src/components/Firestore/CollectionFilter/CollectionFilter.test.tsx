@@ -23,6 +23,7 @@ import {
 } from '@testing-library/react';
 import React from 'react';
 
+import { delay } from '../../../test_utils';
 import { CollectionFilter as CollectionFilterType } from '../models';
 import { FirestoreStore, useCollectionFilter } from '../store';
 import { CollectionFilter } from './CollectionFilter';
@@ -84,9 +85,7 @@ it('unsets sorting when switching to an operator that does not support it', asyn
   expect(getByLabelText(/Ascending/).checked).toBe(true);
 
   // Wait for selects to be stable
-  await act(async () => {
-    await new Promise((resolve) => setTimeout(resolve, 500));
-  });
+  await act(async () => delay(500));
 
   fireEvent.change(getByLabelText(/Only show/), {
     target: { value: '==' },
@@ -128,14 +127,14 @@ it('supports multi-value operators', async () => {
   );
 
   // Wait for selects to be stable
-  await new Promise((resolve) => setTimeout(resolve, 500));
+  await act(async () => delay(500));
 
   act(() => {
     getAllByLabelText(/Remove filter/)[0].click();
   });
 
   // Wait for selects to be stable
-  await new Promise((resolve) => setTimeout(resolve, 500));
+  await act(async () => delay(500));
 
   expect(getByLabelText(/Code preview/).textContent).toMatch(
     /where\("__field__", "in", \["bravo"\]\)/
@@ -153,7 +152,6 @@ const StorePreview: React.FC<React.PropsWithChildren<{ path: string }>> = ({
 };
 
 it('requires a field-name', async () => {
-  const promise = Promise.resolve();
   const onCloseSpy = jest.fn();
 
   const { getByLabelText, getByText, getByTestId } = setup({
@@ -177,13 +175,14 @@ it('requires a field-name', async () => {
   await waitFor(
     () => getByTestId('store-preview').textContent === '{"field":"__field__"}'
   );
-  await waitFor(() => promise);
+
+  // Wait for selects to be stable
+  await act(async () => delay(500));
 
   expect(onCloseSpy).not.toHaveBeenCalled();
 });
 
 it('dispatches the collection-filter to the store', async () => {
-  const promise = Promise.resolve();
   const onCloseSpy = jest.fn();
 
   const { getByTestId, getByLabelText, getByText } = setup({
@@ -201,14 +200,14 @@ it('dispatches the collection-filter to the store', async () => {
   await waitFor(
     () => getByTestId('store-preview').textContent === '{"field":"alpha"}'
   );
-  await waitFor(() => promise);
+
+  // Wait for selects to be stable
+  await act(async () => delay(500));
 
   expect(onCloseSpy).toHaveBeenCalled();
 
   onCloseSpy.mockReset();
-  act(() => {
-    fireEvent.click(getByText(/Clear/));
-  });
+  fireEvent.click(getByText(/Clear/));
 
   expect(getByTestId('store-preview').textContent).toBe('');
   expect(onCloseSpy).toHaveBeenCalledTimes(1);

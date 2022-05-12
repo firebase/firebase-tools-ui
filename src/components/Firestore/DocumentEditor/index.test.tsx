@@ -23,6 +23,7 @@ import {
 } from '@testing-library/react';
 import React from 'react';
 
+import { delay } from '../../../test_utils';
 import { FieldType } from '../models';
 import { renderWithFirestore } from '../testing/FirestoreTestProviders';
 import DocumentEditor from './index';
@@ -232,7 +233,7 @@ describe('changing types', () => {
     await new Promise((resolve) => setTimeout(resolve, 500));
 
     const { getByLabelText } = result;
-    setType = async (fieldType: FieldType) =>
+    setType = (fieldType: FieldType) =>
       fireEvent.change(getByLabelText(/Type/), {
         target: { value: fieldType },
       });
@@ -240,7 +241,7 @@ describe('changing types', () => {
 
   it('switches to an array', async () => {
     const { getAllByText } = result;
-    await act(async () => {
+    act(() => {
       setType(FieldType.ARRAY);
     });
     await waitFor(() => expect(getAllByText('add').length).toBe(2));
@@ -248,7 +249,7 @@ describe('changing types', () => {
 
   it('switches to a boolean', async () => {
     const { getByLabelText } = result;
-    await act(async () => {
+    act(() => {
       setType(FieldType.BOOLEAN);
     });
     expect(getByLabelText('Value').value).toBe('true');
@@ -256,7 +257,7 @@ describe('changing types', () => {
 
   it('switches to a geopoint', async () => {
     const { getByLabelText } = result;
-    await act(async () => {
+    act(() => {
       setType(FieldType.GEOPOINT);
     });
     expect(getByLabelText('Latitude')).not.toBeNull();
@@ -264,7 +265,7 @@ describe('changing types', () => {
 
   it('switches to a map', async () => {
     const { getAllByText } = result;
-    await act(async () => {
+    act(() => {
       setType(FieldType.MAP);
     });
     expect(getAllByText('add').length).toBe(2);
@@ -272,7 +273,7 @@ describe('changing types', () => {
 
   it('switches to null', async () => {
     const { queryByLabelText } = result;
-    await act(async () => {
+    act(() => {
       setType(FieldType.NULL);
     });
     expect(queryByLabelText(/Value/)).toBeNull();
@@ -280,7 +281,7 @@ describe('changing types', () => {
 
   it('switches to a number', async () => {
     const { getByLabelText } = result;
-    await act(async () => {
+    act(() => {
       setType(FieldType.NUMBER);
     });
     expect(getByLabelText(/Value/).value).toBe('0');
@@ -288,7 +289,7 @@ describe('changing types', () => {
 
   it('switches to a reference', async () => {
     const { getByLabelText } = result;
-    await act(async () => {
+    act(() => {
       setType(FieldType.REFERENCE);
     });
     expect(getByLabelText(/Document path/).value).toBe('');
@@ -297,14 +298,14 @@ describe('changing types', () => {
   it('switches to a string', async () => {
     const { getByLabelText } = result;
     // set to Number first to get the default String
-    await act(async () => {
+    act(() => {
       setType(FieldType.NUMBER);
     });
 
     // Wait for selects to be stable
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    await delay(500);
 
-    await act(async () => {
+    act(() => {
       setType(FieldType.STRING);
     });
     expect(getByLabelText(/Value/).value).toBe('');
@@ -312,7 +313,7 @@ describe('changing types', () => {
 
   it('switches to a timestamp', async () => {
     const { getByLabelText } = result;
-    await act(async () => {
+    act(() => {
       setType(FieldType.TIMESTAMP);
     });
     const [date, time] = getByLabelText(/Value/).value.split('T');
