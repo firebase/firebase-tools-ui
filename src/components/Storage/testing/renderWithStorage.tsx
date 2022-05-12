@@ -93,7 +93,7 @@ export async function renderWithStorage(children: ReactElement) {
 
   await deleteAllFiles();
 
-  await waitFor(() => !current.storage.files);
+  await waitFor(() => current.storage.files !== undefined);
 
   async function waitForFilesToBeUploaded() {
     return await waitFor(
