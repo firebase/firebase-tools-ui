@@ -26,7 +26,10 @@ interface ParamValueProps {
   type?: ParamType;
 }
 
-export const ParamValue: React.FC<ParamValueProps> = ({ value, type }) => {
+export const ParamValue: React.FC<React.PropsWithChildren<ParamValueProps>> = ({
+  value,
+  type,
+}) => {
   const [showValue, setShowValue] = useState(false);
 
   if (!value) {

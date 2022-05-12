@@ -16,6 +16,7 @@
 
 import { render } from '@testing-library/react';
 import React from 'react';
+import { act } from 'react-dom/test-utils';
 
 import { ParamType } from '../../../models';
 import { ParamValue } from './ParamValue';
@@ -45,7 +46,10 @@ describe('ParamValue', () => {
       <ParamValue value={PARAM_VALUE} type={ParamType.SECRET} />
     );
 
-    await getByLabelText('Show value').click();
+    act(() => {
+      getByLabelText('Show value').click();
+    });
+
     expect(getByText(PARAM_VALUE)).not.toBeNull();
   });
 });

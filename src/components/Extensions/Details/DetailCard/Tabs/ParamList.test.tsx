@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { render } from '@testing-library/react';
+import { act, render } from '@testing-library/react';
 import React from 'react';
 
 import { Extension } from '../../../models';
@@ -54,10 +54,12 @@ describe('ParamList', () => {
     expect(getByText(new RegExp(VALUE))).not.toBeNull();
   });
 
-  it('displays param description on expansion in markdown', async () => {
+  it('displays param description on expansion in markdown', () => {
     const { getByText } = setup(extension, id);
 
-    await getByText(new RegExp(LABEL)).click();
+    act(() => {
+      getByText(new RegExp(LABEL)).click();
+    });
     expect(getByText(new RegExp(DESCRIPTION))).not.toBeNull();
     expect(getByText(new RegExp(DESCRIPTION))).not.toBeNull();
   });

@@ -34,7 +34,7 @@ import OneAccountPerEmailCard from './OneAccountPerEmailCard/OneAccountPerEmailC
 import ClearAll from './UsersCard/ClearAll';
 import UsersCard from './UsersCard/UsersCard';
 
-export const AuthRoute: React.FC = () => {
+export const AuthRoute: React.FC<React.PropsWithChildren<unknown>> = () => {
   return (
     <Suspense fallback={<AuthRouteSuspended />}>
       <AuthWrapper />
@@ -48,7 +48,9 @@ export interface AuthProps {
   updateAuthConfig(config: { auth: AuthConfig; projectId: string }): void;
 }
 
-export const Auth: React.FC<AuthProps> = ({ updateAuthConfig }) => {
+export const Auth: React.FC<React.PropsWithChildren<AuthProps>> = ({
+  updateAuthConfig,
+}) => {
   const auth = useEmulatorConfig('auth');
   const { projectId } = useConfig();
 
@@ -71,11 +73,11 @@ export const Auth: React.FC<AuthProps> = ({ updateAuthConfig }) => {
 
 export const AuthWrapper = connect(null, { updateAuthConfig })(Auth);
 
-export const AuthRouteDisabled: React.FC = () => (
-  <EmulatorDisabled productName="Auth" />
-);
+export const AuthRouteDisabled: React.FC<
+  React.PropsWithChildren<unknown>
+> = () => <EmulatorDisabled productName="Auth" />;
 
-const AuthRouteSuspended: React.FC = () => {
+const AuthRouteSuspended: React.FC<React.PropsWithChildren<unknown>> = () => {
   const isDisabled = useIsEmulatorDisabled('auth');
   return isDisabled ? (
     <EmulatorDisabled productName="Auth" />

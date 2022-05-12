@@ -43,7 +43,7 @@ const DEFAULT_ICON_MAP: Record<string, string> = {
   [Type.WARNING]: 'warning',
 };
 
-export const Callout: React.FC<CalloutProps> = ({
+export const Callout: React.FC<React.PropsWithChildren<CalloutProps>> = ({
   children,
   actions,
   icon,

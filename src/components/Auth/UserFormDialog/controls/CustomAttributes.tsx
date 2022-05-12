@@ -49,7 +49,7 @@ function validate(attributes: string) {
 const CUSTOM_ATTRIBUTES_CONTROL_NAME = 'customAttributes';
 
 export const CustomAttributes: React.FC<
-  FormContextValues<AddAuthUserPayload>
+  React.PropsWithChildren<FormContextValues<AddAuthUserPayload>>
 > = ({ errors, register }) => {
   const label = (
     <label>

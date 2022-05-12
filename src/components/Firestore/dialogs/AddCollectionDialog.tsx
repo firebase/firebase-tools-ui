@@ -73,7 +73,7 @@ enum Step {
   DOCUMENT,
 }
 
-export const AddCollectionDialog: React.FC<Props> = ({
+export const AddCollectionDialog: React.FC<React.PropsWithChildren<Props>> = ({
   documentRef,
   onValue,
   onClose,

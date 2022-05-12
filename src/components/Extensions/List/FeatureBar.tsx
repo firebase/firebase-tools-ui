@@ -19,7 +19,9 @@ import { Link } from 'react-router-dom';
 
 import styles from './FeatureBar.module.scss';
 
-export const ExtensionsFeatureBar: React.FC = () => {
+export const ExtensionsFeatureBar: React.FC<
+  React.PropsWithChildren<unknown>
+> = () => {
   return (
     <div className={styles.featureBar}>
       <Typography use="headline5" tag="h2">
@@ -33,9 +35,9 @@ export interface ExtensionFeatureBarProps {
   name: string;
 }
 
-export const ExtensionFeatureBar: React.FC<ExtensionFeatureBarProps> = ({
-  name,
-}) => {
+export const ExtensionFeatureBar: React.FC<
+  React.PropsWithChildren<ExtensionFeatureBarProps>
+> = ({ name }) => {
   return (
     <header className={styles.featureBar}>
       <Link to="/extensions">

@@ -24,10 +24,9 @@ export interface StorageTestWrappersProps {
   fallbackTestId: string;
 }
 
-export const FakeStorageWrappers: React.FC<StorageTestWrappersProps> = ({
-  children,
-  fallbackTestId,
-}) => {
+export const FakeStorageWrappers: React.FC<
+  React.PropsWithChildren<StorageTestWrappersProps>
+> = ({ children, fallbackTestId }) => {
   return (
     <TestStorageProvider>
       <Suspense fallback={<div data-testid={fallbackTestId} />}>

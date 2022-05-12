@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook, waitFor } from '@testing-library/react';
 import React, { Suspense } from 'react';
 
+import { delay } from '../../../../test_utils';
 import { mockExtensionBackends } from '../../testing/mockExtensionBackend';
 import { TestExtensionsProvider } from '../../testing/TestExtensionsProvider';
 import { BACKEND_LIST } from '../../testing/utils';
@@ -25,7 +26,9 @@ import { useExtensionBackends } from './useExtensionBackends';
 describe('useExtensionBackends', () => {
   it('returns the list of extension backends', async () => {
     mockExtensionBackends(BACKEND_LIST);
-    const wrapper: React.FC = ({ children }) => {
+    const wrapper: React.FC<React.PropsWithChildren<unknown>> = ({
+      children,
+    }) => {
       return (
         <TestExtensionsProvider>
           <Suspense fallback={null}>{children}</Suspense>
@@ -33,14 +36,13 @@ describe('useExtensionBackends', () => {
       );
     };
 
-    const { result, waitForNextUpdate } = renderHook(
-      () => useExtensionBackends(),
-      {
-        wrapper,
-      }
-    );
+    const { result } = renderHook(() => useExtensionBackends(), {
+      wrapper,
+    });
 
-    await waitForNextUpdate();
+    await waitFor(() => result.current !== null);
+    await waitFor(() => delay(100));
+
     expect(result.current).toEqual([BACKEND_LIST[0], BACKEND_LIST[1]]);
   });
 });

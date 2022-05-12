@@ -14,7 +14,13 @@
  * limitations under the License.
  */
 
-import { act, fireEvent, render } from '@testing-library/react';
+import {
+  act,
+  fireEvent,
+  render,
+  waitFor,
+  waitForElementToBeRemoved,
+} from '@testing-library/react';
 import React from 'react';
 
 import { delay } from '../../../test_utils';
@@ -43,6 +49,7 @@ const setup = async () => {
   } = await renderDialogWithFirestore(async (firestore) => (
     <CloneDialog onComplete={onComplete} realtimeRef={ref} />
   ));
+  await waitForElementToBeRemoved(() => getByText(/Loading/));
   return { ref, onComplete, getByLabelText, getByText, getByTestId };
 };
 
@@ -80,6 +87,8 @@ it('uses a filtered data set when query params are provided', async () => {
       query={todosQuery}
     />
   ));
+
+  await waitFor(() => getByLabelText(/one:/));
 
   expect(() => getByLabelText(/two:/)).toThrowError();
   expect(getByLabelText(/one:/)).toBeDefined();
@@ -154,28 +163,22 @@ it('contains an input and json value for each field', async () => {
 it('clones dialog data when the dialog is accepted', async () => {
   const { ref, getByText, getByLabelText } = await setup();
 
-  act(() => {
-    fireEvent.change(getByLabelText('string:'), {
-      target: {
-        value: '"new string"',
-      },
-    });
+  fireEvent.change(getByLabelText('string:'), {
+    target: {
+      value: '"new string"',
+    },
   });
 
-  act(() => {
-    fireEvent.change(getByLabelText('number:'), {
-      target: {
-        value: '12',
-      },
-    });
+  fireEvent.change(getByLabelText('number:'), {
+    target: {
+      value: '12',
+    },
   });
 
-  act(() => {
-    fireEvent.change(getByLabelText('json:'), {
-      target: {
-        value: '{"x": "y"}',
-      },
-    });
+  fireEvent.change(getByLabelText('json:'), {
+    target: {
+      value: '{"x": "y"}',
+    },
   });
 
   await act(async () => {
@@ -197,9 +200,7 @@ it('clones dialog data when the dialog is accepted', async () => {
 it('calls onComplete with new key value when accepted', async () => {
   const { getByText, onComplete } = await setup();
 
-  act(() => {
-    fireEvent.submit(getByText('Clone'));
-  });
+  fireEvent.submit(getByText('Clone'));
 
   expect(onComplete).toHaveBeenCalledWith('/parent/to_clone_copy');
 });

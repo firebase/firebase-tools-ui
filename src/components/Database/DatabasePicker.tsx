@@ -41,11 +41,13 @@ export type Props = PropsFromState & {
   navigation: (db: string) => string;
 };
 
-const DatabaseListItem: React.FC<{
-  name: string;
-  navigation: (db: string) => string;
-  activated: boolean;
-}> = ({ name, navigation, activated }) => {
+const DatabaseListItem: React.FC<
+  React.PropsWithChildren<{
+    name: string;
+    navigation: (db: string) => string;
+    activated: boolean;
+  }>
+> = ({ name, navigation, activated }) => {
   const to = navigation(name);
   return (
     <ListItem
@@ -60,7 +62,7 @@ const DatabaseListItem: React.FC<{
   );
 };
 
-export const DatabasePicker: React.FC<Props> = ({
+export const DatabasePicker: React.FC<React.PropsWithChildren<Props>> = ({
   primary,
   current,
   navigation,

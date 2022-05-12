@@ -22,7 +22,7 @@ import { useBucket } from '../../api/useBucket';
 import { useBuckets } from '../../api/useBuckets';
 import styles from './BucketPicker.module.scss';
 
-export const BucketPicker: React.FC = () => {
+export const BucketPicker: React.FC<React.PropsWithChildren<unknown>> = () => {
   const buckets = useBuckets();
   const [bucket, setBucket] = useBucket();
 

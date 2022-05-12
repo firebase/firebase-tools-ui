@@ -38,74 +38,76 @@ interface ConditionEntryProps {
   error: string | undefined;
 }
 
-export const ConditionEntry: React.FC<ConditionEntryProps> = React.memo(
-  ({ name, error }) => {
-    const { setValue, watch } = useFormContext();
-    const value = watch(name);
-    const [fieldType, setFieldType] = useState(getConditionEntryType(value));
+export const ConditionEntry: React.FC<
+  React.PropsWithChildren<ConditionEntryProps>
+> = React.memo(({ name, error }) => {
+  const { setValue, watch } = useFormContext();
+  const value = watch(name);
+  const [fieldType, setFieldType] = useState(getConditionEntryType(value));
 
-    useEffect(() => {
-      // Essentially setting the defaultValue of this form-field,
-      // specifically when chaning types between Single <--> Multi
-      if (value === undefined) {
-        setValue(name, '');
-      }
-    }, [value, setValue, name]);
+  useEffect(() => {
+    // Essentially setting the defaultValue of this form-field,
+    // specifically when chaning types between Single <--> Multi
+    if (value === undefined) {
+      setValue(name, '');
+    }
+  }, [value, setValue, name]);
 
-    return (
-      <div className={styles.conditionEntry}>
-        <SelectField
-          options={['string', 'number', 'boolean']}
-          value={fieldType}
-          onChange={(evt) => {
-            setFieldType(evt.currentTarget.value);
-          }}
-          fieldClassName={styles.conditionEntryType}
+  return (
+    <div className={styles.conditionEntry}>
+      <SelectField
+        options={['string', 'number', 'boolean']}
+        value={fieldType}
+        onChange={(evt) => {
+          setFieldType(evt.currentTarget.value);
+        }}
+        fieldClassName={styles.conditionEntryType}
+      />
+
+      {fieldType === 'string' && (
+        <Controller
+          as={Field}
+          name={name}
+          defaultValue=""
+          error={error}
+          fieldClassName={styles.conditionEntryValue}
+          aria-label="Value"
         />
+      )}
 
-        {fieldType === 'string' && (
-          <Controller
-            as={Field}
-            name={name}
-            defaultValue=""
-            error={error}
-            fieldClassName={styles.conditionEntryValue}
-            aria-label="Value"
-          />
-        )}
+      {fieldType === 'number' && (
+        <Controller
+          as={Field}
+          name={name}
+          defaultValue={''}
+          rules={{
+            pattern: {
+              value: NUMBER_REGEX,
+              message: 'Must be a number',
+            },
+          }}
+          error={error}
+          onChange={([event]) =>
+            // Cast it back to a number before saving to model
+            event.target.value.match(NUMBER_REGEX)
+              ? parseFloat(event.target.value)
+              : event.target.value
+          }
+          fieldClassName={styles.conditionEntryValue}
+          aria-label="Value"
+        />
+      )}
 
-        {fieldType === 'number' && (
-          <Controller
-            as={Field}
-            name={name}
-            defaultValue={''}
-            rules={{
-              pattern: {
-                value: NUMBER_REGEX,
-                message: 'Must be a number',
-              },
-            }}
-            error={error}
-            onChange={([event]) =>
-              // Cast it back to a number before saving to model
-              event.target.value.match(NUMBER_REGEX)
-                ? parseFloat(event.target.value)
-                : event.target.value
-            }
-            fieldClassName={styles.conditionEntryValue}
-            aria-label="Value"
-          />
-        )}
-
-        {fieldType === 'boolean' && <BooleanCondition name={name} />}
-      </div>
-    );
-  }
-);
+      {fieldType === 'boolean' && <BooleanCondition name={name} />}
+    </div>
+  );
+});
 
 // RMWC select-menus do not work well with boolean values, requiring
 // custom-registration w/ the parent form
-const BooleanCondition: React.FC<{ name: string }> = ({ name }) => {
+const BooleanCondition: React.FC<React.PropsWithChildren<{ name: string }>> = ({
+  name,
+}) => {
   const { register, setValue, unregister, watch } = useFormContext();
 
   useEffect(() => {

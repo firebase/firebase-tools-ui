@@ -16,6 +16,8 @@
 
 import React from 'react';
 
-const RequestsHeader: React.FC = () => <div></div>;
+const RequestsHeader: React.FC<React.PropsWithChildren<unknown>> = () => (
+  <div></div>
+);
 
 export default RequestsHeader;

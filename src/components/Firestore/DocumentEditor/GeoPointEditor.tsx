@@ -20,11 +20,13 @@ import { useFormContext } from 'react-hook-form';
 
 import { Field } from '../../common/Field';
 
-const GeoPointEditor: React.FC<{
-  name: string;
-  value: firebase.firestore.GeoPoint;
-  onChange: (value: firebase.firestore.GeoPoint) => void;
-}> = ({ name, value, onChange }) => {
+const GeoPointEditor: React.FC<
+  React.PropsWithChildren<{
+    name: string;
+    value: firebase.firestore.GeoPoint;
+    onChange: (value: firebase.firestore.GeoPoint) => void;
+  }>
+> = ({ name, value, onChange }) => {
   const [latitude, setLatitude] = useState(String(value.latitude));
   const [longitude, setLongitude] = useState(String(value.longitude));
   const {

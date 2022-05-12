@@ -41,7 +41,7 @@ export async function renderWithStorage(children: ReactElement) {
   async function waitForNFiles(n: number) {
     await waitFor(
       () => {
-        expect(current.storage.files!.length).toBe(n);
+        return current.storage.files!.length === n;
       },
       { timeout: 5000 }
     );
@@ -67,7 +67,9 @@ export async function renderWithStorage(children: ReactElement) {
     await waitForNFiles(filesBeforeUpload + 1);
   };
 
-  const Component: React.FC = ({ children }) => {
+  const Component: React.FC<React.PropsWithChildren<unknown>> = ({
+    children,
+  }) => {
     current.storage = useStorageFiles();
     current.history = useHistory();
     current.bucket = useBucket();
@@ -84,14 +86,14 @@ export async function renderWithStorage(children: ReactElement) {
 
   await waitFor(
     () => {
-      expect(element.queryByTestId(fallbackTestId)).toBeNull();
+      return element.queryByTestId(fallbackTestId) === null;
     },
     { timeout: 5000 }
   );
 
   await deleteAllFiles();
 
-  await waitFor(() => expect(current.storage.files).toBeDefined());
+  await waitFor(() => current.storage.files !== undefined);
 
   async function waitForFilesToBeUploaded() {
     return await waitFor(

@@ -33,7 +33,7 @@ type FileFieldProps = {
 const DROP_MESSAGE = 'Drop file(s) here';
 const INVALID_FILE_MESSAGE = 'File type is not accepted';
 
-export const FileField: React.FC<FileFieldProps> = ({
+export const FileField: React.FC<React.PropsWithChildren<FileFieldProps>> = ({
   label,
   tip,
   error,

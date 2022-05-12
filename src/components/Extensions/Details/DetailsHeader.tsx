@@ -27,7 +27,9 @@ export interface DetailsHeaderProps {
   extension: Extension;
 }
 
-export const DetailsHeader: React.FC<DetailsHeaderProps> = ({ extension }) => {
+export const DetailsHeader: React.FC<
+  React.PropsWithChildren<DetailsHeaderProps>
+> = ({ extension }) => {
   return (
     <Card className="detailsHeader">
       <Elevation z="2" wrap>

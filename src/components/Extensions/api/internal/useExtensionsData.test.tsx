@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook, waitFor } from '@testing-library/react';
 import React, { Suspense } from 'react';
 
+import { delay } from '../../../../test_utils';
 import { TestEmulatorConfigProvider } from '../../../common/EmulatorConfigProvider';
 import { mockExtensionBackends } from '../../testing/mockExtensionBackend';
 import { BACKEND_LIST, CONFIG_WITH_EXTENSION } from '../../testing/utils';
@@ -25,7 +26,9 @@ import { useExtensionsData } from './useExtensionsData';
 describe('useExtensionsData', () => {
   it('returns the list of extension row extensions', async () => {
     mockExtensionBackends(BACKEND_LIST);
-    const wrapper: React.FC = ({ children }) => {
+    const wrapper: React.FC<React.PropsWithChildren<unknown>> = ({
+      children,
+    }) => {
       return (
         <TestEmulatorConfigProvider config={CONFIG_WITH_EXTENSION}>
           <Suspense fallback={null}>{children}</Suspense>
@@ -33,13 +36,11 @@ describe('useExtensionsData', () => {
       );
     };
 
-    const { result, waitForNextUpdate } = renderHook(
-      () => useExtensionsData(),
-      {
-        wrapper,
-      }
-    );
-    await waitForNextUpdate();
+    const { result } = renderHook(() => useExtensionsData(), {
+      wrapper,
+    });
+
+    await waitFor(() => delay(100));
 
     expect(result.current).toEqual([
       {

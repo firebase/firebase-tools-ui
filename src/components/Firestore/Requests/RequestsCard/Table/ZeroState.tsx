@@ -21,7 +21,7 @@ import React from 'react';
 
 export const ZERO_STATE_MESSAGE = 'No Firestore requests for this project yet';
 
-const RequestsZeroState: React.FC = () => {
+const RequestsZeroState: React.FC<React.PropsWithChildren<unknown>> = () => {
   return (
     <Typography
       use="body2"

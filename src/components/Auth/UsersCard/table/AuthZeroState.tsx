@@ -19,7 +19,7 @@ import React from 'react';
 
 import styles from './UsersTable.module.scss';
 
-export const AuthZeroState: React.FC = () => {
+export const AuthZeroState: React.FC<React.PropsWithChildren<unknown>> = () => {
   return (
     <Typography
       use="body2"

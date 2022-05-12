@@ -21,7 +21,9 @@ import { ExtensionsProvider, useExtensions } from './useExtensions';
 
 describe('useExtensions', () => {
   it('returns the list of extension backends', () => {
-    const wrapper: React.FC = ({ children }) => (
+    const wrapper: React.FC<React.PropsWithChildren<unknown>> = ({
+      children,
+    }) => (
       <ExtensionsProvider extensions={[EXTENSION]}>
         {children}
       </ExtensionsProvider>

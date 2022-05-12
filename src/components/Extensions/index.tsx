@@ -27,7 +27,9 @@ import { ExtensionDetails } from './Details/ExtensionDetails';
 import { ExtensionsList } from './List/List';
 import { BackendExtension, ExtensionSpec, ExtensionVersion } from './models';
 
-export const ExtensionsRoute: React.FC = () => {
+export const ExtensionsRoute: React.FC<
+  React.PropsWithChildren<unknown>
+> = () => {
   return (
     <Suspense fallback={<ExtensionsRouteSuspended />}>
       <HydrateExtensions>
@@ -45,7 +47,9 @@ export interface Backend {
   extensionSpec?: ExtensionSpec;
 }
 
-const HydrateExtensions: React.FC = ({ children }) => {
+const HydrateExtensions: React.FC<React.PropsWithChildren<unknown>> = ({
+  children,
+}) => {
   const extensions = useExtensionsData();
 
   return (
@@ -53,7 +57,7 @@ const HydrateExtensions: React.FC = ({ children }) => {
   );
 };
 
-const Routes: React.FC = () => {
+const Routes: React.FC<React.PropsWithChildren<unknown>> = () => {
   return (
     <Switch>
       <Route
@@ -65,7 +69,9 @@ const Routes: React.FC = () => {
   );
 };
 
-const ScopedExtensionDetails: React.FC = () => {
+const ScopedExtensionDetails: React.FC<
+  React.PropsWithChildren<unknown>
+> = () => {
   const instanceId = useParams<{ instanceId: string }>().instanceId;
 
   return (
@@ -75,7 +81,9 @@ const ScopedExtensionDetails: React.FC = () => {
   );
 };
 
-const ExtensionsRouteSuspended: React.FC = () => {
+const ExtensionsRouteSuspended: React.FC<
+  React.PropsWithChildren<unknown>
+> = () => {
   const isDisabled = useIsEmulatorDisabled('extensions');
   return isDisabled ? (
     <EmulatorDisabled productName="Extensions" />
@@ -84,9 +92,12 @@ const ExtensionsRouteSuspended: React.FC = () => {
   );
 };
 
-export const ExtensionLink: React.FC<{ instanceId: string }> = ({
-  children,
-  instanceId,
-}) => <Link to={`/extensions/${instanceId}`}>{children}</Link>;
+export const ExtensionLink: React.FC<
+  React.PropsWithChildren<{ instanceId: string }>
+> = ({ children, instanceId }) => (
+  <Link to={`/extensions/${instanceId}`}>{children}</Link>
+);
 
-export const RedirectToList: React.FC = () => <Redirect to="/extensions" />;
+export const RedirectToList: React.FC<
+  React.PropsWithChildren<unknown>
+> = () => <Redirect to="/extensions" />;

@@ -20,11 +20,13 @@ import { useFormContext } from 'react-hook-form';
 import { Field } from '../../common/Field';
 import { NUMBER_REGEX } from '../utils';
 
-const NumberEditor: React.FC<{
-  value: number;
-  onChange: (value: number) => void;
-  name: string;
-}> = ({ value, onChange, name }) => {
+const NumberEditor: React.FC<
+  React.PropsWithChildren<{
+    value: number;
+    onChange: (value: number) => void;
+    name: string;
+  }>
+> = ({ value, onChange, name }) => {
   const {
     errors,
     formState: { touched },

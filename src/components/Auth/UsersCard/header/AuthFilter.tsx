@@ -24,7 +24,7 @@ import { updateFilter } from '../../../../store/auth/actions';
 import { getFilter } from '../../../../store/auth/selectors';
 import styles from './AuthFilter.module.scss';
 
-export const AuthFilter: React.FC<AuthFilterProps> = ({
+export const AuthFilter: React.FC<React.PropsWithChildren<AuthFilterProps>> = ({
   filter,
   updateFilter,
 }) => {

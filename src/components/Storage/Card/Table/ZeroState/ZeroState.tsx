@@ -21,7 +21,7 @@ import { useDropzone } from 'react-dropzone';
 import { useStorageFiles } from '../../../api/useStorageFiles';
 import styles from './ZeroState.module.scss';
 
-export const ZeroState: React.FC = () => {
+export const ZeroState: React.FC<React.PropsWithChildren<unknown>> = () => {
   const { uploadFiles } = useStorageFiles();
 
   const { getInputProps, getRootProps, isDragActive } = useDropzone({

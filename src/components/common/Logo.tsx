@@ -17,7 +17,7 @@
 import { Icon } from '@rmwc/icon';
 import React from 'react';
 
-export const Logo: React.FC = () => (
+export const Logo: React.FC<React.PropsWithChildren<unknown>> = () => (
   <Icon
     className="Logo"
     icon={{

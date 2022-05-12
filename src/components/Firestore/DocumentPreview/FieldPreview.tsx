@@ -44,10 +44,14 @@ export interface CommonPreviewProps {
 
 export interface FieldPreviewProps extends CommonPreviewProps {
   actions?: React.ReactNode;
-  childComponent?: React.ComponentType<CommonPreviewProps>;
+  childComponent?: React.ComponentType<
+    React.PropsWithChildren<CommonPreviewProps>
+  >;
 }
 
-export const FieldPreview: React.FC<FieldPreviewProps> = ({
+export const FieldPreview: React.FC<
+  React.PropsWithChildren<FieldPreviewProps>
+> = ({
   path,
   maxSummaryLen,
   children,
@@ -115,9 +119,11 @@ export const FieldPreview: React.FC<FieldPreviewProps> = ({
 };
 
 export const EditableFieldPreview: React.FC<
-  CommonPreviewProps & {
-    documentRef: firebase.firestore.DocumentReference;
-  }
+  React.PropsWithChildren<
+    CommonPreviewProps & {
+      documentRef: firebase.firestore.DocumentReference;
+    }
+  >
 > = ({ path, documentRef, maxSummaryLen }) => {
   const documentData = useDocumentState();
   const parentState = useFieldState(path.slice(0, -1));

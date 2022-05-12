@@ -25,9 +25,9 @@ export interface ExtensionsTableProps {
   extensions: Extension[];
 }
 
-export const ExtensionsTable: React.FC<ExtensionsTableProps> = ({
-  extensions,
-}) => {
+export const ExtensionsTable: React.FC<
+  React.PropsWithChildren<ExtensionsTableProps>
+> = ({ extensions }) => {
   return (
     <DataTable className={styles.extensionTable}>
       <DataTableContent>
