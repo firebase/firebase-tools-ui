@@ -67,6 +67,7 @@ const TimestampEditor: React.FC<
     <Field
       label="Value"
       type="datetime-local"
+      step={1}
       defaultValue={dateToLocale(date)}
       onChange={(e) => {
         const timestamp = Date.parse(e.currentTarget.value);
