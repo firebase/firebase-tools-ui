@@ -195,7 +195,7 @@ function ParamList() {
           that respond to these events. Events will be emitted via Eventarc.{' '}
           <a href="https://cloud.google.com/eventarc/pricing)">Fees apply.</a>
           <br />
-          <a href={`localhost:3000/extensions/${extension.id}`}>
+          <a href={`/extensions/${extension.id}`}>
             How do events in this extension work?
           </a>
         </Typography>
