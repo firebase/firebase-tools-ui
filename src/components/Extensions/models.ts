@@ -123,6 +123,7 @@ export interface ExtensionSpec {
   description?: string;
   apis?: Api[];
   roles?: Role[];
+  events?: Event[];
   resources: Resource[];
   billingRequired?: boolean;
   author?: Author;
@@ -150,8 +151,11 @@ export interface Extension {
   authorUrl: string;
   apis?: Api[];
   roles?: Role[];
+  events?: Event[];
   resources?: ExtensionResource[];
   params?: ExtensionParam[];
+  eventarcChannel?: string;
+  allowedEventTypes?: string;
   displayName: string;
   specVersion: string;
   readmeContent: string;
@@ -173,6 +177,11 @@ export interface Api {
 export interface Role {
   role: string;
   reason: string;
+}
+
+export interface Event {
+  type: string;
+  description: string;
 }
 
 export interface Resource {
