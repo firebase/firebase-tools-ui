@@ -49,7 +49,7 @@ function ParamList() {
     const allowedEventTypeElements = Array.from(eventsByPrefix.keys()).sort().map(prefix => {
       const events = eventsByPrefix.get(prefix)?.map(event => {
         return (
-          <div className={styles.eventValue}>
+          <div key={`event:${event}`} className={styles.eventValue}>
             <ParamValue
               value={event}
               type={ParamType.STRING} />
@@ -61,7 +61,7 @@ function ParamList() {
         )
       })
       return (
-        <div className={styles.eventPrefixValue}>
+        <div key={`eventPrefix:${prefix}`} className={styles.eventPrefixValue}>
           <ParamValue
             value={prefix}
             type={ParamType.STRING} />  
