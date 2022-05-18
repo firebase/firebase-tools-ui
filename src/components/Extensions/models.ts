@@ -155,7 +155,7 @@ export interface Extension {
   resources?: ExtensionResource[];
   params?: ExtensionParam[];
   eventarcChannel?: string;
-  allowedEventTypes?: string;
+  allowedEventTypes?: string[];
   displayName: string;
   specVersion: string;
   readmeContent: string;

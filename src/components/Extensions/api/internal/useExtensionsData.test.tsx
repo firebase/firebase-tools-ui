@@ -50,7 +50,20 @@ describe('useExtensionsData', () => {
         name: 'good-tool',
         displayName: 'Pirojok-the-tool',
         specVersion: 'v1beta',
-        env: {},
+        env: {
+          ALLOWED_EVENT_TYPES: 'google.firebase.v1.custom-event-occurred',
+          EVENTARC_CHANNEL:
+            'projects/test-project/locations/us-west1/channels/firebase',
+        },
+        allowedEventTypes: ['google.firebase.v1.custom-event-occurred'],
+        eventarcChannel:
+          'projects/test-project/locations/us-west1/channels/firebase',
+        events: [
+          {
+            type: 'google.firebase.v1.custom-event-occurred',
+            description: 'A custom event occurred',
+          },
+        ],
         apis: [
           {
             apiName: 'storage-component.googleapis.com',
@@ -93,7 +106,20 @@ describe('useExtensionsData', () => {
         name: 'good-tool',
         displayName: 'Good Tool',
         specVersion: 'v1beta',
-        env: {},
+        env: {
+          ALLOWED_EVENT_TYPES: 'google.firebase.v1.custom-event-occurred',
+          EVENTARC_CHANNEL:
+            'projects/test-project/locations/us-west1/channels/firebase',
+        },
+        allowedEventTypes: ['google.firebase.v1.custom-event-occurred'],
+        eventarcChannel:
+          'projects/test-project/locations/us-west1/channels/firebase',
+        events: [
+          {
+            type: 'google.firebase.v1.custom-event-occurred',
+            description: 'A custom event occurred',
+          },
+        ],
         apis: [
           {
             apiName: 'storage-component.googleapis.com',

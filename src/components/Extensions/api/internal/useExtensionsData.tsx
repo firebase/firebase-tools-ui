@@ -58,7 +58,7 @@ export function convertBackendToExtension(
     displayName: spec.displayName ?? '',
     specVersion: spec.specVersion ?? '',
     env: backend.env,
-    allowedEventTypes: backend.env.ALLOWED_EVENT_TYPES,
+    allowedEventTypes: (backend.env.ALLOWED_EVENT_TYPES || '').split(','),
     eventarcChannel: backend.env.EVENTARC_CHANNEL,
     events: spec.events ?? [],
     apis: spec.apis ?? [],

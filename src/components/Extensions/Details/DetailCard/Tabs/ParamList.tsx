@@ -28,47 +28,47 @@ import { ParamValue } from './ParamValue';
 
 function ParamList() {
   const extension = useExtension()!;
-  let eventsByPrefix: Map<string, string[]> = new Map<string, string[]>();; // maps prefix ==> list of types
+  let eventsByPrefix: Map<string, string[]> = new Map<string, string[]>(); // maps prefix ==> list of types
   let eventDescriptionMapping: Map<string, string> = new Map<string, string>(); // maps type ==> description
   let allowedEventTypesDiv;
   let channelLocationDiv;
   if (!!extension.events) {
-    extension.events.forEach(event => {
+    extension.events.forEach((event) => {
       eventDescriptionMapping.set(event.type, event.description);
-    })
+    });
   }
-  if (!!extension.allowedEventTypes) {
-    extension.allowedEventTypes.split(',').forEach(eventType => {
+  if (!!extension.allowedEventTypes && extension.allowedEventTypes.length > 0) {
+    extension.allowedEventTypes.forEach((eventType) => {
       const prefix = eventType.split('.').slice(0, -1).join('.');
       if (!eventsByPrefix.get(prefix)) {
         eventsByPrefix.set(prefix, [eventType]);
       } else {
         eventsByPrefix.get(prefix)?.push(eventType);
       }
-    })
-    const allowedEventTypeElements = Array.from(eventsByPrefix.keys()).sort().map(prefix => {
-      const events = eventsByPrefix.get(prefix)?.map(event => {
+    });
+    const allowedEventTypeElements = Array.from(eventsByPrefix.keys())
+      .sort()
+      .map((prefix) => {
+        const events = eventsByPrefix.get(prefix)?.map((event) => {
+          return (
+            <div key={`event:${event}`} className={styles.eventValue}>
+              <ParamValue value={event} type={ParamType.STRING} />
+              <Typography use="body1" theme="secondary">
+                {eventDescriptionMapping.get(event) || 'Not Specified'}
+              </Typography>
+            </div>
+          );
+        });
         return (
-          <div key={`event:${event}`} className={styles.eventValue}>
-            <ParamValue
-              value={event}
-              type={ParamType.STRING} />
-            <Typography use="body1" theme="secondary">
-              {eventDescriptionMapping.get(event) || "Not Specified"}
-            </Typography>
+          <div
+            key={`eventPrefix:${prefix}`}
+            className={styles.eventPrefixValue}
+          >
+            <ParamValue value={prefix} type={ParamType.STRING} />
+            {events}
           </div>
-
-        )
-      })
-      return (
-        <div key={`eventPrefix:${prefix}`} className={styles.eventPrefixValue}>
-          <ParamValue
-            value={prefix}
-            type={ParamType.STRING} />  
-          {events}           
-        </div>
-      )
-    })
+        );
+      });
     allowedEventTypesDiv = (
       <div key="allowedEventTypes" className={styles.paramWrapper}>
         <Accordion
@@ -85,15 +85,19 @@ function ParamList() {
             tag="div"
             theme="secondary"
           >
-            <Markdown>Which events do you want to be emitted from this extension? Only selected events will be published to Eventarc, all other events will be ignored and will not be counted against Eventarc usage.</Markdown>
+            <Markdown>
+              Which events do you want to be emitted from this extension? Only
+              selected events will be published to Eventarc, all other events
+              will be ignored and will not be counted against Eventarc usage.
+            </Markdown>
           </Typography>
-        </Accordion>        
+        </Accordion>
         {allowedEventTypeElements}
       </div>
-    )
+    );
   }
   if (!!extension.eventarcChannel) {
-    const location = extension.eventarcChannel.split("/")[3];
+    const location = extension.eventarcChannel.split('/')[3];
     channelLocationDiv = (
       <div key="channelLocation" className={styles.paramWrapper}>
         <Accordion
@@ -110,14 +114,17 @@ function ParamList() {
             tag="div"
             theme="secondary"
           >
-            <Markdown>Where do you want to deploy the Eventarc channel where events will be published? You usually want a location close to where your extension is deployed, but choosing the default location (us-central1) makes it easier to create event handler functions.</Markdown>
+            <Markdown>
+              Where do you want to deploy the Eventarc channel where events will
+              be published? You usually want a location close to where your
+              extension is deployed, but choosing the default location
+              (us-central1) makes it easier to create event handler functions.
+            </Markdown>
           </Typography>
-        </Accordion>        
-        <ParamValue
-            value={location}
-            type={ParamType.STRING} />
+        </Accordion>
+        <ParamValue value={location} type={ParamType.STRING} />
       </div>
-    )
+    );
   }
   return (
     <div>
@@ -181,10 +188,16 @@ function ParamList() {
           tag="div"
           theme="secondary"
         >
-          If you enable events, you can <a href="https://firebase.google.com/docs/extensions/install-extensions#eventarc">write custom event handlers</a> that respond to these events. 
-          Events will be emitted via Eventarc. <a href="https://cloud.google.com/eventarc/pricing)">Fees apply.</a>
+          If you enable events, you can{' '}
+          <a href="https://firebase.google.com/docs/extensions/install-extensions#eventarc">
+            write custom event handlers
+          </a>{' '}
+          that respond to these events. Events will be emitted via Eventarc.{' '}
+          <a href="https://cloud.google.com/eventarc/pricing)">Fees apply.</a>
           <br />
-          <a href={`localhost:3000/extensions/${extension.id}`}>How do events in this extension work?</a>
+          <a href={`localhost:3000/extensions/${extension.id}`}>
+            How do events in this extension work?
+          </a>
         </Typography>
       </div>
       {channelLocationDiv}
