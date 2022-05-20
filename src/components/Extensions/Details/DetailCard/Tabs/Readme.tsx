@@ -22,10 +22,33 @@ import style from './Readme.module.scss';
 
 export function Readme() {
   const extension = useExtension()!;
+  let eventsMd = '';
+  if (
+    extension.eventarcChannel &&
+    extension.allowedEventTypes &&
+    extension.allowedEventTypes.length > 0
+  ) {
+    eventsMd = `
+  ### Create Custom Event Handlers
+  
+  This extension publishes events to the \`${
+    extension.eventarcChannel
+  }\` channel. You can create custom handlers that respond to events on this channel. For example:
+  
+    import { onCustomEventPublished } from "firebase-functions/v2/eventarc";
+
+    export const eventhandler = onCustomEventPublished(
+      "${extension.allowedEventTypes ? extension.allowedEventTypes[0] : ''}",
+      (e) => {
+          // Handle extension event here.
+      });
+    `;
+  }
 
   return (
     <div className={style.wrapper}>
       <Markdown>{extension.postinstallContent}</Markdown>
+      <Markdown>{eventsMd}</Markdown>
     </div>
   );
 }
