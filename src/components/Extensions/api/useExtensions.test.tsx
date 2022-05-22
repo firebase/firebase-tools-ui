@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import { renderHook } from '@testing-library/react-hooks';
-
+import { renderHook } from '@testing-library/react';
 import { EXTENSION } from '../testing/utils';
 import { ExtensionsProvider, useExtensions } from './useExtensions';
 
