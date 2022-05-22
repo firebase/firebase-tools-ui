@@ -16,6 +16,7 @@
 
 import { CircularProgress } from '@rmwc/circular-progress';
 import React, { useEffect, useRef, useState } from 'react';
+import { UseFormReturn } from 'react-hook-form';
 
 import { Field } from '../../../common/Field';
 import { AddAuthUserPayload } from '../../types';
@@ -28,13 +29,13 @@ enum ImagePreviewStatus {
   ERROR = 'ERROR',
 }
 
-export type ImageUrlInputProps = any & {
+export type ImageUrlInputProps = UseFormReturn<AddAuthUserPayload> & {
   ImageConstructor?: typeof Image;
 };
 
 export const ImageUrlInput: React.FC<
   React.PropsWithChildren<ImageUrlInputProps>
-> = ({ register, watch, triggerValidation, ImageConstructor }) => {
+> = ({ register, watch, trigger, ImageConstructor }) => {
   ImageConstructor = ImageConstructor || Image;
   const [previewUrl, setPreviewUrl] = useState('');
   const image = useRef(new ImageConstructor());
@@ -49,14 +50,14 @@ export const ImageUrlInput: React.FC<
       if (status.current === ImagePreviewStatus.LOADING) {
         status.current = ImagePreviewStatus.LOADED;
         setPreviewUrl(imageUrlRef.current);
-        triggerValidation('photoUrl');
+        trigger('photoUrl');
       }
     };
     img.onerror = () => {
       if (status.current === ImagePreviewStatus.LOADING) {
         status.current = ImagePreviewStatus.ERROR;
         setPreviewUrl('');
-        triggerValidation('photoUrl');
+        trigger('photoUrl');
       }
     };
 
@@ -64,7 +65,7 @@ export const ImageUrlInput: React.FC<
       img.onload = null;
       img.onerror = null;
     };
-  }, [triggerValidation]);
+  }, [trigger]);
 
   useEffect(() => {
     if (photoUrl.trim() !== '') {
@@ -74,8 +75,8 @@ export const ImageUrlInput: React.FC<
     } else {
       status.current = ImagePreviewStatus.NONE;
     }
-    triggerValidation('photoUrl');
-  }, [photoUrl, triggerValidation]);
+    trigger('photoUrl');
+  }, [photoUrl, trigger]);
 
   const validate = () => {
     return (
@@ -95,7 +96,7 @@ export const ImageUrlInput: React.FC<
         }
         type="text"
         inputRef={() => {
-          register({ validate });
+          register('photoUrl', { validate });
         }}
       />
       {status.current === ImagePreviewStatus.LOADED && (

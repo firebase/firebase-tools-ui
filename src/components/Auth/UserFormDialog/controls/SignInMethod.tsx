@@ -17,6 +17,7 @@
 import { ListDivider } from '@rmwc/list';
 import { Typography } from '@rmwc/typography';
 import React, { useEffect } from 'react';
+import { UseFormReturn } from 'react-hook-form';
 
 import { AddAuthUserPayload } from '../../types';
 import styles from './controls.module.scss';
@@ -29,12 +30,12 @@ export type SignInMethodProps = {
   user?: AddAuthUserPayload;
 };
 export const SignInMethod: React.FC<
-  React.PropsWithChildren<SignInMethodProps & any>
+  React.PropsWithChildren<SignInMethodProps & UseFormReturn<AddAuthUserPayload>>
 > = (form) => {
   const {
     watch,
     setError,
-    clearError,
+    clearErrors,
     formState: { errors, touchedFields },
     user,
   } = form;
@@ -50,11 +51,13 @@ export const SignInMethod: React.FC<
       // According to docs ClearError should accept arbitrary key
       // to allow cross-field validation, but it's not the case here for some
       // reason.
-      clearError(ERROR_AT_LEAST_ONE_METHOD_REQUIRED as any);
+      clearErrors(ERROR_AT_LEAST_ONE_METHOD_REQUIRED as any);
     } else {
-      setError(ERROR_AT_LEAST_ONE_METHOD_REQUIRED as any);
+      setError(ERROR_AT_LEAST_ONE_METHOD_REQUIRED as any, {
+        message: 'at least',
+      });
     }
-  }, [email, password, clearError, setError, phoneNumber, errors]);
+  }, [email, password, clearErrors, setError, phoneNumber, errors]);
 
   const isTouched = touchedFields['email'] || touchedFields['phoneNumber'];
   const isOnlyError =

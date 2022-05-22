@@ -16,6 +16,7 @@
 
 import { Typography } from '@rmwc/typography';
 import React, { useEffect } from 'react';
+import { UseFormReturn } from 'react-hook-form';
 import { connect } from 'react-redux';
 
 import { createStructuredSelector } from '../../../../store';
@@ -48,13 +49,15 @@ function getErrorText(errors: any) {
 
 export type EmailPasswordProps = PropsFromState & { editedUserEmail?: string };
 export const EmailPassword: React.FC<
-  React.PropsWithChildren<EmailPasswordProps & any>
+  React.PropsWithChildren<
+    EmailPasswordProps & UseFormReturn<AddAuthUserPayload>
+  >
 > = ({
   register,
   watch,
   setError,
-  clearError,
-  errors = {},
+  clearErrors,
+  formState: { errors },
   allEmails,
   editedUserEmail,
   isEditing,
@@ -67,13 +70,13 @@ export const EmailPassword: React.FC<
       (email === '' && password === '') ||
       (email !== '' && (password !== '' || isEditing))
     ) {
-      clearError('emailpassword' as any);
+      clearErrors('emailpassword' as any);
     } else {
-      setError('emailpassword' as any, 'both');
+      setError('emailpassword' as any, { message: 'both' });
     }
-  }, [email, password, clearError, setError, isEditing]);
+  }, [email, password, clearErrors, setError, isEditing]);
 
-  function validate(value: string) {
+  function validate(value?: string) {
     return value === editedUserEmail || !allEmails.has(value);
   }
 
@@ -94,7 +97,7 @@ export const EmailPassword: React.FC<
           label="Email"
           type="text"
           inputRef={() => {
-            register({ validate, pattern: EMAIL_REGEX });
+            register('email', { validate, pattern: EMAIL_REGEX });
           }}
         />
         <Field
@@ -103,7 +106,7 @@ export const EmailPassword: React.FC<
           label="Password"
           placeholder="Enter password"
           inputRef={() => {
-            register({ minLength: PASSWORD_MIN_LENGTH });
+            register('password', { minLength: PASSWORD_MIN_LENGTH });
           }}
         />
       </div>

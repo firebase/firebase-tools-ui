@@ -16,13 +16,14 @@
 
 import { Typography } from '@rmwc/typography';
 import React from 'react';
+import { UseFormReturn } from 'react-hook-form';
 
 import { Field } from '../../../common/Field';
 import { AddAuthUserPayload } from '../../types';
 import styles from './controls.module.scss';
 import { validateSerializedCustomClaims } from './customClaimsValidation';
 
-function validate(attributes: string) {
+function validate(attributes?: string) {
   if (attributes === '') {
     return true;
   }
@@ -47,10 +48,9 @@ function validate(attributes: string) {
 
 const CUSTOM_ATTRIBUTES_CONTROL_NAME = 'customAttributes';
 
-export const CustomAttributes: React.FC<React.PropsWithChildren<any>> = ({
-  errors = {},
-  register,
-}) => {
+export const CustomAttributes: React.FC<
+  React.PropsWithChildren<UseFormReturn<AddAuthUserPayload>>
+> = ({ formState: { errors }, register }) => {
   const label = (
     <label>
       <Typography use="subtitle2" tag="div" theme="textPrimaryOnBackground">
@@ -62,7 +62,7 @@ export const CustomAttributes: React.FC<React.PropsWithChildren<any>> = ({
     <div className={styles.customAttributesWrapper}>
       <Field
         inputRef={() => {
-          register({ validate });
+          register('customAttributes', { validate });
         }}
         error={errors[CUSTOM_ATTRIBUTES_CONTROL_NAME]?.message}
         name={CUSTOM_ATTRIBUTES_CONTROL_NAME}
