@@ -29,12 +29,11 @@ const JsonEditor: React.FC<
 > = ({ value, onChange, name }) => {
   const [initialValue] = useState(JSON.stringify(value));
   const {
-    errors,
-    formState: { touched },
+    formState: { errors, touchedFields },
     register,
     unregister,
     setValue,
-    triggerValidation,
+    trigger,
   } = useFormContext();
 
   useEffect(() => {
@@ -53,7 +52,7 @@ const JsonEditor: React.FC<
   }, [register, unregister, name]);
 
   async function handleChange(value: string) {
-    if (await triggerValidation(name)) {
+    if (await trigger(name)) {
       onChange(JSON.parse(value));
     }
   }
@@ -66,7 +65,7 @@ const JsonEditor: React.FC<
         setValue(name, e.currentTarget.value);
         handleChange(e.currentTarget.value);
       }}
-      error={touched[name] && errors[name]?.message}
+      error={touchedFields[name] && errors[name]?.message}
     />
   );
 };

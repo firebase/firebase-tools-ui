@@ -20,7 +20,7 @@ import { Theme, ThemeProvider } from '@rmwc/theme';
 import { Typography } from '@rmwc/typography';
 import firebase from 'firebase';
 import React, { useState } from 'react';
-import { Controller, FormContext, useForm } from 'react-hook-form';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
 
 import { grey100 } from '../../../colors';
 import { Field, SelectField } from '../../../components/common/Field';
@@ -52,7 +52,7 @@ export const CollectionFilter: React.FC<
     defaultValues: collectionFilter,
   });
 
-  const cf = formMethods.watch({ nest: true });
+  const cf = formMethods.watch();
 
   const onSubmit = (data: CollectionFilterType) => {
     dispatch(
@@ -66,7 +66,7 @@ export const CollectionFilter: React.FC<
 
   return (
     <CollectionFilterTheme>
-      <FormContext {...(formMethods as any)}>
+      <FormProvider {...(formMethods as any)}>
         <form
           onSubmit={formMethods.handleSubmit(onSubmit)}
           className={className}
@@ -74,15 +74,18 @@ export const CollectionFilter: React.FC<
           {/* Field entry */}
           <FilterItem title="Filter by field" preview={cf.field} defaultOpen>
             <Controller
-              as={Field}
               name="field"
-              label="Enter field"
               rules={{ required: 'Required' }}
               defaultValue=""
-              error={
-                (formMethods.formState.touched as any)['field'] &&
-                (formMethods.errors as any)['field']?.message
-              }
+              render={() => (
+                <Field
+                  label="Enter field"
+                  error={
+                    formMethods.formState.touchedFields['field'] &&
+                    formMethods.formState.errors['field']?.message
+                  }
+                />
+              )}
             />
           </FilterItem>
 
@@ -97,8 +100,8 @@ export const CollectionFilter: React.FC<
                 <ConditionEntry
                   name="value"
                   error={
-                    (formMethods.formState.touched as any)['value'] &&
-                    (formMethods.errors as any)['value']?.message
+                    (formMethods.formState.touchedFields as any)['value'] &&
+                    (formMethods.formState.errors as any)['value']?.message
                   }
                 />
               )}
@@ -153,7 +156,7 @@ export const CollectionFilter: React.FC<
             </CardActionButtons>
           </CardActions>
         </form>
-      </FormContext>
+      </FormProvider>
     </CollectionFilterTheme>
   );
 };
@@ -255,12 +258,15 @@ const ConditionSelect: React.FC<React.PropsWithChildren<unknown>> = ({
   return (
     <>
       <Controller
-        as={SelectField}
         name="operator"
-        label="Only show documents where the specified field is..."
-        placeholder="No condition"
-        options={options}
-        onChange={([selected]) => selected.currentTarget.value || undefined}
+        render={() => (
+          <SelectField
+            label="Only show documents where the specified field is..."
+            placeholder="No condition"
+            options={options}
+            onChange={(selected) => selected.currentTarget.value || undefined}
+          />
+        )}
       />
       {children}
     </>

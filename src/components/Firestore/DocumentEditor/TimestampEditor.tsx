@@ -42,8 +42,7 @@ const TimestampEditor: React.FC<
   const [date, setDate] = useState(value.toDate());
 
   const {
-    errors,
-    formState: { touched },
+    formState: { touchedFields, errors },
     register,
     unregister,
     setValue,
@@ -70,12 +69,12 @@ const TimestampEditor: React.FC<
       defaultValue={dateToLocale(date)}
       onChange={(e) => {
         const timestamp = Date.parse(e.currentTarget.value);
-        setValue(name, timestamp, true);
+        setValue(name, timestamp, { shouldValidate: true });
         if (!isNaN(timestamp) && timestamp !== date.getTime()) {
           setDate(new Date(timestamp));
         }
       }}
-      error={touched[name] && errors[name]?.message}
+      error={touchedFields[name] && errors[name]?.message}
     />
   );
 };

@@ -16,7 +16,6 @@
 
 import { Typography } from '@rmwc/typography';
 import React, { useEffect } from 'react';
-import { FormContextValues } from 'react-hook-form/dist/contextTypes';
 import { connect } from 'react-redux';
 
 import { createStructuredSelector } from '../../../../store';
@@ -49,15 +48,13 @@ function getErrorText(errors: any) {
 
 export type EmailPasswordProps = PropsFromState & { editedUserEmail?: string };
 export const EmailPassword: React.FC<
-  React.PropsWithChildren<
-    EmailPasswordProps & FormContextValues<AddAuthUserPayload>
-  >
+  React.PropsWithChildren<EmailPasswordProps & any>
 > = ({
   register,
   watch,
   setError,
   clearError,
-  errors,
+  errors = {},
   allEmails,
   editedUserEmail,
   isEditing,
@@ -96,14 +93,18 @@ export const EmailPassword: React.FC<
           placeholder="Enter email"
           label="Email"
           type="text"
-          inputRef={register({ validate, pattern: EMAIL_REGEX })}
+          inputRef={() => {
+            register({ validate, pattern: EMAIL_REGEX });
+          }}
         />
         <Field
           name="password"
           type="text"
           label="Password"
           placeholder="Enter password"
-          inputRef={register({ minLength: PASSWORD_MIN_LENGTH })}
+          inputRef={() => {
+            register({ minLength: PASSWORD_MIN_LENGTH });
+          }}
         />
       </div>
       <Typography

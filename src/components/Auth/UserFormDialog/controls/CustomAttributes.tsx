@@ -16,7 +16,6 @@
 
 import { Typography } from '@rmwc/typography';
 import React from 'react';
-import { FormContextValues } from 'react-hook-form/dist/contextTypes';
 
 import { Field } from '../../../common/Field';
 import { AddAuthUserPayload } from '../../types';
@@ -48,9 +47,10 @@ function validate(attributes: string) {
 
 const CUSTOM_ATTRIBUTES_CONTROL_NAME = 'customAttributes';
 
-export const CustomAttributes: React.FC<
-  React.PropsWithChildren<FormContextValues<AddAuthUserPayload>>
-> = ({ errors, register }) => {
+export const CustomAttributes: React.FC<React.PropsWithChildren<any>> = ({
+  errors = {},
+  register,
+}) => {
   const label = (
     <label>
       <Typography use="subtitle2" tag="div" theme="textPrimaryOnBackground">
@@ -61,7 +61,9 @@ export const CustomAttributes: React.FC<
   return (
     <div className={styles.customAttributesWrapper}>
       <Field
-        inputRef={register({ validate })}
+        inputRef={() => {
+          register({ validate });
+        }}
         error={errors[CUSTOM_ATTRIBUTES_CONTROL_NAME]?.message}
         name={CUSTOM_ATTRIBUTES_CONTROL_NAME}
         label={label}

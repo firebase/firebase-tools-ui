@@ -19,7 +19,7 @@ import './index.scss';
 import { IconButton } from '@rmwc/icon-button';
 import firebase from 'firebase';
 import React, { useEffect } from 'react';
-import { FormContext, useForm, useFormContext } from 'react-hook-form';
+import { FormProvider, useForm, useFormContext } from 'react-hook-form';
 
 import { Field, SelectField } from '../../common/Field';
 import { FieldType, FirestoreAny, FirestoreMap } from '../models';
@@ -129,9 +129,10 @@ const DocumentEditor: React.FC<
     firestore,
   ]);
 
-  const errorCount = React.useMemo(() => Object.keys(methods.errors).length, [
-    methods,
-  ]);
+  const errorCount = React.useMemo(
+    () => Object.keys(methods.formState.errors).length,
+    [methods]
+  );
 
   useEffect(() => {
     if (errorCount === 0) {
@@ -142,7 +143,7 @@ const DocumentEditor: React.FC<
   }, [denormalizedStore, errorCount, onChange]);
 
   return (
-    <FormContext {...methods}>
+    <FormProvider {...methods}>
       <DocumentStore store={store} dispatch={dispatch}>
         <div className="DocumentEditor">
           {
@@ -161,7 +162,7 @@ const DocumentEditor: React.FC<
           }
         </div>
       </DocumentStore>
-    </FormContext>
+    </FormProvider>
   );
 };
 
@@ -394,11 +395,10 @@ const NameEditor: React.FC<
   const {
     register,
     unregister,
-    errors,
-    clearError,
     setValue,
     setError,
-    formState: { touched },
+    formState: { touchedFields, errors },
+    clearErrors,
   } = useFormContext();
 
   const dispatch = useDispatch();
@@ -424,13 +424,13 @@ const NameEditor: React.FC<
     // Validate `name` when siblings change
     const isUnique = siblingNames.every((name) => name !== child.name);
     if (!child.name) {
-      setError(formName, 'required', 'Required');
+      setError(formName, { type: 'required', message: 'Required' });
     } else if (!isUnique) {
-      setError(formName, 'unique', 'Must be unique');
+      setError(formName, { type: 'unique', message: 'Must be unique' });
     } else {
-      clearError(formName);
+      clearErrors(formName);
     }
-  }, [child, siblingNames, formName, setError, clearError]);
+  }, [child, siblingNames, formName, setError, clearErrors]);
 
   return (
     <Field
@@ -451,7 +451,7 @@ const NameEditor: React.FC<
       // Show the `unique` error regardless of the field having been
       // touched; in case another field's name was updated to now conflict
       error={
-        (touched[formName] || errors[formName]?.type === 'unique') &&
+        (touchedFields[formName] || errors[formName]?.type === 'unique') &&
         errors[formName]?.message
       }
     />

@@ -31,12 +31,11 @@ const ReferenceEditor: React.FC<
   const [path] = useState(value.path);
   const firestore = useFirestore();
   const {
-    errors,
-    formState: { touched },
+    formState: { touchedFields, errors },
     register,
     unregister,
     setValue,
-    triggerValidation,
+    trigger,
   } = useFormContext();
 
   useEffect(() => {
@@ -55,7 +54,7 @@ const ReferenceEditor: React.FC<
   }, [register, unregister, name, firestore]);
 
   async function handleChange(value: string) {
-    if (await triggerValidation(name)) {
+    if (await trigger(name)) {
       onChange(new DocumentPath(value));
     }
   }
@@ -68,7 +67,7 @@ const ReferenceEditor: React.FC<
         setValue(name, e.currentTarget.value);
         handleChange(e.currentTarget.value);
       }}
-      error={touched[name] && errors[name]?.message}
+      error={touchedFields[name] && errors[name]?.message}
     />
   );
 };

@@ -66,18 +66,20 @@ export const ConditionEntry: React.FC<
 
       {fieldType === 'string' && (
         <Controller
-          as={Field}
           name={name}
           defaultValue=""
-          error={error}
-          fieldClassName={styles.conditionEntryValue}
-          aria-label="Value"
+          render={() => (
+            <Field
+              error={error}
+              fieldClassName={styles.conditionEntryValue}
+              aria-label="Value"
+            />
+          )}
         />
       )}
 
       {fieldType === 'number' && (
         <Controller
-          as={Field}
           name={name}
           defaultValue={''}
           rules={{
@@ -86,15 +88,18 @@ export const ConditionEntry: React.FC<
               message: 'Must be a number',
             },
           }}
-          error={error}
-          onChange={([event]) =>
-            // Cast it back to a number before saving to model
-            event.target.value.match(NUMBER_REGEX)
-              ? parseFloat(event.target.value)
-              : event.target.value
-          }
-          fieldClassName={styles.conditionEntryValue}
-          aria-label="Value"
+          render={() => (
+            <Field
+              error={error}
+              onChange={(event) => {
+                // Cast it back to a number before saving to model
+                const value = (event.target as HTMLInputElement).value;
+                return value.match(NUMBER_REGEX) ? parseFloat(value) : value;
+              }}
+              fieldClassName={styles.conditionEntryValue}
+              aria-label="Value"
+            />
+          )}
         />
       )}
 
@@ -111,7 +116,7 @@ const BooleanCondition: React.FC<React.PropsWithChildren<{ name: string }>> = ({
   const { register, setValue, unregister, watch } = useFormContext();
 
   useEffect(() => {
-    register({ name });
+    register(name);
     setValue(name, true);
 
     return () => unregister(name);

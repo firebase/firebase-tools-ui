@@ -16,7 +16,6 @@
 
 import { CircularProgress } from '@rmwc/circular-progress';
 import React, { useEffect, useRef, useState } from 'react';
-import { FormContextValues } from 'react-hook-form/dist/contextTypes';
 
 import { Field } from '../../../common/Field';
 import { AddAuthUserPayload } from '../../types';
@@ -29,7 +28,7 @@ enum ImagePreviewStatus {
   ERROR = 'ERROR',
 }
 
-export type ImageUrlInputProps = FormContextValues<AddAuthUserPayload> & {
+export type ImageUrlInputProps = any & {
   ImageConstructor?: typeof Image;
 };
 
@@ -95,7 +94,9 @@ export const ImageUrlInput: React.FC<
           status.current === ImagePreviewStatus.ERROR && 'Error loading image'
         }
         type="text"
-        inputRef={register({ validate })}
+        inputRef={() => {
+          register({ validate });
+        }}
       />
       {status.current === ImagePreviewStatus.LOADED && (
         <img className={styles.image} src={previewUrl} alt="Profile preview" />

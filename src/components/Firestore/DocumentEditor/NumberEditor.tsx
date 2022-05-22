@@ -28,12 +28,11 @@ const NumberEditor: React.FC<
   }>
 > = ({ value, onChange, name }) => {
   const {
-    errors,
-    formState: { touched },
+    formState: { touchedFields, errors },
     register,
     unregister,
     setValue,
-    triggerValidation,
+    trigger,
   } = useFormContext();
 
   useEffect(() => {
@@ -49,7 +48,7 @@ const NumberEditor: React.FC<
   }, [register, unregister, name]);
 
   async function handleChange(value: string) {
-    if (await triggerValidation(name)) {
+    if (await trigger(name)) {
       onChange(parseFloat(value));
     }
   }
@@ -62,7 +61,7 @@ const NumberEditor: React.FC<
         setValue(name, e.currentTarget.value);
         handleChange(e.currentTarget.value);
       }}
-      error={touched[name] && errors[name]?.message}
+      error={touchedFields[name] && errors[name]?.message}
     />
   );
 };

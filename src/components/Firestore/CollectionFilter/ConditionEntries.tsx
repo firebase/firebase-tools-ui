@@ -26,8 +26,7 @@ export const ConditionEntries: React.FC<
   React.PropsWithChildren<{ name: string }>
 > = ({ name }) => {
   const {
-    errors,
-    formState: { touched },
+    formState: { errors, touchedFields },
   } = useFormContext();
 
   const { fields, append, remove } = useFieldArray({
@@ -48,7 +47,7 @@ export const ConditionEntries: React.FC<
           <li key={field.id}>
             <ConditionEntry
               name={conditionName}
-              error={touched[conditionName] && errors[conditionName]}
+              error={touchedFields[conditionName] && errors[conditionName]}
             />
             <IconButton
               className={
