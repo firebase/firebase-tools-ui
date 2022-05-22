@@ -80,6 +80,15 @@ export const EmailPassword: React.FC<
     return value === editedUserEmail || !allEmails.has(value);
   }
 
+  const { ref: passwordRef, ...passwordState } = register('password', {
+    minLength: PASSWORD_MIN_LENGTH,
+  });
+
+  const { ref: emailRef, ...emailState } = register('email', {
+    validate,
+    pattern: EMAIL_REGEX,
+  });
+
   return (
     <>
       <Typography
@@ -92,22 +101,20 @@ export const EmailPassword: React.FC<
       </Typography>
       <div className={styles.emailWrapper}>
         <Field
-          name="email"
+          // name="email"
           placeholder="Enter email"
           label="Email"
           type="text"
-          inputRef={() => {
-            register('email', { validate, pattern: EMAIL_REGEX });
-          }}
+          inputRef={emailRef}
+          {...emailState}
         />
         <Field
-          name="password"
+          // name="password"
           type="text"
           label="Password"
           placeholder="Enter password"
-          inputRef={() => {
-            register('password', { minLength: PASSWORD_MIN_LENGTH });
-          }}
+          inputRef={passwordRef}
+          {...passwordState}
         />
       </div>
       <Typography
