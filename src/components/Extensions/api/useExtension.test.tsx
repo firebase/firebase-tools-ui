@@ -15,6 +15,7 @@
  */
 
 import { renderHook } from '@testing-library/react';
+
 import { Extension } from '../models';
 import {
   BACKEND_EXTENSION,
