@@ -138,7 +138,7 @@
     "prettier-plugin-import-sort": "0.0.6",
     "redux-mock-store": "^1.5.4",
     "run-script-os": "^1.1.6",
-    "sass": "^1.26.3",
+    "sass": "^1.52.1",
     "webpack": "^5.72.1",
     "webpack-cli": "^4.9.2"
   },
