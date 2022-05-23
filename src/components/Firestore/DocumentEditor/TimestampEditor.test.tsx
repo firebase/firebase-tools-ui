@@ -17,13 +17,13 @@
 import { act, fireEvent, render } from '@testing-library/react';
 import { firestore } from 'firebase';
 import React from 'react';
-import { FormContext, useForm } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 
 import TimestampEditor from './TimestampEditor';
 
 const TestForm: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
   const methods = useForm();
-  return <FormContext {...methods}>{children}</FormContext>;
+  return <FormProvider {...methods}>{children}</FormProvider>;
 };
 
 it('renders an editor for a timestamp', async () => {

@@ -16,13 +16,13 @@
 
 import { act, fireEvent, render } from '@testing-library/react';
 import React from 'react';
-import { FormContext, useForm } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 
 import NumberEditor from './NumberEditor';
 
 const TestForm: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
   const methods = useForm();
-  return <FormContext {...methods}>{children}</FormContext>;
+  return <FormProvider {...methods}>{children}</FormProvider>;
 };
 
 it('renders an editor for a number', async () => {

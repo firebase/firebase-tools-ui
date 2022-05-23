@@ -16,7 +16,7 @@
 
 import { act, fireEvent, render } from '@testing-library/react';
 import React from 'react';
-import { FormContext, useForm } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 
 import JsonEditor from './JsonEditor';
 
@@ -24,7 +24,7 @@ const GOOD_PATH = '/wow/cool';
 
 const TestForm: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
   const methods = useForm();
-  return <FormContext {...methods}>{children}</FormContext>;
+  return <FormProvider {...methods}>{children}</FormProvider>;
 };
 
 it('renders a field with json stringified value', async () => {
