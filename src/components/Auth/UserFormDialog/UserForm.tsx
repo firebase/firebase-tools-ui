@@ -85,6 +85,8 @@ export const UserForm: React.FC<React.PropsWithChildren<UserFormProps>> = ({
     [formState, save]
   );
 
+  const { ref: displayNameRef, ...displayNameField } = register('displayName');
+
   return (
     <Dialog renderToPortal open onClose={clearAuthUserDialogData}>
       <DialogTitle>
@@ -94,14 +96,12 @@ export const UserForm: React.FC<React.PropsWithChildren<UserFormProps>> = ({
       <form onSubmit={handleSubmit(submit)} data-testid="user-form">
         <DialogContent>
           <Field
-            name="displayName"
             label="Display name (optional)"
             type="text"
             placeholder="Enter display name"
             error={formState.errors?.displayName && 'Display name is required'}
-            inputRef={() => {
-              register('displayName');
-            }}
+            inputRef={displayNameRef}
+            {...displayNameField}
           />
 
           <ImageUrlInput {...form} />

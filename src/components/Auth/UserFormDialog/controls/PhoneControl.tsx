@@ -56,6 +56,11 @@ export const PhoneControl: React.FC<
     }
   }
 
+  const { ref: phoneNumberRef, ...phoneNumberField } = register('phoneNumber', {
+    pattern: PHONE_REGEX,
+    validate,
+  });
+
   return (
     <>
       <Typography
@@ -67,14 +72,12 @@ export const PhoneControl: React.FC<
         Phone authentication
       </Typography>
       <Field
-        name="phoneNumber"
         label="Phone"
         placeholder="Enter phone number"
         type="tel"
         error={getErrorText()}
-        inputRef={() => {
-          register('phoneNumber', { pattern: PHONE_REGEX, validate });
-        }}
+        inputRef={phoneNumberRef}
+        {...phoneNumberField}
       />
     </>
   );

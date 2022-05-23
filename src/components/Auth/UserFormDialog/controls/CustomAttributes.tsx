@@ -58,17 +58,21 @@ export const CustomAttributes: React.FC<
       </Typography>
     </label>
   );
+
+  const {
+    ref: customAttributesRef,
+    ...customAttributesField
+  } = register('customAttributes', { validate });
+
   return (
     <div className={styles.customAttributesWrapper}>
       <Field
-        inputRef={() => {
-          register('customAttributes', { validate });
-        }}
+        inputRef={customAttributesRef}
         error={errors[CUSTOM_ATTRIBUTES_CONTROL_NAME]?.message}
-        name={CUSTOM_ATTRIBUTES_CONTROL_NAME}
         label={label}
         textarea
         placeholder={`Enter valid json, e.g. {"role":"admin"}`}
+        {...customAttributesField}
       />
       <Typography use="body2">
         These custom key:value attributes can be used with Rules to implement

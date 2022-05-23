@@ -85,19 +85,21 @@ export const ImageUrlInput: React.FC<
     );
   };
 
+  const { ref: photoUrlRef, ...photoUrlField } = register('photoUrl', {
+    validate,
+  });
+
   return (
     <>
       <Field
-        name="photoUrl"
         label="User photo URL (optional)"
         placeholder="Enter URL"
         error={
           status.current === ImagePreviewStatus.ERROR && 'Error loading image'
         }
         type="text"
-        inputRef={() => {
-          register('photoUrl', { validate });
-        }}
+        inputRef={photoUrlRef}
+        {...photoUrlField}
       />
       {status.current === ImagePreviewStatus.LOADED && (
         <img className={styles.image} src={previewUrl} alt="Profile preview" />

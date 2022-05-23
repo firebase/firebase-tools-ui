@@ -101,7 +101,6 @@ export const EmailPassword: React.FC<
       </Typography>
       <div className={styles.emailWrapper}>
         <Field
-          // name="email"
           placeholder="Enter email"
           label="Email"
           type="text"
@@ -109,7 +108,6 @@ export const EmailPassword: React.FC<
           {...emailState}
         />
         <Field
-          // name="password"
           type="text"
           label="Password"
           placeholder="Enter password"
