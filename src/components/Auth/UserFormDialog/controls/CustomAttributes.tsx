@@ -32,7 +32,7 @@ function validate(attributes?: string) {
     // We're reusing server validation.
     validateSerializedCustomClaims(attributes);
     return true;
-  } catch (e) {
+  } catch (e: any) {
     if (e.message === 'INVALID_CLAIMS') {
       return 'Custom claims must be a valid JSON object';
     }
@@ -59,10 +59,10 @@ export const CustomAttributes: React.FC<
     </label>
   );
 
-  const { ref: customAttributesRef, ...customAttributesField } = register(
-    'customAttributes',
-    { validate }
-  );
+  const {
+    ref: customAttributesRef,
+    ...customAttributesField
+  } = register('customAttributes', { validate });
 
   return (
     <div className={styles.customAttributesWrapper}>

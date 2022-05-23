@@ -93,7 +93,7 @@ describe('EmailPassword', () => {
           email: validEmail,
           password: 'lollol',
         },
-        { allEmails: new Set([validEmail]) }
+        { allEmails: new Set([validEmail]), isEditing: false }
       );
       await triggerValidation();
       expect(getByText('User with this email already exists')).not.toBeNull();
@@ -105,7 +105,11 @@ describe('EmailPassword', () => {
           email: validEmail,
           password: 'lollol',
         },
-        { allEmails: new Set([validEmail]), editedUserEmail: validEmail }
+        {
+          allEmails: new Set([validEmail]),
+          editedUserEmail: validEmail,
+          isEditing: true,
+        }
       );
       await triggerValidation();
       expect(queryByText('User with this email already exists')).toBeNull();

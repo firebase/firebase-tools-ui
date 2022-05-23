@@ -33,11 +33,13 @@ describe('useExtension', () => {
       extensionInstanceId: 'foo-published',
       extension: BACKEND_EXTENSION,
       extensionVersion: EXTENSION_VERSION,
+      functionTriggers: [],
     });
     const other: Extension = convertBackendToExtension({
       env: {},
       extensionInstanceId: 'foo-local',
       extensionSpec: EXTENSION_SPEC,
+      functionTriggers: [],
     });
 
     const wrapper: React.FC<React.PropsWithChildren<unknown>> = ({

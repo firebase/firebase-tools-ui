@@ -33,7 +33,7 @@ it('renders an editor for a number', async () => {
     </TestForm>
   );
 
-  expect(getByLabelText(/Value/).value).toBe('1');
+  expect((getByLabelText(/Value/) as HTMLInputElement).value).toBe('1');
 
   onChange.mockReset();
 

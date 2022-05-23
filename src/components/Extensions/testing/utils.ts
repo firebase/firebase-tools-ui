@@ -104,19 +104,21 @@ export const CONFIG_WITH_EXTENSION = {
   },
 };
 
-export const BACKEND_LIST = [
+export const BACKEND_LIST: ExtensionBackend[] = [
   // published extension
   {
     env: {},
     extensionInstanceId: 'pirojok-the-published-extension',
     extension: BACKEND_EXTENSION,
     extensionVersion: EXTENSION_VERSION,
+    functionTriggers: [],
   },
   // local extension
   {
     extensionInstanceId: 'pirojok-the-local-extension',
     env: {},
     extensionSpec: EXTENSION_SPEC,
+    functionTriggers: [],
   },
   // Not and extension back-end
   {

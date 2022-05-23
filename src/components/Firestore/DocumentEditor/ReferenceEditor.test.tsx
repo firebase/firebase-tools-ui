@@ -40,7 +40,9 @@ it('renders an editor for a document-ref', async () => {
     )
   );
 
-  expect(getByLabelText(/Document path/).value).toBe('foo/bar');
+  expect((getByLabelText(/Document path/) as HTMLInputElement).value).toBe(
+    'foo/bar'
+  );
 
   await act(async () => {
     fireEvent.change(getByLabelText(/Document path/), {

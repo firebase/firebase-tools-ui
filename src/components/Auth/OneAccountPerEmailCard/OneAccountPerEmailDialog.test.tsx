@@ -21,18 +21,16 @@ import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 
 import { AppState } from '../../../store';
+import { createFakeAuthStateWithUsers } from '../test_utils';
 import { OneAccountPerEmailDialog } from './OneAccountPerEmailDialog';
 
 describe('OneAccountPerEmailDialog', () => {
   function setup(allowDuplicateEmails = false) {
     const onClose = jest.fn();
     const setAllowDuplicateEmails = jest.fn();
+
     const store = configureStore<Pick<AppState, 'auth'>>()({
-      auth: {
-        users: [],
-        filter: '',
-        allowDuplicateEmails: false,
-      },
+      auth: createFakeAuthStateWithUsers([]),
     });
 
     const methods = render(

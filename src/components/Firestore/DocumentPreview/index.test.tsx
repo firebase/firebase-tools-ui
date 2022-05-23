@@ -15,7 +15,7 @@
  */
 
 import { RenderResult, act, fireEvent, waitFor } from '@testing-library/react';
-import { firestore } from 'firebase';
+import firebase from 'firebase';
 import React from 'react';
 
 import { renderWithFirestore } from '../testing/FirestoreTestProviders';
@@ -23,7 +23,7 @@ import DocumentPreview from './index';
 
 describe('loaded document', () => {
   let result: RenderResult;
-  let documentReference: firestore.DocumentReference;
+  let documentReference: firebase.firestore.DocumentReference;
 
   beforeEach(async () => {
     result = await renderWithFirestore(async (firestore) => {
@@ -58,7 +58,7 @@ describe('loaded document', () => {
     });
 
     expect(documentReference.update).toHaveBeenCalledWith(
-      new firestore.FieldPath('new'),
+      new firebase.firestore.FieldPath('new'),
       '42'
     );
   });
@@ -79,8 +79,8 @@ describe('loaded document', () => {
     });
 
     expect(documentReference.update).toHaveBeenCalledWith(
-      new firestore.FieldPath('foo'),
-      firestore.FieldValue.delete()
+      new firebase.firestore.FieldPath('foo'),
+      firebase.firestore.FieldValue.delete()
     );
   });
 
@@ -98,7 +98,7 @@ describe('loaded document', () => {
     fireEvent.submit(getByText('Save'));
 
     expect(documentReference.update).toHaveBeenCalledWith(
-      new firestore.FieldPath('foo'),
+      new firebase.firestore.FieldPath('foo'),
       'new'
     );
   });
@@ -112,7 +112,7 @@ describe('loaded document', () => {
       getByText('edit').click();
     });
 
-    expect(getByLabelText('Field').disabled).toBe(true);
+    expect((getByLabelText('Field') as HTMLInputElement).disabled).toBe(true);
   });
 
   it('does not show `add` a field', () => {
@@ -124,7 +124,7 @@ describe('loaded document', () => {
 
 describe('missing document', () => {
   let result: RenderResult;
-  let documentReference: firestore.DocumentReference;
+  let documentReference: firebase.firestore.DocumentReference;
 
   beforeEach(async () => {
     result = await renderWithFirestore(async (firestore) => {
@@ -173,7 +173,7 @@ describe('missing document', () => {
 
 describe('empty document', () => {
   let result: RenderResult;
-  let documentReference: firestore.DocumentReference;
+  let documentReference: firebase.firestore.DocumentReference;
 
   beforeEach(async () => {
     result = await renderWithFirestore(async (firestore) => {
@@ -217,7 +217,7 @@ describe('empty document', () => {
     await waitFor(() => !queryByText('Save'));
 
     expect(documentReference.update).toHaveBeenCalledWith(
-      new firestore.FieldPath('meaningOfLife'),
+      new firebase.firestore.FieldPath('meaningOfLife'),
       '42'
     );
     expect(documentReference.set).not.toHaveBeenCalled();
@@ -226,7 +226,7 @@ describe('empty document', () => {
 
 describe('loaded array', () => {
   let result: RenderResult;
-  let documentReference: firestore.DocumentReference;
+  let documentReference: firebase.firestore.DocumentReference;
 
   beforeEach(async () => {
     result = await renderWithFirestore(async (firestore) => {
@@ -271,17 +271,19 @@ describe('loaded array', () => {
       queryAllByText('delete')[1].click();
     });
 
-    expect(documentReference.update).toHaveBeenCalledWith(
-      new firestore.FieldPath('foo'),
-      ['bravo', 'bravo']
-    );
+    expect(
+      documentReference.update
+    ).toHaveBeenCalledWith(new firebase.firestore.FieldPath('foo'), [
+      'bravo',
+      'bravo',
+    ]);
   });
 
   it('array elements keys are immutable', async () => {
     const { getByLabelText, getByText, queryAllByText } = result;
     // update the bravo-element
     await act(async () => queryAllByText('edit')[1].click());
-    expect(getByLabelText('Index').disabled).toBe(true);
+    expect((getByLabelText('Index') as HTMLInputElement).disabled).toBe(true);
   });
 
   it('updates a top-level array element', () => {
@@ -294,10 +296,13 @@ describe('loaded array', () => {
       target: { value: 'new' },
     });
     fireEvent.submit(getByText('Save'));
-    expect(documentReference.update).toHaveBeenCalledWith(
-      new firestore.FieldPath('foo'),
-      ['alpha', 'new', 'bravo']
-    );
+    expect(
+      documentReference.update
+    ).toHaveBeenCalledWith(new firebase.firestore.FieldPath('foo'), [
+      'alpha',
+      'new',
+      'bravo',
+    ]);
   });
 
   it('adds a top-level array element', () => {
@@ -307,22 +312,26 @@ describe('loaded array', () => {
       queryAllByText('add')[1].click();
     });
 
-    expect(getByLabelText('Index').value).toBe('3');
+    expect((getByLabelText('Index') as HTMLInputElement).value).toBe('3');
 
     fireEvent.change(getByLabelText('Value'), {
       target: { value: 'new' },
     });
     fireEvent.submit(getByText('Save'));
-    expect(documentReference.update).toHaveBeenCalledWith(
-      new firestore.FieldPath('foo'),
-      ['alpha', 'bravo', 'bravo', 'new']
-    );
+    expect(
+      documentReference.update
+    ).toHaveBeenCalledWith(new firebase.firestore.FieldPath('foo'), [
+      'alpha',
+      'bravo',
+      'bravo',
+      'new',
+    ]);
   });
 });
 
 describe('loaded map', () => {
   let result: RenderResult;
-  let documentReference: firestore.DocumentReference;
+  let documentReference: firebase.firestore.DocumentReference;
 
   beforeEach(async () => {
     result = await renderWithFirestore(async (firestore) => {
@@ -370,7 +379,7 @@ describe('loaded map', () => {
     await act(async () => {
       queryAllByText('edit')[1].click();
     });
-    expect(getByLabelText('Field').disabled).toBe(true);
+    expect((getByLabelText('Field') as HTMLInputElement).disabled).toBe(true);
   });
 
   it('updates a map element', async () => {
@@ -385,7 +394,7 @@ describe('loaded map', () => {
     });
     fireEvent.submit(getByText('Save'));
     expect(documentReference.update).toHaveBeenCalledWith(
-      new firestore.FieldPath('foo', 'first_name'),
+      new firebase.firestore.FieldPath('foo', 'first_name'),
       'new'
     );
   });
@@ -405,7 +414,7 @@ describe('loaded map', () => {
     });
     fireEvent.submit(getByText('Save'));
     expect(documentReference.update).toHaveBeenCalledWith(
-      new firestore.FieldPath('foo', 'wow'),
+      new firebase.firestore.FieldPath('foo', 'wow'),
       'new'
     );
   });

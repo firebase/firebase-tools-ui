@@ -30,10 +30,10 @@ const REF = fakeReference({
 });
 
 beforeEach(() => {
-  REF.toString.mockReturnValue('http://localhost:9000/my_key');
+  (REF.toString as jest.Mock).mockReturnValue('http://localhost:9000/my_key');
 
-  ROOT_REF.child.mockReturnValue(REF);
-  ROOT_REF.toString.mockReturnValue('http://localhost:9000/');
+  (ROOT_REF.child as jest.Mock).mockReturnValue(REF);
+  (ROOT_REF.toString as jest.Mock).mockReturnValue('http://localhost:9000/');
 });
 
 describe('the node key', () => {
@@ -91,7 +91,9 @@ describe('editing the node', () => {
 
       act(() => getByLabelText('Edit value').click());
 
-      expect(getByLabelText('Field').value).toBe(ROOT_REF.toString());
+      expect((getByLabelText('Field') as HTMLInputElement).value).toBe(
+        ROOT_REF.toString()
+      );
     });
 
     it('has an empty value entry', () => {
@@ -103,7 +105,7 @@ describe('editing the node', () => {
 
       act(() => getByLabelText('Edit value').click());
 
-      expect(getByLabelText('Value').value).toBe('');
+      expect((getByLabelText('Value') as HTMLInputElement).value).toBe('');
     });
   });
 
@@ -117,7 +119,9 @@ describe('editing the node', () => {
 
       act(() => getByLabelText('Edit value').click());
 
-      expect(getByLabelText('Field').value).toBe(ROOT_REF.toString());
+      expect((getByLabelText('Field') as HTMLInputElement).value).toBe(
+        ROOT_REF.toString()
+      );
     });
 
     it('has a value entry box initially', () => {
@@ -129,7 +133,9 @@ describe('editing the node', () => {
 
       act(() => getByLabelText('Edit value').click());
 
-      expect(getByLabelText('Value').value).toBe('my-value');
+      expect((getByLabelText('Value') as HTMLInputElement).value).toBe(
+        'my-value'
+      );
     });
   });
 });

@@ -80,7 +80,7 @@
     "build:web": "run-script-os",
     "build:web:win32": "SASS_PATH=\"node_modules;src\" react-scripts build",
     "build:web:default": "SASS_PATH=node_modules:src react-scripts build",
-    "build:server": "webpack --target=node server.js -o server.bundle.js",
+    "build:server": "webpack --target=node ./server.js -o server.bundle.js",
     "test": "react-scripts test --env=./custom-jest-environment.js",
     "test:debug": "react-scripts --inspect-brk test --env=./custom-jest-environment.js --runInBand",
     "test:coverage": "react-scripts test --coverage --watchAll=false --env=./custom-jest-environment.js",

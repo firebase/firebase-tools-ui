@@ -29,12 +29,14 @@ enum ImagePreviewStatus {
   ERROR = 'ERROR',
 }
 
-export type ImageUrlInputProps = UseFormReturn<AddAuthUserPayload> & {
+export type ImageUrlInputProps = {
   ImageConstructor?: typeof Image;
 };
 
 export const ImageUrlInput: React.FC<
-  React.PropsWithChildren<ImageUrlInputProps>
+  React.PropsWithChildren<
+    UseFormReturn<AddAuthUserPayload> & ImageUrlInputProps
+  >
 > = ({ register, watch, trigger, ImageConstructor }) => {
   ImageConstructor = ImageConstructor || Image;
   const [previewUrl, setPreviewUrl] = useState('');

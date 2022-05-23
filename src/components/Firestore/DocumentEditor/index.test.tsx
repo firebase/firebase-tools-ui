@@ -43,9 +43,9 @@ describe('with basic root fields', () => {
   it('renders current field name, type, value', () => {
     const { getByLabelText } = result;
 
-    expect(getByLabelText(/Field/).value).toBe('hello');
-    expect(getByLabelText(/Type/).value).toBe('string');
-    expect(getByLabelText(/Value/).value).toBe('world');
+    expect((getByLabelText(/Field/) as HTMLInputElement).value).toBe('hello');
+    expect((getByLabelText(/Type/) as HTMLInputElement).value).toBe('string');
+    expect((getByLabelText(/Value/) as HTMLInputElement).value).toBe('world');
   });
 
   it('emits nothing if the field-state is invalid', async () => {
@@ -113,7 +113,7 @@ describe('with basic root fields', () => {
       });
     });
 
-    expect(getByLabelText(/Value/).value).toBe('new');
+    expect((getByLabelText(/Value/) as HTMLInputElement).value).toBe('new');
     expect(onChange).toHaveBeenCalledWith({ hello: 'new' });
   });
 
@@ -216,7 +216,7 @@ it('renders an editable key-field', async () => {
     });
   });
 
-  expect(getByLabelText('Field').value).toBe('new');
+  expect((getByLabelText('Field') as HTMLInputElement).value).toBe('new');
   expect(onChange).toHaveBeenCalledWith({ new: 'world' });
 });
 
@@ -252,7 +252,7 @@ describe('changing types', () => {
     act(() => {
       setType(FieldType.BOOLEAN);
     });
-    expect(getByLabelText('Value').value).toBe('true');
+    expect((getByLabelText('Value') as HTMLInputElement).value).toBe('true');
   });
 
   it('switches to a geopoint', async () => {
@@ -284,7 +284,7 @@ describe('changing types', () => {
     act(() => {
       setType(FieldType.NUMBER);
     });
-    expect(getByLabelText(/Value/).value).toBe('0');
+    expect((getByLabelText(/Value/) as HTMLInputElement).value).toBe('0');
   });
 
   it('switches to a reference', async () => {
@@ -292,7 +292,9 @@ describe('changing types', () => {
     act(() => {
       setType(FieldType.REFERENCE);
     });
-    expect(getByLabelText(/Document path/).value).toBe('');
+    expect((getByLabelText(/Document path/) as HTMLInputElement).value).toBe(
+      ''
+    );
   });
 
   it('switches to a string', async () => {
@@ -308,7 +310,7 @@ describe('changing types', () => {
     act(() => {
       setType(FieldType.STRING);
     });
-    expect(getByLabelText(/Value/).value).toBe('');
+    expect((getByLabelText(/Value/) as HTMLInputElement).value).toBe('');
   });
 
   it('switches to a timestamp', async () => {
@@ -316,7 +318,9 @@ describe('changing types', () => {
     act(() => {
       setType(FieldType.TIMESTAMP);
     });
-    const [date, time] = getByLabelText(/Value/).value.split('T');
+    const [date, time] = (getByLabelText(
+      /Value/
+    ) as HTMLInputElement).value.split('T');
     expect(date).toEqual(expect.stringMatching(/\d{4}-\d{2}-\d{2}/));
   });
 });

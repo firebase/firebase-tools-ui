@@ -22,9 +22,24 @@ import InspectionSection, { EXPRESSIONS_INSPECTION_LABEL } from './index';
 
 describe('InspectionSection', () => {
   const INSPECTION_MOCKED_DATA: InspectionElement[] = [
-    { label: 'TEST_1', value: 'MOCKED_VALUE_1' },
-    { label: 'TEST_2', value: 'MOCKED_VALUE_2' },
-    { label: 'TEST_3', value: 'MOCKED_VALUE_3' },
+    {
+      label: 'TEST_1',
+      value: {
+        stringValue: 'MOCKED_VALUE_1',
+      },
+    },
+    {
+      label: 'TEST_2',
+      value: {
+        stringValue: 'MOCKED_VALUE_2',
+      },
+    },
+    {
+      label: 'TEST_3',
+      value: {
+        stringValue: 'MOCKED_VALUE_3',
+      },
+    },
   ];
 
   it("renders expressions inspection's main block", () => {

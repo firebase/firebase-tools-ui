@@ -35,7 +35,7 @@ it('renders a field with json stringified value', async () => {
     </TestForm>
   );
 
-  expect(getByLabelText('JSON').value).toBe('{"a":"b"}');
+  expect((getByLabelText('JSON') as HTMLInputElement).value).toBe('{"a":"b"}');
 });
 
 it('shows an error on invalid json and does not emit onChange', async () => {

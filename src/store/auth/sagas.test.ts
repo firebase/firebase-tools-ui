@@ -19,12 +19,10 @@ import {
   call,
   getContext,
   put,
-  select,
   setContext,
 } from 'redux-saga/effects';
 
 import { AddAuthUserPayload, AuthUser } from '../../components/Auth/types';
-import { getProjectIdResult } from '../config/selectors';
 import {
   authFetchUsersRequest,
   authFetchUsersSuccess,
@@ -57,7 +55,6 @@ import {
   setUserDisabled,
   updateUser,
 } from './sagas';
-import { getAuthConfigResult } from './selectors';
 
 describe('Auth sagas', () => {
   describe('authFetchUsers', () => {
