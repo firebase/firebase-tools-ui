@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import React, { useEffect } from 'react';
-import { useFormContext } from 'react-hook-form';
+import React from 'react';
+import { Controller, useFormContext } from 'react-hook-form';
 
 import { Field } from '../../common/Field';
 import { NUMBER_REGEX } from '../utils';
@@ -27,25 +27,7 @@ const NumberEditor: React.FC<
     name: string;
   }>
 > = ({ value, onChange, name }) => {
-  const {
-    formState: { touchedFields, errors },
-    register,
-    unregister,
-    setValue,
-    trigger,
-  } = useFormContext();
-
-  useEffect(() => {
-    register(name, {
-      required: 'Required',
-      pattern: {
-        value: NUMBER_REGEX,
-        message: 'Must be a number',
-      },
-    });
-
-    return () => unregister(name);
-  }, [register, unregister, name]);
+  const { trigger } = useFormContext();
 
   async function handleChange(value: string) {
     if (await trigger(name)) {
@@ -54,14 +36,27 @@ const NumberEditor: React.FC<
   }
 
   return (
-    <Field
-      label="Value"
-      defaultValue={value}
-      onChange={(e) => {
-        setValue(name, e.currentTarget.value);
-        handleChange(e.currentTarget.value);
+    <Controller
+      name={name}
+      rules={{
+        required: true,
+        pattern: {
+          value: NUMBER_REGEX,
+          message: 'Must be a number',
+        },
       }}
-      error={touchedFields[name] && errors[name]?.message}
+      render={({ field: { ref, ...field }, fieldState }) => (
+        <Field
+          label="Value"
+          defaultValue={value}
+          error={fieldState.isTouched && fieldState.error?.message}
+          {...field}
+          onChange={(e) => {
+            field.onChange(e.currentTarget.value);
+            handleChange(e.currentTarget.value);
+          }}
+        />
+      )}
     />
   );
 };

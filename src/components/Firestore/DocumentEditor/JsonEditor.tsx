@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import React, { useEffect, useState } from 'react';
-import { useFormContext } from 'react-hook-form';
+import React, { useState } from 'react';
+import { Controller, useFormContext } from 'react-hook-form';
 
 import { Field } from '../../common/Field';
 import { FirestoreAny } from '../models';
@@ -28,28 +28,7 @@ const JsonEditor: React.FC<
   }>
 > = ({ value, onChange, name }) => {
   const [initialValue] = useState(JSON.stringify(value));
-  const {
-    formState: { errors, touchedFields },
-    register,
-    unregister,
-    setValue,
-    trigger,
-  } = useFormContext();
-
-  useEffect(() => {
-    register(name, {
-      validate: (e) => {
-        try {
-          JSON.parse(e);
-          return true;
-        } catch {
-          return 'Must be valid JSON';
-        }
-      },
-    });
-
-    return () => unregister(name);
-  }, [register, unregister, name]);
+  const { trigger } = useFormContext();
 
   async function handleChange(value: string) {
     if (await trigger(name)) {
@@ -58,14 +37,30 @@ const JsonEditor: React.FC<
   }
 
   return (
-    <Field
-      label="JSON"
-      defaultValue={initialValue}
-      onChange={(e) => {
-        setValue(name, e.currentTarget.value);
-        handleChange(e.currentTarget.value);
+    <Controller
+      name={name}
+      rules={{
+        validate: (e) => {
+          try {
+            JSON.parse(e);
+            return true;
+          } catch {
+            return 'Must be valid JSON';
+          }
+        },
       }}
-      error={touchedFields[name] && errors[name]?.message}
+      render={({ field: { ref, ...field }, fieldState }) => (
+        <Field
+          label="JSON"
+          defaultValue={initialValue}
+          error={fieldState.isTouched && fieldState.error?.message}
+          {...field}
+          onChange={(e) => {
+            field.onChange(e.currentTarget.value);
+            handleChange(e.currentTarget.value);
+          }}
+        />
+      )}
     />
   );
 };

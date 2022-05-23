@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import React, { useEffect, useState } from 'react';
-import { useFormContext } from 'react-hook-form';
+import React, { useState } from 'react';
+import { Controller, useFormContext } from 'react-hook-form';
 import { useFirestore } from 'reactfire';
 
 import { Field } from '../../common/Field';
@@ -30,28 +30,7 @@ const ReferenceEditor: React.FC<
 > = ({ value, onChange, name }) => {
   const [path] = useState(value.path);
   const firestore = useFirestore();
-  const {
-    formState: { touchedFields, errors },
-    register,
-    unregister,
-    setValue,
-    trigger,
-  } = useFormContext();
-
-  useEffect(() => {
-    register(name, {
-      validate: (e) => {
-        try {
-          firestore.doc(e);
-          return true;
-        } catch {
-          return 'Must point to a document';
-        }
-      },
-    });
-
-    return () => unregister(name);
-  }, [register, unregister, name, firestore]);
+  const { trigger } = useFormContext();
 
   async function handleChange(value: string) {
     if (await trigger(name)) {
@@ -60,14 +39,30 @@ const ReferenceEditor: React.FC<
   }
 
   return (
-    <Field
-      label="Document path"
-      defaultValue={path}
-      onChange={(e) => {
-        setValue(name, e.currentTarget.value);
-        handleChange(e.currentTarget.value);
+    <Controller
+      name={name}
+      rules={{
+        validate: (e) => {
+          try {
+            firestore.doc(e);
+            return true;
+          } catch {
+            return 'Must point to a document';
+          }
+        },
       }}
-      error={touchedFields[name] && errors[name]?.message}
+      render={({ field: { ref, ...field }, fieldState }) => (
+        <Field
+          label="Document path"
+          defaultValue={path}
+          {...field}
+          onChange={(e) => {
+            field.onChange(e.currentTarget.value);
+            handleChange(e.currentTarget.value);
+          }}
+          error={fieldState.isTouched && fieldState.error?.message}
+        />
+      )}
     />
   );
 };

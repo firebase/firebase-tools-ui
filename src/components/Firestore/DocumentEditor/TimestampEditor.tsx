@@ -16,7 +16,7 @@
 
 import firebase from 'firebase';
 import React, { useEffect, useState } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { Controller } from 'react-hook-form';
 
 import { Field } from '../../common/Field';
 
@@ -41,21 +41,6 @@ const TimestampEditor: React.FC<
 > = ({ value, onChange, name }) => {
   const [date, setDate] = useState(value.toDate());
 
-  const {
-    formState: { touchedFields, errors },
-    register,
-    unregister,
-    setValue,
-  } = useFormContext();
-
-  useEffect(() => {
-    register(name, {
-      validate: (e) => !isNaN(e) || 'Must be a date-time',
-    });
-
-    return () => unregister(name);
-  }, [register, unregister, name]);
-
   useEffect(() => {
     if (value.toMillis() !== date.getTime()) {
       onChange(firebase.firestore.Timestamp.fromDate(date));
@@ -63,18 +48,29 @@ const TimestampEditor: React.FC<
   }, [value, date, onChange]);
 
   return (
-    <Field
-      label="Value"
-      type="datetime-local"
-      defaultValue={dateToLocale(date)}
-      onChange={(e) => {
-        const timestamp = Date.parse(e.currentTarget.value);
-        setValue(name, timestamp, { shouldValidate: true });
-        if (!isNaN(timestamp) && timestamp !== date.getTime()) {
-          setDate(new Date(timestamp));
-        }
+    <Controller
+      name={name}
+      rules={{
+        validate: (e) => {
+          return !isNaN(Date.parse(e)) || 'Must be a date-time';
+        },
       }}
-      error={touchedFields[name] && errors[name]?.message}
+      render={({ field: { ref, ...field }, fieldState }) => (
+        <Field
+          label="Value"
+          type="datetime-local"
+          defaultValue={dateToLocale(date)}
+          error={fieldState.isTouched && fieldState.error?.message}
+          {...field}
+          onChange={(e) => {
+            const timestamp = Date.parse(e.currentTarget.value);
+            field.onChange(e.currentTarget.value);
+            if (!isNaN(timestamp) && timestamp !== date.getTime()) {
+              setDate(new Date(timestamp));
+            }
+          }}
+        />
+      )}
     />
   );
 };

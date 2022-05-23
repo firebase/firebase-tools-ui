@@ -16,7 +16,7 @@
 
 import firebase from 'firebase';
 import React, { useEffect, useState } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { Controller } from 'react-hook-form';
 
 import { Field } from '../../common/Field';
 
@@ -29,43 +29,9 @@ const GeoPointEditor: React.FC<
 > = ({ name, value, onChange }) => {
   const [latitude, setLatitude] = useState(String(value.latitude));
   const [longitude, setLongitude] = useState(String(value.longitude));
-  const {
-    formState: { touchedFields, errors },
-    register,
-    unregister,
-    setValue,
-  } = useFormContext();
 
   const latitudeName = `${name}-lat`;
   const longitudeName = `${name}-long`;
-
-  useEffect(() => {
-    register(latitudeName, {
-      required: 'Required',
-      min: {
-        value: -90,
-        message: 'Must be >= -90',
-      },
-      max: {
-        value: 90,
-        message: 'Must be <= -90',
-      },
-    });
-
-    register(longitudeName, {
-      required: 'Required',
-      min: {
-        value: -180,
-        message: 'Must be >= -180',
-      },
-      max: {
-        value: 180,
-        message: 'Must be <= -180',
-      },
-    });
-
-    return () => unregister([latitudeName, longitudeName]);
-  }, [register, unregister, latitudeName, longitudeName]);
 
   useEffect(() => {
     const lat = Number(latitude);
@@ -83,32 +49,62 @@ const GeoPointEditor: React.FC<
 
   return (
     <div className="FieldEditor-geo-point">
-      <Field
-        label="Latitude"
-        type="number"
-        step="any"
-        defaultValue={latitude}
-        onChange={(e) => {
-          setValue(latitudeName, e.currentTarget.value, {
-            shouldValidate: true,
-          });
-          setLatitude(e.currentTarget.value);
+      <Controller
+        name={latitudeName}
+        rules={{
+          required: 'Required',
+          min: {
+            value: -90,
+            message: 'Must be >= -90',
+          },
+          max: {
+            value: 90,
+            message: 'Must be <= -90',
+          },
         }}
-        error={touchedFields[latitudeName] && errors[latitudeName]?.message}
+        render={({ field: { ref, ...field }, fieldState }) => (
+          <Field
+            label="Latitude"
+            type="number"
+            step="any"
+            defaultValue={latitude}
+            error={fieldState.isTouched && fieldState.error?.message}
+            {...field}
+            onChange={(e) => {
+              field.onChange(e.currentTarget.value);
+              setLatitude(e.currentTarget.value);
+            }}
+          />
+        )}
       />
 
-      <Field
-        label="Longitude"
-        type="number"
-        step="any"
-        defaultValue={longitude}
-        onChange={(e) => {
-          setValue(longitudeName, e.currentTarget.value, {
-            shouldValidate: true,
-          });
-          setLongitude(e.currentTarget.value);
+      <Controller
+        name={longitudeName}
+        rules={{
+          required: 'Required',
+          min: {
+            value: -180,
+            message: 'Must be >= -180',
+          },
+          max: {
+            value: 180,
+            message: 'Must be <= -180',
+          },
         }}
-        error={touchedFields[longitudeName] && errors[longitudeName]?.message}
+        render={({ field: { ref, ...field }, fieldState }) => (
+          <Field
+            label="Longitude"
+            type="number"
+            step="any"
+            defaultValue={longitude}
+            error={fieldState.isTouched && fieldState.error?.message}
+            {...field}
+            onChange={(e) => {
+              field.onChange(e.currentTarget.value);
+              setLongitude(e.currentTarget.value);
+            }}
+          />
+        )}
       />
     </div>
   );
