@@ -66,7 +66,7 @@ export const CollectionFilter: React.FC<
 
   return (
     <CollectionFilterTheme>
-      <FormProvider {...(formMethods as any)}>
+      <FormProvider {...formMethods}>
         <form
           onSubmit={formMethods.handleSubmit(onSubmit)}
           className={className}
@@ -77,9 +77,10 @@ export const CollectionFilter: React.FC<
               name="field"
               rules={{ required: 'Required' }}
               defaultValue=""
-              render={() => (
+              render={({ field: { ref, ...field } }) => (
                 <Field
                   label="Enter field"
+                  {...field}
                   error={
                     formMethods.formState.touchedFields['field'] &&
                     formMethods.formState.errors['field']?.message
@@ -259,12 +260,15 @@ const ConditionSelect: React.FC<React.PropsWithChildren<unknown>> = ({
     <>
       <Controller
         name="operator"
-        render={() => (
+        render={({ field: { ref, ...field } }) => (
           <SelectField
             label="Only show documents where the specified field is..."
             placeholder="No condition"
             options={options}
-            onChange={(selected) => selected.currentTarget.value || undefined}
+            {...field}
+            onChange={(selected) => {
+              field.onChange(selected.currentTarget.value || undefined);
+            }}
           />
         )}
       />

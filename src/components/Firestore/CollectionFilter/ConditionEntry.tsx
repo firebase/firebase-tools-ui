@@ -68,11 +68,12 @@ export const ConditionEntry: React.FC<
         <Controller
           name={name}
           defaultValue=""
-          render={() => (
+          render={({ field: { ref, ...field } }) => (
             <Field
               error={error}
               fieldClassName={styles.conditionEntryValue}
               aria-label="Value"
+              {...field}
             />
           )}
         />
@@ -88,16 +89,20 @@ export const ConditionEntry: React.FC<
               message: 'Must be a number',
             },
           }}
-          render={() => (
+          render={({ field: { ref, ...field } }) => (
             <Field
               error={error}
+              fieldClassName={styles.conditionEntryValue}
+              aria-label="Value"
+              {...field}
               onChange={(event) => {
                 // Cast it back to a number before saving to model
                 const value = (event.target as HTMLInputElement).value;
-                return value.match(NUMBER_REGEX) ? parseFloat(value) : value;
+                const parsedValue = value.match(NUMBER_REGEX)
+                  ? parseFloat(value)
+                  : value;
+                field.onChange(parsedValue);
               }}
-              fieldClassName={styles.conditionEntryValue}
-              aria-label="Value"
             />
           )}
         />

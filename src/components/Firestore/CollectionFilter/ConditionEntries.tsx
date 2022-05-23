@@ -35,7 +35,7 @@ export const ConditionEntries: React.FC<
 
   useEffect(() => {
     if (fields.length < 1) {
-      append({ _: '' });
+      append('');
     }
   }, [append, fields]);
 
@@ -61,7 +61,7 @@ export const ConditionEntries: React.FC<
           </li>
         );
       })}
-      <Button type="button" icon="add" onClick={() => append({ _: '' })}>
+      <Button type="button" icon="add" onClick={() => append('')}>
         Add value
       </Button>
     </ul>
