@@ -20,11 +20,7 @@ import React from 'react';
 import { ClearAll } from './ClearAll';
 import { confirmClearAll } from './confirmClearAllData';
 
-const confirmClearAllMock = jest.fn();
-
-jest.mock('./confirmClearAllData.tsx', () => ({
-  confirmClearAll: confirmClearAllMock,
-}));
+jest.mock('./confirmClearAllData.tsx');
 
 describe('ClearAll', () => {
   function setup(hasUsers = true) {
@@ -50,7 +46,9 @@ describe('ClearAll', () => {
   it('calls clearAllData callback on button click if user confirms', async () => {
     const { clickButton, clearAllData } = setup();
 
-    confirmClearAllMock.mockImplementationOnce(() => Promise.resolve(true));
+    (confirmClearAll as jest.Mock).mockImplementationOnce(() =>
+      Promise.resolve(true)
+    );
     await clickButton();
     expect(clearAllData).toHaveBeenCalled();
   });
@@ -58,7 +56,9 @@ describe('ClearAll', () => {
   it("doesn't call clearAllData callback on button click if user cancels", async () => {
     const { clickButton, clearAllData } = setup();
 
-    confirmClearAllMock.mockImplementationOnce(() => Promise.resolve(false));
+    (confirmClearAll as jest.Mock).mockImplementationOnce(() =>
+      Promise.resolve(false)
+    );
     await clickButton();
     expect(clearAllData).not.toHaveBeenCalled();
   });
