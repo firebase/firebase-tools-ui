@@ -54,7 +54,8 @@ import PanelHeader from './PanelHeader';
 import { useCollectionFilter } from './store';
 import { useAutoSelect } from './useAutoSelect';
 
-const NO_DOCS: firebase.firestore.QueryDocumentSnapshot<firebase.firestore.DocumentData>[] = [];
+const NO_DOCS: firebase.firestore.QueryDocumentSnapshot<firebase.firestore.DocumentData>[] =
+  [];
 
 export interface Props {
   collection: firebase.firestore.CollectionReference;

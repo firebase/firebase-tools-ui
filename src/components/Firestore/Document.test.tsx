@@ -181,8 +181,7 @@ it('shows the selected document-collection when there are collection and documen
       );
     },
     {
-      path:
-        '/firestore/data/foo%40%23%24/bar%40%23%24/sub%40%23%24/doc%40%23%24',
+      path: '/firestore/data/foo%40%23%24/bar%40%23%24/sub%40%23%24/doc%40%23%24',
     }
   );
 

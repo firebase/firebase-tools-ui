@@ -94,9 +94,8 @@ export const Document: React.FC<
   }>
 > = ({ reference }) => {
   const recursiveDelete = useRecursiveDelete();
-  const [isDeleteDocumentDialogOpen, setDeleteDocumentDialogOpen] = useState(
-    false
-  );
+  const [isDeleteDocumentDialogOpen, setDeleteDocumentDialogOpen] =
+    useState(false);
 
   const handleDeleteFields = async () => {
     const shouldDelete = await promptDeleteDocumentFields(reference);

@@ -22,13 +22,13 @@ export function mockExtensionBackends(backends: ExtensionBackend[] = []) {
     .spyOn(global, 'fetch')
     .mockImplementation((input: RequestInfo, init?: RequestInit) => {
       if (/^http?:\/\/.*\/backends$/.test(input.toString())) {
-        return Promise.resolve(({
+        return Promise.resolve({
           json: () => {
             return {
               backends,
             };
           },
-        } as unknown) as Response);
+        } as unknown as Response);
       }
 
       return actualFetch(input, init);

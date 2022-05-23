@@ -59,10 +59,10 @@ export const CustomAttributes: React.FC<
     </label>
   );
 
-  const {
-    ref: customAttributesRef,
-    ...customAttributesField
-  } = register('customAttributes', { validate });
+  const { ref: customAttributesRef, ...customAttributesField } = register(
+    'customAttributes',
+    { validate }
+  );
 
   return (
     <div className={styles.customAttributesWrapper}>
