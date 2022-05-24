@@ -32,11 +32,11 @@
 @import '@material/tab-scroller/dist/mdc.tab-scroller';
 @import '@material/tab-indicator/dist/mdc.tab-indicator';
 
-@import './material-components';
-@import './material-overrides-buttons';
-@import './material-overrides-inputs';
+@import '/src/components/common/material-components';
+@import '/src/components/common/material-overrides-buttons';
+@import '/src/components/common/material-overrides-inputs';
 
-@import './components/common/radius';
+@import '/src/components/common/radius';
 
 .mdc-card {
   @include card.shape-radius($BORDER_RADIUS_CARD);
