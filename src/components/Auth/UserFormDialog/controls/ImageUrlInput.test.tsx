@@ -47,7 +47,7 @@ describe('ImageUrlInput', () => {
       });
 
       act(() => {
-        mockImage.onerror && (mockImage.onerror! as Function)();
+        (mockImage.onerror! as Function)();
       });
 
       await triggerValidation();
@@ -60,7 +60,7 @@ describe('ImageUrlInput', () => {
       });
 
       act(() => {
-        mockImage.onload && (mockImage.onload! as Function)();
+        (mockImage.onload! as Function)();
       });
 
       await triggerValidation();

@@ -37,7 +37,7 @@ export const ImageUrlInput: React.FC<
   React.PropsWithChildren<
     UseFormReturn<AddAuthUserPayload> & ImageUrlInputProps
   >
-> = ({ register, watch, trigger, ImageConstructor }) => {
+> = ({ register, watch, trigger, formState, ImageConstructor }) => {
   ImageConstructor = ImageConstructor || Image;
   const [previewUrl, setPreviewUrl] = useState('');
   const image = useRef(new ImageConstructor());
@@ -80,15 +80,13 @@ export const ImageUrlInput: React.FC<
     trigger('photoUrl');
   }, [photoUrl, trigger]);
 
-  const validate = () => {
-    return (
-      status.current === ImagePreviewStatus.LOADED ||
-      status.current === ImagePreviewStatus.NONE
-    );
-  };
-
   const { ref: photoUrlRef, ...photoUrlField } = register('photoUrl', {
-    validate,
+    validate: {
+      errorLoading: () =>
+        status.current === ImagePreviewStatus.ERROR && 'Error loading image',
+      loading: () =>
+        status.current === ImagePreviewStatus.LOADING && 'Loading image',
+    },
   });
 
   return (
@@ -97,7 +95,8 @@ export const ImageUrlInput: React.FC<
         label="User photo URL (optional)"
         placeholder="Enter URL"
         error={
-          status.current === ImagePreviewStatus.ERROR && 'Error loading image'
+          formState.errors.photoUrl?.type === 'errorLoading' &&
+          formState.errors.photoUrl.message
         }
         type="text"
         inputRef={photoUrlRef}
