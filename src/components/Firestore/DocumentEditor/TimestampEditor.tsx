@@ -15,7 +15,7 @@
  */
 
 import firebase from 'firebase';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Controller } from 'react-hook-form';
 
 import { Field } from '../../common/Field';
@@ -39,14 +39,6 @@ const TimestampEditor: React.FC<
     name: string;
   }>
 > = ({ value, onChange, name }) => {
-  const [date, setDate] = useState(value.toDate());
-
-  useEffect(() => {
-    if (value.toMillis() !== date.getTime()) {
-      onChange(firebase.firestore.Timestamp.fromDate(date));
-    }
-  }, [value, date, onChange]);
-
   return (
     <Controller
       name={name}
@@ -59,14 +51,14 @@ const TimestampEditor: React.FC<
         <Field
           label="Value"
           type="datetime-local"
-          defaultValue={dateToLocale(date)}
-          error={fieldState.isTouched && fieldState.error?.message}
+          defaultValue={dateToLocale(value.toDate())}
+          error={fieldState.error?.message}
           {...field}
           onChange={(e) => {
             const timestamp = Date.parse(e.currentTarget.value);
             field.onChange(e.currentTarget.value);
-            if (!isNaN(timestamp) && timestamp !== date.getTime()) {
-              setDate(new Date(timestamp));
+            if (!isNaN(timestamp) && timestamp !== value.toMillis()) {
+              onChange(firebase.firestore.Timestamp.fromMillis(timestamp));
             }
           }}
         />

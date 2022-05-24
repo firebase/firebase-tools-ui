@@ -22,7 +22,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import TimestampEditor from './TimestampEditor';
 
 const TestForm: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
-  const methods = useForm();
+  const methods = useForm({ mode: 'onChange' });
   return <FormProvider {...methods}>{children}</FormProvider>;
 };
 
