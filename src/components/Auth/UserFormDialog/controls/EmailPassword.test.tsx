@@ -47,13 +47,21 @@ describe('EmailPassword', () => {
       expect(queryByText(errorText)).toBeNull();
     });
 
-    it('is invalid if just password is present', () => {
-      const { getByText } = setup({ email: '', password: 'pelmeni' });
-      getByText(errorText);
+    it('is invalid if just password is present', async () => {
+      const { getByText, triggerValidation } = setup({
+        email: '',
+        password: 'pelmeni',
+      });
+      await triggerValidation();
+      expect(getByText(errorText)).not.toBeNull();
     });
 
-    it('is invalid if just email is present', () => {
-      const { getByText } = setup({ email: validEmail, password: '' });
+    it('is invalid if just email is present', async () => {
+      const { getByText, triggerValidation } = setup({
+        email: validEmail,
+        password: '',
+      });
+      await triggerValidation();
       getByText(errorText);
     });
 

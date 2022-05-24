@@ -16,7 +16,7 @@
 
 import { Typography } from '@rmwc/typography';
 import React, { useEffect } from 'react';
-import { UseFormReturn } from 'react-hook-form';
+import { FieldError, UseFormReturn } from 'react-hook-form';
 import { connect } from 'react-redux';
 
 import { createStructuredSelector } from '../../../../store';
@@ -29,20 +29,21 @@ import styles from './controls.module.scss';
 const EMAIL_REGEX = /^[^@]+@[^@]+$/;
 const PASSWORD_MIN_LENGTH = 6;
 
-function getErrorText(errors: any) {
+function getErrorText(errors: { [key: string]: FieldError | undefined }) {
   if (errors.email) {
     if (errors.email.type === 'pattern') {
       return 'Invalid email';
     }
-    if (errors.email.type === 'validate') {
+    if (errors.email.type === 'unique') {
       return 'User with this email already exists';
     }
   }
 
-  if (errors.emailpassword) {
+  if (errors.email?.type === 'both' || errors.password?.type === 'both') {
     return 'Both email and password should be present';
   }
-  if (errors.password) {
+
+  if (errors.password?.type === 'minLength') {
     return `Password should be at least ${PASSWORD_MIN_LENGTH} characters`;
   }
 }
@@ -54,38 +55,38 @@ export const EmailPassword: React.FC<
   >
 > = ({
   register,
-  watch,
-  setError,
-  clearErrors,
+  getValues,
   formState: { errors },
   allEmails,
   editedUserEmail,
   isEditing,
 }) => {
-  const email = watch('email');
-  const password = watch('password');
-
-  useEffect(() => {
-    if (
-      (email === '' && password === '') ||
-      (email !== '' && (password !== '' || isEditing))
-    ) {
-      clearErrors('emailpassword' as any);
-    } else {
-      setError('emailpassword' as any, { message: 'both' });
-    }
-  }, [email, password, clearErrors, setError, isEditing]);
-
-  function validate(value?: string) {
-    return value === editedUserEmail || !allEmails.has(value);
-  }
-
   const { ref: passwordRef, ...passwordState } = register('password', {
     minLength: PASSWORD_MIN_LENGTH,
+    validate: {
+      both: (value) => {
+        const { email } = getValues();
+
+        if (!!value || isEditing) {
+          return !!email;
+        }
+
+        return !email || 'both';
+      },
+    },
   });
 
   const { ref: emailRef, ...emailState } = register('email', {
-    validate,
+    validate: {
+      unique: (value) => value === editedUserEmail || !allEmails.has(value),
+      both: (value) => {
+        const { password } = getValues();
+
+        if (!!value) return !!password;
+
+        return !password || 'both';
+      },
+    },
     pattern: EMAIL_REGEX,
   });
 
