@@ -39,7 +39,7 @@ const NumberEditor: React.FC<
     <Controller
       name={name}
       rules={{
-        required: true,
+        required: 'Required',
         pattern: {
           value: NUMBER_REGEX,
           message: 'Must be a number',
@@ -49,7 +49,7 @@ const NumberEditor: React.FC<
         <Field
           label="Value"
           defaultValue={value}
-          error={fieldState.isTouched && fieldState.error?.message}
+          error={fieldState.error?.message}
           {...field}
           onChange={(e) => {
             field.onChange(e.currentTarget.value);

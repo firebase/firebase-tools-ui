@@ -53,7 +53,7 @@ const JsonEditor: React.FC<
         <Field
           label="JSON"
           defaultValue={initialValue}
-          error={fieldState.isTouched && fieldState.error?.message}
+          error={fieldState.error?.message}
           {...field}
           onChange={(e) => {
             field.onChange(e.currentTarget.value);

@@ -22,7 +22,7 @@ import { renderWithFirestore } from '../testing/FirestoreTestProviders';
 import ReferenceEditor from './ReferenceEditor';
 
 const TestForm: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
-  const methods = useForm();
+  const methods = useForm({ mode: 'all' });
   return <FormProvider {...methods} children={children} />;
 };
 

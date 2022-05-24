@@ -22,7 +22,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import GeoPointEditor from './GeoPointEditor';
 
 const TestForm: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
-  const methods = useForm();
+  const methods = useForm({ mode: 'all' });
   return <FormProvider {...methods}>{children}</FormProvider>;
 };
 

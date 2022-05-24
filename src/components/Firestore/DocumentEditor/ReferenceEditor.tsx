@@ -60,7 +60,7 @@ const ReferenceEditor: React.FC<
             field.onChange(e.currentTarget.value);
             handleChange(e.currentTarget.value);
           }}
-          error={fieldState.isTouched && fieldState.error?.message}
+          error={fieldState.error?.message}
         />
       )}
     />

@@ -68,7 +68,7 @@ const GeoPointEditor: React.FC<
             type="number"
             step="any"
             defaultValue={latitude}
-            error={fieldState.isTouched && fieldState.error?.message}
+            error={fieldState.error?.message}
             {...field}
             onChange={(e) => {
               field.onChange(e.currentTarget.value);
@@ -97,7 +97,7 @@ const GeoPointEditor: React.FC<
             type="number"
             step="any"
             defaultValue={longitude}
-            error={fieldState.isTouched && fieldState.error?.message}
+            error={fieldState.error?.message}
             {...field}
             onChange={(e) => {
               field.onChange(e.currentTarget.value);
