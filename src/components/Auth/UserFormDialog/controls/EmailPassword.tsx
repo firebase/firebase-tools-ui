@@ -15,7 +15,7 @@
  */
 
 import { Typography } from '@rmwc/typography';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { FieldError, UseFormReturn } from 'react-hook-form';
 import { connect } from 'react-redux';
 
