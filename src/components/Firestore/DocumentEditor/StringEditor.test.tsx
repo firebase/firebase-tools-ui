@@ -25,7 +25,7 @@ it('renders an editor for a string', () => {
     <StringEditor value={'foo'} onChange={onChange} />
   );
 
-  expect(getByLabelText('Value').value).toBe('foo');
+  expect((getByLabelText('Value') as HTMLInputElement).value).toBe('foo');
 
   fireEvent.change(getByLabelText('Value'), {
     target: { value: 'new' },

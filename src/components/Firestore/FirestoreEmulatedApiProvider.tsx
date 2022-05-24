@@ -62,27 +62,26 @@ export const FirestoreEmulatedApiProvider: React.FC<
   );
 });
 
-const FirestoreDevTools: React.FC<
-  React.PropsWithChildren<unknown>
-> = React.memo(() => {
-  const firestore = useFirestore();
+const FirestoreDevTools: React.FC<React.PropsWithChildren<unknown>> =
+  React.memo(() => {
+    const firestore = useFirestore();
 
-  useEffect(() => {
-    const windowWithFirestore = window as WindowWithFirestore;
-    windowWithFirestore.firestore = firestore;
-    console.log(`🔥 Firestore is available at window.firestore.
+    useEffect(() => {
+      const windowWithFirestore = window as WindowWithFirestore;
+      windowWithFirestore.firestore = firestore;
+      console.log(`🔥 Firestore is available at window.firestore.
 
     Try:
     firestore.doc('hello/world').set({hello: 'world!'});
     firestore.doc('hello/world').get().then( snap => console.log(snap.data()) );`);
 
-    return () => {
-      delete windowWithFirestore.firestore;
-    };
-  }, [firestore]);
+      return () => {
+        delete windowWithFirestore.firestore;
+      };
+    }, [firestore]);
 
-  return null;
-});
+    return null;
+  });
 
 function useFirestoreRestApi() {
   const config = useEmulatorConfig('firestore');
@@ -135,7 +134,8 @@ export function useSubCollections(
   return collectionIds.map((id) => docRef.collection(id));
 }
 
-const DOCUMENT_PATH_RE = /projects\/(?<project>.*)\/databases\/(?<database>.*)\/documents\/(?<path>.*)/;
+const DOCUMENT_PATH_RE =
+  /projects\/(?<project>.*)\/databases\/(?<database>.*)\/documents\/(?<path>.*)/;
 
 export function useMissingDocuments(
   collection: firebase.firestore.CollectionReference

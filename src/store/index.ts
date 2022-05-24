@@ -36,8 +36,8 @@ export const rootReducer = combineReducers<AppState>({
   auth: authReducer,
 });
 
-export function createStructuredSelector<T>(
-  selectors: { [K in keyof T]: reselect.Selector<AppState, T[K]> }
-) {
+export function createStructuredSelector<T>(selectors: {
+  [K in keyof T]: reselect.Selector<AppState, T[K]>;
+}) {
   return reselect.createStructuredSelector<AppState, T>(selectors);
 }

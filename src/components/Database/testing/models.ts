@@ -23,7 +23,7 @@ export function fakeReference({
   parent = null as firebase.database.Reference | null,
   domain = 'http://localhost:9000',
 } = {}): firebase.database.Reference {
-  return ({
+  return {
     key,
     path,
     parent,
@@ -40,7 +40,7 @@ export function fakeReference({
     database: {
       app: { options: { databaseURL: 'http://localhost:9000/' } },
     },
-  } as unknown) as firebase.database.Reference;
+  } as unknown as firebase.database.Reference;
 }
 
 export function fakeSnapshot({
@@ -48,9 +48,9 @@ export function fakeSnapshot({
   data = undefined as any,
   ref = {} as firebase.database.Reference,
 } = {}): firebase.database.DataSnapshot {
-  return ({
+  return {
     ref,
     key,
     val: () => data,
-  } as unknown) as firebase.database.DataSnapshot;
+  } as unknown as firebase.database.DataSnapshot;
 }

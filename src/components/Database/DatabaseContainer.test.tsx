@@ -32,8 +32,6 @@ it('renders prompt to refresh when new dbs are added', async () => {
         primary="foo"
         current="bar"
         navigation={(db) => `/nav/${db}`}
-        databasesSubscribe={() => {}}
-        databasesUnsubscribe={() => {}}
         databases={databases}
       />
     );

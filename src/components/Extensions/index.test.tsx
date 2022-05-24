@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import { act, render } from '@testing-library/react';
-import { renderHook } from '@testing-library/react-hooks';
+import { act, render, renderHook } from '@testing-library/react';
 import { MemoryRouter, useLocation } from 'react-router-dom';
 
 import { Config } from '../../store/config/types';

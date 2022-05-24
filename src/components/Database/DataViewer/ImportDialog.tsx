@@ -61,7 +61,7 @@ export const ImportDialog: React.FC<React.PropsWithChildren<Props>> = ({
           disableTriggers: !functionsEmulatorRunning || !executeFunctions,
         });
         onComplete(reference, file);
-      } catch (err) {
+      } catch (err: any) {
         setError(err.message);
       }
       setIsImporting(false);
