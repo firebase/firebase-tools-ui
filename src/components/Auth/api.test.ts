@@ -151,7 +151,7 @@ describe('API', () => {
     expect(global.fetch).toHaveBeenCalledWith(
       'http://foo.example.com:9002/identitytoolkit.googleapis.com/v1/projects/pelmen-the-project/accounts:update',
       {
-        body: JSON.stringify(user),
+        body: JSON.stringify({...user, ...mockFetchResult}),
         headers: {
           Authorization: 'Bearer owner',
           'Content-Type': 'application/json',
