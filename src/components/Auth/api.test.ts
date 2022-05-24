@@ -146,12 +146,12 @@ describe('API', () => {
       mockFetchResult,
       secondFetchResult: { users: [mockFetchResult] },
     });
-    const result = await api.updateUser({...user, ...mockFetchResult});
+    const result = await api.updateUser({ ...user, ...mockFetchResult });
 
     expect(global.fetch).toHaveBeenCalledWith(
       'http://foo.example.com:9002/identitytoolkit.googleapis.com/v1/projects/pelmen-the-project/accounts:update',
       {
-        body: JSON.stringify({...user, ...mockFetchResult}),
+        body: JSON.stringify({ ...user, ...mockFetchResult }),
         headers: {
           Authorization: 'Bearer owner',
           'Content-Type': 'application/json',

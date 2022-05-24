@@ -42,13 +42,10 @@ const setup = async () => {
   ref.root = ROOT_REF;
   (ref.child as jest.Mock).mockReturnValue(ref);
 
-  const {
-    getByText,
-    getByLabelText,
-    getByTestId,
-  } = await renderDialogWithFirestore(async (firestore) => (
-    <CloneDialog onComplete={onComplete} realtimeRef={ref} />
-  ));
+  const { getByText, getByLabelText, getByTestId } =
+    await renderDialogWithFirestore(async (firestore) => (
+      <CloneDialog onComplete={onComplete} realtimeRef={ref} />
+    ));
   await waitForElementToBeRemoved(() => getByText(/Loading/));
   return { ref, onComplete, getByLabelText, getByText, getByTestId };
 };

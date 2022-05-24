@@ -39,9 +39,9 @@ it('renders an editor for a timestamp', async () => {
     </TestForm>
   );
 
-  const [displayDate, displayTime] = (getByLabelText(
-    'Value'
-  ) as HTMLInputElement).value.split('T');
+  const [displayDate, displayTime] = (
+    getByLabelText('Value') as HTMLInputElement
+  ).value.split('T');
   expect(displayDate).toBe('2000-01-02');
   expect(displayTime).toBe('10:30');
 

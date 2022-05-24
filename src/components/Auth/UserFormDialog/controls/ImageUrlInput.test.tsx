@@ -24,9 +24,9 @@ import { ImageUrlInput, ImageUrlInputProps } from './ImageUrlInput';
 describe('ImageUrlInput', () => {
   function setup(defaultValues: Partial<AddAuthUserPayload>) {
     const mockImage = { src: '', onload: undefined, onerror: undefined };
-    const MockImageConstructor = (function () {
+    const MockImageConstructor = function () {
       return mockImage;
-    } as unknown) as new (
+    } as unknown as new (
       width?: number | undefined,
       height?: number | undefined
     ) => HTMLImageElement;
@@ -74,12 +74,8 @@ describe('ImageUrlInput', () => {
     });
 
     it('displays nothing if there is no image', async () => {
-      const {
-        queryByTestId,
-        queryByText,
-        queryByAltText,
-        triggerValidation,
-      } = setup({ photoUrl: '' });
+      const { queryByTestId, queryByText, queryByAltText, triggerValidation } =
+        setup({ photoUrl: '' });
       await triggerValidation();
       expect(queryByTestId('spinner')).toBeNull();
       expect(queryByAltText('Profile preview')).toBeNull();

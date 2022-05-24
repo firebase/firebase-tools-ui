@@ -227,9 +227,9 @@ it('sorts documents when filtered', async () => {
 
   await findByText(/doc-a/);
 
-  expect(
-    queryAllByText(/doc-a|doc-b|doc-z/).map((e) => e.textContent)
-  ).toEqual(['doc-a', 'doc-b', 'doc-z']);
+  expect(queryAllByText(/doc-a|doc-b|doc-z/).map((e) => e.textContent)).toEqual(
+    ['doc-a', 'doc-b', 'doc-z']
+  );
 });
 
 it('shows the missing documents', async () => {

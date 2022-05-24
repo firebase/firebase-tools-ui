@@ -271,12 +271,10 @@ describe('loaded array', () => {
       queryAllByText('delete')[1].click();
     });
 
-    expect(
-      documentReference.update
-    ).toHaveBeenCalledWith(new firebase.firestore.FieldPath('foo'), [
-      'bravo',
-      'bravo',
-    ]);
+    expect(documentReference.update).toHaveBeenCalledWith(
+      new firebase.firestore.FieldPath('foo'),
+      ['bravo', 'bravo']
+    );
   });
 
   it('array elements keys are immutable', async () => {
@@ -296,13 +294,10 @@ describe('loaded array', () => {
       target: { value: 'new' },
     });
     fireEvent.submit(getByText('Save'));
-    expect(
-      documentReference.update
-    ).toHaveBeenCalledWith(new firebase.firestore.FieldPath('foo'), [
-      'alpha',
-      'new',
-      'bravo',
-    ]);
+    expect(documentReference.update).toHaveBeenCalledWith(
+      new firebase.firestore.FieldPath('foo'),
+      ['alpha', 'new', 'bravo']
+    );
   });
 
   it('adds a top-level array element', () => {
@@ -318,14 +313,10 @@ describe('loaded array', () => {
       target: { value: 'new' },
     });
     fireEvent.submit(getByText('Save'));
-    expect(
-      documentReference.update
-    ).toHaveBeenCalledWith(new firebase.firestore.FieldPath('foo'), [
-      'alpha',
-      'bravo',
-      'bravo',
-      'new',
-    ]);
+    expect(documentReference.update).toHaveBeenCalledWith(
+      new firebase.firestore.FieldPath('foo'),
+      ['alpha', 'bravo', 'bravo', 'new']
+    );
   });
 });
 

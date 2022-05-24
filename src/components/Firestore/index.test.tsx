@@ -110,20 +110,16 @@ describe('Firestore sub-tabs navigation', () => {
 
   describe('Show Firestore collections and documents', () => {
     it('shows the top-level collections', async () => {
-      const {
-        getAllByText,
-        getAllByTestId,
-        queryByText,
-        findByTestId,
-      } = await renderWithFirestore(
-        async (firestore) => {
-          const collectionRef = firestore.collection('cool-coll');
-          await collectionRef.doc('bar').set({ a: 1 });
+      const { getAllByText, getAllByTestId, queryByText, findByTestId } =
+        await renderWithFirestore(
+          async (firestore) => {
+            const collectionRef = firestore.collection('cool-coll');
+            await collectionRef.doc('bar').set({ a: 1 });
 
-          return <Firestore />;
-        },
-        { path: '/firestore/data' }
-      );
+            return <Firestore />;
+          },
+          { path: '/firestore/data' }
+        );
 
       await findByTestId('collection-list');
 
@@ -182,25 +178,22 @@ describe('Firestore sub-tabs navigation', () => {
       jest.spyOn(emulatedApi, 'useEjector').mockReturnValue(nukeSpy);
       (confirm as jest.Mock).mockResolvedValueOnce(true);
 
-      const {
-        getByTestId,
-        getByText,
-        queryByTestId,
-      } = await renderWithFirestore(
-        async () => (
-          <>
-            <Firestore />
-            <Route
-              path="/firestore/data"
-              exact
-              render={() => <div data-testid="ROOT"></div>}
-            />
-          </>
-        ),
-        {
-          path: '/firestore/data',
-        }
-      );
+      const { getByTestId, getByText, queryByTestId } =
+        await renderWithFirestore(
+          async () => (
+            <>
+              <Firestore />
+              <Route
+                path="/firestore/data"
+                exact
+                render={() => <div data-testid="ROOT"></div>}
+              />
+            </>
+          ),
+          {
+            path: '/firestore/data',
+          }
+        );
       act(() => getByText('Clear all data').click());
       await waitFor(() => expect(nukeSpy).toHaveBeenCalled());
       expect(getByTestId('firestore-loading')).not.toBeNull();
