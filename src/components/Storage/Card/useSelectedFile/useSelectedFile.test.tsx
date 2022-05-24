@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-
 import { act, renderHook } from '@testing-library/react';
+
 import { StorageFile } from '../../types';
 import { useSelectedFile } from './useSelectedFile';
 

@@ -15,6 +15,7 @@
  */
 
 import { renderHook } from '@testing-library/react';
+
 import { EXTENSION } from '../testing/utils';
 import { ExtensionsProvider, useExtensions } from './useExtensions';
 

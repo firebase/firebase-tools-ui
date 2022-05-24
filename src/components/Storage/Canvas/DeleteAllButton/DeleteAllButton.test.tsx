@@ -29,14 +29,22 @@ describe('DeleteAllButton', () => {
       <DeleteAllButton />
     );
 
-    confirmDeleteAllFiles.mockReturnValueOnce(Promise.resolve(true));
+    (confirmDeleteAllFiles as jest.Mock).mockReturnValueOnce(
+      Promise.resolve(true)
+    );
 
     await uploadFile('lol.txt');
 
     const button = getByText('Delete all files');
-    await waitFor(() => expect(button.parentElement.disabled).not.toBe(true), {
-      timeout: true,
-    });
+    await waitFor(
+      () =>
+        expect((button.parentElement! as HTMLButtonElement).disabled).not.toBe(
+          true
+        ),
+      {
+        timeout: 5000,
+      }
+    );
 
     await act(async () => {
       await fireEvent.click(button);

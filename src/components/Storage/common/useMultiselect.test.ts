@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-
 import { act, renderHook } from '@testing-library/react';
+
 import { useMultiselect } from './useMultiselect';
 
 describe('useMultiSelect', () => {

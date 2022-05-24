@@ -32,7 +32,7 @@ describe('<Field>', () => {
       <Field label="My label" value="val" onChange={jest.fn()} />
     );
 
-    expect(getByLabelText('My label').value).toBe('val');
+    expect((getByLabelText('My label') as HTMLInputElement).value).toBe('val');
   });
 
   it('shows a tip below', () => {
@@ -83,7 +83,7 @@ describe('<SelectField>', () => {
       />
     );
 
-    expect(getByLabelText('My label').value).toBe('val');
+    expect((getByLabelText('My label') as HTMLInputElement).value).toBe('val');
     expect(getAllByText('Val!')).not.toBeNull();
   });
 

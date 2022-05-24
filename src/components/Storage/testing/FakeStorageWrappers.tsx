@@ -21,7 +21,7 @@ import { FakeFirebaseRouterProvider } from './FakeFirebaseRouterProvider';
 import { TestStorageProvider } from './TestStorageProvider';
 
 export interface StorageTestWrappersProps {
-  fallbackTestId: string;
+  fallbackTestId?: string;
 }
 
 export const FakeStorageWrappers: React.FC<

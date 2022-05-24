@@ -29,7 +29,7 @@ it('renders an editor for a boolean', async () => {
   // Wait for selects to be stable
   await new Promise((resolve) => setTimeout(resolve, 500));
 
-  expect(getByLabelText('Value').value).toBe('true');
+  expect((getByLabelText('Value') as HTMLInputElement).value).toBe('true');
 
   act(() => {
     fireEvent.change(getByLabelText('Value'), { target: { value: 'false' } });

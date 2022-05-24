@@ -16,14 +16,14 @@
 
 import { act, fireEvent } from '@testing-library/react';
 import React from 'react';
-import { FormContext, useForm } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 
 import { renderWithFirestore } from '../testing/FirestoreTestProviders';
 import ReferenceEditor from './ReferenceEditor';
 
 const TestForm: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
-  const methods = useForm();
-  return <FormContext {...methods} children={children} />;
+  const methods = useForm({ mode: 'all' });
+  return <FormProvider {...methods} children={children} />;
 };
 
 it('renders an editor for a document-ref', async () => {
@@ -40,7 +40,9 @@ it('renders an editor for a document-ref', async () => {
     )
   );
 
-  expect(getByLabelText(/Document path/).value).toBe('foo/bar');
+  expect((getByLabelText(/Document path/) as HTMLInputElement).value).toBe(
+    'foo/bar'
+  );
 
   await act(async () => {
     fireEvent.change(getByLabelText(/Document path/), {

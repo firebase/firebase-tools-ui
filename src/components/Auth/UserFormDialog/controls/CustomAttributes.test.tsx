@@ -25,7 +25,7 @@ describe('CustomAttributes', () => {
       customAttributes,
     };
 
-    return wrapWithForm(CustomAttributes, { defaultValues });
+    return wrapWithForm(CustomAttributes, { defaultValues }, {});
   }
 
   it('displays no errors for an empty object', async () => {

@@ -25,7 +25,7 @@ export const SortRadioGroup: React.FC<
 
   useEffect(() => {
     if (!disabled) {
-      register({ name });
+      register(name);
     } else {
       setValue(name, undefined);
     }
