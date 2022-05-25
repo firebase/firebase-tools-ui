@@ -130,7 +130,7 @@
     "import-sort-parser-typescript": "^6.0.0",
     "import-sort-style-module": "^6.0.0",
     "jest-fetch-mock": "^3.0.3",
-    "lint-staged": "^10.5.3",
+    "lint-staged": "^12.0.0",
     "mutationobserver-shim": "^0.3.3",
     "prettier": "^2.2.1",
     "prettier-plugin-import-sort": "0.0.6",
