@@ -50,16 +50,6 @@ export async function renderWithStorage(children: ReactElement) {
     return true;
   }
 
-  const deleteAllFiles = async () => {
-    await waitFor(() => expect(current.storage).toBeDefined());
-    await waitFor(() => expect(current.storage.deleteAllFiles).toBeDefined());
-
-    await act(async () => {
-      await current.storage.deleteAllFiles();
-      await waitForNFiles(0);
-    });
-  };
-
   const uploadFile = async (name: string, folder?: string) => {
     const filesBeforeUpload = current.storage.files.length;
     const file = new File(['a'.repeat(777)], name);
