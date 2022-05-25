@@ -49,7 +49,7 @@ export async function renderWithStorage(children: ReactElement) {
   }
 
   const deleteAllFiles = async () => {
-    await waitFor(() => current.storage.toBeDefined());
+    await waitFor(() => !!current.storage);
 
     await act(async () => {
       await current.storage.deleteAllFiles();
