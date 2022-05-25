@@ -16,7 +16,7 @@
 
 import { fireEvent } from '@testing-library/react';
 import React from 'react';
-import { FormContextValues } from 'react-hook-form/dist/contextTypes';
+import { UseFormReturn } from 'react-hook-form';
 import { Provider } from 'react-redux';
 
 import { wrapWithForm } from '../../../../test_utils';
@@ -31,7 +31,7 @@ describe('SignInMethod', () => {
   async function setup(defaultValues: Partial<AddAuthUserPayload>) {
     const store = getMockAuthStore();
     const methods = wrapWithForm(
-      (props: SignInMethodProps & FormContextValues<AddAuthUserPayload>) => (
+      (props: SignInMethodProps & UseFormReturn<AddAuthUserPayload>) => (
         <Provider store={store}>
           <SignInMethod {...props} />
         </Provider>

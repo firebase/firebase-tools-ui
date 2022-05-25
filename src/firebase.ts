@@ -22,7 +22,6 @@ import 'firebase/firestore';
 // The browser build works because it uses XHR (also mocked by jsdom).
 import '@firebase/storage/dist/index.browser.cjs.js';
 
-import { _FirebaseApp } from '@firebase/app-types/private';
 import { FirebaseAuthInternal } from '@firebase/auth-interop-types';
 import { Component, ComponentType } from '@firebase/component';
 import firebase from 'firebase/app';
@@ -126,7 +125,5 @@ function applyAdminAuth(app: firebase.app.App): void {
     'PRIVATE' as ComponentType
   );
 
-  ((app as unknown) as _FirebaseApp)._addOrOverwriteComponent(
-    mockAuthComponent
-  );
+  (app as any)._addOrOverwriteComponent(mockAuthComponent);
 }

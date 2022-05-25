@@ -43,15 +43,11 @@ export const FileField: React.FC<React.PropsWithChildren<FileFieldProps>> = ({
 }) => {
   const [id] = useState(randomId());
 
-  const {
-    isDragActive,
-    getRootProps,
-    getInputProps,
-    isDragReject,
-  } = useDropzone({
-    onDrop: onFiles,
-    accept,
-  });
+  const { isDragActive, getRootProps, getInputProps, isDragReject } =
+    useDropzone({
+      onDrop: onFiles,
+      accept,
+    });
 
   return (
     <div className="Field">

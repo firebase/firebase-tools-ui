@@ -41,11 +41,9 @@ function getLinesOutcome(
 ): OutcomeInfo[] {
   return [
     ...granularAllowOutcomes,
-    ...(issues?.map(
-      ({ line }): OutcomeInfo => {
-        return { outcome: 'error', line };
-      }
-    ) || []),
+    ...(issues?.map(({ line }): OutcomeInfo => {
+      return { outcome: 'error', line };
+    }) || []),
   ];
 }
 // Transforms the (rulesContext) data into InspectionElements

@@ -15,15 +15,15 @@
  */
 
 import { act, fireEvent, render } from '@testing-library/react';
-import { firestore } from 'firebase';
+import firebase from 'firebase';
 import React from 'react';
-import { FormContext, useForm } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 
 import TimestampEditor from './TimestampEditor';
 
 const TestForm: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
-  const methods = useForm();
-  return <FormContext {...methods}>{children}</FormContext>;
+  const methods = useForm({ mode: 'onChange' });
+  return <FormProvider {...methods}>{children}</FormProvider>;
 };
 
 it('renders an editor for a timestamp', async () => {
@@ -33,13 +33,15 @@ it('renders an editor for a timestamp', async () => {
     <TestForm>
       <TimestampEditor
         name="foo"
-        value={firestore.Timestamp.fromDate(date)}
+        value={firebase.firestore.Timestamp.fromDate(date)}
         onChange={onChange}
       />
     </TestForm>
   );
 
-  const [displayDate, displayTime] = getByLabelText('Value').value.split('T');
+  const [displayDate, displayTime] = (
+    getByLabelText('Value') as HTMLInputElement
+  ).value.split('T');
   expect(displayDate).toBe('2000-01-02');
   expect(displayTime).toBe('10:30');
 
@@ -60,6 +62,6 @@ it('renders an editor for a timestamp', async () => {
   });
 
   expect(onChange).toHaveBeenCalledWith(
-    firestore.Timestamp.fromDate(new Date(2001, 0, 2, 14, 30))
+    firebase.firestore.Timestamp.fromDate(new Date(2001, 0, 2, 14, 30))
   );
 });

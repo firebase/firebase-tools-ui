@@ -18,7 +18,7 @@
 // needed
 @import '@material/theme/dist/mdc.theme';
 @import '@material/elevation/dist/mdc.elevation';
-@import '@material/floating-label/dist/mdc.floating-label';
+@import '@material/floating-label'; // sass compilation hanging w/ dist
 @import '@material/form-field/dist/mdc.form-field';
 @import '@material/icon-button/dist/mdc.icon-button';
 @import '@material/layout-grid/dist/mdc.layout-grid';

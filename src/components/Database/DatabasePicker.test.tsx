@@ -60,7 +60,13 @@ it('renders extra databases with link', () => {
     </MemoryRouter>
   );
 
-  expect(getByTestId('nav-foo').href).toContain('/nav/foo');
-  expect(getByTestId('nav-bar').href).toContain('/nav/bar');
-  expect(getByTestId('nav-baz').href).toContain('/nav/baz');
+  expect((getByTestId('nav-foo') as HTMLAnchorElement).href).toContain(
+    '/nav/foo'
+  );
+  expect((getByTestId('nav-bar') as HTMLAnchorElement).href).toContain(
+    '/nav/bar'
+  );
+  expect((getByTestId('nav-baz') as HTMLAnchorElement).href).toContain(
+    '/nav/baz'
+  );
 });

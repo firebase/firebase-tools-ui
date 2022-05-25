@@ -92,7 +92,7 @@ describe('CollectionPanel', () => {
 });
 
 it('filters documents for single-value filters', async () => {
-  useCollectionFilter.mockReturnValue({
+  (useCollectionFilter as jest.Mock).mockReturnValue({
     field: 'foo',
     operator: '==',
     value: 'bar',
@@ -120,7 +120,7 @@ it('filters documents for single-value filters', async () => {
 });
 
 it('filters documents for single-value not operator filters', async () => {
-  useCollectionFilter.mockReturnValue({
+  (useCollectionFilter as jest.Mock).mockReturnValue({
     field: 'foo',
     operator: '!=',
     value: 'bar',
@@ -148,7 +148,7 @@ it('filters documents for single-value not operator filters', async () => {
 });
 
 it('filters documents for multi-value filters', async () => {
-  useCollectionFilter.mockReturnValue({
+  (useCollectionFilter as jest.Mock).mockReturnValue({
     field: 'foo',
     operator: 'in',
     values: ['eggs', 'spam'],
@@ -176,7 +176,7 @@ it('filters documents for multi-value filters', async () => {
 });
 
 it('filters documents for multi-value not operator filters', async () => {
-  useCollectionFilter.mockReturnValue({
+  (useCollectionFilter as jest.Mock).mockReturnValue({
     field: 'foo',
     operator: 'not-in',
     values: ['eggs', 'spam'],
@@ -204,7 +204,7 @@ it('filters documents for multi-value not operator filters', async () => {
 });
 
 it('sorts documents when filtered', async () => {
-  useCollectionFilter.mockReturnValue({
+  (useCollectionFilter as jest.Mock).mockReturnValue({
     field: 'foo',
     sort: 'asc',
   });
@@ -227,9 +227,9 @@ it('sorts documents when filtered', async () => {
 
   await findByText(/doc-a/);
 
-  expect(
-    queryAllByText(/doc-a|doc-b|doc-z/).map((e) => e.textContent)
-  ).toEqual(['doc-a', 'doc-b', 'doc-z']);
+  expect(queryAllByText(/doc-a|doc-b|doc-z/).map((e) => e.textContent)).toEqual(
+    ['doc-a', 'doc-b', 'doc-z']
+  );
 });
 
 it('shows the missing documents', async () => {
@@ -301,7 +301,7 @@ it('deletes collection and nested data when requested', async () => {
     return delay(200);
   });
 
-  confirm.mockResolvedValueOnce(true);
+  (confirm as jest.Mock).mockResolvedValueOnce(true);
 
   const deleteDocument = await findByRole('menuitem', {
     name: 'Delete collection',

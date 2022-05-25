@@ -16,7 +16,7 @@
 
 import { Typography } from '@rmwc/typography';
 import React from 'react';
-import { FormContextValues } from 'react-hook-form/dist/contextTypes';
+import { UseFormReturn } from 'react-hook-form';
 import { connect } from 'react-redux';
 
 import { createStructuredSelector } from '../../../../store';
@@ -34,11 +34,14 @@ export type PhoneControlProps = PropsFromState & {
 };
 
 export const PhoneControl: React.FC<
-  React.PropsWithChildren<
-    PhoneControlProps & FormContextValues<AddAuthUserPayload>
-  >
-> = ({ register, errors, allPhoneNumbers, editedUserPhoneNumber }) => {
-  function validate(value: string) {
+  React.PropsWithChildren<PhoneControlProps & UseFormReturn<AddAuthUserPayload>>
+> = ({
+  register,
+  formState: { errors },
+  allPhoneNumbers,
+  editedUserPhoneNumber,
+}) => {
+  function validate(value?: string) {
     return editedUserPhoneNumber === value || !allPhoneNumbers.has(value);
   }
 
@@ -53,6 +56,11 @@ export const PhoneControl: React.FC<
     }
   }
 
+  const { ref: phoneNumberRef, ...phoneNumberField } = register('phoneNumber', {
+    pattern: PHONE_REGEX,
+    validate,
+  });
+
   return (
     <>
       <Typography
@@ -64,12 +72,12 @@ export const PhoneControl: React.FC<
         Phone authentication
       </Typography>
       <Field
-        name="phoneNumber"
         label="Phone"
         placeholder="Enter phone number"
         type="tel"
         error={getErrorText()}
-        inputRef={register({ pattern: PHONE_REGEX, validate })}
+        inputRef={phoneNumberRef}
+        {...phoneNumberField}
       />
     </>
   );
