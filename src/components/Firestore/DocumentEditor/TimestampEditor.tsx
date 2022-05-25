@@ -51,6 +51,7 @@ const TimestampEditor: React.FC<
         <Field
           label="Value"
           type="datetime-local"
+          step={1}
           defaultValue={dateToLocale(value.toDate())}
           error={fieldState.error?.message}
           {...field}
