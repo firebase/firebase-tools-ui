@@ -17,7 +17,7 @@
 import { randomId } from '@rmwc/base';
 import { act, render, waitFor } from '@testing-library/react';
 import { History } from 'history';
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { UseBucketResult, useBucket } from '../api/useBucket';
@@ -30,6 +30,8 @@ interface CurrentType {
   history: History;
   bucket: UseBucketResult;
 }
+
+const ASYNC_STORAGE_WRAPPER_TEST_ID = 'AsyncStorage-wrapper';
 
 export async function renderWithStorage(children: ReactElement) {
   const defaultBucket = randomId('bucket');
@@ -75,7 +77,23 @@ export async function renderWithStorage(children: ReactElement) {
     current.history = useHistory();
     current.bucket = useBucket();
 
-    return <>{children}</>;
+    const [storageChildren, setStorageChildren] =
+      useState<React.ReactNode | null>(null);
+
+    useEffect(() => {
+      current.storage
+        .deleteAllFiles()
+        .then(() => {
+          setStorageChildren(children);
+        })
+        .catch((e) => {
+          console.error('Unable to clear all storage files', { e });
+        });
+    }, []);
+
+    return storageChildren ? (
+      <div data-testid={ASYNC_STORAGE_WRAPPER_TEST_ID}>{storageChildren}</div>
+    ) : null;
   };
 
   const fallbackTestId = 'storage-fallback';
@@ -85,16 +103,11 @@ export async function renderWithStorage(children: ReactElement) {
     </FakeStorageWrappers>
   );
 
-  await waitFor(
-    () => {
-      return element.queryByTestId(fallbackTestId) === null;
-    },
-    { timeout: 5000 }
+  await element.findByTestId(
+    ASYNC_STORAGE_WRAPPER_TEST_ID,
+    {},
+    { timeout: 5_000 }
   );
-
-  await deleteAllFiles();
-
-  await waitFor(() => current.storage.files !== undefined);
 
   async function waitForFilesToBeUploaded() {
     return await waitFor(
