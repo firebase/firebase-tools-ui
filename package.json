@@ -32,7 +32,7 @@
     "@rmwc/top-app-bar": "^7.0.3",
     "@rmwc/types": "^7.0.3",
     "@rmwc/typography": "^7.0.3",
-    "@rooks/use-key": "^3.6.0",
+    "@rooks/use-key": "^4.0.0",
     "@types/codemirror": "^5.60.1",
     "@types/jest": "^26.0.0",
     "@types/lodash.debounce": "^4.0.6",
