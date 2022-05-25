@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-import { render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Router } from 'react-router-dom';
 
+import { delay } from '../../test_utils';
 import { StorageRoute, StorageWrapper } from './index';
 import { FakeStorageWrappers } from './testing/FakeStorageWrappers';
 import { renderWithStorage } from './testing/renderWithStorage';
@@ -28,6 +29,7 @@ describe('Storage Index Page', () => {
     const { getByText, defaultBucket } = await renderWithStorage(
       <StorageWrapper />
     );
+    await waitFor(() => delay(100));
     expect(getByText('Delete all files')).toBeDefined();
     expect(getByText(`gs://${defaultBucket}`)).toBeDefined();
   });
