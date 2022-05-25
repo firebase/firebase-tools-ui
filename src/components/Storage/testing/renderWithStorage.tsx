@@ -52,6 +52,7 @@ export async function renderWithStorage(children: ReactElement) {
     await waitFor(() => !!current.storage);
 
     await act(async () => {
+      await waitFor(() => !!current.storage);
       await current.storage.deleteAllFiles();
       await waitForNFiles(0);
     });
