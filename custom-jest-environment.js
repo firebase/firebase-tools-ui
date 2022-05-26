@@ -18,6 +18,9 @@
 // This file is used in `npm test` to override a few globals on top of jsdom.
 
 const JsdomEnvironment = require('jest-environment-jsdom');
+const dns = require('dns');
+
+dns.setDefaultResultOrder('ipv4first');
 
 class EmulatorUiTestEnvironment extends JsdomEnvironment {
   constructor(config) {
