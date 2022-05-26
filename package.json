@@ -80,7 +80,7 @@
     "build:server": "webpack --target=node ./server.js -o server.bundle.js",
     "test": "react-scripts test --env=./custom-jest-environment.js",
     "test:debug": "react-scripts --inspect-brk test --env=./custom-jest-environment.js --runInBand",
-    "test:coverage": "node --expose-gc --max-old-space-size=4076 node_modules/.bin/react-scripts test --coverage --watchAll=false --env=./custom-jest-environment.js --logHeapUsage --runInBand",
+    "test:coverage": "react-scripts --expose-gc test --coverage --watchAll=false --env=./custom-jest-environment.js",
     "eject": "react-scripts eject",
     "lint": "prettier --check . && eslint 'src/**/*.{ts,tsx}'",
     "lint:fix": "eslint --fix 'src/**/*.{ts,tsx}' && npm run format",
