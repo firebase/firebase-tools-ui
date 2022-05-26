@@ -86,7 +86,8 @@
     "lint": "prettier --check . && eslint 'src/**/*.{ts,tsx}'",
     "lint:fix": "eslint --fix 'src/**/*.{ts,tsx}' && npm run format",
     "fmt": "npm run format",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "prepare": "husky install"
   },
   "eslintConfig": {
     "extends": [
