@@ -63,7 +63,7 @@ jobs:
         # forceExit: something is not cleaning up - likely firebase-app that needs to be deleted, investigate
         run: |
           npm install -g firebase-tools@latest
-          firebase emulators:exec --only database,firestore,storage --project sample 'npm run test:coverage -- --forceExit --logHeapUsage'
+          firebase emulators:exec --only database,firestore,storage --project sample 'npm run test:coverage -- --forceExit'
         env:
           CI: true
 
