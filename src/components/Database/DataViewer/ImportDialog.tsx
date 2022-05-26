@@ -87,7 +87,7 @@ export const ImportDialog: React.FC<React.PropsWithChildren<Props>> = ({
           />
           <FileField
             name="file"
-            accept="application/json"
+            accept={{ 'application/json': ['.json'] }}
             label="Data (JSON)"
             required
             value={file?.name || 'Drop a file, or click to select'}
