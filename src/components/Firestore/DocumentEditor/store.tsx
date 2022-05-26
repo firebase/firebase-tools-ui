@@ -23,7 +23,6 @@ import * as actions from './actions';
 import {
   ArrayField,
   Field,
-  PrimitiveField,
   PrimitiveValue,
   Store,
   assertIsArrayField,

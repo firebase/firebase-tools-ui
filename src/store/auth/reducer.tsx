@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import produce, { produceWithPatches } from 'immer';
+import produce from 'immer';
 import { Action, createReducer } from 'typesafe-actions';
 
 import { AuthState, AuthUser } from '../../components/Auth/types';
