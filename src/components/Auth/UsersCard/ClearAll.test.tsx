@@ -46,7 +46,9 @@ describe('ClearAll', () => {
   it('calls clearAllData callback on button click if user confirms', async () => {
     const { clickButton, clearAllData } = setup();
 
-    confirmClearAll.mockImplementation(() => Promise.resolve(true));
+    (confirmClearAll as jest.Mock).mockImplementationOnce(() =>
+      Promise.resolve(true)
+    );
     await clickButton();
     expect(clearAllData).toHaveBeenCalled();
   });
@@ -54,7 +56,9 @@ describe('ClearAll', () => {
   it("doesn't call clearAllData callback on button click if user cancels", async () => {
     const { clickButton, clearAllData } = setup();
 
-    confirmClearAll.mockImplementation(() => Promise.resolve(false));
+    (confirmClearAll as jest.Mock).mockImplementationOnce(() =>
+      Promise.resolve(false)
+    );
     await clickButton();
     expect(clearAllData).not.toHaveBeenCalled();
   });

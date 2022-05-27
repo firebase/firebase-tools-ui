@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import React from 'react';
+import { act } from 'react-dom/test-utils';
 import { Route, Router } from 'react-router-dom';
 
 import { storagePath } from '../common/constants';
@@ -60,7 +61,9 @@ describe('useBucket', () => {
     const newBucketName = 'lol';
 
     const { setBucket, history } = setup();
-    setBucket(newBucketName);
+    act(() => {
+      setBucket(newBucketName);
+    });
     expect(history.location.pathname).toBe('/storage/' + newBucketName);
   });
 });

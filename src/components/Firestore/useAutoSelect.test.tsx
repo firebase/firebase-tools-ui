@@ -37,7 +37,7 @@ const WITH_CHILDREN_ENCODED = [{ id: 'first@#$' }, { id: 'last@#$' }];
 const EMPTY: Array<{ id: string }> = [];
 
 // TODO: Find some other way to test hooks (e.g. using
-// react-hooks-testing-library) that does not need artificial delays on init.
+// react-testing-library) that does not need artificial delays on init.
 describe('useAutoSelect', () => {
   describe(`at ${FIRESTORE_DATA_URL}`, () => {
     it('does not redirect if the list is null', async () => {

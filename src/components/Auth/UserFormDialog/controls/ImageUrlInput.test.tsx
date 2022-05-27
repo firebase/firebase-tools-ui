@@ -19,20 +19,23 @@ import { act } from 'react-dom/test-utils';
 
 import { wrapWithForm } from '../../../../test_utils';
 import { AddAuthUserPayload } from '../../types';
-import { ImageUrlInput } from './ImageUrlInput';
+import { ImageUrlInput, ImageUrlInputProps } from './ImageUrlInput';
 
 describe('ImageUrlInput', () => {
   function setup(defaultValues: Partial<AddAuthUserPayload>) {
     const mockImage = { src: '', onload: undefined, onerror: undefined };
-    const MockImageConstructor = (function () {
+    const MockImageConstructor = function () {
       return mockImage;
-    } as unknown) as new () => HTMLImageElement;
+    } as unknown as new (
+      width?: number | undefined,
+      height?: number | undefined
+    ) => HTMLImageElement;
 
-    const methods = wrapWithForm(
-      ImageUrlInput,
-      { defaultValues },
-      { ImageConstructor: MockImageConstructor }
-    );
+    const props: ImageUrlInputProps = {
+      ImageConstructor: MockImageConstructor,
+    };
+
+    const methods = wrapWithForm(ImageUrlInput, { defaultValues }, props);
 
     return { ...methods, mockImage };
   }
@@ -44,7 +47,7 @@ describe('ImageUrlInput', () => {
       });
 
       act(() => {
-        mockImage.onerror && (mockImage.onerror! as Function)();
+        (mockImage.onerror! as Function)();
       });
 
       await triggerValidation();
@@ -57,7 +60,7 @@ describe('ImageUrlInput', () => {
       });
 
       act(() => {
-        mockImage.onload && (mockImage.onload! as Function)();
+        (mockImage.onload! as Function)();
       });
 
       await triggerValidation();
@@ -71,12 +74,8 @@ describe('ImageUrlInput', () => {
     });
 
     it('displays nothing if there is no image', async () => {
-      const {
-        queryByTestId,
-        queryByText,
-        queryByAltText,
-        triggerValidation,
-      } = setup({ photoUrl: '' });
+      const { queryByTestId, queryByText, queryByAltText, triggerValidation } =
+        setup({ photoUrl: '' });
       await triggerValidation();
       expect(queryByTestId('spinner')).toBeNull();
       expect(queryByAltText('Profile preview')).toBeNull();

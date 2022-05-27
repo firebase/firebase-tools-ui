@@ -30,22 +30,17 @@ import { alert } from '../common/DialogQueue';
 import { TestEmulatorConfigProvider } from '../common/EmulatorConfigProvider';
 import App from '.';
 
+// TODO: is this test really necessary? the following test covers the "crashing"-aspect
 it('renders without crashing', async () => {
-  const div = document.createElement('div');
-  await act(async () => {
-    ReactDOM.render(
+  expect(async () => {
+    render(
       <TestEmulatorConfigProvider config={{ projectId: 'example' }}>
         <BrowserRouter>
           <App />
         </BrowserRouter>
-      </TestEmulatorConfigProvider>,
-      div
+      </TestEmulatorConfigProvider>
     );
-    // Wait for async tab indicator changes.
-    await delay(100);
-    expect(div.firstChild).not.toBeNull();
-    ReactDOM.unmountComponentAtNode(div);
-  });
+  }).not.toThrow();
 });
 
 it('shows dialogs in the queue', async () => {
