@@ -20,7 +20,7 @@ import { Theme, ThemeProvider } from '@rmwc/theme';
 import { Typography } from '@rmwc/typography';
 import firebase from 'firebase';
 import React, { useState } from 'react';
-import { Controller, FormContext, useForm } from 'react-hook-form';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
 
 import { grey100 } from '../../../colors';
 import { Field, SelectField } from '../../../components/common/Field';
@@ -37,11 +37,13 @@ import { ConditionEntries } from './ConditionEntries';
 import { ConditionEntry } from './ConditionEntry';
 import { SortRadioGroup } from './SortRadioGroup';
 
-export const CollectionFilter: React.FC<{
-  className?: string;
-  path: string;
-  onClose?: () => void;
-}> = ({ className, path, onClose }) => {
+export const CollectionFilter: React.FC<
+  React.PropsWithChildren<{
+    className?: string;
+    path: string;
+    onClose?: () => void;
+  }>
+> = ({ className, path, onClose }) => {
   const collectionFilter = useCollectionFilter(path);
   const dispatch = useDispatch();
 
@@ -50,7 +52,7 @@ export const CollectionFilter: React.FC<{
     defaultValues: collectionFilter,
   });
 
-  const cf = formMethods.watch({ nest: true });
+  const cf = formMethods.watch();
 
   const onSubmit = (data: CollectionFilterType) => {
     dispatch(
@@ -64,7 +66,7 @@ export const CollectionFilter: React.FC<{
 
   return (
     <CollectionFilterTheme>
-      <FormContext {...(formMethods as any)}>
+      <FormProvider {...formMethods}>
         <form
           onSubmit={formMethods.handleSubmit(onSubmit)}
           className={className}
@@ -72,15 +74,19 @@ export const CollectionFilter: React.FC<{
           {/* Field entry */}
           <FilterItem title="Filter by field" preview={cf.field} defaultOpen>
             <Controller
-              as={Field}
               name="field"
-              label="Enter field"
               rules={{ required: 'Required' }}
               defaultValue=""
-              error={
-                (formMethods.formState.touched as any)['field'] &&
-                (formMethods.errors as any)['field']?.message
-              }
+              render={({ field: { ref, ...field } }) => (
+                <Field
+                  label="Enter field"
+                  {...field}
+                  error={
+                    formMethods.formState.touchedFields['field'] &&
+                    formMethods.formState.errors['field']?.message
+                  }
+                />
+              )}
             />
           </FilterItem>
 
@@ -95,8 +101,8 @@ export const CollectionFilter: React.FC<{
                 <ConditionEntry
                   name="value"
                   error={
-                    (formMethods.formState.touched as any)['value'] &&
-                    (formMethods.errors as any)['value']?.message
+                    (formMethods.formState.touchedFields as any)['value'] &&
+                    (formMethods.formState.errors as any)['value']?.message
                   }
                 />
               )}
@@ -151,12 +157,14 @@ export const CollectionFilter: React.FC<{
             </CardActionButtons>
           </CardActions>
         </form>
-      </FormContext>
+      </FormProvider>
     </CollectionFilterTheme>
   );
 };
 
-const CollectionFilterTheme: React.FC = ({ children }) => (
+const CollectionFilterTheme: React.FC<React.PropsWithChildren<unknown>> = ({
+  children,
+}) => (
   <ThemeProvider options={{ background: grey100, surface: '#fff' }}>
     <Theme use={['background']} tag="div">
       {children}
@@ -164,7 +172,9 @@ const CollectionFilterTheme: React.FC = ({ children }) => (
   </ThemeProvider>
 );
 
-const ConditionPreview: React.FC<{ cf: CollectionFilterType }> = ({ cf }) => {
+const ConditionPreview: React.FC<
+  React.PropsWithChildren<{ cf: CollectionFilterType }>
+> = ({ cf }) => {
   const operator = `"${cf.operator}"`;
   if (isSingleValueCollectionFilter(cf)) {
     return <span>{`${operator}, ${JSON.stringify(cf.value)}`}</span>;
@@ -175,10 +185,9 @@ const ConditionPreview: React.FC<{ cf: CollectionFilterType }> = ({ cf }) => {
   return null;
 };
 
-const Preview: React.FC<{ path: string; cf: CollectionFilterType }> = ({
-  path,
-  cf,
-}) => {
+const Preview: React.FC<
+  React.PropsWithChildren<{ path: string; cf: CollectionFilterType }>
+> = ({ path, cf }) => {
   const collectionId = path.split('/').pop();
   return (
     <code className={styles.preview} aria-label="Code preview">
@@ -198,7 +207,9 @@ const Preview: React.FC<{ path: string; cf: CollectionFilterType }> = ({
   );
 };
 
-const ConditionSelect: React.FC = ({ children }) => {
+const ConditionSelect: React.FC<React.PropsWithChildren<unknown>> = ({
+  children,
+}) => {
   const options: Array<{
     label: string;
     value: firebase.firestore.WhereFilterOp;
@@ -248,12 +259,18 @@ const ConditionSelect: React.FC = ({ children }) => {
   return (
     <>
       <Controller
-        as={SelectField}
         name="operator"
-        label="Only show documents where the specified field is..."
-        placeholder="No condition"
-        options={options}
-        onChange={([selected]) => selected.currentTarget.value || undefined}
+        render={({ field: { ref, ...field } }) => (
+          <SelectField
+            label="Only show documents where the specified field is..."
+            placeholder="No condition"
+            options={options}
+            {...field}
+            onChange={(selected) => {
+              field.onChange(selected.currentTarget.value || undefined);
+            }}
+          />
+        )}
       />
       {children}
     </>
@@ -261,11 +278,13 @@ const ConditionSelect: React.FC = ({ children }) => {
 };
 
 // Accordian-view for expanding/collapsing panels in the query-view
-const FilterItem: React.FC<{
-  title: string;
-  preview?: React.ReactNode;
-  defaultOpen: boolean;
-}> = ({ title, preview, defaultOpen, children }) => {
+const FilterItem: React.FC<
+  React.PropsWithChildren<{
+    title: string;
+    preview?: React.ReactNode;
+    defaultOpen: boolean;
+  }>
+> = ({ title, preview, defaultOpen, children }) => {
   const [expanded, setExpanded] = useState(defaultOpen);
 
   return (

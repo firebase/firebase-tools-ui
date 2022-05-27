@@ -40,7 +40,7 @@ export interface Props {
   onComplete: (reference?: firebase.database.Reference, file?: File) => void;
 }
 
-export const ImportDialog: React.FC<Props> = ({
+export const ImportDialog: React.FC<React.PropsWithChildren<Props>> = ({
   api,
   reference,
   onComplete,
@@ -61,7 +61,7 @@ export const ImportDialog: React.FC<Props> = ({
           disableTriggers: !functionsEmulatorRunning || !executeFunctions,
         });
         onComplete(reference, file);
-      } catch (err) {
+      } catch (err: any) {
         setError(err.message);
       }
       setIsImporting(false);

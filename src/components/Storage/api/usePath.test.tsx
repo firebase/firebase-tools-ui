@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import React from 'react';
+import { act } from 'react-dom/test-utils';
 import { Route, Router } from 'react-router-dom';
 
 import { storagePath } from '../common/constants';
@@ -31,7 +32,9 @@ describe('usePath', () => {
       initialEntries: [`/storage/${bucket}/${initialPath}`],
     });
 
-    const Wrapper: React.FC = ({ children }) => {
+    const Wrapper: React.FC<React.PropsWithChildren<unknown>> = ({
+      children,
+    }) => {
       return (
         <Router history={history}>
           <Route exact path={storagePath + `:bucket/:path*`}>
@@ -58,7 +61,9 @@ describe('usePath', () => {
   it('updates the URL', async () => {
     const newPath = 'new/path';
     const { setPath, history } = setup();
-    setPath(newPath);
+    act(() => {
+      setPath(newPath);
+    });
     expect(history.location.pathname).toBe(`/storage/${bucket}/${newPath}`);
   });
 });

@@ -76,10 +76,10 @@ export const NodeParent = React.memo<Props>(function NodeParent$({
       });
   };
 
-  const toggleExpansion = useCallback(() => setIsExpanded(!isExpanded), [
-    setIsExpanded,
-    isExpanded,
-  ]);
+  const toggleExpansion = useCallback(
+    () => setIsExpanded(!isExpanded),
+    [setIsExpanded, isExpanded]
+  );
 
   return (
     <div className="NodeParent">

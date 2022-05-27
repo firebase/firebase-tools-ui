@@ -29,7 +29,7 @@ const BadRequestError = Error;
  */
 const CUSTOM_ATTRIBUTES_MAX_LENGTH = 1000;
 
-export function validateSerializedCustomClaims(claims: string): void {
+export function validateSerializedCustomClaims(claims = ''): void {
   assert(claims.length <= CUSTOM_ATTRIBUTES_MAX_LENGTH, 'CLAIMS_TOO_LARGE');
 
   let parsed;

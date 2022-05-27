@@ -31,7 +31,9 @@ interface FileLocationProps {
   fullPath: string;
 }
 
-export const FileLocation: React.FC<FileLocationProps> = ({ fullPath }) => {
+export const FileLocation: React.FC<
+  React.PropsWithChildren<FileLocationProps>
+> = ({ fullPath }) => {
   const { tokens, createToken, deleteToken } = useTokens(fullPath);
   const { getLocation } = useStorageFiles();
   const { writeText } = useClipboard();

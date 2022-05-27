@@ -24,7 +24,9 @@ interface SideBarProps {
   metadata?: Record<string, string>;
 }
 
-export const CustomMetadata: React.FC<SideBarProps> = ({ metadata }) => {
+export const CustomMetadata: React.FC<
+  React.PropsWithChildren<SideBarProps>
+> = ({ metadata }) => {
   return (
     <Accordion title="Custom metadata">
       {metadata ? (

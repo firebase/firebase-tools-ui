@@ -24,9 +24,11 @@ import { CONSOLE_ROOT } from '../common/constants';
 
 const DISMISS_KEY = 'isLocalWarningCalloutDismissed';
 
-export const LocalWarningCallout: React.FC<{
-  projectId: string;
-}> = ({ projectId }) => {
+export const LocalWarningCallout: React.FC<
+  React.PropsWithChildren<{
+    projectId: string;
+  }>
+> = ({ projectId }) => {
   const [isDismissed] = useLocalStorage<boolean>(DISMISS_KEY);
 
   if (isDismissed) {

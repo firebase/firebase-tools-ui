@@ -16,14 +16,14 @@
 
 import { Typography } from '@rmwc/typography';
 import React from 'react';
-import { FormContextValues } from 'react-hook-form/dist/contextTypes';
+import { UseFormReturn } from 'react-hook-form';
 
 import { Field } from '../../../common/Field';
 import { AddAuthUserPayload } from '../../types';
 import styles from './controls.module.scss';
 import { validateSerializedCustomClaims } from './customClaimsValidation';
 
-function validate(attributes: string) {
+function validate(attributes?: string) {
   if (attributes === '') {
     return true;
   }
@@ -32,7 +32,7 @@ function validate(attributes: string) {
     // We're reusing server validation.
     validateSerializedCustomClaims(attributes);
     return true;
-  } catch (e) {
+  } catch (e: any) {
     if (e.message === 'INVALID_CLAIMS') {
       return 'Custom claims must be a valid JSON object';
     }
@@ -49,8 +49,8 @@ function validate(attributes: string) {
 const CUSTOM_ATTRIBUTES_CONTROL_NAME = 'customAttributes';
 
 export const CustomAttributes: React.FC<
-  FormContextValues<AddAuthUserPayload>
-> = ({ errors, register }) => {
+  React.PropsWithChildren<UseFormReturn<AddAuthUserPayload>>
+> = ({ formState: { errors }, register }) => {
   const label = (
     <label>
       <Typography use="subtitle2" tag="div" theme="textPrimaryOnBackground">
@@ -58,15 +58,21 @@ export const CustomAttributes: React.FC<
       </Typography>
     </label>
   );
+
+  const { ref: customAttributesRef, ...customAttributesField } = register(
+    'customAttributes',
+    { validate }
+  );
+
   return (
     <div className={styles.customAttributesWrapper}>
       <Field
-        inputRef={register({ validate })}
+        inputRef={customAttributesRef}
         error={errors[CUSTOM_ATTRIBUTES_CONTROL_NAME]?.message}
-        name={CUSTOM_ATTRIBUTES_CONTROL_NAME}
         label={label}
         textarea
         placeholder={`Enter valid json, e.g. {"role":"admin"}`}
+        {...customAttributesField}
       />
       <Typography use="body2">
         These custom key:value attributes can be used with Rules to implement

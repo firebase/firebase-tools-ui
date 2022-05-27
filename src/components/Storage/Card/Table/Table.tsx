@@ -44,11 +44,9 @@ interface StorageTableProps {
   selectFile: (file?: StorageFile) => void;
 }
 
-export const StorageTable: React.FC<StorageTableProps> = ({
-  selection,
-  selectFile,
-  selectedFile,
-}) => {
+export const StorageTable: React.FC<
+  React.PropsWithChildren<StorageTableProps>
+> = ({ selection, selectFile, selectedFile }) => {
   const { files, bucket, setPath } = useStorageFiles();
 
   return (
@@ -66,10 +64,8 @@ export const StorageTable: React.FC<StorageTableProps> = ({
                   checked={selection.allSelected}
                   indeterminate={selection.allIndeterminate}
                   onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                    const {
-                      checked,
-                      indeterminate,
-                    } = event.target as HTMLInputElement;
+                    const { checked, indeterminate } =
+                      event.target as HTMLInputElement;
                     if (
                       checked !== selection.allSelected ||
                       indeterminate !== selection.allIndeterminate
@@ -132,13 +128,9 @@ function lastModified(item: StorageItem) {
   return new Date(item.updated).toLocaleDateString();
 }
 
-export const StorageFileTableRow: React.FC<StorageTableRowProps> = ({
-  item,
-  selection,
-  selectFile,
-  setPath,
-  selectedFile,
-}) => {
+export const StorageFileTableRow: React.FC<
+  React.PropsWithChildren<StorageTableRowProps>
+> = ({ item, selection, selectFile, setPath, selectedFile }) => {
   const fileNameId = randomId('file');
 
   function navigate() {

@@ -84,9 +84,11 @@ const queryFields = [
   'search',
   'metadata.emulator',
   'metadata.emulator.name',
+  'metadata.extension.instanceId',
   'metadata.function',
   'metadata.function.name',
 ];
+
 export function parseQuery(query: string): ParsedQuery {
   let escapedQuery = '';
   let isEscaped = false;
@@ -195,7 +197,10 @@ interface Props {
   compiledGetters: CompiledGetterCache;
 }
 
-export const QueryBar: React.FC<Props> = ({ query, setQuery }) => {
+export const QueryBar: React.FC<React.PropsWithChildren<Props>> = ({
+  query,
+  setQuery,
+}) => {
   const [temporaryQuery, setTemporaryQuery] = useState('');
 
   useEffect(() => {

@@ -19,7 +19,7 @@ import './index.scss';
 import { IconButton } from '@rmwc/icon-button';
 import firebase from 'firebase';
 import React, { useEffect } from 'react';
-import { FormContext, useForm, useFormContext } from 'react-hook-form';
+import { FormProvider, useForm, useFormContext } from 'react-hook-form';
 
 import { Field, SelectField } from '../../common/Field';
 import { FieldType, FirestoreAny, FirestoreMap } from '../models';
@@ -99,16 +99,18 @@ export function supportsEditing(value: FirestoreAny): boolean {
  *     once a field has been persisted via the SDK.
  * areRootFielsMutable: can a root field be added/removed.
  */
-const DocumentEditor: React.FC<{
-  value: FirestoreAny;
-  onChange?: (value?: FirestoreMap) => void;
-  areRootNamesMutable?: boolean;
-  areRootFieldsMutable?: boolean;
-  rtdb?: boolean;
-  startingIndex?: number;
-  supportNestedArrays?: boolean;
-  firestore?: firebase.firestore.Firestore;
-}> = ({
+const DocumentEditor: React.FC<
+  React.PropsWithChildren<{
+    value: FirestoreAny;
+    onChange?: (value?: FirestoreMap) => void;
+    areRootNamesMutable?: boolean;
+    areRootFieldsMutable?: boolean;
+    rtdb?: boolean;
+    startingIndex?: number;
+    supportNestedArrays?: boolean;
+    firestore?: firebase.firestore.Firestore;
+  }>
+> = ({
   value,
   onChange,
   areRootNamesMutable,
@@ -122,14 +124,15 @@ const DocumentEditor: React.FC<{
   const [store, dispatch] = React.useReducer(storeReducer, initialState);
   const methods = useForm({ mode: 'onChange' });
 
-  const denormalizedStore = React.useMemo(() => denormalize(store, firestore), [
-    store,
-    firestore,
-  ]);
+  const denormalizedStore = React.useMemo(
+    () => denormalize(store, firestore),
+    [store, firestore]
+  );
 
-  const errorCount = React.useMemo(() => Object.keys(methods.errors).length, [
-    methods,
-  ]);
+  const errorCount = React.useMemo(
+    () => Object.keys(methods.formState.errors).length,
+    [methods]
+  );
 
   useEffect(() => {
     if (errorCount === 0) {
@@ -140,7 +143,7 @@ const DocumentEditor: React.FC<{
   }, [denormalizedStore, errorCount, onChange]);
 
   return (
-    <FormContext {...methods}>
+    <FormProvider {...methods}>
       <DocumentStore store={store} dispatch={dispatch}>
         <div className="DocumentEditor">
           {
@@ -159,22 +162,24 @@ const DocumentEditor: React.FC<{
           }
         </div>
       </DocumentStore>
-    </FormContext>
+    </FormProvider>
   );
 };
 
 /**
  * Field with call-to-actions for editing as well as rendering applicable child-nodes
  */
-const FieldEditor: React.FC<{
-  uuid: number;
-  isRtdb: boolean;
-  areNamesMutable?: boolean;
-  areFieldsMutable?: boolean;
-  startingIndex?: number;
-  supportNestedArrays?: boolean;
-  isJson?: boolean;
-}> = ({
+const FieldEditor: React.FC<
+  React.PropsWithChildren<{
+    uuid: number;
+    isRtdb: boolean;
+    areNamesMutable?: boolean;
+    areFieldsMutable?: boolean;
+    startingIndex?: number;
+    supportNestedArrays?: boolean;
+    isJson?: boolean;
+  }>
+> = ({
   uuid,
   isRtdb,
   areNamesMutable = true,
@@ -355,10 +360,12 @@ const FieldEditor: React.FC<{
   }
 };
 
-const ChildTypeSelect: React.FC<{
-  uuid: number;
-  allowedTypes: FieldType[];
-}> = ({ uuid, allowedTypes }) => {
+const ChildTypeSelect: React.FC<
+  React.PropsWithChildren<{
+    uuid: number;
+    allowedTypes: FieldType[];
+  }>
+> = ({ uuid, allowedTypes }) => {
   const field = useField(uuid);
   const dispatch = useDispatch();
 
@@ -377,20 +384,21 @@ const ChildTypeSelect: React.FC<{
   );
 };
 
-const NameEditor: React.FC<{
-  uuid: number;
-  field: MapField;
-  childId: number;
-  readonly: boolean;
-}> = ({ uuid, field, childId, readonly }) => {
+const NameEditor: React.FC<
+  React.PropsWithChildren<{
+    uuid: number;
+    field: MapField;
+    childId: number;
+    readonly: boolean;
+  }>
+> = ({ uuid, field, childId, readonly }) => {
   const {
     register,
     unregister,
-    errors,
-    clearError,
     setValue,
     setError,
-    formState: { touched },
+    formState: { touchedFields, errors },
+    clearErrors,
   } = useFormContext();
 
   const dispatch = useDispatch();
@@ -416,13 +424,13 @@ const NameEditor: React.FC<{
     // Validate `name` when siblings change
     const isUnique = siblingNames.every((name) => name !== child.name);
     if (!child.name) {
-      setError(formName, 'required', 'Required');
+      setError(formName, { type: 'required', message: 'Required' });
     } else if (!isUnique) {
-      setError(formName, 'unique', 'Must be unique');
+      setError(formName, { type: 'unique', message: 'Must be unique' });
     } else {
-      clearError(formName);
+      clearErrors(formName);
     }
-  }, [child, siblingNames, formName, setError, clearError]);
+  }, [child, siblingNames, formName, setError, clearErrors]);
 
   return (
     <Field
@@ -443,7 +451,7 @@ const NameEditor: React.FC<{
       // Show the `unique` error regardless of the field having been
       // touched; in case another field's name was updated to now conflict
       error={
-        (touched[formName] || errors[formName]?.type === 'unique') &&
+        (touchedFields[formName] || errors[formName]?.type === 'unique') &&
         errors[formName]?.message
       }
     />

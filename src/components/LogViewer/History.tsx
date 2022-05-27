@@ -25,22 +25,36 @@ import { HighlightedJSON } from './HighlightedJSON';
 import { ParsedQuery, filtersToQueryString, isQueryMatch } from './QueryBar';
 import { LogEntry } from './types';
 
-const FilterTag: React.FC<{ appendToQuery: Function; log: LogEntry }> = ({
-  appendToQuery,
-  log,
-}) => {
+const FilterTag: React.FC<
+  React.PropsWithChildren<{ appendToQuery: Function; log: LogEntry }>
+> = ({ appendToQuery, log }) => {
   const metadata = log.data.metadata;
   let tagButton;
 
   if (metadata?.function?.name) {
     tagButton = (
-      <div
-        className="log-tag-button"
-        onClick={() =>
-          appendToQuery('metadata.function.name', metadata.function?.name)
-        }
-      >
-        function[{metadata.function.name}]
+      <div>
+        <div
+          className="log-tag-button"
+          onClick={() =>
+            appendToQuery('metadata.function.name', metadata.function?.name)
+          }
+        >
+          function[{metadata.function.name}]
+        </div>
+        {metadata.extension?.instanceId && (
+          <div
+            className="log-tag-button"
+            onClick={() =>
+              appendToQuery(
+                'metadata.extension.instanceId',
+                metadata.extension?.instanceId
+              )
+            }
+          >
+            extension[{metadata.extension?.instanceId}]
+          </div>
+        )}
       </div>
     );
   } else if (metadata?.emulator?.name) {
@@ -68,7 +82,7 @@ interface Props {
 
 const MAX_LOG_LINES = 100;
 
-export const History: React.FC<Props> = ({
+export const History: React.FC<React.PropsWithChildren<Props>> = ({
   parsedQuery,
   setQuery,
   logs,

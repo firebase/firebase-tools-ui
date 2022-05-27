@@ -19,7 +19,8 @@ $input-height: 36px;
 
 @use '@material/notched-outline/_index' as notched-outline;
 @use '@material/textfield/_index' as textfield with (
-  $height: 40px, // wow, cant set to 36px
+  $height: 40px,
+  // wow, cant set to 36px
   $input-padding: $input-default-padding,
   $input-padding-top: $input-default-padding,
   $input-padding-bottom: $input-default-padding,
@@ -27,71 +28,36 @@ $input-height: 36px;
   $outlined-idle-border: var(--fire-color-input-borders),
   $outlined-hover-border: var(--fire-color-input-borders),
   $outlined-input-padding-top: $input-default-padding,
-  $outlined-input-padding-bottom: $input-default-padding,
+  $outlined-input-padding-bottom: $input-default-padding
 );
 
-// TODO: uncomment for 6.0.9, when fixed
-// @use '@material/select/_index' as select with (
-//   $height: $input-height,
-//   $label-padding: $input-default-padding,
-//   $arrow-padding: $input-default-padding,
-//   $outline-label-offset: $input-default-padding,
-//   $outlined-idle-border: var(--fire-color-input-borders),
-//   $outlined-hover-border: var(--fire-color-input-borders),
-// );
+@use '@material/select/_index' as select with (
+  $height: $input-height,
+  $label-padding: $input-default-padding,
+  $arrow-padding: $input-default-padding,
+  $outline-label-offset: $input-default-padding,
+  $outlined-idle-border: var(--fire-color-input-borders),
+  $outlined-hover-border: var(--fire-color-input-borders)
+);
 
 @import './color';
 @import './z';
 
-// TODO: remove below for select 6.0.9
-$mdc-select-height: $input-height;
-$mdc-select-label-padding: $input-default-padding;
-$mdc-select-arrow-padding: $input-default-padding;
-$mdc-select-outline-label-offset: $input-default-padding;
-$mdc-select-outlined-idle-border: var(--fire-color-input-borders);
-$mdc-select-outlined-hover-border: var(--fire-color-input-borders);
-@import '@material/select/dist/mdc.select';
-// @import '@rmwc/select/select'; // 6.0.9, when fixed
-
-// TODO: Cannot use mixins because the mixins deps are 6.0.9 and select is 5.7.2
-// @link https://github.com/jamesmfriedman/rmwc/issues/596
-.mdc-select {
-  height: $input-height;
-
-  &.mdc-select--outlined {
-    .mdc-notched-outline {
-      @include notched-outline.color($mdc-select-outlined-idle-border);
-    }
-
-    &:not(.mdc-select--disabled) {
-      &:not(.mdc-select--focused) .mdc-select__native-control:hover ~,
-      &:not(.mdc-select--focused) .mdc-select__selected-text:hover ~ {
-        .mdc-notched-outline {
-          @include notched-outline.color($mdc-select-outlined-hover-border);
-        }
-      }
-    }
-  }
-
-  .mdc-select__native-control,
-  .mdc-select__selected-text {
-    height: $input-height;
-    line-height: normal;
-    min-width: 0;
-    padding: $input-default-padding; // base component doesnt do this yet
-  }
-
-  .mdc-select__dropdown-icon,
-  .mdc-select__icon {
-    bottom: $input-default-padding - 2px; // base component doesnt do this yet
-    z-index: $ZINDEX_MEDIUM;
-  }
-}
-
+@import '@material/select/mdc-select';
 @import '@material/textfield/mdc-text-field';
 
 .mdc-text-field {
   @include textfield.height(36px); // lol, but this works
+}
+
+.mdc-select {
+  .mdc-select__dropdown-icon {
+    bottom: 8px; // Changing height does not affect the dropdown-icon placement
+  }
+
+  .mdc-select__selected-text {
+    padding-top: 4px !important; // Changing height does not affect the trigger-text placement
+  }
 }
 
 .mdc-select--outlined,

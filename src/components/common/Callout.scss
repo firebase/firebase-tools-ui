@@ -24,11 +24,19 @@
 
 .Callout-body {
   padding: 12px 24px;
+  width: 100%;
 }
 
 .Callout-message {
   display: flex;
   align-items: stretch;
+  width: 100%;
+}
+
+.Callout-header-wrapper {
+  width: 100%;
+  overflow: hidden;
+  flex: 1;
 }
 
 .Callout-icon {

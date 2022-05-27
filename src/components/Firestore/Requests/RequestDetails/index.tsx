@@ -41,11 +41,9 @@ function getLinesOutcome(
 ): OutcomeInfo[] {
   return [
     ...granularAllowOutcomes,
-    ...(issues?.map(
-      ({ line }): OutcomeInfo => {
-        return { outcome: 'error', line };
-      }
-    ) || []),
+    ...(issues?.map(({ line }): OutcomeInfo => {
+      return { outcome: 'error', line };
+    }) || []),
   ];
 }
 // Transforms the (rulesContext) data into InspectionElements
@@ -127,7 +125,7 @@ interface Props extends PropsFromParentComponent {
   selectedRequest: FirestoreRulesEvaluation | undefined;
 }
 
-export const RequestDetails: React.FC<Props> = ({
+export const RequestDetails: React.FC<React.PropsWithChildren<Props>> = ({
   selectedRequest,
   requestId,
   setShowCopyNotification,
@@ -177,9 +175,9 @@ export const RequestDetails: React.FC<Props> = ({
   );
 };
 
-export const RequestDetailsWrapper: React.FC<PropsFromParentComponent> = (
-  props
-) => {
+export const RequestDetailsWrapper: React.FC<
+  React.PropsWithChildren<PropsFromParentComponent>
+> = (props) => {
   const selectedRequest = useFirestoreRequest(props.requestId);
 
   return <RequestDetails selectedRequest={selectedRequest} {...props} />;

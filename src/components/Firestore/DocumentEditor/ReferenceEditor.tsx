@@ -14,59 +14,55 @@
  * limitations under the License.
  */
 
-import React, { useEffect, useState } from 'react';
-import { useFormContext } from 'react-hook-form';
+import React, { useState } from 'react';
+import { Controller, useFormContext } from 'react-hook-form';
 import { useFirestore } from 'reactfire';
 
 import { Field } from '../../common/Field';
 import { DocumentPath } from './types';
 
-const ReferenceEditor: React.FC<{
-  value: DocumentPath;
-  onChange: (value: DocumentPath) => void;
-  name: string;
-}> = ({ value, onChange, name }) => {
+const ReferenceEditor: React.FC<
+  React.PropsWithChildren<{
+    value: DocumentPath;
+    onChange: (value: DocumentPath) => void;
+    name: string;
+  }>
+> = ({ value, onChange, name }) => {
   const [path] = useState(value.path);
   const firestore = useFirestore();
-  const {
-    errors,
-    formState: { touched },
-    register,
-    unregister,
-    setValue,
-    triggerValidation,
-  } = useFormContext();
-
-  useEffect(() => {
-    register(name, {
-      validate: (e) => {
-        try {
-          firestore.doc(e);
-          return true;
-        } catch {
-          return 'Must point to a document';
-        }
-      },
-    });
-
-    return () => unregister(name);
-  }, [register, unregister, name, firestore]);
+  const { trigger } = useFormContext();
 
   async function handleChange(value: string) {
-    if (await triggerValidation(name)) {
+    if (await trigger(name)) {
       onChange(new DocumentPath(value));
     }
   }
 
   return (
-    <Field
-      label="Document path"
-      defaultValue={path}
-      onChange={(e) => {
-        setValue(name, e.currentTarget.value);
-        handleChange(e.currentTarget.value);
+    <Controller
+      name={name}
+      rules={{
+        validate: (e) => {
+          try {
+            firestore.doc(e);
+            return true;
+          } catch {
+            return 'Must point to a document';
+          }
+        },
       }}
-      error={touched[name] && errors[name]?.message}
+      render={({ field: { ref, ...field }, fieldState }) => (
+        <Field
+          label="Document path"
+          defaultValue={path}
+          {...field}
+          onChange={(e) => {
+            field.onChange(e.currentTarget.value);
+            handleChange(e.currentTarget.value);
+          }}
+          error={fieldState.error?.message}
+        />
+      )}
     />
   );
 };

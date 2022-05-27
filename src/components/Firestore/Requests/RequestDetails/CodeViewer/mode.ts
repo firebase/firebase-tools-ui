@@ -19,7 +19,8 @@ import 'codemirror/addon/mode/simple';
 
 import CodeMirror from 'codemirror';
 
-const FIREBASE_RULES_KEYWORD_REGEX = /(?:allow|function|match|service|if|import|as|let|return)\b/;
+const FIREBASE_RULES_KEYWORD_REGEX =
+  /(?:allow|function|match|service|if|import|as|let|return)\b/;
 const FIREBASE_RULES_VARIABLE_REGEX = /[a-z$][\w$]*/;
 
 const FIREBASE_RULES_ATOM_REGEX = /true|false|null/;
@@ -28,7 +29,8 @@ const FIREBASE_RULES_OPERATOR_REGEX = /(?:[-+/*=<>!&|]+)/;
 const FIREBASE_RULES_NUMBER_REGEX = /(b?"[^"]*")|(b?'[^']*')|[0-9]+(\.[0-9]+)?/;
 // Creating tokens for these helps code mirror find text marks by mouse position
 const FIREBASE_RULES_MISC_REGEX = /(?:[.,:[\]{}()])/;
-const FIREBASE_RULES_STRING_REGEX = /(?:auth|create|delete|get|headers|method|params|path|read|request|resource|time|uid|update|write|list)\b/;
+const FIREBASE_RULES_STRING_REGEX =
+  /(?:auth|create|delete|get|headers|method|params|path|read|request|resource|time|uid|update|write|list)\b/;
 
 export const MODE_FIREBASE_RULES = 'firebaseRules';
 

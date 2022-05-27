@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook, waitFor } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import React, { Suspense } from 'react';
 import { Route, Router } from 'react-router-dom';
 
+import { delay } from '../../../test_utils';
 import { storagePath } from '../common/constants';
 import { mockBuckets } from '../testing/mockBuckets';
 import { TestStorageProvider } from '../testing/TestStorageProvider';
@@ -34,7 +35,9 @@ describe('useBuckets', () => {
     });
 
     mockBuckets(buckets);
-    const Wrapper: React.FC = ({ children }) => {
+    const Wrapper: React.FC<React.PropsWithChildren<unknown>> = ({
+      children,
+    }) => {
       return (
         <Router history={history}>
           <Route exact path={storagePath + `:bucket/:path*`}>
@@ -45,11 +48,11 @@ describe('useBuckets', () => {
         </Router>
       );
     };
-    const { result, waitForNextUpdate } = renderHook(() => useBuckets(), {
+    const { result } = renderHook(() => useBuckets(), {
       wrapper: Wrapper,
     });
 
-    await waitForNextUpdate();
+    await waitFor(() => delay(100));
 
     return { buckets: result.current };
   }

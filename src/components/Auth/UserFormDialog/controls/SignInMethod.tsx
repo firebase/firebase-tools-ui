@@ -17,7 +17,7 @@
 import { ListDivider } from '@rmwc/list';
 import { Typography } from '@rmwc/typography';
 import React, { useEffect } from 'react';
-import { FormContextValues } from 'react-hook-form/dist/contextTypes';
+import { UseFormReturn } from 'react-hook-form';
 
 import { AddAuthUserPayload } from '../../types';
 import styles from './controls.module.scss';
@@ -30,9 +30,15 @@ export type SignInMethodProps = {
   user?: AddAuthUserPayload;
 };
 export const SignInMethod: React.FC<
-  SignInMethodProps & FormContextValues<AddAuthUserPayload>
+  React.PropsWithChildren<SignInMethodProps & UseFormReturn<AddAuthUserPayload>>
 > = (form) => {
-  const { watch, setError, clearError, formState, errors, user } = form;
+  const {
+    watch,
+    setError,
+    clearErrors,
+    formState: { errors, touchedFields },
+    user,
+  } = form;
   const email = watch('email');
   const password = watch('password');
   const phoneNumber = watch('phoneNumber');
@@ -45,14 +51,15 @@ export const SignInMethod: React.FC<
       // According to docs ClearError should accept arbitrary key
       // to allow cross-field validation, but it's not the case here for some
       // reason.
-      clearError(ERROR_AT_LEAST_ONE_METHOD_REQUIRED as any);
+      clearErrors(ERROR_AT_LEAST_ONE_METHOD_REQUIRED as any);
     } else {
-      setError(ERROR_AT_LEAST_ONE_METHOD_REQUIRED as any);
+      setError(ERROR_AT_LEAST_ONE_METHOD_REQUIRED as any, {
+        message: 'at least',
+      });
     }
-  }, [email, password, clearError, setError, phoneNumber, errors]);
+  }, [email, password, clearErrors, setError, phoneNumber, errors]);
 
-  const isTouched =
-    formState.touched['email'] || formState.touched['phoneNumber'];
+  const isTouched = touchedFields['email'] || touchedFields['phoneNumber'];
   const isOnlyError =
     ERROR_AT_LEAST_ONE_METHOD_REQUIRED in errors &&
     Object.values(errors).length === 1;

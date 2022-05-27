@@ -33,7 +33,7 @@ export interface Props {
 
 const EMPTY_KEYS: string[] = [];
 
-export const BreadCrumbs: React.FC<Props> = ({
+export const BreadCrumbs: React.FC<React.PropsWithChildren<Props>> = ({
   base,
   path,
   onEdit,
@@ -54,7 +54,7 @@ export const BreadCrumbs: React.FC<Props> = ({
       <li className="BreadCrumbs-crumb BreadCrumbs-homeCrumb">
         <Link to={base}>
           <Typography use="body2" theme="secondary">
-            {homeElement}
+            <>{homeElement}</>
           </Typography>
         </Link>
       </li>

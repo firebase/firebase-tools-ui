@@ -15,8 +15,8 @@
  */
 
 import firebase from 'firebase';
-import React, { useEffect, useState } from 'react';
-import { useFormContext } from 'react-hook-form';
+import React from 'react';
+import { Controller } from 'react-hook-form';
 
 import { Field } from '../../common/Field';
 
@@ -32,48 +32,38 @@ function dateToLocale(date: Date): string {
 }
 
 // TODO: update to a date-picker that potentially supports time-zones
-const TimestampEditor: React.FC<{
-  value: firebase.firestore.Timestamp;
-  onChange: (value: firebase.firestore.Timestamp) => void;
-  name: string;
-}> = ({ value, onChange, name }) => {
-  const [date, setDate] = useState(value.toDate());
-
-  const {
-    errors,
-    formState: { touched },
-    register,
-    unregister,
-    setValue,
-  } = useFormContext();
-
-  useEffect(() => {
-    register(name, {
-      validate: (e) => !isNaN(e) || 'Must be a date-time',
-    });
-
-    return () => unregister(name);
-  }, [register, unregister, name]);
-
-  useEffect(() => {
-    if (value.toMillis() !== date.getTime()) {
-      onChange(firebase.firestore.Timestamp.fromDate(date));
-    }
-  }, [value, date, onChange]);
-
+const TimestampEditor: React.FC<
+  React.PropsWithChildren<{
+    value: firebase.firestore.Timestamp;
+    onChange: (value: firebase.firestore.Timestamp) => void;
+    name: string;
+  }>
+> = ({ value, onChange, name }) => {
   return (
-    <Field
-      label="Value"
-      type="datetime-local"
-      defaultValue={dateToLocale(date)}
-      onChange={(e) => {
-        const timestamp = Date.parse(e.currentTarget.value);
-        setValue(name, timestamp, true);
-        if (!isNaN(timestamp) && timestamp !== date.getTime()) {
-          setDate(new Date(timestamp));
-        }
+    <Controller
+      name={name}
+      rules={{
+        validate: (e) => {
+          return !isNaN(Date.parse(e)) || 'Must be a date-time';
+        },
       }}
-      error={touched[name] && errors[name]?.message}
+      render={({ field: { ref, ...field }, fieldState }) => (
+        <Field
+          label="Value"
+          type="datetime-local"
+          step={1}
+          defaultValue={dateToLocale(value.toDate())}
+          error={fieldState.error?.message}
+          {...field}
+          onChange={(e) => {
+            const timestamp = Date.parse(e.currentTarget.value);
+            field.onChange(e.currentTarget.value);
+            if (!isNaN(timestamp) && timestamp !== value.toMillis()) {
+              onChange(firebase.firestore.Timestamp.fromMillis(timestamp));
+            }
+          }}
+        />
+      )}
     />
   );
 };

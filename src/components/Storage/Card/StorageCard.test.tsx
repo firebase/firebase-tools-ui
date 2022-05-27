@@ -26,11 +26,8 @@ describe('StorageCard', () => {
   beforeEach(() => mockTokens());
 
   it('displays regular header by default', async () => {
-    const {
-      getByText,
-      getByLabelText,
-      defaultBucket,
-    } = await renderWithStorage(<StorageCard />);
+    const { getByText, getByLabelText, defaultBucket } =
+      await renderWithStorage(<StorageCard />);
 
     expect(getByText(`gs://${defaultBucket}`)).toBeDefined();
     expect(getByLabelText('Copy')).toBeDefined();
@@ -43,9 +40,7 @@ describe('StorageCard', () => {
 
     await uploadFile(fileName);
 
-    await act(async () => {
-      await fireEvent.click(getByLabelText(fileName));
-    });
+    fireEvent.click(getByLabelText(fileName));
 
     // Action header
     expect(getByText('1 item(s)')).toBeDefined();
@@ -58,9 +53,7 @@ describe('StorageCard', () => {
 
     await uploadFile(fileName);
 
-    await act(async () => {
-      await fireEvent.click(getByText(fileName));
-    });
+    fireEvent.click(getByText(fileName));
 
     expect(getByRole('complementary')).toBeDefined();
   });

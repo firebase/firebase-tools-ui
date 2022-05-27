@@ -26,9 +26,9 @@ import styles from './OneAccountPerEmailCard.module.scss';
 import OneAccountPerEmailDialog from './OneAccountPerEmailDialog';
 
 export type OneAccountPerEmailCardProps = PropsFromStore;
-export const OneAccountPerEmailCard: React.FC<OneAccountPerEmailCardProps> = ({
-  allowDuplicateEmails,
-}) => {
+export const OneAccountPerEmailCard: React.FC<
+  React.PropsWithChildren<OneAccountPerEmailCardProps>
+> = ({ allowDuplicateEmails }) => {
   const [open, setOpen] = useState(false);
 
   return (

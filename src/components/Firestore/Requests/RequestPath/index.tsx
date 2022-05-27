@@ -53,10 +53,8 @@ function truncateRequestPathFromLeft(
   if (!pathHtmlElement || !pathContainerWidth) {
     return;
   }
-  const {
-    textContent: pathTextString,
-    offsetWidth: pathTextWidth,
-  } = pathHtmlElement;
+  const { textContent: pathTextString, offsetWidth: pathTextWidth } =
+    pathHtmlElement;
   const copyIconButtonWidth = copyButtonElement.current?.offsetWidth || 0;
   // Calculate the width in px of a single character: (totalWidth / totalCharacters)
   // NOTE: Even though the font-family is not monospace (every character may have a different width),
@@ -101,7 +99,7 @@ interface Props {
   requestPathContainerWidth?: number;
 }
 
-const RequestPath: React.FC<Props> = ({
+const RequestPath: React.FC<React.PropsWithChildren<Props>> = ({
   resourcePath,
   setShowCopyNotification,
   requestPathContainerWidth,

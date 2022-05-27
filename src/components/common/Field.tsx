@@ -31,7 +31,7 @@ type Props = {
 } & TextFieldProps &
   TextFieldHTMLProps;
 
-export const Field: React.FC<Props> = ({
+export const Field: React.FC<React.PropsWithChildren<Props>> = ({
   fieldClassName,
   label,
   // strip fullwidth or outlined, always use outlined
@@ -92,13 +92,14 @@ type SelectFieldProps = {
 } & SelectProps &
   HTMLProps<HTMLSelectElement>;
 
-export const SelectField: React.FC<SelectFieldProps> = ({
+export const SelectField: React.FC<
+  React.PropsWithChildren<SelectFieldProps>
+> = ({
   fieldClassName,
   label,
   // strip outlined bool, always use outlined
   outlined,
   tip,
-  theme, // TODO: 5.0 theme, incompatible with 6.0 remove at 6.0
   error,
   ...selectProps
 }) => {

@@ -18,7 +18,9 @@ import React from 'react';
 
 import { TestEmulatorConfigProvider } from '../../common/EmulatorConfigProvider';
 
-export const TestStorageProvider: React.FC = ({ children }) => {
+export const TestStorageProvider: React.FC<
+  React.PropsWithChildren<unknown>
+> = ({ children }) => {
   const projectId = 'UNUSED';
   const hostAndPort = process.env.FIREBASE_STORAGE_EMULATOR_HOST;
 

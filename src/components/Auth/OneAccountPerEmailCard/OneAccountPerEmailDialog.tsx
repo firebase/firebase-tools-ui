@@ -37,11 +37,9 @@ interface OneAccountPerEmailDialogProps {
 
 type Props = PropsFromDispatch & PropsFromStore & OneAccountPerEmailDialogProps;
 
-export const OneAccountPerEmailDialog: React.FC<Props> = ({
-  allowDuplicateEmails,
-  onClose,
-  setAllowDuplicateEmails,
-}) => {
+export const OneAccountPerEmailDialog: React.FC<
+  React.PropsWithChildren<Props>
+> = ({ allowDuplicateEmails, onClose, setAllowDuplicateEmails }) => {
   const [value, setValue] = React.useState(allowDuplicateEmails);
 
   return (

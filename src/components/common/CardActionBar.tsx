@@ -22,10 +22,9 @@ import React from 'react';
 
 import { grey100 } from '../../colors';
 
-export const CardActionBar: React.FC<{ className?: string }> = ({
-  className,
-  children,
-}) => {
+export const CardActionBar: React.FC<
+  React.PropsWithChildren<{ className?: string }>
+> = ({ className, children }) => {
   return (
     <ThemeProvider
       options={{ surface: grey100 }}
@@ -38,7 +37,9 @@ export const CardActionBar: React.FC<{ className?: string }> = ({
   );
 };
 
-export const CardActionBarActions: React.FC = ({ children }) => {
+export const CardActionBarActions: React.FC<
+  React.PropsWithChildren<unknown>
+> = ({ children }) => {
   return (
     <>
       <span style={{ flex: '1 auto' }} />

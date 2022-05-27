@@ -61,47 +61,47 @@ export const renderWithFirestore = async (
   return component;
 };
 
-export const FirestoreTestProviders: React.FC<RenderOptions> = React.memo(
-  ({ children, path = '' }) => {
-    const projectId = `${process.env.GCLOUD_PROJECT}-${Date.now()}`;
-    const hostAndPort =
-      process.env.FIRESTORE_EMULATOR_HOST ||
-      process.env.FIREBASE_FIRESTORE_EMULATOR_ADDRESS;
-    if (!projectId || !hostAndPort) {
-      throw new Error('FirestoreTestProviders requires a running Emulator');
-    }
-    const [host, port] = hostAndPort.split(':');
-
-    return (
-      <TestEmulatorConfigProvider
-        config={{
-          projectId,
-          firestore: { host, port: Number(port), hostAndPort },
-        }}
-      >
-        <FirestoreEmulatedApiProvider disableDevTools>
-          <MemoryRouter initialEntries={[path]}>
-            <Suspense fallback={<h1 data-testid="fallback">Fallback</h1>}>
-              {children}
-            </Suspense>
-          </MemoryRouter>
-        </FirestoreEmulatedApiProvider>
-      </TestEmulatorConfigProvider>
-    );
+export const FirestoreTestProviders: React.FC<
+  React.PropsWithChildren<RenderOptions>
+> = React.memo(({ children, path = '' }) => {
+  const projectId = `${process.env.GCLOUD_PROJECT}-${Date.now()}`;
+  const hostAndPort =
+    process.env.FIRESTORE_EMULATOR_HOST ||
+    process.env.FIREBASE_FIRESTORE_EMULATOR_ADDRESS;
+  if (!projectId || !hostAndPort) {
+    throw new Error('FirestoreTestProviders requires a running Emulator');
   }
-);
+  const [host, port] = hostAndPort.split(':');
+
+  return (
+    <TestEmulatorConfigProvider
+      config={{
+        projectId,
+        firestore: { host, port: Number(port), hostAndPort },
+      }}
+    >
+      <FirestoreEmulatedApiProvider disableDevTools>
+        <MemoryRouter initialEntries={[path]}>
+          <Suspense fallback={<h1 data-testid="fallback">Fallback</h1>}>
+            {children}
+          </Suspense>
+        </MemoryRouter>
+      </FirestoreEmulatedApiProvider>
+    </TestEmulatorConfigProvider>
+  );
+});
 
 const ASYNC_FIRESTORE_WRAPPER_TEST_ID = 'AsyncFirestore-wrapper';
 
-const AsyncFirestore: React.FC<{
-  r: (firestore: firebase.firestore.Firestore) => Promise<React.ReactElement>;
-  onError: (e: Error) => void;
-}> = React.memo(({ r, onError }) => {
+const AsyncFirestore: React.FC<
+  React.PropsWithChildren<{
+    r: (firestore: firebase.firestore.Firestore) => Promise<React.ReactElement>;
+    onError: (e: Error) => void;
+  }>
+> = React.memo(({ r, onError }) => {
   const firestore = useFirestore();
-  const [
-    firestoreChildren,
-    setFirestoreChildren,
-  ] = useState<React.ReactElement | null>(null);
+  const [firestoreChildren, setFirestoreChildren] =
+    useState<React.ReactElement | null>(null);
 
   useEffect(() => {
     r(firestore)

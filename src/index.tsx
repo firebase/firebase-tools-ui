@@ -23,9 +23,10 @@ import './index.scss';
 import { RMWCProvider } from '@rmwc/provider';
 import { ThemeProvider } from '@rmwc/theme';
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { CompatRouter } from 'react-router-dom-v5-compat';
 
 import { background, primary, secondary } from './colors';
 import App from './components/App';
@@ -39,36 +40,41 @@ const store = configureStore();
 const RouterWithInit = () => {
   return (
     <BrowserRouter>
-      <Switch>
-        <Route component={App} />
-      </Switch>
+      <CompatRouter>
+        <Switch>
+          <Route component={App} />
+        </Switch>
+      </CompatRouter>
     </BrowserRouter>
   );
 };
 
-ReactDOM.unstable_createBlockingRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <RMWCProvider
-      // Globally disable ripples
-      ripple={false}
+const container = document.getElementById('root');
+const root = createRoot(container!);
+
+// TODO: Enable strict-mode after upgrading to router-v6 (or upcoming v5 backport)
+// https://github.com/remix-run/react-router/issues/7870
+root.render(
+  <RMWCProvider
+    // Globally disable ripples
+    ripple={false}
+  >
+    <ThemeProvider
+      options={{
+        background,
+        primary,
+        primaryRgb: '104, 29, 168',
+        secondary,
+        error,
+      }}
     >
-      <ThemeProvider
-        options={{
-          background,
-          primary,
-          primaryRgb: '104, 29, 168',
-          secondary,
-          error,
-        }}
-      >
-        <EmulatorConfigProvider refreshInterval={2000}>
-          <FirestoreRequestsProvider>
-            <Provider store={store}>
-              <RouterWithInit />
-            </Provider>
-          </FirestoreRequestsProvider>
-        </EmulatorConfigProvider>
-      </ThemeProvider>
-    </RMWCProvider>
-  </React.StrictMode>
+      <EmulatorConfigProvider refreshInterval={2000}>
+        <FirestoreRequestsProvider>
+          <Provider store={store}>
+            <RouterWithInit />
+          </Provider>
+        </FirestoreRequestsProvider>
+      </EmulatorConfigProvider>
+    </ThemeProvider>
+  </RMWCProvider>
 );

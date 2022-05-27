@@ -18,6 +18,7 @@ import React from 'react';
 
 import Auth from './components/Auth';
 import Database from './components/Database';
+import { ExtensionsRoute } from './components/Extensions';
 import Firestore from './components/Firestore';
 import Home from './components/Home';
 import LogsViewer from './components/LogViewer';
@@ -25,7 +26,7 @@ import { Storage } from './components/Storage';
 
 export interface Route {
   path: string;
-  component: React.FC;
+  component: React.FC<React.PropsWithChildren<unknown>>;
   label: string;
   exact: boolean;
   showInNav: boolean;
@@ -43,6 +44,13 @@ export const routes: ReadonlyArray<Route> = [
     path: '/auth',
     component: Auth,
     label: 'Authentication',
+    exact: false,
+    showInNav: true,
+  },
+  {
+    path: '/extensions',
+    component: ExtensionsRoute,
+    label: 'Extensions',
     exact: false,
     showInNav: true,
   },
