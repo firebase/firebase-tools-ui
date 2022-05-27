@@ -67,28 +67,6 @@ jobs:
         env:
           CI: true
 
-  screenshot:
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [16.x]
-
-    steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-      - run: npm ci
-      - name: Run tests against emulator
-        # forceExit: something is not cleaning up - likely firebase-app that needs to be deleted, investigate
-        run: |
-          npm install -g firebase-tools@latest
-          firebase emulators:exec --only database,firestore,storage --project sample 'npm run test:screenshot -- -p --forceExit'
-        env:
-          CI: true
-
   lint:
     runs-on: ubuntu-latest
 
