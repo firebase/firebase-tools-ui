@@ -34,9 +34,8 @@ export type DataTypeOf<T extends Result<any, any>> = T extends Result<
   ? D
   : any;
 
-export type DataTypeIfPresent<
-  T extends Result<any, any> | undefined
-> = T extends DataResult<infer D> ? D : never;
+export type DataTypeIfPresent<T extends Result<any, any> | undefined> =
+  T extends DataResult<infer D> ? D : never;
 
 // Type helper to extract the type of T.error.
 export type ErrorTypeOf<T extends Result<any, any>> = T extends Result<
@@ -46,9 +45,8 @@ export type ErrorTypeOf<T extends Result<any, any>> = T extends Result<
   ? E
   : any;
 
-export type ErrorTypeIfPresent<
-  T extends Result<any, any> | undefined
-> = T extends ErrorResult<infer E> ? E : never;
+export type ErrorTypeIfPresent<T extends Result<any, any> | undefined> =
+  T extends ErrorResult<infer E> ? E : never;
 
 export function hasData<T, E>(
   result: Result<T, E> | undefined
@@ -140,9 +138,9 @@ export function combineData<
   }
 
   return {
-    data: (results.map(
+    data: results.map(
       (result) => (result as DataResult<unknown>).data
-    ) as unknown) as DataTypeOfEach<Arr>,
+    ) as unknown as DataTypeOfEach<Arr>,
   };
 }
 

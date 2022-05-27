@@ -51,12 +51,8 @@ describe('PhoneControl', () => {
   });
 
   it('displays an error for a duplicate value', async () => {
-    const {
-      getByPlaceholderText,
-      getByText,
-      triggerValidation,
-      submit,
-    } = setup({ allPhoneNumbers: new Set([dupePhoneNumber]) });
+    const { getByPlaceholderText, getByText, triggerValidation, submit } =
+      setup({ allPhoneNumbers: new Set([dupePhoneNumber]) });
     const input = getByPlaceholderText('Enter phone number');
     fireEvent.change(input, {
       target: { value: dupePhoneNumber },
@@ -70,15 +66,11 @@ describe('PhoneControl', () => {
   });
 
   it('does not display an error for edited email', async () => {
-    const {
-      getByPlaceholderText,
-      queryByText,
-      triggerValidation,
-      submit,
-    } = setup({
-      editedUserPhoneNumber: dupePhoneNumber,
-      allPhoneNumbers: new Set([dupePhoneNumber]),
-    });
+    const { getByPlaceholderText, queryByText, triggerValidation, submit } =
+      setup({
+        editedUserPhoneNumber: dupePhoneNumber,
+        allPhoneNumbers: new Set([dupePhoneNumber]),
+      });
 
     const input = getByPlaceholderText('Enter phone number');
     fireEvent.change(input, {
@@ -93,12 +85,8 @@ describe('PhoneControl', () => {
   });
 
   it('displays an error if leading plus is missing', async () => {
-    const {
-      getByPlaceholderText,
-      getByText,
-      triggerValidation,
-      submit,
-    } = setup();
+    const { getByPlaceholderText, getByText, triggerValidation, submit } =
+      setup();
     // Leading "+" missing.
     const phoneNumber = '1 555-555-0100';
 

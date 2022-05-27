@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ok } from 'assert';
 
 import { Checkbox } from '@rmwc/checkbox';
 import {
@@ -29,6 +28,7 @@ import firebase from 'firebase';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 
+import { assert } from '../../common/asserts';
 import { Field } from '../../common/Field';
 
 export interface Props {
@@ -68,7 +68,7 @@ export const CloneDialog = React.memo<Props>(function CloneDialog$({
   query,
   onComplete,
 }) {
-  ok(realtimeRef.parent, 'Cannot clone the root node!');
+  assert(realtimeRef.parent, 'Cannot clone the root node!');
 
   // queries only exist if queryParams are passed into the dialog
   let hasQuery = query != null;

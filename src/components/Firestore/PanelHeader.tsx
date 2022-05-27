@@ -22,11 +22,9 @@ import React from 'react';
 
 import { CardActionBar, CardActionBarActions } from '../common/CardActionBar';
 
-export const PanelHeader: React.FC<{ id: string; icon: React.ReactNode }> = ({
-  id,
-  icon,
-  children,
-}) => {
+export const PanelHeader: React.FC<
+  React.PropsWithChildren<{ id: string; icon: React.ReactNode }>
+> = ({ id, icon, children }) => {
   return (
     <div className="Firestore-PanelHeader">
       <CardActionBar>

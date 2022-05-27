@@ -15,15 +15,15 @@
  */
 
 import { act, fireEvent, render } from '@testing-library/react';
-import { firestore } from 'firebase';
+import firebase from 'firebase';
 import React from 'react';
-import { FormContext, useForm } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 
 import GeoPointEditor from './GeoPointEditor';
 
-const TestForm: React.FC = ({ children }) => {
-  const methods = useForm();
-  return <FormContext {...methods}>{children}</FormContext>;
+const TestForm: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
+  const methods = useForm({ mode: 'all' });
+  return <FormProvider {...methods}>{children}</FormProvider>;
 };
 
 it('renders an editor for a geo-point', () => {
@@ -32,14 +32,14 @@ it('renders an editor for a geo-point', () => {
     <TestForm>
       <GeoPointEditor
         name="foo"
-        value={new firestore.GeoPoint(12, 42)}
+        value={new firebase.firestore.GeoPoint(12, 42)}
         onChange={onChange}
       />
     </TestForm>
   );
 
-  expect(getByLabelText('Latitude').value).toBe('12');
-  expect(getByLabelText('Longitude').value).toBe('42');
+  expect((getByLabelText('Latitude') as HTMLInputElement).value).toBe('12');
+  expect((getByLabelText('Longitude') as HTMLInputElement).value).toBe('42');
 });
 
 it('updates the latitude', async () => {
@@ -47,7 +47,8 @@ it('updates the latitude', async () => {
   const { getByText, getByLabelText } = render(
     <TestForm>
       <GeoPointEditor
-        value={new firestore.GeoPoint(12, 42)}
+        name="foo"
+        value={new firebase.firestore.GeoPoint(12, 42)}
         onChange={onChange}
       />
     </TestForm>
@@ -66,8 +67,10 @@ it('updates the latitude', async () => {
     });
   });
 
-  expect(getByLabelText('Latitude').value).toBe('-13.2');
-  expect(onChange).toHaveBeenCalledWith(new firestore.GeoPoint(-13.2, 42));
+  expect((getByLabelText('Latitude') as HTMLInputElement).value).toBe('-13.2');
+  expect(onChange).toHaveBeenCalledWith(
+    new firebase.firestore.GeoPoint(-13.2, 42)
+  );
 });
 
 it('updates the longitude', async () => {
@@ -75,7 +78,8 @@ it('updates the longitude', async () => {
   const { getByLabelText, getByText } = render(
     <TestForm>
       <GeoPointEditor
-        value={new firestore.GeoPoint(12, 42)}
+        name="foo"
+        value={new firebase.firestore.GeoPoint(12, 42)}
         onChange={onChange}
       />
     </TestForm>
@@ -95,6 +99,8 @@ it('updates the longitude', async () => {
     });
   });
 
-  expect(getByLabelText('Longitude').value).toBe('-43');
-  expect(onChange).toHaveBeenCalledWith(new firestore.GeoPoint(12, -43));
+  expect((getByLabelText('Longitude') as HTMLInputElement).value).toBe('-43');
+  expect(onChange).toHaveBeenCalledWith(
+    new firebase.firestore.GeoPoint(12, -43)
+  );
 });

@@ -40,10 +40,9 @@ export interface AddDocumentStepProps {
   onChange: (value: AddDocumentDialogValue) => void;
 }
 
-export const AddDocumentStep: React.FC<AddDocumentStepProps> = ({
-  collectionRef,
-  onChange,
-}) => {
+export const AddDocumentStep: React.FC<
+  React.PropsWithChildren<AddDocumentStepProps>
+> = ({ collectionRef, onChange }) => {
   const [id, setId] = useState(collectionRef.doc().id);
   const [data, setData] = useState<FirestoreMap | undefined>();
 
@@ -93,7 +92,7 @@ interface Props extends DialogProps {
   onValue: (v: AddDocumentDialogValue | null) => void;
 }
 
-export const AddDocumentDialog: React.FC<Props> = ({
+export const AddDocumentDialog: React.FC<React.PropsWithChildren<Props>> = ({
   collectionRef,
   onClose,
   onValue,

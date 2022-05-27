@@ -45,7 +45,7 @@ import { ImageUrlInput } from './controls/ImageUrlInput';
 import { SignInMethod } from './controls/SignInMethod';
 
 export type UserFormProps = PropsFromState & PropsFromDispatch;
-export const UserForm: React.FC<UserFormProps> = ({
+export const UserForm: React.FC<React.PropsWithChildren<UserFormProps>> = ({
   authUserDialogData,
   clearAuthUserDialogData,
   updateUser,
@@ -71,19 +71,21 @@ export const UserForm: React.FC<UserFormProps> = ({
     [isEditing, updateUser, createUser, localId]
   );
 
-  const { register, handleSubmit, formState, reset, errors } = form;
+  const { register, handleSubmit, formState, reset } = form;
 
   const canSubmit = !authUserDialogData?.loading && formState.isValid;
 
   const submit = useCallback(
     (user: AddAuthUserPayload) => {
       // Take into account multi-field errors.
-      if (Object.values(errors).length === 0) {
+      if (Object.values(formState.errors).length === 0) {
         save(user);
       }
     },
-    [errors, save]
+    [formState, save]
   );
+
+  const { ref: displayNameRef, ...displayNameField } = register('displayName');
 
   return (
     <Dialog renderToPortal open onClose={clearAuthUserDialogData}>
@@ -94,12 +96,12 @@ export const UserForm: React.FC<UserFormProps> = ({
       <form onSubmit={handleSubmit(submit)} data-testid="user-form">
         <DialogContent>
           <Field
-            name="displayName"
             label="Display name (optional)"
             type="text"
             placeholder="Enter display name"
-            error={errors?.displayName && 'Display name is required'}
-            inputRef={register({})}
+            error={formState.errors?.displayName && 'Display name is required'}
+            inputRef={displayNameRef}
+            {...displayNameField}
           />
 
           <ImageUrlInput {...form} />
@@ -107,7 +109,7 @@ export const UserForm: React.FC<UserFormProps> = ({
           <SignInMethod {...form} user={user} />
           {hasError(authUserDialogData?.result) && (
             <Callout type="warning">
-              Error: {authUserDialogData?.result.error}
+              <>Error: {authUserDialogData?.result.error}</>
             </Callout>
           )}
         </DialogContent>

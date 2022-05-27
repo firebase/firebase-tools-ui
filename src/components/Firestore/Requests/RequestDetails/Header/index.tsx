@@ -37,7 +37,7 @@ interface Props {
   setShowCopyNotification: (value: boolean) => void;
 }
 
-const RequestDetailsHeader: React.FC<Props> = ({
+const RequestDetailsHeader: React.FC<React.PropsWithChildren<Props>> = ({
   requestTimeComplete,
   requestTimeFormatted,
   requestMethod,

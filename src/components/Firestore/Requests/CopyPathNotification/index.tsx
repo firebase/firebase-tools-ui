@@ -27,7 +27,7 @@ interface Props {
   timeout?: number;
 }
 
-const CopyPathNotification: React.FC<Props> = ({
+const CopyPathNotification: React.FC<React.PropsWithChildren<Props>> = ({
   showCopyNotification,
   setShowCopyNotification,
   timeout,

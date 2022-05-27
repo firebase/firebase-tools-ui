@@ -18,7 +18,7 @@ import React from 'react';
 
 import styles from './ZeroState.module.scss';
 
-export const ZeroState: React.FC = () => {
+export const ZeroState: React.FC<React.PropsWithChildren<unknown>> = () => {
   return (
     <div className={styles.wrapper}>
       <Typography

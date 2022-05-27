@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 
 import { Extension } from '../models';
 import {
@@ -33,14 +33,18 @@ describe('useExtension', () => {
       extensionInstanceId: 'foo-published',
       extension: BACKEND_EXTENSION,
       extensionVersion: EXTENSION_VERSION,
+      functionTriggers: [],
     });
     const other: Extension = convertBackendToExtension({
       env: {},
       extensionInstanceId: 'foo-local',
       extensionSpec: EXTENSION_SPEC,
+      functionTriggers: [],
     });
 
-    const wrapper: React.FC = ({ children }) => (
+    const wrapper: React.FC<React.PropsWithChildren<unknown>> = ({
+      children,
+    }) => (
       <ExtensionsProvider extensions={[want, other]}>
         <InstanceIdProvider instanceId="foo-published">
           {children}

@@ -123,7 +123,7 @@ export function* createUser({ payload }: ReturnType<typeof createUserRequest>) {
     if (!payload.keepDialogOpen) {
       yield put(clearAuthUserDialogData());
     }
-  } catch (e) {
+  } catch (e: any) {
     yield put(setAuthUserDialogError(e.message));
   } finally {
     yield put(setAuthUserDialogLoading(false));
@@ -140,7 +140,7 @@ export function* updateUser({ payload }: ReturnType<typeof updateUserRequest>) {
     });
     yield put(updateUserSuccess({ user }));
     yield put(clearAuthUserDialogData());
-  } catch (e) {
+  } catch (e: any) {
     yield put(setAuthUserDialogError(e.message));
   } finally {
     yield put(setAuthUserDialogLoading(false));

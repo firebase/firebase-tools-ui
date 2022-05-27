@@ -41,9 +41,11 @@ const DocumentStateContext = React.createContext<FirestoreMap | undefined>(
   undefined
 );
 
-export const DocumentProvider: React.FC<{
-  value: FirestoreMap;
-}> = ({ value, children }) => {
+export const DocumentProvider: React.FC<
+  React.PropsWithChildren<{
+    value: FirestoreMap;
+  }>
+> = ({ value, children }) => {
   return (
     <DocumentStateContext.Provider value={value}>
       {children}
@@ -73,9 +75,11 @@ const ExpressionValueStateContext = React.createContext<
   ExpressionValue | undefined
 >(undefined);
 
-export const ExpressionValueStateProvider: React.FC<{
-  value: ExpressionValue;
-}> = ({ value, children }) => {
+export const ExpressionValueStateProvider: React.FC<
+  React.PropsWithChildren<{
+    value: ExpressionValue;
+  }>
+> = ({ value, children }) => {
   return (
     <ExpressionValueStateContext.Provider value={value}>
       {children}

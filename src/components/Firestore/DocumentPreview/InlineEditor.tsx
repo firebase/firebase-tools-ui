@@ -31,15 +31,17 @@ import DocumentEditor from '../DocumentEditor';
 import { FirestoreAny } from '../models';
 
 /** Editor entry point for a selected field */
-const InlineEditor: React.FC<{
-  value: FirestoreAny;
-  onCancel: () => void;
-  onSave: (key: string, value: FirestoreAny) => void;
-  areRootKeysMutable: boolean;
-  rtdb?: boolean;
-  startingIndex?: number;
-  firestore?: firebase.firestore.Firestore;
-}> = ({
+const InlineEditor: React.FC<
+  React.PropsWithChildren<{
+    value: FirestoreAny;
+    onCancel: () => void;
+    onSave: (key: string, value: FirestoreAny) => void;
+    areRootKeysMutable: boolean;
+    rtdb?: boolean;
+    startingIndex?: number;
+    firestore?: firebase.firestore.Firestore;
+  }>
+> = ({
   value,
   onCancel,
   onSave,

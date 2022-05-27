@@ -26,7 +26,7 @@ import { Storage } from './components/Storage';
 
 export interface Route {
   path: string;
-  component: React.FC;
+  component: React.FC<React.PropsWithChildren<unknown>>;
   label: string;
   exact: boolean;
   showInNav: boolean;

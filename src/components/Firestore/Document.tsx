@@ -36,11 +36,13 @@ import DocumentPreview from './DocumentPreview';
 import { useRecursiveDelete } from './FirestoreEmulatedApiProvider';
 import PanelHeader from './PanelHeader';
 
-const Doc: React.FC<{
-  id: string;
-  collectionById: (id: string) => firebase.firestore.CollectionReference;
-  children: React.ReactNode;
-}> = ({ collectionById, children }) => {
+const Doc: React.FC<
+  React.PropsWithChildren<{
+    id: string;
+    collectionById: (id: string) => firebase.firestore.CollectionReference;
+    children: React.ReactNode;
+  }>
+> = ({ collectionById, children }) => {
   const { url } = useRouteMatch()!;
 
   return (
@@ -72,7 +74,7 @@ const Doc: React.FC<{
 };
 
 /** Root node */
-export const Root: React.FC = () => {
+export const Root: React.FC<React.PropsWithChildren<unknown>> = () => {
   const firestore = useFirestore();
 
   return (
@@ -86,13 +88,14 @@ export const Root: React.FC = () => {
 };
 
 /** Document node */
-export const Document: React.FC<{
-  reference: firebase.firestore.DocumentReference;
-}> = ({ reference }) => {
+export const Document: React.FC<
+  React.PropsWithChildren<{
+    reference: firebase.firestore.DocumentReference;
+  }>
+> = ({ reference }) => {
   const recursiveDelete = useRecursiveDelete();
-  const [isDeleteDocumentDialogOpen, setDeleteDocumentDialogOpen] = useState(
-    false
-  );
+  const [isDeleteDocumentDialogOpen, setDeleteDocumentDialogOpen] =
+    useState(false);
 
   const handleDeleteFields = async () => {
     const shouldDelete = await promptDeleteDocumentFields(reference);

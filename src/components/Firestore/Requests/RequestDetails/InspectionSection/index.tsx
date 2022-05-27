@@ -28,7 +28,9 @@ interface Props {
   inspectionExpressions?: InspectionElement[];
 }
 
-const InspectionSection: React.FC<Props> = ({ inspectionExpressions }) => {
+const InspectionSection: React.FC<React.PropsWithChildren<Props>> = ({
+  inspectionExpressions,
+}) => {
   const renderInspectionContent = () => {
     if (!inspectionExpressions?.length) {
       return (

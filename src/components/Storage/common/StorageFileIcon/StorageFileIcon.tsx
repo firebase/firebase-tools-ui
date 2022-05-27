@@ -85,9 +85,9 @@ export function getFileIcon(contentType: string) {
   return MIME_TYPE_ICON_MAP[contentType] || DEFAULT_MIME_TYPE_ICON;
 }
 
-export const StorageFileIcon: React.FC<StorageIconProps> = ({
-  contentType,
-}) => {
+export const StorageFileIcon: React.FC<
+  React.PropsWithChildren<StorageIconProps>
+> = ({ contentType }) => {
   return (
     <Theme use="secondary">
       <Icon icon={getFileIcon(contentType)} className={styles.icon} />

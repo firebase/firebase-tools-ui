@@ -16,7 +16,7 @@
 
 import { CircularProgress } from '@rmwc/circular-progress';
 import React, { useEffect, useRef, useState } from 'react';
-import { FormContextValues } from 'react-hook-form/dist/contextTypes';
+import { UseFormReturn } from 'react-hook-form';
 
 import { Field } from '../../../common/Field';
 import { AddAuthUserPayload } from '../../types';
@@ -29,16 +29,15 @@ enum ImagePreviewStatus {
   ERROR = 'ERROR',
 }
 
-export type ImageUrlInputProps = FormContextValues<AddAuthUserPayload> & {
+export type ImageUrlInputProps = {
   ImageConstructor?: typeof Image;
 };
 
-export const ImageUrlInput: React.FC<ImageUrlInputProps> = ({
-  register,
-  watch,
-  triggerValidation,
-  ImageConstructor,
-}) => {
+export const ImageUrlInput: React.FC<
+  React.PropsWithChildren<
+    UseFormReturn<AddAuthUserPayload> & ImageUrlInputProps
+  >
+> = ({ register, watch, trigger, formState: { errors }, ImageConstructor }) => {
   ImageConstructor = ImageConstructor || Image;
   const [previewUrl, setPreviewUrl] = useState('');
   const image = useRef(new ImageConstructor());
@@ -53,14 +52,14 @@ export const ImageUrlInput: React.FC<ImageUrlInputProps> = ({
       if (status.current === ImagePreviewStatus.LOADING) {
         status.current = ImagePreviewStatus.LOADED;
         setPreviewUrl(imageUrlRef.current);
-        triggerValidation('photoUrl');
+        trigger('photoUrl');
       }
     };
     img.onerror = () => {
       if (status.current === ImagePreviewStatus.LOADING) {
         status.current = ImagePreviewStatus.ERROR;
         setPreviewUrl('');
-        triggerValidation('photoUrl');
+        trigger('photoUrl');
       }
     };
 
@@ -68,7 +67,7 @@ export const ImageUrlInput: React.FC<ImageUrlInputProps> = ({
       img.onload = null;
       img.onerror = null;
     };
-  }, [triggerValidation]);
+  }, [trigger]);
 
   useEffect(() => {
     if (photoUrl.trim() !== '') {
@@ -78,27 +77,29 @@ export const ImageUrlInput: React.FC<ImageUrlInputProps> = ({
     } else {
       status.current = ImagePreviewStatus.NONE;
     }
-    triggerValidation('photoUrl');
-  }, [photoUrl, triggerValidation]);
+    trigger('photoUrl');
+  }, [photoUrl, trigger]);
 
-  const validate = () => {
-    return (
-      status.current === ImagePreviewStatus.LOADED ||
-      status.current === ImagePreviewStatus.NONE
-    );
-  };
+  const { ref: photoUrlRef, ...photoUrlField } = register('photoUrl', {
+    validate: {
+      loading: () =>
+        status.current !== ImagePreviewStatus.LOADING || 'Loading image',
+      errorLoading: () =>
+        status.current !== ImagePreviewStatus.ERROR || 'Error loading image',
+    },
+  });
 
   return (
     <>
       <Field
-        name="photoUrl"
         label="User photo URL (optional)"
         placeholder="Enter URL"
         error={
-          status.current === ImagePreviewStatus.ERROR && 'Error loading image'
+          errors.photoUrl?.type === 'errorLoading' && errors.photoUrl.message
         }
         type="text"
-        inputRef={register({ validate })}
+        inputRef={photoUrlRef}
+        {...photoUrlField}
       />
       {status.current === ImagePreviewStatus.LOADED && (
         <img className={styles.image} src={previewUrl} alt="Profile preview" />

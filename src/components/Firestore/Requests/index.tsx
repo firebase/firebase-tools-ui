@@ -30,10 +30,9 @@ export interface RequestDetailsRouteParams {
   requestId: string;
 }
 
-const Requests: React.FC = () => {
-  const [showCopyNotification, setShowCopyNotification] = useState<boolean>(
-    false
-  );
+const Requests: React.FC<React.PropsWithChildren<unknown>> = () => {
+  const [showCopyNotification, setShowCopyNotification] =
+    useState<boolean>(false);
   const isRequestsAvailable = useIsFirestoreRequestsAvailable();
   if (!isRequestsAvailable) {
     return <EmulatorOutdated productName="Firestore" />;

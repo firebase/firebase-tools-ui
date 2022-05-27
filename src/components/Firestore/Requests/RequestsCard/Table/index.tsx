@@ -46,7 +46,7 @@ interface Props {
   setShowCopyNotification: (show: boolean) => void;
 }
 
-export const RequestsTable: React.FC<Props> = ({
+export const RequestsTable: React.FC<React.PropsWithChildren<Props>> = ({
   filteredRequests,
   shouldShowZeroState,
   shouldShowZeroResults,
@@ -126,9 +126,11 @@ export const RequestsTable: React.FC<Props> = ({
   );
 };
 
-export const RequestsTableWrapper: React.FC<{
-  setShowCopyNotification: (show: boolean) => void;
-}> = ({ setShowCopyNotification }) => {
+export const RequestsTableWrapper: React.FC<
+  React.PropsWithChildren<{
+    setShowCopyNotification: (show: boolean) => void;
+  }>
+> = ({ setShowCopyNotification }) => {
   const evaluations = useFirestoreRequests().requests;
 
   // TODO: Add support for filtering.

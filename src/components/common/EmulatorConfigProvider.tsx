@@ -61,10 +61,9 @@ export function useOnChangePromise<T>(data: T): Promise<T> {
   return state.deferred.promise;
 }
 
-export const EmulatorConfigProvider: React.FC<{ refreshInterval: number }> = ({
-  refreshInterval,
-  children,
-}) => {
+export const EmulatorConfigProvider: React.FC<
+  React.PropsWithChildren<{ refreshInterval: number }>
+> = ({ refreshInterval, children }) => {
   // We don't use suspense here since the provider should never be suspended --
   // it merely creates a context for hooks (e.g. useConfig) who do suspend.
   const { data } = useSwr<Config | null>(CONFIG_API, configFetcher, {
@@ -109,9 +108,11 @@ export const EmulatorConfigProvider: React.FC<{ refreshInterval: number }> = ({
   );
 };
 
-export const TestEmulatorConfigProvider: React.FC<{
-  config: Config | null | undefined;
-}> = ({ config, children }) => {
+export const TestEmulatorConfigProvider: React.FC<
+  React.PropsWithChildren<{
+    config: Config | null | undefined;
+  }>
+> = ({ config, children }) => {
   const promise = useOnChangePromise(config);
   return (
     <emulatorConfigContext.Provider

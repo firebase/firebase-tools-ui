@@ -16,7 +16,7 @@
 
 import {
   act,
-  waitForElement,
+  waitFor,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import firebase from 'firebase';
@@ -48,7 +48,7 @@ it('should get root-collections', async () => {
     }
   );
 
-  await waitForElement(() => getByText(/others/));
+  await waitFor(() => getByText(/others/));
 
   expect(getByTestId(/collections/).textContent).toBe('others,things');
 });
@@ -74,13 +74,17 @@ it('should get sub-collections', async () => {
     }
   );
 
-  await waitForElement(() => getByText(/others/));
+  await waitFor(() => getByText(/others/));
 
   expect(getByTestId(/collections/).textContent).toBe('others,things');
 });
 
 it('should get sub-collections with special characters inside URI', async () => {
-  const TestResults = ({ docRef }: { docRef: firestore.DocumentReference }) => {
+  const TestResults = ({
+    docRef,
+  }: {
+    docRef: firebase.firestore.DocumentReference;
+  }) => {
     const collections = useSubCollections(docRef);
     return (
       <div data-testid="collections">{collections.map((c) => c.id).join()}</div>
@@ -96,15 +100,17 @@ it('should get sub-collections with special characters inside URI', async () => 
     }
   );
 
-  await waitForElement(() => getByText(/others/));
+  await waitFor(() => getByText(/others/));
 
   expect(getByTestId(/collections/).textContent).toBe('others,things');
 });
 
 it('should get missing-documents', async () => {
-  const TestResults: React.FC<{
-    collection: firebase.firestore.CollectionReference;
-  }> = ({ collection }) => {
+  const TestResults: React.FC<
+    React.PropsWithChildren<{
+      collection: firebase.firestore.CollectionReference;
+    }>
+  > = ({ collection }) => {
     const documents = useMissingDocuments(collection);
     return (
       <div data-testid="documents">{documents.map((d) => d.path).join()}</div>
@@ -120,7 +126,7 @@ it('should get missing-documents', async () => {
     }
   );
 
-  await waitForElement(() => getByText(/hidden/));
+  await waitFor(() => getByText(/hidden/));
 
   expect(getByTestId(/documents/).textContent).toBe('foo/hidden');
 });
@@ -150,7 +156,7 @@ it('should clear the database', async () => {
     }
   );
 
-  await waitForElement(() => getByText(/"a":1/));
+  await waitFor(() => getByText(/"a":1/));
 
   act(() => {
     getByText(/Clear/).click();

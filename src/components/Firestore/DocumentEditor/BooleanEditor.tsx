@@ -18,10 +18,12 @@ import React from 'react';
 
 import { SelectField } from '../../common/Field';
 
-const BooleanEditor: React.FC<{
-  value: boolean;
-  onChange: (value: boolean) => void;
-}> = ({ value, onChange }) => {
+const BooleanEditor: React.FC<
+  React.PropsWithChildren<{
+    value: boolean;
+    onChange: (value: boolean) => void;
+  }>
+> = ({ value, onChange }) => {
   return (
     <SelectField
       label="Value"

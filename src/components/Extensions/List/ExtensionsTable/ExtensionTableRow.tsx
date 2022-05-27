@@ -27,9 +27,9 @@ export interface ExtensionsTableRowProps {
   extension: Extension;
 }
 
-export const ExtensionsTableRow: React.FC<ExtensionsTableRowProps> = ({
-  extension,
-}) => {
+export const ExtensionsTableRow: React.FC<
+  React.PropsWithChildren<ExtensionsTableRowProps>
+> = ({ extension }) => {
   const history = useHistory();
 
   return (

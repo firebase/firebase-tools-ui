@@ -19,7 +19,9 @@ import { Theme } from '@rmwc/theme';
 
 import styles from './StorageIcon.module.scss';
 
-export const StorageFolderIcon: React.FC = () => {
+export const StorageFolderIcon: React.FC<
+  React.PropsWithChildren<unknown>
+> = () => {
   return (
     <Theme use="secondary">
       <Icon icon="folder_open" className={styles.icon} />

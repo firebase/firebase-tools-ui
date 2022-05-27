@@ -15,8 +15,8 @@
  */
 
 import { Typography } from '@rmwc/typography';
-import React, { useEffect } from 'react';
-import { FormContextValues } from 'react-hook-form/dist/contextTypes';
+import React from 'react';
+import { FieldError, UseFormReturn } from 'react-hook-form';
 import { connect } from 'react-redux';
 
 import { createStructuredSelector } from '../../../../store';
@@ -29,54 +29,66 @@ import styles from './controls.module.scss';
 const EMAIL_REGEX = /^[^@]+@[^@]+$/;
 const PASSWORD_MIN_LENGTH = 6;
 
-function getErrorText(errors: any) {
+function getErrorText(errors: { [key: string]: FieldError | undefined }) {
   if (errors.email) {
     if (errors.email.type === 'pattern') {
       return 'Invalid email';
     }
-    if (errors.email.type === 'validate') {
+    if (errors.email.type === 'unique') {
       return 'User with this email already exists';
     }
   }
 
-  if (errors.emailpassword) {
+  if (errors.email?.type === 'both' || errors.password?.type === 'both') {
     return 'Both email and password should be present';
   }
-  if (errors.password) {
+
+  if (errors.password?.type === 'minLength') {
     return `Password should be at least ${PASSWORD_MIN_LENGTH} characters`;
   }
 }
 
 export type EmailPasswordProps = PropsFromState & { editedUserEmail?: string };
 export const EmailPassword: React.FC<
-  EmailPasswordProps & FormContextValues<AddAuthUserPayload>
+  React.PropsWithChildren<
+    EmailPasswordProps & UseFormReturn<AddAuthUserPayload>
+  >
 > = ({
   register,
-  watch,
-  setError,
-  clearError,
-  errors,
+  getValues,
+  formState: { errors },
   allEmails,
   editedUserEmail,
   isEditing,
 }) => {
-  const email = watch('email');
-  const password = watch('password');
+  const { ref: passwordRef, ...passwordState } = register('password', {
+    minLength: PASSWORD_MIN_LENGTH,
+    validate: {
+      both: (value) => {
+        const { email } = getValues();
 
-  useEffect(() => {
-    if (
-      (email === '' && password === '') ||
-      (email !== '' && (password !== '' || isEditing))
-    ) {
-      clearError('emailpassword' as any);
-    } else {
-      setError('emailpassword' as any, 'both');
-    }
-  }, [email, password, clearError, setError, isEditing]);
+        if (!!value || isEditing) {
+          return !!email;
+        }
 
-  function validate(value: string) {
-    return value === editedUserEmail || !allEmails.has(value);
-  }
+        return !email || 'both';
+      },
+    },
+  });
+
+  const { ref: emailRef, ...emailState } = register('email', {
+    validate: {
+      unique: (value) => value === editedUserEmail || !allEmails.has(value),
+      both: (value) => {
+        const { password } = getValues();
+
+        if (!!value) return !!password;
+
+        return !password || 'both';
+      },
+    },
+    pattern: EMAIL_REGEX,
+  });
 
   return (
     <>
@@ -90,18 +102,18 @@ export const EmailPassword: React.FC<
       </Typography>
       <div className={styles.emailWrapper}>
         <Field
-          name="email"
           placeholder="Enter email"
           label="Email"
           type="text"
-          inputRef={register({ validate, pattern: EMAIL_REGEX })}
+          inputRef={emailRef}
+          {...emailState}
         />
         <Field
-          name="password"
           type="text"
           label="Password"
           placeholder="Enter password"
-          inputRef={register({ minLength: PASSWORD_MIN_LENGTH })}
+          inputRef={passwordRef}
+          {...passwordState}
         />
       </div>
       <Typography

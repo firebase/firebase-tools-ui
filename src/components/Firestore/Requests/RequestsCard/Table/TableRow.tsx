@@ -62,7 +62,7 @@ interface Props {
   requestPathContainerWidth?: number;
 }
 
-const RequestTableRow: React.FC<Props> = ({
+const RequestTableRow: React.FC<React.PropsWithChildren<Props>> = ({
   request,
   requestId,
   setShowCopyNotification,

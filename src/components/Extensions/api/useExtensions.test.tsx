@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 
 import { EXTENSION } from '../testing/utils';
 import { ExtensionsProvider, useExtensions } from './useExtensions';
 
 describe('useExtensions', () => {
   it('returns the list of extension backends', () => {
-    const wrapper: React.FC = ({ children }) => (
+    const wrapper: React.FC<React.PropsWithChildren<unknown>> = ({
+      children,
+    }) => (
       <ExtensionsProvider extensions={[EXTENSION]}>
         {children}
       </ExtensionsProvider>

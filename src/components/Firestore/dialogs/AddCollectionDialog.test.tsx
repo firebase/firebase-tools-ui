@@ -14,11 +14,7 @@
  * limitations under the License.
  */
 
-import {
-  RenderResult,
-  fireEvent,
-  waitForElement,
-} from '@testing-library/react';
+import { RenderResult, fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 
@@ -35,7 +31,7 @@ it('shows correct title', async () => {
     <AddCollectionDialog open={true} onValue={onValue} />
   ));
 
-  await waitForElement(() => getByText(/Start a collection/));
+  await waitFor(() => getByText(/Start a collection/));
 });
 
 describe('step 1', () => {
@@ -53,7 +49,9 @@ describe('step 1', () => {
       }
     );
 
-    expect(getByLabelText(/Parent path/).value).toBe('docs/my-doc');
+    expect((getByLabelText(/Parent path/) as HTMLInputElement).value).toBe(
+      'docs/my-doc'
+    );
   });
 
   it('contains a collection id input', async () => {
@@ -97,13 +95,17 @@ describe('step 2', () => {
   it('displays the parent collection path', () => {
     const { getByLabelText } = result;
 
-    expect(getByLabelText(/Parent path/).value).toBe('docs/my-doc/my-col');
+    expect((getByLabelText(/Parent path/) as HTMLInputElement).value).toBe(
+      'docs/my-doc/my-col'
+    );
   });
 
   it('contains a document id with random id', () => {
     const { getByLabelText } = result;
 
-    expect(getByLabelText(/Document ID/).value).toMatch(/^\w{20}$/);
+    expect((getByLabelText(/Document ID/) as HTMLInputElement).value).toMatch(
+      /^\w{20}$/
+    );
   });
 
   it('contains a data input', () => {
@@ -127,7 +129,7 @@ describe('step 2', () => {
 
   it('emits doc data when clicking [Save]', async () => {
     const { getByLabelText, getByText } = result;
-    const randomId = getByLabelText(/Document ID/).value;
+    const randomId = (getByLabelText(/Document ID/) as HTMLInputElement).value;
 
     await act(async () => {
       fireEvent.change(getByLabelText('Field'), {
@@ -163,6 +165,6 @@ describe('at the root of the db', () => {
       <AddCollectionDialog open={true} onValue={() => {}} />
     ));
 
-    expect(getByLabelText(/Parent path/).value).toBe('/');
+    expect((getByLabelText(/Parent path/) as HTMLInputElement).value).toBe('/');
   });
 }); // at the root of the db

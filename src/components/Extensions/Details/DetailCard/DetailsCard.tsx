@@ -31,7 +31,9 @@ export interface DetailsCardProps {
   extension: Extension;
 }
 
-export const DetailsCard: React.FC<DetailsCardProps> = ({ extension }) => {
+export const DetailsCard: React.FC<
+  React.PropsWithChildren<DetailsCardProps>
+> = ({ extension }) => {
   const config = {
     tabs: [
       {

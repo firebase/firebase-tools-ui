@@ -57,12 +57,9 @@ interface UserTableRowProps {
   onDeleteUser: () => void;
 }
 
-export const UsersTableRow: React.FC<UserTableRowProps> = ({
-  user,
-  onEditUser,
-  toggleUserDisabled,
-  onDeleteUser,
-}) => {
+export const UsersTableRow: React.FC<
+  React.PropsWithChildren<UserTableRowProps>
+> = ({ user, onEditUser, toggleUserDisabled, onDeleteUser }) => {
   /*
    * Simple menu is broken when rendered in portal (it doesn't close)
    *
@@ -125,7 +122,7 @@ export const UsersTableRow: React.FC<UserTableRowProps> = ({
   );
 };
 
-export const UsersTable: React.FC<UsersTableProps> = ({
+export const UsersTable: React.FC<React.PropsWithChildren<UsersTableProps>> = ({
   filteredUsers,
   setUserDisabled,
   deleteUser,

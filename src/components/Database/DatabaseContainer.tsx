@@ -34,7 +34,7 @@ export type Props = {
   navigation: (db: string) => string;
 };
 
-export const DatabaseContainer: React.FC<Props> = ({
+export const DatabaseContainer: React.FC<React.PropsWithChildren<Props>> = ({
   current,
   primary,
   navigation,
@@ -91,16 +91,16 @@ export const DatabaseContainer: React.FC<Props> = ({
   );
 };
 
-export const DatabaseContainerWrapper: React.FC<Omit<Props, 'databases'>> = (
-  props
-) => {
+export const DatabaseContainerWrapper: React.FC<
+  React.PropsWithChildren<Omit<Props, 'databases'>>
+> = (props) => {
   const config = useEmulatorConfig('database');
   const { data } = useSwr(
     // Put config object in cache key (compared shallowly) so databases will
     // be cleared on emulator restart as expected (even if ports don't change).
     ['/dummy/database/databases', config, props.primary],
     fetchDatabases,
-    { refreshWhenOffline: true, initialData: undefined, refreshInterval: 5000 }
+    { refreshWhenOffline: true, fallbackData: undefined, refreshInterval: 5000 }
   );
   return <DatabaseContainer databases={data} {...props} />;
 };
