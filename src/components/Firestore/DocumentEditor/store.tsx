@@ -18,10 +18,12 @@ import produce from 'immer';
 import * as React from 'react';
 import { Action, createReducer } from 'typesafe-actions';
 
-import { FieldType } from '../models';
+import { FieldType, FirestoreAny } from '../models';
 import * as actions from './actions';
 import {
+  ArrayField,
   Field,
+  PrimitiveValue,
   Store,
   assertIsArrayField,
   assertIsMapField,
@@ -43,12 +45,11 @@ const documentStoreContext = React.createContext<{
 }>({ store: INIT_STATE, dispatch: () => {} });
 
 export const reducer = createReducer<Store, Action>({ fields: {} })
-  .handleAction(
-    actions.addToMap,
-    produce((draft, { payload }) => {
+  .handleAction(actions.addToMap, (state, { payload }) => {
+    return produce(state, (draft) => {
       const field = draft.fields[payload.uuid];
       assertIsMapField(field);
-      const normalized = normalize(payload.value);
+      const normalized = normalize(payload.value as FirestoreAny);
       assertStoreHasRoot(normalized);
       draft.fields = {
         ...draft.fields,
@@ -59,28 +60,26 @@ export const reducer = createReducer<Store, Action>({ fields: {} })
         name: payload.name,
         valueId: normalized.uuid,
       });
-    })
-  )
-  .handleAction(
-    actions.addToArray,
-    produce((draft, { payload }) => {
+    });
+  })
+  .handleAction(actions.addToArray, (state, { payload }) => {
+    return produce(state, (draft) => {
       const field = draft.fields[payload.uuid];
       assertIsArrayField(field);
-      const normalized = normalize(payload.value);
+      const normalized = normalize(payload.value as FirestoreAny);
       assertStoreHasRoot(normalized);
       draft.fields = {
         ...draft.fields,
         ...normalized.fields,
       };
-      draft.fields[payload.uuid].arrayChildren.push({
+      (draft.fields[payload.uuid] as ArrayField).arrayChildren.push({
         uuid: getUniqueId(),
         valueId: normalized.uuid,
       });
-    })
-  )
-  .handleAction(
-    actions.removeFromMap,
-    produce((draft, { payload }) => {
+    });
+  })
+  .handleAction(actions.removeFromMap, (state, { payload }) => {
+    return produce(state, (draft) => {
       const field = draft.fields[payload.uuid];
       assertIsMapField(field);
       const child = field.mapChildren.find((c) => c.uuid === payload.childId);
@@ -97,11 +96,10 @@ export const reducer = createReducer<Store, Action>({ fields: {} })
       field.mapChildren = field.mapChildren.filter(
         (c) => c.uuid !== payload.childId
       );
-    })
-  )
-  .handleAction(
-    actions.removeFromArray,
-    produce((draft, { payload }) => {
+    });
+  })
+  .handleAction(actions.removeFromArray, (state, { payload }) => {
+    return produce(state, (draft) => {
       const field = draft.fields[payload.uuid];
       assertIsArrayField(field);
       const child = field.arrayChildren.find((c) => c.uuid === payload.childId);
@@ -118,11 +116,10 @@ export const reducer = createReducer<Store, Action>({ fields: {} })
       field.arrayChildren = field.arrayChildren.filter(
         (c) => c.uuid !== payload.childId
       );
-    })
-  )
-  .handleAction(
-    actions.updateName,
-    produce((draft, { payload }) => {
+    });
+  })
+  .handleAction(actions.updateName, (state, { payload }) => {
+    return produce(state, (draft) => {
       const field = draft.fields[payload.uuid];
       assertIsMapField(field);
       const childField = field.mapChildren.find(
@@ -132,11 +129,10 @@ export const reducer = createReducer<Store, Action>({ fields: {} })
         throw new Error('No map-child found with given ID');
       }
       childField.name = payload.name;
-    })
-  )
-  .handleAction(
-    actions.updateType,
-    produce((draft, { payload }) => {
+    });
+  })
+  .handleAction(actions.updateType, (state, { payload }) => {
+    return produce(state, (draft) => {
       if (payload.type === FieldType.MAP) {
         draft.fields[payload.uuid] = { mapChildren: [] };
       } else if (payload.type === FieldType.ARRAY) {
@@ -148,16 +144,15 @@ export const reducer = createReducer<Store, Action>({ fields: {} })
           value: defaultValueForPrimitiveType(payload.type),
         };
       }
-    })
-  )
-  .handleAction(
-    actions.updateValue,
-    produce((draft, { payload }) => {
+    });
+  })
+  .handleAction(actions.updateValue, (state, { payload }) => {
+    return produce(state, (draft) => {
       const field = draft.fields[payload.uuid];
       assertIsPrimitiveField(field);
-      field.value = payload.value;
-    })
-  );
+      field.value = payload.value as PrimitiveValue;
+    });
+  });
 
 export const storeReducer: React.Reducer<Store, Action> = (state, action) => {
   return (reducer.handlers as any)[action.type](state, action);
