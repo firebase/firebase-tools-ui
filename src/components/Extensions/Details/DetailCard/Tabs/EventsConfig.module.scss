@@ -13,18 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+.paramWrapper {
+  --accordion-border-size: 0;
+  --accordion-horizontal-spacing: 0;
+  --accordion-vertical-spacing: 0;
+  --accordion-focus-background: transparent;
+  --accordion-header-justification: flex-start;
 
-import { Markdown } from '../../../../common/Markdown';
-import { useExtension } from '../../../api/useExtension';
-import { EventsCodeSnippet } from './EventsCodeSnippet';
-import style from './Readme.module.scss';
+  padding: 8px var(--tab-spacing);
+  margin-bottom: 16px;
 
-export function Readme() {
-  const extension = useExtension()!;
-  return (
-    <div className={style.wrapper}>
-      <Markdown>{extension.postinstallContent}</Markdown>
-      <EventsCodeSnippet />
-    </div>
-  );
+  p:first-child {
+    margin-top: 0;
+  }
+}
+
+.eventPrefixValue {
+  margin-bottom: 32px;
+}
+
+.eventValue {
+  margin-top: 8px;
+  margin-bottom: 8px;
+  padding-left: 32px;
 }
