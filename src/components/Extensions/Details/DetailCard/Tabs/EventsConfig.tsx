@@ -121,7 +121,7 @@ export function EventsConfig() {
   }
   return (
     <div>
-      <div className={styles.paramWrapper}>
+      <div className={styles.wrapper}>
         <h4>Enabled Events</h4>
         <Typography
           className={styles.description}
