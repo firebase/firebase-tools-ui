@@ -30,13 +30,7 @@ describe('Table', () => {
     const selectFile = jest.fn();
     const FakeComponent: React.FC<React.PropsWithChildren<unknown>> = () => {
       const selection = useMultiselect([fileName, file2, file3]);
-      return (
-        <StorageTable
-          selection={selection}
-          selectFile={selectFile}
-          selectedFile={{}}
-        />
-      );
+      return <StorageTable selection={selection} selectFile={selectFile} />;
     };
     return renderWithStorage(<FakeComponent />);
   }

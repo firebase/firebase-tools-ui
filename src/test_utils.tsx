@@ -24,7 +24,7 @@ import {
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import React from 'react';
-import { FormContextValues, UseFormOptions, useForm } from 'react-hook-form';
+import { UseFormProps, UseFormReturn, useForm } from 'react-hook-form';
 
 export function delay(timeoutMs: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, timeoutMs));
@@ -138,8 +138,8 @@ export function makeDeferred<T>(): Deferred<T> {
  *
  * Component is expected to receive resulting form methods as props.
  */
-export const wrapWithForm = <P, T, F = UseFormOptions<T>>(
-  Control: React.FC<React.PropsWithChildren<FormContextValues<T> & P>>,
+export const wrapWithForm = <P, T, F = UseFormProps<T>>(
+  Control: React.FC<React.PropsWithChildren<UseFormReturn<T> & P>>,
   options: F,
   props: P
 ) => {

@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import { act, waitFor } from '@testing-library/react';
-import { renderHook } from '@testing-library/react-hooks';
+import { act, renderHook, waitFor } from '@testing-library/react';
 
 import { FakeStorageWrappers } from '../testing/FakeStorageWrappers';
 import { mockBuckets } from '../testing/mockBuckets';
@@ -29,7 +28,7 @@ describe('useStorageFiles', () => {
       wrapper: FakeStorageWrappers,
     });
 
-    await waitFor(() => expect(storage.result.current).toBeDefined());
+    await waitFor(() => expect(storage.result.current).not.toBeNull());
 
     await act(async () => {
       await storage.result.current.deleteAllFiles();

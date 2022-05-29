@@ -19,8 +19,8 @@
 // export styles
 @use '@material/button/mdc-button';
 
-@import './components/common/radius';
-@import './components/common/z';
+@import '/src/components/common/radius';
+@import '/src/components/common/z';
 
 $FOCUS_OUTLINE_THICKNESS: 2px;
 

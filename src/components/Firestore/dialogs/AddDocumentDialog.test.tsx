@@ -51,8 +51,12 @@ it('shows the (disabled) creation path', async () => {
     }
   );
 
-  expect(getByLabelText('Parent path').value).toBe('things/1/objects');
-  expect(getByLabelText('Parent path').disabled).toBe(true);
+  expect((getByLabelText('Parent path') as HTMLInputElement).value).toBe(
+    'things/1/objects'
+  );
+  expect((getByLabelText('Parent path') as HTMLInputElement).disabled).toBe(
+    true
+  );
 });
 
 it('auto generates an id', async () => {
@@ -69,7 +73,9 @@ it('auto generates an id', async () => {
     }
   );
 
-  expect(getByLabelText('Document ID').value).toMatch(/\w+/);
+  expect((getByLabelText('Document ID') as HTMLInputElement).value).toMatch(
+    /\w+/
+  );
 });
 
 it('provides a document-editor', async () => {

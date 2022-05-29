@@ -23,7 +23,10 @@
 const express = require('express');
 const fetch = require('node-fetch').default;
 const path = require('path');
+const dns = require('dns');
 const { URL } = require('url');
+
+dns.setDefaultResultOrder('ipv4first');
 
 /**
   Start an express app that serves both static content and APIs.

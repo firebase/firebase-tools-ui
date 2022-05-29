@@ -38,17 +38,14 @@ const setup = async () => {
     path: 'parent/to_clone',
     data: { bool: true, number: 1234, string: 'a string', json: { a: 'b' } },
   });
-  ROOT_REF.child.mockReturnValue(ref);
+  (ROOT_REF.child as jest.Mock).mockReturnValue(ref);
   ref.root = ROOT_REF;
-  ref.child.mockReturnValue(ref);
+  (ref.child as jest.Mock).mockReturnValue(ref);
 
-  const {
-    getByText,
-    getByLabelText,
-    getByTestId,
-  } = await renderDialogWithFirestore(async (firestore) => (
-    <CloneDialog onComplete={onComplete} realtimeRef={ref} />
-  ));
+  const { getByText, getByLabelText, getByTestId } =
+    await renderDialogWithFirestore(async (firestore) => (
+      <CloneDialog onComplete={onComplete} realtimeRef={ref} />
+    ));
   await waitForElementToBeRemoved(() => getByText(/Loading/));
   return { ref, onComplete, getByLabelText, getByText, getByTestId };
 };
@@ -114,7 +111,7 @@ describe('errors', () => {
       if (this.state.hasError) {
         return <div>CAUGHT_ERROR</div>;
       } else {
-        return this.props.children;
+        return <div></div>;
       }
     }
   }
@@ -146,18 +143,20 @@ it('shows a title with the key to clone', async () => {
 it('defaults the new destination path to /parent/<key>_copy', async () => {
   const { getByLabelText } = await setup();
 
-  expect(getByLabelText('New destination path:').value).toBe(
-    '/parent/to_clone_copy'
-  );
+  expect(
+    (getByLabelText('New destination path:') as HTMLInputElement).value
+  ).toBe('/parent/to_clone_copy');
 });
 
 it('contains an input and json value for each field', async () => {
   const { getByLabelText } = await setup();
 
-  expect(getByLabelText(/bool:/).value).toBe('true');
-  expect(getByLabelText(/number:/).value).toBe('1234');
-  expect(getByLabelText(/string:/).value).toBe('"a string"');
-  expect(getByLabelText(/json:/).value).toBe('{"a":"b"}');
+  expect((getByLabelText(/bool:/) as HTMLInputElement).value).toBe('true');
+  expect((getByLabelText(/number:/) as HTMLInputElement).value).toBe('1234');
+  expect((getByLabelText(/string:/) as HTMLInputElement).value).toBe(
+    '"a string"'
+  );
+  expect((getByLabelText(/json:/) as HTMLInputElement).value).toBe('{"a":"b"}');
 });
 
 it('clones dialog data when the dialog is accepted', async () => {

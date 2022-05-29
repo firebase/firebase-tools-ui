@@ -110,7 +110,7 @@ export const CONFIG_WITH_EXTENSION = {
   },
 };
 
-export const BACKEND_LIST = [
+export const BACKEND_LIST: ExtensionBackend[] = [
   // published extension
   {
     env: {
@@ -121,6 +121,7 @@ export const BACKEND_LIST = [
     extensionInstanceId: 'pirojok-the-published-extension',
     extension: BACKEND_EXTENSION,
     extensionVersion: EXTENSION_VERSION,
+    functionTriggers: [],
   },
   // local extension
   {
@@ -131,6 +132,7 @@ export const BACKEND_LIST = [
         'projects/test-project/locations/us-west1/channels/firebase',
     },
     extensionSpec: EXTENSION_SPEC,
+    functionTriggers: [],
   },
   // Not and extension back-end
   {

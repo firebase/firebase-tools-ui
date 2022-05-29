@@ -30,8 +30,10 @@ const REF = fakeReference({
 });
 
 beforeEach(() => {
-  REF.toString.mockReturnValue('http://localhost:9000/a/b/c/my_key');
-  ROOT_REF.toString.mockReturnValue('http://localhost:9000/');
+  (REF.toString as jest.Mock).mockReturnValue(
+    'http://localhost:9000/a/b/c/my_key'
+  );
+  (ROOT_REF.toString as jest.Mock).mockReturnValue('http://localhost:9000/');
 });
 
 it('renders a link with the key name', () => {

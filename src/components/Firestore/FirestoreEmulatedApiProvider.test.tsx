@@ -80,7 +80,11 @@ it('should get sub-collections', async () => {
 });
 
 it('should get sub-collections with special characters inside URI', async () => {
-  const TestResults = ({ docRef }: { docRef: firestore.DocumentReference }) => {
+  const TestResults = ({
+    docRef,
+  }: {
+    docRef: firebase.firestore.DocumentReference;
+  }) => {
     const collections = useSubCollections(docRef);
     return (
       <div data-testid="collections">{collections.map((c) => c.id).join()}</div>

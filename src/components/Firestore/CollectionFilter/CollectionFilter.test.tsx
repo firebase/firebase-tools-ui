@@ -56,10 +56,12 @@ it('loads any found collection-filter', () => {
     path: '/foo/bar',
   });
 
-  expect(getByLabelText(/Enter field/).value).toBe('__field__');
-  expect(getByLabelText(/Only show/).value).toBe('>');
-  expect(getByLabelText(/Value/).value).toBe('__value__');
-  expect(getByLabelText(/Ascending/).checked).toBe(true);
+  expect((getByLabelText(/Enter field/) as HTMLInputElement).value).toBe(
+    '__field__'
+  );
+  expect((getByLabelText(/Only show/) as HTMLInputElement).value).toBe('>');
+  expect((getByLabelText(/Value/) as HTMLInputElement).value).toBe('__value__');
+  expect((getByLabelText(/Ascending/) as HTMLInputElement).checked).toBe(true);
 
   expect(getByLabelText(/Code preview/).textContent).toMatch(
     /collection\("bar"\)/
@@ -82,7 +84,7 @@ it('unsets sorting when switching to an operator that does not support it', asyn
     },
   });
 
-  expect(getByLabelText(/Ascending/).checked).toBe(true);
+  expect((getByLabelText(/Ascending/) as HTMLInputElement).checked).toBe(true);
 
   // Wait for selects to be stable
   await act(async () => delay(500));
@@ -91,8 +93,10 @@ it('unsets sorting when switching to an operator that does not support it', asyn
     target: { value: '==' },
   });
 
-  expect(getByLabelText(/Ascending/).disabled).toBe(true);
-  expect(getByLabelText(/Code preview/).textContent).not.toMatch(/orderBy/);
+  expect((getByLabelText(/Ascending/) as HTMLInputElement).disabled).toBe(true);
+  expect(
+    (getByLabelText(/Code preview/) as HTMLInputElement).textContent
+  ).not.toMatch(/orderBy/);
 });
 
 it('supports multi-value operators', async () => {
