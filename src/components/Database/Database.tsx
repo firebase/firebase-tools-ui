@@ -134,7 +134,9 @@ const DatabaseDropZone: React.FC<
     useDropzone({
       onDrop: (files) => onDrop(files[0]),
       noClick: true,
-      accept: 'application/json',
+      accept: {
+        'application/json': ['.json'],
+      },
     });
 
   return (
