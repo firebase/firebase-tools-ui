@@ -15,6 +15,8 @@
  */
 
 import { Typography } from '@rmwc/typography';
+import { groupBy } from 'lodash';
+import keyBy from 'lodash.keyby';
 
 import { Accordion } from '../../../../common/Accordion';
 import { Markdown } from '../../../../common/Markdown';
@@ -23,33 +25,23 @@ import { ParamType } from '../../../models';
 import styles from './EventsConfig.module.scss';
 import { ParamValue } from './ParamValue';
 
+
+
 export function EventsConfig() {
   const extension = useExtension()!;
-  const eventsByPrefix: Map<string, string[]> = new Map(); // maps prefix ==> list of types
-  const eventDescriptionMapping: Map<string, string> = new Map(); // maps type ==> description
-  !!extension.events &&
-    extension.events?.forEach((event) => {
-      eventDescriptionMapping.set(event.type, event.description);
-    });
-  if (!!extension.allowedEventTypes && extension.allowedEventTypes.length > 0) {
-    extension.allowedEventTypes.forEach((eventType) => {
-      const prefix = eventType.split('.').slice(0, -1).join('.');
-      if (!eventsByPrefix.get(prefix)) {
-        eventsByPrefix.set(prefix, [eventType]);
-      } else {
-        eventsByPrefix.get(prefix)?.push(eventType);
-      }
-    });
-  }
-  const allowedEventTypeElements = Array.from(eventsByPrefix.keys())
+  const eventsByType = !!extension.events ? keyBy(extension.events, "type") : {};
+  const eventsByPrefix = !!extension.allowedEventTypes ? groupBy(extension.allowedEventTypes, function(a) {
+      return a.split('.').slice(0, -1).join('.');
+  }) : {};
+  const allowedEventTypeElements = Object.keys(eventsByPrefix)
     .sort()
     .map((prefix) => {
-      const events = eventsByPrefix.get(prefix)?.map((event) => {
+      const events = eventsByPrefix[prefix]?.map((event) => {
         return (
           <div key={`${event}`} className={styles.eventValue}>
             <ParamValue value={event} type={ParamType.STRING} />
             <Typography use="body1" theme="secondary">
-              {eventDescriptionMapping.get(event) ?? 'Not Specified'}
+              {eventsByType[event]?.description ?? 'Not Specified'}
             </Typography>
           </div>
         );
@@ -63,7 +55,7 @@ export function EventsConfig() {
     });
   const allowedEventTypesDiv = (!!extension.allowedEventTypes &&
     extension.allowedEventTypes.length > 0) ?? (
-    <div key="allowedEventTypes" className={styles.wrapper}>
+    <div key="allowedEventTypes" className={styles.wrapper} data-testid="allowed-event-types-config">
       <Accordion
         expansionLabel="Description"
         title={
@@ -89,7 +81,7 @@ export function EventsConfig() {
     </div>
   );
   const channelLocationDiv = !!extension.eventarcChannel ?? (
-    <div key="channelLocation" className={styles.paramWrapper}>
+    <div key="channelLocation" className={styles.paramWrapper} data-testid="channel-location-config">
       <Accordion
         expansionLabel="Description"
         title={

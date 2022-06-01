@@ -34,15 +34,39 @@ describe('EventsCodeSnippet', () => {
       allowedEventTypes: ['google.firebase.v1.custom-event-occurred'],
     } as Extension;
 
-    const { getByText } = render(
+    const { queryByTestId, getByText } = render(
       <TestExtensionsProvider extensions={[extension]} instanceId={id}>
         <EventsCodeSnippet />
       </TestExtensionsProvider>
     );
     expect(
       getByText(
-        /You can create custom handlers that respond to events on this channel./
+        /projects\/test-project\/locations\/us-central1\/channels\/firebase/
       )
     ).not.toBeNull();
+    expect(
+        getByText(
+          /google.firebase.v1.custom-event-occurred/
+        )
+      ).not.toBeNull();
+    expect(queryByTestId('events-code-snippet')).not.toBeNull();
+  });
+
+  it('Renders an empty node when there are no events emitted', () => {
+    const displayName = 'Pirojok-the-extension';
+    const id = 'pirojok';
+    const POST_INSTALL_CONTENT = 'CONTENT';
+    const extension: Extension = {
+      id,
+      displayName,
+      postinstallContent: POST_INSTALL_CONTENT,
+    } as Extension;
+
+    const { queryByTestId } = render(
+      <TestExtensionsProvider extensions={[extension]} instanceId={id}>
+        <EventsCodeSnippet />
+      </TestExtensionsProvider>
+    );
+    expect(queryByTestId('events-code-snippet')).toBeNull();
   });
 });

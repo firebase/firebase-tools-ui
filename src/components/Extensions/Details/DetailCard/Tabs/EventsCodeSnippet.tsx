@@ -19,13 +19,12 @@ import { useExtension } from '../../../api/useExtension';
 
 export function EventsCodeSnippet() {
   const extension = useExtension()!;
-  let eventsMd = '';
   if (
     extension.eventarcChannel &&
     extension.allowedEventTypes &&
     extension.allowedEventTypes.length > 0
   ) {
-    eventsMd = `
+    const eventsMd = `
    ### Create Custom Event Handlers
    
    This extension publishes events to the \`${
@@ -40,6 +39,7 @@ export function EventsCodeSnippet() {
            // Handle extension event here.
        });
      `;
+     return <Markdown data-testid="events-code-snippet">{eventsMd}</Markdown>;
   }
-  return <Markdown>{eventsMd}</Markdown>;
+  return <div />
 }
