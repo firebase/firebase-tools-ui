@@ -18,7 +18,7 @@ import React, { Suspense } from 'react';
 import { Link, Redirect, Route, Switch, useParams } from 'react-router-dom';
 
 import { useIsEmulatorDisabled } from '../common/EmulatorConfigProvider';
-import { EmulatorDisabled } from '../common/EmulatorDisabled';
+import { ExtensionsEmulatorDisabled } from '../common/EmulatorDisabled';
 import { Spinner } from '../common/Spinner';
 import { useExtensionsData } from './api/internal/useExtensionsData';
 import { InstanceIdProvider } from './api/useExtension';
@@ -86,7 +86,7 @@ const ExtensionsRouteSuspended: React.FC<
 > = () => {
   const isDisabled = useIsEmulatorDisabled('extensions');
   return isDisabled ? (
-    <EmulatorDisabled productName="Extensions" />
+    <ExtensionsEmulatorDisabled/>
   ) : (
     <Spinner span={12} message="Extensions Emulator Loading..." />
   );
