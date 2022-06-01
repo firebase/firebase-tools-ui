@@ -17,7 +17,7 @@
 import produce from 'immer';
 import { Action, createReducer } from 'typesafe-actions';
 
-import { AuthState, AuthUser, UsageMode } from '../../components/Auth/types';
+import { AuthState, AuthUser } from '../../components/Auth/types';
 import { mapResult } from '../utils';
 import * as authActions from './actions';
 
@@ -25,7 +25,6 @@ const INIT_STATE = {
   users: { loading: true },
   filter: '',
   allowDuplicateEmails: false,
-  usageMode: UsageMode.DEFAULT,
   tenants: { loading: true },
 };
 
@@ -137,12 +136,6 @@ export const authReducer = createReducer<AuthState, Action>(INIT_STATE)
         loading: false,
         result: { error: payload },
       };
-    })
-  )
-  .handleAction(
-    authActions.setUsageModeSuccess,
-    produce((draft, { payload }) => {
-      draft.usageMode = payload;
     })
   )
   .handleAction(

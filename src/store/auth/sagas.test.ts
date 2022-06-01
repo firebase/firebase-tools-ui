@@ -17,11 +17,7 @@
 import { all, call, getContext, put, setContext } from 'redux-saga/effects';
 
 import { createFakeTenant } from '../../components/Auth/test_utils';
-import {
-  AddAuthUserPayload,
-  AuthUser,
-  UsageMode,
-} from '../../components/Auth/types';
+import { AddAuthUserPayload, AuthUser } from '../../components/Auth/types';
 import {
   authFetchTenantsRequest,
   authFetchTenantsSuccess,
@@ -472,7 +468,6 @@ describe('Auth sagas', () => {
       expect(
         gen.next({
           signIn: { allowDuplicateEmails: false },
-          usageMode: UsageMode.DEFAULT,
         })
       ).toEqual({
         done: false,
