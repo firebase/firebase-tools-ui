@@ -33,6 +33,7 @@ export function EventsConfig() {
   const eventsByPrefix = !!extension.allowedEventTypes ? groupBy(extension.allowedEventTypes, function(a) {
       return a.split('.').slice(0, -1).join('.');
   }) : {};
+  
   const allowedEventTypeElements = Object.keys(eventsByPrefix)
     .sort()
     .map((prefix) => {
@@ -53,8 +54,8 @@ export function EventsConfig() {
         </div>
       );
     });
-  const allowedEventTypesDiv = (!!extension.allowedEventTypes &&
-    extension.allowedEventTypes.length > 0) ?? (
+  
+  const allowedEventTypesDiv = !!extension.allowedEventTypes?.length ? (
     <div key="allowedEventTypes" className={styles.wrapper} data-testid="allowed-event-types-config">
       <Accordion
         expansionLabel="Description"
@@ -79,9 +80,10 @@ export function EventsConfig() {
       </Accordion>
       {allowedEventTypeElements}
     </div>
-  );
-  const channelLocationDiv = !!extension.eventarcChannel ?? (
-    <div key="channelLocation" className={styles.paramWrapper} data-testid="channel-location-config">
+  ) : null;
+
+  const channelLocationDiv = !!extension.eventarcChannel ? (
+    <div key="channelLocation" className={styles.wrapper} data-testid="channel-location-config">
       <Accordion
         expansionLabel="Description"
         title={
@@ -109,7 +111,8 @@ export function EventsConfig() {
         type={ParamType.STRING}
       />
     </div>
-  );
+  ) : null;
+
   return (
     <div>
       <div className={styles.wrapper}>
