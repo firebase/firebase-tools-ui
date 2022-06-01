@@ -76,12 +76,13 @@ export const ExtensionsEmulatorDisabled: React.FC<
             The Extensions Emulator is currently not running.
           </Typography>
           <Typography use="body1" tag="p">
-            If you are not using Extensions in your testing, everything is
-            fine. If you want to use Extensions in your testing, add them to
-            your extension manifest. To do so, either 
-            to add a single extension instance by running:
+            If you are not using Extensions in your testing, everything is fine.
+            If you want to use Extensions in your testing, add them to your
+            extension manifest. To do so, either to add a single extension
+            instance by running:
             <code>firebase ext:install &gt;publisherId/extensionId&lt;</code>
-            or export the extensions instances from a production project by running
+            or export the extensions instances from a production project by
+            running
             <code>firebase ext:export --project=your-project</code>.
           </Typography>
           <Typography use="body1" tag="p">

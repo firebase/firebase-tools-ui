@@ -86,7 +86,7 @@ const ExtensionsRouteSuspended: React.FC<
 > = () => {
   const isDisabled = useIsEmulatorDisabled('extensions');
   return isDisabled ? (
-    <ExtensionsEmulatorDisabled/>
+    <ExtensionsEmulatorDisabled />
   ) : (
     <Spinner span={12} message="Extensions Emulator Loading..." />
   );
