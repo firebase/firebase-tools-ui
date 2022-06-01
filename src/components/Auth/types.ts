@@ -92,15 +92,6 @@ export interface AuthUser extends AddAuthUserPayload {
   providerUserInfo: AuthProviderInfo[];
 }
 
-export enum UsageMode {
-  // We shouldn't ever get this usage mode
-  USAGE_MODE_UNSPECIFIED = 'USAGE_MODE_UNSPECIFIED',
-  // Passthrough mode is off
-  DEFAULT = 'DEFAULT',
-  // Passthrough mode is on
-  PASSTHROUGH = 'PASSTHROUGH',
-}
-
 export interface Tenant {
   allowPasswordSignup: boolean;
   disableAuth: boolean;
@@ -116,7 +107,6 @@ export interface AuthState {
   users: RemoteResult<AuthUser[]>;
   filter: string;
   allowDuplicateEmails: boolean;
-  usageMode: UsageMode;
   tenants: RemoteResult<Tenant[]>;
 }
 
@@ -124,5 +114,4 @@ export interface AuthState {
 // but without optional types
 export interface EmulatorV1ProjectsConfig {
   signIn: { allowDuplicateEmails: boolean };
-  usageMode: UsageMode;
 }

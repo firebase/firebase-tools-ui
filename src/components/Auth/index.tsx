@@ -33,7 +33,6 @@ import { EmulatorDisabled } from '../common/EmulatorDisabled';
 import { Spinner } from '../common/Spinner';
 import styles from './index.module.scss';
 import OneAccountPerEmailCard from './OneAccountPerEmailCard/OneAccountPerEmailCard';
-import PassthroughModeCard from './PassthroughModeCard/PassthroughModeCard';
 import ClearAll from './UsersCard/ClearAll';
 import TenantPicker, { useTenantFromUrl } from './UsersCard/TenantPicker';
 import UsersCard from './UsersCard/UsersCard';
@@ -91,9 +90,6 @@ export const Auth: React.FC<React.PropsWithChildren<AuthProps>> = ({
       </Elevation>
       <Elevation z="2" wrap>
         <OneAccountPerEmailCard />
-      </Elevation>
-      <Elevation z="2" wrap>
-        <PassthroughModeCard />
       </Elevation>
     </GridCell>
   );

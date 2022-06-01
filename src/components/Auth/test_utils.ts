@@ -18,7 +18,7 @@ import configureStore from 'redux-mock-store';
 
 import { AppState } from '../../store';
 import { createRemoteDataLoaded } from '../../store/utils';
-import { AuthState, AuthUser, Tenant, UsageMode } from './types';
+import { AuthState, AuthUser, Tenant } from './types';
 
 export function getMockAuthStore(state?: Partial<AppState['auth']>) {
   return configureStore<Pick<AppState, 'auth'>>()({
@@ -26,7 +26,6 @@ export function getMockAuthStore(state?: Partial<AppState['auth']>) {
       users: { loading: false, result: { data: [] } },
       filter: '',
       allowDuplicateEmails: false,
-      usageMode: UsageMode.DEFAULT,
       tenants: { loading: false, result: { data: [] } },
       ...state,
     },
@@ -64,7 +63,6 @@ export function createFakeState(state: Partial<AuthState>): AuthState {
     filter: '',
     allowDuplicateEmails: true,
     users: createRemoteDataLoaded([]),
-    usageMode: UsageMode.DEFAULT,
     tenants: createRemoteDataLoaded([]),
     ...state,
   };

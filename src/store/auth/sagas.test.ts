@@ -22,7 +22,6 @@ import {
   AddAuthUserPayload,
   AuthUser,
   EmulatorV1ProjectsConfig,
-  UsageMode,
 } from '../../components/Auth/types';
 import {
   authFetchTenantsRequest,
@@ -474,7 +473,6 @@ describe('Auth sagas', () => {
       expect(
         gen.next(({
           signIn: { allowDuplicateEmails: false },
-          usageMode: UsageMode.DEFAULT,
         } as unknown) as AuthApi & EmulatorV1ProjectsConfig)
       ).toEqual({
         done: false,
