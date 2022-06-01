@@ -69,7 +69,7 @@ export const ExtensionsEmulatorDisabled: React.FC<
     <GridCell span={8} align="middle">
       <Card className="EmulatorDisabled">
         <div className="EmulatorDisabled-graphics">
-          <img src="/assets/img/database.png" alt="" />
+          <img src="/assets/extensions/default-extension.png" alt="" />
         </div>
         <div className="EmulatorDisabled-description">
           <Typography use="headline6" tag="h3">
