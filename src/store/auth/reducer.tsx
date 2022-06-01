@@ -28,40 +28,38 @@ const INIT_STATE = {
 };
 
 export const authReducer = createReducer<AuthState, Action>(INIT_STATE)
-  .handleAction(
-    authActions.createUserSuccess,
-    produce((draft, { payload }) => {
+  .handleAction(authActions.createUserSuccess, (state, { payload }) => {
+    return produce(state, (draft) => {
       draft.users = mapResult(draft.users, (users: AuthUser[]) => [
         ...users,
         payload.user,
       ]);
-    })
-  )
-  .handleAction(
-    authActions.updateUserSuccess,
-    produce((draft: AuthState, { payload }) => {
+    });
+  })
+  .handleAction(authActions.updateUserSuccess, (state, { payload }) => {
+    return produce(state, (draft) => {
       draft.users = mapResult(draft.users, (users) =>
         users.map((user: AuthUser) => {
           return user.localId === payload.user.localId ? payload.user : user;
         })
       );
-    })
-  )
-  .handleAction(
-    authActions.nukeUsersSuccess,
-    produce((draft) => {
+    });
+  })
+  .handleAction(authActions.nukeUsersSuccess, (state) => {
+    return produce(state, (draft) => {
       draft.users = mapResult(draft.users, () => []);
-    })
-  )
+    });
+  })
   .handleAction(
     authActions.setAllowDuplicateEmailsSuccess,
-    produce((draft, { payload }) => {
-      draft.allowDuplicateEmails = payload;
-    })
+    (state, { payload }) => {
+      return produce(state, (draft) => {
+        draft.allowDuplicateEmails = payload;
+      });
+    }
   )
-  .handleAction(
-    authActions.setUserDisabledSuccess,
-    produce((draft, { payload }) => {
+  .handleAction(authActions.setUserDisabledSuccess, (state, { payload }) => {
+    return produce(state, (draft) => {
       draft.users = mapResult(draft.users, (users: AuthUser[]) => {
         return users.map((u: AuthUser) =>
           u.localId === payload.localId
@@ -69,65 +67,57 @@ export const authReducer = createReducer<AuthState, Action>(INIT_STATE)
             : u
         );
       });
-    })
-  )
-  .handleAction(
-    authActions.deleteUserSuccess,
-    produce((draft, { payload }) => {
+    });
+  })
+  .handleAction(authActions.deleteUserSuccess, (state, { payload }) => {
+    return produce(state, (draft) => {
       draft.users = mapResult(draft.users, (users: AuthUser[]) =>
         users.filter((u: AuthUser) => u.localId !== payload.localId)
       );
-    })
-  )
-  .handleAction(
-    authActions.updateFilter,
-    produce((draft, { payload: { filter } }) => {
-      draft.filter = filter;
-    })
-  )
-  .handleAction(
-    authActions.openAuthUserDialog,
-    produce((draft, { payload: authUserDialogData }) => {
-      draft.authUserDialogData = authUserDialogData;
-    })
-  )
-  .handleAction(
-    authActions.setAuthUserDialogLoading,
-    produce((draft, { payload: loading }) => {
+    });
+  })
+  .handleAction(authActions.updateFilter, (state, { payload }) => {
+    return produce(state, (draft) => {
+      draft.filter = payload.filter;
+    });
+  })
+  .handleAction(authActions.openAuthUserDialog, (state, { payload }) => {
+    return produce(state, (draft) => {
+      draft.authUserDialogData = payload;
+    });
+  })
+  .handleAction(authActions.setAuthUserDialogLoading, (state, { payload }) => {
+    return produce(state, (draft) => {
       if (draft.authUserDialogData) {
-        draft.authUserDialogData.loading = loading;
+        draft.authUserDialogData.loading = payload;
       }
-    })
-  )
-  .handleAction(
-    authActions.setAuthUserDialogError,
-    produce((draft, { payload: error }) => {
+    });
+  })
+  .handleAction(authActions.setAuthUserDialogError, (state, { payload }) => {
+    return produce(state, (draft) => {
       if (draft.authUserDialogData && draft.authUserDialogData.result) {
-        draft.authUserDialogData.result.error = error;
+        (draft.authUserDialogData.result as any).error = payload;
       }
-    })
-  )
-  .handleAction(
-    authActions.clearAuthUserDialogData,
-    produce((draft) => {
+    });
+  })
+  .handleAction(authActions.clearAuthUserDialogData, (state) => {
+    return produce(state, (draft) => {
       draft.authUserDialogData = undefined;
-    })
-  )
-  .handleAction(
-    authActions.authFetchUsersSuccess,
-    produce((draft: AuthState, { payload }) => {
+    });
+  })
+  .handleAction(authActions.authFetchUsersSuccess, (state, { payload }) => {
+    return produce(state, (draft) => {
       draft.users = {
         loading: false,
         result: { data: payload },
       };
-    })
-  )
-  .handleAction(
-    authActions.authFetchUsersError,
-    produce((draft: AuthState, { payload }) => {
+    });
+  })
+  .handleAction(authActions.authFetchUsersError, (state, { payload }) => {
+    return produce(state, (draft) => {
       draft.users = {
         loading: false,
         result: { error: payload },
       };
-    })
-  );
+    });
+  });

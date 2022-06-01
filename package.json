@@ -44,7 +44,7 @@
     "express": "^4.17.1",
     "firebase": "^8.9.0",
     "font-awesome": "^4.7.0",
-    "immer": "^8.0.1",
+    "immer": "^9.0.14",
     "keycode": "^2.2.0",
     "lodash.debounce": "^4.0.8",
     "lodash.get": "^4.4.2",
@@ -52,7 +52,7 @@
     "node-fetch": "^3.0.0",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
-    "react-dropzone": "^11.0.1",
+    "react-dropzone": "^14.2.1",
     "react-focus-on": "3.6",
     "react-hook-form": "^7.31.2",
     "react-markdown": "^8.0.0",
@@ -85,7 +85,8 @@
     "lint": "prettier --check . && eslint 'src/**/*.{ts,tsx}'",
     "lint:fix": "eslint --fix 'src/**/*.{ts,tsx}' && npm run format",
     "fmt": "npm run format",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "prepare": "husky install"
   },
   "eslintConfig": {
     "extends": [

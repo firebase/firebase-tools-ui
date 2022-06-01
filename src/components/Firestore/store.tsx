@@ -37,19 +37,17 @@ const firestoreStoreContext = React.createContext<{
 }>({ store: INIT_STATE, dispatch: () => {} });
 
 const reducer = createReducer<Store, Action>(INIT_STATE)
-  .handleAction(
-    actions.addCollectionFilter,
-    produce((draft, { payload }) => {
+  .handleAction(actions.addCollectionFilter, (state, { payload }) => {
+    return produce(state, (draft) => {
       const { path, ...filter } = payload;
       draft.collectionFilters[payload.path] = filter;
-    })
-  )
-  .handleAction(
-    actions.removeCollectionFilter,
-    produce((draft, { payload }) => {
+    });
+  })
+  .handleAction(actions.removeCollectionFilter, (state, { payload }) => {
+    return produce(state, (draft) => {
       delete draft.collectionFilters[payload.path];
-    })
-  );
+    });
+  });
 
 const storeReducer: React.Reducer<Store, Action> = (state, action) => {
   return (reducer.handlers as any)[action.type](state, action);
