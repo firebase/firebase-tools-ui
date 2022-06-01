@@ -22,13 +22,14 @@ import { Button } from '@rmwc/button';
 import { HTMLProps } from '@rmwc/types';
 import { Typography } from '@rmwc/typography';
 import React, { useState } from 'react';
-import { useDropzone } from 'react-dropzone';
+import { Accept, useDropzone } from 'react-dropzone';
 
 type FileFieldProps = {
   tip?: string;
   error?: string;
   onFiles?: (files: File[]) => void;
-} & HTMLProps<HTMLInputElement>;
+  accept?: Accept;
+} & Omit<HTMLProps<HTMLInputElement>, 'accept'>;
 
 const DROP_MESSAGE = 'Drop file(s) here';
 const INVALID_FILE_MESSAGE = 'File type is not accepted';
