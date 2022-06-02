@@ -21,14 +21,14 @@ import {
   DialogContent,
   DialogTitle,
 } from '@rmwc/dialog';
-import firebase from 'firebase/compat';
+import { DatabaseReference, get, update } from 'firebase/database';
 import * as React from 'react';
 import { useState } from 'react';
 
 import { Field } from '../../common/Field';
 
 export interface Props {
-  realtimeRef: firebase.database.Reference;
+  realtimeRef: DatabaseReference;
   isOpen: boolean;
   onComplete: (didRename: boolean) => void;
 }
@@ -53,9 +53,9 @@ export const RenameDialog = React.memo<Props>(function RenameDialog$({
 
   const onSubmit = async (e: React.FormEvent<HTMLElement>) => {
     e.preventDefault();
-    const snap = await realtimeRef.once('value');
+    const snap = await get(realtimeRef);
     try {
-      await realtimeRef.parent!.update({
+      await update(realtimeRef.parent!, {
         [form.newKey]: snap.val(),
         [originalKey]: null,
       });

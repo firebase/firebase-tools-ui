@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import firebase from 'firebase/compat';
+import { DatabaseReference, DataSnapshot, endAt, equalTo, get, limitToFirst, off, onValue, orderByChild, query, Query, startAt } from 'firebase/database';
 import { Observable, ReplaySubject, defer, from, of } from 'rxjs';
 import {
   catchError,
@@ -48,7 +48,7 @@ const ADMIN_AUTH_HEADERS = { Authorization: 'Bearer owner' };
  * update when the query emits/changes.
  */
 export function createViewModel(
-  ref: firebase.database.Reference,
+  ref: DatabaseReference,
   canDoRealtime$: Observable<boolean>
 ) {
   const query = new ReplaySubject<QueryParams>(1);
@@ -72,7 +72,7 @@ export function createViewModel(
  * node.
  */
 export function canDoRealtime(
-  realtimeRef: firebase.database.Reference
+  realtimeRef: DatabaseReference
 ): Observable<boolean> {
   const silent = restUrl(realtimeRef, {
     print: 'silent',
@@ -86,10 +86,10 @@ export function canDoRealtime(
 }
 
 function realtimeToViewModel(
-  ref: firebase.database.Reference,
+  ref: DatabaseReference,
   queryParams: QueryParams
 ) {
-  let query: firebase.database.Query;
+  let query: Query;
   return once(ref).pipe(
     switchMap((snap) => {
       // The "default" query contains limitToFirst(50), so we can not blindly
@@ -114,7 +114,7 @@ function realtimeToViewModel(
 }
 
 function nonRealtimeToViewModel(
-  ref: firebase.database.Reference,
+  ref: DatabaseReference,
   queryParams: QueryParams
 ): Observable<ViewModel> {
   return fetchNonRealtime(ref, queryParams).pipe(
@@ -128,42 +128,42 @@ function nonRealtimeToViewModel(
   );
 }
 
-function once(query: firebase.database.Query) {
-  return from(query.once('value'));
+function once(query: Query) {
+  return from(get(query));
 }
 
-function toObservable(query: firebase.database.Query) {
-  return new Observable<firebase.database.DataSnapshot>((o) => {
-    const handler = query.on('value', (snapshot) => o.next(snapshot));
-    return () => query.off('value', handler);
+function toObservable(query: Query) {
+  return new Observable<DataSnapshot>((o) => {
+    onValue(query, (snapshot) => o.next(snapshot));
+    return () => off(query);
   });
 }
 
 export function applyQuery(
-  ref: firebase.database.Reference,
+  ref: DatabaseReference,
   params: QueryParams
-): firebase.database.Query {
+): Query {
   const { key, operator, value, limit } = params;
   // Check the existence value instead of it being falsy. This prevents bugs
   // where the "value" is actually false.
   // ex: { key: "completed", operator: "==", value: "false" }
   if (key != null && operator != null && value != null) {
-    let query = ref.orderByChild(key).limitToFirst(limit || DEFAULT_PAGE_SIZE);
+    let queryOp = query(ref, orderByChild(key), limitToFirst(limit || DEFAULT_PAGE_SIZE));
     switch (operator) {
       case '==':
-        return query.equalTo(value);
+        return query(queryOp, equalTo(value));
       case '<=':
-        return query.endAt(value);
+        return query(queryOp, endAt(value));
       case '>=':
-        return query.startAt(value);
+        return query(queryOp, startAt(value));
     }
   }
-  return ref.limitToFirst(limit || DEFAULT_PAGE_SIZE);
+  return query(ref, limitToFirst(limit || DEFAULT_PAGE_SIZE));
 }
 
 /** Use REST to fetch the children for a node */
 function fetchNonRealtime(
-  realtimeRef: firebase.database.Reference,
+  realtimeRef: DatabaseReference,
   query: QueryParams
 ): Observable<string[]> {
   const params = getRestQueryParams(query);
@@ -208,7 +208,7 @@ function getRestQueryParams(query: QueryParams): RestQueryParams {
 }
 
 function restUrl(
-  ref: firebase.database.Reference,
+  ref: DatabaseReference,
   params: Record<string, string | undefined>
 ): string {
   const rootUrl = getDbRootUrl(ref);

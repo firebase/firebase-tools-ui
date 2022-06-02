@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import firebase from 'firebase/compat';
+import { Database, DatabaseReference, Query } from "firebase/database";
 
 /**
  * Max nodes shown underneath each
@@ -28,7 +28,7 @@ export interface ViewModel {
   isRealtime?: boolean;
   value?: string;
   children: string[];
-  query?: firebase.database.Query;
+  query?: Query;
 }
 
 export interface QueryParams {
@@ -57,12 +57,12 @@ export function jsonIshValue(value: string) {
 }
 
 /** Extra internal props on db Reference. */
-interface RefWithInternals extends firebase.database.Reference {
-  database: firebase.database.Database;
+interface RefWithInternals extends DatabaseReference {
+  database: Database;
 }
 
 /** Use some internals to determine the full url with `?ns=x` param. */
-export function getDbRootUrl(ref: firebase.database.Reference) {
+export function getDbRootUrl(ref: DatabaseReference) {
   const options = (ref as RefWithInternals).database.app.options as Record<
     string,
     string

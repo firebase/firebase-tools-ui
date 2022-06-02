@@ -21,6 +21,7 @@ import {
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import firebase from 'firebase/compat';
+import { DocumentReference, onSnapshot } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { Route } from 'react-router-dom';
 
@@ -194,8 +195,8 @@ it('shows the selected document-collection when there are collection and documen
 
 const TestDeleteComponent: React.FC<
   React.PropsWithChildren<{
-    docRef: firebase.firestore.DocumentReference;
-    nestedDocRef: firebase.firestore.DocumentReference;
+    docRef: DocumentReference;
+    nestedDocRef: DocumentReference;
   }>
 > = ({ docRef, nestedDocRef }) => {
   const [nestedDocExists, setNestedDocExists] = useState(false);
@@ -204,8 +205,10 @@ const TestDeleteComponent: React.FC<
     // Use onSnapshot to determine if nested document still exists.
     // We cannot rely on the builtin nested collection list since that is not
     // updated in real time, thus the custom logic and dummy elements below.
-    const unsubscribe = nestedDocRef.onSnapshot((snap) => {
-      setNestedDocExists(snap.exists);
+    const unsubscribe = onSnapshot(nestedDocRef, {
+      next: (snap) => {
+        setNestedDocExists(snap.exists);
+      },
     });
     return unsubscribe;
   }, [docRef, nestedDocRef]);

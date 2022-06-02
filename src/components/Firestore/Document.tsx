@@ -20,7 +20,7 @@ import { Icon } from '@rmwc/icon';
 import { IconButton } from '@rmwc/icon-button';
 import { ListDivider } from '@rmwc/list';
 import { MenuItem, SimpleMenu } from '@rmwc/menu';
-import firebase from 'firebase/compat';
+import { CollectionReference } from 'firebase/firestore';
 import React, { Suspense, useState } from 'react';
 import { Route, useRouteMatch } from 'react-router-dom';
 import { useFirestore } from 'reactfire';
@@ -39,7 +39,7 @@ import PanelHeader from './PanelHeader';
 const Doc: React.FC<
   React.PropsWithChildren<{
     id: string;
-    collectionById: (id: string) => firebase.firestore.CollectionReference;
+    collectionById: (id: string) => CollectionReference;
     children: React.ReactNode;
   }>
 > = ({ collectionById, children }) => {

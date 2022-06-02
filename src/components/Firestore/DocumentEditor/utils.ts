@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import firebase from 'firebase/compat';
+import { doc, DocumentReference, Firestore, GeoPoint, Timestamp } from 'firebase/firestore';
 
 import {
   FieldType,
@@ -107,7 +107,7 @@ function normalizeArray(data: FirestoreArray): Store {
 function normalizePrimitive(data: FirestorePrimitive): Store {
   const uuid = getUniqueId();
 
-  if (data instanceof firebase.firestore.DocumentReference) {
+  if (data instanceof DocumentReference) {
     return {
       uuid,
       fields: { [uuid]: { value: new DocumentPath(data.path) } },
@@ -128,7 +128,7 @@ export function normalize(data: FirestoreAny): Store {
 
 export function denormalize(
   store: Store,
-  firestore?: firebase.firestore.Firestore
+  firestore?: Firestore
 ): FirestoreAny {
   assertStoreHasRoot(store);
   const field = store.fields[store.uuid];
@@ -157,7 +157,7 @@ export function denormalize(
         return '';
       }
       try {
-        return firestore.doc(field.value.path);
+        return doc(firestore, field.value.path);
       } catch {
         // TODO: The store does not always have a valid DocRef, reconsider.
         return '';
@@ -175,7 +175,7 @@ export function defaultValueForPrimitiveType(type: FieldType): PrimitiveValue {
     case FieldType.BOOLEAN:
       return true;
     case FieldType.GEOPOINT:
-      return new firebase.firestore.GeoPoint(0, 0);
+      return new GeoPoint(0, 0);
     case FieldType.NULL:
       return null;
     case FieldType.NUMBER:
@@ -185,7 +185,7 @@ export function defaultValueForPrimitiveType(type: FieldType): PrimitiveValue {
     case FieldType.STRING:
       return '';
     case FieldType.TIMESTAMP:
-      return firebase.firestore.Timestamp.fromDate(new Date());
+      return Timestamp.fromDate(new Date());
   }
   return '';
 }

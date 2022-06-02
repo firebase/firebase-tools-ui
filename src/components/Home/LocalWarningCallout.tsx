@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useLocalStorage, writeStorage } from '@rehooks/local-storage';
+// import { useLocalStorage, writeStorage } from '@rehooks/local-storage';
 import { Button } from '@rmwc/button';
 import { GridCell } from '@rmwc/grid';
 import React from 'react';
@@ -29,7 +29,8 @@ export const LocalWarningCallout: React.FC<
     projectId: string;
   }>
 > = ({ projectId }) => {
-  const [isDismissed] = useLocalStorage<boolean>(DISMISS_KEY);
+  // const [isDismissed] = useLocalStorage<boolean>(DISMISS_KEY);
+  const isDismissed = true;
 
   if (isDismissed) {
     return null;
@@ -49,7 +50,9 @@ export const LocalWarningCallout: React.FC<
             />
             <Button
               label="Dismiss"
-              onClick={() => writeStorage(DISMISS_KEY, true)}
+              onClick={() => {
+                // writeStorage(DISMISS_KEY, true);
+              }}
             />
           </>
         }

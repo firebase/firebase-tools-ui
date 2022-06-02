@@ -15,16 +15,14 @@
  */
 
 import { DialogButton } from '@rmwc/dialog';
-import firebase from 'firebase/compat';
+import { DocumentReference } from 'firebase/firestore';
 import React from 'react';
 
 import { Callout } from '../../common/Callout';
 import { confirm } from '../../common/DialogQueue';
 import { Field } from '../../common/Field';
 
-export const promptDeleteDocumentFields = (
-  reference: firebase.firestore.DocumentReference
-) =>
+export const promptDeleteDocumentFields = (reference: DocumentReference) =>
   confirm({
     title: 'Delete data',
     body: (

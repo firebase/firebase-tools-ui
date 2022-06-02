@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 
-import firebase from 'firebase/compat';
+import {
+  CollectionReference,
+  DocumentReference,
+  Firestore,
+  collection,
+} from 'firebase/firestore';
 import React, { useCallback, useEffect } from 'react';
 import { FirebaseAppProvider, useFirestore } from 'reactfire';
 import { mutate } from 'swr';
@@ -25,7 +30,7 @@ import { useFetcher, useRequest } from '../common/useRequest';
 import { MissingDocument } from './models';
 
 interface WindowWithFirestore extends Window {
-  firestore?: firebase.firestore.Firestore;
+  firestore?: Firestore;
 }
 
 const FIRESTORE_OPTIONS = {};
@@ -110,12 +115,10 @@ export function useRootCollections() {
   );
 
   const collectionIds = data?.collectionIds || [];
-  return collectionIds.map((id) => firestore.collection(id));
+  return collectionIds.map((id) => collection(firestore, id));
 }
 
-export function useSubCollections(
-  docRef: firebase.firestore.DocumentReference
-) {
+export function useSubCollections(docRef: DocumentReference) {
   const { baseUrl } = useFirestoreRestApi();
   const encodedPath = encodePath(docRef.path);
   const url = `${baseUrl}/documents/${encodedPath}:listCollectionIds`;
@@ -131,14 +134,14 @@ export function useSubCollections(
   );
 
   const collectionIds = data?.collectionIds || [];
-  return collectionIds.map((id) => docRef.collection(id));
+  return collectionIds.map((id) => collection(docRef, id));
 }
 
 const DOCUMENT_PATH_RE =
   /projects\/(?<project>.*)\/databases\/(?<database>.*)\/documents\/(?<path>.*)/;
 
 export function useMissingDocuments(
-  collection: firebase.firestore.CollectionReference
+  collection: CollectionReference
 ): MissingDocument[] {
   const { baseUrl } = useFirestoreRestApi();
   const encodedPath = encodePath(collection.path);
@@ -192,11 +195,7 @@ export function useRecursiveDelete() {
     method: 'DELETE',
   });
 
-  return async (
-    ref:
-      | firebase.firestore.CollectionReference
-      | firebase.firestore.DocumentReference
-  ) => {
+  return async (ref: CollectionReference | DocumentReference) => {
     mutate('*');
     const encodedPath = encodePath(ref.path);
     const url = `${baseEmulatorUrl}/documents/${encodedPath}`;

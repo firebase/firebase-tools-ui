@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import firebase from 'firebase/compat';
+import { Bytes, DocumentReference, GeoPoint, Timestamp } from 'firebase/firestore';
 import produce from 'immer';
 import get from 'lodash.get';
 
@@ -44,7 +44,7 @@ export function getFieldType(value: FirestoreAny): FieldType {
     return FieldType.NULL;
   }
 
-  if (value instanceof firebase.firestore.Timestamp) {
+  if (value instanceof Timestamp) {
     return FieldType.TIMESTAMP;
   }
 
@@ -52,15 +52,15 @@ export function getFieldType(value: FirestoreAny): FieldType {
     return FieldType.ARRAY;
   }
 
-  if (value instanceof firebase.firestore.DocumentReference) {
+  if (value instanceof DocumentReference) {
     return FieldType.REFERENCE;
   }
 
-  if (value instanceof firebase.firestore.GeoPoint) {
+  if (value instanceof GeoPoint) {
     return FieldType.GEOPOINT;
   }
 
-  if (value instanceof firebase.firestore.Blob) {
+  if (value instanceof Bytes) {
     return FieldType.BLOB;
   }
 
@@ -77,14 +77,14 @@ export function isBoolean(value: FirestoreAny): value is boolean {
 
 export function isReference(
   value: FirestoreAny
-): value is firebase.firestore.DocumentReference {
-  return value instanceof firebase.firestore.DocumentReference;
+): value is DocumentReference {
+  return value instanceof DocumentReference;
 }
 
 export function isTimestamp(
   value: FirestoreAny
-): value is firebase.firestore.Timestamp {
-  return value instanceof firebase.firestore.Timestamp;
+): value is Timestamp {
+  return value instanceof Timestamp;
 }
 
 export function isString(value: FirestoreAny): value is string {
@@ -97,8 +97,8 @@ export function isNumber(value: FirestoreAny): value is number {
 
 export function isGeoPoint(
   value: FirestoreAny
-): value is firebase.firestore.GeoPoint {
-  return value instanceof firebase.firestore.GeoPoint;
+): value is GeoPoint {
+  return value instanceof GeoPoint;
 }
 
 export function isMap(value: any): value is FirestoreMap {
@@ -154,25 +154,25 @@ export function summarize(data: FirestoreAny, maxLen: number): string {
         summarize
       );
     case FieldType.BLOB:
-      const base64 = (data as firebase.firestore.Blob).toBase64();
+      const base64 = (data as Bytes).toBase64();
       if (base64.length < maxLen) return base64;
       else return base64.slice(0, maxLen) + '...';
     case FieldType.BOOLEAN:
       return (data as boolean).toString();
     case FieldType.GEOPOINT:
-      const value = data as firebase.firestore.GeoPoint;
+      const value = data as GeoPoint;
       return summarizeLatLng(value.latitude, value.longitude);
     case FieldType.NULL:
       return 'null';
     case FieldType.NUMBER:
       return (data as number).toString();
     case FieldType.REFERENCE:
-      return (data as firebase.firestore.DocumentReference).path;
+      return (data as DocumentReference).path;
     case FieldType.STRING:
       return `"${data as string}"`;
     case FieldType.TIMESTAMP:
       return summarizeDate(
-        (data as firebase.firestore.Timestamp).toDate(),
+        (data as Timestamp).toDate(),
         maxLen
       );
     case FieldType.JSON:

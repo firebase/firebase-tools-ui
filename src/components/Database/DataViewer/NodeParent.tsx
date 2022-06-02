@@ -17,7 +17,7 @@
 import './NodeParent.scss';
 
 import { Button } from '@rmwc/button';
-import firebase from 'firebase/compat';
+import { DatabaseReference, Query, child } from 'firebase/database';
 import * as React from 'react';
 import { useCallback, useState } from 'react';
 
@@ -32,7 +32,7 @@ import { NodeLink } from './NodeLink';
 import { NodeTabularDisplay } from './NodeTabularDisplay';
 
 export interface Props {
-  realtimeRef: firebase.database.Reference;
+  realtimeRef: DatabaseReference;
   children: string[];
   isRealtime?: boolean;
   queryParams?: QueryParams;
@@ -42,7 +42,7 @@ export interface Props {
    */
   isViewRoot?: boolean;
   updateQuery?: (params: QueryParams) => void;
-  query?: firebase.database.Query;
+  query?: Query;
 }
 
 export const NodeParent = React.memo<Props>(function NodeParent$({
@@ -128,7 +128,7 @@ export const NodeParent = React.memo<Props>(function NodeParent$({
             <ul className="NodeParent__children">
               {children.map((key) => (
                 <li key={key}>
-                  <NodeContainer realtimeRef={realtimeRef.child(key)} />
+                  <NodeContainer realtimeRef={child(realtimeRef, key)} />
                 </li>
               ))}
               {hasMore && (

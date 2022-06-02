@@ -24,7 +24,14 @@ import {
 } from '@rmwc/dialog';
 import { TextField } from '@rmwc/textfield';
 import { Typography } from '@rmwc/typography';
-import firebase from 'firebase/compat';
+import {
+  DatabaseReference,
+  Query,
+  child,
+  get,
+  push,
+  set,
+} from 'firebase/database';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 
@@ -32,8 +39,8 @@ import { assert } from '../../common/asserts';
 import { Field } from '../../common/Field';
 
 export interface Props {
-  realtimeRef: firebase.database.Reference;
-  query?: firebase.database.Query;
+  realtimeRef: DatabaseReference;
+  query?: Query;
   /**
    * Called when complete, if the data was cloned the key is returned, else
    * undefined.
@@ -47,7 +54,7 @@ export interface Props {
  * @example "localhost:9000/todos/one" -> "/todos/one"
  * @param ref
  */
-const getAbsoluteRefPath = (ref: firebase.database.Reference) => {
+const getAbsoluteRefPath = (ref: DatabaseReference) => {
   return new URL(ref.toString()).pathname;
 };
 
@@ -57,9 +64,9 @@ const getAbsoluteRefPath = (ref: firebase.database.Reference) => {
  * @param key
  * @param ref
  */
-const cloneKey = (key: string, ref: firebase.database.Reference) => {
+const cloneKey = (key: string, ref: DatabaseReference) => {
   return key.startsWith('-')
-    ? `${getAbsoluteRefPath(ref.parent!)}/${ref.push().key!}`
+    ? `${getAbsoluteRefPath(ref.parent!)}/${push(ref).key!}`
     : `${getAbsoluteRefPath(ref)}_copy`;
 };
 
@@ -86,9 +93,9 @@ export const CloneDialog = React.memo<Props>(function CloneDialog$({
       // only apply the query if the user has selected the checkbox
       // and the query has been passed as a prop
       if (query != null && isCloningWithFiltered) {
-        snapshot = await query.once('value');
+        snapshot = await get(query);
       } else {
-        snapshot = await realtimeRef.once('value');
+        snapshot = await get(realtimeRef);
       }
       const data: Record<string, string> = {};
       Object.entries(snapshot.val() || {}).forEach(([key, val]) => {
@@ -123,7 +130,7 @@ export const CloneDialog = React.memo<Props>(function CloneDialog$({
     Object.entries(form).forEach(([key, value]) => {
       data[key] = JSON.parse(value);
     });
-    realtimeRef.root.child(newDestinationPath).set(data);
+    set(child(realtimeRef.root, newDestinationPath), data);
 
     onComplete(newDestinationPath);
   };

@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import firebase from 'firebase/compat';
 
+import { Database, DatabaseReference } from 'firebase/database';
 import { initDatabase } from '../../firebase';
 import { DatabaseConfig } from '../../store/config';
 import { RestApi } from '../common/rest_api';
@@ -22,7 +22,7 @@ import { RestApi } from '../common/rest_api';
 export class DatabaseApi extends RestApi {
   private readonly baseUrl: string;
   private cleanup: () => Promise<void>;
-  readonly database: firebase.database.Database;
+  readonly database: Database;
 
   constructor(config: DatabaseConfig, private readonly namespace: string) {
     super();
@@ -40,7 +40,7 @@ export class DatabaseApi extends RestApi {
    * Import a file at a specific path within the current database.
    */
   async importFile(
-    ref: firebase.database.Reference,
+    ref: DatabaseReference,
     file: File,
     options: { disableTriggers?: boolean } = {}
   ) {
@@ -59,7 +59,7 @@ export class DatabaseApi extends RestApi {
 }
 
 /** Get absolute path for file upload (the path with `.upload` appended) */
-function getUploadPath(ref: firebase.database.Reference) {
+function getUploadPath(ref: DatabaseReference) {
   const absolutePath = new URL(ref.toString()).pathname;
   // trim leading and trailing slashes
   let path = absolutePath.replace(/^\//, '').replace(/\/$/, '');

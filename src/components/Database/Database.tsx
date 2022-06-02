@@ -15,7 +15,7 @@
  */
 import { IconButton } from '@rmwc/icon-button';
 import { MenuItem, SimpleMenu } from '@rmwc/menu';
-import firebase from 'firebase/compat';
+import { DatabaseReference, ref as dbRef } from 'firebase/database';
 import React, { useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useHistory } from 'react-router-dom';
@@ -35,7 +35,7 @@ export interface PropsFromState {
 
 export type Props = PropsFromState;
 
-const getPrefix = (ref: firebase.database.Reference) => {
+const getPrefix = (ref: DatabaseReference) => {
   const base = ref.root.toString();
   return base.substring(0, base.length - 1);
 };
@@ -45,9 +45,7 @@ export const Database: React.FC<React.PropsWithChildren<Props>> = ({
   namespace,
   path,
 }) => {
-  const [ref, setRef] = useState<firebase.database.Reference | undefined>(
-    undefined
-  );
+  const [ref, setRef] = useState<DatabaseReference | undefined>(undefined);
   const [api, setApi] = useState<DatabaseApi | undefined>(undefined);
 
   const history = useHistory();
@@ -62,7 +60,7 @@ export const Database: React.FC<React.PropsWithChildren<Props>> = ({
 
   useEffect(() => {
     const [db, { cleanup }] = initDatabase(config, namespace);
-    setRef(path ? db.ref(path) : db.ref());
+    setRef(path ? dbRef(db, path) : dbRef(db));
 
     const api = new DatabaseApi(config, namespace);
     setApi(api);

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import firebase from 'firebase/compat';
+import { DatabaseReference } from 'firebase/database';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { Subject } from 'rxjs';
@@ -29,7 +29,7 @@ import { NodeLeaf } from './NodeLeaf';
 import { NodeParent } from './NodeParent';
 
 export interface Props {
-  realtimeRef: firebase.database.Reference;
+  realtimeRef: DatabaseReference;
   /**
    * This node is the top most visible node in viewer (not the same as the real
    * db root). It will show breadcrumbs of all hidden parent nodes to the root.

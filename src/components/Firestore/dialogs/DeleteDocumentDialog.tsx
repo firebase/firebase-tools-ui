@@ -24,7 +24,7 @@ import {
   DialogProps,
   DialogTitle,
 } from '@rmwc/dialog';
-import firebase from 'firebase/compat';
+import { DocumentReference } from 'firebase/firestore';
 import React, { useState } from 'react';
 
 import { Callout } from '../../common/Callout';
@@ -35,7 +35,7 @@ interface DeleteDocumentOptions {
 }
 
 interface Props extends DialogProps {
-  documentRef: firebase.firestore.DocumentReference;
+  documentRef: DocumentReference;
   onConfirm: (options: DeleteDocumentOptions) => void;
 }
 

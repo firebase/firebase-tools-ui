@@ -17,7 +17,7 @@
 import './index.scss';
 
 import { IconButton } from '@rmwc/icon-button';
-import firebase from 'firebase/compat';
+import { Firestore } from 'firebase/firestore';
 import React, { useEffect } from 'react';
 import { FormProvider, useForm, useFormContext } from 'react-hook-form';
 
@@ -108,7 +108,7 @@ const DocumentEditor: React.FC<
     rtdb?: boolean;
     startingIndex?: number;
     supportNestedArrays?: boolean;
-    firestore?: firebase.firestore.Firestore;
+    firestore?: Firestore;
   }>
 > = ({
   value,
