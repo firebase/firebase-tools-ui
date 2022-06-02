@@ -15,6 +15,7 @@
  */
 
 import { RenderResult, fireEvent, waitFor } from '@testing-library/react';
+import { doc } from 'firebase/firestore';
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 
@@ -38,7 +39,7 @@ describe('step 1', () => {
   it('displays the parent document path', async () => {
     const { getByLabelText } = await renderDialogWithFirestore(
       async (firestore) => {
-        const docRef = firestore.doc('docs/my-doc');
+        const docRef = doc(firestore, 'docs/my-doc');
         return (
           <AddCollectionDialog
             open={true}
@@ -70,7 +71,7 @@ describe('step 2', () => {
   beforeEach(async () => {
     onValue = jest.fn();
     result = await renderDialogWithFirestore(async (firestore) => {
-      const docRef = firestore.doc('docs/my-doc');
+      const docRef = doc(firestore, 'docs/my-doc');
       return (
         <AddCollectionDialog
           open={true}
