@@ -76,11 +76,9 @@ const CollectionList: React.FC<React.PropsWithChildren<Props>> = ({
 
   const addCollection = async (value: AddCollectionDialogValue | null) => {
     if (value?.collectionId && value?.document.id) {
-      const ref = reference || firestore;
-      const newCollection = collection(
-        ref as DocumentReference,
-        value.collectionId
-      );
+      const newCollection = reference
+        ? collection(reference, value.collectionId)
+        : collection(firestore, value.collectionId);
       await setDoc(doc(newCollection, value.document.id), value.document.data);
 
       // Redirect to the new collection
