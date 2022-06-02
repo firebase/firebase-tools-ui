@@ -21,12 +21,15 @@
 */
 
 const express = require('express');
-const fetch = require('node-fetch').default;
+// const fetch = require('node-fetch').default;
 const path = require('path');
 const dns = require('dns');
 const { URL } = require('url');
 
 dns.setDefaultResultOrder('ipv4first');
+
+const fetch = (...args) =>
+  import('node-fetch').then(({ default: fetch }) => fetch(...args));
 
 /**
   Start an express app that serves both static content and APIs.
@@ -43,7 +46,8 @@ exports.startServer = function () {
   });
 
   const host = process.env.HOST || 'localhost';
-  const port = process.env.PORT || 3000;
+  const port = process.env.PORT || 3001;
+  console.log({ port });
   app.listen(port, host, () => {
     console.log(`Web / API server started at ${host}:${port}`);
   });

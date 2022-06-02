@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { FirebaseApp } from 'firebase/app';
+import { connectStorageEmulator, getStorage } from 'firebase/storage';
 import React, { useCallback } from 'react';
 import { FirebaseAppProvider } from 'reactfire';
 
@@ -30,8 +32,8 @@ export const StorageFirebaseAppProvider: React.FC<
     'storage',
     FIREBASE_APP_OPTIONS,
     useCallback(
-      (app: any) => {
-        app.storage().useEmulator(host, port);
+      (app: FirebaseApp) => {
+        connectStorageEmulator(getStorage(app), host, port);
       },
       [host, port]
     )

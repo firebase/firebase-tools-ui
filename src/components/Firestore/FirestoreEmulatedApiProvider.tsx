@@ -14,11 +14,14 @@
  * limitations under the License.
  */
 
+import { FirebaseApp } from 'firebase/app';
 import {
   CollectionReference,
   DocumentReference,
   Firestore,
   collection,
+  connectFirestoreEmulator,
+  getFirestore,
 } from 'firebase/firestore';
 import React, { useCallback, useEffect } from 'react';
 import { FirebaseAppProvider, useFirestore } from 'reactfire';
@@ -49,8 +52,8 @@ export const FirestoreEmulatedApiProvider: React.FC<
     'firestore',
     FIRESTORE_OPTIONS,
     useCallback(
-      (app: any) => {
-        app.firestore().useEmulator(config.host, config.port);
+      (app: FirebaseApp) => {
+        connectFirestoreEmulator(getFirestore(app), config.host, config.port);
       },
       [config]
     )

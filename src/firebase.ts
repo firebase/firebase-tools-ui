@@ -125,5 +125,5 @@ function applyAdminAuth(app: FirebaseApp): void {
     'PRIVATE' as ComponentType
   );
 
-  (app as any)._addOrOverwriteComponent(mockAuthComponent);
+  (app as any).container.addOrOverwriteComponent(mockAuthComponent);
 }

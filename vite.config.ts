@@ -3,6 +3,8 @@ import react from '@vitejs/plugin-react'
 import svgrPlugin from 'vite-plugin-svgr'
 import { viteCommonjs } from '@originjs/vite-plugin-commonjs'
 
+const { PORT = 3001 } = process.env;
+
 // https://vitejs.dev/config/
 export default defineConfig({
   // This changes the out put dir from dist to build
@@ -19,4 +21,12 @@ export default defineConfig({
     }),
     viteCommonjs(),
   ],
+  server: {
+    proxy: {
+      '/api': {
+        target: `http://localhost:${PORT}`,
+        changeOrigin: true,
+      },
+    },
+  },
 })
