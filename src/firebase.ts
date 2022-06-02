@@ -20,10 +20,8 @@
 // The browser build works because it uses XHR (also mocked by jsdom).
 // import '@firebase/storage/dist/index.browser.cjs.js';
 
-import { FirebaseAuthInternal } from '@firebase/auth-interop-types';
-import { Component, ComponentType } from '@firebase/component';
 import { deleteApp, FirebaseApp, initializeApp } from 'firebase/app';
-import { Database, getDatabase } from 'firebase/database';
+import { connectDatabaseEmulator, Database, getDatabase } from 'firebase/database';
 import { Firestore } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 
@@ -45,18 +43,8 @@ export function initDatabase(
     `Database Component: ${databaseURL} ${Math.random()}`
   );
 
-  applyAdminAuth(app);
-
   const db = getDatabase(app);
-  // only log the first time
-  if (!(window as WindowWithDb).database) {
-    console.log(`🔥 Realtime Database is available at window.database.
-
-    Try:
-    database.ref().set({hello: 'world!'});
-    database.ref().once('value').then( snap => console.log(snap.val()) );`);
-  }
-  (window as WindowWithDb).database = db;
+  connectDatabaseEmulator(db, config.host, config.port, {mockUserToken: 'owner'});
   return [db, { cleanup: () => deleteApp(app) }];
 }
 
@@ -90,7 +78,6 @@ export function useEmulatedFirebaseApp(
         { ...config, projectId },
         `${name} component::${Math.random()}`
       );
-      applyAdminAuth(app);
       initialize?.(app);
       setApp(app);
     }
@@ -105,25 +92,4 @@ export function useEmulatedFirebaseApp(
   }, [app, name, config, projectId, initialize]);
 
   return app;
-}
-
-function applyAdminAuth(app: FirebaseApp): void {
-  const accessToken = 'owner'; // Accepted as admin by emulators.
-  const mockAuthComponent = new Component(
-    'auth-internal',
-    () =>
-      ({
-        getToken: async () => ({ accessToken: accessToken }),
-        getUid: () => null,
-        addAuthTokenListener: (listener) => {
-          // Call listener once immediately with predefined
-          // accessToken.
-          listener(accessToken);
-        },
-        removeAuthTokenListener: () => {},
-      } as FirebaseAuthInternal),
-    'PRIVATE' as ComponentType
-  );
-
-  (app as any).container.addOrOverwriteComponent(mockAuthComponent);
 }

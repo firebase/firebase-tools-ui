@@ -78,7 +78,7 @@ export const FirestoreTestProviders: React.FC<
         firestore: { host, port: Number(port), hostAndPort },
       }}
     >
-      <FirestoreEmulatedApiProvider disableDevTools>
+      <FirestoreEmulatedApiProvider>
         <MemoryRouter initialEntries={[path]}>
           <Suspense fallback={<h1 data-testid="fallback">Fallback</h1>}>
             {children}

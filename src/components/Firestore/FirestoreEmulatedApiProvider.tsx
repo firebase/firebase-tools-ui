@@ -48,17 +48,18 @@ const FIRESTORE_OPTIONS = {};
  * the Emulator Hub.
  */
 export const FirestoreEmulatedApiProvider: React.FC<
-  React.PropsWithChildren<{
-    disableDevTools?: boolean;
-  }>
-> = React.memo(({ children, disableDevTools }) => {
+  React.PropsWithChildren<unknown>
+> = React.memo(({ children }) => {
   const config = useEmulatorConfig('firestore');
   const app = useEmulatedFirebaseApp(
     'firestore',
     FIRESTORE_OPTIONS,
     useCallback(
       (app: FirebaseApp) => {
-        connectFirestoreEmulator(getFirestore(app), config.host, config.port);
+        const firestore = getFirestore(app);
+        connectFirestoreEmulator(firestore, config.host, config.port, {
+          mockUserToken: 'owner',
+        });
       },
       [config]
     )
@@ -69,10 +70,7 @@ export const FirestoreEmulatedApiProvider: React.FC<
 
   return (
     <FirebaseAppProvider firebaseApp={app}>
-      <FirestoreComponent>
-        {children}
-        {disableDevTools || <FirestoreDevTools />}
-      </FirestoreComponent>
+      <FirestoreComponent>{children}</FirestoreComponent>
     </FirebaseAppProvider>
   );
 });
@@ -80,31 +78,10 @@ export const FirestoreEmulatedApiProvider: React.FC<
 const FirestoreComponent: React.FC<React.PropsWithChildren<unknown>> = ({
   children,
 }) => {
-  const app = useFirebaseApp(); // a parent component contains a `FirebaseAppProvider`
+  const app = useFirebaseApp();
   const firestore = getFirestore(app);
   return <FirestoreProvider sdk={firestore}>{children}</FirestoreProvider>;
 };
-
-const FirestoreDevTools: React.FC<React.PropsWithChildren<unknown>> =
-  React.memo(() => {
-    const firestore = useFirestore();
-
-    useEffect(() => {
-      const windowWithFirestore = window as WindowWithFirestore;
-      windowWithFirestore.firestore = firestore;
-      console.log(`🔥 Firestore is available at window.firestore.
-
-    Try:
-    firestore.doc('hello/world').set({hello: 'world!'});
-    firestore.doc('hello/world').get().then( snap => console.log(snap.data()) );`);
-
-      return () => {
-        delete windowWithFirestore.firestore;
-      };
-    }, [firestore]);
-
-    return null;
-  });
 
 function useFirestoreRestApi() {
   const config = useEmulatorConfig('firestore');

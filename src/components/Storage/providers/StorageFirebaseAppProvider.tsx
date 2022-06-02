@@ -37,7 +37,9 @@ export const StorageFirebaseAppProvider: React.FC<
     FIREBASE_APP_OPTIONS,
     useCallback(
       (app: FirebaseApp) => {
-        connectStorageEmulator(getStorage(app), host, port);
+        connectStorageEmulator(getStorage(app), host, port, {
+          mockUserToken: 'owner',
+        });
       },
       [host, port]
     )
