@@ -20,8 +20,13 @@ import {
   waitFor,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
-import firebase from 'firebase/compat';
-import { DocumentReference, onSnapshot } from 'firebase/firestore';
+import {
+  DocumentReference,
+  collection,
+  doc,
+  onSnapshot,
+  setDoc,
+} from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { Route } from 'react-router-dom';
 
@@ -42,11 +47,11 @@ it('shows the root-id', async () => {
 
 it('shows the document-id', async () => {
   const { getByText } = await renderWithFirestore(async (firestore) => {
-    const docRef = firestore.doc('my-stuff/foo');
-    await docRef.set({ a: 1 });
+    const docRef = doc(firestore, 'my-stuff/foo');
+    await setDoc(docRef, { a: 1 });
     return (
       <>
-        <Document reference={firestore.doc('my-stuff/foo')} />
+        <Document reference={doc(firestore, 'my-stuff/foo')} />
         <Portal />
       </>
     );
@@ -60,7 +65,7 @@ it('shows the document-id', async () => {
 it('shows the root collection-list', async () => {
   const { getByText, getByTestId } = await renderWithFirestore(
     async (firestore) => {
-      await firestore.doc('foo/bar').set({ a: 1 });
+      await setDoc(doc(firestore, 'foo/bar'), { a: 1 });
       return (
         <>
           <Root />
@@ -79,8 +84,8 @@ it('shows the root collection-list', async () => {
 it('shows the document collection-list', async () => {
   const { getByText, getByTestId } = await renderWithFirestore(
     async (firestore) => {
-      const documentRef = firestore.doc('foo/bar');
-      await documentRef.collection('sub').doc('spam').set({ a: 1 });
+      const documentRef = doc(firestore, 'foo/bar');
+      await setDoc(doc(collection(documentRef, 'sub'), 'spam'), { a: 1 });
       return (
         <>
           <Document reference={documentRef} />
@@ -99,7 +104,7 @@ it('shows the document collection-list', async () => {
 it('shows the selected root-collection', async () => {
   const { getAllByText, getAllByTestId } = await renderWithFirestore(
     async (firestore) => {
-      await firestore.doc('foo/bar').set({ a: 1 });
+      await setDoc(doc(firestore, 'foo/bar'), { a: 1 });
       return (
         <Route path="/firestore/data">
           <Root />
@@ -122,7 +127,7 @@ it('shows the selected root-collection', async () => {
 it('shows the selected root-collection when the collection id has special characters', async () => {
   const { getAllByText, getAllByTestId } = await renderWithFirestore(
     async (firestore) => {
-      await firestore.doc('foo@#$/bar').set({ a: 1 });
+      await setDoc(doc(firestore, 'foo@#$/bar'), { a: 1 });
       return (
         <Route path="/firestore/data">
           <Root />
@@ -145,8 +150,10 @@ it('shows the selected root-collection when the collection id has special charac
 it('shows the selected document-collection', async () => {
   const { getAllByTestId, getByText } = await renderWithFirestore(
     async (firestore) => {
-      const documentRef = firestore.doc('foo/bar');
-      await documentRef.collection('sub').doc('doc').set({ spam: 'eggs' });
+      const documentRef = doc(firestore, 'foo/bar');
+      await setDoc(doc(collection(documentRef, 'sub'), 'doc'), {
+        spam: 'eggs',
+      });
       return (
         <Route path="/firestore/data/foo/bar">
           <Document reference={documentRef} />
@@ -169,11 +176,10 @@ it('shows the selected document-collection', async () => {
 it('shows the selected document-collection when there are collection and document ids with special characters', async () => {
   const { getAllByTestId, getByText } = await renderWithFirestore(
     async (firestore) => {
-      const documentRef = firestore.doc('foo@#$/bar@#$');
-      await documentRef
-        .collection('sub@#$')
-        .doc('doc@#$')
-        .set({ spam: 'eggs' });
+      const documentRef = doc(firestore, 'foo@#$/bar@#$');
+      await setDoc(doc(collection(documentRef, 'sub@#$'), 'doc@#$'), {
+        spam: 'eggs',
+      });
       return (
         <Route path="/firestore/data/foo%40%23%24/bar%40%23%24">
           <Document reference={documentRef} />
@@ -207,7 +213,7 @@ const TestDeleteComponent: React.FC<
     // updated in real time, thus the custom logic and dummy elements below.
     const unsubscribe = onSnapshot(nestedDocRef, {
       next: (snap) => {
-        setNestedDocExists(snap.exists);
+        setNestedDocExists(snap.exists());
       },
     });
     return unsubscribe;
@@ -229,13 +235,14 @@ const TestDeleteComponent: React.FC<
 it('deletes document when requested', async () => {
   const { findByText, findByRole } = await renderWithFirestore(
     async (firestore) => {
-      const docRef = firestore.doc('whose-stuff/foo');
-      const nestedDocRef = docRef
-        .collection('nestedCollection')
-        .doc('nestedDoc');
+      const docRef = doc(firestore, 'whose-stuff/foo');
+      const nestedDocRef = doc(
+        collection(docRef, 'nestedCollection'),
+        'nestedDoc'
+      );
 
-      await docRef.set({ myField: 1 });
-      await nestedDocRef.set({ myField: 2 });
+      await setDoc(docRef, { myField: 1 });
+      await setDoc(nestedDocRef, { myField: 2 });
       return (
         <TestDeleteComponent docRef={docRef} nestedDocRef={nestedDocRef} />
       );
@@ -275,13 +282,14 @@ it('deletes document when requested', async () => {
 it('deletes document and nested data when requested', async () => {
   const { findByText, findByRole, getByRole } = await renderWithFirestore(
     async (firestore) => {
-      const docRef = firestore.doc('your-stuff/foo');
-      const nestedDocRef = docRef
-        .collection('nestedCollection')
-        .doc('nestedDoc');
+      const docRef = doc(firestore, 'your-stuff/foo');
+      const nestedDocRef = doc(
+        collection(docRef, 'nestedCollection'),
+        'nestedDoc'
+      );
 
-      await docRef.set({ myField: 1 });
-      await nestedDocRef.set({ myField: 2 });
+      await setDoc(docRef, { myField: 1 });
+      await setDoc(nestedDocRef, { myField: 2 });
       return (
         <TestDeleteComponent docRef={docRef} nestedDocRef={nestedDocRef} />
       );
@@ -328,13 +336,14 @@ it('deletes document and nested data when requested', async () => {
 it('deletes document fields when requested', async () => {
   const { findByText, findByRole } = await renderWithFirestore(
     async (firestore) => {
-      const docRef = firestore.doc('their-stuff/foo');
-      const nestedDocRef = docRef
-        .collection('nestedCollection')
-        .doc('nestedDoc');
+      const docRef = doc(firestore, 'their-stuff/foo');
+      const nestedDocRef = doc(
+        collection(docRef, 'nestedCollection'),
+        'nestedDoc'
+      );
 
-      await docRef.set({ myField: 1 });
-      await nestedDocRef.set({ myField: 2 });
+      await setDoc(docRef, { myField: 1 });
+      await setDoc(nestedDocRef, { myField: 2 });
       return (
         <TestDeleteComponent docRef={docRef} nestedDocRef={nestedDocRef} />
       );
