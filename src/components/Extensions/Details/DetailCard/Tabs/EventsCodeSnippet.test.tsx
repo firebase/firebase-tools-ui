@@ -47,7 +47,6 @@ describe('EventsCodeSnippet', () => {
     expect(
       getByText(/google.firebase.v1.custom-event-occurred/)
     ).not.toBeNull();
-    expect(queryByTestId('events-code-snippet')).not.toBeNull();
   });
 
   it('Renders an empty node when there are no events emitted', () => {
