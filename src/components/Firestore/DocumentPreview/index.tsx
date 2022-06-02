@@ -17,7 +17,7 @@
 import { Button } from '@rmwc/button';
 import { List, ListItem } from '@rmwc/list';
 import { Typography } from '@rmwc/typography';
-import firebase from 'firebase';
+import firebase from 'firebase/compat';
 import React, { useState } from 'react';
 import { useFirestoreDoc } from 'reactfire';
 

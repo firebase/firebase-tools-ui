@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import firebase from 'firebase';
+import firebase from 'firebase/compat';
 import React, { useCallback, useEffect } from 'react';
 import { FirebaseAppProvider, useFirestore } from 'reactfire';
 import { mutate } from 'swr';

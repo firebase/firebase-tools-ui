@@ -18,7 +18,7 @@ import { Icon } from '@rmwc/icon';
 import { IconButton } from '@rmwc/icon-button';
 import { MenuItem, SimpleMenu } from '@rmwc/menu';
 import { Tooltip } from '@rmwc/tooltip';
-import firebase from 'firebase';
+import firebase from 'firebase/compat';
 import * as React from 'react';
 import { useState } from 'react';
 

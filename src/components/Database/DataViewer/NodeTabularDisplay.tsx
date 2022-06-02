@@ -29,7 +29,7 @@ import {
   DataTableRow,
 } from '@rmwc/data-table';
 import { Typography } from '@rmwc/typography';
-import firebase from 'firebase';
+import firebase from 'firebase/compat';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 

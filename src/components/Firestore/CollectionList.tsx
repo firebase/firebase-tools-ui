@@ -20,7 +20,7 @@ import './CollectionList.scss';
 import { Button } from '@rmwc/button';
 import { List, ListItem } from '@rmwc/list';
 import classnames from 'classnames';
-import firebase from 'firebase';
+import firebase from 'firebase/compat';
 import React, { useState } from 'react';
 import { NavLink, useHistory, useRouteMatch } from 'react-router-dom';
 import { useFirestore } from 'reactfire';

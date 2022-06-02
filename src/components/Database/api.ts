@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import firebase from 'firebase';
+import firebase from 'firebase/compat';
 
 import { initDatabase } from '../../firebase';
 import { DatabaseConfig } from '../../store/config';

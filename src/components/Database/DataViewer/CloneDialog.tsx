@@ -24,7 +24,7 @@ import {
 } from '@rmwc/dialog';
 import { TextField } from '@rmwc/textfield';
 import { Typography } from '@rmwc/typography';
-import firebase from 'firebase';
+import firebase from 'firebase/compat';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 

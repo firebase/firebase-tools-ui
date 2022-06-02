@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import firebase from 'firebase';
+import firebase from 'firebase/compat';
 import get from 'lodash.get';
 import React, { ReactNode } from 'react';
 

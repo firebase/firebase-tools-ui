@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import firebase from 'firebase';
+import firebase from 'firebase/compat';
 
 export interface DocumentCollectionDatabaseApi<U, V> {
   projectId: string;

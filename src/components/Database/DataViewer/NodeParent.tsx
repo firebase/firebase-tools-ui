@@ -17,7 +17,7 @@
 import './NodeParent.scss';
 
 import { Button } from '@rmwc/button';
-import firebase from 'firebase';
+import firebase from 'firebase/compat';
 import * as React from 'react';
 import { useCallback, useState } from 'react';
 

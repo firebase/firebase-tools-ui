@@ -23,7 +23,7 @@ import {
   DialogProps,
   DialogTitle,
 } from '@rmwc/dialog';
-import firebase from 'firebase';
+import firebase from 'firebase/compat';
 import React, { useCallback, useEffect, useState } from 'react';
 
 import { Field } from '../../common/Field';

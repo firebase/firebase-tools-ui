@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import firebase from 'firebase';
+import firebase from 'firebase/compat';
 import { Observable, ReplaySubject, defer, from, of } from 'rxjs';
 import {
   catchError,

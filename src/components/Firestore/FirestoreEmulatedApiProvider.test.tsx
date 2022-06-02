@@ -19,7 +19,7 @@ import {
   waitFor,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
-import firebase from 'firebase';
+import firebase from 'firebase/compat';
 import React from 'react';
 import { useFirestoreDocData } from 'reactfire';
 

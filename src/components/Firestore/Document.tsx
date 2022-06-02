@@ -20,7 +20,7 @@ import { Icon } from '@rmwc/icon';
 import { IconButton } from '@rmwc/icon-button';
 import { ListDivider } from '@rmwc/list';
 import { MenuItem, SimpleMenu } from '@rmwc/menu';
-import firebase from 'firebase';
+import firebase from 'firebase/compat';
 import React, { Suspense, useState } from 'react';
 import { Route, useRouteMatch } from 'react-router-dom';
 import { useFirestore } from 'reactfire';

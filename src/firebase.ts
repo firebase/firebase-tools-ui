@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-import 'firebase/database';
-import 'firebase/firestore';
+import 'firebase/compat/database';
+import 'firebase/compat/firestore';
 // Force the browser build even in Node.js + jsdom unit tests because jsdom's
 // File/Blob impl is incomplete (https://github.com/jsdom/jsdom/issues/2555)
 // and thus not recognized by node-fetch, used by the Node build of Storage SDK.
 // The browser build works because it uses XHR (also mocked by jsdom).
-import '@firebase/storage/dist/index.browser.cjs.js';
+// import '@firebase/storage/dist/index.browser.cjs.js';
 
 import { FirebaseAuthInternal } from '@firebase/auth-interop-types';
 import { Component, ComponentType } from '@firebase/component';
-import firebase from 'firebase/app';
+import firebase from 'firebase/compat/app';
 import { useEffect, useState } from 'react';
 
 import { useConfig } from './components/common/EmulatorConfigProvider';

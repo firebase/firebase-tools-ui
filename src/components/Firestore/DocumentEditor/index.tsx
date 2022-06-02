@@ -17,7 +17,7 @@
 import './index.scss';
 
 import { IconButton } from '@rmwc/icon-button';
-import firebase from 'firebase';
+import firebase from 'firebase/compat';
 import React, { useEffect } from 'react';
 import { FormProvider, useForm, useFormContext } from 'react-hook-form';
 
