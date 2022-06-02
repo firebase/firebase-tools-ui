@@ -15,6 +15,7 @@
  */
 
 import { render } from '@testing-library/react';
+
 import { Extension } from '../../../models';
 import { TestExtensionsProvider } from '../../../testing/TestExtensionsProvider';
 import { EventsConfig } from './EventsConfig';
@@ -24,7 +25,8 @@ describe('EventsConfig', () => {
     const displayName = 'Pirojok-the-extension';
     const id = 'pirojok';
     const postInstallContent = 'CONTENT';
-    const eventarcChannel = 'projects/test-project/locations/us-central1/channels/firebase';
+    const eventarcChannel =
+      'projects/test-project/locations/us-central1/channels/firebase';
     const allowedEventTypes = ['google.firebase.v1.custom-event-occurred'];
     const extension: Extension = {
       id,
@@ -63,4 +65,3 @@ describe('EventsConfig', () => {
     expect(queryByTestId('channel-location-config')).toBeNull();
   });
 });
-

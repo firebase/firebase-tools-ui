@@ -39,7 +39,7 @@ export function EventsCodeSnippet() {
            // Handle extension event here.
        });
      `;
-     return <Markdown data-testid="events-code-snippet">{eventsMd}</Markdown>;
+    return <Markdown data-testid="events-code-snippet">{eventsMd}</Markdown>;
   }
-  return <div />
+  return <div />;
 }

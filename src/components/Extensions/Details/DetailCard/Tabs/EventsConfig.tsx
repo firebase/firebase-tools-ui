@@ -25,15 +25,17 @@ import { ParamType } from '../../../models';
 import styles from './EventsConfig.module.scss';
 import { ParamValue } from './ParamValue';
 
-
-
 export function EventsConfig() {
   const extension = useExtension()!;
-  const eventsByType = !!extension.events ? keyBy(extension.events, "type") : {};
-  const eventsByPrefix = !!extension.allowedEventTypes ? groupBy(extension.allowedEventTypes, function(a) {
-      return a.split('.').slice(0, -1).join('.');
-  }) : {};
-  
+  const eventsByType = !!extension.events
+    ? keyBy(extension.events, 'type')
+    : {};
+  const eventsByPrefix = !!extension.allowedEventTypes
+    ? groupBy(extension.allowedEventTypes, function (a) {
+        return a.split('.').slice(0, -1).join('.');
+      })
+    : {};
+
   const allowedEventTypeElements = Object.keys(eventsByPrefix)
     .sort()
     .map((prefix) => {
@@ -54,9 +56,13 @@ export function EventsConfig() {
         </div>
       );
     });
-  
+
   const allowedEventTypesDiv = !!extension.allowedEventTypes?.length ? (
-    <div key="allowedEventTypes" className={styles.wrapper} data-testid="allowed-event-types-config">
+    <div
+      key="allowedEventTypes"
+      className={styles.wrapper}
+      data-testid="allowed-event-types-config"
+    >
       <Accordion
         expansionLabel="Description"
         title={
@@ -83,7 +89,11 @@ export function EventsConfig() {
   ) : null;
 
   const channelLocationDiv = !!extension.eventarcChannel ? (
-    <div key="channelLocation" className={styles.wrapper} data-testid="channel-location-config">
+    <div
+      key="channelLocation"
+      className={styles.wrapper}
+      data-testid="channel-location-config"
+    >
       <Accordion
         expansionLabel="Description"
         title={

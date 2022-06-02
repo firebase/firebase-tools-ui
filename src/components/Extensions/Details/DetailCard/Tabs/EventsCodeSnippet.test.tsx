@@ -45,10 +45,8 @@ describe('EventsCodeSnippet', () => {
       )
     ).not.toBeNull();
     expect(
-        getByText(
-          /google.firebase.v1.custom-event-occurred/
-        )
-      ).not.toBeNull();
+      getByText(/google.firebase.v1.custom-event-occurred/)
+    ).not.toBeNull();
     expect(queryByTestId('events-code-snippet')).not.toBeNull();
   });
 
