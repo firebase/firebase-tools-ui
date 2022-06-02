@@ -24,7 +24,12 @@ import {
   getFirestore,
 } from 'firebase/firestore';
 import React, { useCallback, useEffect } from 'react';
-import { FirebaseAppProvider, useFirestore } from 'reactfire';
+import {
+  FirebaseAppProvider,
+  FirestoreProvider,
+  useFirebaseApp,
+  useFirestore,
+} from 'reactfire';
 import { mutate } from 'swr';
 
 import { useEmulatedFirebaseApp } from '../../firebase';
@@ -64,11 +69,21 @@ export const FirestoreEmulatedApiProvider: React.FC<
 
   return (
     <FirebaseAppProvider firebaseApp={app}>
-      {children}
-      {disableDevTools || <FirestoreDevTools />}
+      <FirestoreComponent>
+        {children}
+        {disableDevTools || <FirestoreDevTools />}
+      </FirestoreComponent>
     </FirebaseAppProvider>
   );
 });
+
+const FirestoreComponent: React.FC<React.PropsWithChildren<unknown>> = ({
+  children,
+}) => {
+  const app = useFirebaseApp(); // a parent component contains a `FirebaseAppProvider`
+  const firestore = getFirestore(app);
+  return <FirestoreProvider sdk={firestore}>{children}</FirestoreProvider>;
+};
 
 const FirestoreDevTools: React.FC<React.PropsWithChildren<unknown>> =
   React.memo(() => {

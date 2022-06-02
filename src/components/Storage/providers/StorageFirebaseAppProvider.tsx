@@ -17,7 +17,11 @@
 import { FirebaseApp } from 'firebase/app';
 import { connectStorageEmulator, getStorage } from 'firebase/storage';
 import React, { useCallback } from 'react';
-import { FirebaseAppProvider } from 'reactfire';
+import {
+  FirebaseAppProvider,
+  StorageProvider,
+  useFirebaseApp,
+} from 'reactfire';
 
 import { useEmulatedFirebaseApp } from '../../../firebase';
 import { useEmulatorConfig } from '../../common/EmulatorConfigProvider';
@@ -44,6 +48,16 @@ export const StorageFirebaseAppProvider: React.FC<
   }
 
   return (
-    <FirebaseAppProvider firebaseApp={app}>{children}</FirebaseAppProvider>
+    <FirebaseAppProvider firebaseApp={app}>
+      <StorageComponent>{children}</StorageComponent>
+    </FirebaseAppProvider>
   );
+};
+
+const StorageComponent: React.FC<React.PropsWithChildren<unknown>> = ({
+  children,
+}) => {
+  const app = useFirebaseApp(); // a parent component contains a `FirebaseAppProvider`
+  const storage = getStorage(app);
+  return <StorageProvider sdk={storage}>{children}</StorageProvider>;
 };
