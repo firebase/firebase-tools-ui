@@ -58,14 +58,12 @@ export function jsonIshValue(value: string) {
 
 /** Extra internal props on db Reference. */
 interface RefWithInternals extends DatabaseReference {
-  database: Database;
+  _repo: {
+    key: string;
+  };
 }
 
 /** Use some internals to determine the full url with `?ns=x` param. */
 export function getDbRootUrl(ref: DatabaseReference) {
-  const options = (ref as RefWithInternals).database.app.options as Record<
-    string,
-    string
-  >;
-  return options['databaseURL'];
+  return (ref as RefWithInternals)._repo.key;
 }
