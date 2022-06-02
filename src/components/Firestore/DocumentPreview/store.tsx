@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import firebase from 'firebase/compat';
+import { Bytes } from 'firebase/firestore';
 import get from 'lodash.get';
 import React, { ReactNode } from 'react';
 
@@ -186,10 +186,7 @@ function summarizeExp(value: ExpressionValue, maxLen: number): string {
   } else if ('stringValue' in value) {
     return summarize(value.stringValue || '', maxLen);
   } else if ('bytesValue' in value) {
-    return summarize(
-      firebase.firestore.Blob.fromBase64String(value.bytesValue || ''),
-      maxLen
-    );
+    return summarize(Bytes.fromBase64String(value.bytesValue || ''), maxLen);
   } else if ('durationValue' in value) {
     return value.durationValue || '0s';
   } else if ('timestampValue' in value) {

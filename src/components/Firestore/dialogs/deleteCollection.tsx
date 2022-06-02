@@ -15,16 +15,14 @@
  */
 
 import { DialogButton } from '@rmwc/dialog';
-import firebase from 'firebase/compat';
+import { CollectionReference } from 'firebase/firestore';
 import React from 'react';
 
 import { Callout } from '../../common/Callout';
 import { confirm } from '../../common/DialogQueue';
 import { Field } from '../../common/Field';
 
-export const promptDeleteCollection = (
-  reference: firebase.firestore.CollectionReference
-) =>
+export const promptDeleteCollection = (reference: CollectionReference) =>
   confirm({
     title: 'Delete collection',
     body: (

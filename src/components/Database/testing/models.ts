@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-import firebase from 'firebase/compat';
+import { DatabaseReference, DataSnapshot } from "firebase/database";
 
 export function fakeReference({
   key = null as string | null,
   path = '',
   data = null as any,
-  parent = null as firebase.database.Reference | null,
+  parent = null as DatabaseReference | null,
   domain = 'http://localhost:9000',
-} = {}): firebase.database.Reference {
+} = {}): DatabaseReference {
   return {
     key,
     path,
@@ -40,17 +40,17 @@ export function fakeReference({
     database: {
       app: { options: { databaseURL: 'http://localhost:9000/' } },
     },
-  } as unknown as firebase.database.Reference;
+  } as unknown as DatabaseReference;
 }
 
 export function fakeSnapshot({
   key = null as string | null,
   data = undefined as any,
-  ref = {} as firebase.database.Reference,
-} = {}): firebase.database.DataSnapshot {
+  ref = {} as DatabaseReference,
+} = {}): DataSnapshot {
   return {
     ref,
     key,
     val: () => data,
-  } as unknown as firebase.database.DataSnapshot;
+  } as unknown as DataSnapshot;
 }

@@ -20,7 +20,13 @@ import './CollectionList.scss';
 import { Button } from '@rmwc/button';
 import { List, ListItem } from '@rmwc/list';
 import classnames from 'classnames';
-import firebase from 'firebase/compat';
+import {
+  CollectionReference,
+  DocumentReference,
+  collection,
+  doc,
+  setDoc,
+} from 'firebase/firestore';
 import React, { useState } from 'react';
 import { NavLink, useHistory, useRouteMatch } from 'react-router-dom';
 import { useFirestore } from 'reactfire';
@@ -36,8 +42,8 @@ import {
 import { useAutoSelect } from './useAutoSelect';
 
 export interface Props {
-  collections: firebase.firestore.CollectionReference[];
-  reference?: firebase.firestore.DocumentReference;
+  collections: CollectionReference[];
+  reference?: DocumentReference;
 }
 
 export const RootCollectionList: React.FC<
@@ -49,7 +55,7 @@ export const RootCollectionList: React.FC<
 
 export const SubCollectionList: React.FC<
   React.PropsWithChildren<{
-    reference: firebase.firestore.DocumentReference;
+    reference: DocumentReference;
   }>
 > = ({ reference }) => {
   const subCollections = useSubCollections(reference);
@@ -71,8 +77,11 @@ const CollectionList: React.FC<React.PropsWithChildren<Props>> = ({
   const addCollection = async (value: AddCollectionDialogValue | null) => {
     if (value?.collectionId && value?.document.id) {
       const ref = reference || firestore;
-      const newCollection = ref.collection(value.collectionId);
-      await newCollection.doc(value.document.id).set(value.document.data);
+      const newCollection = collection(
+        ref as DocumentReference,
+        value.collectionId
+      );
+      await setDoc(doc(newCollection, value.document.id), value.document.data);
 
       // Redirect to the new collection
       const encodedCollectionId = encodeURIComponent(value.collectionId);

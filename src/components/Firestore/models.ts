@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import firebase from 'firebase/compat';
+import { Timestamp, CollectionReference, DocumentReference, GeoPoint, Bytes, FieldValue, WhereFilterOp, Firestore } from "firebase/firestore";
 
 export interface DocumentCollectionDatabaseApi<U, V> {
   projectId: string;
@@ -24,12 +24,12 @@ export interface DocumentCollectionDatabaseApi<U, V> {
 
   delete(): Promise<void>;
 
-  getCollections(docRef?: V): Promise<firebase.firestore.CollectionReference[]>;
+  getCollections(docRef?: V): Promise<CollectionReference[]>;
 }
 
 export type FirestoreApi = DocumentCollectionDatabaseApi<
-  firebase.firestore.Firestore,
-  firebase.firestore.DocumentReference
+  Firestore,
+  DocumentReference
 >;
 
 /** Field types supported by Firestore  */
@@ -54,11 +54,11 @@ export type FirestorePrimitive =
   | number
   | boolean
   | null
-  | firebase.firestore.DocumentReference
-  | firebase.firestore.GeoPoint
-  | firebase.firestore.Blob
-  | firebase.firestore.Timestamp
-  | firebase.firestore.FieldValue;
+  | DocumentReference
+  | GeoPoint
+  | Bytes 
+  | Timestamp
+  | FieldValue;
 
 export type FirestoreArray = Array<FirestorePrimitive | FirestoreMap>;
 
@@ -69,7 +69,7 @@ export type FirestoreMap = {
 /** Collection filter */
 export type CollectionFilterSort = 'ascending' | 'descending';
 
-interface Filter<T extends firebase.firestore.WhereFilterOp | undefined> {
+interface Filter<T extends WhereFilterOp | undefined> {
   field: string;
   operator: T;
 }

@@ -22,7 +22,17 @@ import { IconButton } from '@rmwc/icon-button';
 import { List, ListItem } from '@rmwc/list';
 import { Menu, MenuItem, MenuSurface, MenuSurfaceAnchor } from '@rmwc/menu';
 import classNames from 'classnames';
-import firebase from 'firebase/compat';
+import {
+  CollectionReference,
+  DocumentData,
+  Query,
+  QueryDocumentSnapshot,
+  doc,
+  orderBy,
+  query,
+  setDoc,
+  where,
+} from 'firebase/firestore';
 import get from 'lodash.get';
 import React, { useEffect, useState } from 'react';
 import { Route, useHistory, useRouteMatch } from 'react-router-dom';
@@ -54,11 +64,10 @@ import PanelHeader from './PanelHeader';
 import { useCollectionFilter } from './store';
 import { useAutoSelect } from './useAutoSelect';
 
-const NO_DOCS: firebase.firestore.QueryDocumentSnapshot<firebase.firestore.DocumentData>[] =
-  [];
+const NO_DOCS: QueryDocumentSnapshot<DocumentData>[] = [];
 
 export interface Props {
-  collection: firebase.firestore.CollectionReference;
+  collection: CollectionReference;
 }
 
 export function withCollectionState(
@@ -89,7 +98,7 @@ export function withCollectionState(
 
     const addDocument = async (value: AddDocumentDialogValue | null) => {
       if (value && value.id) {
-        await collection.doc(value.id).set(value.data);
+        await setDoc(doc(collection, value.id), value.data);
         setNewDocumentId(value.id);
       }
     };
@@ -125,7 +134,7 @@ export function withCollectionState(
 // TODO: create a CollectionSkeleton that the loading+loaded state can utilize
 export const CollectionLoading: React.FC<
   React.PropsWithChildren<{
-    collection: firebase.firestore.CollectionReference<firebase.firestore.DocumentData>;
+    collection: CollectionReference<DocumentData>;
   }>
 > = ({ collection }) => (
   <div className="Firestore-Collection">
@@ -138,10 +147,10 @@ export const CollectionLoading: React.FC<
 );
 
 interface CollectionPresentationProps {
-  collection: firebase.firestore.CollectionReference<firebase.firestore.DocumentData>;
+  collection: CollectionReference<DocumentData>;
   collectionFilter: ReturnType<typeof useCollectionFilter>;
   addDocument: (value: AddDocumentDialogValue | null) => Promise<void>;
-  docs: firebase.firestore.QueryDocumentSnapshot<firebase.firestore.DocumentData>[];
+  docs: QueryDocumentSnapshot<DocumentData>[];
   missingDocs: MissingDocument[];
   url: string;
 }
@@ -266,7 +275,7 @@ export const CollectionPresentation: React.FC<
         path={`${url}/:id`}
         render={({ match }: any) => {
           const docId = decodeURIComponent(match.params.id);
-          const docRef = collection.doc(docId);
+          const docRef = doc(collection, docId);
           return <Document reference={docRef} />;
         }}
       ></Route>
@@ -275,28 +284,34 @@ export const CollectionPresentation: React.FC<
 };
 
 function applyCollectionFilter(
-  collection: firebase.firestore.Query<firebase.firestore.DocumentData>,
+  collection: Query<DocumentData>,
   collectionFilter?: CollectionFilterType
-): firebase.firestore.Query<firebase.firestore.DocumentData> {
+): Query<DocumentData> {
   let filteredCollection = collection;
   if (collectionFilter && isSingleValueCollectionFilter(collectionFilter)) {
-    filteredCollection = filteredCollection.where(
-      collectionFilter.field,
-      collectionFilter.operator,
-      collectionFilter.value
+    filteredCollection = query(
+      filteredCollection,
+      where(
+        collectionFilter.field,
+        collectionFilter.operator,
+        collectionFilter.value
+      )
     );
   }
   if (collectionFilter && isMultiValueCollectionFilter(collectionFilter)) {
-    filteredCollection = filteredCollection.where(
-      collectionFilter.field,
-      collectionFilter.operator,
-      collectionFilter.values
+    filteredCollection = query(
+      filteredCollection,
+      where(
+        collectionFilter.field,
+        collectionFilter.operator,
+        collectionFilter.values
+      )
     );
   }
   if (collectionFilter && isSortableCollectionFilter(collectionFilter)) {
-    filteredCollection = filteredCollection.orderBy(
-      collectionFilter.field,
-      collectionFilter.sort
+    filteredCollection = query(
+      filteredCollection,
+      orderBy(collectionFilter.field, collectionFilter.sort)
     );
   }
   return filteredCollection;

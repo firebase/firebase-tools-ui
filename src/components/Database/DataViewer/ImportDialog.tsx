@@ -21,7 +21,7 @@ import {
   DialogContent,
   DialogTitle,
 } from '@rmwc/dialog';
-import firebase from 'firebase/compat';
+import { DatabaseReference } from 'firebase/database';
 import * as React from 'react';
 import { useState } from 'react';
 
@@ -35,9 +35,9 @@ import styles from './ImportDialog.module.scss';
 
 export interface Props {
   api: DatabaseApi;
-  reference: firebase.database.Reference;
+  reference: DatabaseReference;
   droppedFile?: File;
-  onComplete: (reference?: firebase.database.Reference, file?: File) => void;
+  onComplete: (reference?: DatabaseReference, file?: File) => void;
 }
 
 export const ImportDialog: React.FC<React.PropsWithChildren<Props>> = ({
