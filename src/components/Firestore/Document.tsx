@@ -20,7 +20,13 @@ import { Icon } from '@rmwc/icon';
 import { IconButton } from '@rmwc/icon-button';
 import { ListDivider } from '@rmwc/list';
 import { MenuItem, SimpleMenu } from '@rmwc/menu';
-import { CollectionReference } from 'firebase/firestore';
+import {
+  CollectionReference,
+  DocumentReference,
+  collection,
+  deleteDoc,
+  setDoc,
+} from 'firebase/firestore';
 import React, { Suspense, useState } from 'react';
 import { Route, useRouteMatch } from 'react-router-dom';
 import { useFirestore } from 'reactfire';
@@ -78,7 +84,7 @@ export const Root: React.FC<React.PropsWithChildren<unknown>> = () => {
   const firestore = useFirestore();
 
   return (
-    <Doc id={'Root'} collectionById={(id: string) => firestore.collection(id)}>
+    <Doc id={'Root'} collectionById={(id: string) => collection(firestore, id)}>
       <PanelHeader id="Root" icon={<FirestoreIcon />} />
       <Suspense fallback={<Spinner message="Loading collections" />}>
         <RootCollectionList />
@@ -90,7 +96,7 @@ export const Root: React.FC<React.PropsWithChildren<unknown>> = () => {
 /** Document node */
 export const Document: React.FC<
   React.PropsWithChildren<{
-    reference: firebase.firestore.DocumentReference;
+    reference: DocumentReference;
   }>
 > = ({ reference }) => {
   const recursiveDelete = useRecursiveDelete();
@@ -99,20 +105,20 @@ export const Document: React.FC<
 
   const handleDeleteFields = async () => {
     const shouldDelete = await promptDeleteDocumentFields(reference);
-    shouldDelete && reference.set({});
+    shouldDelete && setDoc(reference, {});
   };
 
   return (
     <Doc
       id={reference.id}
-      collectionById={(id: string) => reference.collection(id)}
+      collectionById={(id: string) => collection(reference, id)}
     >
       {isDeleteDocumentDialogOpen && (
         <DeleteDocumentDialog
           documentRef={reference}
           open={isDeleteDocumentDialogOpen}
           onConfirm={({ recursive }) =>
-            recursive ? recursiveDelete(reference) : reference.delete()
+            recursive ? recursiveDelete(reference) : deleteDoc(reference)
           }
           onClose={() => setDeleteDocumentDialogOpen(false)}
         />
