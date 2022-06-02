@@ -15,7 +15,7 @@
  */
 
 import { RenderResult } from '@testing-library/react';
-import firebase from 'firebase';
+import firebase from 'firebase/compat';
 
 import { waitForDialogsToOpen } from '../../../test_utils';
 import { FirestoreRulesEvaluation } from '../Requests/rules_evaluation_result_model';

@@ -23,7 +23,7 @@ import {
   CardActions,
 } from '@rmwc/card';
 import { Elevation } from '@rmwc/elevation';
-import firebase from 'firebase';
+import firebase from 'firebase/compat';
 import React, { useState } from 'react';
 import { FocusOn } from 'react-focus-on';
 

@@ -18,7 +18,7 @@ import './NodeLeaf.scss';
 
 import { IconButton } from '@rmwc/icon-button';
 import { Tooltip } from '@rmwc/tooltip';
-import firebase from 'firebase';
+import firebase from 'firebase/compat';
 import * as React from 'react';
 import { useState } from 'react';
 

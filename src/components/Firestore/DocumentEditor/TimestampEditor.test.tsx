@@ -15,7 +15,7 @@
  */
 
 import { act, fireEvent, render } from '@testing-library/react';
-import firebase from 'firebase';
+import firebase from 'firebase/compat';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 

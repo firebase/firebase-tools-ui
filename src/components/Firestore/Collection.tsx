@@ -22,7 +22,7 @@ import { IconButton } from '@rmwc/icon-button';
 import { List, ListItem } from '@rmwc/list';
 import { Menu, MenuItem, MenuSurface, MenuSurfaceAnchor } from '@rmwc/menu';
 import classNames from 'classnames';
-import firebase from 'firebase';
+import firebase from 'firebase/compat';
 import get from 'lodash.get';
 import React, { useEffect, useState } from 'react';
 import { Route, useHistory, useRouteMatch } from 'react-router-dom';

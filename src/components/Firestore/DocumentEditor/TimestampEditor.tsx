@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import firebase from 'firebase';
+import firebase from 'firebase/compat';
 import React from 'react';
 import { Controller } from 'react-hook-form';
 

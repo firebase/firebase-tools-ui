@@ -18,7 +18,7 @@ import { CardActionButton, CardActionButtons, CardActions } from '@rmwc/card';
 import { CollapsibleList, SimpleListItem } from '@rmwc/list';
 import { Theme, ThemeProvider } from '@rmwc/theme';
 import { Typography } from '@rmwc/typography';
-import firebase from 'firebase';
+import firebase from 'firebase/compat';
 import React, { useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 

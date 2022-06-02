@@ -15,7 +15,7 @@
  */
 
 import { DialogButton } from '@rmwc/dialog';
-import firebase from 'firebase';
+import firebase from 'firebase/compat';
 import React from 'react';
 
 import { Callout } from '../../common/Callout';

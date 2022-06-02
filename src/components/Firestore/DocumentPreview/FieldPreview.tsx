@@ -21,7 +21,7 @@ import { IconButton } from '@rmwc/icon-button';
 import { ListItem, ListItemMeta } from '@rmwc/list';
 import { Theme } from '@rmwc/theme';
 import classnames from 'classnames';
-import firebase from 'firebase';
+import firebase from 'firebase/compat';
 import React, { useCallback, useState } from 'react';
 
 import { supportsEditing } from '../DocumentEditor';

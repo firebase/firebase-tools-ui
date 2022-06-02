@@ -15,7 +15,7 @@
  */
 
 import { RenderResult, act, fireEvent, waitFor } from '@testing-library/react';
-import firebase from 'firebase';
+import firebase from 'firebase/compat';
 import React from 'react';
 
 import { renderWithFirestore } from '../testing/FirestoreTestProviders';
