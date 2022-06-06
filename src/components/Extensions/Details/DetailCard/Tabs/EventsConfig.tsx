@@ -30,11 +30,10 @@ export function EventsConfig() {
   const eventsByType = !!extension.events
     ? keyBy(extension.events, 'type')
     : {};
-  const eventsByPrefix = !!extension.allowedEventTypes
-    ? groupBy(extension.allowedEventTypes, function (a) {
+  const eventsByPrefix = 
+    groupBy(extension.allowedEventTypes ?? [], function (a) {
         return a.split('.').slice(0, -1).join('.');
-      })
-    : {};
+      });
 
   const allowedEventTypeElements = Object.keys(eventsByPrefix)
     .sort()
