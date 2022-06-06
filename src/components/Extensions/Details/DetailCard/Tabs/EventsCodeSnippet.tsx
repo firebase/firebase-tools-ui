@@ -41,5 +41,5 @@ export function EventsCodeSnippet() {
      `;
     return <Markdown data-testid="events-code-snippet">{eventsMd}</Markdown>;
   }
-  return <div />;
+  return null;
 }
