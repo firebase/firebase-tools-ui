@@ -40,7 +40,7 @@ export function EventsConfig() {
     .map((prefix) => {
       const events = eventsByPrefix[prefix]?.map((event) => {
         return (
-          <div key={`${event}`} className={styles.eventValue}>
+          <div key={event} className={styles.eventValue}>
             <ParamValue value={event} type={ParamType.STRING} />
             <Typography use="body1" theme="secondary">
               {eventsByType[event]?.description ?? 'Not Specified'}
