@@ -44,6 +44,10 @@ describe('EventsConfig', () => {
     expect(queryByTestId('allowed-event-types-config')).not.toBeNull();
     expect(queryByTestId('channel-location-config')).not.toBeNull();
     expect(getByText(/Events will be emitted via Eventarc/)).not.toBeNull();
+    expect(getByText(/us-central1/)).not.toBeNull();
+    expect(
+      getByText(/google.firebase.v1.custom-event-occurred/)
+    ).not.toBeNull();
   });
 
   it('Does not render channel or location configs if events are not provided', () => {
