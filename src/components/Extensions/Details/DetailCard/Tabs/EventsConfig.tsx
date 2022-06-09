@@ -15,20 +15,23 @@
  */
 
 import { Typography } from '@rmwc/typography';
+import e from 'express';
 import { groupBy } from 'lodash';
 import keyBy from 'lodash.keyby';
 
 import { Accordion } from '../../../../common/Accordion';
 import { Markdown } from '../../../../common/Markdown';
 import { useExtension } from '../../../api/useExtension';
-import { ParamType } from '../../../models';
+import { Event, ParamType } from '../../../models';
 import styles from './EventsConfig.module.scss';
 import { ParamValue } from './ParamValue';
 
 export function EventsConfig() {
   const extension = useExtension()!;
   const eventsByType = !!extension.events
-    ? keyBy(extension.events, 'type')
+    ? keyBy(extension.events, function (e: Event) {
+        return e.type;
+      })
     : {};
   const eventsByPrefix = groupBy(
     extension.allowedEventTypes ?? [],
@@ -118,7 +121,7 @@ export function EventsConfig() {
         </Typography>
       </Accordion>
       <ParamValue
-        value={extension.eventarcChannel?.split('/')[3] ?? ''}
+        value={extension.eventarcChannel.split('/')[3] ?? ''}
         type={ParamType.STRING}
       />
     </div>
