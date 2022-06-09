@@ -15,7 +15,6 @@
  */
 
 import { Typography } from '@rmwc/typography';
-import e from 'express';
 import { groupBy } from 'lodash';
 import keyBy from 'lodash.keyby';
 
