@@ -59,7 +59,7 @@ export const StorageFirebaseAppProvider: React.FC<
 const StorageComponent: React.FC<React.PropsWithChildren<unknown>> = ({
   children,
 }) => {
-  const app = useFirebaseApp(); // a parent component contains a `FirebaseAppProvider`
+  const app = useFirebaseApp();
   const storage = getStorage(app);
   return <StorageProvider sdk={storage}>{children}</StorageProvider>;
 };
