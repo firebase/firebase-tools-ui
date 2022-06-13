@@ -15,21 +15,38 @@
  */
 
 import { RenderResult, act, fireEvent, waitFor } from '@testing-library/react';
-import firebase from 'firebase/compat';
+import * as firestoreLib from 'firebase/firestore';
+import {
+  DocumentReference,
+  FieldPath,
+  FieldValue,
+  deleteField,
+  doc,
+  setDoc,
+  updateDoc,
+} from 'firebase/firestore';
 import React from 'react';
 
 import { renderWithFirestore } from '../testing/FirestoreTestProviders';
 import DocumentPreview from './index';
 
+jest.mock('firebase/firestore', () => {
+  const actual = jest.requireActual('firebase/firestore');
+  return {
+    ...actual,
+    updateDoc: jest.fn(),
+    setDoc: jest.fn(actual.setDoc),
+  };
+});
+
 describe('loaded document', () => {
   let result: RenderResult;
-  let documentReference: firebase.firestore.DocumentReference;
+  let documentReference: DocumentReference;
 
   beforeEach(async () => {
     result = await renderWithFirestore(async (firestore) => {
-      documentReference = firestore.doc('my-stuff/an-item');
-      await documentReference.set({ foo: 'bar' });
-      documentReference.update = jest.fn();
+      documentReference = doc(firestore, 'my-stuff/an-item');
+      await setDoc(documentReference, { foo: 'bar' });
       return <DocumentPreview reference={documentReference} />;
     });
 
@@ -57,8 +74,9 @@ describe('loaded document', () => {
       fireEvent.submit(getByText('Save'));
     });
 
-    expect(documentReference.update).toHaveBeenCalledWith(
-      new firebase.firestore.FieldPath('new'),
+    expect(updateDoc).toHaveBeenCalledWith(
+      documentReference,
+      new FieldPath('new'),
       '42'
     );
   });
@@ -78,9 +96,10 @@ describe('loaded document', () => {
       getByText('delete').click();
     });
 
-    expect(documentReference.update).toHaveBeenCalledWith(
-      new firebase.firestore.FieldPath('foo'),
-      firebase.firestore.FieldValue.delete()
+    expect(updateDoc).toHaveBeenCalledWith(
+      documentReference,
+      new FieldPath('foo'),
+      deleteField()
     );
   });
 
@@ -97,8 +116,9 @@ describe('loaded document', () => {
 
     fireEvent.submit(getByText('Save'));
 
-    expect(documentReference.update).toHaveBeenCalledWith(
-      new firebase.firestore.FieldPath('foo'),
+    expect(updateDoc).toHaveBeenCalledWith(
+      documentReference,
+      new FieldPath('foo'),
       'new'
     );
   });
@@ -124,12 +144,11 @@ describe('loaded document', () => {
 
 describe('missing document', () => {
   let result: RenderResult;
-  let documentReference: firebase.firestore.DocumentReference;
+  let documentReference: DocumentReference;
 
   beforeEach(async () => {
     result = await renderWithFirestore(async (firestore) => {
-      documentReference = firestore.doc('not/here');
-      documentReference.set = jest.fn();
+      documentReference = doc(firestore, 'not/here');
       return <DocumentPreview reference={documentReference} />;
     });
 
@@ -167,18 +186,20 @@ describe('missing document', () => {
 
     await new Promise((resolve) => setTimeout(resolve, 500));
 
-    expect(documentReference.set).toHaveBeenCalledWith({ meaningOfLife: '42' });
+    expect(setDoc).toHaveBeenCalledWith(documentReference, {
+      meaningOfLife: '42',
+    });
   });
 }); // missing document
 
 describe('empty document', () => {
   let result: RenderResult;
-  let documentReference: firebase.firestore.DocumentReference;
+  let documentReference: DocumentReference;
 
   beforeEach(async () => {
     result = await renderWithFirestore(async (firestore) => {
-      documentReference = firestore.doc('iam/empty');
-      await documentReference.set({}); // exists but has no fields
+      documentReference = doc(firestore, 'iam/empty');
+      await setDoc(documentReference, {}); // exists but has no fields
       documentReference.set = jest.fn();
       documentReference.update = jest.fn();
       return <DocumentPreview reference={documentReference} />;
@@ -226,13 +247,13 @@ describe('empty document', () => {
 
 describe('loaded array', () => {
   let result: RenderResult;
-  let documentReference: firebase.firestore.DocumentReference;
+  let documentReference: DocumentReference;
 
   beforeEach(async () => {
     result = await renderWithFirestore(async (firestore) => {
-      documentReference = firestore.doc('foo/bar');
+      documentReference = doc(firestore, 'foo/bar');
       documentReference.update = jest.fn();
-      await documentReference.set({
+      await setDoc(documentReference, {
         foo: ['alpha', 'bravo', 'bravo'],
       });
       return (
@@ -322,13 +343,13 @@ describe('loaded array', () => {
 
 describe('loaded map', () => {
   let result: RenderResult;
-  let documentReference: firebase.firestore.DocumentReference;
+  let documentReference: DocumentReference;
 
   beforeEach(async () => {
     result = await renderWithFirestore(async (firestore) => {
-      documentReference = firestore.doc('foo/bar');
+      documentReference = doc(firestore, 'foo/bar');
       documentReference.update = jest.fn();
-      await documentReference.set({
+      await setDoc(documentReference, {
         foo: {
           last_name: 'potter',
           first_name: 'harry',
