@@ -14,26 +14,11 @@
  * limitations under the License.
  */
 
-import {
-  RenderResult,
-  act,
-  findByText,
-  fireEvent,
-  waitFor,
-} from '@testing-library/react';
-import {
-  DocumentReference,
-  FieldPath,
-  FieldValue,
-  deleteField,
-  doc,
-  setDoc,
-  updateDoc,
-} from 'firebase/firestore';
+import { RenderResult, act, fireEvent, waitFor } from '@testing-library/react';
+import { DocumentReference, doc, setDoc } from 'firebase/firestore';
 import React from 'react';
 import { useFirestoreDocData } from 'reactfire';
 
-import { delay } from '../../../test_utils';
 import { renderWithFirestore } from '../testing/FirestoreTestProviders';
 import DocumentPreview from './index';
 
