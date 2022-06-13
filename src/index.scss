@@ -38,3 +38,7 @@ code {
 :root {
   --fire-color-input-borders: #e0e0e0; // grey 300
 }
+
+body > iframe {
+  pointer-events: none;
+}
