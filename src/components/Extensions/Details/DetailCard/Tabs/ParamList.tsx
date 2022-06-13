@@ -15,13 +15,13 @@ import { Button } from '@rmwc/button';
  * limitations under the License.
  */
 import { Typography } from '@rmwc/typography';
-import React from 'react';
 
 import { Accordion } from '../../../../common/Accordion';
 import { Callout } from '../../../../common/Callout';
 import { DOCS_BASE } from '../../../../common/links/DocsLink';
 import { Markdown } from '../../../../common/Markdown';
 import { useExtension } from '../../../api/useExtension';
+import { EventsConfig } from './EventsConfig';
 import styles from './ParamList.module.scss';
 import { ParamValue } from './ParamValue';
 
@@ -81,6 +81,7 @@ function ParamList() {
           </div>
         );
       })}
+      <EventsConfig />
     </div>
   );
 }
