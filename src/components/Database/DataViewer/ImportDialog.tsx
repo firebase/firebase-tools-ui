@@ -30,18 +30,16 @@ import { useConfig } from '../../common/EmulatorConfigProvider';
 import { Field } from '../../common/Field';
 import { FileField } from '../../common/FileField';
 import { Spinner } from '../../common/Spinner';
-import { DatabaseApi } from '../api';
+import { useImport } from '../useImport';
 import styles from './ImportDialog.module.scss';
 
 export interface Props {
-  api: DatabaseApi;
   reference: DatabaseReference;
   droppedFile?: File;
   onComplete: (reference?: DatabaseReference, file?: File) => void;
 }
 
 export const ImportDialog: React.FC<React.PropsWithChildren<Props>> = ({
-  api,
   reference,
   onComplete,
   droppedFile,
@@ -50,6 +48,9 @@ export const ImportDialog: React.FC<React.PropsWithChildren<Props>> = ({
   const [file, setFile] = useState<File | undefined>(droppedFile);
   const [executeFunctions, setExecuteFunctions] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
+  const importFile = useImport(reference, file, {
+    disableTriggers: !functionsEmulatorRunning || !executeFunctions,
+  });
   const [error, setError] = useState();
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -57,9 +58,7 @@ export const ImportDialog: React.FC<React.PropsWithChildren<Props>> = ({
     if (file) {
       try {
         setIsImporting(true);
-        await api.importFile(reference, file, {
-          disableTriggers: !functionsEmulatorRunning || !executeFunctions,
-        });
+        await importFile();
         onComplete(reference, file);
       } catch (err: any) {
         setError(err.message);

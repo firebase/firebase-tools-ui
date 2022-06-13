@@ -15,20 +15,20 @@
  */
 import { IconButton } from '@rmwc/icon-button';
 import { MenuItem, SimpleMenu } from '@rmwc/menu';
-import { DatabaseReference, ref as dbRef } from 'firebase/database';
+import { DatabaseReference, child, ref as dbRef, ref } from 'firebase/database';
 import React, { useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useHistory } from 'react-router-dom';
+import { useDatabase, useDatabaseObject } from 'reactfire';
 
 import { initDatabase } from '../../firebase';
 import { DatabaseConfig } from '../../store/config';
 import { InteractiveBreadCrumbBar } from '../common/InteractiveBreadCrumbBar';
-import { DatabaseApi } from './api';
 import { ImportDialog } from './DataViewer/ImportDialog';
 import { NodeContainer } from './DataViewer/NodeContainer';
+import { useNamespace } from './useNamespace';
 
 export interface PropsFromState {
-  namespace: string;
   path?: string;
   config: DatabaseConfig;
 }
@@ -41,13 +41,11 @@ const getPrefix = (ref: DatabaseReference) => {
 };
 
 export const Database: React.FC<React.PropsWithChildren<Props>> = ({
-  config,
-  namespace,
   path,
 }) => {
-  const [ref, setRef] = useState<DatabaseReference | undefined>(undefined);
-  const [api, setApi] = useState<DatabaseApi | undefined>(undefined);
-
+  const database = useDatabase();
+  const namespace = useNamespace();
+  const databaseReference = ref(database, path);
   const history = useHistory();
 
   const [importDialogOpen, setImportDialogOpen] = useState(false);
@@ -57,19 +55,6 @@ export const Database: React.FC<React.PropsWithChildren<Props>> = ({
     setDroppedFile(undefined);
     setImportDialogOpen(false);
   };
-
-  useEffect(() => {
-    const [db, { cleanup }] = initDatabase(config, namespace);
-    setRef(path ? dbRef(db, path) : dbRef(db));
-
-    const api = new DatabaseApi(config, namespace);
-    setApi(api);
-
-    return function cleanupDb() {
-      cleanup();
-      api.delete();
-    };
-  }, [config, namespace, path]);
 
   const urlBase = `/database/${namespace}/data`;
   const handleNavigate = (newPath: string) => {
@@ -81,12 +66,12 @@ export const Database: React.FC<React.PropsWithChildren<Props>> = ({
 
   return (
     <div className="Database-Database">
-      {ref && api ? (
+      {databaseReference ? (
         <>
           <InteractiveBreadCrumbBar
             base={urlBase}
             path={path || '/'}
-            inputPrefix={getPrefix(ref)}
+            inputPrefix={getPrefix(databaseReference)}
             onNavigate={handleNavigate}
           >
             <SimpleMenu
@@ -100,13 +85,12 @@ export const Database: React.FC<React.PropsWithChildren<Props>> = ({
           </InteractiveBreadCrumbBar>
 
           <DatabaseDropZone onDrop={(f) => setDroppedFile(f)}>
-            <NodeContainer realtimeRef={ref} isViewRoot />
+            <NodeContainer realtimeRef={databaseReference} isViewRoot />
           </DatabaseDropZone>
 
           {(importDialogOpen || droppedFile) && (
             <ImportDialog
-              api={api}
-              reference={ref}
+              reference={databaseReference}
               droppedFile={droppedFile}
               onComplete={closeImportDialog}
             />

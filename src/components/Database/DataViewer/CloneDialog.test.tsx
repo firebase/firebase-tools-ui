@@ -25,22 +25,21 @@ import React from 'react';
 
 import { delay } from '../../../test_utils';
 import { renderDialogWithFirestore } from '../../Firestore/testing/test_utils';
-import { fakeReference } from '../testing/models';
 import { CloneDialog } from './CloneDialog';
 
 const setup = async () => {
   const onComplete = jest.fn();
-  const parent = fakeReference({ key: 'parent', path: 'parent' });
-  const ROOT_REF = fakeReference({ key: null, parent: null });
-  const ref = fakeReference({
-    parent,
-    key: 'to_clone',
-    path: 'parent/to_clone',
-    data: { bool: true, number: 1234, string: 'a string', json: { a: 'b' } },
-  });
-  (ROOT_REF.child as jest.Mock).mockReturnValue(ref);
-  ref.root = ROOT_REF;
-  (ref.child as jest.Mock).mockReturnValue(ref);
+  // const parent = fakeReference({ key: 'parent', path: 'parent' });
+  // const ROOT_REF = fakeReference({ key: null, parent: null });
+  // const ref = fakeReference({
+  //   parent,
+  //   key: 'to_clone',
+  //   path: 'parent/to_clone',
+  //   data: { bool: true, number: 1234, string: 'a string', json: { a: 'b' } },
+  // });
+  // (ROOT_REF.child as jest.Mock).mockReturnValue(ref);
+  // ref.root = ROOT_REF;
+  // (ref.child as jest.Mock).mockReturnValue(ref);
 
   const { getByText, getByLabelText, getByTestId } =
     await renderDialogWithFirestore(async (firestore) => (

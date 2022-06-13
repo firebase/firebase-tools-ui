@@ -14,50 +14,48 @@
  * limitations under the License.
  */
 
-import { render } from '@testing-library/react';
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
 
 import { DatabasePicker } from './DatabasePicker';
+import { renderWithDatabase } from './testing/DatabaseTestProviders';
 
-it('renders primary database name and link', () => {
-  const { getByText } = render(
-    <MemoryRouter>
+it('renders primary database name and link', async () => {
+  const { getByText } = await renderWithDatabase(() =>
+    Promise.resolve(
       <DatabasePicker
         primary="foo"
-        current="foo"
         navigation={(db) => `/nav/${db}`}
         databases={['foo']}
       />
-    </MemoryRouter>
+    )
   );
   expect(getByText('foo')).not.toBeNull();
 });
 
-it('renders current database name even if it is not in list', () => {
-  const { getByText } = render(
-    <MemoryRouter>
-      <DatabasePicker
-        primary="foo"
-        current="random"
-        navigation={(db) => `/nav/${db}`}
-        databases={['foo']}
-      />
-    </MemoryRouter>
+it('renders current database name even if it is not in list', async () => {
+  const { getByText } = await renderWithDatabase(
+    () =>
+      Promise.resolve(
+        <DatabasePicker
+          primary="foo"
+          navigation={(db) => `/nav/${db}`}
+          databases={['foo']}
+        />
+      ),
+    { namespace: 'random', path: 'fooooo' }
   );
   expect(getByText('random')).not.toBeNull();
 });
 
-it('renders extra databases with link', () => {
-  const { getByTestId } = render(
-    <MemoryRouter>
+it('renders extra databases with link', async () => {
+  const { getByTestId } = await renderWithDatabase(() =>
+    Promise.resolve(
       <DatabasePicker
         primary="foo"
-        current="bar"
         navigation={(db) => `/nav/${db}`}
         databases={['foo', 'bar', 'baz']}
       />
-    </MemoryRouter>
+    )
   );
 
   expect((getByTestId('nav-foo') as HTMLAnchorElement).href).toContain(

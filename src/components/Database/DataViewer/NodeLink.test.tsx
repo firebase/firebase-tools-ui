@@ -15,45 +15,47 @@
  */
 
 import { render } from '@testing-library/react';
+import { ref } from 'firebase/database';
 import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 
-import { fakeReference } from '../testing/models';
+import { renderWithDatabase } from '../testing/DatabaseTestProviders';
 import { NodeLink } from './NodeLink';
 
-const ROOT_REF = fakeReference({ key: null, parent: null });
-const REF = fakeReference({
-  parent: ROOT_REF,
-  key: 'my_key',
-  path: 'a/b/c/my_key',
-  data: 'my_value',
-});
+// const ROOT_REF = fakeReference({ key: null, parent: null });
+// const REF = fakeReference({
+//   parent: ROOT_REF,
+//   key: 'my_key',
+//   path: 'a/b/c/my_key',
+//   data: 'my_value',
+// });
 
-beforeEach(() => {
-  (REF.toString as jest.Mock).mockReturnValue(
-    'http://localhost:9000/a/b/c/my_key'
-  );
-  (ROOT_REF.toString as jest.Mock).mockReturnValue('http://localhost:9000/');
-});
+// beforeEach(() => {
+//   (REF.toString as jest.Mock).mockReturnValue(
+//     'http://localhost:9000/a/b/c/my_key'
+//   );
+//   (ROOT_REF.toString as jest.Mock).mockReturnValue('http://localhost:9000/');
+// });
 
-it('renders a link with the key name', () => {
-  const { getByText } = render(
-    <MemoryRouter initialEntries={['/database/test/data/a/b']}>
-      <NodeLink dbRef={REF} />
-    </MemoryRouter>
+it('renders a link with the key name', async () => {
+  const { getByText } = await renderWithDatabase(
+    (db) => Promise.resolve(<NodeLink dbRef={ref(db, 'a/b/c/my_key')} />),
+    { namespace: 'test', path: 'a/b' }
   );
 
   expect(getByText('my_key')).not.toBeNull();
 });
 
 describe('linking within the current <Route>', () => {
-  it('replaces :path param, keeps other route params', () => {
-    const { getByText } = render(
-      <MemoryRouter initialEntries={['/database/my-instance/data/x/y']}>
-        <Route path="/database/:instance/data/:path*">
-          <NodeLink dbRef={REF} />
-        </Route>
-      </MemoryRouter>
+  it('replaces :path param, keeps other route params', async () => {
+    const { getByText } = await renderWithDatabase(
+      (db) =>
+        Promise.resolve(
+          <Route path="/database/:namespace/data/:path*">
+            <NodeLink dbRef={ref(db, 'a/b/c/my_key')} />
+          </Route>
+        ),
+      { namespace: 'my-instance', path: 'x/y' }
     );
 
     expect(getByText('my_key').getAttribute('href')).toEqual(
