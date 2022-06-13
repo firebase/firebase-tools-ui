@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-import React from 'react';
-
 import { Markdown } from '../../../../common/Markdown';
 import { useExtension } from '../../../api/useExtension';
+import { EventsCodeSnippet } from './EventsCodeSnippet';
 import style from './Readme.module.scss';
 
 export function Readme() {
   const extension = useExtension()!;
-
   return (
     <div className={style.wrapper}>
       <Markdown>{extension.postinstallContent}</Markdown>
+      <EventsCodeSnippet />
     </div>
   );
 }
