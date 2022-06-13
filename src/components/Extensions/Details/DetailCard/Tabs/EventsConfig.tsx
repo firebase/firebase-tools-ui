@@ -27,6 +27,7 @@ import { ParamValue } from './ParamValue';
 
 export function EventsConfig() {
   const extension = useExtension()!;
+  console.log("ok");
   const eventsByType = !!extension.events
     ? keyBy(extension.events, function (e: Event) {
         return e.type;
@@ -125,31 +126,37 @@ export function EventsConfig() {
       />
     </div>
   ) : null;
-
-  return (
-    <div>
-      <div className={styles.wrapper}>
-        <h4>Enabled Events</h4>
-        <Typography
-          className={styles.description}
-          use="caption"
-          tag="div"
-          theme="secondary"
-        >
-          If you enable events, you can{' '}
-          <a href="https://firebase.google.com/docs/extensions/install-extensions#eventarc">
-            write custom event handlers
-          </a>{' '}
-          that respond to these events. Events will be emitted via Eventarc.{' '}
-          <a href="https://cloud.google.com/eventarc/pricing)">Fees apply.</a>
-          <br />
-          <a href={`/extensions/${extension.id}`}>
-            How do events in this extension work?
-          </a>
-        </Typography>
-      </div>
+  console.log("k here", extension.eventarcChannel, extension.allowedEventTypes);
+  const eventsConfigDiv = !!extension.eventarcChannel && !!extension.allowedEventTypes ? (
+    <div className={styles.wrapper}>
+      <h4>Enabled Events</h4>
+      <Typography
+        className={styles.description}
+        use="caption"
+        tag="div"
+        theme="secondary"
+      >
+        If you enable events, you can{' '}
+        <a href="https://firebase.google.com/docs/extensions/install-extensions#eventarc">
+          write custom event handlers
+        </a>{' '}
+        that respond to these events. Events will be emitted via Eventarc.{' '}
+        <a href="https://cloud.google.com/eventarc/pricing)">Fees apply.</a> 
+        Note: Events aren't emitted to production Eventarc in the emulator. 
+        <br />
+        <a href={`/extensions/${extension.id}`}>
+          How do events in this extension work?
+        </a>
+      </Typography>
       {channelLocationDiv}
       {allowedEventTypesDiv}
     </div>
+  ) : null;
+
+  return (
+    <div>
+      {eventsConfigDiv}
+    </div>
+
   );
 }
