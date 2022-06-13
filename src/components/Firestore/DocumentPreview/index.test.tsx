@@ -30,15 +30,6 @@ import React from 'react';
 import { renderWithFirestore } from '../testing/FirestoreTestProviders';
 import DocumentPreview from './index';
 
-jest.mock('firebase/firestore', () => {
-  const actual = jest.requireActual('firebase/firestore');
-  return {
-    ...actual,
-    updateDoc: jest.fn(),
-    setDoc: jest.fn(actual.setDoc),
-  };
-});
-
 describe('loaded document', () => {
   let result: RenderResult;
   let documentReference: DocumentReference;

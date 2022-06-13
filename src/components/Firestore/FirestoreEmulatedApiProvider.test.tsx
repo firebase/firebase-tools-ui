@@ -19,7 +19,13 @@ import {
   waitFor,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
-import firebase from 'firebase/compat';
+import {
+  CollectionReference,
+  DocumentReference,
+  collection,
+  doc,
+  setDoc,
+} from 'firebase/firestore';
 import React from 'react';
 import { useFirestoreDocData } from 'reactfire';
 
@@ -42,8 +48,8 @@ it('should get root-collections', async () => {
 
   const { getByText, getByTestId } = await renderWithFirestore(
     async (firestore) => {
-      await firestore.doc('things/a').set({ a: 1 });
-      await firestore.doc('others/a').set({ a: 1 });
+      await setDoc(doc(firestore, 'things/a'), { a: 1 });
+      await setDoc(doc(firestore, 'others/a'), { a: 1 });
       return <TestResults />;
     }
   );
@@ -54,11 +60,7 @@ it('should get root-collections', async () => {
 });
 
 it('should get sub-collections', async () => {
-  const TestResults = ({
-    docRef,
-  }: {
-    docRef: firebase.firestore.DocumentReference;
-  }) => {
+  const TestResults = ({ docRef }: { docRef: DocumentReference }) => {
     const collections = useSubCollections(docRef);
     return (
       <div data-testid="collections">{collections.map((c) => c.id).join()}</div>
@@ -67,9 +69,9 @@ it('should get sub-collections', async () => {
 
   const { getByText, getByTestId } = await renderWithFirestore(
     async (firestore) => {
-      const docRef = firestore.doc('top/doc');
-      await docRef.collection('things').doc('a').set({ a: 1 });
-      await docRef.collection('others').doc('a').set({ a: 1 });
+      const docRef = doc(firestore, 'top/doc');
+      await setDoc(doc(collection(docRef, 'things'), 'a'), { a: 1 });
+      await setDoc(doc(collection(docRef, 'others'), 'a'), { a: 1 });
       return <TestResults docRef={docRef} />;
     }
   );
@@ -80,11 +82,7 @@ it('should get sub-collections', async () => {
 });
 
 it('should get sub-collections with special characters inside URI', async () => {
-  const TestResults = ({
-    docRef,
-  }: {
-    docRef: firebase.firestore.DocumentReference;
-  }) => {
+  const TestResults = ({ docRef }: { docRef: DocumentReference }) => {
     const collections = useSubCollections(docRef);
     return (
       <div data-testid="collections">{collections.map((c) => c.id).join()}</div>
@@ -93,9 +91,9 @@ it('should get sub-collections with special characters inside URI', async () => 
 
   const { getByText, getByTestId } = await renderWithFirestore(
     async (firestore) => {
-      const docRef = firestore.doc('top/doc _!@#$_');
-      await docRef.collection('things').doc('a').set({ a: 1 });
-      await docRef.collection('others').doc('a').set({ a: 1 });
+      const docRef = doc(firestore, 'top/doc _!@#$_');
+      await setDoc(doc(collection(docRef, 'things'), 'a'), { a: 1 });
+      await setDoc(doc(collection(docRef, 'others'), 'a'), { a: 1 });
       return <TestResults docRef={docRef} />;
     }
   );
@@ -108,7 +106,7 @@ it('should get sub-collections with special characters inside URI', async () => 
 it('should get missing-documents', async () => {
   const TestResults: React.FC<
     React.PropsWithChildren<{
-      collection: firebase.firestore.CollectionReference;
+      collection: CollectionReference;
     }>
   > = ({ collection }) => {
     const documents = useMissingDocuments(collection);
@@ -119,10 +117,10 @@ it('should get missing-documents', async () => {
 
   const { getByText, getByTestId } = await renderWithFirestore(
     async (firestore) => {
-      await firestore.doc('foo/bar').set({ a: 1 });
-      await firestore.doc('foo/bar/deep/egg').set({ a: 1 });
-      await firestore.doc('foo/hidden/deep/egg').set({ a: 1 });
-      return <TestResults collection={firestore.collection('foo')} />;
+      await setDoc(doc(firestore, 'foo/bar'), { a: 1 });
+      await setDoc(doc(firestore, 'foo/bar/deep/egg'), { a: 1 });
+      await setDoc(doc(firestore, 'foo/hidden/deep/egg'), { a: 1 });
+      return <TestResults collection={collection(firestore, 'foo')} />;
     }
   );
 
@@ -132,11 +130,7 @@ it('should get missing-documents', async () => {
 });
 
 it('should clear the database', async () => {
-  const TestResults = ({
-    docRef,
-  }: {
-    docRef: firebase.firestore.DocumentReference;
-  }) => {
+  const TestResults = ({ docRef }: { docRef: DocumentReference }) => {
     const { data } = useFirestoreDocData(docRef);
     const eject = useEjector();
 
@@ -150,8 +144,8 @@ it('should clear the database', async () => {
 
   const { getByText, getByTestId } = await renderWithFirestore(
     async (firestore) => {
-      const docRef = firestore.doc('top/doc');
-      await docRef.set({ a: 1 });
+      const docRef = doc(firestore, 'top/doc');
+      await setDoc(docRef, { a: 1 });
       return <TestResults docRef={docRef} />;
     }
   );
@@ -172,8 +166,8 @@ it('should recursively delete under path', async () => {
     docRef,
     nestedRef,
   }: {
-    docRef: firebase.firestore.DocumentReference;
-    nestedRef: firebase.firestore.DocumentReference;
+    docRef: DocumentReference;
+    nestedRef: DocumentReference;
   }) => {
     const { data } = useFirestoreDocData(docRef);
     const nested = useFirestoreDocData(nestedRef);
@@ -190,10 +184,10 @@ it('should recursively delete under path', async () => {
 
   const { getByText, getByTestId, findByText } = await renderWithFirestore(
     async (firestore) => {
-      const docRef = firestore.doc('top/doc');
-      await docRef.set({ a: 1 });
-      const nestedRef = docRef.collection('nested').doc('nestedDoc');
-      await nestedRef.set({ b: 2 });
+      const docRef = doc(firestore, 'top/doc');
+      await setDoc(docRef, { a: 1 });
+      const nestedRef = doc(collection(docRef, 'nested'), 'nestedDoc');
+      await setDoc(nestedRef, { b: 2 });
       return <TestResults docRef={docRef} nestedRef={nestedRef} />;
     }
   );
