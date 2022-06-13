@@ -75,7 +75,7 @@
     "start": "run-script-os",
     "start:win32": "SASS_PATH=\"node_modules;src\" react-scripts start",
     "start:default": "SASS_PATH=node_modules:src react-scripts start",
-    "build": "npm run build:web && npm run build:server",
+    "build": "NODE_OPTIONS=--openssl-legacy-provider npm run build:web && npm run build:server",
     "bundle": "rm -f emulator-ui-dist.zip && zip -r emulator-ui-dist.zip server.bundle.js build",
     "build:web": "react-scripts build",
     "build:server": "webpack --target=node ./server.js -o server.bundle.js",
