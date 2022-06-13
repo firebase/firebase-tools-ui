@@ -14,8 +14,13 @@
  * limitations under the License.
  */
 
-import { RenderResult, act, fireEvent, waitFor } from '@testing-library/react';
-import * as firestoreLib from 'firebase/firestore';
+import {
+  RenderResult,
+  act,
+  findByText,
+  fireEvent,
+  waitFor,
+} from '@testing-library/react';
 import {
   DocumentReference,
   FieldPath,
@@ -26,9 +31,16 @@ import {
   updateDoc,
 } from 'firebase/firestore';
 import React from 'react';
+import { useFirestoreDocData } from 'reactfire';
 
+import { delay } from '../../../test_utils';
 import { renderWithFirestore } from '../testing/FirestoreTestProviders';
 import DocumentPreview from './index';
+
+const TestDocument: React.FC<{ docRef: DocumentReference }> = ({ docRef }) => {
+  const { data } = useFirestoreDocData(docRef);
+  return <div>{JSON.stringify(data)}</div>;
+};
 
 describe('loaded document', () => {
   let result: RenderResult;
@@ -38,38 +50,35 @@ describe('loaded document', () => {
     result = await renderWithFirestore(async (firestore) => {
       documentReference = doc(firestore, 'my-stuff/an-item');
       await setDoc(documentReference, { foo: 'bar' });
-      return <DocumentPreview reference={documentReference} />;
+      return (
+        <>
+          <DocumentPreview reference={documentReference} />
+          <TestDocument docRef={documentReference} />
+        </>
+      );
     });
 
-    await waitFor(() => result.getByText(/foo/));
+    await waitFor(() => result.getAllByText(/foo/).length);
   });
 
   it('adds a new field', async () => {
-    const { getByText, getByLabelText } = result;
+    const { getByText, getByLabelText, findByText } = result;
 
     await act(async () => getByText('Add field').click());
 
-    act(() => {
-      fireEvent.change(getByLabelText('Field'), {
-        target: { value: 'new' },
-      });
+    fireEvent.change(getByLabelText('Field'), {
+      target: { value: 'new' },
     });
 
-    act(() => {
-      fireEvent.change(getByLabelText('Value'), {
-        target: { value: '42' },
-      });
+    fireEvent.change(getByLabelText('Value'), {
+      target: { value: '42' },
     });
 
     act(() => {
       fireEvent.submit(getByText('Save'));
     });
 
-    expect(updateDoc).toHaveBeenCalledWith(
-      documentReference,
-      new FieldPath('new'),
-      '42'
-    );
+    expect(await findByText(/\"new\":\"42\"/)).not.toBeNull();
   });
 
   it('renders a field', () => {
@@ -80,22 +89,18 @@ describe('loaded document', () => {
     expect(getByText('(string)')).not.toBe(null);
   });
 
-  it('deletes a field', () => {
-    const { getByText } = result;
+  it('deletes a field', async () => {
+    const { findByText, getByText } = result;
 
     act(() => {
       getByText('delete').click();
     });
 
-    expect(updateDoc).toHaveBeenCalledWith(
-      documentReference,
-      new FieldPath('foo'),
-      deleteField()
-    );
+    expect(await findByText('This document has no data')).not.toBeNull();
   });
 
-  it('updates a field-value', () => {
-    const { getByLabelText, getByText } = result;
+  it('updates a field-value', async () => {
+    const { findByText, getByLabelText, getByText } = result;
 
     act(() => {
       getByText('edit').click();
@@ -107,11 +112,7 @@ describe('loaded document', () => {
 
     fireEvent.submit(getByText('Save'));
 
-    expect(updateDoc).toHaveBeenCalledWith(
-      documentReference,
-      new FieldPath('foo'),
-      'new'
-    );
+    expect(await findByText(/\"foo\":\"new\"/)).not.toBeNull();
   });
 
   // TODO: these are definitely immutable, but cannot figure out how to trigger
