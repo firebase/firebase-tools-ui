@@ -18,10 +18,14 @@
 // File/Blob impl is incomplete (https://github.com/jsdom/jsdom/issues/2555)
 // and thus not recognized by node-fetch, used by the Node build of Storage SDK.
 // The browser build works because it uses XHR (also mocked by jsdom).
-// import '@firebase/storage/dist/index.browser.cjs.js';
+import '@firebase/storage/dist/index.browser.cjs.js';
 
-import { deleteApp, FirebaseApp, initializeApp } from 'firebase/app';
-import { connectDatabaseEmulator, Database, getDatabase } from 'firebase/database';
+import { FirebaseApp, deleteApp, initializeApp } from 'firebase/app';
+import {
+  Database,
+  connectDatabaseEmulator,
+  getDatabase,
+} from 'firebase/database';
 import { Firestore } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 
@@ -44,7 +48,9 @@ export function initDatabase(
   );
 
   const db = getDatabase(app);
-  connectDatabaseEmulator(db, config.host, config.port, {mockUserToken: 'owner'});
+  connectDatabaseEmulator(db, config.host, config.port, {
+    mockUserToken: 'owner',
+  });
   return [db, { cleanup: () => deleteApp(app) }];
 }
 

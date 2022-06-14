@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 
-import { render } from '@testing-library/react';
+import { randomUUID } from 'crypto';
+
+import { render, waitForElementToBeRemoved } from '@testing-library/react';
 import { Database } from 'firebase/database';
+import { uniqueId } from 'lodash';
 import React, { Suspense, useEffect, useState } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { useDatabase } from 'reactfire';
@@ -32,10 +35,10 @@ interface RenderOptions {
 
 export const renderWithDatabase = async (
   children: (database: Database) => Promise<React.ReactElement>,
-  { path = '', state, namespace = '' }: RenderOptions = {}
+  { path = '', state, namespace = 'default' }: RenderOptions = {}
 ) => {
   const errorDeferred = makeDeferred();
-  const realPath = `database/${namespace}/data/${path}`;
+  const realPath = `/database/${namespace}/data/${path}`;
   const component = render(
     <MemoryRouter initialEntries={[realPath]}>
       <DatabaseTestProviders namespace={namespace} path={path} state={state}>
@@ -64,7 +67,8 @@ export const renderWithDatabase = async (
 
 export const DatabaseTestProviders: React.FC<
   React.PropsWithChildren<RenderOptions>
-> = React.memo(({ namespace = '', children }) => {
+> = React.memo(({ namespace, children }) => {
+  namespace = `${namespace}-${randomUUID()}`;
   const projectId = `${process.env.GCLOUD_PROJECT}-${Date.now()}`;
   const hostAndPort = process.env.FIREBASE_DATABASE_EMULATOR_HOST;
   if (!projectId || !hostAndPort) {

@@ -44,7 +44,7 @@ it('renders current database name even if it is not in list', async () => {
       ),
     { namespace: 'random', path: 'fooooo' }
   );
-  expect(getByText('random')).not.toBeNull();
+  expect(getByText(/^random/)).not.toBeNull();
 });
 
 it('renders extra databases with link', async () => {

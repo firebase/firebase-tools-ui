@@ -97,6 +97,11 @@ export const CloneDialog = React.memo<Props>(function CloneDialog$({
       } else {
         snapshot = await get(realtimeRef);
       }
+      console.log({
+        snapshot,
+        val: snapshot.val(),
+        foo: (snapshot.ref as any)._repo,
+      });
       const data: Record<string, string> = {};
       Object.entries(snapshot.val() || {}).forEach(([key, val]) => {
         data[key] = JSON.stringify(val);

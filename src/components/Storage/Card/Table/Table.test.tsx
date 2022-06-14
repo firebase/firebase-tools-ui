@@ -48,7 +48,7 @@ describe('Table', () => {
   it('display all the rows', async () => {
     const { getAllByRole, getByText, queryByText, uploadFile } = await setup();
 
-    await uploadFile(fileName);
+    await uploadFile(fileName).catch((e) => console.log(e));
     await uploadFile('lol.txt', 'folder');
 
     expect(getByText(fileName)).toBeDefined();

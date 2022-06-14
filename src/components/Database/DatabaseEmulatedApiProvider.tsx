@@ -15,8 +15,12 @@
  */
 
 import { FirebaseApp } from 'firebase/app';
-import { connectDatabaseEmulator, getDatabase } from 'firebase/database';
-import React, { useCallback } from 'react';
+import {
+  Database,
+  connectDatabaseEmulator,
+  getDatabase,
+} from 'firebase/database';
+import React, { useCallback, useState } from 'react';
 import {
   DatabaseProvider,
   FirebaseAppProvider,
@@ -38,12 +42,14 @@ export const DatabaseEmulatedApiProvider: React.FC<
 > = React.memo(({ namespace, children }) => {
   const databaseUrl = useDatabaseUrl(namespace);
   const config = useEmulatorConfig('database');
+  const [database, setDatabase] = useState<Database | null>(null);
   const app = useEmulatedFirebaseApp(
     'database',
     DATABASE_OPTIONS,
     useCallback(
       (app: FirebaseApp) => {
         const database = getDatabase(app, databaseUrl);
+        setDatabase(database);
         connectDatabaseEmulator(database, config.host, config.port, {
           mockUserToken: 'owner',
         });
@@ -51,25 +57,25 @@ export const DatabaseEmulatedApiProvider: React.FC<
       [config, databaseUrl]
     )
   );
-  if (!app) {
+
+  if (!app || !database) {
     return null;
   }
 
   return (
     <FirebaseAppProvider firebaseApp={app}>
       <NamespaceProvider namespace={namespace}>
-        <DatabaseComponent namespace={namespace}>{children}</DatabaseComponent>
+        <DatabaseComponent database={database} namespace={namespace}>
+          {children}
+        </DatabaseComponent>
       </NamespaceProvider>
     </FirebaseAppProvider>
   );
 });
 
 const DatabaseComponent: React.FC<
-  React.PropsWithChildren<{ namespace: string }>
-> = ({ namespace, children }) => {
-  const app = useFirebaseApp();
-  const databaseUrl = useDatabaseUrl(namespace);
-  const database = getDatabase(app, databaseUrl);
+  React.PropsWithChildren<{ namespace: string; database: Database }>
+> = ({ database, children }) => {
   return <DatabaseProvider sdk={database}>{children}</DatabaseProvider>;
 };
 

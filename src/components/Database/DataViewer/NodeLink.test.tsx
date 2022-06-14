@@ -55,7 +55,7 @@ describe('linking within the current <Route>', () => {
             <NodeLink dbRef={ref(db, 'a/b/c/my_key')} />
           </Route>
         ),
-      { namespace: 'my-instance', path: 'x/y' }
+      { namespace: 'my-instance', path: 'database/my-instance/data/x/y' }
     );
 
     expect(getByText('my_key').getAttribute('href')).toEqual(
@@ -63,63 +63,56 @@ describe('linking within the current <Route>', () => {
     );
   });
 
-  it('appends ref path to routes that dont declare :path', () => {
-    const { getByText } = render(
-      <MemoryRouter initialEntries={['/nopath/x/y/z']}>
-        <Route path="/nopath">
-          <NodeLink dbRef={REF} />
+  it('appends ref path to routes that dont declare :path', async () => {
+    const { getByText } = await renderWithDatabase(
+      async (db) => (
+        <Route path="/database/:namespace/data">
+          <NodeLink dbRef={ref(db, 'a/b/c/my_key')} />
         </Route>
-      </MemoryRouter>
+      ),
+      { namespace: 'my-instance', path: '/database/my-instance/data' }
     );
 
     expect(getByText('my_key').getAttribute('href')).toEqual(
-      '/nopath/a/b/c/my_key'
+      '/database/my-instance/data/a/b/c/my_key'
     );
   });
 
-  it('appends ref path to root routes', () => {
-    const { getByText } = render(
-      <MemoryRouter initialEntries={['/x/y/z']}>
-        <Route path="/">
-          <NodeLink dbRef={REF} />
+  it('appends ref path to root routes', async () => {
+    const { getByText } = await renderWithDatabase(
+      async (db) => (
+        <Route path="/database/:namespace/data/:path*">
+          <NodeLink dbRef={ref(db, 'a/b/c/my_key')} />
         </Route>
-      </MemoryRouter>
+      ),
+      { namespace: 'my-instance', path: '/database/my-instance/data' }
     );
 
-    expect(getByText('my_key').getAttribute('href')).toEqual('/a/b/c/my_key');
-  });
-
-  it('resolves a href even when not inside a route', () => {
-    const { getByText } = render(
-      <MemoryRouter initialEntries={['/x/y/z']}>
-        <NodeLink dbRef={REF} />
-      </MemoryRouter>
+    expect(getByText('my_key').getAttribute('href')).toEqual(
+      '/database/my-instance/data/a/b/c/my_key'
     );
-
-    expect(getByText('my_key').getAttribute('href')).toEqual('/a/b/c/my_key');
   });
 });
 
-it('renders the url for root refs', () => {
-  const { getByText } = render(
-    <MemoryRouter initialEntries={['/database/test/data/a/b']}>
-      <NodeLink dbRef={ROOT_REF} />
-    </MemoryRouter>
-  );
+it('renders the url for root refs', async () => {
+  const { getByText } = await renderWithDatabase(async (db) => (
+    <NodeLink dbRef={ref(db)} />
+  ));
 
-  expect(getByText(ROOT_REF.toString())).not.toBeNull();
+  expect(getByText(/localhost/)).not.toBeNull();
 });
 
-it('links root nodes to the route root: /database/:id/data/', () => {
-  const { getByText } = render(
-    <MemoryRouter initialEntries={['/database/test/data/a/b']}>
-      <Route path="/database/:instance/data/:path*">
-        <NodeLink dbRef={ROOT_REF} />
+it('links root nodes to the route root: /database/:id/data/', async () => {
+  const { getByText } = await renderWithDatabase(
+    async (db) => (
+      <Route path="/database/:namespace/data/:path*">
+        <NodeLink dbRef={ref(db)} />
       </Route>
-    </MemoryRouter>
+    ),
+    { namespace: 'test', path: '/database/test/data/foo/bar/baz' }
   );
 
-  expect(getByText(ROOT_REF.toString()).getAttribute('href')).toEqual(
+  expect(getByText(/localhost/).getAttribute('href')).toEqual(
     '/database/test/data/'
   );
 });
