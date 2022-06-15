@@ -22,7 +22,17 @@ import {
   waitFor,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
-import { Database, equalTo, query, ref, set } from 'firebase/database';
+import {
+  Database,
+  equalTo,
+  get,
+  limitToFirst,
+  limitToLast,
+  orderByChild,
+  query,
+  ref,
+  set,
+} from 'firebase/database';
 import React from 'react';
 
 import { delay, waitForDialogsToOpen } from '../../../test_utils';
@@ -63,15 +73,24 @@ const setup = async () => {
 it('uses a filtered data set when query params are provided', async () => {
   const { getByText, getByLabelText } = await renderDialogWithDatabase(
     async (database) => {
+      console.log({ database });
+      await set(ref(database), null);
       const todosRef = ref(database, 'todos');
-      const todosQuery = query(todosRef, equalTo('Totally done', 'title'));
+      const todosQuery = query(todosRef, limitToFirst(1));
+
+      const snapQ = await get(todosQuery);
+      console.log(snapQ.val());
 
       await set(todosRef, {
         one: { title: 'Not done', completed: false },
         two: { title: 'Totally done', completed: true },
       });
 
+      // const snap = await get(todosRef);
+      // console.log(snap.val());
+
       return (
+        // <div></div>
         <CloneDialog
           onComplete={jest.fn()}
           realtimeRef={todosRef}
@@ -81,14 +100,12 @@ it('uses a filtered data set when query params are provided', async () => {
     }
   );
 
-  await waitForElementToBeRemoved(() => getByText(/Loading/), {
-    timeout: 10_000,
-  });
+  // await waitFor(() => getByLabelText(/one:/));
 
-  await waitFor(() => getByLabelText(/one:/));
+  // expect(() => getByLabelText(/two:/)).toThrowError();
+  // expect(getByLabelText(/one:/)).toBeDefined();
 
-  expect(() => getByLabelText(/two:/)).toThrowError();
-  expect(getByLabelText(/one:/)).toBeDefined();
+  await delay(5_000);
 }, 10_000);
 
 // describe('errors', () => {

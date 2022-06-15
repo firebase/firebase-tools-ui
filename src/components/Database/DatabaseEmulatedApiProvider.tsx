@@ -21,11 +21,7 @@ import {
   getDatabase,
 } from 'firebase/database';
 import React, { useCallback, useState } from 'react';
-import {
-  DatabaseProvider,
-  FirebaseAppProvider,
-  useFirebaseApp,
-} from 'reactfire';
+import { DatabaseProvider, FirebaseAppProvider } from 'reactfire';
 
 import { useEmulatedFirebaseApp } from '../../firebase';
 import { useEmulatorConfig } from '../common/EmulatorConfigProvider';

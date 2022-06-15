@@ -45,7 +45,7 @@
     "codemirror": "^5.61.1",
     "concurrently": "^7.2.1",
     "express": "^4.17.1",
-    "firebase": "9.0",
+    "firebase": "9.8",
     "font-awesome": "^4.7.0",
     "immer": "^9.0.14",
     "keycode": "^2.2.0",

@@ -17,7 +17,7 @@
 import { randomUUID } from 'crypto';
 
 import { render, waitForElementToBeRemoved } from '@testing-library/react';
-import { Database } from 'firebase/database';
+import { Database, enableLogging, ref, set } from 'firebase/database';
 import { uniqueId } from 'lodash';
 import React, { Suspense, useEffect, useState } from 'react';
 import { MemoryRouter } from 'react-router-dom';
@@ -26,6 +26,8 @@ import { useDatabase } from 'reactfire';
 import { makeDeferred } from '../../../test_utils';
 import { TestEmulatorConfigProvider } from '../../common/EmulatorConfigProvider';
 import { DatabaseEmulatedApiProvider } from '../DatabaseEmulatedApiProvider';
+
+enableLogging(true);
 
 interface RenderOptions {
   path?: string;
