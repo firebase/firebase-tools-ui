@@ -77,6 +77,9 @@ export const Email: React.FC<
     pattern: EMAIL_REGEX,
   });
 
+  // TODO: Only adding this todo to get reviewer visibility. I added this
+  // register() call during a rebase of PR#658 but this feels very wonky. I can
+  // revert it back to what it was before.
   const { ref: emailVerifiedRef, ...emailVerifiedState } = register(
     'emailVerified',
     {

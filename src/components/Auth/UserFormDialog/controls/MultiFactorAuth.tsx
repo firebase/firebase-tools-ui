@@ -20,8 +20,7 @@ import { ListDivider } from '@rmwc/list';
 import { Typography } from '@rmwc/typography';
 import classNames from 'classnames';
 import React, { useEffect, useState } from 'react';
-import { useFieldArray } from 'react-hook-form';
-import { FormContextValues } from 'react-hook-form/dist/contextTypes';
+import { UseFormReturn, useFieldArray } from 'react-hook-form';
 
 import { Field, SwitchField } from '../../../common/Field';
 import { AddAuthUserPayload, AuthFormUser } from '../../types';
@@ -40,14 +39,20 @@ function addNewMfaNumber(add: (newMfaInfo: { phoneInfo: string }) => void) {
 }
 
 export const MultiFactor: React.FC<
-  MultiFactorProps & FormContextValues<AuthFormUser>
+  MultiFactorProps & UseFormReturn<AuthFormUser>
 > = (form) => {
-  const { control, watch, setError, clearError, errors, user, register } = form;
+  const {
+    control,
+    watch,
+    setError,
+    clearErrors,
+    formState: { errors },
+    user,
+    register,
+  } = form;
 
   // https://react-hook-form.com/v5/api#useFieldArray
-  const { fields, append, remove } = useFieldArray<
-    AuthFormUser['mfaPhoneInfo'][0]
-  >({
+  const { fields, append, remove } = useFieldArray({
     control,
     name: 'mfaPhoneInfo',
   });
@@ -71,15 +76,17 @@ export const MultiFactor: React.FC<
       }
 
       if (emailVerified) {
-        clearError('verifyEmail');
+        clearErrors('emailVerified');
       } else {
-        setError('verifyEmail', 'notverified');
+        setError('emailVerified', { type: 'notVerified'});
       }
     } else {
-      clearError('verifyEmail');
-      clearError('mfaPhoneInfo');
+      clearErrors('emailVerified');
+      clearErrors('mfaPhoneInfo');
     }
-  }, [fields, mfaEnabled, emailVerified, setError, clearError, append]);
+  }, [fields, mfaEnabled, emailVerified, setError, clearErrors, append]);
+
+  const { ref: mfaEnabledRef, ...mfaEnabledArrState } = register('mfaEnabled');
 
   return (
     <div className={styles.signInWrapper}>
@@ -91,14 +98,14 @@ export const MultiFactor: React.FC<
       </div>
 
       <SwitchField
-        name="mfaEnabled"
         label=""
         switchLabel={mfaEnabled ? 'Enabled' : 'Disabled'}
         defaultChecked={false}
-        inputRef={register()}
+        inputRef={mfaEnabledRef}
+        {...mfaEnabledArrState}
       />
 
-      {(errors as any).verifyEmail ? (
+      {(errors as any).emailVerified?.type === 'notVerified' ? (
         <Typography use="body2" theme="error" tag="div" role="alert">
           Email needs to be verified to enroll in multi-factor authentication
         </Typography>
@@ -116,7 +123,7 @@ export const MultiFactor: React.FC<
           </Typography>
           <div>
             {fields.map((item, index) => {
-              const fieldName = `mfaPhoneInfo[${index}].phoneInfo`;
+              const fieldName = `mfaPhoneInfo.${index}.phoneInfo` as const; 
 
               const getPhoneErrorText = () => {
                 const error = errors.mfaPhoneInfo?.[index];
@@ -126,10 +133,16 @@ export const MultiFactor: React.FC<
                   } else if ((error as any).phoneInfo.type === 'required') {
                     return 'Phone number is required';
                   } else {
-                    return error.message;
+                    return (error as any).phoneInfo.message;
                   }
                 }
               };
+
+              // TODO: ask yuchen
+              const { ref: phoneRef, ...phoneState } = register(fieldName, {
+                pattern: PHONE_REGEX,
+                required: !!mfaEnabled,
+              });
 
               return (
                 <div
@@ -140,17 +153,14 @@ export const MultiFactor: React.FC<
                   )}
                 >
                   <Field
-                    name={fieldName}
                     label="Phone number"
                     placeholder="Enter phone number"
                     type="tel"
                     error={getPhoneErrorText()}
                     disabled={!mfaEnabled}
-                    inputRef={register({
-                      pattern: PHONE_REGEX,
-                      required: !!mfaEnabled,
-                    })}
+                    inputRef={phoneRef}
                     defaultValue={item.phoneInfo}
+                    {...phoneState}
                   />
                   <div className={styles.deleteButtonContainer}>
                     <IconButton
