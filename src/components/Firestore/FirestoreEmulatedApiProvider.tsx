@@ -48,7 +48,7 @@ const FIRESTORE_OPTIONS = {};
  * the Emulator Hub.
  */
 export const FirestoreEmulatedApiProvider: React.FC<
-  React.PropsWithChildren<unknown>
+  React.PropsWithChildren<{}>
 > = React.memo(({ children }) => {
   const config = useEmulatorConfig('firestore');
   const app = useEmulatedFirebaseApp(
