@@ -78,7 +78,7 @@
     "vite-plugin-svgr": "^2.1.0"
   },
   "scripts": {
-    "start": "concurrently \"npm run start:server\" \"npm run start:client\"",
+    "start": "concurrently 'npm run start:server' 'npm run start:client'",
     "start:client": "vite",
     "start:server": "nodemon server.js",
     "build": "npm run build:web && npm run build:server",
