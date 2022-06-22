@@ -14,7 +14,13 @@
  * limitations under the License.
  */
 
-import { doc, DocumentReference, Firestore, GeoPoint, Timestamp } from 'firebase/firestore';
+import {
+  DocumentReference,
+  Firestore,
+  GeoPoint,
+  Timestamp,
+  doc,
+} from 'firebase/firestore';
 
 import {
   FieldType,
@@ -126,10 +132,7 @@ export function normalize(data: FirestoreAny): Store {
   }
 }
 
-export function denormalize(
-  store: Store,
-  firestore?: Firestore
-): FirestoreAny {
+export function denormalize(store: Store, firestore?: Firestore): FirestoreAny {
   assertStoreHasRoot(store);
   const field = store.fields[store.uuid];
   if (isMapField(field)) {

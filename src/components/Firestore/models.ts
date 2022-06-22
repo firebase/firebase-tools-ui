@@ -14,7 +14,16 @@
  * limitations under the License.
  */
 
-import { Timestamp, CollectionReference, DocumentReference, GeoPoint, Bytes, FieldValue, WhereFilterOp, Firestore } from "firebase/firestore";
+import {
+  Bytes,
+  CollectionReference,
+  DocumentReference,
+  FieldValue,
+  Firestore,
+  GeoPoint,
+  Timestamp,
+  WhereFilterOp,
+} from 'firebase/firestore';
 
 export interface DocumentCollectionDatabaseApi<U, V> {
   projectId: string;
@@ -56,7 +65,7 @@ export type FirestorePrimitive =
   | null
   | DocumentReference
   | GeoPoint
-  | Bytes 
+  | Bytes
   | Timestamp
   | FieldValue;
 

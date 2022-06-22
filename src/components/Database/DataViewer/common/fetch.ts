@@ -14,7 +14,20 @@
  * limitations under the License.
  */
 
-import { DatabaseReference, DataSnapshot, endAt, equalTo, get, limitToFirst, off, onValue, orderByChild, query, Query, startAt } from 'firebase/database';
+import {
+  DataSnapshot,
+  DatabaseReference,
+  Query,
+  endAt,
+  equalTo,
+  get,
+  limitToFirst,
+  off,
+  onValue,
+  orderByChild,
+  query,
+  startAt,
+} from 'firebase/database';
 import { Observable, ReplaySubject, defer, from, of } from 'rxjs';
 import {
   catchError,
@@ -85,10 +98,7 @@ export function canDoRealtime(
   );
 }
 
-function realtimeToViewModel(
-  ref: DatabaseReference,
-  queryParams: QueryParams
-) {
+function realtimeToViewModel(ref: DatabaseReference, queryParams: QueryParams) {
   let query: Query;
   return once(ref).pipe(
     switchMap((snap) => {
@@ -139,16 +149,17 @@ function toObservable(query: Query) {
   });
 }
 
-export function applyQuery(
-  ref: DatabaseReference,
-  params: QueryParams
-): Query {
+export function applyQuery(ref: DatabaseReference, params: QueryParams): Query {
   const { key, operator, value, limit } = params;
   // Check the existence value instead of it being falsy. This prevents bugs
   // where the "value" is actually false.
   // ex: { key: "completed", operator: "==", value: "false" }
   if (key != null && operator != null && value != null) {
-    let queryOp = query(ref, orderByChild(key), limitToFirst(limit || DEFAULT_PAGE_SIZE));
+    let queryOp = query(
+      ref,
+      orderByChild(key),
+      limitToFirst(limit || DEFAULT_PAGE_SIZE)
+    );
     switch (operator) {
       case '==':
         return query(queryOp, equalTo(value));

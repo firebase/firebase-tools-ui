@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Database, DatabaseReference, Query } from "firebase/database";
+import { Database, DatabaseReference, Query } from 'firebase/database';
 
 /**
  * Max nodes shown underneath each

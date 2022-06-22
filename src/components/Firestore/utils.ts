@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 
-import { Bytes, DocumentReference, GeoPoint, Timestamp } from 'firebase/firestore';
+import {
+  Bytes,
+  DocumentReference,
+  GeoPoint,
+  Timestamp,
+} from 'firebase/firestore';
 import produce from 'immer';
 import get from 'lodash.get';
 
@@ -75,15 +80,11 @@ export function isBoolean(value: FirestoreAny): value is boolean {
   return typeof value === 'boolean';
 }
 
-export function isReference(
-  value: FirestoreAny
-): value is DocumentReference {
+export function isReference(value: FirestoreAny): value is DocumentReference {
   return value instanceof DocumentReference;
 }
 
-export function isTimestamp(
-  value: FirestoreAny
-): value is Timestamp {
+export function isTimestamp(value: FirestoreAny): value is Timestamp {
   return value instanceof Timestamp;
 }
 
@@ -95,9 +96,7 @@ export function isNumber(value: FirestoreAny): value is number {
   return typeof value === 'number';
 }
 
-export function isGeoPoint(
-  value: FirestoreAny
-): value is GeoPoint {
+export function isGeoPoint(value: FirestoreAny): value is GeoPoint {
   return value instanceof GeoPoint;
 }
 
@@ -171,10 +170,7 @@ export function summarize(data: FirestoreAny, maxLen: number): string {
     case FieldType.STRING:
       return `"${data as string}"`;
     case FieldType.TIMESTAMP:
-      return summarizeDate(
-        (data as Timestamp).toDate(),
-        maxLen
-      );
+      return summarizeDate((data as Timestamp).toDate(), maxLen);
     case FieldType.JSON:
       throw new Error('JSON field type is input only');
   }
