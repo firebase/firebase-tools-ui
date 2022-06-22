@@ -15,13 +15,12 @@
  */
 import { IconButton } from '@rmwc/icon-button';
 import { MenuItem, SimpleMenu } from '@rmwc/menu';
-import { DatabaseReference, child, ref as dbRef, ref } from 'firebase/database';
-import React, { useEffect, useState } from 'react';
+import { DatabaseReference, ref } from 'firebase/database';
+import React, { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useHistory } from 'react-router-dom';
-import { useDatabase, useDatabaseObject } from 'reactfire';
+import { useDatabase } from 'reactfire';
 
-import { initDatabase } from '../../firebase';
 import { DatabaseConfig } from '../../store/config';
 import { InteractiveBreadCrumbBar } from '../common/InteractiveBreadCrumbBar';
 import { ImportDialog } from './DataViewer/ImportDialog';

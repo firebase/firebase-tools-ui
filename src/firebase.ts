@@ -26,28 +26,6 @@ import { useEffect, useState } from 'react';
 import { useConfig } from './components/common/EmulatorConfigProvider';
 import { DatabaseConfig } from './store/config';
 
-interface WindowWithDb extends Window {
-  database?: Database;
-  firestore?: Firestore;
-}
-
-export function initDatabase(
-  config: DatabaseConfig,
-  namespace: string
-): [Database, { cleanup: () => Promise<void> }] {
-  const databaseURL = `http://${config.hostAndPort}/?ns=${namespace}`;
-  const app = initializeApp(
-    { databaseURL },
-    `Database Component: ${databaseURL} ${Math.random()}`
-  );
-
-  const db = getDatabase(app);
-  connectDatabaseEmulator(db, config.host, config.port, {
-    mockUserToken: 'owner',
-  });
-  return [db, { cleanup: () => deleteApp(app) }];
-}
-
 /**
  * Get a JS SDK App instance with emulator Admin auth enabled.
  *
@@ -86,7 +64,7 @@ export function useEmulatedFirebaseApp(
       if (app) {
         setApp(undefined);
         // Errors may happen if app is already deleted. Ignore them.
-        // deleteApp(app).catch(() => {});
+        deleteApp(app).catch(() => {});
       }
     };
   }, [app, name, config, projectId, initialize]);
