@@ -89,7 +89,6 @@ export const CloneDialog = React.memo<Props>(function CloneDialog$({
 
   useEffect(() => {
     const loadData = async () => {
-      console.log('load data....');
       let snapshot = null;
       // only apply the query if the user has selected the checkbox
       // and the query has been passed as a prop
@@ -98,15 +97,10 @@ export const CloneDialog = React.memo<Props>(function CloneDialog$({
       } else {
         snapshot = await get(realtimeRef);
       }
-      console.log({
-        snapshot,
-        val: snapshot.val(),
-      });
       const data: Record<string, string> = {};
       Object.entries(snapshot.val() || {}).forEach(([key, val]) => {
         data[key] = JSON.stringify(val);
       });
-      console.log({ data });
       setForm(data);
       setNewDestinationPath(cloneKey(originalKey, realtimeRef));
       setIsLoading(false);

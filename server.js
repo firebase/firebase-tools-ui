@@ -47,7 +47,6 @@ exports.startServer = function () {
 
   const host = process.env.HOST || 'localhost';
   const port = process.env.PORT || 3001;
-  console.log({ port });
   app.listen(port, host, () => {
     console.log(`Web / API server started at ${host}:${port}`);
   });

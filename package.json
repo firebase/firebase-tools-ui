@@ -83,7 +83,7 @@
     "start:server": "nodemon server.js",
     "build": "npm run build:web && npm run build:server",
     "bundle": "rm -f emulator-ui-dist.zip && zip -r emulator-ui-dist.zip server.bundle.js build",
-    "build:web": "react-scripts build",
+    "build:web": "vite build",
     "build:server": "webpack --target=node ./server.js -o server.bundle.js",
     "test": "react-scripts test --env=./custom-jest-environment.js",
     "test:debug": "react-scripts --inspect-brk test --env=./custom-jest-environment.js --runInBand",

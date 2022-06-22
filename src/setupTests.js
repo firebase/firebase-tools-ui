@@ -17,8 +17,6 @@
 import * as base from '@rmwc/base';
 
 require('mutationobserver-shim');
-// require('web-streams-polyfill/es2018');
-// require('blob-polyfill');
 
 // reactFire has an implicit dependency on globalThis
 // https://github.com/FirebaseExtended/reactfire/blob/b82b58a8146eb044321244005f9d0eeeaf2be9e1/README.md#install

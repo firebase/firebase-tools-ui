@@ -123,11 +123,7 @@ export function useStorageFiles() {
     return Promise.all(
       files.map((file) => {
         const path = folder ? `${folder}/${file.name}` : file.name;
-        console.log(file.toString());
-        // console.log(file.stream());
-        return uploadBytes(ref(getCurrentRef(), path), file).catch((e) =>
-          console.log(e)
-        );
+        return uploadBytes(ref(getCurrentRef(), path), file);
       })
     );
   }

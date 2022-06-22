@@ -15,51 +15,56 @@
  */
 
 import { FirebaseApp } from 'firebase/app';
-import { connectStorageEmulator, getStorage } from 'firebase/storage';
-import React, { useCallback } from 'react';
 import {
-  FirebaseAppProvider,
-  StorageProvider,
-  useFirebaseApp,
-} from 'reactfire';
+  FirebaseStorage,
+  connectStorageEmulator,
+  getStorage,
+} from 'firebase/storage';
+import React, { useCallback, useState } from 'react';
+import { FirebaseAppProvider, StorageProvider } from 'reactfire';
 
 import { useEmulatedFirebaseApp } from '../../../firebase';
 import { useEmulatorConfig } from '../../common/EmulatorConfigProvider';
 
-const FIREBASE_APP_OPTIONS = {};
+const FIREBASE_APP_OPTIONS = {
+  storageBucket: 'foo.appspot.com',
+};
 
 export const StorageFirebaseAppProvider: React.FC<
-  React.PropsWithChildren<unknown>
-> = ({ children }) => {
+  React.PropsWithChildren<{ bucket?: string }>
+> = ({ bucket, children }) => {
   const { host, port } = useEmulatorConfig('storage');
+  const [storage, setStorage] = useState<FirebaseStorage | null>(null);
   const app = useEmulatedFirebaseApp(
     'storage',
     FIREBASE_APP_OPTIONS,
     useCallback(
       (app: FirebaseApp) => {
-        connectStorageEmulator(getStorage(app), host, port, {
+        const storage = bucket
+          ? getStorage(app, `gs://other.appspot.com`)
+          : getStorage(app);
+        connectStorageEmulator(storage, host, port, {
           mockUserToken: 'owner',
         });
+        setStorage(storage);
       },
       [host, port]
     )
   );
 
-  if (!app) {
+  if (!app || !storage) {
     return null;
   }
 
   return (
     <FirebaseAppProvider firebaseApp={app}>
-      <StorageComponent>{children}</StorageComponent>
+      <StorageComponent storage={storage}>{children}</StorageComponent>
     </FirebaseAppProvider>
   );
 };
 
-const StorageComponent: React.FC<React.PropsWithChildren<unknown>> = ({
-  children,
-}) => {
-  const app = useFirebaseApp();
-  const storage = getStorage(app);
+const StorageComponent: React.FC<
+  React.PropsWithChildren<{ storage: FirebaseStorage }>
+> = ({ storage, children }) => {
   return <StorageProvider sdk={storage}>{children}</StorageProvider>;
 };

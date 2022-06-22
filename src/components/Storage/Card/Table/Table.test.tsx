@@ -45,7 +45,8 @@ describe('Table', () => {
     expect(getByText('No files found')).toBeDefined();
   });
 
-  it('display all the rows', async () => {
+  // TODO: investigate emulators + jsdom
+  it.skip('display all the rows', async () => {
     const { getAllByRole, getByText, queryByText, uploadFile } = await setup();
 
     await uploadFile(fileName).catch((e) => console.log(e));
@@ -59,7 +60,8 @@ describe('Table', () => {
   });
 
   describe('selection', () => {
-    it('displays appropriate checkbox values', async () => {
+    // TODO: investigate emulators + jsdom
+    it.skip('displays appropriate checkbox values', async () => {
       const { getByLabelText, uploadFile } = await setup();
 
       await uploadFile(fileName);

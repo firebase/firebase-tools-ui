@@ -14,12 +14,6 @@
  * limitations under the License.
  */
 
-// Force the browser build even in Node.js + jsdom unit tests because jsdom's
-// File/Blob impl is incomplete (https://github.com/jsdom/jsdom/issues/2555)
-// and thus not recognized by node-fetch, used by the Node build of Storage SDK.
-// The browser build works because it uses XHR (also mocked by jsdom).
-import '@firebase/storage/dist/index.browser.cjs.js';
-
 import { FirebaseApp, deleteApp, initializeApp } from 'firebase/app';
 import {
   Database,
@@ -92,7 +86,7 @@ export function useEmulatedFirebaseApp(
       if (app) {
         setApp(undefined);
         // Errors may happen if app is already deleted. Ignore them.
-        deleteApp(app).catch(() => {});
+        // deleteApp(app).catch(() => {});
       }
     };
   }, [app, name, config, projectId, initialize]);
