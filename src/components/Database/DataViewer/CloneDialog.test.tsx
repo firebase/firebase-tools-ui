@@ -22,7 +22,7 @@ import { delay, waitForDialogsToOpen } from '../../../test_utils';
 import { renderWithDatabase } from '../testing/DatabaseTestProviders';
 import { CloneDialog } from './CloneDialog';
 
-export async function renderDialogWithDatabase(
+async function renderDialogWithDatabase(
   ui: (database: Database) => Promise<React.ReactElement>
 ): Promise<RenderResult> {
   const result = await renderWithDatabase(ui);
