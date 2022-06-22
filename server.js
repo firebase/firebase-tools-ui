@@ -29,7 +29,7 @@ const { URL } = require('url');
 dns.setDefaultResultOrder('ipv4first');
 
 const fetch = (...args) =>
-  import('node-fetch').then(({ default: fetch }) => fetch(...args));
+  import('node-fetch').then((mod) => mod.default(...args));
 
 /**
   Start an express app that serves both static content and APIs.
