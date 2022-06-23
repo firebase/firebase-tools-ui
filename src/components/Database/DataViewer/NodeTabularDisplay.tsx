@@ -29,7 +29,7 @@ import {
   DataTableRow,
 } from '@rmwc/data-table';
 import { Typography } from '@rmwc/typography';
-import firebase from 'firebase';
+import { DatabaseReference, Query, child, get } from 'firebase/database';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 
@@ -39,7 +39,7 @@ import { ValueDisplay } from './ValueDisplay';
 
 export interface Props {
   hasMoreRows?: boolean;
-  query: firebase.database.Query;
+  query: Query;
   onLoadMore?: () => void;
 }
 
@@ -112,13 +112,13 @@ function getColumnValue(
   row: { pkId: string; value: any },
   key: string,
   colIndex: number,
-  ref: firebase.database.Reference
+  ref: DatabaseReference
 ) {
   if (colIndex === 0) {
     return (
       <DataTableCell key={key}>
         <Typography use="body2" className="NodeTabularDisplay__key">
-          <NodeLink dbRef={ref.child(row.pkId)} />
+          <NodeLink dbRef={child(ref, row.pkId)} />
         </Typography>
       </DataTableCell>
     );
@@ -147,8 +147,8 @@ function getColumnValue(
   }
 }
 
-async function buildTable(query: firebase.database.Query): Promise<Table> {
-  const snap = await query.once('value');
+async function buildTable(query: Query): Promise<Table> {
+  const snap = await get(query);
   const data = snap.val();
 
   // empty filter results

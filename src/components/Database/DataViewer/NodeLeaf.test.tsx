@@ -15,65 +15,50 @@
  */
 
 import { act, render } from '@testing-library/react';
+import { DatabaseReference, ref } from 'firebase/database';
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
-import { fakeReference } from '../testing/models';
+import { renderWithDatabase } from '../testing/DatabaseTestProviders';
 import { NodeLeaf } from './NodeLeaf';
 
-const ROOT_REF = fakeReference({ key: null, parent: null });
-const REF = fakeReference({
-  parent: ROOT_REF,
-  key: 'my_key',
-  path: 'my_key',
-  data: 'my_value',
-});
-
-beforeEach(() => {
-  (REF.toString as jest.Mock).mockReturnValue('http://localhost:9000/my_key');
-
-  (ROOT_REF.child as jest.Mock).mockReturnValue(REF);
-  (ROOT_REF.toString as jest.Mock).mockReturnValue('http://localhost:9000/');
-});
-
 describe('the node key', () => {
-  it('shows options.databaseURL for root nodes', () => {
-    const { getByLabelText } = render(
-      <MemoryRouter>
-        <NodeLeaf realtimeRef={ROOT_REF} value={'my-value'} />
-      </MemoryRouter>
-    );
+  it('shows options.databaseURL for root nodes', async () => {
+    const { getByLabelText } = await renderWithDatabase((db) => {
+      const dbRef = ref(db, 'foo');
+      return Promise.resolve(
+        <NodeLeaf realtimeRef={dbRef} value={'my-value'} />
+      );
+    });
 
-    expect(getByLabelText('Key name').textContent).toBe(ROOT_REF.toString());
+    expect(getByLabelText('Key name').textContent).toMatch('foo');
   });
 
-  it('shows the key for other nodes', () => {
-    const { getByLabelText } = render(
-      <MemoryRouter>
-        <NodeLeaf realtimeRef={REF} value={'my-value'} />
-      </MemoryRouter>
-    );
+  it('shows the key for other nodes', async () => {
+    const { getByLabelText } = await renderWithDatabase((db) => {
+      const dbRef = ref(db, 'foo/bar/baz');
 
-    expect(getByLabelText('Key name').textContent).toBe(REF.key);
+      return Promise.resolve(
+        <NodeLeaf realtimeRef={dbRef} value={'my-value'} />
+      );
+    });
+
+    expect(getByLabelText('Key name').textContent).toBe('baz');
   });
 });
 
 describe('the node value', () => {
-  it('shows null for root nodes', () => {
-    const { getByLabelText } = render(
-      <MemoryRouter>
-        <NodeLeaf realtimeRef={ROOT_REF} value={null} />
-      </MemoryRouter>
+  it('shows null for root nodes', async () => {
+    const { getByLabelText } = await renderWithDatabase((db) =>
+      Promise.resolve(<NodeLeaf realtimeRef={ref(db)} value={null} />)
     );
 
     expect(getByLabelText('Node value').textContent).toBe('null');
   });
 
-  it('shows the json wrapped value for other nodes', () => {
-    const { getByLabelText } = render(
-      <MemoryRouter>
-        <NodeLeaf realtimeRef={REF} value={'my-value'} />
-      </MemoryRouter>
+  it('shows the json wrapped value for other nodes', async () => {
+    const { getByLabelText } = await renderWithDatabase((db) =>
+      Promise.resolve(<NodeLeaf realtimeRef={ref(db)} value={'my-value'} />)
     );
 
     expect(getByLabelText('Node value').textContent).toBe('"my-value"');
@@ -82,25 +67,21 @@ describe('the node value', () => {
 
 describe('editing the node', () => {
   describe('root nodes', () => {
-    it('shows url as the key, and is disabled', () => {
-      const { getByLabelText } = render(
-        <MemoryRouter>
-          <NodeLeaf realtimeRef={ROOT_REF} value={null} />
-        </MemoryRouter>
+    it('shows url as the key, and is disabled', async () => {
+      const { getByLabelText } = await renderWithDatabase((db) =>
+        Promise.resolve(<NodeLeaf realtimeRef={ref(db)} value={null} />)
       );
 
       act(() => getByLabelText('Edit value').click());
 
-      expect((getByLabelText('Field') as HTMLInputElement).value).toBe(
-        ROOT_REF.toString()
+      expect((getByLabelText('Field') as HTMLInputElement).value).toMatch(
+        /^http:\/\/localhost/
       );
     });
 
-    it('has an empty value entry', () => {
-      const { getByLabelText } = render(
-        <MemoryRouter>
-          <NodeLeaf realtimeRef={ROOT_REF} value={null} />
-        </MemoryRouter>
+    it('has an empty value entry', async () => {
+      const { getByLabelText } = await renderWithDatabase((db) =>
+        Promise.resolve(<NodeLeaf realtimeRef={ref(db)} value={null} />)
       );
 
       act(() => getByLabelText('Edit value').click());
@@ -110,25 +91,23 @@ describe('editing the node', () => {
   });
 
   describe('other nodes', () => {
-    it('shows url as the key, and is disabled', () => {
-      const { getByLabelText } = render(
-        <MemoryRouter>
-          <NodeLeaf realtimeRef={ROOT_REF} value={null} />
-        </MemoryRouter>
+    it('shows url as the key, and is disabled', async () => {
+      const { getByLabelText } = await renderWithDatabase((db) =>
+        Promise.resolve(<NodeLeaf realtimeRef={ref(db)} value={null} />)
       );
 
       act(() => getByLabelText('Edit value').click());
 
-      expect((getByLabelText('Field') as HTMLInputElement).value).toBe(
-        ROOT_REF.toString()
+      expect((getByLabelText('Field') as HTMLInputElement).value).toMatch(
+        /^http:\/\/localhost/
       );
     });
 
-    it('has a value entry box initially', () => {
-      const { getByLabelText } = render(
-        <MemoryRouter>
-          <NodeLeaf realtimeRef={REF} value={'my-value'} />
-        </MemoryRouter>
+    it('has a value entry box initially', async () => {
+      const { getByLabelText } = await renderWithDatabase((db) =>
+        Promise.resolve(
+          <NodeLeaf realtimeRef={ref(db, 'foo')} value={'my-value'} />
+        )
       );
 
       act(() => getByLabelText('Edit value').click());

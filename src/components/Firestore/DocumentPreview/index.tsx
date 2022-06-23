@@ -17,7 +17,7 @@
 import { Button } from '@rmwc/button';
 import { List, ListItem } from '@rmwc/list';
 import { Typography } from '@rmwc/typography';
-import firebase from 'firebase';
+import { DocumentReference } from 'firebase/firestore';
 import React, { useState } from 'react';
 import { useFirestoreDoc } from 'reactfire';
 
@@ -29,7 +29,7 @@ import InlineEditor from './InlineEditor';
 import { DocumentProvider } from './store';
 
 export interface Props {
-  reference: firebase.firestore.DocumentReference;
+  reference: DocumentReference;
   maxSummaryLen?: number;
 }
 
@@ -39,7 +39,7 @@ const DocumentPreview: React.FC<React.PropsWithChildren<Props>> = ({
 }) => {
   const snapshot = useFirestoreDoc(reference, { suspense: true }).data;
   const [isAddingField, setIsAddingField] = useState(false);
-  const docExists = snapshot.exists;
+  const docExists = snapshot.exists();
   const data = docExists ? (snapshot.data() as FirestoreMap) : {};
   const docEmpty = docExists && Object.keys(data).length === 0;
 

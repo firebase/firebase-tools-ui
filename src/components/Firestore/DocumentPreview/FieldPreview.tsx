@@ -21,7 +21,7 @@ import { IconButton } from '@rmwc/icon-button';
 import { ListItem, ListItemMeta } from '@rmwc/list';
 import { Theme } from '@rmwc/theme';
 import classnames from 'classnames';
-import firebase from 'firebase';
+import { DocumentReference } from 'firebase/firestore';
 import React, { useCallback, useState } from 'react';
 
 import { supportsEditing } from '../DocumentEditor';
@@ -121,7 +121,7 @@ export const FieldPreview: React.FC<
 export const EditableFieldPreview: React.FC<
   React.PropsWithChildren<
     CommonPreviewProps & {
-      documentRef: firebase.firestore.DocumentReference;
+      documentRef: DocumentReference;
     }
   >
 > = ({ path, documentRef, maxSummaryLen }) => {

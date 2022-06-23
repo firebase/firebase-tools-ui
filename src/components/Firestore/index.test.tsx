@@ -15,6 +15,7 @@
  */
 
 import { act, render, waitFor } from '@testing-library/react';
+import { collection, doc, setDoc } from 'firebase/firestore';
 import React from 'react';
 import { Route } from 'react-router-dom';
 
@@ -113,8 +114,8 @@ describe('Firestore sub-tabs navigation', () => {
       const { getAllByText, getAllByTestId, queryByText, findByTestId } =
         await renderWithFirestore(
           async (firestore) => {
-            const collectionRef = firestore.collection('cool-coll');
-            await collectionRef.doc('bar').set({ a: 1 });
+            const collectionRef = collection(firestore, 'cool-coll');
+            await setDoc(doc(collectionRef, 'bar'), { a: 1 });
 
             return <Firestore />;
           },
@@ -155,8 +156,8 @@ describe('Firestore sub-tabs navigation', () => {
     it('shows no shells if 2-levels deep', async () => {
       const { queryByTestId, findByText } = await renderWithFirestore(
         async (firestore) => {
-          const collectionRef = firestore.collection('coll');
-          await collectionRef.doc('doc').set({ a: 1 });
+          const collectionRef = collection(firestore, 'coll');
+          await setDoc(doc(collectionRef, 'doc'), { a: 1 });
           return <Firestore />;
         },
         {

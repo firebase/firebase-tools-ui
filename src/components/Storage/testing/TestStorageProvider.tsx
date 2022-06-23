@@ -21,7 +21,7 @@ import { TestEmulatorConfigProvider } from '../../common/EmulatorConfigProvider'
 export const TestStorageProvider: React.FC<
   React.PropsWithChildren<unknown>
 > = ({ children }) => {
-  const projectId = 'UNUSED';
+  const projectId = `UNUSED-${Date.now()}`;
   const hostAndPort = process.env.FIREBASE_STORAGE_EMULATOR_HOST;
 
   if (!hostAndPort) {

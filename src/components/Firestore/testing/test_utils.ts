@@ -15,7 +15,7 @@
  */
 
 import { RenderResult } from '@testing-library/react';
-import firebase from 'firebase';
+import { Firestore } from 'firebase/firestore';
 
 import { waitForDialogsToOpen } from '../../../test_utils';
 import { FirestoreRulesEvaluation } from '../Requests/rules_evaluation_result_model';
@@ -28,7 +28,7 @@ import { renderWithFirestore } from './FirestoreTestProviders';
  * This is syntatic sugar for render() and then waitForDialogsToOpen().
  */
 export async function renderDialogWithFirestore(
-  ui: (firestore: firebase.firestore.Firestore) => Promise<React.ReactElement>
+  ui: (firestore: Firestore) => Promise<React.ReactElement>
 ): Promise<RenderResult> {
   const result = await renderWithFirestore(ui);
   await waitForDialogsToOpen(result.container);

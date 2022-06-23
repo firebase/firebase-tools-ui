@@ -15,7 +15,7 @@
  */
 
 import { act, fireEvent, render } from '@testing-library/react';
-import firebase from 'firebase';
+import { Timestamp } from 'firebase/firestore';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
@@ -33,7 +33,7 @@ it('renders an editor for a timestamp', async () => {
     <TestForm>
       <TimestampEditor
         name="foo"
-        value={firebase.firestore.Timestamp.fromDate(date)}
+        value={Timestamp.fromDate(date)}
         onChange={onChange}
       />
     </TestForm>
@@ -62,6 +62,6 @@ it('renders an editor for a timestamp', async () => {
   });
 
   expect(onChange).toHaveBeenCalledWith(
-    firebase.firestore.Timestamp.fromDate(new Date(2001, 0, 2, 14, 30))
+    Timestamp.fromDate(new Date(2001, 0, 2, 14, 30))
   );
 });
