@@ -19,11 +19,13 @@ import { groupBy } from 'lodash';
 import keyBy from 'lodash.keyby';
 
 import { Accordion } from '../../../../common/Accordion';
+import { Callout } from '../../../../common/Callout';
 import { Markdown } from '../../../../common/Markdown';
 import { useExtension } from '../../../api/useExtension';
 import { Event, ParamType } from '../../../models';
 import styles from './EventsConfig.module.scss';
 import { ParamValue } from './ParamValue';
+
 
 export function EventsConfig() {
   const extension = useExtension()!;
@@ -130,7 +132,8 @@ export function EventsConfig() {
   const eventsConfigDiv = !!extension.eventarcChannel && !!extension.allowedEventTypes ? (
     <div className={styles.wrapper}>
       <h4>Enabled Events</h4>
-      <Typography
+      <Callout aside type="note">Events aren't emitted to production Eventarc in the emulator, and there won't be any cost.</Callout>
+      <p><Typography
         className={styles.description}
         use="caption"
         tag="div"
@@ -141,13 +144,12 @@ export function EventsConfig() {
           write custom event handlers
         </a>{' '}
         that respond to these events. Events will be emitted via Eventarc.{' '}
-        <a href="https://cloud.google.com/eventarc/pricing)">Fees apply.</a> 
-        Note: Events aren't emitted to production Eventarc in the emulator. 
+        <a href="https://cloud.google.com/eventarc/pricing">Fees apply.</a>
         <br />
         <a href={`/extensions/${extension.id}`}>
           How do events in this extension work?
         </a>
-      </Typography>
+      </Typography></p>
       {channelLocationDiv}
       {allowedEventTypesDiv}
     </div>
