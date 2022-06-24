@@ -22,21 +22,6 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { renderWithDatabase } from '../testing/DatabaseTestProviders';
 import { NodeLink } from './NodeLink';
 
-// const ROOT_REF = fakeReference({ key: null, parent: null });
-// const REF = fakeReference({
-//   parent: ROOT_REF,
-//   key: 'my_key',
-//   path: 'a/b/c/my_key',
-//   data: 'my_value',
-// });
-
-// beforeEach(() => {
-//   (REF.toString as jest.Mock).mockReturnValue(
-//     'http://localhost:9000/a/b/c/my_key'
-//   );
-//   (ROOT_REF.toString as jest.Mock).mockReturnValue('http://localhost:9000/');
-// });
-
 it('renders a link with the key name', async () => {
   const { getByText } = await renderWithDatabase(
     (db) => Promise.resolve(<NodeLink dbRef={ref(db, 'a/b/c/my_key')} />),
