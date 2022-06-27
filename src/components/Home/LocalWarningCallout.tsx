@@ -49,7 +49,9 @@ export const LocalWarningCallout: React.FC<
             />
             <Button
               label="Dismiss"
-              onClick={() => writeStorage(DISMISS_KEY, true)}
+              onClick={() => {
+                writeStorage(DISMISS_KEY, true);
+              }}
             />
           </>
         }

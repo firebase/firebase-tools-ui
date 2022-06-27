@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import firebase from 'firebase';
+import { GeoPoint } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { Controller } from 'react-hook-form';
 
@@ -23,8 +23,8 @@ import { Field } from '../../common/Field';
 const GeoPointEditor: React.FC<
   React.PropsWithChildren<{
     name: string;
-    value: firebase.firestore.GeoPoint;
-    onChange: (value: firebase.firestore.GeoPoint) => void;
+    value: GeoPoint;
+    onChange: (value: GeoPoint) => void;
   }>
 > = ({ name, value, onChange }) => {
   const [latitude, setLatitude] = useState(String(value.latitude));
@@ -42,7 +42,7 @@ const GeoPointEditor: React.FC<
 
     try {
       // Update the parent when _both_ fields are valid
-      const geoPoint = new firebase.firestore.GeoPoint(lat, long);
+      const geoPoint = new GeoPoint(lat, long);
       onChange(geoPoint);
     } catch {}
   }, [value, latitude, longitude, onChange]);

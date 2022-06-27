@@ -17,14 +17,14 @@
 import './NodeLink.scss';
 
 import { Typography } from '@rmwc/typography';
-import firebase from 'firebase';
+import { DatabaseReference } from 'firebase/database';
 import * as React from 'react';
 import { Link, matchPath, useRouteMatch } from 'react-router-dom';
 
 import { getDbRootUrl } from './common/view_model';
 
 export interface Props {
-  dbRef: firebase.database.Reference;
+  dbRef: DatabaseReference;
 }
 
 export const NodeLink = React.memo<Props>(function NodeLink$({ dbRef }) {

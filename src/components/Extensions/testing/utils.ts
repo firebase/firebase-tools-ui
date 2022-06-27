@@ -52,6 +52,12 @@ export const EXTENSION_SPEC: ExtensionSpec = {
         'availableMemoryMb: 1024\neventTrigger:\n  eventType: google.storage.object.finalize\n  resource: projects/_/buckets/${param:IMG_BUCKET}\nlocation: ${param:LOCATION}\nruntime: nodejs14\n',
     },
   ],
+  events: [
+    {
+      type: 'google.firebase.v1.custom-event-occurred',
+      description: 'A custom event occurred',
+    },
+  ],
   billingRequired: true,
   author: {
     authorName: 'Awesome Inc',
@@ -107,7 +113,11 @@ export const CONFIG_WITH_EXTENSION = {
 export const BACKEND_LIST: ExtensionBackend[] = [
   // published extension
   {
-    env: {},
+    env: {
+      ALLOWED_EVENT_TYPES: 'google.firebase.v1.custom-event-occurred',
+      EVENTARC_CHANNEL:
+        'projects/test-project/locations/us-west1/channels/firebase',
+    },
     extensionInstanceId: 'pirojok-the-published-extension',
     extension: BACKEND_EXTENSION,
     extensionVersion: EXTENSION_VERSION,
@@ -116,7 +126,11 @@ export const BACKEND_LIST: ExtensionBackend[] = [
   // local extension
   {
     extensionInstanceId: 'pirojok-the-local-extension',
-    env: {},
+    env: {
+      ALLOWED_EVENT_TYPES: 'google.firebase.v1.custom-event-occurred',
+      EVENTARC_CHANNEL:
+        'projects/test-project/locations/us-west1/channels/firebase',
+    },
     extensionSpec: EXTENSION_SPEC,
     functionTriggers: [],
   },

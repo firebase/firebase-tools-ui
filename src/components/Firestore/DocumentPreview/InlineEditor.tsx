@@ -23,7 +23,7 @@ import {
   CardActions,
 } from '@rmwc/card';
 import { Elevation } from '@rmwc/elevation';
-import firebase from 'firebase';
+import { Firestore } from 'firebase/firestore';
 import React, { useState } from 'react';
 import { FocusOn } from 'react-focus-on';
 
@@ -39,7 +39,7 @@ const InlineEditor: React.FC<
     areRootKeysMutable: boolean;
     rtdb?: boolean;
     startingIndex?: number;
-    firestore?: firebase.firestore.Firestore;
+    firestore?: Firestore;
   }>
 > = ({
   value,

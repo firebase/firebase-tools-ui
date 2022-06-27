@@ -14,9 +14,22 @@
  * limitations under the License.
  */
 
-import firebase from 'firebase';
+import { FirebaseApp } from 'firebase/app';
+import {
+  CollectionReference,
+  DocumentReference,
+  Firestore,
+  collection,
+  connectFirestoreEmulator,
+  getFirestore,
+} from 'firebase/firestore';
 import React, { useCallback, useEffect } from 'react';
-import { FirebaseAppProvider, useFirestore } from 'reactfire';
+import {
+  FirebaseAppProvider,
+  FirestoreProvider,
+  useFirebaseApp,
+  useFirestore,
+} from 'reactfire';
 import { mutate } from 'swr';
 
 import { useEmulatedFirebaseApp } from '../../firebase';
@@ -25,7 +38,7 @@ import { useFetcher, useRequest } from '../common/useRequest';
 import { MissingDocument } from './models';
 
 interface WindowWithFirestore extends Window {
-  firestore?: firebase.firestore.Firestore;
+  firestore?: Firestore;
 }
 
 const FIRESTORE_OPTIONS = {};
@@ -35,17 +48,18 @@ const FIRESTORE_OPTIONS = {};
  * the Emulator Hub.
  */
 export const FirestoreEmulatedApiProvider: React.FC<
-  React.PropsWithChildren<{
-    disableDevTools?: boolean;
-  }>
-> = React.memo(({ children, disableDevTools }) => {
+  React.PropsWithChildren<{}>
+> = React.memo(({ children }) => {
   const config = useEmulatorConfig('firestore');
   const app = useEmulatedFirebaseApp(
     'firestore',
     FIRESTORE_OPTIONS,
     useCallback(
-      (app: any) => {
-        app.firestore().useEmulator(config.host, config.port);
+      (app: FirebaseApp) => {
+        const firestore = getFirestore(app);
+        connectFirestoreEmulator(firestore, config.host, config.port, {
+          mockUserToken: 'owner',
+        });
       },
       [config]
     )
@@ -56,32 +70,18 @@ export const FirestoreEmulatedApiProvider: React.FC<
 
   return (
     <FirebaseAppProvider firebaseApp={app}>
-      {children}
-      {disableDevTools || <FirestoreDevTools />}
+      <FirestoreComponent>{children}</FirestoreComponent>
     </FirebaseAppProvider>
   );
 });
 
-const FirestoreDevTools: React.FC<React.PropsWithChildren<unknown>> =
-  React.memo(() => {
-    const firestore = useFirestore();
-
-    useEffect(() => {
-      const windowWithFirestore = window as WindowWithFirestore;
-      windowWithFirestore.firestore = firestore;
-      console.log(`🔥 Firestore is available at window.firestore.
-
-    Try:
-    firestore.doc('hello/world').set({hello: 'world!'});
-    firestore.doc('hello/world').get().then( snap => console.log(snap.data()) );`);
-
-      return () => {
-        delete windowWithFirestore.firestore;
-      };
-    }, [firestore]);
-
-    return null;
-  });
+const FirestoreComponent: React.FC<React.PropsWithChildren<unknown>> = ({
+  children,
+}) => {
+  const app = useFirebaseApp();
+  const firestore = getFirestore(app);
+  return <FirestoreProvider sdk={firestore}>{children}</FirestoreProvider>;
+};
 
 function useFirestoreRestApi() {
   const config = useEmulatorConfig('firestore');
@@ -110,12 +110,10 @@ export function useRootCollections() {
   );
 
   const collectionIds = data?.collectionIds || [];
-  return collectionIds.map((id) => firestore.collection(id));
+  return collectionIds.map((id) => collection(firestore, id));
 }
 
-export function useSubCollections(
-  docRef: firebase.firestore.DocumentReference
-) {
+export function useSubCollections(docRef: DocumentReference) {
   const { baseUrl } = useFirestoreRestApi();
   const encodedPath = encodePath(docRef.path);
   const url = `${baseUrl}/documents/${encodedPath}:listCollectionIds`;
@@ -131,14 +129,14 @@ export function useSubCollections(
   );
 
   const collectionIds = data?.collectionIds || [];
-  return collectionIds.map((id) => docRef.collection(id));
+  return collectionIds.map((id) => collection(docRef, id));
 }
 
 const DOCUMENT_PATH_RE =
   /projects\/(?<project>.*)\/databases\/(?<database>.*)\/documents\/(?<path>.*)/;
 
 export function useMissingDocuments(
-  collection: firebase.firestore.CollectionReference
+  collection: CollectionReference
 ): MissingDocument[] {
   const { baseUrl } = useFirestoreRestApi();
   const encodedPath = encodePath(collection.path);
@@ -192,11 +190,7 @@ export function useRecursiveDelete() {
     method: 'DELETE',
   });
 
-  return async (
-    ref:
-      | firebase.firestore.CollectionReference
-      | firebase.firestore.DocumentReference
-  ) => {
+  return async (ref: CollectionReference | DocumentReference) => {
     mutate('*');
     const encodedPath = encodePath(ref.path);
     const url = `${baseEmulatorUrl}/documents/${encodedPath}`;

@@ -14,17 +14,20 @@
  * limitations under the License.
  */
 
-import { Markdown } from '../../../../common/Markdown';
-import { useExtension } from '../../../api/useExtension';
-import { EventsCodeSnippet } from './EventsCodeSnippet';
-import style from './Readme.module.scss';
+import React, { createContext, useContext } from 'react';
 
-export function Readme() {
-  const extension = useExtension()!;
+const NamespaceContext = createContext('');
+
+export const NamespaceProvider: React.FC<
+  React.PropsWithChildren<{ namespace: string }>
+> = ({ namespace, children }) => {
   return (
-    <div className={style.wrapper}>
-      <Markdown>{extension.postinstallContent}</Markdown>
-      <EventsCodeSnippet />
-    </div>
+    <NamespaceContext.Provider value={namespace}>
+      {children}
+    </NamespaceContext.Provider>
   );
+};
+
+export function useNamespace() {
+  return useContext(NamespaceContext);
 }

@@ -23,7 +23,7 @@ import {
   DialogProps,
   DialogTitle,
 } from '@rmwc/dialog';
-import firebase from 'firebase';
+import { DocumentReference, collection } from 'firebase/firestore';
 import React, { useState } from 'react';
 import { useFirestore } from 'reactfire';
 
@@ -31,7 +31,7 @@ import { Field } from '../../common/Field';
 import { AddDocumentDialogValue, AddDocumentStep } from './AddDocumentDialog';
 
 interface AddCollectionStepProps {
-  documentRef?: firebase.firestore.DocumentReference;
+  documentRef?: DocumentReference;
   onChange: (value: string) => void;
 }
 
@@ -64,7 +64,7 @@ export interface AddCollectionDialogValue {
 }
 
 interface Props extends DialogProps {
-  documentRef?: firebase.firestore.DocumentReference;
+  documentRef?: DocumentReference;
   onValue: (v: AddCollectionDialogValue | null) => void;
 }
 
@@ -114,8 +114,8 @@ export const AddCollectionDialog: React.FC<React.PropsWithChildren<Props>> = ({
           <AddDocumentStep
             collectionRef={
               documentRef
-                ? documentRef.collection(collectionId)
-                : firestore.collection(collectionId)
+                ? collection(documentRef, collectionId)
+                : collection(firestore, collectionId)
             }
             onChange={setDocument}
           />

@@ -14,7 +14,15 @@
  * limitations under the License.
  */
 
-import firebase from 'firebase';
+import {
+  StorageReference,
+  deleteObject,
+  getDownloadURL,
+  getMetadata,
+  listAll,
+  ref,
+  uploadBytes,
+} from 'firebase/storage';
 import { useStorage } from 'reactfire';
 import useSwr from 'swr';
 
@@ -25,14 +33,12 @@ import { useBucket } from './useBucket';
 import { useCreateFolder } from './useCreateFolder';
 import { usePath } from './usePath';
 
-async function importFile(
-  fileRef: firebase.storage.Reference
-): Promise<StorageFile> {
-  const metadata = await fileRef.getMetadata();
-  return { type: 'file', ...metadata };
+async function importFile(fileRef: StorageReference): Promise<StorageFile> {
+  const metadata = await getMetadata(fileRef);
+  return { type: 'file', contentType: '', customMetadata: {}, ...metadata };
 }
 
-function importFolder(folder: firebase.storage.Reference): StorageFolder {
+function importFolder(folder: StorageReference): StorageFolder {
   return {
     type: 'folder',
     name: folder.name,
@@ -51,13 +57,13 @@ export function useStorageFiles() {
   }
 
   function getCurrentRef(folder = path) {
-    return storage.refFromURL(getLocation(folder));
+    return ref(storage, getLocation(folder));
   }
 
   const bucketHasAnyFiles = useSwr(
     `storage/hasFiles/${bucket}/`,
     async (): Promise<boolean> => {
-      const { items, prefixes } = await getCurrentRef('').listAll();
+      const { items, prefixes } = await listAll(getCurrentRef(''));
       return !!items.length || !!prefixes.length;
     },
     { suspense: true }
@@ -66,7 +72,7 @@ export function useStorageFiles() {
   const result = useSwr(
     `storage/${bucket}/${path}`,
     async (): Promise<StorageItem[]> => {
-      const { items, prefixes } = await getCurrentRef().listAll();
+      const { items, prefixes } = await listAll(getCurrentRef());
 
       return [
         ...prefixes.map(importFolder),
@@ -79,11 +85,11 @@ export function useStorageFiles() {
   const files = result.data || [];
 
   async function deleteFile(path: string): Promise<void> {
-    return await getCurrentRef('').child(path).delete();
+    return await deleteObject(ref(getCurrentRef(''), path));
   }
 
   async function deleteFolder(path: string): Promise<void> {
-    const { items, prefixes } = await getCurrentRef(path).listAll();
+    const { items, prefixes } = await listAll(getCurrentRef(path));
 
     try {
       /**
@@ -103,7 +109,7 @@ export function useStorageFiles() {
     });
 
     const filesPromise: Promise<void>[] = items.map(async (file) => {
-      return await file.delete();
+      return await deleteObject(file);
     });
 
     await Promise.all([...filesPromise, ...prefixesPromise]);
@@ -117,7 +123,7 @@ export function useStorageFiles() {
     return Promise.all(
       files.map((file) => {
         const path = folder ? `${folder}/${file.name}` : file.name;
-        return getCurrentRef().child(path).put(file);
+        return uploadBytes(ref(getCurrentRef(), path), file);
       })
     );
   }
@@ -140,8 +146,8 @@ export function useStorageFiles() {
   async function openAllFiles(paths: string[]) {
     const links = await Promise.all(
       paths
-        .map((path) => storage.refFromURL(getLocation() + '/' + path))
-        .map((d) => d.getDownloadURL())
+        .map((path) => ref(storage, getLocation() + '/' + path))
+        .map((d) => getDownloadURL(d))
     );
 
     links.forEach((url) => {

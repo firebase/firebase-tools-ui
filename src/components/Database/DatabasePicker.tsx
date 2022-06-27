@@ -30,6 +30,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { DatabaseCircleIcon } from '../common/icons';
+import { useNamespace } from './useNamespace';
 
 export interface PropsFromState {
   databases: string[] | undefined;
@@ -37,7 +38,6 @@ export interface PropsFromState {
 
 export type Props = PropsFromState & {
   primary: string;
-  current: string;
   navigation: (db: string) => string;
 };
 
@@ -64,10 +64,10 @@ const DatabaseListItem: React.FC<
 
 export const DatabasePicker: React.FC<React.PropsWithChildren<Props>> = ({
   primary,
-  current,
   navigation,
   databases,
 }) => {
+  const current = useNamespace();
   const secondaryDbs = databases
     ? databases.filter((db) => db !== primary)
     : [];
