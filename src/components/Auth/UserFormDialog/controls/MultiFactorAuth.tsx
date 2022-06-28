@@ -105,6 +105,7 @@ export const MultiFactor: React.FC<
         {...mfaEnabledArrState}
       />
 
+      {/** TODO: Everything below here is not getting displayed */}
       {(errors as any).emailVerified?.type === 'notVerified' ? (
         <Typography use="body2" theme="error" tag="div" role="alert">
           Email needs to be verified to enroll in multi-factor authentication
@@ -138,7 +139,6 @@ export const MultiFactor: React.FC<
                 }
               };
 
-              // TODO: ask yuchen
               const { ref: phoneRef, ...phoneState } = register(fieldName, {
                 pattern: PHONE_REGEX,
                 required: !!mfaEnabled,

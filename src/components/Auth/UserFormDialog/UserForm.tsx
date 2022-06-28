@@ -142,8 +142,18 @@ export const UserForm: React.FC<React.PropsWithChildren<UserFormProps>> = ({
   );
 
   const { register, handleSubmit, formState, reset } = form;
+  const { isValid, errors } = formState;
 
-  const canSubmit = !authUserDialogData?.loading && formState.isValid;
+  // TODO: formState.isValid remains false even when there are no errors present
+  // Possibly related: https://github.com/react-hook-form/react-hook-form/issues/2755
+  const canSubmit = !authUserDialogData?.loading && isValid;
+  console.log(`>>> isValid: ${isValid}`);
+  console.log(`>>> formState.isValid: ${formState.isValid}`);
+  console.log(`>>> values in errors`);
+  for (const property in Object.values(errors)) {
+    const elem = Object.values(errors)[property];
+    console.log(`>>>>> ${Object.values(elem)}`);
+  }
 
   const submit = useCallback(
     (formUser: AuthFormUser) => {

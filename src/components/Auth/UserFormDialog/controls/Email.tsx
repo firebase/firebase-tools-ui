@@ -36,6 +36,7 @@ function getErrorText(errors: any) {
     if (errors.email.type === 'unique') {
       return 'User with this email already exists';
     }
+    // TODO: this message isn't getting displayed when email is not present
     if (errors.email.type === 'emailPresent') {
       return 'Email required for verification';
     }
@@ -59,7 +60,6 @@ export const Email: React.FC<
   getValues,
   formState: { errors },
   allEmails,
-  isEditing,
 }) => {
   const { ref: emailRef, ...emailState } = register('email', {
     validate: {
@@ -84,7 +84,7 @@ export const Email: React.FC<
     'emailVerified',
     {
       validate: {
-        verified: (value) => !!value,
+        verified: (value) => value && value.length > 0,
       },
     }
   );
