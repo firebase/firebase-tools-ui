@@ -59,6 +59,37 @@ export const EmulatorDisabled: React.FC<
   </>
 );
 
+export const ExtensionsEmulatorDisabled: React.FC = () => (
+  <>
+    <GridCell desktop={2} tablet={0} phone={0}>
+      {/* Spacing */}
+    </GridCell>
+    <GridCell span={8} align="middle">
+      <Card className="EmulatorDisabled">
+        <div className="EmulatorDisabled-extensions-graphics">
+          <img src="/assets/extensions/default-extension.png" alt="" />
+        </div>
+        <div className="EmulatorDisabled-description">
+          <Typography use="headline6" tag="h3">
+            The Extensions Emulator is currently not running.
+          </Typography>
+          <Typography use="body1" tag="p">
+            If you are not using Extensions in your testing, everything is fine.
+            If you want to use Extensions in your testing,{' '}
+            <a href="https://firebase.google.com/docs/extensions/manifest">
+              add them to your extension manifest
+            </a>
+            . To do so, either to add a single extension instance by running:{' '}
+            <code>firebase ext:install &lt;publisherId/extensionId&gt;</code> or
+            export the extensions instances from a production project by running{' '}
+            <code>firebase ext:export --project=your-project</code>.
+          </Typography>
+        </div>
+      </Card>
+    </GridCell>
+  </>
+);
+
 export const EmulatorOutdated: React.FC<
   React.PropsWithChildren<{
     productName: string;
