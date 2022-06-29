@@ -16,7 +16,7 @@
 
 import { Button } from '@rmwc/button';
 import { GridCell } from '@rmwc/grid';
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { Callout } from '../common/Callout';
 import { CONSOLE_ROOT } from '../common/constants';
@@ -28,10 +28,22 @@ export const LocalWarningCallout: React.FC<
     projectId: string;
   }>
 > = ({ projectId }) => {
-  // TODO: investigate local-storage
-  const [isDismissed, setIsDismissed] = useState(false);
+  // Default to false to reduce layout flashes if already dismissed.
+  const [showWarning, setShowWarning] = useState(false);
+  useEffect(() => {
+    // Set to true only if localStorage is accessible and not dismissed before.
+    const val = localStorage.getItem(DISMISS_KEY);
+    if (val !== 'true') {
+      setShowWarning(true);
+    }
+  }, []);
 
-  if (isDismissed) {
+  const dismiss = useCallback(() => {
+    setShowWarning(false);
+    localStorage.setItem(DISMISS_KEY, 'true');
+  }, [setShowWarning]);
+
+  if (!showWarning) {
     return null;
   }
 
@@ -47,12 +59,7 @@ export const LocalWarningCallout: React.FC<
               target="_blank"
               label="View project"
             />
-            <Button
-              label="Dismiss"
-              onClick={() => {
-                setIsDismissed(true);
-              }}
-            />
+            <Button label="Dismiss" onClick={dismiss} />
           </>
         }
       >
