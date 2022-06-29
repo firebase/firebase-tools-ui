@@ -19,6 +19,7 @@ import { groupBy } from 'lodash';
 import keyBy from 'lodash.keyby';
 
 import { Accordion } from '../../../../common/Accordion';
+import { Callout } from '../../../../common/Callout';
 import { Markdown } from '../../../../common/Markdown';
 import { useExtension } from '../../../api/useExtension';
 import { Event, ParamType } from '../../../models';
@@ -125,31 +126,37 @@ export function EventsConfig() {
       />
     </div>
   ) : null;
-
-  return (
-    <div>
+  const eventsConfigDiv =
+    !!extension.eventarcChannel && !!extension.allowedEventTypes ? (
       <div className={styles.wrapper}>
         <h4>Enabled Events</h4>
-        <Typography
-          className={styles.description}
-          use="caption"
-          tag="div"
-          theme="secondary"
-        >
-          If you enable events, you can{' '}
-          <a href="https://firebase.google.com/docs/extensions/install-extensions#eventarc">
-            write custom event handlers
-          </a>{' '}
-          that respond to these events. Events will be emitted via Eventarc.{' '}
-          <a href="https://cloud.google.com/eventarc/pricing)">Fees apply.</a>
-          <br />
-          <a href={`/extensions/${extension.id}`}>
-            How do events in this extension work?
-          </a>
-        </Typography>
+        <Callout aside type="note">
+          Events aren't emitted to production Eventarc in the emulator, and
+          there won't be any cost.
+        </Callout>
+        <p>
+          <Typography
+            className={styles.description}
+            use="caption"
+            tag="div"
+            theme="secondary"
+          >
+            If you enable events, you can{' '}
+            <a href="https://firebase.google.com/docs/extensions/install-extensions#eventarc">
+              write custom event handlers
+            </a>{' '}
+            that respond to these events. Events will be emitted via Eventarc.{' '}
+            <a href="https://cloud.google.com/eventarc/pricing">Fees apply.</a>
+            <br />
+            <a href={`/extensions/${extension.id}`}>
+              How do events in this extension work?
+            </a>
+          </Typography>
+        </p>
+        {channelLocationDiv}
+        {allowedEventTypesDiv}
       </div>
-      {channelLocationDiv}
-      {allowedEventTypesDiv}
-    </div>
-  );
+    ) : null;
+
+  return <div>{eventsConfigDiv}</div>;
 }
