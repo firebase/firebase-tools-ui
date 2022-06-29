@@ -6,7 +6,6 @@
     "node": "^14.18.0 || >=16.4.0"
   },
   "dependencies": {
-    "@rehooks/local-storage": "^2.3.0",
     "@rmwc/base": "^7.0.3",
     "@rmwc/button": "^7.0.3",
     "@rmwc/card": "^7.0.3",
