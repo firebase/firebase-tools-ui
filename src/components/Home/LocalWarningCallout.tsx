@@ -29,7 +29,7 @@ export const LocalWarningCallout: React.FC<
   }>
 > = ({ projectId }) => {
   // Default to false to reduce layout flashes if already dismissed.
-  const [showWarning, setShowWarning] = useState<boolean>(false);
+  const [showWarning, setShowWarning] = useState(false);
   useEffect(() => {
     // Set to true only if localStorage is accessible and not dismissed before.
     const val = localStorage.getItem(DISMISS_KEY);
