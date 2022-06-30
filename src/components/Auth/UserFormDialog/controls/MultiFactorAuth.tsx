@@ -48,6 +48,8 @@ export const MultiFactor: React.FC<
     register,
     getValues,
     watch,
+    setError,
+    clearErrors,
   } = form;
 
   // https://react-hook-form.com/v5/api#useFieldArray
@@ -63,14 +65,6 @@ export const MultiFactor: React.FC<
   // TODO: mfaEnabled is a boolean instead of [] | ['on'] as defined
   // on type of AuthFormUser
   const { ref: mfaEnabledRef, ...mfaEnabledArrState } = register('mfaEnabled', {
-    validate: {
-      verified: (value) => {
-        const { emailVerified } = getValues();
-        console.log(`emailVerified: ${emailVerified}`);
-        console.log(`!value || emailVerified: ${!value || emailVerified}`);
-        return !value || emailVerified;
-      },
-    },
     onChange: (event) => {
       const mfaEnabled = getValues('mfaEnabled');
       if (mfaEnabled && fields.length === 0) {
@@ -81,6 +75,17 @@ export const MultiFactor: React.FC<
   });
 
   const mfaEnabled = watch('mfaEnabled');
+  const emailVerified = watch('emailVerified');
+
+  useEffect(() => {
+    if (mfaEnabled) {
+      if (!emailVerified) {
+        setError('mfaEnabled', { type: 'verified' });
+      } else {
+        clearErrors('mfaEnabled');
+      }
+    }
+  }, [mfaEnabled, emailVerified, setError, clearErrors]);
 
   return (
     <div className={styles.signInWrapper}>
