@@ -102,8 +102,7 @@ export const MultiFactor: React.FC<
         {...mfaEnabledArrState}
       />
 
-      {/** TODO: This error message never gets displayed */}
-      {(errors as any).mfaEnabled?.type === 'notVerified' ? (
+      {(errors as any).mfaEnabled?.type === 'verified' ? (
         <Typography use="body2" theme="error" tag="div" role="alert">
           Email needs to be verified to enroll in multi-factor authentication
         </Typography>
