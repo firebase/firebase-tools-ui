@@ -94,7 +94,7 @@ const ParamConditionListItem: React.FunctionComponent<
     isSelected: boolean;
     setSelectedCondition: Function;
   }
-> = ({ name, value, expression, isSelected, setSelectedCondition }) => {
+> = ({ name, value, tagColor, isSelected, setSelectedCondition }) => {
   return (
     <ListItem className={styles.rcListItem}>
       <Grid className={styles.parameterListItemGrid}>
@@ -102,7 +102,12 @@ const ParamConditionListItem: React.FunctionComponent<
         <GridCell span={2} />
 
         <GridCell span={3} className={styles.paramListHeaderGridItem}>
-          <Chip label={name} selected={isSelected} disabled />
+          <Chip
+            style={tagColor ? { backgroundColor: tagColor } : {}}
+            label={name}
+            selected={isSelected}
+            disabled
+          />
         </GridCell>
 
         <GridCell span={5} className={styles.paramListHeaderGridItem}>
@@ -171,6 +176,25 @@ const ParamDetails: React.FunctionComponent<{
     }
   };
 
+  let activeConditionName = 'Default';
+  let activeConditionValue: RemoteConfigParameterValue = defaultValue as RemoteConfigParameterValue;
+  let activeConditionColor:
+    | RemoteConfigCondition['tagColor']
+    | undefined = undefined;
+  for (let condition of conditions) {
+    if (
+      condition.name !== '!isEmulator' &&
+      checkEqual(condition.value, servedValue)
+    ) {
+      activeConditionName = condition.name;
+      activeConditionValue = condition.value;
+
+      if (condition.tagColor) {
+        activeConditionColor = condition.tagColor;
+      }
+    }
+  }
+
   return (
     <CollapsibleList
       open={expanded}
@@ -196,15 +220,20 @@ const ParamDetails: React.FunctionComponent<{
             </GridCell>
             <GridCell span={3} className={styles.paramListHeaderGridItem}>
               <Chip
-                label={'Default'}
+                style={
+                  activeConditionColor
+                    ? { backgroundColor: activeConditionColor }
+                    : {}
+                }
+                label={activeConditionName}
                 selected={true}
                 checkmark={true}
-                onInteraction={console.log}
+                disabled
               />
             </GridCell>
 
             <GridCell span={5} className={styles.paramListHeaderGridItem}>
-              {remoteConfigParameterValueToString(servedValue)}
+              {remoteConfigParameterValueToString(activeConditionValue)}
             </GridCell>
             <GridCell span={1} className={styles.paramListHeaderGridItem}>
               <IconButton

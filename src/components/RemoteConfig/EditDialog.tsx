@@ -134,6 +134,7 @@ export default function EditDialog({
 
                 return (
                   <ConditionField
+                    key={conditionName}
                     label={conditionName}
                     conditionValue={value}
                     update={(newValue: string) => {
