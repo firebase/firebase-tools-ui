@@ -16,7 +16,7 @@
 
 import classNames from 'classnames';
 import React from 'react';
-import { FieldError, UseFormReturn } from 'react-hook-form';
+import { UseFormReturn } from 'react-hook-form';
 import { connect } from 'react-redux';
 
 import { createStructuredSelector } from '../../../../store';
@@ -36,55 +36,35 @@ function getErrorText(errors: any) {
     if (errors.email.type === 'unique') {
       return 'User with this email already exists';
     }
-    // TODO: this message isn't getting displayed when email is not present
-    if (errors.email.type === 'emailPresent') {
-      return 'Email required for verification';
-    }
   }
-}
-
-function getVerifiedStatus(emailVerifiedError: [] | [FieldError?] | undefined) {
-  if (!emailVerifiedError) {
-    return 'Verified';
+  if (errors.emailVerified?.type === 'emailPresent') {
+    return 'Email required for verification';
   }
-
-  return emailVerifiedError[0]?.type === 'verified'
-    ? 'Not verified'
-    : 'Verified';
 }
 
 export const Email: React.FC<
   React.PropsWithChildren<PropsFromState & UseFormReturn<AuthFormUser>>
-> = ({
-  register,
-  getValues,
-  formState: { errors },
-  allEmails,
-}) => {
+> = ({ register, getValues, formState: { errors }, allEmails }) => {
   const { ref: emailRef, ...emailState } = register('email', {
     validate: {
       unique: (value) => {
         const { email } = getValues();
         return value === email || !allEmails.has(value);
       },
-      emailPresent: (value) => {
-        const { emailVerified: emailVerifiedArr } = getValues();
-        const emailVerified = emailVerifiedArr && emailVerifiedArr.length > 0;
-
-        return !!value || !emailVerified;
-      },
     },
     pattern: EMAIL_REGEX,
   });
 
-  // TODO: Only adding this todo to get reviewer visibility. I added this
-  // register() call during a rebase of PR#658 but this feels very wonky. I can
-  // revert it back to what it was before.
   const { ref: emailVerifiedRef, ...emailVerifiedState } = register(
     'emailVerified',
     {
       validate: {
-        verified: (value) => value && value.length > 0,
+        emailPresent: (value) => {
+          // TODO: emailVerified is a boolean instead of [] | ['on'] as defined
+          // on type of AuthFormUser
+          const { email } = getValues();
+          return !!email || !value;
+        },
       },
     }
   );
@@ -107,7 +87,7 @@ export const Email: React.FC<
         />
         <SwitchField
           label="Verified email?"
-          switchLabel={getVerifiedStatus(errors.emailVerified)}
+          switchLabel={getValues('emailVerified') ? 'Verified' : 'Not Verified'}
           defaultChecked={false}
           inputRef={emailVerifiedRef}
           className={styles.switchField}

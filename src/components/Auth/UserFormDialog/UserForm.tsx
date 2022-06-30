@@ -141,28 +141,23 @@ export const UserForm: React.FC<React.PropsWithChildren<UserFormProps>> = ({
     [isEditing, updateUser, createUser, localId]
   );
 
-  const { register, handleSubmit, formState, reset } = form;
-  const { isValid, errors } = formState;
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+    reset,
+  } = form;
 
-  // TODO: formState.isValid remains false even when there are no errors present
-  // Possibly related: https://github.com/react-hook-form/react-hook-form/issues/2755
   const canSubmit = !authUserDialogData?.loading && isValid;
-  console.log(`>>> isValid: ${isValid}`);
-  console.log(`>>> formState.isValid: ${formState.isValid}`);
-  console.log(`>>> values in errors`);
-  for (const property in Object.values(errors)) {
-    const elem = Object.values(errors)[property];
-    console.log(`>>>>> ${Object.values(elem)}`);
-  }
 
   const submit = useCallback(
     (formUser: AuthFormUser) => {
       // Take into account multi-field errors.
-      if (Object.values(formState.errors).length === 0) {
+      if (Object.values(errors).length === 0) {
         save(formUser);
       }
     },
-    [formState, save]
+    [errors, save]
   );
 
   const { ref: displayNameRef, ...displayNameField } = register('displayName');
@@ -179,7 +174,7 @@ export const UserForm: React.FC<React.PropsWithChildren<UserFormProps>> = ({
             label="Display name (optional)"
             type="text"
             placeholder="Enter display name"
-            error={formState.errors?.displayName && 'Display name is required'}
+            error={errors?.displayName && 'Display name is required'}
             inputRef={displayNameRef}
             {...displayNameField}
           />
