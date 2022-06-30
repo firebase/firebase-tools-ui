@@ -15,7 +15,7 @@
  */
 
 import classNames from 'classnames';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { connect } from 'react-redux';
 
@@ -44,7 +44,15 @@ function getErrorText(errors: any) {
 
 export const Email: React.FC<
   React.PropsWithChildren<PropsFromState & UseFormReturn<AuthFormUser>>
-> = ({ register, getValues, formState: { errors }, allEmails, watch }) => {
+> = ({
+  register,
+  getValues,
+  formState: { errors },
+  allEmails,
+  watch,
+  setError,
+  clearErrors,
+}) => {
   const { ref: emailRef, ...emailState } = register('email', {
     validate: {
       unique: (value) => {
@@ -56,23 +64,21 @@ export const Email: React.FC<
   });
 
   const { ref: emailVerifiedRef, ...emailVerifiedState } = register(
-    'emailVerified',
-    {
-      validate: {
-        emailPresent: (value) => {
-          // TODO: emailVerified is a boolean instead of [] | ['on'] as defined
-          // on type of AuthFormUser.
-          // TODO: When emailVerified=true and type in an email in the input
-          // field, sometimes the error "Email required for verifiation" is
-          // incorrectly displayed.
-          const { email } = getValues();
-          return !!email || !value;
-        },
-      },
-    }
+    'emailVerified'
   );
 
+  const email = watch('email');
+  // TODO: emailVerified is a boolean instead of [] | ['on'] as defined
+  // on type of AuthFormUser.
   const emailVerified = watch('emailVerified');
+
+  useEffect(() => {
+    if (emailVerified && !email) {
+      setError('emailVerified', { type: 'emailPresent' });
+    } else {
+      clearErrors('emailVerified');
+    }
+  }, [emailVerified, email, setError, clearErrors]);
 
   return (
     <>
