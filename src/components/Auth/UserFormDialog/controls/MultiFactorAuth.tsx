@@ -43,12 +43,10 @@ export const MultiFactor: React.FC<
 > = (form) => {
   const {
     control,
-    watch,
-    setError,
-    clearErrors,
     formState: { errors },
     user,
     register,
+    getValues,
   } = form;
 
   // https://react-hook-form.com/v5/api#useFieldArray
@@ -57,36 +55,32 @@ export const MultiFactor: React.FC<
     name: 'mfaPhoneInfo',
   });
 
-  const emailVerifiedArr = watch('emailVerified');
-  const mfaEnabledArr = watch('mfaEnabled');
-
-  const emailVerified = emailVerifiedArr && emailVerifiedArr.length > 0;
-  const mfaEnabled = mfaEnabledArr && mfaEnabledArr.length > 0;
-
   const [isZeroState, setIsZeroState] = useState(
     !(user?.mfaInfo && user?.mfaInfo.length > 0)
   );
 
-  useEffect(() => {
-    if (mfaEnabled) {
-      setIsZeroState(false);
-
-      if (fields.length === 0) {
+  // TODO: mfaEnabled is a boolean instead of [] | ['on'] as defined
+  // on type of AuthFormUser
+  const { ref: mfaEnabledRef, ...mfaEnabledArrState } = register('mfaEnabled', {
+    validate: {
+      // TODO: Even when this returns false, errors.mfaEnabled is undefined.
+      // This means the error message "Email needs to be verified to enroll in
+      // multi-factor authentication" is never shown to users.
+      verified: (value) => {
+        const { emailVerified } = getValues();
+        console.log(`emailVerified: ${emailVerified}`);
+        console.log(`!value || emailVerified: ${!value || emailVerified}`);
+        return !value || emailVerified;
+      },
+    },
+    onChange: (event) => {
+      const mfaEnabled = getValues('mfaEnabled');
+      if (mfaEnabled && fields.length === 0) {
         addNewMfaNumber(append);
       }
-
-      if (emailVerified) {
-        clearErrors('emailVerified');
-      } else {
-        setError('emailVerified', { type: 'notVerified'});
-      }
-    } else {
-      clearErrors('emailVerified');
-      clearErrors('mfaPhoneInfo');
-    }
-  }, [fields, mfaEnabled, emailVerified, setError, clearErrors, append]);
-
-  const { ref: mfaEnabledRef, ...mfaEnabledArrState } = register('mfaEnabled');
+      setIsZeroState(false);
+    },
+  });
 
   return (
     <div className={styles.signInWrapper}>
@@ -99,20 +93,23 @@ export const MultiFactor: React.FC<
 
       <SwitchField
         label=""
-        switchLabel={mfaEnabled ? 'Enabled' : 'Disabled'}
+        // TODO: There's a weird interaction between the emailVerified toggle
+        // and MFA toggle. Toggling email verification sometimes causes this
+        // switchLabel to freeze on the last string value it was set as.
+        switchLabel={getValues('mfaEnabled') ? 'Enabled' : 'Disabled'}
         defaultChecked={false}
         inputRef={mfaEnabledRef}
         {...mfaEnabledArrState}
       />
 
-      {/** TODO: Everything below here is not getting displayed */}
-      {(errors as any).emailVerified?.type === 'notVerified' ? (
+      {/** TODO: This error message never gets displayed */}
+      {(errors as any).mfaEnabled?.type === 'notVerified' ? (
         <Typography use="body2" theme="error" tag="div" role="alert">
           Email needs to be verified to enroll in multi-factor authentication
         </Typography>
       ) : null}
 
-      {(mfaEnabled || !isZeroState) && (
+      {(getValues('mfaEnabled') || !isZeroState) && (
         <>
           <Typography
             use="body1"
@@ -124,7 +121,7 @@ export const MultiFactor: React.FC<
           </Typography>
           <div>
             {fields.map((item, index) => {
-              const fieldName = `mfaPhoneInfo.${index}.phoneInfo` as const; 
+              const fieldName = `mfaPhoneInfo.${index}.phoneInfo` as const;
 
               const getPhoneErrorText = () => {
                 const error = errors.mfaPhoneInfo?.[index];
@@ -141,7 +138,7 @@ export const MultiFactor: React.FC<
 
               const { ref: phoneRef, ...phoneState } = register(fieldName, {
                 pattern: PHONE_REGEX,
-                required: !!mfaEnabled,
+                required: !!getValues('mfaEnabled'),
               });
 
               return (
@@ -157,7 +154,7 @@ export const MultiFactor: React.FC<
                     placeholder="Enter phone number"
                     type="tel"
                     error={getPhoneErrorText()}
-                    disabled={!mfaEnabled}
+                    disabled={!getValues('mfaEnabled')}
                     inputRef={phoneRef}
                     defaultValue={item.phoneInfo}
                     {...phoneState}
@@ -176,7 +173,7 @@ export const MultiFactor: React.FC<
           <Button
             type="button"
             outlined={true}
-            disabled={!mfaEnabled}
+            disabled={!getValues('mfaEnabled')}
             onClick={() => addNewMfaNumber(append)}
           >
             Add another phone number
