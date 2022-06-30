@@ -148,7 +148,17 @@ export const UserForm: React.FC<React.PropsWithChildren<UserFormProps>> = ({
     reset,
   } = form;
 
-  const canSubmit = !authUserDialogData?.loading && isValid;
+  // TODO: Should be able to just check isValid, instead of additionally checking
+  // that there are no errors. This only happens when `atLeastOneMethodRequired`
+  // is the only error present and is causing the "Save" and "Save and create
+  // another" buttons to remain enabled even when neither email/password or
+  // phone auth are provided. May want to check for any components that are
+  // repeatedly getting remounted; perhaps this is the right thread to look at:
+  // https://spectrum.chat/react-hook-form/help/should-the-form-isvalid-property-be-false-when-a-required-field-is-empty~c68abcd6-d4c6-4961-9402-7f5d723639fd
+  const canSubmit =
+    !authUserDialogData?.loading &&
+    isValid &&
+    Object.values(errors).length === 0;
 
   const submit = useCallback(
     (formUser: AuthFormUser) => {

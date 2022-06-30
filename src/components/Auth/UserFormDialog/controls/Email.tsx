@@ -61,7 +61,10 @@ export const Email: React.FC<
       validate: {
         emailPresent: (value) => {
           // TODO: emailVerified is a boolean instead of [] | ['on'] as defined
-          // on type of AuthFormUser
+          // on type of AuthFormUser.
+          // TODO: When emailVerified=true and type in an email in the input
+          // field, sometimes the error "Email required for verifiation" is
+          // incorrectly displayed.
           const { email } = getValues();
           return !!email || !value;
         },

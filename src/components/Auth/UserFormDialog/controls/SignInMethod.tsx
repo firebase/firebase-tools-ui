@@ -60,10 +60,6 @@ export const SignInMethod: React.FC<
     }
   }, [password, clearErrors, setError, phoneNumber, errors]);
 
-  // TODO: When ERROR_AT_LEAST_ONE_METHOD_REQUIRED is the only error, value of
-  // formState.isValid is still true. This is inccorectly causing the "Save" and
-  // "Save and create another" buttons to remain enabled in UserForm.tsx even
-  // when neither email/password or phone auth are provided.
   const isOnlyError =
     ERROR_AT_LEAST_ONE_METHOD_REQUIRED in errors &&
     Object.values(errors).length === 1;
