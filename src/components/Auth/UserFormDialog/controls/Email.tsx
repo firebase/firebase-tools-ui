@@ -44,7 +44,7 @@ function getErrorText(errors: any) {
 
 export const Email: React.FC<
   React.PropsWithChildren<PropsFromState & UseFormReturn<AuthFormUser>>
-> = ({ register, getValues, formState: { errors }, allEmails }) => {
+> = ({ register, getValues, formState: { errors }, allEmails, watch }) => {
   const { ref: emailRef, ...emailState } = register('email', {
     validate: {
       unique: (value) => {
@@ -72,6 +72,8 @@ export const Email: React.FC<
     }
   );
 
+  const emailVerified = watch('emailVerified');
+
   return (
     <>
       <div
@@ -90,7 +92,7 @@ export const Email: React.FC<
         />
         <SwitchField
           label="Verified email?"
-          switchLabel={getValues('emailVerified') ? 'Verified' : 'Not Verified'}
+          switchLabel={emailVerified ? 'Verified' : 'Not Verified'}
           defaultChecked={false}
           inputRef={emailVerifiedRef}
           className={styles.switchField}
