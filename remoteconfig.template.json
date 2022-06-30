@@ -1,8 +1,9 @@
 {
   "conditions": [
     {
-      "name": "ios",
-      "expression": "device.os == 'ios'"
+      "name": "iOS",
+      "expression": "device.os == 'ios'",
+      "tagColor": "LIME"
     }
   ],
   "parameters": {
@@ -11,7 +12,7 @@
         "value": "Welcome to this sample app"
       },
       "conditionalValues": {
-        "ios": {
+        "iOS": {
           "value": "Welcome to this sample iOS app"
         }
       }
