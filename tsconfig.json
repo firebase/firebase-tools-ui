@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "target": "ESNext",
+    "types": ["vite/client"],
     "lib": ["dom", "dom.iterable", "es2020.string", "esnext"],
     "allowJs": false,
     "skipLibCheck": false,
@@ -16,5 +17,5 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["src"]
+  "include": ["src", "server.ts"]
 }
