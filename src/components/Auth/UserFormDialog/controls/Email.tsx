@@ -68,8 +68,6 @@ export const Email: React.FC<
   );
 
   const email = watch('email');
-  // TODO: emailVerified is a boolean instead of [] | ['on'] as defined
-  // on type of AuthFormUser.
   const emailVerified = watch('emailVerified');
 
   useEffect(() => {

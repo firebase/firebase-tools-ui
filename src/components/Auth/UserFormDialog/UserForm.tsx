@@ -51,19 +51,19 @@ function convertToFormUser(user?: AuthUser): AuthFormUser | undefined {
     return;
   }
 
-  let mfaEnabled: AuthFormUser['mfaEnabled'] = [];
+  let mfaEnabled: AuthFormUser['mfaEnabled'] = false;
   let mfaPhoneInfo: AuthFormUser['mfaInfo'] = [];
-  let emailVerified: AuthFormUser['emailVerified'] = [];
+  let emailVerified: AuthFormUser['emailVerified'] = false;
 
   if (user.mfaInfo) {
-    mfaEnabled = ['on'];
+    mfaEnabled = true;
     mfaPhoneInfo = user.mfaInfo.map((mfaEnrollment) => ({
       phoneInfo: mfaEnrollment.phoneInfo,
     }));
   }
 
   if (!!user.emailVerified) {
-    emailVerified = ['on'];
+    emailVerified = true;
   }
 
   return {
@@ -83,7 +83,7 @@ function convertToFormUser(user?: AuthUser): AuthFormUser | undefined {
 
 function convertFromFormUser(formUser: AuthFormUser): AddAuthUserPayload {
   let mfaInfo: AddAuthUserPayload['mfaInfo'];
-  if (formUser.mfaEnabled[0] === 'on') {
+  if (formUser.mfaEnabled) {
     mfaInfo = formUser.mfaPhoneInfo.map((mfaPhoneInfo) => {
       const existingEnrollment = formUser.mfaInfo?.find(
         (mfaEnrollment) => mfaEnrollment.phoneInfo === mfaPhoneInfo.phoneInfo
@@ -106,7 +106,7 @@ function convertFromFormUser(formUser: AuthFormUser): AddAuthUserPayload {
     email: formUser.email,
     password: formUser.password,
     phoneNumber: formUser.phoneNumber,
-    emailVerified: formUser.emailVerified.length > 0 ? true : false,
+    emailVerified: formUser.emailVerified,
     mfaInfo,
   };
 }

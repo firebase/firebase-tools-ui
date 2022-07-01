@@ -52,7 +52,7 @@ export const MultiFactor: React.FC<
     clearErrors,
   } = form;
 
-  // https://react-hook-form.com/v5/api#useFieldArray
+  // https://react-hook-form.com/api/usefieldarray/
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'mfaPhoneInfo',
@@ -62,8 +62,6 @@ export const MultiFactor: React.FC<
     !(user?.mfaInfo && user?.mfaInfo.length > 0)
   );
 
-  // TODO: mfaEnabled is a boolean instead of [] | ['on'] as defined
-  // on type of AuthFormUser
   const { ref: mfaEnabledRef, ...mfaEnabledArrState } = register('mfaEnabled', {
     onChange: (event) => {
       const mfaEnabled = getValues('mfaEnabled');
@@ -141,7 +139,7 @@ export const MultiFactor: React.FC<
                 pattern: PHONE_REGEX,
                 // TODO: Required error is not getting triggered when MFA
                 // and emailVerified are true, and email is present
-                required: !!mfaEnabled,
+                required: mfaEnabled,
               });
 
               return (
