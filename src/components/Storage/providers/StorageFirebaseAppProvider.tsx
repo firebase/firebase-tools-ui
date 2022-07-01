@@ -27,7 +27,7 @@ import { useEmulatedFirebaseApp } from '../../../firebase';
 import { useEmulatorConfig } from '../../common/EmulatorConfigProvider';
 
 const FIREBASE_APP_OPTIONS = {
-  storageBucket: 'foo.appspot.com',
+  storageBucket: 'demo-example.appspot.com',
 };
 
 export const StorageFirebaseAppProvider: React.FC<
@@ -41,7 +41,7 @@ export const StorageFirebaseAppProvider: React.FC<
     useCallback(
       (app: FirebaseApp) => {
         const storage = bucket
-          ? getStorage(app, `gs://other.appspot.com`)
+          ? getStorage(app, `gs://demo-example.appspot.com`)
           : getStorage(app);
         connectStorageEmulator(storage, host, port, {
           mockUserToken: 'owner',
