@@ -6,7 +6,6 @@
     "node": "^14.18.0 || >=16.4.0"
   },
   "dependencies": {
-    "@rehooks/local-storage": "^2.3.0",
     "@rmwc/base": "^7.0.3",
     "@rmwc/button": "^7.0.3",
     "@rmwc/card": "^7.0.3",
@@ -43,7 +42,6 @@
     "blob-polyfill": "^7.0.20220408",
     "classnames": "^2.2.6",
     "codemirror": "^5.61.1",
-    "concurrently": "^7.2.1",
     "express": "^4.17.1",
     "firebase": "9.8",
     "font-awesome": "^4.7.0",
@@ -54,7 +52,6 @@
     "lodash.groupby": "^4.6.0",
     "lodash.isequal": "^4.5.0",
     "node-fetch": "^3.0.0",
-    "nodemon": "^2.0.16",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
     "react-dropzone": "^14.2.1",
@@ -74,17 +71,16 @@
     "tslib": "^2.4.0",
     "typesafe-actions": "^5.1.0",
     "typescript": "^4.1.5",
-    "vite": "^2.9.9",
+    "vite": "^2.9.13",
+    "vite-plugin-node": "^1.0.0",
     "vite-plugin-svgr": "^2.1.0"
   },
   "scripts": {
-    "start": "concurrently 'npm run start:server' 'npm run start:client'",
-    "start:client": "vite",
-    "start:server": "nodemon server.js",
+    "start": "vite",
     "build": "npm run build:web && npm run build:server",
-    "bundle": "rm -f emulator-ui-dist.zip && zip -r emulator-ui-dist.zip server.bundle.js build",
+    "bundle": "rm -f emulator-ui-dist.zip && cd dist && zip -r ../emulator-ui-dist.zip *",
     "build:web": "vite build",
-    "build:server": "webpack --target=node ./server.js -o server.bundle.js",
+    "build:server": "vite build --mode server",
     "test": "react-scripts test --env=./custom-jest-environment.js",
     "test:debug": "react-scripts --inspect-brk test --env=./custom-jest-environment.js --runInBand",
     "test:coverage": "react-scripts test --coverage --watchAll=false --env=./custom-jest-environment.js",
@@ -149,9 +145,7 @@
     "redux-mock-store": "^1.5.4",
     "run-script-os": "^1.1.6",
     "sass": "^1.52.1",
-    "web-streams-polyfill": "^3.2.1",
-    "webpack": "^5.72.1",
-    "webpack-cli": "^4.9.2"
+    "web-streams-polyfill": "^3.2.1"
   },
   "husky": {
     "hooks": {

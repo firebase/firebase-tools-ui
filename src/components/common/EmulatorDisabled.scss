@@ -30,6 +30,18 @@
     width: auto;
   }
 }
+
+.EmulatorDisabled-extensions-graphics {
+  img {
+    display: block;
+    filter: grayscale(100%);
+    height: 126px;
+    margin: 0 auto;
+    padding-left: 30px;
+    opacity: 0.4;
+    width: auto;
+  }
+}
 .EmulatorDisabled-description {
   flex: 1;
   padding: 24px;

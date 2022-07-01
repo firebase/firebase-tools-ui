@@ -16,33 +16,55 @@
 
 import { viteCommonjs } from '@originjs/vite-plugin-commonjs';
 import react from '@vitejs/plugin-react';
-import { defineConfig } from 'vite';
+import { UserConfig, defineConfig } from 'vite';
+import { VitePluginNode } from 'vite-plugin-node';
 import svgrPlugin from 'vite-plugin-svgr';
 
-const { PORT = 3001 } = process.env;
-
 // https://vitejs.dev/config/
-export default defineConfig({
-  // This changes the out put dir from dist to build
-  // comment this out if that isn't relevant for your project
-  build: {
-    outDir: 'build',
-  },
-  plugins: [
-    react(),
-    svgrPlugin({
-      svgrOptions: {
-        icon: true,
-      },
-    }),
-    viteCommonjs(),
-  ],
-  server: {
-    proxy: {
-      '/api': {
-        target: `http://localhost:${PORT}`,
-        changeOrigin: true,
-      },
+export default defineConfig(({ command, mode }) => {
+  const config: UserConfig = {
+    build: {
+      outDir: mode === 'server' ? 'dist/server' : 'dist/client',
     },
-  },
+    publicDir: mode === 'server' ? false : 'public',
+    plugins: [
+      react(),
+      svgrPlugin({
+        svgrOptions: {
+          icon: true,
+        },
+      }),
+      viteCommonjs(),
+    ],
+  };
+  if (command === 'serve' || mode === 'server') {
+    // Start Node.js server (APIs) during dev time.
+    config.plugins.push(
+      ...VitePluginNode({
+        // tell the plugin where is your project entry
+        appPath: './server.ts',
+
+        // the name of named export of you app from the appPath file
+        exportName: 'viteNodeApp',
+        tsCompiler: 'esbuild',
+        // https://github.com/axe-me/vite-plugin-node/issues/47
+        adapter({ app, req, res, next }) {
+          if (req.url.startsWith('/api/')) {
+            app(req, res);
+          } else {
+            next();
+          }
+        },
+      })
+    );
+    // Rollup a server bundle when `vite build --mode server` is invoked.
+    if (command === 'build') {
+      // @ts-ignore (Vite alpha feature: https://vitejs.dev/config/#ssr-options)
+      // This instructs Vite to rollup all dependencies into a single file.
+      // Needed because the Emulator UI is distributed as a self-contained zip
+      // ball with no `node_modules` or `package.json`.
+      config.ssr = { noExternal: /^(?!dns)/ };
+    }
+  }
+  return config;
 });
