@@ -148,7 +148,7 @@ export const UserForm: React.FC<React.PropsWithChildren<UserFormProps>> = ({
     reset,
   } = form;
 
-  // TODO: Should be able to just check isValid, instead of additionally checking
+  // FIXME: Should be able to just check isValid, instead of additionally checking
   // that there are no errors. This only happens when `atLeastOneMethodRequired`
   // is the only error present and is causing the "Save" and "Save and create
   // another" buttons to remain enabled even when neither email/password or
