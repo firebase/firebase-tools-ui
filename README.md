@@ -26,7 +26,7 @@ We welcome any issues and Pull Requests to improve the Emulator UI. The followin
 Clone the repo and install any dependencies:
 
 ```bash
-git clone git@github.com:firebase/firebase-tools-ui.git
+git clone https://github.com/firebase/firebase-tools-ui.git
 cd firebase-tools
 npm install # must be run the first time you clone
 ```
