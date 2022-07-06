@@ -18,7 +18,7 @@ import './NodeLeaf.scss';
 
 import { IconButton } from '@rmwc/icon-button';
 import { Tooltip } from '@rmwc/tooltip';
-import firebase from 'firebase';
+import { DatabaseReference, child, push, remove, set } from 'firebase/database';
 import * as React from 'react';
 import { useState } from 'react';
 
@@ -28,7 +28,7 @@ import { NodeLink } from './NodeLink';
 import { ValueDisplay } from './ValueDisplay';
 
 export interface Props {
-  realtimeRef: firebase.database.Reference;
+  realtimeRef: DatabaseReference;
   value: string | boolean | number | null;
 }
 
@@ -43,7 +43,7 @@ export const NodeLeaf = React.memo<Props>(function NodeLeaf$({
   };
 
   const handleEditSuccess = async (key: string, value: FirestoreAny) => {
-    await realtimeRef.set(value);
+    await set(realtimeRef, value);
     setIsEditing(false);
   };
 
@@ -52,13 +52,13 @@ export const NodeLeaf = React.memo<Props>(function NodeLeaf$({
   };
 
   const handleAddSuccess = async (key: string, value: FirestoreAny) => {
-    await realtimeRef.child(key).set(value);
+    await set(child(realtimeRef, key), value);
     setIsAdding(false);
   };
 
   const handleDelete = async () => {
     try {
-      await realtimeRef.remove();
+      await remove(realtimeRef);
     } catch (e) {
       throw e;
     }
@@ -109,7 +109,7 @@ export const NodeLeaf = React.memo<Props>(function NodeLeaf$({
         {isAdding && (
           <InlineEditor
             rtdb
-            value={{ [realtimeRef.push().key!]: '' }}
+            value={{ [push(realtimeRef).key!]: '' }}
             onCancel={() => setIsAdding(false)}
             onSave={handleAddSuccess}
             areRootKeysMutable={true}

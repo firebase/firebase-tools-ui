@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { doc } from 'firebase/firestore';
 import React, { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useFirestore } from 'reactfire';
@@ -44,7 +45,7 @@ const ReferenceEditor: React.FC<
       rules={{
         validate: (e) => {
           try {
-            firestore.doc(e);
+            doc(firestore, e);
             return true;
           } catch {
             return 'Must point to a document';

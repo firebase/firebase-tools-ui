@@ -28,6 +28,8 @@ import { EmulatorDisabled } from '../common/EmulatorDisabled';
 import { Spinner } from '../common/Spinner';
 import Database from './Database';
 import DatabaseContainer from './DatabaseContainer';
+import { DatabaseEmulatedApiProvider } from './DatabaseEmulatedApiProvider';
+import { NamespaceProvider } from './useNamespace';
 
 export const DatabaseRoute: React.FC<React.PropsWithChildren<unknown>> = () => {
   return (
@@ -54,16 +56,16 @@ export const DatabaseRouteContent: React.FC<
       <Route
         path={`${path}/:namespace/data/:path*`}
         render={({ match }: any) => {
-          const current = match.params.namespace;
           const dbPath = `/${match.params.path || ''}`;
           return (
-            <DatabaseContainer
-              primary={primary}
-              current={current}
-              navigation={(db) => `${url}/${db}/data`}
-            >
-              <Database namespace={current} path={dbPath} config={config} />
-            </DatabaseContainer>
+            <DatabaseEmulatedApiProvider namespace={match.params.namespace}>
+              <DatabaseContainer
+                primary={primary}
+                navigation={(db) => `${url}/${db}/data`}
+              >
+                <Database path={dbPath} config={config} />
+              </DatabaseContainer>
+            </DatabaseEmulatedApiProvider>
           );
         }}
       />

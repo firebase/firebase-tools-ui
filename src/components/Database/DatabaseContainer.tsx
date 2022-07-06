@@ -29,13 +29,11 @@ import DatabasePicker from './DatabasePicker';
 export type Props = {
   children?: React.ReactNode;
   databases: string[] | undefined;
-  current: string;
   primary: string;
   navigation: (db: string) => string;
 };
 
 export const DatabaseContainer: React.FC<React.PropsWithChildren<Props>> = ({
-  current,
   primary,
   navigation,
   databases,
@@ -77,7 +75,6 @@ export const DatabaseContainer: React.FC<React.PropsWithChildren<Props>> = ({
           <Card className="canvas-card">
             <div className="Database">
               <DatabasePicker
-                current={current}
                 primary={primary}
                 navigation={navigation}
                 databases={dbs}

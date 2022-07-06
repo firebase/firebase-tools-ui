@@ -14,44 +14,52 @@
  * limitations under the License.
  */
 
-import firebase from 'firebase';
+import {
+  DocumentReference,
+  FieldPath,
+  FieldValue,
+  deleteField as deleteFieldApi,
+  getDoc,
+  setDoc,
+  updateDoc,
+} from 'firebase/firestore';
 
 import { FirestoreAny, FirestoreMap } from '../models';
 import { isArray, isMap, withFieldRemoved, withFieldSet } from '../utils';
 
-const DELETE_FIELD = firebase.firestore.FieldValue.delete();
+const DELETE_FIELD = deleteFieldApi();
 
 export function deleteField(
-  documentRef: firebase.firestore.DocumentReference,
+  documentRef: DocumentReference,
   documentData: FirestoreMap,
   path: string[]
 ) {
   const payload = adjustPayloadForArray(documentData, path, DELETE_FIELD);
-  documentRef.update(...payload);
+  updateDoc(documentRef, ...payload);
 }
 
 export function updateField(
-  documentRef: firebase.firestore.DocumentReference,
+  documentRef: DocumentReference,
   documentData: FirestoreMap,
   path: string[],
   value: FirestoreAny
 ) {
   const payload = adjustPayloadForArray(documentData, path, value);
-  documentRef.update(...payload);
+  updateDoc(documentRef, ...payload);
 }
 
 export async function addFieldToMissingDocument(
-  reference: firebase.firestore.DocumentReference,
+  reference: DocumentReference,
   key: string,
   value: FirestoreAny
 ) {
-  const snapshot = await reference.get();
-  if (snapshot.exists) {
+  const snapshot = await getDoc(reference);
+  if (snapshot.exists()) {
     // TODO: Better surface this to the user.
     throw new Error('.set() on an existing document would delete other fields');
   }
 
-  await reference.set({ [key]: value });
+  await setDoc(reference, { [key]: value });
 }
 
 /**
@@ -65,8 +73,8 @@ export async function addFieldToMissingDocument(
 function adjustPayloadForArray(
   doc: FirestoreMap,
   fieldPath: string[],
-  value: FirestoreAny | firebase.firestore.FieldValue
-): [firebase.firestore.FieldPath, FirestoreAny] {
+  value: FirestoreAny | FieldValue
+): [FieldPath, FirestoreAny] {
   let cur: FirestoreAny | undefined = doc;
   let parentPath: string[] = [];
   for (const key of fieldPath) {
@@ -82,7 +90,7 @@ function adjustPayloadForArray(
       // beyond the scope of this function and hard to keep in sync.
       // Instead, just overwrite the whole array, which may touch more data
       // than needed, but is always correct.
-      const pathToUpdate = new firebase.firestore.FieldPath(...parentPath);
+      const pathToUpdate = new FieldPath(...parentPath);
       const childPath = fieldPath.slice(parentPath.length);
 
       // Note: FieldValue sentinels are not guaranteed to be
@@ -94,5 +102,5 @@ function adjustPayloadForArray(
       }
     }
   }
-  return [new firebase.firestore.FieldPath(...fieldPath), value];
+  return [new FieldPath(...fieldPath), value];
 }

@@ -15,7 +15,7 @@
  */
 
 import { render } from '@testing-library/react';
-import firebase from 'firebase';
+import { Firestore } from 'firebase/firestore';
 import React, { Suspense, useEffect, useState } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { useFirestore } from 'reactfire';
@@ -31,9 +31,7 @@ interface RenderOptions {
 }
 
 export const renderWithFirestore = async (
-  children: (
-    firestore: firebase.firestore.Firestore
-  ) => Promise<React.ReactElement>,
+  children: (firestore: Firestore) => Promise<React.ReactElement>,
   { path, state }: RenderOptions = {}
 ) => {
   const errorDeferred = makeDeferred();
@@ -80,7 +78,7 @@ export const FirestoreTestProviders: React.FC<
         firestore: { host, port: Number(port), hostAndPort },
       }}
     >
-      <FirestoreEmulatedApiProvider disableDevTools>
+      <FirestoreEmulatedApiProvider>
         <MemoryRouter initialEntries={[path]}>
           <Suspense fallback={<h1 data-testid="fallback">Fallback</h1>}>
             {children}
@@ -95,7 +93,7 @@ const ASYNC_FIRESTORE_WRAPPER_TEST_ID = 'AsyncFirestore-wrapper';
 
 const AsyncFirestore: React.FC<
   React.PropsWithChildren<{
-    r: (firestore: firebase.firestore.Firestore) => Promise<React.ReactElement>;
+    r: (firestore: Firestore) => Promise<React.ReactElement>;
     onError: (e: Error) => void;
   }>
 > = React.memo(({ r, onError }) => {
