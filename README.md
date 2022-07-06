@@ -91,17 +91,17 @@ If you get port conflict errors, make sure to stop other instances of the Fireba
 
 Builds the app for production, both server and web.
 
-The web production build will be output to the `build` folder.<br />
+The web production build will be output to the `dist/client` folder.<br />
 It correctly bundles React in production mode and optimizes the build for the best performance.
 The build is minified and the filenames include the hashes.<br />
 
-The server code will be packed into `server.bundle.js`, which is a standalone
-JS file including all dependencies, ready for execution with Node.js.
+The server code will be packed into `dist/server/server.js`, which is a
+standalone JS file including all dependencies, ready for execution with Node.js.
 
 To run the production build with emulators, use:
 
 ```bash
-firebase emulators:exec --project sample --only database,firestore --import test-data 'PORT=3000 node server.bundle.js'
+firebase emulators:exec --project demo-example --import test-data 'node dist/server/server.js'
 ```
 
 This will start a server that serves both the static files and APIs at `http://localhost:3000/`.

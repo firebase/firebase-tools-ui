@@ -14,51 +14,17 @@
  * limitations under the License.
  */
 
-import 'firebase/database';
-import 'firebase/firestore';
-// Force the browser build even in Node.js + jsdom unit tests because jsdom's
-// File/Blob impl is incomplete (https://github.com/jsdom/jsdom/issues/2555)
-// and thus not recognized by node-fetch, used by the Node build of Storage SDK.
-// The browser build works because it uses XHR (also mocked by jsdom).
-import '@firebase/storage/dist/index.browser.cjs.js';
-
-import { FirebaseAuthInternal } from '@firebase/auth-interop-types';
-import { Component, ComponentType } from '@firebase/component';
-import firebase from 'firebase/app';
+import { FirebaseApp, deleteApp, initializeApp } from 'firebase/app';
+import {
+  Database,
+  connectDatabaseEmulator,
+  getDatabase,
+} from 'firebase/database';
+import { Firestore } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 
 import { useConfig } from './components/common/EmulatorConfigProvider';
 import { DatabaseConfig } from './store/config';
-
-interface WindowWithDb extends Window {
-  database?: firebase.database.Database;
-  firestore?: firebase.firestore.Firestore;
-}
-
-export function initDatabase(
-  config: DatabaseConfig,
-  namespace: string
-): [firebase.database.Database, { cleanup: () => Promise<void> }] {
-  const databaseURL = `http://${config.hostAndPort}/?ns=${namespace}`;
-  const app = firebase.initializeApp(
-    { databaseURL },
-    `Database Component: ${databaseURL} ${Math.random()}`
-  );
-
-  applyAdminAuth(app);
-
-  const db = app.database();
-  // only log the first time
-  if (!(window as WindowWithDb).database) {
-    console.log(`🔥 Realtime Database is available at window.database.
-
-    Try:
-    database.ref().set({hello: 'world!'});
-    database.ref().once('value').then( snap => console.log(snap.val()) );`);
-  }
-  (window as WindowWithDb).database = db;
-  return [db, { cleanup: () => app.delete() }];
-}
 
 /**
  * Get a JS SDK App instance with emulator Admin auth enabled.
@@ -79,18 +45,17 @@ export function initDatabase(
 export function useEmulatedFirebaseApp(
   name: string,
   config?: object,
-  initialize?: (app: firebase.app.App) => void
-): firebase.app.App | undefined {
+  initialize?: (app: FirebaseApp) => void
+): FirebaseApp | undefined {
   const { projectId } = useConfig();
-  const [app, setApp] = useState<firebase.app.App | undefined>();
+  const [app, setApp] = useState<FirebaseApp | undefined>();
 
   useEffect(() => {
     if (!app) {
-      const app = firebase.initializeApp(
+      const app = initializeApp(
         { ...config, projectId },
         `${name} component::${Math.random()}`
       );
-      applyAdminAuth(app);
       initialize?.(app);
       setApp(app);
     }
@@ -99,31 +64,10 @@ export function useEmulatedFirebaseApp(
       if (app) {
         setApp(undefined);
         // Errors may happen if app is already deleted. Ignore them.
-        app.delete().catch(() => {});
+        deleteApp(app).catch(() => {});
       }
     };
   }, [app, name, config, projectId, initialize]);
 
   return app;
-}
-
-function applyAdminAuth(app: firebase.app.App): void {
-  const accessToken = 'owner'; // Accepted as admin by emulators.
-  const mockAuthComponent = new Component(
-    'auth-internal',
-    () =>
-      ({
-        getToken: async () => ({ accessToken: accessToken }),
-        getUid: () => null,
-        addAuthTokenListener: (listener) => {
-          // Call listener once immediately with predefined
-          // accessToken.
-          listener(accessToken);
-        },
-        removeAuthTokenListener: () => {},
-      } as FirebaseAuthInternal),
-    'PRIVATE' as ComponentType
-  );
-
-  (app as any)._addOrOverwriteComponent(mockAuthComponent);
 }

@@ -18,7 +18,7 @@ import { Icon } from '@rmwc/icon';
 import { IconButton } from '@rmwc/icon-button';
 import { MenuItem, SimpleMenu } from '@rmwc/menu';
 import { Tooltip } from '@rmwc/tooltip';
-import firebase from 'firebase';
+import { DatabaseReference, child, push, remove, set } from 'firebase/database';
 import * as React from 'react';
 import { useState } from 'react';
 
@@ -35,7 +35,7 @@ import { InlineQuery } from './InlineQuery';
 import { RenameDialog } from './RenameDialog';
 
 export interface Props {
-  realtimeRef: firebase.database.Reference;
+  realtimeRef: DatabaseReference;
   displayType: ChildrenDisplayType;
   queryParams?: QueryParams;
   updateQuery?: (params: QueryParams) => void;
@@ -85,9 +85,9 @@ export const NodeActions = React.memo<Props>(function NodeActions$({
     queryParams !== DEFAULT_QUERY_PARAMS;
   const isRoot = realtimeRef.parent === null;
 
-  const pushId = realtimeRef.push().key!;
+  const pushId = push(realtimeRef).key!;
   const handleAddSuccess = async (key: string, value: FirestoreAny) => {
-    await realtimeRef.child(key).set(value);
+    await set(child(realtimeRef, key), value);
     setIsAdding(false);
   };
   const addChild = () => {
@@ -97,7 +97,7 @@ export const NodeActions = React.memo<Props>(function NodeActions$({
 
   const removeNode = async () => {
     try {
-      await realtimeRef.remove();
+      await remove(realtimeRef);
     } catch (e) {
       throw e;
     }

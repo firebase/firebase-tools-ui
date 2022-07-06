@@ -14,14 +14,26 @@
  * limitations under the License.
  */
 
-import { randomId } from '@rmwc/base';
-import { act, render, waitFor } from '@testing-library/react';
-import { History } from 'history';
-import React, { ReactElement, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { randomUUID } from 'crypto';
 
+import { randomId } from '@rmwc/base';
+import { RenderResult, act, render, waitFor } from '@testing-library/react';
+import { waitForElementToBeRemoved } from '@testing-library/react';
+import { Database, enableLogging, ref, set } from 'firebase/database';
+import { FirebaseStorage } from 'firebase/storage';
+import { History } from 'history';
+import { uniqueId } from 'lodash';
+import React, { ReactElement, useEffect, useState } from 'react';
+import { Suspense } from 'react';
+import { useHistory } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
+import { useDatabase, useStorage } from 'reactfire';
+
+import { makeDeferred } from '../../../test_utils';
+import { TestEmulatorConfigProvider } from '../../common/EmulatorConfigProvider';
 import { UseBucketResult, useBucket } from '../api/useBucket';
 import { useStorageFiles, useStorageFilesResult } from '../api/useStorageFiles';
+import { StorageFirebaseAppProvider } from '../providers/StorageFirebaseAppProvider';
 import { FakeStorageWrappers } from './FakeStorageWrappers';
 import { mockBuckets } from './mockBuckets';
 
@@ -32,6 +44,85 @@ interface CurrentType {
 }
 
 const ASYNC_STORAGE_WRAPPER_TEST_ID = 'AsyncStorage-wrapper';
+
+// TODO: investigate storage-emulator in jsdom env
+export const renderWithStorageNew = async (
+  children: (storage: FirebaseStorage) => Promise<React.ReactElement>,
+  { bucket = 'foo' } = {}
+): Promise<RenderResult> => {
+  const errorDeferred = makeDeferred();
+  const component = render(
+    <MemoryRouter initialEntries={['']}>
+      <StorageTestProviders bucket={bucket}>
+        <AsyncStorage
+          r={children}
+          onError={(e) => errorDeferred.reject(e)}
+        ></AsyncStorage>
+      </StorageTestProviders>
+    </MemoryRouter>
+  );
+
+  await Promise.race([
+    errorDeferred.promise,
+    component.findByTestId(
+      ASYNC_STORAGE_WRAPPER_TEST_ID,
+      {},
+      {
+        // Some test setup can take longer than default 1000ms (esp. cold starts).
+        timeout: 10_000,
+      }
+    ),
+  ]);
+
+  return component;
+};
+
+export const StorageTestProviders: React.FC<
+  React.PropsWithChildren<{ bucket: string }>
+> = React.memo(({ bucket, children }) => {
+  const projectId = `${process.env.GCLOUD_PROJECT}-${Date.now()}`;
+  const hostAndPort = process.env.FIREBASE_STORAGE_EMULATOR_HOST;
+  if (!projectId || !hostAndPort) {
+    throw new Error('StorageTestProviders requires a running Emulator');
+  }
+  const [host, port] = hostAndPort.split(':');
+
+  return (
+    <TestEmulatorConfigProvider
+      config={{
+        projectId,
+        storage: { host, port: Number(port), hostAndPort },
+      }}
+    >
+      <StorageFirebaseAppProvider bucket={bucket}>
+        <Suspense fallback={<h1 data-testid="fallback">Fallback</h1>}>
+          {children}
+        </Suspense>
+      </StorageFirebaseAppProvider>
+    </TestEmulatorConfigProvider>
+  );
+});
+
+const AsyncStorage: React.FC<
+  React.PropsWithChildren<{
+    r: (storage: FirebaseStorage) => Promise<React.ReactElement>;
+    onError: (e: Error) => void;
+  }>
+> = React.memo(({ r, onError }) => {
+  const storage = useStorage();
+  const [storageChildren, setStorageChildren] =
+    useState<React.ReactElement | null>(null);
+
+  useEffect(() => {
+    r(storage)
+      .then((c) => setStorageChildren(c))
+      .catch(onError);
+  }, [r, storage, setStorageChildren]);
+
+  return storageChildren ? (
+    <div data-testid={ASYNC_STORAGE_WRAPPER_TEST_ID}>{storageChildren}</div>
+  ) : null;
+});
 
 export async function renderWithStorage(children: ReactElement) {
   const defaultBucket = randomId('bucket');

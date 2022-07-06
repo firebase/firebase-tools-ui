@@ -14,34 +14,57 @@
  * limitations under the License.
  */
 
-import React, { useCallback } from 'react';
-import { FirebaseAppProvider } from 'reactfire';
+import { FirebaseApp } from 'firebase/app';
+import {
+  FirebaseStorage,
+  connectStorageEmulator,
+  getStorage,
+} from 'firebase/storage';
+import React, { useCallback, useState } from 'react';
+import { FirebaseAppProvider, StorageProvider } from 'reactfire';
 
 import { useEmulatedFirebaseApp } from '../../../firebase';
 import { useEmulatorConfig } from '../../common/EmulatorConfigProvider';
 
-const FIREBASE_APP_OPTIONS = {};
+const FIREBASE_APP_OPTIONS = {
+  storageBucket: 'demo-example.appspot.com',
+};
 
 export const StorageFirebaseAppProvider: React.FC<
-  React.PropsWithChildren<unknown>
-> = ({ children }) => {
+  React.PropsWithChildren<{ bucket?: string }>
+> = ({ bucket, children }) => {
   const { host, port } = useEmulatorConfig('storage');
+  const [storage, setStorage] = useState<FirebaseStorage | null>(null);
   const app = useEmulatedFirebaseApp(
     'storage',
     FIREBASE_APP_OPTIONS,
     useCallback(
-      (app: any) => {
-        app.storage().useEmulator(host, port);
+      (app: FirebaseApp) => {
+        const storage = bucket
+          ? getStorage(app, `gs://demo-example.appspot.com`)
+          : getStorage(app);
+        connectStorageEmulator(storage, host, port, {
+          mockUserToken: 'owner',
+        });
+        setStorage(storage);
       },
       [host, port]
     )
   );
 
-  if (!app) {
+  if (!app || !storage) {
     return null;
   }
 
   return (
-    <FirebaseAppProvider firebaseApp={app}>{children}</FirebaseAppProvider>
+    <FirebaseAppProvider firebaseApp={app}>
+      <StorageComponent storage={storage}>{children}</StorageComponent>
+    </FirebaseAppProvider>
   );
+};
+
+const StorageComponent: React.FC<
+  React.PropsWithChildren<{ storage: FirebaseStorage }>
+> = ({ storage, children }) => {
+  return <StorageProvider sdk={storage}>{children}</StorageProvider>;
 };

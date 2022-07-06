@@ -15,6 +15,7 @@
  */
 
 import { act, fireEvent } from '@testing-library/react';
+import { doc } from 'firebase/firestore';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
@@ -33,7 +34,7 @@ it('renders an editor for a document-ref', async () => {
       <TestForm>
         <ReferenceEditor
           name="foo"
-          value={firestore.doc('foo/bar')}
+          value={doc(firestore, 'foo/bar')}
           onChange={onChange}
         />
       </TestForm>
