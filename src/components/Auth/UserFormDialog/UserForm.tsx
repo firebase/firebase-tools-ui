@@ -196,7 +196,7 @@ export const UserForm: React.FC<React.PropsWithChildren<UserFormProps>> = ({
           <ImageUrlInput {...form} />
           <CustomAttributes {...form} />
           <SignInMethod {...form} user={user} />
-          <MultiFactor {...form} user={user} /> {/* FIXME: disabling mfa does not save */}
+          <MultiFactor {...form} user={user} />
           {hasError(authUserDialogData?.result) && (
             <Callout type="warning">
               <>Error: {authUserDialogData?.result.error}</>
