@@ -132,6 +132,9 @@ export const UserForm: React.FC<React.PropsWithChildren<UserFormProps>> = ({
   const save = useCallback(
     (formUser: AuthFormUser, keepDialogOpen?: boolean) => {
       const user = convertFromFormUser(formUser);
+      if (!formUser.mfaEnabled) {
+        user.mfaInfo = [];
+      }
       if (isEditing) {
         updateUser({ user, localId });
       } else {
@@ -217,7 +220,9 @@ export const UserForm: React.FC<React.PropsWithChildren<UserFormProps>> = ({
             </Button>
           )}
 
-          <DialogButton disabled={!canSubmit} type="submit" unelevated>
+          <DialogButton onClick={handleSubmit((result) => {
+            save(result, /* keepDialogOpen */ false);
+          })} disabled={!canSubmit} type="submit" unelevated>
             Save
           </DialogButton>
         </DialogActions>
