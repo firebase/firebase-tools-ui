@@ -40,13 +40,7 @@ function getErrorText(errors: any) {
 
 export const Password: React.FC<
   React.PropsWithChildren<PropsFromState & UseFormReturn<AuthFormUser>>
-> = ({
-  register,
-  formState: { errors },
-  watch,
-  setError,
-  clearErrors,
-}) => {
+> = ({ register, formState: { errors }, watch, setError, clearErrors }) => {
   const { ref: passwordRef, ...passwordState } = register('password', {
     minLength: PASSWORD_MIN_LENGTH,
   });
@@ -56,7 +50,7 @@ export const Password: React.FC<
 
   useEffect(() => {
     if (password !== '' && email === '') {
-      setError('emailpassword' as any, {type: 'both'});
+      setError('emailpassword' as any, { type: 'both' });
     } else {
       clearErrors('emailpassword' as any);
     }

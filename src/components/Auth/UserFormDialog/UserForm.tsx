@@ -148,17 +148,17 @@ export const UserForm: React.FC<React.PropsWithChildren<UserFormProps>> = ({
     reset,
   } = form;
 
-  // FIXME: Should be able to just check isValid, instead of additionally checking
+  // FIXME: Should be able to just check isValid, instead of checking
   // that there are no errors. This only happens when `atLeastOneMethodRequired`
   // is the only error present and is causing the "Save" and "Save and create
   // another" buttons to remain enabled even when neither email/password or
   // phone auth are provided. May want to check for any components that are
   // repeatedly getting remounted; perhaps this is the right thread to look at:
   // https://spectrum.chat/react-hook-form/help/should-the-form-isvalid-property-be-false-when-a-required-field-is-empty~c68abcd6-d4c6-4961-9402-7f5d723639fd
+  // FIXME: Disabling MFA can result in isValid=false even when there are no
+  // errors; this prevents changes from being saved.
   const canSubmit =
-    !authUserDialogData?.loading &&
-    isValid &&
-    Object.values(errors).length === 0;
+    !authUserDialogData?.loading && Object.values(errors).length === 0;
 
   const submit = useCallback(
     (formUser: AuthFormUser) => {
@@ -193,7 +193,7 @@ export const UserForm: React.FC<React.PropsWithChildren<UserFormProps>> = ({
           <ImageUrlInput {...form} />
           <CustomAttributes {...form} />
           <SignInMethod {...form} user={user} />
-          <MultiFactor {...form} user={user} />
+          <MultiFactor {...form} user={user} /> {/* FIXME: disabling mfa does not save */}
           {hasError(authUserDialogData?.result) && (
             <Callout type="warning">
               <>Error: {authUserDialogData?.result.error}</>

@@ -139,8 +139,6 @@ export const MultiFactor: React.FC<
 
               const { ref: phoneRef, ...phoneState } = register(fieldName, {
                 pattern: PHONE_REGEX,
-                // FIXME: Required error is not getting triggered when MFA
-                // and emailVerified are true, and email is present
                 required: mfaEnabled,
               });
 
