@@ -82,6 +82,8 @@ export const MultiFactor: React.FC<
       } else {
         clearErrors('mfaEnabled');
       }
+    } else {
+      clearErrors('mfaPhoneInfo');
     }
   }, [mfaEnabled, emailVerified, setError, clearErrors]);
 
