@@ -55,7 +55,7 @@ function convertToFormUser(user?: AuthUser): AuthFormUser | undefined {
   let mfaPhoneInfo: AuthFormUser['mfaInfo'] = [];
   let emailVerified: AuthFormUser['emailVerified'] = false;
 
-  if (user.mfaInfo) {
+  if (user.mfaInfo && user.mfaInfo.length > 0) {
     mfaEnabled = true;
     mfaPhoneInfo = user.mfaInfo.map((mfaEnrollment) => ({
       phoneInfo: mfaEnrollment.phoneInfo,
