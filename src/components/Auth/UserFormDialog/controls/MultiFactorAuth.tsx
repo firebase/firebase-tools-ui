@@ -22,6 +22,7 @@ import classNames from 'classnames';
 import React, { useEffect, useState } from 'react';
 import { UseFormReturn, useFieldArray } from 'react-hook-form';
 
+import { Callout } from '../../../common/Callout';
 import { Field, SwitchField } from '../../../common/Field';
 import { AddAuthUserPayload, AuthFormUser } from '../../types';
 import styles from './controls.module.scss';
@@ -87,6 +88,9 @@ export const MultiFactor: React.FC<
     }
   }, [mfaEnabled, emailVerified, setError, clearErrors]);
 
+  const emptyMfaNumbers =
+    fields.length === 0 || !fields.some((item) => item.phoneInfo !== '');
+
   return (
     <div className={styles.signInWrapper}>
       <ListDivider tag="div" />
@@ -103,6 +107,13 @@ export const MultiFactor: React.FC<
         inputRef={mfaEnabledRef}
         {...mfaEnabledArrState}
       />
+
+      {emptyMfaNumbers || mfaEnabled ? null : (
+        <Callout aside type="warning">
+          Disabling multi-factor authentication will remove any phone numbers
+          added for SMS multi-factor
+        </Callout>
+      )}
 
       {(errors as any).mfaEnabled?.type === 'verified' ? (
         <Typography use="body2" theme="error" tag="div" role="alert">
