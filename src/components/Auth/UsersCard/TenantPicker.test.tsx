@@ -76,13 +76,15 @@ describe('TenantPicker', () => {
   });
 
   it('shows the tenant picker', () => {
-    const { queryByLabelText, getByText } = setup({
+    const { queryByLabelText, getByText, getAllByText } = setup({
       tenants: [createFakeTenant({ tenantId: 'tenantId' })],
     });
 
     expect(queryByLabelText('Select tenant')).not.toBeNull();
     expect(getByText('Default tenant')).not.toBeNull();
-    expect(getByText('tenantId')).not.toBeNull();
+    // An extra Aria accessible element gets created for the option selected,
+    // so need to use getAllByText
+    expect(getAllByText('tenantId').length).toBeGreaterThan(0);
     expect(queryByLabelText('Tenant picker loading')).toBeNull();
   });
 });

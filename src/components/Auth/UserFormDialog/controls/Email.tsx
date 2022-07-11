@@ -33,6 +33,7 @@ function getErrorText(errors: any) {
     if (errors.email.type === 'pattern') {
       return 'Invalid email';
     }
+    // TODO: this is not getting triggered
     if (errors.email.type === 'unique') {
       return 'User with this email already exists';
     }
@@ -53,22 +54,20 @@ export const Email: React.FC<
   setError,
   clearErrors,
 }) => {
+  const email = watch('email');
+  const emailVerified = watch('emailVerified');
+
   const { ref: emailRef, ...emailState } = register('email', {
     validate: {
       unique: (value) => {
-        const { email } = getValues();
         return value === email || !allEmails.has(value);
       },
     },
     pattern: EMAIL_REGEX,
   });
 
-  const { ref: emailVerifiedRef, ...emailVerifiedState } = register(
-    'emailVerified'
-  );
-
-  const email = watch('email');
-  const emailVerified = watch('emailVerified');
+  const { ref: emailVerifiedRef, ...emailVerifiedState } =
+    register('emailVerified');
 
   useEffect(() => {
     if (emailVerified && !email) {

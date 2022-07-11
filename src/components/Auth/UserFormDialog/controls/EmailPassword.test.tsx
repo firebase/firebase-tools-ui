@@ -15,7 +15,6 @@
  */
 
 import { fireEvent } from '@testing-library/react';
-import React from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { Provider } from 'react-redux';
 
@@ -87,6 +86,8 @@ describe('EmailPassword', () => {
       expect(queryByText(errorText)).not.toBeNull();
     });
 
+    // FIXME: This test is failing. allEmails in Email.tsx is still empty by the
+    // time that validEmail is inputted for a second time.
     it('invalid for duplicate email', async () => {
       const { getByText, triggerValidation, getByLabelText } = setup(
         {
