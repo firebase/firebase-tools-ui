@@ -220,9 +220,14 @@ export const UserForm: React.FC<React.PropsWithChildren<UserFormProps>> = ({
             </Button>
           )}
 
-          <DialogButton onClick={handleSubmit((result) => {
-            save(result, /* keepDialogOpen */ false);
-          })} disabled={!canSubmit} type="submit" unelevated>
+          <DialogButton
+            onClick={handleSubmit((result) => {
+              save(result, /* keepDialogOpen */ false);
+            })}
+            disabled={!canSubmit}
+            type="submit"
+            unelevated
+          >
             Save
           </DialogButton>
         </DialogActions>

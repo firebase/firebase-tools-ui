@@ -59,7 +59,6 @@ import {
   updateUser,
 } from './sagas';
 
-// TODO: fix compiler errors in this file
 describe('Auth sagas', () => {
   describe('fetchAuthUsers', () => {
     it('dispatches authFetchUsersSuccess action with the resulting info', () => {
@@ -118,7 +117,7 @@ describe('Auth sagas', () => {
         value: call(configureAuthSaga),
       });
 
-      expect(gen.next((fakeAuthApi as unknown) as AuthApi & AuthUser)).toEqual({
+      expect(gen.next(fakeAuthApi as unknown as AuthApi & AuthUser)).toEqual({
         done: false,
         value: put(setAuthUserDialogLoading(true)),
       });
@@ -128,9 +127,9 @@ describe('Auth sagas', () => {
         value: call([fakeAuthApi, 'createUser'], user),
       });
 
-      expect(gen.next((user as unknown) as AuthApi & AuthUser)).toEqual({
+      expect(gen.next(user as unknown as AuthApi & AuthUser)).toEqual({
         done: false,
-        value: put(createUserSuccess({ user: (user as unknown) as AuthUser })),
+        value: put(createUserSuccess({ user: user as unknown as AuthUser })),
       });
 
       expect(gen.next()).toEqual({
@@ -163,7 +162,7 @@ describe('Auth sagas', () => {
         value: call(configureAuthSaga),
       });
 
-      expect(gen.next((fakeAuthApi as unknown) as AuthApi & AuthUser)).toEqual({
+      expect(gen.next(fakeAuthApi as unknown as AuthApi & AuthUser)).toEqual({
         done: false,
         value: put(setAuthUserDialogLoading(true)),
       });
@@ -178,7 +177,7 @@ describe('Auth sagas', () => {
         displayName: user.displayName,
       } as AuthUser;
 
-      expect(gen.next((newUser as unknown) as AuthApi & AuthUser)).toEqual({
+      expect(gen.next(newUser as unknown as AuthApi & AuthUser)).toEqual({
         done: false,
         value: call([fakeAuthApi, 'updateUser'], {
           localId: newUser.localId,
@@ -188,7 +187,7 @@ describe('Auth sagas', () => {
 
       newUser.customAttributes = user.customAttributes;
 
-      expect(gen.next((newUser as unknown) as AuthApi & AuthUser)).toEqual({
+      expect(gen.next(newUser as unknown as AuthApi & AuthUser)).toEqual({
         done: false,
         value: put(createUserSuccess({ user: newUser })),
       });
@@ -220,7 +219,7 @@ describe('Auth sagas', () => {
         value: call(configureAuthSaga),
       });
 
-      expect(gen.next((fakeAuthApi as unknown) as AuthApi & AuthUser)).toEqual({
+      expect(gen.next(fakeAuthApi as unknown as AuthApi & AuthUser)).toEqual({
         done: false,
         value: put(setAuthUserDialogLoading(true)),
       });
@@ -254,7 +253,7 @@ describe('Auth sagas', () => {
         value: call(configureAuthSaga),
       });
 
-      expect(gen.next((fakeAuthApi as unknown) as AuthApi & AuthUser)).toEqual({
+      expect(gen.next(fakeAuthApi as unknown as AuthApi & AuthUser)).toEqual({
         done: false,
         value: put(setAuthUserDialogLoading(true)),
       });
@@ -328,11 +327,11 @@ describe('Auth sagas', () => {
         done: false,
         value: call(configureAuthSaga),
       });
-      expect(gen.next((fakeAuthApi as unknown) as AuthApi & AuthUser)).toEqual({
+      expect(gen.next(fakeAuthApi as unknown as AuthApi & AuthUser)).toEqual({
         done: false,
         value: call([fakeAuthApi, 'deleteUser'], payload),
       });
-      expect(gen.next((payload as unknown) as AuthApi & AuthUser)).toEqual({
+      expect(gen.next(payload as unknown as AuthApi & AuthUser)).toEqual({
         done: false,
         value: put(deleteUserSuccess(payload)),
       });
@@ -354,7 +353,7 @@ describe('Auth sagas', () => {
         value: call(configureAuthSaga),
       });
 
-      expect(gen.next((fakeAuthApi as unknown) as AuthApi & AuthUser)).toEqual({
+      expect(gen.next(fakeAuthApi as unknown as AuthApi & AuthUser)).toEqual({
         done: false,
         value: put(setAuthUserDialogLoading(true)),
       });
@@ -363,7 +362,7 @@ describe('Auth sagas', () => {
         done: false,
         value: call([fakeAuthApi, 'updateUser'], newUser),
       });
-      expect(gen.next((newUser as unknown) as AuthApi & AuthUser)).toEqual({
+      expect(gen.next(newUser as unknown as AuthApi & AuthUser)).toEqual({
         done: false,
         value: put(updateUserSuccess({ user: newUser as AuthUser })),
       });
@@ -373,7 +372,7 @@ describe('Auth sagas', () => {
         value: put(clearAuthUserDialogData()),
       });
 
-      expect(gen.next((fakeAuthApi as unknown) as AuthApi & AuthUser)).toEqual({
+      expect(gen.next(fakeAuthApi as unknown as AuthApi & AuthUser)).toEqual({
         done: false,
         value: put(setAuthUserDialogLoading(false)),
       });
@@ -394,7 +393,7 @@ describe('Auth sagas', () => {
         done: false,
         value: call(configureAuthSaga),
       });
-      expect(gen.next((fakeAuthApi as unknown) as AuthApi & AuthUser)).toEqual({
+      expect(gen.next(fakeAuthApi as unknown as AuthApi & AuthUser)).toEqual({
         done: false,
         value: call([fakeAuthApi, 'updateUser'], {
           disableUser: isDisabled,
@@ -419,7 +418,7 @@ describe('Auth sagas', () => {
         done: false,
         value: call(configureAuthSaga),
       });
-      expect(gen.next((fakeAuthApi as unknown) as AuthApi & AuthUser)).toEqual({
+      expect(gen.next(fakeAuthApi as unknown as AuthApi & AuthUser)).toEqual({
         done: false,
         value: call([fakeAuthApi, 'nukeUsers']),
       });
@@ -443,7 +442,7 @@ describe('Auth sagas', () => {
         done: false,
         value: call(configureAuthSaga),
       });
-      expect(gen.next((fakeAuthApi as unknown) as AuthApi & AuthUser)).toEqual({
+      expect(gen.next(fakeAuthApi as unknown as AuthApi & AuthUser)).toEqual({
         done: false,
         value: call([fakeAuthApi, 'updateConfig'], {
           signIn: { allowDuplicateEmails: duplicateEmailsAllowed },
@@ -465,15 +464,15 @@ describe('Auth sagas', () => {
         value: call(configureAuthSaga),
       });
       expect(
-        gen.next((fakeAuthApi as unknown) as AuthApi & EmulatorV1ProjectsConfig)
+        gen.next(fakeAuthApi as unknown as AuthApi & EmulatorV1ProjectsConfig)
       ).toEqual({
         done: false,
         value: call([fakeAuthApi, 'getConfig']),
       });
       expect(
-        gen.next(({
+        gen.next({
           signIn: { allowDuplicateEmails: false },
-        } as unknown) as AuthApi & EmulatorV1ProjectsConfig)
+        } as unknown as AuthApi & EmulatorV1ProjectsConfig)
       ).toEqual({
         done: false,
         value: put(setAllowDuplicateEmailsSuccess(false)),
