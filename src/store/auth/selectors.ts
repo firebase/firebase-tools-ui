@@ -57,12 +57,9 @@ export const getAllTakenEmails = createSelector(
   getCurrentEditedUser,
   getUsers,
   (currUser: AuthUser | undefined, users: AuthUser[]) => {
-    if (!currUser) {
-      return new Set(users.map((u) => u.email).filter((e) => !!e));
-    }
     return new Set(
       users
-        .filter((user) => user.localId !== currUser.localId)
+        .filter((user) => user.localId !== currUser?.localId)
         .map((user) => user.email)
         .filter((email) => !!email)
     );
