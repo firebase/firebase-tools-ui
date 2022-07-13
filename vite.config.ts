@@ -24,6 +24,9 @@ import svgrPlugin from 'vite-plugin-svgr';
 export default defineConfig(({ command, mode }) => {
   const config: UserConfig = {
     build: {
+      // Included in the bundled build so that users can see non-minified error
+      // messages using DevTools for debugging (at the cost of bundle size).
+      sourcemap: true,
       outDir: mode === 'server' ? 'dist/server' : 'dist/client',
     },
     publicDir: mode === 'server' ? false : 'public',
