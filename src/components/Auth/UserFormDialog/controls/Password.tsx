@@ -15,12 +15,12 @@
  */
 
 import { Typography } from '@rmwc/typography';
-import React from 'react';
-import { FieldError, UseFormReturn } from 'react-hook-form';
+import React, { useEffect } from 'react';
+import { UseFormReturn } from 'react-hook-form';
 import { connect } from 'react-redux';
 
 import { createStructuredSelector } from '../../../../store';
-import { getAllEmails, isEditingUser } from '../../../../store/auth/selectors';
+import { isEditingUser } from '../../../../store/auth/selectors';
 import { Field } from '../../../common/Field';
 import { AuthFormUser } from '../../types';
 import styles from './controls.module.scss';
@@ -29,7 +29,7 @@ import styles from './controls.module.scss';
 const PASSWORD_MIN_LENGTH = 6;
 
 function getErrorText(errors: any) {
-  if (errors.password?.type === 'both') {
+  if (errors.emailpassword?.type === 'both') {
     return 'Email is required for password authentication';
   }
 
@@ -40,23 +40,21 @@ function getErrorText(errors: any) {
 
 export const Password: React.FC<
   React.PropsWithChildren<PropsFromState & UseFormReturn<AuthFormUser>>
-> = ({
-  register,
-  getValues,
-  formState: { errors },
-  isEditing,
-}) => {
+> = ({ register, formState: { errors }, watch, setError, clearErrors }) => {
   const { ref: passwordRef, ...passwordState } = register('password', {
     minLength: PASSWORD_MIN_LENGTH,
-    validate: {
-      both: (value) => {
-        const { email } = getValues();
-
-        // Email should be present if password is present
-        return !!email || !value;
-      },
-    },
   });
+
+  const email = watch('email');
+  const password = watch('password');
+
+  useEffect(() => {
+    if (password !== '' && email === '') {
+      setError('emailpassword' as any, { type: 'both' });
+    } else {
+      clearErrors('emailpassword' as any);
+    }
+  }, [email, password, clearErrors, setError]);
 
   return (
     <>
@@ -81,7 +79,6 @@ export const Password: React.FC<
 };
 
 export const mapStateToProps = createStructuredSelector({
-  allEmails: getAllEmails,
   isEditing: isEditingUser,
 });
 export type PropsFromState = ReturnType<typeof mapStateToProps>;

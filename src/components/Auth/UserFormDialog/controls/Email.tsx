@@ -15,12 +15,12 @@
  */
 
 import classNames from 'classnames';
-import React from 'react';
-import { FieldError, UseFormReturn } from 'react-hook-form';
+import React, { useEffect } from 'react';
+import { UseFormReturn } from 'react-hook-form';
 import { connect } from 'react-redux';
 
 import { createStructuredSelector } from '../../../../store';
-import { getAllEmails, isEditingUser } from '../../../../store/auth/selectors';
+import { getAllTakenEmails } from '../../../../store/auth/selectors';
 import { Field, SwitchField } from '../../../common/Field';
 import { AuthFormUser } from '../../types';
 import styles from './controls.module.scss';
@@ -36,55 +36,44 @@ function getErrorText(errors: any) {
     if (errors.email.type === 'unique') {
       return 'User with this email already exists';
     }
-    if (errors.email.type === 'emailPresent') {
-      return 'Email required for verification';
-    }
   }
-}
-
-function getVerifiedStatus(emailVerifiedError: [] | [FieldError?] | undefined) {
-  if (!emailVerifiedError) {
-    return 'Verified';
+  if (errors.emailVerified?.type === 'emailPresent') {
+    return 'Email required for verification';
   }
-
-  return emailVerifiedError[0]?.type === 'verified'
-    ? 'Not verified'
-    : 'Verified';
 }
 
 export const Email: React.FC<
   React.PropsWithChildren<PropsFromState & UseFormReturn<AuthFormUser>>
 > = ({
   register,
-  getValues,
   formState: { errors },
-  allEmails,
-  isEditing,
+  allTakenEmails,
+  watch,
+  setError,
+  clearErrors,
 }) => {
+  const email = watch('email');
+  const emailVerified = watch('emailVerified');
+
   const { ref: emailRef, ...emailState } = register('email', {
     validate: {
       unique: (value) => {
-        const { email } = getValues();
-        return value === email || !allEmails.has(value);
-      },
-      emailPresent: (value) => {
-        const { emailVerified: emailVerifiedArr } = getValues();
-        const emailVerified = emailVerifiedArr && emailVerifiedArr.length > 0;
-
-        return !!value || !emailVerified;
+        return !allTakenEmails.has(value);
       },
     },
     pattern: EMAIL_REGEX,
   });
 
-  const { ref: emailVerifiedRef, ...emailVerifiedState } = register(
-    'emailVerified',
-    {
-      validate: {
-        verified: (value) => !!value,
-      },
+  const { ref: emailVerifiedRef, ...emailVerifiedState } =
+    register('emailVerified');
+
+  useEffect(() => {
+    if (emailVerified && !email) {
+      setError('emailVerified', { type: 'emailPresent' });
+    } else {
+      clearErrors('emailVerified');
     }
-  );
+  }, [emailVerified, email, setError, clearErrors]);
 
   return (
     <>
@@ -104,7 +93,7 @@ export const Email: React.FC<
         />
         <SwitchField
           label="Verified email?"
-          switchLabel={getVerifiedStatus(errors.emailVerified)}
+          switchLabel={emailVerified ? 'Verified' : 'Not Verified'}
           defaultChecked={false}
           inputRef={emailVerifiedRef}
           className={styles.switchField}
@@ -117,8 +106,7 @@ export const Email: React.FC<
 };
 
 export const mapStateToProps = createStructuredSelector({
-  allEmails: getAllEmails,
-  isEditing: isEditingUser,
+  allTakenEmails: getAllTakenEmails,
 });
 export type PropsFromState = ReturnType<typeof mapStateToProps>;
 

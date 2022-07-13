@@ -15,7 +15,6 @@
  */
 
 import { fireEvent } from '@testing-library/react';
-import React from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { Provider } from 'react-redux';
 
@@ -112,6 +111,7 @@ describe('EmailPassword', () => {
     });
 
     it('valid for email that is being edited', async () => {
+      const user = createFakeUser({ email: validEmail, localId: 'pirojok' });
       const { queryByText, triggerValidation } = setup(
         {
           email: validEmail,
@@ -121,7 +121,13 @@ describe('EmailPassword', () => {
           users: {
             loading: false,
             result: {
-              data: [createFakeUser({ email: validEmail })],
+              data: [user],
+            },
+          },
+          authUserDialogData: {
+            loading: false,
+            result: {
+              data: user,
             },
           },
         }

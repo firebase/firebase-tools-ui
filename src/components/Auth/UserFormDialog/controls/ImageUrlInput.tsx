@@ -34,9 +34,7 @@ export type ImageUrlInputProps = {
 };
 
 export const ImageUrlInput: React.FC<
-  React.PropsWithChildren<
-    UseFormReturn<AuthFormUser> & ImageUrlInputProps
-  >
+  React.PropsWithChildren<UseFormReturn<AuthFormUser> & ImageUrlInputProps>
 > = ({ register, watch, trigger, formState: { errors }, ImageConstructor }) => {
   ImageConstructor = ImageConstructor || Image;
   const [previewUrl, setPreviewUrl] = useState('');

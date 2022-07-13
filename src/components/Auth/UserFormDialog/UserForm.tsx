@@ -51,19 +51,19 @@ function convertToFormUser(user?: AuthUser): AuthFormUser | undefined {
     return;
   }
 
-  let mfaEnabled: AuthFormUser['mfaEnabled'] = [];
+  let mfaEnabled: AuthFormUser['mfaEnabled'] = false;
   let mfaPhoneInfo: AuthFormUser['mfaInfo'] = [];
-  let emailVerified: AuthFormUser['emailVerified'] = [];
+  let emailVerified: AuthFormUser['emailVerified'] = false;
 
-  if (user.mfaInfo) {
-    mfaEnabled = ['on'];
+  if (user.mfaInfo && user.mfaInfo.length > 0) {
+    mfaEnabled = true;
     mfaPhoneInfo = user.mfaInfo.map((mfaEnrollment) => ({
       phoneInfo: mfaEnrollment.phoneInfo,
     }));
   }
 
   if (!!user.emailVerified) {
-    emailVerified = ['on'];
+    emailVerified = true;
   }
 
   return {
@@ -83,7 +83,7 @@ function convertToFormUser(user?: AuthUser): AuthFormUser | undefined {
 
 function convertFromFormUser(formUser: AuthFormUser): AddAuthUserPayload {
   let mfaInfo: AddAuthUserPayload['mfaInfo'];
-  if (formUser.mfaEnabled[0] === 'on') {
+  if (formUser.mfaEnabled) {
     mfaInfo = formUser.mfaPhoneInfo.map((mfaPhoneInfo) => {
       const existingEnrollment = formUser.mfaInfo?.find(
         (mfaEnrollment) => mfaEnrollment.phoneInfo === mfaPhoneInfo.phoneInfo
@@ -106,7 +106,7 @@ function convertFromFormUser(formUser: AuthFormUser): AddAuthUserPayload {
     email: formUser.email,
     password: formUser.password,
     phoneNumber: formUser.phoneNumber,
-    emailVerified: formUser.emailVerified.length > 0 ? true : false,
+    emailVerified: formUser.emailVerified,
     mfaInfo,
   };
 }
@@ -132,6 +132,9 @@ export const UserForm: React.FC<React.PropsWithChildren<UserFormProps>> = ({
   const save = useCallback(
     (formUser: AuthFormUser, keepDialogOpen?: boolean) => {
       const user = convertFromFormUser(formUser);
+      if (!formUser.mfaEnabled) {
+        user.mfaInfo = [];
+      }
       if (isEditing) {
         updateUser({ user, localId });
       } else {
@@ -141,18 +144,33 @@ export const UserForm: React.FC<React.PropsWithChildren<UserFormProps>> = ({
     [isEditing, updateUser, createUser, localId]
   );
 
-  const { register, handleSubmit, formState, reset } = form;
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+    reset,
+  } = form;
 
-  const canSubmit = !authUserDialogData?.loading && formState.isValid;
+  // FIXME: Should be able to just check isValid, instead of checking
+  // that there are no errors. This only happens when `atLeastOneMethodRequired`
+  // is the only error present and is causing the "Save" and "Save and create
+  // another" buttons to remain enabled even when neither email/password or
+  // phone auth are provided. May want to check for any components that are
+  // repeatedly getting remounted; perhaps this is the right thread to look at:
+  // https://spectrum.chat/react-hook-form/help/should-the-form-isvalid-property-be-false-when-a-required-field-is-empty~c68abcd6-d4c6-4961-9402-7f5d723639fd
+  // FIXME: Disabling MFA can result in isValid=false even when there are no
+  // errors; this prevents changes from being saved.
+  const canSubmit =
+    !authUserDialogData?.loading && Object.values(errors).length === 0;
 
   const submit = useCallback(
     (formUser: AuthFormUser) => {
       // Take into account multi-field errors.
-      if (Object.values(formState.errors).length === 0) {
+      if (Object.values(errors).length === 0) {
         save(formUser);
       }
     },
-    [formState, save]
+    [errors, save]
   );
 
   const { ref: displayNameRef, ...displayNameField } = register('displayName');
@@ -169,7 +187,7 @@ export const UserForm: React.FC<React.PropsWithChildren<UserFormProps>> = ({
             label="Display name (optional)"
             type="text"
             placeholder="Enter display name"
-            error={formState.errors?.displayName && 'Display name is required'}
+            error={errors?.displayName && 'Display name is required'}
             inputRef={displayNameRef}
             {...displayNameField}
           />
@@ -202,7 +220,14 @@ export const UserForm: React.FC<React.PropsWithChildren<UserFormProps>> = ({
             </Button>
           )}
 
-          <DialogButton disabled={!canSubmit} type="submit" unelevated>
+          <DialogButton
+            onClick={handleSubmit((result) => {
+              save(result, /* keepDialogOpen */ false);
+            })}
+            disabled={!canSubmit}
+            type="submit"
+            unelevated
+          >
             Save
           </DialogButton>
         </DialogActions>

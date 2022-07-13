@@ -61,7 +61,8 @@ describe('SignInMethod', () => {
   }
 
   describe('requiring at least one value', () => {
-    const errorText = /One method is required. Please enter either an email\/password or phone number./;
+    const errorText =
+      /One method is required. Please enter either an email\/password or phone number./;
 
     it('is valid when phoneNumber present', async () => {
       const { queryByText } = await setup({

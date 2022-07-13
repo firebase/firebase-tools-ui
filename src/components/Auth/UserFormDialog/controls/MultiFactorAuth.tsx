@@ -20,9 +20,9 @@ import { ListDivider } from '@rmwc/list';
 import { Typography } from '@rmwc/typography';
 import classNames from 'classnames';
 import React, { useEffect, useState } from 'react';
-import { useFieldArray } from 'react-hook-form';
-import { FormContextValues } from 'react-hook-form/dist/contextTypes';
+import { UseFormReturn, useFieldArray } from 'react-hook-form';
 
+import { Callout } from '../../../common/Callout';
 import { Field, SwitchField } from '../../../common/Field';
 import { AddAuthUserPayload, AuthFormUser } from '../../types';
 import styles from './controls.module.scss';
@@ -40,46 +40,56 @@ function addNewMfaNumber(add: (newMfaInfo: { phoneInfo: string }) => void) {
 }
 
 export const MultiFactor: React.FC<
-  MultiFactorProps & FormContextValues<AuthFormUser>
+  MultiFactorProps & UseFormReturn<AuthFormUser>
 > = (form) => {
-  const { control, watch, setError, clearError, errors, user, register } = form;
+  const {
+    control,
+    formState: { errors },
+    user,
+    register,
+    getValues,
+    watch,
+    setError,
+    clearErrors,
+  } = form;
 
-  // https://react-hook-form.com/v5/api#useFieldArray
-  const { fields, append, remove } = useFieldArray<
-    AuthFormUser['mfaPhoneInfo'][0]
-  >({
+  // https://react-hook-form.com/api/usefieldarray/
+  const { fields, append, remove } = useFieldArray({
     control,
     name: 'mfaPhoneInfo',
   });
-
-  const emailVerifiedArr = watch('emailVerified');
-  const mfaEnabledArr = watch('mfaEnabled');
-
-  const emailVerified = emailVerifiedArr && emailVerifiedArr.length > 0;
-  const mfaEnabled = mfaEnabledArr && mfaEnabledArr.length > 0;
 
   const [isZeroState, setIsZeroState] = useState(
     !(user?.mfaInfo && user?.mfaInfo.length > 0)
   );
 
-  useEffect(() => {
-    if (mfaEnabled) {
-      setIsZeroState(false);
-
-      if (fields.length === 0) {
+  const { ref: mfaEnabledRef, ...mfaEnabledArrState } = register('mfaEnabled', {
+    onChange: (event) => {
+      const mfaEnabled = getValues('mfaEnabled');
+      if (mfaEnabled && fields.length === 0) {
         addNewMfaNumber(append);
       }
+      setIsZeroState(false);
+    },
+  });
 
-      if (emailVerified) {
-        clearError('verifyEmail');
+  const mfaEnabled = watch('mfaEnabled');
+  const emailVerified = watch('emailVerified');
+
+  useEffect(() => {
+    if (mfaEnabled) {
+      if (!emailVerified) {
+        setError('mfaEnabled', { type: 'verified' });
       } else {
-        setError('verifyEmail', 'notverified');
+        clearErrors('mfaEnabled');
       }
     } else {
-      clearError('verifyEmail');
-      clearError('mfaPhoneInfo');
+      clearErrors('mfaPhoneInfo');
     }
-  }, [fields, mfaEnabled, emailVerified, setError, clearError, append]);
+  }, [mfaEnabled, emailVerified, setError, clearErrors]);
+
+  const emptyMfaNumbers =
+    fields.length === 0 || !fields.some((item) => item.phoneInfo !== '');
 
   return (
     <div className={styles.signInWrapper}>
@@ -91,14 +101,21 @@ export const MultiFactor: React.FC<
       </div>
 
       <SwitchField
-        name="mfaEnabled"
         label=""
         switchLabel={mfaEnabled ? 'Enabled' : 'Disabled'}
         defaultChecked={false}
-        inputRef={register()}
+        inputRef={mfaEnabledRef}
+        {...mfaEnabledArrState}
       />
 
-      {(errors as any).verifyEmail ? (
+      {emptyMfaNumbers || mfaEnabled ? null : (
+        <Callout aside type="warning">
+          Disabling multi-factor authentication will remove any phone numbers
+          added for SMS multi-factor
+        </Callout>
+      )}
+
+      {(errors as any).mfaEnabled?.type === 'verified' ? (
         <Typography use="body2" theme="error" tag="div" role="alert">
           Email needs to be verified to enroll in multi-factor authentication
         </Typography>
@@ -116,7 +133,7 @@ export const MultiFactor: React.FC<
           </Typography>
           <div>
             {fields.map((item, index) => {
-              const fieldName = `mfaPhoneInfo[${index}].phoneInfo`;
+              const fieldName = `mfaPhoneInfo.${index}.phoneInfo` as const;
 
               const getPhoneErrorText = () => {
                 const error = errors.mfaPhoneInfo?.[index];
@@ -126,10 +143,15 @@ export const MultiFactor: React.FC<
                   } else if ((error as any).phoneInfo.type === 'required') {
                     return 'Phone number is required';
                   } else {
-                    return error.message;
+                    return (error as any).phoneInfo.message;
                   }
                 }
               };
+
+              const { ref: phoneRef, ...phoneState } = register(fieldName, {
+                pattern: PHONE_REGEX,
+                required: mfaEnabled,
+              });
 
               return (
                 <div
@@ -140,17 +162,14 @@ export const MultiFactor: React.FC<
                   )}
                 >
                   <Field
-                    name={fieldName}
                     label="Phone number"
                     placeholder="Enter phone number"
                     type="tel"
                     error={getPhoneErrorText()}
                     disabled={!mfaEnabled}
-                    inputRef={register({
-                      pattern: PHONE_REGEX,
-                      required: !!mfaEnabled,
-                    })}
+                    inputRef={phoneRef}
                     defaultValue={item.phoneInfo}
+                    {...phoneState}
                   />
                   <div className={styles.deleteButtonContainer}>
                     <IconButton

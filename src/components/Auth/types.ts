@@ -56,11 +56,8 @@ export type UpdateAuthUserPayload = Omit<AddAuthUserPayload, 'mfaInfo'> & {
   mfa?: { enrollments: MfaEnrollment[] };
 };
 
-// The form library can't handle booleans or object arrays,
-// so we need to change the types to something the form supports
-export type AuthFormUser = Omit<AddAuthUserPayload, 'emailVerified'> & {
-  emailVerified: [] | ['on'];
-  mfaEnabled: [] | ['on'];
+export type AuthFormUser = AddAuthUserPayload & {
+  mfaEnabled?: boolean;
   mfaPhoneInfo: { phoneInfo?: string }[];
 };
 
