@@ -20,16 +20,11 @@
   display: flex;
   align-items: flex-end;
 
-  > {
-    flex-grow: 0;
-    flex-shrink: 0;
-  }
-
   :global .Field {
     padding-bottom: 0;
 
     &:first-child {
-      flex-basis: 70%;
+      flex: 1;
       margin-right: 8px;
     }
   }
