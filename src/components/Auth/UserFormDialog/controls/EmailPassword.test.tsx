@@ -20,11 +20,7 @@ import { Provider } from 'react-redux';
 
 import { wrapWithForm } from '../../../../test_utils';
 import { createFakeUser, getMockAuthStore } from '../../test_utils';
-import {
-  AddAuthUserPayload,
-  AuthFormUser,
-  AuthState,
-} from '../../types';
+import { AddAuthUserPayload, AuthFormUser, AuthState } from '../../types';
 import Email from './Email';
 import Password from './Password';
 
@@ -131,10 +127,10 @@ describe('EmailPassword', () => {
           authUserDialogData: {
             loading: false,
             result: {
-              data: user
-            }
+              data: user,
+            },
           },
-        },
+        }
       );
       await triggerValidation();
       expect(queryByText('User with this email already exists')).toBeNull();
