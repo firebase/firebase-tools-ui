@@ -25,18 +25,59 @@
     flex-shrink: 0;
   }
 
-  // Hiding error container, as we're using custom one for both fields
   :global .Field {
-    flex-basis: 50%;
     padding-bottom: 0;
 
     &:first-child {
+      flex-basis: 70%;
       margin-right: 8px;
     }
+  }
+}
 
-    .Field-subtext {
-      display: none;
+.smsWrapper {
+  display: flex;
+  align-items: center;
+
+  &:hover:not(:only-child) {
+    .deleteButtonContainer {
+      visibility: visible; // reveal delete button on hover
     }
+  }
+
+  > {
+    flex-grow: 0;
+    flex-shrink: 0;
+  }
+
+  // align the delete button with the field next to it
+  .deleteButtonContainer {
+    height: 80px;
+    padding-top: 20px;
+    visibility: hidden; // it is only visible when parent is hovered
+  }
+
+  :global .Field {
+    padding-bottom: 0;
+
+    &:first-child {
+      flex-basis: 90%;
+      margin-right: 8px;
+    }
+  }
+}
+
+.switchField {
+  height: 36px;
+
+  :global {
+    .mdc-switch {
+      margin-left: 4px; // otherwise the switch goes outside its container when off
+    }
+  }
+
+  :last-child {
+    margin-top: 0px;
   }
 }
 
@@ -69,7 +110,7 @@
   }
 }
 
-.signInHeader {
+.sectionHeader {
   margin-bottom: 20px;
 
   :global .mdc-typography--body1 {
@@ -78,7 +119,11 @@
   }
 }
 
-.authKindLabel {
+.sectionSubHeader {
   font-weight: 500;
   margin-bottom: 8px;
+}
+
+.showError {
+  padding-bottom: 16px;
 }

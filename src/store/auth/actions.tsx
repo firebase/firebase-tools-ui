@@ -16,13 +16,18 @@
 
 import { createAction } from 'typesafe-actions';
 
-import { AddAuthUserPayload, AuthUser } from '../../components/Auth/types';
+import {
+  AddAuthUserPayload,
+  AuthUser,
+  Tenant,
+} from '../../components/Auth/types';
 import { AuthConfig } from '../config';
 import { RemoteResult } from '../utils';
 
 export const updateAuthConfig = createAction('@auth/UPDATE_AUTH_CONFIG')<{
   projectId: string;
   auth: AuthConfig;
+  tenantId?: string;
 } | null>();
 
 export const createUserRequest = createAction('@auth/CREATE_USER_REQUEST')<{
@@ -68,6 +73,14 @@ export const deleteUserSuccess = createAction('@auth/DELETE_USER_SUCCESS')<{
 export const updateFilter = createAction('@auth/UPDATE_FILTER')<{
   filter: string;
 }>();
+
+export const nukeUsersForAllTenantsRequest = createAction(
+  '@auth/NUKE_USERS_FOR_ALL_TENANTS_REQUEST'
+)();
+
+export const nukeUsersForAllTenantsSuccess = createAction(
+  '@auth/NUKE_USERS_FOR_ALL_TENANTS_SUCCESS'
+)();
 
 export const nukeUsersRequest = createAction('@auth/NUKE_USERS_REQUEST')();
 
@@ -116,3 +129,11 @@ export const setAuthUserDialogError = createAction(
 export const clearAuthUserDialogData = createAction(
   '@auth/CLEAR_AUTH_USER_DIALOG_DATA'
 )();
+
+export const authFetchTenantsRequest = createAction(
+  '@auth/AUTH_FETCH_TENANTS_REQUEST'
+)();
+
+export const authFetchTenantsSuccess = createAction(
+  '@auth/AUTH_FETCH_TENANTS_SUCCESS'
+)<Tenant[]>();

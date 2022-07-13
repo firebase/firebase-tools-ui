@@ -19,9 +19,9 @@ import { Typography } from '@rmwc/typography';
 import React, { useEffect } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 
-import { AddAuthUserPayload } from '../../types';
+import { AddAuthUserPayload, AuthFormUser } from '../../types';
 import styles from './controls.module.scss';
-import EmailPassword from './EmailPassword';
+import Password from './Password';
 import PhoneControl from './PhoneControl';
 
 const ERROR_AT_LEAST_ONE_METHOD_REQUIRED = 'atLeastOneMethodRequired';
@@ -30,7 +30,7 @@ export type SignInMethodProps = {
   user?: AddAuthUserPayload;
 };
 export const SignInMethod: React.FC<
-  React.PropsWithChildren<SignInMethodProps & UseFormReturn<AddAuthUserPayload>>
+  React.PropsWithChildren<SignInMethodProps & UseFormReturn<AuthFormUser>>
 > = (form) => {
   const {
     watch,
@@ -39,15 +39,16 @@ export const SignInMethod: React.FC<
     formState: { errors, touchedFields },
     user,
   } = form;
-  const email = watch('email');
   const password = watch('password');
   const phoneNumber = watch('phoneNumber');
 
+  const isTouched = touchedFields['password'] || touchedFields['phoneNumber'];
+
   useEffect(() => {
-    const hasEmail = email !== '';
+    const hasPassword = password !== '';
     const hasPhone = !!phoneNumber;
 
-    if (hasEmail || hasPhone) {
+    if (hasPassword || hasPhone) {
       // According to docs ClearError should accept arbitrary key
       // to allow cross-field validation, but it's not the case here for some
       // reason.
@@ -57,9 +58,8 @@ export const SignInMethod: React.FC<
         message: 'at least',
       });
     }
-  }, [email, password, clearErrors, setError, phoneNumber, errors]);
+  }, [password, clearErrors, setError, phoneNumber, errors]);
 
-  const isTouched = touchedFields['email'] || touchedFields['phoneNumber'];
   const isOnlyError =
     ERROR_AT_LEAST_ONE_METHOD_REQUIRED in errors &&
     Object.values(errors).length === 1;
@@ -67,7 +67,7 @@ export const SignInMethod: React.FC<
   return (
     <div className={styles.signInWrapper}>
       <ListDivider tag="div" />
-      <div className={styles.signInHeader}>
+      <div className={styles.sectionHeader}>
         <Typography use="body1" theme="textPrimaryOnBackground">
           Authentication method
         </Typography>
@@ -82,7 +82,7 @@ export const SignInMethod: React.FC<
           </Typography>
         )}
       </div>
-      <EmailPassword {...form} editedUserEmail={user?.email} />
+      <Password {...form} />
       <PhoneControl {...form} editedUserPhoneNumber={user?.phoneNumber} />
     </div>
   );

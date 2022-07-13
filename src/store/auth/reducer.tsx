@@ -25,6 +25,7 @@ const INIT_STATE = {
   users: { loading: true },
   filter: '',
   allowDuplicateEmails: false,
+  tenants: { loading: true },
 };
 
 export const authReducer = createReducer<AuthState, Action>(INIT_STATE)
@@ -46,6 +47,11 @@ export const authReducer = createReducer<AuthState, Action>(INIT_STATE)
     });
   })
   .handleAction(authActions.nukeUsersSuccess, (state) => {
+    return produce(state, (draft) => {
+      draft.users = mapResult(draft.users, () => []);
+    });
+  })
+  .handleAction(authActions.nukeUsersForAllTenantsSuccess, (state) => {
     return produce(state, (draft) => {
       draft.users = mapResult(draft.users, () => []);
     });
@@ -119,5 +125,20 @@ export const authReducer = createReducer<AuthState, Action>(INIT_STATE)
         loading: false,
         result: { error: payload },
       };
+    });
+  })
+  .handleAction(authActions.authFetchTenantsSuccess, (state, { payload }) => {
+    return produce(state, (draft) => {
+      draft.tenants = {
+        loading: false,
+        result: { data: payload },
+      };
+    });
+  })
+  .handleAction(authActions.authFetchTenantsRequest, (state) => {
+    return produce(state, (draft) => {
+      // intentionally don't wipe out the old tenants list
+      // so that components that rely on tenants list don't flicker
+      draft.tenants.loading = true;
     });
   });

@@ -21,7 +21,8 @@ import { Provider } from 'react-redux';
 
 import { wrapWithForm } from '../../../../test_utils';
 import { getMockAuthStore } from '../../test_utils';
-import { AddAuthUserPayload } from '../../types';
+import { AddAuthUserPayload, AuthFormUser } from '../../types';
+import Email from './Email';
 import { SignInMethod, SignInMethodProps } from './SignInMethod';
 
 describe('SignInMethod', () => {
@@ -31,8 +32,9 @@ describe('SignInMethod', () => {
   async function setup(defaultValues: Partial<AddAuthUserPayload>) {
     const store = getMockAuthStore();
     const methods = wrapWithForm(
-      (props: SignInMethodProps & UseFormReturn<AddAuthUserPayload>) => (
+      (props: SignInMethodProps & UseFormReturn<AuthFormUser>) => (
         <Provider store={store}>
+          <Email {...props} />
           <SignInMethod {...props} />
         </Provider>
       ),
@@ -40,26 +42,27 @@ describe('SignInMethod', () => {
       { isEditing: false }
     );
 
-    const email = methods.getByLabelText('Email');
+    const password = methods.getByLabelText('Password');
 
-    fireEvent.change(email, {
+    fireEvent.change(password, {
       target: { value: 'just need to make this dirty' },
     });
 
     await methods.triggerValidation();
 
-    fireEvent.change(email, {
-      target: { value: defaultValues.email },
+    fireEvent.change(password, {
+      target: { value: defaultValues.password },
     });
 
-    fireEvent.blur(email);
+    fireEvent.blur(password);
 
     await methods.triggerValidation();
     return methods;
   }
 
   describe('requiring at least one value', () => {
-    const errorText = /One method is required./;
+    const errorText =
+      /One method is required. Please enter either an email\/password or phone number./;
 
     it('is valid when phoneNumber present', async () => {
       const { queryByText } = await setup({
@@ -99,7 +102,6 @@ describe('SignInMethod', () => {
 
     it('shows error, if nothing is present', async () => {
       const { getByText } = await setup({
-        email: '',
         password: '',
         phoneNumber: '',
       });

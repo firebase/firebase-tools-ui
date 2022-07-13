@@ -18,7 +18,7 @@ import { createSelector } from 'reselect';
 
 import { AuthState, AuthUser } from '../../components/Auth/types';
 import { AppState } from '../index';
-import { hasData, squashOrDefaut } from '../utils';
+import { hasData, squashOrDefault } from '../utils';
 
 export const getAuth = (state: AppState) => state.auth;
 
@@ -48,14 +48,23 @@ export const getAuthUsersResult = createSelector(getAuthUsers, (users) => {
 });
 
 export const getUsers = createSelector(getAuthUsers, (users) => {
-  return [...squashOrDefaut(users, [])].sort(
+  return [...squashOrDefault(users, [])].sort(
     (a, b) => Number(new Date(b.createdAt)) - Number(new Date(a.createdAt || 0))
   );
 });
 
-export const getAllEmails = createSelector(getUsers, (users) => {
-  return new Set(users.map((u) => u.email).filter((e) => !!e));
-});
+export const getAllTakenEmails = createSelector(
+  getCurrentEditedUser,
+  getUsers,
+  (currUser: AuthUser | undefined, users: AuthUser[]) => {
+    return new Set(
+      users
+        .filter((user) => user.localId !== currUser?.localId)
+        .map((user) => user.email)
+        .filter((email) => !!email)
+    );
+  }
+);
 
 export const getAllPhoneNumbers = createSelector(getUsers, (users) => {
   return new Set(users.map((u) => u.phoneNumber).filter((e) => !!e));
@@ -101,7 +110,12 @@ export const getShowZeroResults = createSelector(
   (users, filteredUsers) => users.length > 0 && filteredUsers.length === 0
 );
 export const getShowTable = createSelector(
-  getUsers,
   getFilteredUsers,
-  (users, filteredUsers) => filteredUsers.length > 0
+  (filteredUsers) => filteredUsers.length > 0
 );
+export const getTenants = createSelector(getAuth, (state: AuthState) => {
+  return squashOrDefault(state.tenants, []).map((tenant) => tenant.tenantId);
+});
+export const getTenantsLoading = createSelector(getAuth, (state: AuthState) => {
+  return state.tenants.loading;
+});

@@ -20,13 +20,16 @@ import { createFakeUser } from './test_utils';
 describe('API', () => {
   const hostAndPort = 'foo.example.com:9002';
   const projectId = 'pelmen-the-project';
+  const testTenantId = 'test-tenant-id';
 
   function setup({
     mockFetchResult,
     secondFetchResult,
+    tenantId,
   }: {
     mockFetchResult: unknown;
     secondFetchResult?: unknown;
+    tenantId?: string;
   }) {
     const fetchSpy = jest.spyOn(global, 'fetch').mockReturnValueOnce(
       Promise.resolve({
@@ -40,7 +43,7 @@ describe('API', () => {
         } as Response)
       );
     }
-    return new AuthApi(hostAndPort, projectId);
+    return new AuthApi(hostAndPort, projectId, tenantId);
   }
 
   it('nukes users', async () => {
@@ -89,6 +92,112 @@ describe('API', () => {
     ]);
   });
 
+  it('fetchUsers for tenant project', async () => {
+    const password = 'p1r0j0k';
+    const fakeUserInfo = {
+      passwordHash: 'fakeHash:salt=asdfgh3:password=' + password,
+    };
+    const api = setup({
+      mockFetchResult: {
+        userInfo: [fakeUserInfo],
+      },
+      tenantId: testTenantId,
+    });
+
+    const result = await api.fetchUsers();
+
+    expect(global.fetch).toHaveBeenCalledWith(
+      'http://foo.example.com:9002/identitytoolkit.googleapis.com/v1/projects/pelmen-the-project/accounts:query',
+      {
+        body: JSON.stringify({ tenantId: testTenantId }),
+        headers: {
+          Authorization: 'Bearer owner',
+          'Content-Type': 'application/json',
+        },
+        method: 'POST',
+      }
+    );
+    expect(result).toEqual([
+      {
+        ...fakeUserInfo,
+        password,
+        providerUserInfo: [],
+      },
+    ]);
+  });
+
+  it('fetchTenants', async () => {
+    const tenants = [{ tenantId: 'tenant-id-1' }, { tenantId: 'tenant-id-2' }];
+    const api = setup({
+      mockFetchResult: {
+        tenants,
+      },
+    });
+
+    const result = await api.fetchTenants();
+
+    expect(global.fetch).toHaveBeenCalledWith(
+      'http://foo.example.com:9002/identitytoolkit.googleapis.com/v2/projects/pelmen-the-project/tenants',
+      {
+        headers: {
+          Authorization: 'Bearer owner',
+          'Content-Type': 'application/json',
+        },
+        method: 'GET',
+      }
+    );
+    expect(result).toEqual(tenants);
+  });
+
+  it('fetchUser', async () => {
+    const localId = 'local-id';
+    const api = setup({
+      mockFetchResult: {
+        users: [{ localId }],
+      },
+    });
+
+    const result = await api.fetchUser(localId);
+
+    expect(global.fetch).toHaveBeenCalledWith(
+      'http://foo.example.com:9002/identitytoolkit.googleapis.com/v1/projects/pelmen-the-project/accounts:lookup',
+      {
+        body: JSON.stringify({ localId: [localId] }),
+        headers: {
+          Authorization: 'Bearer owner',
+          'Content-Type': 'application/json',
+        },
+        method: 'POST',
+      }
+    );
+    expect(result.localId).toEqual(localId);
+  });
+
+  it('fetchUser for tenant project', async () => {
+    const localId = 'local-id';
+    const api = setup({
+      mockFetchResult: {
+        users: [{ localId }],
+      },
+      tenantId: testTenantId,
+    });
+
+    const result = await api.fetchUser(localId);
+
+    expect(global.fetch).toHaveBeenCalledWith(
+      'http://foo.example.com:9002/identitytoolkit.googleapis.com/v1/projects/pelmen-the-project/accounts:lookup',
+      {
+        body: JSON.stringify({ localId: [localId], tenantId: testTenantId }),
+        headers: {
+          Authorization: 'Bearer owner',
+          'Content-Type': 'application/json',
+        },
+        method: 'POST',
+      }
+    );
+    expect(result.localId).toEqual(localId);
+  });
+
   it('createUser', async () => {
     const user = { phoneNumber: '+1 555-555-0100' };
     const mockFetchResult = { localId: 'pirojok' };
@@ -103,6 +212,36 @@ describe('API', () => {
       'http://foo.example.com:9002/identitytoolkit.googleapis.com/v1/projects/pelmen-the-project/accounts',
       {
         body: JSON.stringify(user),
+        headers: {
+          Authorization: 'Bearer owner',
+          'Content-Type': 'application/json',
+        },
+        method: 'POST',
+      }
+    );
+
+    expect(result).toEqual({
+      ...serverUser,
+      password: '',
+      providerUserInfo: [],
+    });
+  });
+
+  it('createUser in tenant project', async () => {
+    const user = { phoneNumber: '+1 555-555-0100' };
+    const mockFetchResult = { localId: 'pirojok' };
+    const serverUser = { localId: 'pirojok' };
+    const api = setup({
+      mockFetchResult,
+      secondFetchResult: { users: [serverUser] },
+      tenantId: testTenantId,
+    });
+    const result = await api.createUser(user);
+
+    expect(global.fetch).toHaveBeenCalledWith(
+      'http://foo.example.com:9002/identitytoolkit.googleapis.com/v1/projects/pelmen-the-project/accounts',
+      {
+        body: JSON.stringify({ ...user, tenantId: testTenantId }),
         headers: {
           Authorization: 'Bearer owner',
           'Content-Type': 'application/json',
@@ -171,7 +310,7 @@ describe('API', () => {
     const allowDuplicateEmails = false;
     const mockFetchResult = { signIn: { allowDuplicateEmails } };
     const api = setup({ mockFetchResult });
-    const result = await api.updateConfig(allowDuplicateEmails);
+    const result = await api.updateConfig({ signIn: { allowDuplicateEmails } });
     expect(global.fetch).toHaveBeenCalledWith(
       'http://foo.example.com:9002/emulator/v1/projects/pelmen-the-project/config',
       {
