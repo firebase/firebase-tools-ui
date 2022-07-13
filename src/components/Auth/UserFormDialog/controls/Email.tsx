@@ -20,7 +20,7 @@ import { UseFormReturn } from 'react-hook-form';
 import { connect } from 'react-redux';
 
 import { createStructuredSelector } from '../../../../store';
-import { getAllEmails, isEditingUser } from '../../../../store/auth/selectors';
+import { getAllTakenEmails } from '../../../../store/auth/selectors';
 import { Field, SwitchField } from '../../../common/Field';
 import { AuthFormUser } from '../../types';
 import styles from './controls.module.scss';
@@ -33,7 +33,6 @@ function getErrorText(errors: any) {
     if (errors.email.type === 'pattern') {
       return 'Invalid email';
     }
-    // TODO: this is not getting triggered
     if (errors.email.type === 'unique') {
       return 'User with this email already exists';
     }
@@ -47,9 +46,8 @@ export const Email: React.FC<
   React.PropsWithChildren<PropsFromState & UseFormReturn<AuthFormUser>>
 > = ({
   register,
-  getValues,
   formState: { errors },
-  allEmails,
+  allTakenEmails,
   watch,
   setError,
   clearErrors,
@@ -60,7 +58,7 @@ export const Email: React.FC<
   const { ref: emailRef, ...emailState } = register('email', {
     validate: {
       unique: (value) => {
-        return value === email || !allEmails.has(value);
+        return !allTakenEmails.has(value);
       },
     },
     pattern: EMAIL_REGEX,
@@ -108,8 +106,7 @@ export const Email: React.FC<
 };
 
 export const mapStateToProps = createStructuredSelector({
-  allEmails: getAllEmails,
-  isEditing: isEditingUser,
+  allTakenEmails: getAllTakenEmails,
 });
 export type PropsFromState = ReturnType<typeof mapStateToProps>;
 

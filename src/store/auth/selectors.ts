@@ -53,9 +53,21 @@ export const getUsers = createSelector(getAuthUsers, (users) => {
   );
 });
 
-export const getAllEmails = createSelector(getUsers, (users) => {
-  return new Set(users.map((u) => u.email).filter((e) => !!e));
-});
+export const getAllTakenEmails = createSelector(
+  getCurrentEditedUser,
+  getUsers,
+  (currUser: AuthUser | undefined, users: AuthUser[]) => {
+    if (!currUser) {
+      return new Set(users.map((u) => u.email).filter((e) => !!e));
+    }
+    return new Set(
+      users
+        .filter((user) => user.localId !== currUser.localId)
+        .map((user) => user.email)
+        .filter((email) => !!email)
+    );
+  }
+);
 
 export const getAllPhoneNumbers = createSelector(getUsers, (users) => {
   return new Set(users.map((u) => u.phoneNumber).filter((e) => !!e));

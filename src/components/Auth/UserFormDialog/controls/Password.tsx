@@ -20,7 +20,7 @@ import { UseFormReturn } from 'react-hook-form';
 import { connect } from 'react-redux';
 
 import { createStructuredSelector } from '../../../../store';
-import { getAllEmails, isEditingUser } from '../../../../store/auth/selectors';
+import { isEditingUser } from '../../../../store/auth/selectors';
 import { Field } from '../../../common/Field';
 import { AuthFormUser } from '../../types';
 import styles from './controls.module.scss';
@@ -79,7 +79,6 @@ export const Password: React.FC<
 };
 
 export const mapStateToProps = createStructuredSelector({
-  allEmails: getAllEmails,
   isEditing: isEditingUser,
 });
 export type PropsFromState = ReturnType<typeof mapStateToProps>;

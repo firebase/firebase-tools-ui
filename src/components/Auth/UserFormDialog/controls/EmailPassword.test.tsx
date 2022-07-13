@@ -20,7 +20,11 @@ import { Provider } from 'react-redux';
 
 import { wrapWithForm } from '../../../../test_utils';
 import { createFakeUser, getMockAuthStore } from '../../test_utils';
-import { AddAuthUserPayload, AuthFormUser, AuthState } from '../../types';
+import {
+  AddAuthUserPayload,
+  AuthFormUser,
+  AuthState,
+} from '../../types';
 import Email from './Email';
 import Password from './Password';
 
@@ -86,37 +90,10 @@ describe('EmailPassword', () => {
       expect(queryByText(errorText)).not.toBeNull();
     });
 
-    // FIXME: This test is failing. allEmails in Email.tsx is still empty by the
-    // time that validEmail is inputted for a second time.
-
-    // it('invalid for duplicate email', async () => {
-    //   const { getByText, triggerValidation, getByLabelText } = setup(
-    //     {
-    //       email: '',
-    //       password: 'lollol',
-    //     },
-    //     {
-    //       users: {
-    //         loading: false,
-    //         result: {
-    //           data: [createFakeUser({ email: validEmail })],
-    //         },
-    //       },
-    //     }
-    //   );
-    //   const emailInput = getByLabelText('Email (optional)');
-    //   fireEvent.change(emailInput, {
-    //     target: { value: validEmail },
-    //   });
-
-    //   await triggerValidation();
-    //   expect(getByText('User with this email already exists')).not.toBeNull();
-    // });
-
-    it('valid for email that is being edited', async () => {
-      const { queryByText, triggerValidation } = setup(
+    it('invalid for duplicate email', async () => {
+      const { getByText, triggerValidation, getByLabelText } = setup(
         {
-          email: validEmail,
+          email: '',
           password: 'lollol',
         },
         {
@@ -127,6 +104,37 @@ describe('EmailPassword', () => {
             },
           },
         }
+      );
+      const emailInput = getByLabelText('Email (optional)');
+      fireEvent.change(emailInput, {
+        target: { value: validEmail },
+      });
+
+      await triggerValidation();
+      expect(getByText('User with this email already exists')).not.toBeNull();
+    });
+
+    it('valid for email that is being edited', async () => {
+      const user = createFakeUser({ email: validEmail, localId: 'pirojok' });
+      const { queryByText, triggerValidation } = setup(
+        {
+          email: validEmail,
+          password: 'lollol',
+        },
+        {
+          users: {
+            loading: false,
+            result: {
+              data: [user],
+            },
+          },
+          authUserDialogData: {
+            loading: false,
+            result: {
+              data: user
+            }
+          },
+        },
       );
       await triggerValidation();
       expect(queryByText('User with this email already exists')).toBeNull();
