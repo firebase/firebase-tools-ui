@@ -29,7 +29,7 @@
     "pubsub": {
       "port": 8085
     },
-    "remote config": {
+    "remoteconfig": {
       "port": 9200
     }
   },
