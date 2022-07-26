@@ -18,6 +18,7 @@ import './Field.scss';
 
 import { randomId } from '@rmwc/base';
 import { Select, SelectProps } from '@rmwc/select';
+import { Switch, SwitchProps } from '@rmwc/switch';
 import { TextField, TextFieldHTMLProps, TextFieldProps } from '@rmwc/textfield';
 import { HTMLProps } from '@rmwc/types';
 import { Typography } from '@rmwc/typography';
@@ -39,6 +40,7 @@ export const Field: React.FC<React.PropsWithChildren<Props>> = ({
   outlined,
   tip,
   error,
+  key,
   ...textFieldProps
 }) => {
   const [id] = useState(randomId('field'));
@@ -119,6 +121,58 @@ export const SelectField: React.FC<
       <div className="Field-subtext">
         {error ? (
           <Typography className="Field-tip" use="body2" theme="error">
+            {error}
+          </Typography>
+        ) : (
+          tip && (
+            <Typography className="Field-tip" use="body2" theme="secondary">
+              {tip}
+            </Typography>
+          )
+        )}
+      </div>
+    </div>
+  );
+};
+
+type SwitchFieldProps = {
+  fieldClassName?: string;
+  switchLabel?: string;
+  tip?: string;
+  error?: string;
+} & SwitchProps &
+  HTMLProps<HTMLInputElement>;
+
+export const SwitchField: React.FC<SwitchFieldProps> = ({
+  fieldClassName,
+  label,
+  switchLabel,
+  tip,
+  error,
+  ...switchProps
+}) => {
+  const [id] = useState(randomId());
+  const [subtextId] = useState(randomId('field-subtext'));
+  return (
+    <div className={classnames('Field', fieldClassName)}>
+      <Typography
+        className="Field-label"
+        use="body2"
+        theme="secondary"
+        tag="label"
+        htmlFor={id}
+      >
+        {label}
+      </Typography>
+      <Switch {...switchProps} id={id} label={switchLabel} />
+      <div className="Field-subtext" id={subtextId}>
+        {error ? (
+          <Typography
+            className="Field-tip"
+            role="alert"
+            use="body2"
+            theme="error"
+          >
             {error}
           </Typography>
         ) : (

@@ -180,7 +180,7 @@ export function squash<T, E, R>(
   });
 }
 
-export function squashOrDefaut<T>(
+export function squashOrDefault<T>(
   remoteResult: RemoteResult<T, unknown>,
   defaultValue: T
 ) {

@@ -17,11 +17,14 @@
 import {
   createFakeAuthStateWithUsers,
   createFakeState,
+  createFakeTenant,
   createFakeUser,
 } from '../../components/Auth/test_utils';
 import { AuthUser } from '../../components/Auth/types';
-import { squashOrDefaut } from '../utils';
+import { squashOrDefault } from '../utils';
 import {
+  authFetchTenantsRequest,
+  authFetchTenantsSuccess,
   authFetchUsersError,
   authFetchUsersSuccess,
   createUserSuccess,
@@ -100,7 +103,7 @@ describe('auth reducers', () => {
         const action = setUserDisabledSuccess({ localId, disabled: true });
 
         const result = authReducer(state, action);
-        expect(squashOrDefaut(result.users, [])[0].disabled).toEqual(true);
+        expect(squashOrDefault(result.users, [])[0].disabled).toEqual(true);
       });
 
       it(`${setUserDisabledSuccess} => enables the user`, () => {
@@ -109,7 +112,7 @@ describe('auth reducers', () => {
         const action = setUserDisabledSuccess({ localId, disabled: false });
 
         const result = authReducer(state, action);
-        expect(squashOrDefaut(result.users, [])[0].disabled).toEqual(false);
+        expect(squashOrDefault(result.users, [])[0].disabled).toEqual(false);
       });
     });
   });
@@ -159,6 +162,38 @@ describe('auth reducers', () => {
       expect(result).toEqual(
         createFakeState({
           users: { loading: false, result: { error: { message } } },
+        })
+      );
+    });
+  });
+
+  describe('tenant reducers', () => {
+    it(`${authFetchTenantsSuccess} => updates tenants`, () => {
+      const state = createFakeState({});
+      const tenants = [
+        createFakeTenant({ tenantId: 'tenant-id-1' }),
+        createFakeTenant({ tenantId: 'tenant-id-2' }),
+      ];
+      const action = authFetchTenantsSuccess(tenants);
+
+      const result = authReducer(state, action);
+
+      expect(result).toEqual(
+        createFakeState({
+          tenants: { loading: false, result: { data: tenants } },
+        })
+      );
+    });
+
+    it(`${authFetchTenantsRequest} => sets tenant loading state`, () => {
+      const state = createFakeState({});
+      const action = authFetchTenantsRequest();
+
+      const result = authReducer(state, action);
+
+      expect(result).toEqual(
+        createFakeState({
+          tenants: { loading: true, result: { data: [] } },
         })
       );
     });

@@ -34,7 +34,7 @@ export abstract class RestApi {
 
   protected async jsonRequest(
     url: string,
-    data: {},
+    data?: {},
     method: RequestMethod = 'GET',
     headers: Record<string, string> = { 'Content-Type': 'application/json' }
   ) {
@@ -42,7 +42,7 @@ export abstract class RestApi {
 
     const res = await fetch(url, {
       method,
-      body: JSON.stringify(data),
+      body: data ? JSON.stringify(data) : undefined,
       headers: {
         Authorization: 'Bearer ' + accessToken,
         ...headers,

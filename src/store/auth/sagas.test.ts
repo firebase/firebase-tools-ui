@@ -17,8 +17,15 @@
 import { all, call, getContext, put, setContext } from 'redux-saga/effects';
 
 import AuthApi from '../../components/Auth/api';
-import { AddAuthUserPayload, AuthUser } from '../../components/Auth/types';
+import { createFakeTenant } from '../../components/Auth/test_utils';
 import {
+  AddAuthUserPayload,
+  AuthUser,
+  EmulatorV1ProjectsConfig,
+} from '../../components/Auth/types';
+import {
+  authFetchTenantsRequest,
+  authFetchTenantsSuccess,
   authFetchUsersRequest,
   authFetchUsersSuccess,
   clearAuthUserDialogData,
@@ -43,6 +50,7 @@ import {
   createUser,
   deleteUser,
   fetchAuthUsers,
+  fetchTenants,
   getAllowDuplicateEmails,
   initAuth,
   nukeUsers,
@@ -52,7 +60,7 @@ import {
 } from './sagas';
 
 describe('Auth sagas', () => {
-  describe('authFetchUsers', () => {
+  describe('fetchAuthUsers', () => {
     it('dispatches authFetchUsersSuccess action with the resulting info', () => {
       const gen = fetchAuthUsers();
       const fakeAuthApi = { fetchUsers: jest.fn() };
@@ -68,6 +76,31 @@ describe('Auth sagas', () => {
       expect(gen.next(fakeUsers)).toEqual({
         done: false,
         value: put(authFetchUsersSuccess(fakeUsers)),
+      });
+      expect(gen.next().done).toBe(true);
+    });
+  });
+
+  describe('fetchTenants', () => {
+    it('dispatches authFetchTenantsSuccess action with the resulting info', () => {
+      const gen = fetchTenants();
+      const fakeAuthApi = { fetchTenants: jest.fn() };
+      const fakeTenants = [
+        createFakeTenant({ tenantId: 'tenant-id-1' }),
+        createFakeTenant({ tenantId: 'tenant-id-2' }),
+      ];
+
+      expect(gen.next()).toEqual({
+        done: false,
+        value: call(configureAuthSaga),
+      });
+      expect(gen.next(fakeAuthApi)).toEqual({
+        done: false,
+        value: call([fakeAuthApi, 'fetchTenants']),
+      });
+      expect(gen.next(fakeTenants)).toEqual({
+        done: false,
+        value: put(authFetchTenantsSuccess(fakeTenants)),
       });
       expect(gen.next().done).toBe(true);
     });
@@ -259,6 +292,7 @@ describe('Auth sagas', () => {
             port: 9099,
           },
           projectId: 'hello',
+          tenantId: 'tenant-id',
         })
       );
       expect(gen.next()).toEqual({
@@ -272,6 +306,7 @@ describe('Auth sagas', () => {
           expect.arrayContaining([
             put(authFetchUsersRequest()),
             put(getAllowDuplicateEmailsRequest()),
+            put(authFetchTenantsRequest()),
           ])
         ),
       });
@@ -399,18 +434,23 @@ describe('Auth sagas', () => {
   describe('setAllowDuplicateEmails', () => {
     it('triggers appropriate API endpoint', () => {
       const fakeAuthApi = { updateConfig: jest.fn() };
-      const gen = setAllowDuplicateEmails(setAllowDuplicateEmailsRequest(true));
+      const duplicateEmailsAllowed = true;
+      const gen = setAllowDuplicateEmails(
+        setAllowDuplicateEmailsRequest(duplicateEmailsAllowed)
+      );
       expect(gen.next()).toEqual({
         done: false,
         value: call(configureAuthSaga),
       });
       expect(gen.next(fakeAuthApi as unknown as AuthApi & AuthUser)).toEqual({
         done: false,
-        value: call([fakeAuthApi, 'updateConfig'], true),
+        value: call([fakeAuthApi, 'updateConfig'], {
+          signIn: { allowDuplicateEmails: duplicateEmailsAllowed },
+        }),
       });
       expect(gen.next()).toEqual({
         done: false,
-        value: put(setAllowDuplicateEmailsSuccess(true)),
+        value: put(setAllowDuplicateEmailsSuccess(duplicateEmailsAllowed)),
       });
     });
   });
@@ -423,11 +463,17 @@ describe('Auth sagas', () => {
         done: false,
         value: call(configureAuthSaga),
       });
-      expect(gen.next(fakeAuthApi as unknown as AuthApi & boolean)).toEqual({
+      expect(
+        gen.next(fakeAuthApi as unknown as AuthApi & EmulatorV1ProjectsConfig)
+      ).toEqual({
         done: false,
         value: call([fakeAuthApi, 'getConfig']),
       });
-      expect(gen.next(false as unknown as AuthApi & boolean)).toEqual({
+      expect(
+        gen.next({
+          signIn: { allowDuplicateEmails: false },
+        } as unknown as AuthApi & EmulatorV1ProjectsConfig)
+      ).toEqual({
         done: false,
         value: put(setAllowDuplicateEmailsSuccess(false)),
       });

@@ -19,7 +19,7 @@ import React from 'react';
 import { UseFormReturn } from 'react-hook-form';
 
 import { Field } from '../../../common/Field';
-import { AddAuthUserPayload } from '../../types';
+import { AuthFormUser } from '../../types';
 import styles from './controls.module.scss';
 import { validateSerializedCustomClaims } from './customClaimsValidation';
 
@@ -49,7 +49,7 @@ function validate(attributes?: string) {
 const CUSTOM_ATTRIBUTES_CONTROL_NAME = 'customAttributes';
 
 export const CustomAttributes: React.FC<
-  React.PropsWithChildren<UseFormReturn<AddAuthUserPayload>>
+  React.PropsWithChildren<UseFormReturn<AuthFormUser>>
 > = ({ formState: { errors }, register }) => {
   const label = (
     <label>

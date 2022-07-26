@@ -15,7 +15,13 @@
  */
 
 import { RestApi } from '../common/rest_api';
-import { AddAuthUserPayload, AuthUser } from './types';
+import {
+  AddAuthUserPayload,
+  AuthUser,
+  EmulatorV1ProjectsConfig,
+  Tenant,
+  UpdateAuthUserPayload,
+} from './types';
 
 const importUser = (user: AuthUser & ApiAuthUserFields) => {
   const match = user.passwordHash?.match(PASSWORD_HASH_REGEX);
@@ -38,34 +44,66 @@ export default class AuthApi extends RestApi {
 
   // https://cloud.google.com/identity-platform/docs/reference/rest/v1/projects.accounts
   private readonly baseUrl = `http://${this.hostAndPort}/identitytoolkit.googleapis.com/v1/projects/${this.projectId}`;
+  private readonly baseUrlV2 = `http://${this.hostAndPort}/identitytoolkit.googleapis.com/v2/projects/${this.projectId}`;
   private readonly baseEmulatorUrl = `http://${this.hostAndPort}/emulator/v1/projects/${this.projectId}`;
 
   constructor(
     private readonly hostAndPort: string,
-    private readonly projectId: string
+    private readonly projectId: string,
+    private readonly tenantId?: string
   ) {
     super();
   }
 
+  async nukeUsersForAllTenants(): Promise<void> {
+    const deletePromises = [];
+
+    // clear users from default tenant
+    deletePromises.push(this.deleteRequest(`${this.baseEmulatorUrl}/accounts`));
+
+    // clear users from all other tenants
+    const tenants = await this.fetchTenants();
+    const tenantDeletes = tenants.map(({ tenantId }) => {
+      return this.deleteRequest(
+        `${this.baseEmulatorUrl}/tenants/${tenantId}/accounts`
+      );
+    });
+    deletePromises.concat(tenantDeletes);
+
+    await Promise.all(deletePromises);
+  }
+
   async nukeUsers() {
-    await this.deleteRequest(`${this.baseEmulatorUrl}/accounts`);
+    if (this.tenantId) {
+      await this.deleteRequest(
+        `${this.baseEmulatorUrl}/tenants/${this.tenantId}/accounts`
+      );
+    } else {
+      await this.deleteRequest(`${this.baseEmulatorUrl}/accounts`);
+    }
+
     return [];
   }
 
   async fetchUsers(): Promise<AuthUser[]> {
     const { json } = await this.jsonRequest(
       `${this.baseUrl}/accounts:query`,
-      {},
+      { tenantId: this.tenantId },
       'POST'
     );
 
     return json.userInfo.map(importUser);
   }
 
+  async fetchTenants(): Promise<Tenant[]> {
+    const { json } = await this.jsonRequest(`${this.baseUrlV2}/tenants`);
+    return json.tenants;
+  }
+
   async fetchUser(localId: string): Promise<AuthUser> {
     const { json } = await this.jsonRequest(
       `${this.baseUrl}/accounts:lookup`,
-      { localId: [localId] },
+      { localId: [localId], tenantId: this.tenantId },
       'POST'
     );
 
@@ -80,7 +118,7 @@ export default class AuthApi extends RestApi {
   async createUser(user: AddAuthUserPayload): Promise<AuthUser> {
     const { json } = await this.jsonRequest(
       `${this.baseUrl}/accounts`,
-      { ...user },
+      { ...user, tenantId: this.tenantId },
       'POST'
     );
 
@@ -88,29 +126,33 @@ export default class AuthApi extends RestApi {
   }
 
   async updateConfig(
-    allowDuplicateEmails: boolean
-  ): Promise<{ signIn: { allowDuplicateEmails: boolean } }> {
-    const { json } = await this.patchRequest(`${this.baseEmulatorUrl}/config`, {
-      signIn: { allowDuplicateEmails },
-    });
-
-    return json;
+    newConfig: Partial<EmulatorV1ProjectsConfig>
+  ): Promise<EmulatorV1ProjectsConfig> {
+    const { json: updatedConfig } = await this.patchRequest(
+      `${this.baseEmulatorUrl}/config`,
+      newConfig
+    );
+    return updatedConfig;
   }
 
-  async getConfig(): Promise<AuthUser> {
-    const { signIn } = await (
-      await fetch(`${this.baseEmulatorUrl}/config`)
-    ).json();
-
-    return signIn.allowDuplicateEmails;
+  async getConfig(): Promise<EmulatorV1ProjectsConfig> {
+    const config = await (await fetch(`${this.baseEmulatorUrl}/config`)).json();
+    return config;
   }
 
   async updateUser(
     user: AddAuthUserPayload & { localId: string }
   ): Promise<AuthUser> {
+    // AddAuthUserPayload isn't always a valid update payload.
+    // Convert to valid update payload.
+    const userUpdate: UpdateAuthUserPayload = {
+      ...user,
+      mfa: user.mfaInfo ? { enrollments: user.mfaInfo } : undefined,
+    };
+
     const { json } = await this.jsonRequest(
       `${this.baseUrl}/accounts:update`,
-      user,
+      { ...userUpdate, tenantId: this.tenantId },
       'POST'
     );
 
@@ -118,7 +160,11 @@ export default class AuthApi extends RestApi {
   }
 
   async deleteUser(user: AuthUser): Promise<void> {
-    await this.jsonRequest(`${this.baseUrl}/accounts:delete`, user, 'POST');
+    await this.jsonRequest(
+      `${this.baseUrl}/accounts:delete`,
+      { ...user, tenantId: this.tenantId },
+      'POST'
+    );
   }
 }
 

@@ -18,14 +18,15 @@ import configureStore from 'redux-mock-store';
 
 import { AppState } from '../../store';
 import { createRemoteDataLoaded } from '../../store/utils';
-import { AuthState, AuthUser } from './types';
+import { AuthState, AuthUser, Tenant } from './types';
 
-export function getMockAuthStore(state?: Partial<AppState>) {
+export function getMockAuthStore(state?: Partial<AppState['auth']>) {
   return configureStore<Pick<AppState, 'auth'>>()({
     auth: {
       users: { loading: false, result: { data: [] } },
       filter: '',
       allowDuplicateEmails: false,
+      tenants: { loading: false, result: { data: [] } },
       ...state,
     },
   });
@@ -44,15 +45,33 @@ export function createFakeUser(user: Partial<AuthUser>): AuthUser {
   };
 }
 
+export function createFakeTenant(tenant: Partial<Tenant>): Tenant {
+  return {
+    allowPasswordSignup: false,
+    disableAuth: false,
+    enableAnonymousUser: false,
+    enableEmailLinkSignin: false,
+    mfaConfig: { state: '', enabledProviders: [] },
+    name: 'name',
+    tenantId: 'tenant-id',
+    ...tenant,
+  };
+}
+
 export function createFakeState(state: Partial<AuthState>): AuthState {
   return {
     filter: '',
     allowDuplicateEmails: true,
     users: createRemoteDataLoaded([]),
+    tenants: createRemoteDataLoaded([]),
     ...state,
   };
 }
 
 export function createFakeAuthStateWithUsers(users: AuthUser[]) {
   return createFakeState({ users: createRemoteDataLoaded(users) });
+}
+
+export function createFakeAuthStateWithTenants(tenants: Tenant[]) {
+  return createFakeState({ tenants: createRemoteDataLoaded(tenants) });
 }

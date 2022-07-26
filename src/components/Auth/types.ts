@@ -24,7 +24,19 @@ export interface CustomAttribute {
 
 /**
  * Field names are consistent with:
- * https://github.com/FirebasePrivate/firebase-tools/blob/d6b584da9f852313064d32dd219a6f23b7800d66/src/emulator/auth/schema.ts#L1670-L1779
+ * https://github.com/firebase/firebase-tools/blob/f413eb9eb6940ee20dea748b18bb25ce185e7d7f/src/emulator/auth/schema.ts#L617
+ */
+export type MfaEnrollment = {
+  displayName?: string;
+  enrolledAt?: string;
+  mfaEnrollmentId?: string;
+  phoneInfo?: string;
+  unobfuscatedPhoneInfo?: string;
+};
+
+/**
+ * Field names are consistent with:
+ * https://github.com/firebase/firebase-tools/blob/a8ccc7afec817389a7ab5565a1bbf59f24bd68bd/src/emulator/auth/schema.ts#L1724-L1833
  */
 export interface AddAuthUserPayload {
   customAttributes?: string;
@@ -34,7 +46,20 @@ export interface AddAuthUserPayload {
   email?: string;
   password?: string;
   phoneNumber?: string;
+  emailVerified?: boolean;
+  mfaInfo?: MfaEnrollment[];
 }
+
+// `mfaInfo` name is changed to `mfa.enrollments` only for user update:
+// https://github.com/firebase/firebase-tools/blob/a8ccc7afec817389a7ab5565a1bbf59f24bd68bd/src/emulator/auth/schema.ts#L932
+export type UpdateAuthUserPayload = Omit<AddAuthUserPayload, 'mfaInfo'> & {
+  mfa?: { enrollments: MfaEnrollment[] };
+};
+
+export type AuthFormUser = AddAuthUserPayload & {
+  mfaEnabled?: boolean;
+  mfaPhoneInfo: { phoneInfo?: string }[];
+};
 
 export const providerToIconMap = {
   'gc.apple.com': 'assets/provider-icons/auth_service_game_center.svg',
@@ -64,9 +89,26 @@ export interface AuthUser extends AddAuthUserPayload {
   providerUserInfo: AuthProviderInfo[];
 }
 
+export interface Tenant {
+  allowPasswordSignup: boolean;
+  disableAuth: boolean;
+  enableAnonymousUser: boolean;
+  enableEmailLinkSignin: boolean;
+  mfaConfig: { state: string; enabledProviders: string[] };
+  name: string;
+  tenantId: string;
+}
+
 export interface AuthState {
   authUserDialogData?: RemoteResult<AuthUser | undefined>;
   users: RemoteResult<AuthUser[]>;
   filter: string;
   allowDuplicateEmails: boolean;
+  tenants: RemoteResult<Tenant[]>;
+}
+
+// Similar the emulator config object of the same name in the Firebase CLI,
+// but without optional types
+export interface EmulatorV1ProjectsConfig {
+  signIn: { allowDuplicateEmails: boolean };
 }

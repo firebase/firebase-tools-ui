@@ -25,8 +25,13 @@ import {
 import { ActionType, getType } from 'typesafe-actions';
 
 import AuthApi from '../../components/Auth/api';
-import { AuthUser } from '../../components/Auth/types';
 import {
+  AuthUser,
+  EmulatorV1ProjectsConfig,
+} from '../../components/Auth/types';
+import {
+  authFetchTenantsRequest,
+  authFetchTenantsSuccess,
   authFetchUsersError,
   authFetchUsersRequest,
   authFetchUsersSuccess,
@@ -36,6 +41,8 @@ import {
   deleteUserRequest,
   deleteUserSuccess,
   getAllowDuplicateEmailsRequest,
+  nukeUsersForAllTenantsRequest,
+  nukeUsersForAllTenantsSuccess,
   nukeUsersRequest,
   nukeUsersSuccess,
   setAllowDuplicateEmailsRequest,
@@ -60,6 +67,12 @@ export function* fetchAuthUsers(): any {
   }
 }
 
+export function* fetchTenants(): any {
+  const authApi = yield call(configureAuthSaga);
+  const tenants = yield call([authApi, 'fetchTenants']);
+  yield put(authFetchTenantsSuccess(tenants));
+}
+
 export const AUTH_API_CONTEXT = 'AUTH_API_CONTEXT';
 
 export function* initAuth({ payload }: ActionType<typeof updateAuthConfig>) {
@@ -69,13 +82,16 @@ export function* initAuth({ payload }: ActionType<typeof updateAuthConfig>) {
   yield setContext({
     [AUTH_API_CONTEXT]: new AuthApi(
       payload.auth.hostAndPort,
-      payload.projectId
+      payload.projectId,
+      payload.tenantId
     ),
   });
   yield all([
     takeLatest(getType(authFetchUsersRequest), fetchAuthUsers),
+    takeLatest(getType(authFetchTenantsRequest), fetchTenants),
     takeLatest(getType(createUserRequest), createUser),
     takeLatest(getType(nukeUsersRequest), nukeUsers),
+    takeLatest(getType(nukeUsersForAllTenantsRequest), nukeUsersForAllTenants),
     takeLatest(getType(deleteUserRequest), deleteUser),
     takeLatest(getType(updateUserRequest), updateUser),
     takeLatest(getType(setUserDisabledRequest), setUserDisabled),
@@ -88,6 +104,7 @@ export function* initAuth({ payload }: ActionType<typeof updateAuthConfig>) {
       getAllowDuplicateEmails
     ),
     put(authFetchUsersRequest()),
+    put(authFetchTenantsRequest()),
     put(getAllowDuplicateEmailsRequest()),
   ]);
 }
@@ -162,20 +179,36 @@ export function* setAllowDuplicateEmails({
   payload,
 }: ReturnType<typeof setAllowDuplicateEmailsRequest>) {
   const authApi: AuthApi = yield call(configureAuthSaga);
-  yield call([authApi, 'updateConfig'], payload);
+  yield call([authApi, 'updateConfig'], {
+    signIn: { allowDuplicateEmails: payload },
+  });
   yield put(setAllowDuplicateEmailsSuccess(payload));
 }
 
 export function* getAllowDuplicateEmails() {
   const authApi: AuthApi = yield call(configureAuthSaga);
-  const config: boolean = yield call([authApi, 'getConfig']);
-  yield put(setAllowDuplicateEmailsSuccess(config));
+  const config: EmulatorV1ProjectsConfig = yield call([authApi, 'getConfig']);
+  const allowDuplicateEmails = config.signIn?.allowDuplicateEmails;
+
+  if (allowDuplicateEmails === undefined) {
+    throw new Error(
+      'Did not get a "signIn.allowDuplicateEmails" setting from config API'
+    );
+  }
+
+  yield put(setAllowDuplicateEmailsSuccess(config.signIn.allowDuplicateEmails));
 }
 
 export function* nukeUsers() {
   const authApi: AuthApi = yield call(configureAuthSaga);
   yield call([authApi, 'nukeUsers']);
   yield put(nukeUsersSuccess());
+}
+
+export function* nukeUsersForAllTenants() {
+  const authApi: AuthApi = yield call(configureAuthSaga);
+  yield call([authApi, 'nukeUsersForAllTenants']);
+  yield put(nukeUsersForAllTenantsSuccess());
 }
 
 export function* configureAuthSaga(): Generator {

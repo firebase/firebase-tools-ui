@@ -16,5 +16,17 @@
 
 .clearAllButton {
   text-align: end;
-  margin-bottom: 24px;
+}
+
+.tenantPicker {
+  :global select {
+    // Override global select styles to have the icons aligned properly. (same as Storage bucket picker)
+    padding: 4px 32px 0 48px !important;
+  }
+  svg {
+    position: absolute;
+    margin: 0;
+    top: 50%;
+  }
+  min-width: 200px;
 }
