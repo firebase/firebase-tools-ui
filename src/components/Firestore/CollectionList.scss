@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
+@import '../common/utils';
+
 .Firestore-CollectionList {
   display: flex;
   flex-direction: column;
   overflow: hidden;
 
   .mdc-list:not(.List-Actions) {
+    @include scrollable;
     flex: 1;
-    overflow: scroll;
   }
 }
 
