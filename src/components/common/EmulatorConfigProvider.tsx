@@ -17,7 +17,12 @@
 import React, { useEffect, useState } from 'react';
 import useSwr, { mutate } from 'swr';
 
-import { Config, Emulator, hostAndPort } from '../../store/config';
+import {
+  AnalyticsSession,
+  Config,
+  Emulator,
+  hostAndPort,
+} from '../../store/config';
 
 const emulatorConfigContext = React.createContext<
   | {
@@ -198,9 +203,10 @@ async function configFetcher(url: string): Promise<Config> {
   const json = (await jsonFetcher(url)) as any;
   const result: Config = {
     projectId: json.projectId as string,
+    analytics: json.analytics as AnalyticsSession,
   };
   for (const [key, value] of Object.entries<any>(json)) {
-    if (key === 'projectId') {
+    if (key === 'projectId' || key === 'analytics') {
       continue;
     }
     const host = fixHostname(value.host as string);

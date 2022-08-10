@@ -69,6 +69,12 @@ app.get(
       }
     }
 
+    // Googlers: see go/firebase-emulator-ui-usage-collection-design?pli=1#heading=h.jwz7lj6r67z8
+    // for more detail
+    if (process.env.FIREBASE_GA_SESSION) {
+      json.analytics = JSON.parse(process.env.FIREBASE_GA_SESSION);
+    }
+
     return json;
   })
 );
