@@ -28,6 +28,7 @@ import { Provider } from 'react-redux';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { CompatRouter } from 'react-router-dom-v5-compat';
 
+import { initGtag } from './analytics';
 import { background, primary, secondary } from './colors';
 import App from './components/App';
 import { EmulatorConfigProvider } from './components/common/EmulatorConfigProvider';
@@ -36,6 +37,7 @@ import configureStore from './configureStore';
 import { error } from './themes';
 
 const store = configureStore();
+initGtag();
 
 const RouterWithInit = () => {
   return (

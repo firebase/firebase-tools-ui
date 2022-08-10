@@ -15,6 +15,7 @@
  */
 
 import React from 'react';
+import { matchPath } from 'react-router';
 
 import Auth from './components/Auth';
 import Database from './components/Database';
@@ -30,6 +31,58 @@ export interface Route {
   label: string;
   exact: boolean;
   showInNav: boolean;
+}
+
+// Routes must be in a form React Router would understand
+const routesToSanitize: string[] = [
+  // Auth
+  '/auth/:tenantId',
+
+  // Database
+  '/database/:namespace/data/:path*',
+
+  // Extensions
+  '/extensions/:instanceId',
+
+  // Firestore
+  '/firestore/data/:path*',
+  '/firestore/requests/:requestId',
+
+  // Storage
+  '/storage/:bucket/:path*',
+];
+
+export function scrubPathData(pathname: string): {
+  scrubbedPath: string;
+  pathLabel: string;
+} {
+  const routeMatch = routes.find((r) =>
+    matchPath(pathname as string, {
+      path: r.path,
+      exact: r.exact,
+    })
+  );
+
+  if (!routeMatch) {
+    return {
+      scrubbedPath: '/invalid',
+      pathLabel: 'invalid path',
+    };
+  }
+
+  const scrubbedPathData = {
+    scrubbedPath: pathname,
+    pathLabel: routeMatch.label,
+  };
+
+  for (const route of routesToSanitize) {
+    if (!!matchPath(pathname, { path: route })) {
+      scrubbedPathData.scrubbedPath = route;
+      break;
+    }
+  }
+
+  return scrubbedPathData;
 }
 
 export const routes: ReadonlyArray<Route> = [

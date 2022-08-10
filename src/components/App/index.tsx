@@ -20,9 +20,10 @@ import { Portal } from '@rmwc/base';
 import { DialogQueue } from '@rmwc/dialog';
 import { Grid } from '@rmwc/grid';
 import { Theme } from '@rmwc/theme';
-import React from 'react';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Redirect, Route, Switch, useLocation } from 'react-router-dom';
 
+import { scrubAnalyticsPageData } from '../../analytics';
 import { routes } from '../../routes';
 import { dialogs } from '../common/DialogQueue';
 import AppBar from './AppBar';
@@ -32,6 +33,9 @@ export const REDIRECT_LOGS_URL =
   '/logs?q=metadata.emulator.name%3D%22functions%22';
 
 const App: React.FC<React.PropsWithChildren<unknown>> = () => {
+  let location = useLocation();
+  useEffect(scrubAnalyticsPageData, [location]);
+
   return (
     <>
       <DialogQueue dialogs={dialogs} />

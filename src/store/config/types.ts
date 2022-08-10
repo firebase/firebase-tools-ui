@@ -44,8 +44,34 @@ export type Emulator =
   | 'pubsub'
   | 'extensions';
 
+// Config for the Emulator Suite UI's own analytics (not a Google Analytics emulator)
+// See also: https://github.com/FirebasePrivate/firebase-tools/blob/3e6f525717f546c64f9943f6b3e045772fbf637f/src/track.ts#L167-L187
+export interface AnalyticsSession {
+  measurementId: string;
+  clientId: string;
+
+  // https://support.google.com/analytics/answer/9191807
+  // Inherited from the CLI invocation (i.e. reusing the same session).
+  sessionId: string;
+
+  // Currently unused in Emulator UI. The GA library automatically tracks this.
+  totalEngagementSeconds: number;
+
+  // Whether the events sent should be tagged so that they are shown in GA Debug
+  // View in real time (for Googler to debug) and excluded from reports.
+  debugMode: boolean;
+
+  // Whether to validate events format instead of collecting them. Should only
+  // be used to debug the Firebase CLI / Emulator UI itself regarding issues
+  // with Analytics. To enable, set the env var FIREBASE_CLI_MP_VALIDATE in CLI.
+  // In Emulator UI, this is implemented by marking events sent as model-only.
+  // See: https://support.google.com/analytics/answer/11161109
+  validateOnly: boolean;
+}
+
 export interface Config {
   projectId: string;
+  analytics?: AnalyticsSession;
   database?: DatabaseConfig;
   auth?: AuthConfig;
   firestore?: FirestoreConfig;
