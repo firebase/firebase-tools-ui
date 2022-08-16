@@ -4,7 +4,11 @@ about: Create a report to help us improve
 title: ''
 labels: ''
 assignees: ''
+
 ---
+
+Note: Before filing bugs in this repo, please ensure that this is a bug for the Emulator Suite UI. Emulator Suite and/or Firebase CLI bugs should be filed under the firebase-tools repo here:
+https://github.com/firebase/firebase-tools/issues/new/choose
 
 **Describe the bug**
 A clear and concise description of what the bug is.
