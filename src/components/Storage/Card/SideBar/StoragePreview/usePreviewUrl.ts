@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { getDownloadURL, ref } from 'firebase/storage';
 import { useStorage } from 'reactfire';
 import useSWR from 'swr';
 
@@ -49,7 +50,7 @@ export const usePreviewUrl = (file: StorageFile) => {
       if (!shouldShowPreview(file.contentType)) {
         return Promise.resolve(undefined);
       }
-      return storage.refFromURL(getLocation(file.fullPath)).getDownloadURL();
+      return getDownloadURL(ref(storage, getLocation(file.fullPath)));
     },
     { suspense: true }
   );
