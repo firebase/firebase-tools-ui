@@ -4,7 +4,6 @@ about: Suggest an idea for this project
 title: ''
 labels: ''
 assignees: ''
-
 ---
 
 Note: Before filing feature requests in this repo, please ensure that this is a feature request for the Emulator Suite UI. Emulator Suite and/or Firebase CLI feature requests should be filed under the firebase-tools repo here:
