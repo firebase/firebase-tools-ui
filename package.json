@@ -73,6 +73,7 @@
     "typescript": "^4.1.5",
     "vite": "^2.9.13",
     "vite-plugin-node": "^1.0.0",
+    "vite-plugin-rewrite-all": "^1.0.0",
     "vite-plugin-svgr": "^2.1.0"
   },
   "scripts": {
