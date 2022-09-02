@@ -42,7 +42,7 @@ export default defineConfig(({ command, mode }) => {
       viteCommonjs(),
       checker({
         typescript: true,
-        eslint: { lintCommand: 'eslint "src/**/*.{js,ts,tsx}"' },
+        eslint: { lintCommand: 'eslint --ext .js,.jsx,.ts,.tsx src/' },
       }),
 
       // Fix Vite routing paths with dots (used in Storage/Firestore/etc.):

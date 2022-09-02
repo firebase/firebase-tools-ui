@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import * as base from '@rmwc/base';
 
 require('mutationobserver-shim');
 

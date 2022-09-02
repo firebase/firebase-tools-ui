@@ -87,8 +87,8 @@
     "test:debug": "react-scripts --inspect-brk test --env=./custom-jest-environment.js --runInBand",
     "test:coverage": "react-scripts test --coverage --watchAll=false --env=./custom-jest-environment.js",
     "eject": "react-scripts eject",
-    "lint": "prettier --check . && eslint 'src/**/*.{ts,tsx}'",
-    "lint:fix": "eslint --fix 'src/**/*.{ts,tsx}' && npm run format",
+    "lint": "prettier --check . && eslint --ext .js,.jsx,.ts,.tsx src/",
+    "lint:fix": "eslint --ext .js,.jsx,.ts,.tsx src/ && npm run format",
     "fmt": "npm run format",
     "format": "prettier --write .",
     "prepare": "husky install"
