@@ -137,6 +137,10 @@ export function denormalize(store: Store, firestore?: Firestore): FirestoreAny {
   const field = store.fields[store.uuid];
   if (isMapField(field)) {
     return field.mapChildren.reduce((acc, curr) => {
+      if (!curr.name) {
+        // Skip fields with empty name (not allowed by Firestore SDK anyway).
+        return acc;
+      }
       acc[curr.name] = denormalize(
         {
           uuid: curr.valueId,
