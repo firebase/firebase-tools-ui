@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 require('mutationobserver-shim');
 
 // reactFire has an implicit dependency on globalThis

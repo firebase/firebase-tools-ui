@@ -18,9 +18,7 @@ import { getByRole, getByText, render } from '@testing-library/react';
 import React from 'react';
 import { MemoryRouter } from 'react-router';
 
-import {
-  TestEmulatorConfigProvider,
-} from '../common/EmulatorConfigProvider';
+import { TestEmulatorConfigProvider } from '../common/EmulatorConfigProvider';
 import { Home } from './index';
 
 it('renders fetching placeholder when fetching config', () => {

@@ -15,8 +15,6 @@
  */
 
 import { FirebaseApp, deleteApp, initializeApp } from 'firebase/app';
-
-
 import { useEffect, useState } from 'react';
 
 import { useConfig } from './components/common/EmulatorConfigProvider';
