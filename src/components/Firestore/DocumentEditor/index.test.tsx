@@ -125,7 +125,7 @@ describe('with basic root fields', () => {
     await act(async () => {
       getByText('add').click();
     });
-    expect(onChange).toHaveBeenCalledWith({ hello: 'world', '': '' });
+    expect(onChange).toHaveBeenCalledWith({ hello: 'world' });
   });
 
   it('removes root-fields', () => {
