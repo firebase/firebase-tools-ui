@@ -18,6 +18,7 @@ import { viteCommonjs } from '@originjs/vite-plugin-commonjs';
 import react from '@vitejs/plugin-react';
 import { UserConfig, defineConfig } from 'vite';
 import { VitePluginNode } from 'vite-plugin-node';
+import pluginRewriteAll from 'vite-plugin-rewrite-all';
 import svgrPlugin from 'vite-plugin-svgr';
 
 // https://vitejs.dev/config/
@@ -38,6 +39,10 @@ export default defineConfig(({ command, mode }) => {
         },
       }),
       viteCommonjs(),
+
+      // Fix Vite routing paths with dots (used in Storage/Firestore/etc.):
+      // https://github.com/vitejs/vite/issues/2415
+      pluginRewriteAll(),
     ],
     resolve: {
       alias:
