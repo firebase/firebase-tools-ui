@@ -147,11 +147,11 @@ export const UserForm: React.FC<React.PropsWithChildren<UserFormProps>> = ({
   const {
     register,
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { errors },
     reset,
   } = form;
 
-  // FIXME: Should be able to just check isValid, instead of checking
+  // FIXME: Should be able to just check form.isValid, instead of checking
   // that there are no errors. This only happens when `atLeastOneMethodRequired`
   // is the only error present and is causing the "Save" and "Save and create
   // another" buttons to remain enabled even when neither email/password or

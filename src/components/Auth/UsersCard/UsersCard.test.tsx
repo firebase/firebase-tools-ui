@@ -21,7 +21,6 @@ import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 
 import { AppState } from '../../../store';
-import { openAuthUserDialog } from '../../../store/auth/actions';
 import { createRemoteDataLoaded } from '../../../store/utils';
 import { waitForDialogsToOpen } from '../../../test_utils';
 import { createFakeAuthStateWithUsers } from '../test_utils';

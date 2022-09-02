@@ -18,12 +18,11 @@ import { FirebaseApp } from 'firebase/app';
 import {
   CollectionReference,
   DocumentReference,
-  Firestore,
   collection,
   connectFirestoreEmulator,
   getFirestore,
 } from 'firebase/firestore';
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import {
   FirebaseAppProvider,
   FirestoreProvider,
@@ -36,10 +35,6 @@ import { useEmulatedFirebaseApp } from '../../firebase';
 import { useConfig, useEmulatorConfig } from '../common/EmulatorConfigProvider';
 import { useFetcher, useRequest } from '../common/useRequest';
 import { MissingDocument } from './models';
-
-interface WindowWithFirestore extends Window {
-  firestore?: Firestore;
-}
 
 const FIRESTORE_OPTIONS = {};
 

@@ -15,7 +15,6 @@
  */
 
 import { fireEvent } from '@testing-library/react';
-import React from 'react';
 
 import { wrapWithForm } from '../../../../test_utils';
 import { PhoneControl, PhoneControlProps } from './PhoneControl';

@@ -63,7 +63,7 @@ describe('loaded document', () => {
       fireEvent.submit(getByText('Save'));
     });
 
-    expect(await findByText(/\"new\":\"42\"/)).not.toBeNull();
+    expect(await findByText(/"new":"42"/)).not.toBeNull();
   });
 
   it('renders a field', () => {
@@ -97,7 +97,7 @@ describe('loaded document', () => {
 
     fireEvent.submit(getByText('Save'));
 
-    expect(await findByText(/\"foo\":\"new\"/)).not.toBeNull();
+    expect(await findByText(/"foo":"new"/)).not.toBeNull();
   });
 
   // TODO: these are definitely immutable, but cannot figure out how to trigger
@@ -164,7 +164,7 @@ describe('missing document', () => {
 
     await new Promise((resolve) => setTimeout(resolve, 500));
 
-    expect(await findByText(/\"meaningOfLife\":\"42\"/)).not.toBeNull();
+    expect(await findByText(/"meaningOfLife":"42"/)).not.toBeNull();
   });
 }); // missing document
 
@@ -212,7 +212,7 @@ describe('empty document', () => {
 
     await waitFor(() => !queryByText('Save'));
 
-    expect(await findByText(/\"meaningOfLife\":\"42\"/)).not.toBeNull();
+    expect(await findByText(/"meaningOfLife":"42"/)).not.toBeNull();
   });
 }); // empty document
 
@@ -265,11 +265,11 @@ describe('loaded array', () => {
       queryAllByText('delete')[1].click();
     });
 
-    expect(await findByText(/\"foo\":\[\"bravo\",\"bravo\"\]/)).not.toBeNull();
+    expect(await findByText(/"foo":\["bravo","bravo"\]/)).not.toBeNull();
   });
 
   it('array elements keys are immutable', async () => {
-    const { getByLabelText, getByText, queryAllByText } = result;
+    const { getByLabelText, queryAllByText } = result;
     // update the bravo-element
     await act(async () => queryAllByText('edit')[1].click());
     expect((getByLabelText('Index') as HTMLInputElement).disabled).toBe(true);
@@ -285,9 +285,7 @@ describe('loaded array', () => {
       target: { value: 'new' },
     });
     fireEvent.submit(getByText('Save'));
-    expect(
-      await findByText(/\"foo\":\[\"alpha\",\"new\",\"bravo\"\]/)
-    ).not.toBeNull();
+    expect(await findByText(/"foo":\["alpha","new","bravo"\]/)).not.toBeNull();
   });
 
   it('adds a top-level array element', async () => {
@@ -304,7 +302,7 @@ describe('loaded array', () => {
     });
     fireEvent.submit(getByText('Save'));
     expect(
-      await findByText(/\"foo\":\[\"alpha\",\"bravo\",\"bravo\",\"new\"\]/)
+      await findByText(/"foo":\["alpha","bravo","bravo","new"\]/)
     ).not.toBeNull();
   });
 });
@@ -375,7 +373,7 @@ describe('loaded map', () => {
       target: { value: 'new' },
     });
     fireEvent.submit(getByText('Save'));
-    expect(await findByText(/\"first_name\":\"new\"/)).not.toBeNull();
+    expect(await findByText(/"first_name":"new"/)).not.toBeNull();
   });
 
   it('adds a map element', async () => {
@@ -392,6 +390,6 @@ describe('loaded map', () => {
       target: { value: 'new' },
     });
     fireEvent.submit(getByText('Save'));
-    expect(await findByText(/\"wow\":\"new\"/)).not.toBeNull();
+    expect(await findByText(/"wow":"new"/)).not.toBeNull();
   });
 });

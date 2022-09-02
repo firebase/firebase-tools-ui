@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { act } from 'react-dom/test-utils';
 
 import { wrapWithForm } from '../../../../test_utils';
@@ -51,7 +50,7 @@ describe('ImageUrlInput', () => {
       });
 
       await triggerValidation();
-      getByText('Error loading image');
+      expect(getByText('Error loading image')).not.toBeNull();
     });
 
     it('displays an image if image loaded', async () => {
@@ -64,13 +63,13 @@ describe('ImageUrlInput', () => {
       });
 
       await triggerValidation();
-      getByAltText('Profile preview');
+      expect(getByAltText('Profile preview')).not.toBeNull();
     });
 
     it('displays loading spinner', async () => {
       const { getByTestId, triggerValidation } = setup({ photoUrl: 'lol.png' });
       await triggerValidation();
-      getByTestId('spinner');
+      expect(getByTestId('spinner')).not.toBeNull();
     });
 
     it('displays nothing if there is no image', async () => {

@@ -15,7 +15,6 @@
  */
 
 import {
-  RenderResult,
   act,
   fireEvent,
   render,

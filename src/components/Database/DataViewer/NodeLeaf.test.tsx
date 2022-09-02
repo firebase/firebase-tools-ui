@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-import { act, render } from '@testing-library/react';
-import { DatabaseReference, ref } from 'firebase/database';
+import { act } from '@testing-library/react';
+import { ref } from 'firebase/database';
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
 
 import { renderWithDatabase } from '../testing/DatabaseTestProviders';
 import { NodeLeaf } from './NodeLeaf';

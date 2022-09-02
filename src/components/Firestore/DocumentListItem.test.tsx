@@ -110,7 +110,7 @@ describe('DocumentListItem', () => {
     const history = createMemoryHistory({
       initialEntries: ['/firestore/data'],
     });
-    const { debug, queryByText, queryByTestId } = await render(
+    const { queryByText, queryByTestId } = await render(
       <Router history={history}>
         <Route path="/firestore/data">
           <DocumentListItem

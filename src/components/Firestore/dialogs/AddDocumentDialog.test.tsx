@@ -96,29 +96,19 @@ it('provides a document-editor', async () => {
   expect(getByLabelText('Field')).not.toBe(null);
 });
 
-// TODO testing suggests that the button is infact disabed by inspecting the DOM
-// but triggering a click event still triggers the underlying event. This is no
-// reproducible in the actual GUI.
-it.skip('[Save] is disabled with invalid doc-data', async () => {
+it('[Save] is disabled with invalid doc-data', async () => {
   const onValue = jest.fn();
-  const { getByText, getByLabelText } = await renderDialogWithFirestore(
-    async (firestore) => {
-      const collectionRef = collection(firestore, 'things');
-      return (
-        <AddDocumentDialog
-          open={true}
-          collectionRef={collectionRef}
-          onValue={onValue}
-        />
-      );
-    }
-  );
-
-  await act(async () => {
-    getByText('Save').click();
+  const { getByText } = await renderDialogWithFirestore(async (firestore) => {
+    const collectionRef = collection(firestore, 'things');
+    return (
+      <AddDocumentDialog
+        open={true}
+        collectionRef={collectionRef}
+        onValue={onValue}
+      />
+    );
   });
-
-  expect(onValue).not.toHaveBeenCalled();
+  expect((getByText('Save') as HTMLButtonElement).disabled).toBe(true);
 });
 
 it('emits id and parsed data when [Save] is clicked', async () => {

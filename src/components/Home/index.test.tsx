@@ -19,7 +19,6 @@ import React from 'react';
 import { MemoryRouter } from 'react-router';
 
 import {
-  EmulatorConfigProvider,
   TestEmulatorConfigProvider,
 } from '../common/EmulatorConfigProvider';
 import { Home } from './index';
