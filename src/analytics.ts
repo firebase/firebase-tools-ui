@@ -23,32 +23,8 @@ const USAGE_CONFIG_API = '/api/config';
 // Types for gtag
 // https://developers.google.com/analytics/devguides/collection/gtagjs#install_the_global_site_tag
 interface WindowWithGA extends Window {
-  _gtag: Gtag;
+  _gtag: Gtag.Gtag;
   [key: `ga-disable-${string}`]: boolean;
-}
-
-// Roughed out types for gtag because the default TS types for
-// gtag expect it to be global, but we don't want it to be callable from
-// anywhere in the app (only here, where we can control whether events
-// are sent or not based on user preferences)
-interface Gtag {
-  (
-    command: 'config',
-    targetId: string,
-    config?: { [key: string]: unknown }
-  ): void;
-  (command: 'set', config: { [key: string]: unknown }): void;
-  (
-    command: 'event',
-    eventName: string,
-    eventParams?: { [key: string]: unknown }
-  ): void;
-  (
-    command: 'consent',
-    consentArg: 'default' | 'update' | 'default',
-    consentParams: { [key: string]: unknown }
-  ): void;
-  (command: 'js', config: Date): void;
 }
 
 /**
@@ -65,16 +41,20 @@ interface Gtag {
  * the Analytics backend
  *
  */
-export const gtag: Gtag = function (eventName, eventParams, options?) {
+export const gtag: Gtag.Gtag = function () {
   initGtag();
-  (window as WindowWithGA)._gtag.apply(window, arguments);
+  (window as unknown as WindowWithGA)._gtag.apply(
+    window,
+    arguments as unknown as Parameters<Gtag.Gtag>
+  );
 };
 
 let loadedMeasurementId: string | undefined = undefined;
 
 function disableGtag() {
   if (loadedMeasurementId) {
-    (window as WindowWithGA)[`ga-disable-${loadedMeasurementId}`] = true;
+    (window as unknown as WindowWithGA)[`ga-disable-${loadedMeasurementId}`] =
+      true;
   }
 }
 

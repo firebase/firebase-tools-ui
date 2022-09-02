@@ -1,5 +1,5 @@
 /**
- * Copyright 2020 Google LLC
+ * Copyright 2022 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,24 @@
  * limitations under the License.
  */
 
-/// <reference types="react-scripts" />
-/// <reference types="react-dom/experimental" />
-/// <reference types="react/experimental" />
+const restrictedGlobals = require('confusing-browser-globals');
+
+module.exports = {
+  extends: [
+    'react-app',
+    'plugin:jest/recommended',
+    'plugin:react-hooks/recommended',
+  ],
+  plugins: ['jest'],
+  rules: {
+    'jest/no-jasmine-globals': 'error',
+    'no-restricted-globals': [
+      'error',
+      {
+        // Our setup does not use global var gtag (declared by @types/gtag.js).
+        name: 'gtag',
+        message: "Use `import { gtag } from './analytics';` instead.",
+      },
+    ].concat(restrictedGlobals),
+  },
+};

@@ -17,6 +17,7 @@
 import { viteCommonjs } from '@originjs/vite-plugin-commonjs';
 import react from '@vitejs/plugin-react';
 import { UserConfig, defineConfig } from 'vite';
+import checker from 'vite-plugin-checker';
 import { VitePluginNode } from 'vite-plugin-node';
 import pluginRewriteAll from 'vite-plugin-rewrite-all';
 import svgrPlugin from 'vite-plugin-svgr';
@@ -39,6 +40,10 @@ export default defineConfig(({ command, mode }) => {
         },
       }),
       viteCommonjs(),
+      checker({
+        typescript: true,
+        eslint: { lintCommand: 'eslint "src/**/*.{js,ts,tsx}"' },
+      }),
 
       // Fix Vite routing paths with dots (used in Storage/Firestore/etc.):
       // https://github.com/vitejs/vite/issues/2415

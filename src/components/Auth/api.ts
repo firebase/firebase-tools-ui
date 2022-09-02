@@ -43,9 +43,9 @@ export default class AuthApi extends RestApi {
   // clients and infers projectId, which can lead to unexpected mismatches.
 
   // https://cloud.google.com/identity-platform/docs/reference/rest/v1/projects.accounts
-  private readonly baseUrl = `http://${this.hostAndPort}/identitytoolkit.googleapis.com/v1/projects/${this.projectId}`;
-  private readonly baseUrlV2 = `http://${this.hostAndPort}/identitytoolkit.googleapis.com/v2/projects/${this.projectId}`;
-  private readonly baseEmulatorUrl = `http://${this.hostAndPort}/emulator/v1/projects/${this.projectId}`;
+  private readonly baseUrl: string;
+  private readonly baseUrlV2: string;
+  private readonly baseEmulatorUrl: string;
 
   constructor(
     private readonly hostAndPort: string,
@@ -53,6 +53,10 @@ export default class AuthApi extends RestApi {
     private readonly tenantId?: string
   ) {
     super();
+    // https://cloud.google.com/identity-platform/docs/reference/rest/v1/projects.accounts
+    this.baseUrl = `http://${this.hostAndPort}/identitytoolkit.googleapis.com/v1/projects/${this.projectId}`;
+    this.baseUrlV2 = `http://${this.hostAndPort}/identitytoolkit.googleapis.com/v2/projects/${this.projectId}`;
+    this.baseEmulatorUrl = `http://${this.hostAndPort}/emulator/v1/projects/${this.projectId}`;
   }
 
   async nukeUsersForAllTenants(): Promise<void> {
