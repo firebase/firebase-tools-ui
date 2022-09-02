@@ -108,7 +108,10 @@ it('[Save] is disabled with invalid doc-data', async () => {
       />
     );
   });
-  expect((getByText('Save') as HTMLButtonElement).disabled).toBe(true);
+
+  const saveButton = getByText('Save').closest('button');
+  expect(saveButton).not.toBeNull();
+  expect(saveButton!.disabled).toBe(true);
 });
 
 it('emits id and parsed data when [Save] is clicked', async () => {
