@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@import '../common/utils';
+
 .Firestore-PanelHeader {
   .CardActionBar-container {
     padding: 8px 12px;
@@ -27,6 +29,6 @@
 }
 
 .Firestore-PanelHeader-title {
+  @include scrollable;
   padding-left: 4px;
-  overflow-x: scroll;
 }
