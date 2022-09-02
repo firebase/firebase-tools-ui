@@ -39,10 +39,20 @@ export default defineConfig(({ command, mode }) => {
       }),
       viteCommonjs(),
     ],
+    resolve: {
+      alias:
+        mode !== 'server'
+          ? {
+              // node-fetch is imported by Firebase SDKs but not actually used
+              // in browsers. Stub it to silence Vite errors on Node.js deps.
+              'node-fetch': './src/stub.js',
+            }
+          : undefined,
+    },
   };
   if (command === 'serve' || mode === 'server') {
     // Start Node.js server (APIs) during dev time.
-    config.plugins.push(
+    config.plugins!.push(
       ...VitePluginNode({
         // tell the plugin where is your project entry
         appPath: './server.ts',
@@ -52,7 +62,7 @@ export default defineConfig(({ command, mode }) => {
         tsCompiler: 'esbuild',
         // https://github.com/axe-me/vite-plugin-node/issues/47
         adapter({ app, req, res, next }) {
-          if (req.url.startsWith('/api/')) {
+          if (req.url?.startsWith('/api/')) {
             app(req, res);
           } else {
             next();
