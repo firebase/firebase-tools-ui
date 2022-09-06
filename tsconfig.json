@@ -1,10 +1,10 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "types": ["vite/client"],
+    "types": ["vite/client", "@types/gtag.js"],
     "lib": ["dom", "dom.iterable", "es2020.string", "esnext"],
     "allowJs": false,
-    "skipLibCheck": false,
+    "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
@@ -17,5 +17,7 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["src", "server.ts"]
+  "include": ["src", "server.ts"],
+  // TODO: Somehow type check the tests too.
+  "exclude": ["src/**/*.test.*", "src/test_utils.tsx", "src/**/testing/*"]
 }
