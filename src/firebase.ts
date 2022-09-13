@@ -15,16 +15,9 @@
  */
 
 import { FirebaseApp, deleteApp, initializeApp } from 'firebase/app';
-import {
-  Database,
-  connectDatabaseEmulator,
-  getDatabase,
-} from 'firebase/database';
-import { Firestore } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 
 import { useConfig } from './components/common/EmulatorConfigProvider';
-import { DatabaseConfig } from './store/config';
 
 /**
  * Get a JS SDK App instance with emulator Admin auth enabled.

@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-import { render } from '@testing-library/react';
 import { ref } from 'firebase/database';
 import React from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 
 import { renderWithDatabase } from '../testing/DatabaseTestProviders';
 import { NodeLink } from './NodeLink';

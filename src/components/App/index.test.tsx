@@ -15,9 +15,7 @@
  */
 
 import { fireEvent, render } from '@testing-library/react';
-import { createMemoryHistory } from 'history';
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { act } from 'react-dom/test-utils';
 import { BrowserRouter } from 'react-router-dom';
 

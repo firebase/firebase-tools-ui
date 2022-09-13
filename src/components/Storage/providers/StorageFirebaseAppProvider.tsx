@@ -48,7 +48,7 @@ export const StorageFirebaseAppProvider: React.FC<
         });
         setStorage(storage);
       },
-      [host, port]
+      [host, port, bucket]
     )
   );
 

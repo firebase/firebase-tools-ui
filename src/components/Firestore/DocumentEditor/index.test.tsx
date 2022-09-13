@@ -320,9 +320,9 @@ describe('changing types', () => {
     act(() => {
       setType(FieldType.TIMESTAMP);
     });
-    const [date, time] = (
-      getByLabelText(/Value/) as HTMLInputElement
-    ).value.split('T');
+    const [date] = (getByLabelText(/Value/) as HTMLInputElement).value.split(
+      'T'
+    );
     expect(date).toEqual(expect.stringMatching(/\d{4}-\d{2}-\d{2}/));
   });
 });

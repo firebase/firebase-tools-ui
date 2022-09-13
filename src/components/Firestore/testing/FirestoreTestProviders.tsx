@@ -105,7 +105,7 @@ const AsyncFirestore: React.FC<
     r(firestore)
       .then((c) => setFirestoreChildren(c))
       .catch(onError);
-  }, [r, firestore, setFirestoreChildren]);
+  }, [r, firestore, setFirestoreChildren, onError]);
 
   return firestoreChildren ? (
     <div data-testid={ASYNC_FIRESTORE_WRAPPER_TEST_ID}>{firestoreChildren}</div>

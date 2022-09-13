@@ -25,7 +25,7 @@ import { DatabaseProvider, FirebaseAppProvider } from 'reactfire';
 
 import { useEmulatedFirebaseApp } from '../../firebase';
 import { useEmulatorConfig } from '../common/EmulatorConfigProvider';
-import { NamespaceProvider, useNamespace } from './useNamespace';
+import { NamespaceProvider } from './useNamespace';
 
 const DATABASE_OPTIONS = {};
 

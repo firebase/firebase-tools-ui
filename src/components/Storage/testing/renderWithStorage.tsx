@@ -14,20 +14,15 @@
  * limitations under the License.
  */
 
-import { randomUUID } from 'crypto';
-
 import { randomId } from '@rmwc/base';
 import { RenderResult, act, render, waitFor } from '@testing-library/react';
-import { waitForElementToBeRemoved } from '@testing-library/react';
-import { Database, enableLogging, ref, set } from 'firebase/database';
 import { FirebaseStorage } from 'firebase/storage';
 import { History } from 'history';
-import { uniqueId } from 'lodash';
 import React, { ReactElement, useEffect, useState } from 'react';
 import { Suspense } from 'react';
 import { useHistory } from 'react-router-dom';
 import { MemoryRouter } from 'react-router-dom';
-import { useDatabase, useStorage } from 'reactfire';
+import { useStorage } from 'reactfire';
 
 import { makeDeferred } from '../../../test_utils';
 import { TestEmulatorConfigProvider } from '../../common/EmulatorConfigProvider';
@@ -117,7 +112,7 @@ const AsyncStorage: React.FC<
     r(storage)
       .then((c) => setStorageChildren(c))
       .catch(onError);
-  }, [r, storage, setStorageChildren]);
+  }, [r, storage, setStorageChildren, onError]);
 
   return storageChildren ? (
     <div data-testid={ASYNC_STORAGE_WRAPPER_TEST_ID}>{storageChildren}</div>
@@ -170,7 +165,7 @@ export async function renderWithStorage(children: ReactElement) {
         .catch((e) => {
           console.error('Unable to clear all storage files', { e });
         });
-    }, []);
+    }, [children]);
 
     return storageChildren ? (
       <div data-testid={ASYNC_STORAGE_WRAPPER_TEST_ID}>{storageChildren}</div>

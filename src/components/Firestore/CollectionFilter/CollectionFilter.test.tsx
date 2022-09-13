@@ -14,13 +14,7 @@
  * limitations under the License.
  */
 
-import {
-  RenderResult,
-  act,
-  fireEvent,
-  render,
-  waitFor,
-} from '@testing-library/react';
+import { act, fireEvent, render, waitFor } from '@testing-library/react';
 import React from 'react';
 
 import { delay } from '../../../test_utils';

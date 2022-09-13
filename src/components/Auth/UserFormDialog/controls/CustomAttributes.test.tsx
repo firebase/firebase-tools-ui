@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import React from 'react';
-
 import { wrapWithForm } from '../../../../test_utils';
 import { CustomAttributes } from './CustomAttributes';
 
@@ -60,7 +58,7 @@ describe('CustomAttributes', () => {
   });
 
   it('displays an error if a forbidden key was used', async () => {
-    const { triggerValidation, getByRole, getByText } = setup(
+    const { triggerValidation, getByRole } = setup(
       '{"firebase": "is awesome"}'
     );
     await triggerValidation();

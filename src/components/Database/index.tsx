@@ -29,7 +29,6 @@ import { Spinner } from '../common/Spinner';
 import Database from './Database';
 import DatabaseContainer from './DatabaseContainer';
 import { DatabaseEmulatedApiProvider } from './DatabaseEmulatedApiProvider';
-import { NamespaceProvider } from './useNamespace';
 
 export const DatabaseRoute: React.FC<React.PropsWithChildren<unknown>> = () => {
   return (

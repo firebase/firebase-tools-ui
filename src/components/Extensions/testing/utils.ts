@@ -49,6 +49,7 @@ export const EXTENSION_SPEC: ExtensionSpec = {
         'Listens for new images uploaded to your specified Cloud Storage bucket, resizes the images, then stores the resized images in the same bucket. Optionally keeps or deletes the original images.',
       name: 'generateResizedImage',
       propertiesYaml:
+        // eslint-disable-next-line no-template-curly-in-string
         'availableMemoryMb: 1024\neventTrigger:\n  eventType: google.storage.object.finalize\n  resource: projects/_/buckets/${param:IMG_BUCKET}\nlocation: ${param:LOCATION}\nruntime: nodejs14\n',
     },
   ],

@@ -15,6 +15,7 @@
  */
 
 import { render } from '@testing-library/react';
+import React from 'react';
 
 import { Extension } from '../../../models';
 import { TestExtensionsProvider } from '../../../testing/TestExtensionsProvider';
@@ -34,7 +35,7 @@ describe('EventsCodeSnippet', () => {
       allowedEventTypes: ['google.firebase.v1.custom-event-occurred'],
     } as Extension;
 
-    const { queryByTestId, getByText } = render(
+    const { getByText } = render(
       <TestExtensionsProvider extensions={[extension]} instanceId={id}>
         <EventsCodeSnippet />
       </TestExtensionsProvider>

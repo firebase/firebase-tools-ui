@@ -16,9 +16,8 @@
 
 import { randomUUID } from 'crypto';
 
-import { render, waitForElementToBeRemoved } from '@testing-library/react';
-import { Database, ref, set } from 'firebase/database';
-import { uniqueId } from 'lodash';
+import { render } from '@testing-library/react';
+import { Database } from 'firebase/database';
 import React, { Suspense, useEffect, useState } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { useDatabase } from 'reactfire';
@@ -108,7 +107,7 @@ const AsyncDatabase: React.FC<
     r(database)
       .then((c) => setDatabaseChildren(c))
       .catch(onError);
-  }, [r, database, setDatabaseChildren]);
+  }, [r, database, setDatabaseChildren, onError]);
 
   return databaseChildren ? (
     <div data-testid={ASYNC_DATABASE_WRAPPER_TEST_ID}>{databaseChildren}</div>

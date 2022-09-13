@@ -33,6 +33,7 @@ it('shows correct title', async () => {
   ));
 
   await waitFor(() => getByText(/Start a collection/));
+  expect(true).toBe(true);
 });
 
 describe('step 1', () => {
@@ -119,7 +120,7 @@ describe('step 2', () => {
   // but triggering a click event still triggers the underlying event. This is no
   // reproducible in the actual GUI.
   it.skip('[Save] is disabled if invalid doc-data', async () => {
-    const { getByLabelText, getByText } = result;
+    const { getByText } = result;
 
     await act(async () => {
       getByText('Save').click();

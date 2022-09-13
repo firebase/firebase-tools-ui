@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+const React = require('react');
 
 function ReactMarkdown({ children }) {
-  return <>Markdown: {children}</>;
+  return React.createElement(React.Fragment, {}, 'Markdown: ', children);
 }
 
 export default ReactMarkdown;

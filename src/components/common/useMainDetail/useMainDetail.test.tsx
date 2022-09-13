@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { act, getByLabelText, render } from '@testing-library/react';
+import { act, render } from '@testing-library/react';
 import React from 'react';
 
 import { useMainDetail } from './useMainDetail';

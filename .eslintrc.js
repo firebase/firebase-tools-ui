@@ -22,9 +22,10 @@ module.exports = {
     'plugin:jest/recommended',
     'plugin:react-hooks/recommended',
   ],
-  plugins: ['jest'],
+  plugins: ['jest', 'unused-imports'],
   rules: {
     'jest/no-jasmine-globals': 'error',
+    'unused-imports/no-unused-imports-ts': 'error',
     'no-restricted-globals': [
       'error',
       {

@@ -87,8 +87,8 @@
     "test:debug": "react-scripts --inspect-brk test --env=./custom-jest-environment.js --runInBand",
     "test:coverage": "react-scripts test --coverage --watchAll=false --env=./custom-jest-environment.js",
     "eject": "react-scripts eject",
-    "lint": "prettier --check . && eslint 'src/**/*.{ts,tsx}'",
-    "lint:fix": "eslint --fix 'src/**/*.{ts,tsx}' && npm run format",
+    "lint": "prettier --check . && eslint --ext .js,.jsx,.ts,.tsx src/",
+    "lint:fix": "eslint --ext .js,.jsx,.ts,.tsx src/ && npm run format",
     "fmt": "npm run format",
     "format": "prettier --write .",
     "prepare": "husky install"
@@ -122,6 +122,7 @@
     "confusing-browser-globals": "^1.0.11",
     "eslint-plugin-jest": "^23.11.0",
     "eslint-plugin-react-hooks": "^4.0.0",
+    "eslint-plugin-unused-imports": "^2.0.0",
     "globalthis": "^1.0.1",
     "husky": "^8.0.0",
     "import-sort-config": "^6.0.0",
