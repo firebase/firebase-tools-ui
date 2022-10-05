@@ -112,9 +112,7 @@ const Overview: React.FC<
           icon={<HostingIcon theme="secondary" />}
           config={config.hosting}
           testId="emulator-info-hosting"
-          linkToExternal={
-            config.hosting && `http://${config.hosting.hostAndPort}/`
-          }
+          linkToExternal={config.hosting && `//${config.hosting.hostAndPort}/`}
           linkLabel="View website"
         />
         <EmulatorCard

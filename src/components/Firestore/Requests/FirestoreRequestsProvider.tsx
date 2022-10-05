@@ -51,6 +51,7 @@ export const FirestoreRequestsProvider: React.FC<
       setRequests(undefined);
     } else {
       const wsUrl = new URL('ws://placeholder/requests');
+      wsUrl.protocol = document.location.protocol === 'https:' ? 'wss:' : 'ws:';
       wsUrl.host = firestore.webSocketHost;
       wsUrl.port = firestore.webSocketPort.toString();
 

@@ -84,8 +84,8 @@ function useFirestoreRestApi() {
   const databaseId = '(default)';
 
   return {
-    baseUrl: `http://${config.hostAndPort}/v1/projects/${projectId}/databases/${databaseId}`,
-    baseEmulatorUrl: `http://${config.hostAndPort}/emulator/v1/projects/${projectId}/databases/${databaseId}`,
+    baseUrl: `//${config.hostAndPort}/v1/projects/${projectId}/databases/${databaseId}`,
+    baseEmulatorUrl: `//${config.hostAndPort}/emulator/v1/projects/${projectId}/databases/${databaseId}`,
   };
 }
 

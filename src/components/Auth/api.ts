@@ -54,9 +54,9 @@ export default class AuthApi extends RestApi {
   ) {
     super();
     // https://cloud.google.com/identity-platform/docs/reference/rest/v1/projects.accounts
-    this.baseUrl = `http://${this.hostAndPort}/identitytoolkit.googleapis.com/v1/projects/${this.projectId}`;
-    this.baseUrlV2 = `http://${this.hostAndPort}/identitytoolkit.googleapis.com/v2/projects/${this.projectId}`;
-    this.baseEmulatorUrl = `http://${this.hostAndPort}/emulator/v1/projects/${this.projectId}`;
+    this.baseUrl = `//${this.hostAndPort}/identitytoolkit.googleapis.com/v1/projects/${this.projectId}`;
+    this.baseUrlV2 = `//${this.hostAndPort}/identitytoolkit.googleapis.com/v2/projects/${this.projectId}`;
+    this.baseEmulatorUrl = `//${this.hostAndPort}/emulator/v1/projects/${this.projectId}`;
   }
 
   async nukeUsersForAllTenants(): Promise<void> {
