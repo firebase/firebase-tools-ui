@@ -19,7 +19,7 @@ export function mockBuckets(buckets: string[] = []) {
   jest
     .spyOn(global, 'fetch')
     .mockImplementation((input: RequestInfo, init?: RequestInit) => {
-      if (/^http?:\/\/.*\/b$/.test(input.toString())) {
+      if (/^\/\/.*\/b$/.test(input.toString())) {
         return Promise.resolve({
           json: () => {
             return {
