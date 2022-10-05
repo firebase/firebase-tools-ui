@@ -78,5 +78,5 @@ const DatabaseComponent: React.FC<
 function useDatabaseUrl(namespace: string) {
   const config = useEmulatorConfig('database');
 
-  return `http://${config.hostAndPort}/?ns=${namespace}`;
+  return `${document.location.protocol}//${config.hostAndPort}/?ns=${namespace}`;
 }

@@ -28,7 +28,7 @@ export function useBuckets() {
   const [bucket] = useBucket();
 
   const fetcher = async () => {
-    const response = await fetch('http://' + config.hostAndPort + '/b');
+    const response = await fetch(`//${config.hostAndPort}/b`);
     const json = await response.json();
     return json.items.map((b: Bucket) => b.name);
   };

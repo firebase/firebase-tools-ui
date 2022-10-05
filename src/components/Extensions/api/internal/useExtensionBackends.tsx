@@ -15,9 +15,9 @@
  */
 import useSwr from 'swr';
 
+import { useEmulatorConfig } from '../../../common/EmulatorConfigProvider';
 import { Backend } from '../../index';
 import { ExtensionBackend } from '../useExtensions';
-import { useFunctionsEmulator } from './useFunctionsEmulator';
 
 export function isExtensionBackend(
   backend: Backend
@@ -30,10 +30,10 @@ export function isExtensionBackend(
 }
 
 export function useExtensionBackends(): ExtensionBackend[] {
-  const functionsEmulator = useFunctionsEmulator();
+  const config = useEmulatorConfig('extensions');
 
   const fetcher = async () => {
-    const response = await fetch(`${functionsEmulator}/backends`);
+    const response = await fetch(`//${config.hostAndPort}/backends`);
     const json = await response.json();
     return json.backends;
   };

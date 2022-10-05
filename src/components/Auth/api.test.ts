@@ -51,7 +51,7 @@ describe('API', () => {
     const result = await api.nukeUsers();
     expect(result).toEqual([]);
     expect(global.fetch).toHaveBeenCalledWith(
-      'http://foo.example.com:9002/emulator/v1/projects/pelmen-the-project/accounts',
+      '//foo.example.com:9002/emulator/v1/projects/pelmen-the-project/accounts',
       {
         headers: { Authorization: 'Bearer owner' },
         method: 'DELETE',
@@ -72,7 +72,7 @@ describe('API', () => {
     const result = await api.fetchUsers();
 
     expect(global.fetch).toHaveBeenCalledWith(
-      'http://foo.example.com:9002/identitytoolkit.googleapis.com/v1/projects/pelmen-the-project/accounts:query',
+      '//foo.example.com:9002/identitytoolkit.googleapis.com/v1/projects/pelmen-the-project/accounts:query',
       {
         body: '{}',
         headers: {
@@ -107,7 +107,7 @@ describe('API', () => {
     const result = await api.fetchUsers();
 
     expect(global.fetch).toHaveBeenCalledWith(
-      'http://foo.example.com:9002/identitytoolkit.googleapis.com/v1/projects/pelmen-the-project/accounts:query',
+      '//foo.example.com:9002/identitytoolkit.googleapis.com/v1/projects/pelmen-the-project/accounts:query',
       {
         body: JSON.stringify({ tenantId: testTenantId }),
         headers: {
@@ -137,7 +137,7 @@ describe('API', () => {
     const result = await api.fetchTenants();
 
     expect(global.fetch).toHaveBeenCalledWith(
-      'http://foo.example.com:9002/identitytoolkit.googleapis.com/v2/projects/pelmen-the-project/tenants',
+      '//foo.example.com:9002/identitytoolkit.googleapis.com/v2/projects/pelmen-the-project/tenants',
       {
         headers: {
           Authorization: 'Bearer owner',
@@ -160,7 +160,7 @@ describe('API', () => {
     const result = await api.fetchUser(localId);
 
     expect(global.fetch).toHaveBeenCalledWith(
-      'http://foo.example.com:9002/identitytoolkit.googleapis.com/v1/projects/pelmen-the-project/accounts:lookup',
+      '//foo.example.com:9002/identitytoolkit.googleapis.com/v1/projects/pelmen-the-project/accounts:lookup',
       {
         body: JSON.stringify({ localId: [localId] }),
         headers: {
@@ -185,7 +185,7 @@ describe('API', () => {
     const result = await api.fetchUser(localId);
 
     expect(global.fetch).toHaveBeenCalledWith(
-      'http://foo.example.com:9002/identitytoolkit.googleapis.com/v1/projects/pelmen-the-project/accounts:lookup',
+      '//foo.example.com:9002/identitytoolkit.googleapis.com/v1/projects/pelmen-the-project/accounts:lookup',
       {
         body: JSON.stringify({ localId: [localId], tenantId: testTenantId }),
         headers: {
@@ -209,7 +209,7 @@ describe('API', () => {
     const result = await api.createUser(user);
 
     expect(global.fetch).toHaveBeenCalledWith(
-      'http://foo.example.com:9002/identitytoolkit.googleapis.com/v1/projects/pelmen-the-project/accounts',
+      '//foo.example.com:9002/identitytoolkit.googleapis.com/v1/projects/pelmen-the-project/accounts',
       {
         body: JSON.stringify(user),
         headers: {
@@ -239,7 +239,7 @@ describe('API', () => {
     const result = await api.createUser(user);
 
     expect(global.fetch).toHaveBeenCalledWith(
-      'http://foo.example.com:9002/identitytoolkit.googleapis.com/v1/projects/pelmen-the-project/accounts',
+      '//foo.example.com:9002/identitytoolkit.googleapis.com/v1/projects/pelmen-the-project/accounts',
       {
         body: JSON.stringify({ ...user, tenantId: testTenantId }),
         headers: {
@@ -263,7 +263,7 @@ describe('API', () => {
     const api = setup({ mockFetchResult });
     const result = await api.deleteUser(user);
     expect(global.fetch).toHaveBeenCalledWith(
-      'http://foo.example.com:9002/identitytoolkit.googleapis.com/v1/projects/pelmen-the-project/accounts:delete',
+      '//foo.example.com:9002/identitytoolkit.googleapis.com/v1/projects/pelmen-the-project/accounts:delete',
       {
         body: JSON.stringify(user),
         headers: {
@@ -288,7 +288,7 @@ describe('API', () => {
     const result = await api.updateUser({ ...user, ...mockFetchResult });
 
     expect(global.fetch).toHaveBeenCalledWith(
-      'http://foo.example.com:9002/identitytoolkit.googleapis.com/v1/projects/pelmen-the-project/accounts:update',
+      '//foo.example.com:9002/identitytoolkit.googleapis.com/v1/projects/pelmen-the-project/accounts:update',
       {
         body: JSON.stringify({ ...user, ...mockFetchResult }),
         headers: {
@@ -312,7 +312,7 @@ describe('API', () => {
     const api = setup({ mockFetchResult });
     const result = await api.updateConfig({ signIn: { allowDuplicateEmails } });
     expect(global.fetch).toHaveBeenCalledWith(
-      'http://foo.example.com:9002/emulator/v1/projects/pelmen-the-project/config',
+      '//foo.example.com:9002/emulator/v1/projects/pelmen-the-project/config',
       {
         body: JSON.stringify(mockFetchResult),
         headers: {
@@ -331,7 +331,7 @@ describe('API', () => {
     const api = setup({ mockFetchResult });
     const result = await api.getConfig();
     expect(global.fetch).toHaveBeenCalledWith(
-      'http://foo.example.com:9002/emulator/v1/projects/pelmen-the-project/config'
+      '//foo.example.com:9002/emulator/v1/projects/pelmen-the-project/config'
     );
 
     expect(result).toEqual(result);

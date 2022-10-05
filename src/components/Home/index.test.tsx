@@ -117,7 +117,8 @@ it('links to the hosting website externally', () => {
   const link = getByRole(card, 'link', {
     name: 'View website',
   }) as HTMLAnchorElement;
-  expect(link.href).toBe('http://localhost:5000/');
+  // Not testing link.href since that would always return an absolute URL.
+  expect(link.getAttribute('href')).toBe('//localhost:5000/');
   expect(link.target).toBe('_blank');
 });
 

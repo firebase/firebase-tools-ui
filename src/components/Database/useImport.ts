@@ -60,7 +60,7 @@ export function useImport(
   }
 
   return () =>
-    fetch(`http://${config.hostAndPort}/${path}`, {
+    fetch(`//${config.hostAndPort}/${path}`, {
       method: 'POST',
       body: formData,
     });

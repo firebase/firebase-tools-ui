@@ -21,7 +21,7 @@ export function mockExtensionBackends(backends: ExtensionBackend[] = []) {
   jest
     .spyOn(global, 'fetch')
     .mockImplementation((input: RequestInfo, init?: RequestInit) => {
-      if (/^http?:\/\/.*\/backends$/.test(input.toString())) {
+      if (/^\/\/.*\/backends$/.test(input.toString())) {
         return Promise.resolve({
           json: () => {
             return {
