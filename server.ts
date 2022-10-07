@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-import * as dns from 'dns';
+import { createServer } from 'http';
+import type { ListenOptions } from 'net';
 import * as path from 'path';
 
 import express from 'express';
 import fetch from 'node-fetch';
-
-dns.setDefaultResultOrder('ipv4first');
 
 /*
   This file defines Node.js server-side logic for the Emulator UI.
@@ -54,20 +53,10 @@ app.get(
   '/api/config',
   jsonHandler(async () => {
     const hubDiscoveryUrl = new URL(`http://${hubHost}/emulators`);
-    hubDiscoveryUrl.hostname = fixHostname(hubDiscoveryUrl.hostname);
     const emulatorsRes = await fetch(hubDiscoveryUrl.toString());
     const emulators = (await emulatorsRes.json()) as any;
 
     const json = { projectId, ...emulators };
-
-    if (json.firestore) {
-      try {
-        const result = await discoverFirestoreWs(json.firestore);
-        Object.assign(json.firestore, result);
-      } catch {
-        // ignored
-      }
-    }
 
     // Googlers: see go/firebase-emulator-ui-usage-collection-design?pli=1#heading=h.jwz7lj6r67z8
     // for more detail
@@ -82,61 +71,36 @@ app.get(
 export const viteNodeApp = app;
 
 if (import.meta.env.PROD) {
-  const host = process.env.HOST || 'localhost';
-  const port = Number(process.env.PORT) || 3000;
   const webDir = path.join(path.dirname(process.argv[1]), '..', 'client');
   app.use(express.static(webDir));
   // Required for the router to work properly.
   app.get('*', function (_, res) {
     res.sendFile(path.join(webDir, 'index.html'));
   });
-  app.listen(port, host, () => {
-    console.log(`Web / API server started at ${host}:${port}`);
-  });
-}
 
-/* Helper functions */
-
-async function discoverFirestoreWs(firestore: { host: string; port: number }) {
-  const discoveryUrl = new URL('http://placeholder/ws/discovery');
-  discoveryUrl.hostname = fixHostname(firestore.host);
-  discoveryUrl.port = firestore.port.toString();
-
-  const wsDiscoveryRes = await fetch(discoveryUrl.toString());
-  const { url } = (await wsDiscoveryRes.json()) as { url?: string };
-  if (!url) {
-    throw new Error('Invalid discovery response (no url field).');
+  let listen: ListenOptions[];
+  if (process.env.LISTEN) {
+    listen = JSON.parse(process.env.LISTEN);
+  } else {
+    // Mainly used when starting in dev mode (without CLI).
+    const host = process.env.HOST || '127.0.0.1';
+    const port = Number(process.env.PORT) || 3000;
+    listen = [{ host, port }];
   }
-  const parsed = new URL(url);
-
-  // Remove [] brackets around IPv6 addr to be consistent with other emulators.
-  const webSocketHost = parsed.hostname.replace(/\[/g, '').replace(/\]/g, '');
-  const webSocketPort = Number(parsed.port || '80');
-  if (!webSocketPort) {
-    throw new Error(`Invalid port in discovery URL: ${parsed}`);
+  for (const opts of listen) {
+    const server = createServer(app).listen(opts);
+    server.once('listening', () => {
+      console.log(`Web / API server started at ${opts.host}:${opts.port}`);
+    });
+    server.once('error', (err) => {
+      console.error(`Failed to start server at ${opts.host}:${opts.port}`);
+      console.error(err);
+      if (opts === listen[0]) {
+        // If we failed to listen on the primary address, surface the error.
+        process.exit(1);
+      }
+    });
   }
-  return { webSocketHost, webSocketPort };
-}
-
-/**
- * Return a connectable hostname, replacing wildcard 0.0.0.0 or :: with loopback
- * addresses 127.0.0.1 / ::1 correspondingly. See below for why this is needed:
- * https://github.com/firebase/firebase-tools-ui/issues/286
- *
- * This assumes emulators are running on the same device as the Emulator UI
- * server, which should hold if both are started from the same CLI command.
- */
-function fixHostname(host: string): string {
-  if (host.indexOf(':') >= 0 && host.indexOf('[') < 0) {
-    // Add brackets to IPv6 address.
-    host = `[${host}]`;
-  }
-  if (host === '0.0.0.0') {
-    host = '127.0.0.1';
-  } else if (host === '[::]') {
-    host = '[::1]';
-  }
-  return host;
 }
 
 function jsonHandler(

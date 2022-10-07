@@ -209,18 +209,53 @@ async function configFetcher(url: string): Promise<Config> {
     if (key === 'projectId' || key === 'analytics') {
       continue;
     }
-    const host = fixHostname(value.host as string);
+    let host = value.host as string;
+    let port = value.port as number;
+    // For emulators listening using wildcard, we assume that they can be connected
+    // using the same hostname as the current page (but different ports of course).
+    // This works for local setup as well as running the suite (emulators + UI)
+    // remotely and connect from another device. It does not work for some setups
+    // e.g. when Emulator UI is proxied but not the individual emulators.
+    for (const listen of (value.listen ?? []) as {
+      host: string;
+      port: number;
+    }[]) {
+      if (listen.host === '0.0.0.0') {
+        port = listen.port;
+        host = window.location.hostname;
+        if (!host || host === 'localhost') {
+          // Replace localhost with IPv4 loopback since some browsers / OSes may
+          // resolve it to IPv6 and connection may fail.
+          host = '127.0.0.1';
+        }
+        break;
+      } else if (listen.host === '::') {
+        port = listen.port;
+        host = window.location.hostname;
+        if (!host || host === 'localhost') {
+          // Ditto for IPv6.
+          host = '::1';
+        }
+        break;
+      }
+    }
     result[key as Emulator] = {
       ...value,
       host,
-      hostAndPort: hostAndPort(host, value.port as number),
+      port,
+      hostAndPort: hostAndPort(host, port),
     };
   }
 
   if (result.firestore?.webSocketHost) {
-    result.firestore.webSocketHost = fixHostname(
-      result.firestore.webSocketHost
-    );
+    if (result.firestore.webSocketHost === result.firestore.host) {
+      console.warn(
+        `Firestore WebSocket listens on different host ${result.firestore.webSocketHost} than Firestore (${result.firestore.host}). Requests monitor may not work.`
+      );
+    } else {
+      // Apply the same `host` change above to the WebSocket server.
+      result.firestore.webSocketHost = result.firestore.host;
+    }
   }
   return result;
 }
@@ -231,33 +266,4 @@ export function makeDeferred<T>() {
     resolve = res;
   });
   return { promise, resolve };
-}
-
-/**
- * Return a connectable hostname, replacing wildcard 0.0.0.0 or :: with the best
- * effort guess but keep the others unchanged.
- *
- * For emulators listening using wildcard, we assume that they can be connected
- * using the same hostname as the current page (but different ports of course).
- * This works for local setup as well as running the suite (emulators + UI)
- * remotely and connect from another device. It does not work for some setups
- * e.g. when Emulator UI is proxied but not the individual emulators.
- */
-function fixHostname(host: string): string {
-  // We should never return 0.0.0.0 or :: since they won't work in some OSes:
-  // https://github.com/firebase/firebase-tools-ui/issues/286
-  if (host === '0.0.0.0') {
-    host = window.location.hostname;
-    // Replace localhost with IPv4 loopback since some browsers / OSes may
-    // resolve it to IPv6 and connection may fail. Ditto for IPv6 cases below.
-    if (!host || host === 'localhost') {
-      host = '127.0.0.1';
-    }
-  } else if (host === '::') {
-    host = window.location.hostname;
-    if (!host || host === 'localhost') {
-      host = '::1';
-    }
-  }
-  return host;
 }
