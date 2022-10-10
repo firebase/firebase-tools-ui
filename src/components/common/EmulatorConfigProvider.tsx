@@ -247,15 +247,9 @@ async function configFetcher(url: string): Promise<Config> {
     };
   }
 
-  if (result.firestore?.webSocketHost) {
-    if (result.firestore.webSocketHost === result.firestore.host) {
-      console.warn(
-        `Firestore WebSocket listens on different host ${result.firestore.webSocketHost} than Firestore (${result.firestore.host}). Requests monitor may not work.`
-      );
-    } else {
-      // Apply the same `host` change above to the WebSocket server.
-      result.firestore.webSocketHost = result.firestore.host;
-    }
+  if (result.firestore?.webSocketPort) {
+    // Apply the same `host` change above to the WebSocket server.
+    result.firestore.webSocketHost = result.firestore.host;
   }
   return result;
 }
