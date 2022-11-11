@@ -1,5 +1,3 @@
-import { RemoteConfigTemplate } from 'firebase-admin/lib/remote-config';
-
 /**
  * Copyright 2019 Google LLC
  *
@@ -15,8 +13,25 @@ import { RemoteConfigTemplate } from 'firebase-admin/lib/remote-config';
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { useConfig, useEmulatorConfig } from '../common/EmulatorConfigProvider';
 import { useRequest } from '../common/useRequest';
+
+import type {
+  RemoteConfigParameterValue,
+  RemoteConfigTemplate,
+} from 'firebase-admin/remote-config';
+
+
+export function remoteConfigParameterValueToString(
+  paramValue: RemoteConfigParameterValue
+) {
+  if ('value' in paramValue) {
+    return paramValue.value;
+  } else {
+    return 'In-app default';
+  }
+}
 
 function useRemoteConfigRevertUrl() {
   const config = useEmulatorConfig('remoteconfig');
@@ -43,7 +58,11 @@ export function useTemplate(): {
 } {
   const url = useRemoteConfigAdminUrl();
   const revertUrl = useRemoteConfigRevertUrl();
-  const { data: template, mutate, isValidating } = useRequest(
+  const {
+    data: template,
+    mutate,
+    isValidating,
+  } = useRequest(
     url,
     { method: 'GET' },
     // disable auto refresh
