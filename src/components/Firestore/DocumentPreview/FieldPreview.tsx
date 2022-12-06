@@ -194,7 +194,7 @@ export const EditableFieldPreview: React.FC<
           )}{' '}
           {(isArray(state) || isMap(state)) && (
             <IconButton
-              icon="add" // FIXME this is where the good stuff be
+              icon="add"
               label="Add field"
               onClick={(e) => {
                 e.stopPropagation();
