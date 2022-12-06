@@ -90,7 +90,7 @@ export const StorageFileIcon: React.FC<
 > = ({ contentType }) => {
   return (
     <Theme use="secondary">
-      <Icon icon={getFileIcon(contentType)} className={styles.icon} />
+      <Icon aria-hidden="true" icon={getFileIcon(contentType)} className={styles.icon} />
     </Theme>
   );
 };
