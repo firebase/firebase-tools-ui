@@ -88,7 +88,9 @@ export const FieldPreview: React.FC<
           {summary}
         </span>
         <ListItemMeta className="FieldPreview-actions">
-          <span className="FieldPreview-type">({typeDisp})</span>
+        <Theme use="secondary" tag="span" className="FieldPreview-type">
+          ({typeDisp})
+        </Theme>
           {actions}
         </ListItemMeta>
       </ListItem>
@@ -192,7 +194,7 @@ export const EditableFieldPreview: React.FC<
           )}{' '}
           {(isArray(state) || isMap(state)) && (
             <IconButton
-              icon="add"
+              icon="add" // FIXME this is where the good stuff be
               label="Add field"
               onClick={(e) => {
                 e.stopPropagation();

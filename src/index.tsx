@@ -67,6 +67,7 @@ root.render(
         primary,
         primaryRgb: '104, 29, 168',
         secondary,
+        "text-secondary-on-background": secondary,
         error,
       }}
     >

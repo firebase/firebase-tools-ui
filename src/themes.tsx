@@ -67,6 +67,7 @@ export const cautionTheme = {
   textIconOnBackground: amber800,
   textPrimaryOnBackground: deepOrange900,
   textSecondaryOnBackground: `rgba(${deepOrange900}, 0.7)`,
+  textHintOnBackground: "#FFFFFF", // FIXME no idea what I'm doing
 };
 
 const deepOrange50 = '#fbe9e7';
