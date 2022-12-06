@@ -31,7 +31,7 @@ export const UploadButton: React.FC<React.PropsWithChildren<unknown>> = () => {
   });
 
   return (
-    <div className={styles.uploadButton} {...getRootProps()}>
+    <div className={styles.uploadButton} {...getRootProps({tabIndex: -1})}>
       <Button unelevated>Upload file</Button>
       <input aria-label="Upload" {...getInputProps()} />
     </div>
