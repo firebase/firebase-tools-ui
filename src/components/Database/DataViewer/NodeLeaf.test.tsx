@@ -74,7 +74,7 @@ describe('editing the node', () => {
       act(() => getByLabelText('Edit value').click());
 
       expect((getByLabelText('Field') as HTMLInputElement).value).toMatch(
-        /^http:\/\/localhost/
+        /^http:\/\/(localhost|127.0.0.1)/
       );
     });
 
@@ -98,7 +98,7 @@ describe('editing the node', () => {
       act(() => getByLabelText('Edit value').click());
 
       expect((getByLabelText('Field') as HTMLInputElement).value).toMatch(
-        /^http:\/\/localhost/
+        /^http:\/\/(localhost|127.0.0.1)/
       );
     });
 
