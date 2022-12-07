@@ -63,7 +63,7 @@ it('shows port for emulator that are loaded and N/A for not loaded', () => {
   // Database Emulator is running.
   const databaseCard = getByTestId(`emulator-info-database`);
   expect(getByText(databaseCard, '9000')).not.toBeNull();
-  expect(getByText(databaseCard, 'Go to emulator')).not.toBeNull();
+  expect(getByText(databaseCard, 'Go to database emulator')).not.toBeNull();
 
   // Firestore Emulator is not running.
   const firestoreCard = getByTestId(`emulator-info-firestore`);
