@@ -34,11 +34,6 @@
   @include a11y-display-on-hover('.BreadCrumbs-edit .mdc-icon-button');
 
   .mdc-icon-button {
-    &::before,
-    &::after {
-      display: none; // remove the hover/ripple
-    }
-
     &:hover {
       color: var(--mdc-theme-text-primary-on-background);
     }

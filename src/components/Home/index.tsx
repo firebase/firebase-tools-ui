@@ -75,12 +75,14 @@ const Overview: React.FC<
           icon={<AuthIcon theme="secondary" />}
           config={config.auth}
           linkTo="/auth"
+          linkLabel="Go to auth emulator"
           testId="emulator-info-auth"
         />
         <EmulatorCard
           name="Firestore emulator"
           icon={<FirestoreIcon theme="secondary" />}
           config={config.firestore}
+          linkLabel="Go to firestore emulator"
           linkTo="/firestore"
           testId="emulator-info-firestore"
         />
@@ -89,6 +91,7 @@ const Overview: React.FC<
           icon={<DatabaseIcon theme="secondary" />}
           config={config.database}
           linkTo="/database"
+          linkLabel="Go to database emulator"
           testId="emulator-info-database"
         />
         <EmulatorCard
@@ -126,6 +129,7 @@ const Overview: React.FC<
           icon={<ExtensionsIcon theme="secondary" />}
           config={config.extensions}
           linkTo="/extensions"
+          linkLabel="Go to extensions emulator"
           testId="emulator-info-extensions"
         />
       </GridRow>
