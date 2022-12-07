@@ -53,7 +53,7 @@ const DocumentListItem: React.FC<
         className={listItemClass}
         tag={NavLink}
         to={`${url}/${encodedDocId}`}
-        aria-label={`Document: ${encodedDocId}`}
+        aria-label={`View contents of document with id: ${encodedDocId}`}
         activeClassName="mdc-list-item--activated"
         data-testid="firestore-document-list-item"
       >
