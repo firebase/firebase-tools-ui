@@ -17,6 +17,7 @@
 import './History.scss';
 
 import { ThemeProvider } from '@rmwc/theme';
+import { Tooltip } from '@rmwc/tooltip';
 import React, { useEffect, useRef } from 'react';
 
 import { grey100 } from '../../colors';
@@ -119,12 +120,15 @@ export const History: React.FC<React.PropsWithChildren<Props>> = ({
                 hour12: false,
               })}
             </span>
-            <span
-              className={`log-level ${log.level}`}
-              onClick={() => appendToQuery('level', log.level)}
-            >
-              {log.level[0].toUpperCase()}
-            </span>
+            <Tooltip content={`Log with level: ${log.level}`}>
+              <button
+                aria-label={`Limit results to logs with log level ${log.level}`}
+                className={`log-level ${log.level}`}
+                onClick={() => appendToQuery('level', log.level)}
+              >
+                {log.level[0].toUpperCase()}
+              </button>
+            </Tooltip>
             <FilterTag appendToQuery={appendToQuery} log={log} />
             {getUserData(log) ? (
               <HighlightedJSON
