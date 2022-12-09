@@ -22,7 +22,7 @@ import './index.scss';
 import CodeMirror from 'codemirror';
 import React, { useEffect, useRef } from 'react';
 
-import { textBlackTertiary } from '../../../../../colors';
+import { secondary } from '../../../../../colors';
 import { errorTheme, successTheme } from '../../../../../themes';
 import { Callout } from '../../../../common/Callout';
 import { OutcomeInfo, RulesOutcome } from '../../rules_evaluation_result_model';
@@ -37,7 +37,7 @@ const CODE_VIEWER_CUSTOM_STYLES = {
   '--emulator-ui-code-success-background': successTheme.background,
   '--emulator-ui-code-error-primary': errorTheme.primary,
   '--emulator-ui-code-error-background': errorTheme.background,
-  '--emulator-ui-code-comment-text': textBlackTertiary,
+  '--emulator-ui-code-comment-text': secondary,
 } as React.CSSProperties;
 
 const CODE_MIRROR_OPTIONS: CodeMirror.EditorConfiguration = {

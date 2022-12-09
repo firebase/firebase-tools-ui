@@ -39,3 +39,7 @@ $page-gutter-size: 48px;
     min-height: $app-remaining-viewport-height-for-content;
   }
 }
+
+.rmwc-icon {
+  color: var(--mdc-theme-secondary);
+}

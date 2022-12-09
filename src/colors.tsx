@@ -15,8 +15,9 @@
  */
 export const background = '#F6F7F9';
 export const primary = '#681DA8'; // Google Purple 900.
-export const secondary = 'rgba(0, 0, 0, .54)';
-export const textBlackTertiary = 'rgba(0, 0, 0, .38)';
+// Note: This secondary is only suitable for white (or near-white) backgrounds
+// On a 0.93 background, grey100 = (245,245,245) we require 55% or above
+export const secondary = 'rgba(0, 0, 0, 0.55)';
 
 export const grey100 = '#F5F5F5';
 

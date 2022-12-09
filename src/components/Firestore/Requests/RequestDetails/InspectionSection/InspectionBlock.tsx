@@ -21,7 +21,7 @@ import { Theme, ThemeProvider } from '@rmwc/theme';
 import classnames from 'classnames';
 import React, { useState } from 'react';
 
-import { grey100, textBlackTertiary } from '../../../../../colors';
+import { grey100, secondary } from '../../../../../colors';
 import { ExpressionValue } from '../../../DocumentPreview/ExpressionValue';
 import { FieldPreview } from '../../../DocumentPreview/FieldPreview';
 import { ExpressionValueStateProvider } from '../../../DocumentPreview/store';
@@ -70,7 +70,7 @@ export const InspectionBlock: React.FC<React.PropsWithChildren<Props>> = ({
     <ThemeProvider
       options={{
         surface: isMainBlock ? MAIN_INSPECT_BLOCK_BACKGROUND_COLOR : grey100,
-        textIconOnLight: textBlackTertiary,
+        textIconOnLight: secondary,
       }}
     >
       <Theme use="surface" wrap>
