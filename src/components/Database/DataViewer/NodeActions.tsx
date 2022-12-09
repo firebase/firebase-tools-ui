@@ -121,6 +121,7 @@ export const NodeActions = React.memo<Props>(function NodeActions$({
     <aside className={'NodeActions' + (isActive ? ' NodeActions--active' : '')}>
       <Tooltip content="Filter children">
         <IconButton
+          label="Filter children"
           icon="filter_list"
           onIcon={<span style={ACTIVE_ICON}>filter_list</span>}
           onClick={() => showQueryUiAndExpand()}
@@ -128,11 +129,12 @@ export const NodeActions = React.memo<Props>(function NodeActions$({
         />
       </Tooltip>
       <Tooltip content="Add child">
-        <IconButton icon="add" onClick={addChild} />
+        <IconButton label="Add child" icon="add" onClick={addChild} />
       </Tooltip>
       {!isRoot ? (
         <Tooltip content="Switch view">
           <IconButton
+            label="Switch view format"
             icon={getToggleIcon(getNextDisplayType(displayType))}
             onClick={() => toggleTable()}
           />
@@ -146,7 +148,7 @@ export const NodeActions = React.memo<Props>(function NodeActions$({
            */
           false
         }
-        handle={<IconButton icon="more_vert" />}
+        handle={<IconButton icon="more_vert" label="More options" />}
         onOpen={() => setMenuOpen(true)}
         onClose={() => setMenuOpen(false)}
       >
