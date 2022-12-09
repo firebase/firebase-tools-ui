@@ -212,18 +212,19 @@ export const QueryBar: React.FC<React.PropsWithChildren<Props>> = ({
   return (
     <div className="QueryBar">
       <div className="QueryBar-render">{parsedQuery.elements}</div>
-      <input
+      <textarea
+        rows={1}
         className="QueryBar-input"
         spellCheck={false}
         value={temporaryQuery}
         onChange={(e) => setTemporaryQuery((e.target as any).value)}
         onKeyUp={(ev) => {
-          if (ev?.key === 'Enter') {
+          if (ev?.key === 'Enter' && !ev.shiftKey) {
             setQuery(temporaryQuery);
           }
         }}
         placeholder="Filter or search logs..."
-      />
+      ></textarea>
       <div className="QueryBar-actions">
         <Button
           unelevated
