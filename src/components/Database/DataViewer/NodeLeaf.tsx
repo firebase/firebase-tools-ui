@@ -73,23 +73,27 @@ export const NodeLeaf = React.memo<Props>(function NodeLeaf$({
         <ValueDisplay use="body1" value={value} onClick={handleEdit} />
       </div>
       <span className="NodeLeaf__actions">
-        <Tooltip content="Edit value">
+        <Tooltip content={`Edit value for: "${realtimeRef.key}"`}>
           <IconButton
             icon="edit"
             onClick={handleEdit}
-            aria-label="Edit value"
+            aria-label={`Edit value for: ${realtimeRef.key}`}
           />
         </Tooltip>
         {showAddButton && (
-          <Tooltip content="Add child">
-            <IconButton icon="add" onClick={handleAdd} aria-label="Add child" />
+          <Tooltip content={`Add child to "${realtimeRef.key}"`}>
+            <IconButton
+              icon="add"
+              onClick={handleAdd}
+              aria-label={`Add child for "${realtimeRef.key}"`}
+            />
           </Tooltip>
         )}
-        <Tooltip content="Delete value">
+        <Tooltip content={`Delete value for: "${realtimeRef.key}"`}>
           <IconButton
             icon="delete"
             onClick={handleDelete}
-            aria-label="Delete value"
+            aria-label={`Delete value for "${realtimeRef.key}"`}
           />
         </Tooltip>
       </span>
