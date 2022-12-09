@@ -30,6 +30,10 @@ import {
 import React, { useState } from 'react';
 import { NavLink, useHistory, useRouteMatch } from 'react-router-dom';
 import { useFirestore } from 'reactfire';
+import {
+  AddDocumentDialog,
+  AddDocumentDialogValue, // FIXME use this later?
+} from './dialogs/AddDocumentDialog';
 
 import {
   AddCollectionDialog,
@@ -40,6 +44,7 @@ import {
   useSubCollections,
 } from './FirestoreEmulatedApiProvider';
 import { useAutoSelect } from './useAutoSelect';
+import { StatusLabel } from '../Home/StatusLabel';
 
 export interface Props {
   collections: CollectionReference[];
@@ -73,8 +78,11 @@ const CollectionList: React.FC<React.PropsWithChildren<Props>> = ({
 
   const [isAddCollectionDialogOpen, setAddCollectionDialogOpen] =
     useState(false);
+    const [isAddDocumentDialogOpen, setAddDocumentDialogOpen] =
+      useState(false);
 
   const addCollection = async (value: AddCollectionDialogValue | null) => {
+    this.state.dialogCollectionRef = value.collectionId
     if (value?.collectionId && value?.document.id) {
       const newCollection = reference
         ? collection(reference, value.collectionId)
@@ -96,6 +104,9 @@ const CollectionList: React.FC<React.PropsWithChildren<Props>> = ({
       }
     }
   };
+function getDialogCollectionRef(): CollectionReference {
+  return this.state.dialogCollectionRef;
+}
 
   return (
     <div
@@ -111,10 +122,18 @@ const CollectionList: React.FC<React.PropsWithChildren<Props>> = ({
         <AddCollectionDialog
           documentRef={reference}
           open={isAddCollectionDialogOpen}
-          onValue={addCollection}
-          onClose={() => setAddCollectionDialogOpen(false)}
+          onValue={setDialogCollectionRef}
+          onClose={() => {setAddCollectionDialogOpen(false);setAddDocumentDialogOpen(true); alert("swapped dialogs") }}
         />
       )}
+      {isAddDocumentDialogOpen && (
+          <AddDocumentDialog
+            collectionRef={this.state.dialogCollectionRef}
+            open={isAddDocumentDialogOpen}
+            onValue={() => {alert("hi"); return null;}} // IDK but it compiles
+            onClose={() => setAddDocumentDialogOpen(false)}
+          />
+        )}
       {/* Actions */}
       <List dense className="List-Actions" tag="div">
         <ListItem

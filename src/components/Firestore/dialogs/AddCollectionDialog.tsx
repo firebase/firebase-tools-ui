@@ -105,41 +105,23 @@ export const AddCollectionDialog: React.FC<React.PropsWithChildren<Props>> = ({
       <DialogTitle>Start a collection</DialogTitle>
 
       <DialogContent>
-        {step === Step.COLLECTION ? (
           <AddCollectionStep
             documentRef={documentRef}
             onChange={setCollectionId}
           />
-        ) : (
-          <AddDocumentStep
-            collectionRef={
-              documentRef
-                ? collection(documentRef, collectionId)
-                : collection(firestore, collectionId)
-            }
-            onChange={setDocument}
-          />
-        )}
+       
       </DialogContent>
 
       <DialogActions>
         <DialogButton action="close" type="button" theme="secondary">
           Cancel
         </DialogButton>
-        {step === Step.DOCUMENT ? (
-          <DialogButton
-            unelevated
+          <DialogButton unelevated 
             action="accept"
             isDefaultAction
-            disabled={!document.data}
-          >
-            Save
-          </DialogButton>
-        ) : (
-          <DialogButton unelevated onClick={next}>
+            >
             Next
           </DialogButton>
-        )}
       </DialogActions>
     </Dialog>
   );
