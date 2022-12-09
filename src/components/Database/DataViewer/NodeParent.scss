@@ -40,13 +40,15 @@ $name: 'NodeParent';
     height: 32px; // to fit buttons
 
     > .NodeActions {
-      display: none;
+      opacity: 0;
       margin-left: 12px;
     }
 
+    &:has(:focus) .NodeActions,
     &:hover > .NodeActions,
     .NodeActions--active {
       display: inline-block;
+      opacity: 100%;
     }
   }
 
