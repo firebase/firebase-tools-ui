@@ -88,9 +88,9 @@ export const FieldPreview: React.FC<
           {summary}
         </span>
         <ListItemMeta className="FieldPreview-actions">
-        <Theme use="secondary" tag="span" className="FieldPreview-type">
-          ({typeDisp})
-        </Theme>
+          <Theme use="secondary" tag="span" className="FieldPreview-type">
+            ({typeDisp})
+          </Theme>
           {actions}
         </ListItemMeta>
       </ListItem>
