@@ -42,7 +42,7 @@ $name: 'NodeLeaf';
   }
 
   .#{$name}__actions {
-    visibility: hidden;
+    opacity: 0;
     flex: 1;
   }
 
@@ -58,7 +58,8 @@ $name: 'NodeLeaf';
     }
   }
 
+  &:has(:focus) > .#{$name}__actions,
   &:hover > .#{$name}__actions {
-    visibility: visible;
+    opacity: 100%;
   }
 }
