@@ -77,7 +77,7 @@ function RemoteConfig() {
               close={() => editParam(undefined)}
               parameterName={paramBeingEdited as string}
               param={editTemplate.parameters[paramBeingEdited]}
-              save={async (updatedParam: RemoteConfigParameter) => {
+              save={(updatedParam: RemoteConfigParameter) => {
                 const newTemplate: RemoteConfigTemplate = JSON.parse(JSON.stringify(editTemplate));
                 newTemplate.parameters[paramBeingEdited] = updatedParam;
                 setEditTemplate({ ...newTemplate })
