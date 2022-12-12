@@ -69,6 +69,7 @@ export function ResetButton({ reset }: { reset: () => Promise<void> }) {
     await reset();
     dispatch('RESET_SUCCESS');
   }
+  
   return (
     <>
       <Button unelevated danger onClick={() => dispatch('SHOW_RESET_DIALOG')}>

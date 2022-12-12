@@ -46,7 +46,7 @@ function RemoteConfig() {
   }
   async function resetToTemplate () {
     await revertTemplate();
-    await refetchTemplate();
+    refetchTemplate();
     setEditTemplate(JSON.parse(JSON.stringify(template)));
   }
   return (
