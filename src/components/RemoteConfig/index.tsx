@@ -18,6 +18,7 @@ import { Suspense, useState } from 'react';
 import { Card } from '@rmwc/card';
 import { Elevation } from '@rmwc/elevation';
 import { GridCell } from '@rmwc/grid';
+
 import isEqual from 'lodash/isEqual';
 import { CardActionBar } from '../common/CardActionBar';
 import { Spinner } from '../common/Spinner';
@@ -40,24 +41,27 @@ function RemoteConfig() {
   const [paramBeingEdited, editParam] = useState<string | undefined>(undefined);
   const [editTemplate, setEditTemplate] = useState(JSON.parse(JSON.stringify(template)));
 
+  const editing = isEqual(template, editTemplate)
+
   async function  saveCurrentConfigs () {
     await updateTemplate(editTemplate);
     await refetchTemplate();
   }
+
   async function resetToTemplate () {
     await revertTemplate();
-    refetchTemplate();
     setEditTemplate(JSON.parse(JSON.stringify(template)));
   }
+
   return (
     <GridCell span={12}>
       <div className={styles.topActions}>
         <PublishButton 
           saveCurrentConfigs={saveCurrentConfigs} 
-          disabled={_.isEqual(template, editTemplate)}/>
+          disabled={editing}/>
         <RevertButton 
           revertChanges={() => setEditTemplate(JSON.parse(JSON.stringify(template)))}
-          disabled={_.isEqual(template, editTemplate)}/>
+          disabled={editing}/>
         <ResetButton reset={resetToTemplate} />
       </div>
       <Elevation z="2" wrap>
@@ -80,7 +84,7 @@ function RemoteConfig() {
               save={(updatedParam: RemoteConfigParameter) => {
                 const newTemplate: RemoteConfigTemplate = JSON.parse(JSON.stringify(editTemplate));
                 newTemplate.parameters[paramBeingEdited] = updatedParam;
-                setEditTemplate({ ...newTemplate })
+                setEditTemplate(JSON.parse(JSON.stringify(newTemplate)))
                 editParam(undefined);
               }}
             />
