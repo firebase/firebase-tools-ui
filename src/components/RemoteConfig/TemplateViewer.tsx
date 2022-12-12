@@ -113,7 +113,7 @@ const ParamDetails: React.FunctionComponent<{
   }
 
   const setSelectedValue = async (value: RemoteConfigParameterValue) => {
-    const newTemplate = { ...template };
+    const newTemplate = JSON.parse(JSON.stringify(template));
     // @ts-expect-error
     (newTemplate.parameters[name] as RemoteConfigParameter).conditionalValues[
       '!isEmulator'
