@@ -41,7 +41,7 @@ function RemoteConfig() {
   const [editTemplate, setEditTemplate] = useState(JSON.parse(JSON.stringify(template)));
 
   async function  saveCurrentConfigs () {
-    await updateTemplate({...editTemplate});
+    await updateTemplate(editTemplate);
     await refetchTemplate();
   }
   async function resetToTemplate () {
