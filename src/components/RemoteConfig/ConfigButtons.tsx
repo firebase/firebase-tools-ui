@@ -145,4 +145,3 @@ export const RevertButton: React.FunctionComponent<{
   );
 }
 
-export default { ResetButton, PublishButton, RevertButton }
