@@ -31,7 +31,7 @@ import type {
 import { useState } from 'react';
 
 import { grey100 } from '../../colors';
-import { remoteConfigParameterValueToString, useTemplate } from './api';
+import { remoteConfigParameterValueToString } from './api';
 import { paramContainsSearchTerm } from './QueryBar';
 import styles from './RemoteConfig.module.scss';
 import type { ConditionDetails } from './types';
@@ -83,10 +83,12 @@ function checkEqual(
 
 const ParamDetails: React.FunctionComponent<{
   name: string;
+  template: RemoteConfigTemplate;
   defaultValue?: RemoteConfigParameterValue;
   conditions: ConditionDetails[];
   edit: () => {};
-}> = ({ name, defaultValue, conditions, edit }) => {
+  setEditTemplate: (template: any) => any;
+}> = ({ name, template, defaultValue, conditions, edit, setEditTemplate }) => {
   if (!defaultValue && !conditions) {
     throw new Error('Parameter needs at least one value (I think)');
   }
@@ -110,16 +112,15 @@ const ParamDetails: React.FunctionComponent<{
     ];
   }
 
-  const { template: currentTemplate, updateTemplate } = useTemplate();
   const setSelectedValue = async (value: RemoteConfigParameterValue) => {
-    const newTemplate = { ...currentTemplate };
+    const newTemplate = { ...template };
     // @ts-expect-error
     (newTemplate.parameters[name] as RemoteConfigParameter).conditionalValues[
       '!isEmulator'
     ] = value;
 
     try {
-      updateTemplate(newTemplate);
+      setEditTemplate(newTemplate);
     } catch (e) {
       console.error(e);
     }
@@ -223,7 +224,8 @@ export const TemplateViewer: React.FunctionComponent<{
   rcTemplate: RemoteConfigTemplate;
   paramNameFilter: string;
   editParam: (paramName: string) => any;
-}> = ({ rcTemplate, paramNameFilter, editParam }) => {
+  setEditTemplate: (template: any) => any;
+}> = ({ rcTemplate, paramNameFilter, editParam, setEditTemplate}) => {
   return (
     <>
       <ThemeProvider
@@ -298,9 +300,11 @@ export const TemplateViewer: React.FunctionComponent<{
               <ParamDetails
                 key={paramName}
                 name={paramName}
+                template={rcTemplate}
                 defaultValue={defaultValue}
                 conditions={conditions}
                 edit={() => editParam(paramName)}
+                setEditTemplate= {setEditTemplate}
               />
             );
           })}
