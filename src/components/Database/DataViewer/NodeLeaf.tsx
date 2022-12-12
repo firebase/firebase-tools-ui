@@ -77,7 +77,7 @@ export const NodeLeaf = React.memo<Props>(function NodeLeaf$({
           <IconButton
             icon="edit"
             onClick={handleEdit}
-            aria-label={`Edit value for: ${realtimeRef.key}`}
+            aria-label={`Edit value for: "${realtimeRef.key}"`}
           />
         </Tooltip>
         {showAddButton && (
