@@ -109,7 +109,7 @@ describe('editing the node', () => {
         )
       );
 
-      act(() => getByLabelText('Edit value for: "foo').click());
+      act(() => getByLabelText('Edit value for: "foo"').click());
 
       expect((getByLabelText('Value') as HTMLInputElement).value).toBe(
         'my-value'
