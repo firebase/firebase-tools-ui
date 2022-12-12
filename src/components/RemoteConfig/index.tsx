@@ -18,7 +18,7 @@ import { Suspense, useState } from 'react';
 import { Card } from '@rmwc/card';
 import { Elevation } from '@rmwc/elevation';
 import { GridCell } from '@rmwc/grid';
-import _ from 'lodash';
+import isEqual from 'lodash/isEqual';
 import { CardActionBar } from '../common/CardActionBar';
 import { Spinner } from '../common/Spinner';
 import { useTemplate } from './api';
