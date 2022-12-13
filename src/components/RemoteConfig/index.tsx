@@ -19,13 +19,14 @@ import { Card } from '@rmwc/card';
 import { Elevation } from '@rmwc/elevation';
 import { GridCell } from '@rmwc/grid';
 
+import isEqual from 'lodash/isEqual';
 import { CardActionBar } from '../common/CardActionBar';
 import { Spinner } from '../common/Spinner';
 import { useTemplate } from './api';
 import EditDialog from './EditDialog';
 import { QueryBar } from './QueryBar';
 import styles from './RemoteConfig.module.scss';
-import ResetButton from './Reset';
+import { ResetButton, PublishButton, RevertButton} from './ConfigButtons';
 import { TemplateViewer } from './TemplateViewer';
 
 import type {
@@ -34,15 +35,34 @@ import type {
 } from 'firebase-admin/remote-config';
 
 function RemoteConfig() {
-  const { template, updateTemplate, revertTemplate } = useTemplate();
+  const { template, updateTemplate, revertTemplate, refetchTemplate } = useTemplate();
 
   const [searchText, setSearchText] = useState('');
   const [paramBeingEdited, editParam] = useState<string | undefined>(undefined);
+  const [editTemplate, setEditTemplate] = useState(JSON.parse(JSON.stringify(template)));
+
+  const editing = isEqual(template, editTemplate)
+
+  async function  saveCurrentConfigs () {
+    await updateTemplate(editTemplate);
+    await refetchTemplate();
+  }
+
+  async function resetToTemplate () {
+    await revertTemplate();
+    setEditTemplate(JSON.parse(JSON.stringify(template)));
+  }
 
   return (
     <GridCell span={12}>
       <div className={styles.topActions}>
-        <ResetButton reset={revertTemplate} />
+        <PublishButton 
+          saveCurrentConfigs={saveCurrentConfigs} 
+          disabled={editing}/>
+        <RevertButton 
+          revertChanges={() => setEditTemplate(JSON.parse(JSON.stringify(template)))}
+          disabled={editing}/>
+        <ResetButton reset={resetToTemplate} />
       </div>
       <Elevation z="2" wrap>
         <Card>
@@ -50,20 +70,21 @@ function RemoteConfig() {
             <QueryBar filter={searchText} setFilter={setSearchText} />
           </CardActionBar>
           <TemplateViewer
-            rcTemplate={template}
+            rcTemplate={editTemplate}
             paramNameFilter={searchText}
             editParam={(paramName: string) => editParam(paramName)}
+            setEditTemplate= {setEditTemplate}
           />
           {paramBeingEdited !== undefined ? (
             <EditDialog
               open={paramBeingEdited !== undefined}
               close={() => editParam(undefined)}
               parameterName={paramBeingEdited as string}
-              param={template.parameters[paramBeingEdited]}
-              save={async (updatedParam: RemoteConfigParameter) => {
-                const newTemplate: RemoteConfigTemplate = { ...template };
+              param={editTemplate.parameters[paramBeingEdited]}
+              save={(updatedParam: RemoteConfigParameter) => {
+                const newTemplate: RemoteConfigTemplate = JSON.parse(JSON.stringify(editTemplate));
                 newTemplate.parameters[paramBeingEdited] = updatedParam;
-                await updateTemplate({ ...newTemplate });
+                setEditTemplate(JSON.parse(JSON.stringify(newTemplate)))
                 editParam(undefined);
               }}
             />

@@ -37,7 +37,7 @@ export type EditDialogProps = {
   close: () => void;
   parameterName: string;
   param: RemoteConfigParameter;
-  save: (updatedParam: RemoteConfigParameter) => Promise<void>;
+  save: (updatedParam: RemoteConfigParameter) => void;
 };
 
 function ConditionField({

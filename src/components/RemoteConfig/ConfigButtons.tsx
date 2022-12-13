@@ -37,7 +37,7 @@ export type ResetDialogProps = {
   reset: () => Promise<void>;
 };
 
-export default function ResetButton({ reset }: { reset: () => Promise<void> }) {
+export function ResetButton({ reset }: { reset: () => Promise<void> }) {
   const [state, dispatch] = useReducer(
     (state: { dialogOpen: boolean; showToast: boolean }, action: string) => {
       const newState = { ...state };
@@ -72,7 +72,7 @@ export default function ResetButton({ reset }: { reset: () => Promise<void> }) {
 
   return (
     <>
-      <Button unelevated onClick={() => dispatch('SHOW_RESET_DIALOG')}>
+      <Button unelevated danger onClick={() => dispatch('SHOW_RESET_DIALOG')}>
         Reset
       </Button>
       <ResetDialog
@@ -113,9 +113,35 @@ function ResetDialog({ open, cancel, reset }: ResetDialogProps) {
       <DialogActions>
         <DialogButton action="close">Cancel</DialogButton>
         <DialogButton action="reset" isDefaultAction>
-          Reset
+          Reset to template
         </DialogButton>
       </DialogActions>
     </Dialog>
   );
 }
+
+export const PublishButton: React.FunctionComponent<{ 
+  saveCurrentConfigs: () => Promise<void>; 
+  disabled: boolean}> = ({saveCurrentConfigs, disabled}) => {
+
+  return (
+    <>
+      <Button unelevated disabled={disabled} onClick={() => saveCurrentConfigs()}>
+        Publish Changes
+      </Button>
+    </>
+  );
+}
+export const RevertButton: React.FunctionComponent<{ 
+  revertChanges: () => void; 
+  disabled: boolean}> = ({revertChanges, disabled}) => {
+
+  return (
+    <>
+      <Button disabled={disabled} onClick={() => revertChanges()}>
+      Revert Changes
+      </Button>
+    </>
+  );
+}
+
