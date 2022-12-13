@@ -83,6 +83,8 @@ To run the test runner with emulators, use:
 
 ```bash
 firebase emulators:exec --project sample --only firestore 'npm test'
+
+firebase emulators:exec --project sample --only firestore 'npm test AddCollectionDialog.test.tsx'
 ```
 
 If you get port conflict errors, make sure to stop other instances of the Firebase Emulator Suite (e.g. the one you've started for the development server above) and try again.
