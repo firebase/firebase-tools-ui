@@ -52,7 +52,7 @@ describe('step 1', () => {
     );
 
     expect((getByLabelText(/Parent path/) as HTMLInputElement).value).toBe(
-      'docs/my-doc'
+      'docs/my-doc/<parent Collection ID>'
     );
   });
 
@@ -85,12 +85,6 @@ describe('step 2', () => {
 
     fireEvent.change(getByLabelText(/Collection ID/), {
       target: { value: 'my-col' },
-    });
-
-    await act(async () => {
-      getByText('Next').click();
-      // Wait for async Dialogs DOM changes for the second step dialog.
-      await delay(100);
     });
   });
 
@@ -167,6 +161,6 @@ describe('at the root of the db', () => {
       <AddCollectionDialog open={true} onValue={() => {}} />
     ));
 
-    expect((getByLabelText(/Parent path/) as HTMLInputElement).value).toBe('/');
+    expect((getByLabelText(/Parent path/) as HTMLInputElement).value).toBe('<parent Collection ID>');
   });
 }); // at the root of the db

@@ -30,13 +30,13 @@ import { useFirestore } from 'reactfire';
 import { Field } from '../../common/Field';
 import { AddDocumentDialogValue, AddDocumentStep } from './AddDocumentDialog';
 
-interface AddCollectionStepProps {
+interface AddCollectionInputProps {
   onChange: (value: string) => void;
 }
 
-export const AddCollectionStep = ({
+export const AddCollectionInput = ({
   onChange,
-}: AddCollectionStepProps) => {
+}: AddCollectionInputProps) => {
   const [id, setId] = useState('');
   const updateId = (evt: React.ChangeEvent<HTMLInputElement>) => {
     setId(evt.target.value);
@@ -92,7 +92,7 @@ export const AddCollectionDialog: React.FC<React.PropsWithChildren<Props>> = ({
       <DialogTitle>Start a collection</DialogTitle>
 
       <DialogContent>
-        <AddCollectionStep
+        <AddCollectionInput
           onChange={setCollectionId}
         />
         <AddDocumentStep
