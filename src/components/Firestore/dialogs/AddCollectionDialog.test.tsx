@@ -19,7 +19,7 @@ import { doc } from 'firebase/firestore';
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 
-import { delay, waitForDialogsToClose } from '../../../test_utils';
+import { waitForDialogsToClose } from '../../../test_utils';
 import { renderWithFirestore } from '../testing/FirestoreTestProviders';
 import { renderDialogWithFirestore } from '../testing/test_utils';
 import { AddCollectionDialog } from './AddCollectionDialog';
