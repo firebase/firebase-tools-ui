@@ -34,9 +34,7 @@ interface AddCollectionInputProps {
   onChange: (value: string) => void;
 }
 
-export const AddCollectionInput = ({
-  onChange,
-}: AddCollectionInputProps) => {
+export const AddCollectionInput = ({ onChange }: AddCollectionInputProps) => {
   const [id, setId] = useState('');
   const updateId = (evt: React.ChangeEvent<HTMLInputElement>) => {
     setId(evt.target.value);
@@ -84,7 +82,7 @@ export const AddCollectionDialog: React.FC<React.PropsWithChildren<Props>> = ({
   };
 
   function getCurrentOrPlaceholderCollectionId(collectionId: string) {
-    return collectionId ? collectionId : "<parent Collection ID>";
+    return collectionId ? collectionId : '<parent Collection ID>';
   }
 
   return (
@@ -92,14 +90,18 @@ export const AddCollectionDialog: React.FC<React.PropsWithChildren<Props>> = ({
       <DialogTitle>Start a collection</DialogTitle>
 
       <DialogContent>
-        <AddCollectionInput
-          onChange={setCollectionId}
-        />
+        <AddCollectionInput onChange={setCollectionId} />
         <AddDocumentStep
           collectionRef={
             documentRef
-              ? collection(documentRef, getCurrentOrPlaceholderCollectionId(collectionId))
-              : collection(firestore, getCurrentOrPlaceholderCollectionId(collectionId))
+              ? collection(
+                  documentRef,
+                  getCurrentOrPlaceholderCollectionId(collectionId)
+                )
+              : collection(
+                  firestore,
+                  getCurrentOrPlaceholderCollectionId(collectionId)
+                )
           }
           onChange={setDocument}
         />

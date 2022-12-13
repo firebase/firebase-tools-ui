@@ -161,6 +161,8 @@ describe('at the root of the db', () => {
       <AddCollectionDialog open={true} onValue={() => {}} />
     ));
 
-    expect((getByLabelText(/Parent path/) as HTMLInputElement).value).toBe('<parent Collection ID>');
+    expect((getByLabelText(/Parent path/) as HTMLInputElement).value).toBe(
+      '<parent Collection ID>'
+    );
   });
 }); // at the root of the db
