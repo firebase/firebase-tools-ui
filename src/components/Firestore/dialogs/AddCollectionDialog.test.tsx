@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { RenderResult, fireEvent, waitFor } from '@testing-library/react';
+import { RenderResult, fireEvent, waitFor } from '@testing-library/react'; // FIXME tests
 import { doc } from 'firebase/firestore';
 import React from 'react';
 import { act } from 'react-dom/test-utils';
