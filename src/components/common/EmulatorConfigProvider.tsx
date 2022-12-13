@@ -217,10 +217,10 @@ async function configFetcher(url: string): Promise<Config> {
     // remotely and connect from another device. It does not work for some setups
     // e.g. when Emulator UI is proxied but not the individual emulators.
     for (const listen of (value.listen ?? []) as {
-      host: string;
+      address: string;
       port: number;
     }[]) {
-      if (listen.host === '0.0.0.0') {
+      if (listen.address === '0.0.0.0') {
         port = listen.port;
         host = window.location.hostname;
         if (!host || host === 'localhost') {
@@ -229,7 +229,7 @@ async function configFetcher(url: string): Promise<Config> {
           host = '127.0.0.1';
         }
         break;
-      } else if (listen.host === '::') {
+      } else if (listen.address === '::') {
         port = listen.port;
         host = window.location.hostname;
         if (!host || host === 'localhost') {
