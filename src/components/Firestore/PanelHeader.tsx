@@ -28,10 +28,14 @@ export const PanelHeader: React.FC<
   return (
     <div className="Firestore-PanelHeader">
       <CardActionBar>
-        <Theme use="secondary">{icon}</Theme>
-        <Typography use="body2" className="Firestore-PanelHeader-title">
-          {id}
-        </Typography>
+        <div className="Firestore-PanelHeader-icon-title">
+          <Theme use="secondary" className="Firestore-PanelHeader-icon">
+            {icon}
+          </Theme>
+          <Typography use="body2" className="Firestore-PanelHeader-title">
+            {id}
+          </Typography>
+        </div>
         <CardActionBarActions>{children}</CardActionBarActions>
       </CardActionBar>
     </div>
