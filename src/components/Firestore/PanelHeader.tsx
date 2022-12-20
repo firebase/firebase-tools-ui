@@ -29,7 +29,9 @@ export const PanelHeader: React.FC<
     <div className="Firestore-PanelHeader">
       <CardActionBar>
         <div className="Firestore-PanelHeader-icon-title">
-          <Theme use="secondary" className="Firestore-PanelHeader-icon">{icon}</Theme>
+          <Theme use="secondary" className="Firestore-PanelHeader-icon">
+            {icon}
+          </Theme>
           <Typography use="body2" className="Firestore-PanelHeader-title">
             {id}
           </Typography>
