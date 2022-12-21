@@ -54,7 +54,7 @@ export function useTemplate(): {
   template: RemoteConfigTemplate;
   refetchTemplate: () => void;
   updateTemplate: (newTemplate: RemoteConfigTemplate) => Promise<void>;
-  revertTemplate: () => Promise<void>;
+  revertTemplate: () => Promise<RemoteConfigTemplate>;
 } {
   const url = useRemoteConfigAdminUrl();
   const revertUrl = useRemoteConfigRevertUrl();
@@ -86,7 +86,7 @@ export function useTemplate(): {
     await mutate();
   };
 
-  const revertTemplate = async () => {
+  async function revertTemplate(): Promise<RemoteConfigTemplate> {
     const response = await fetch(revertUrl, {
       method: 'PUT',
       headers: {
@@ -94,13 +94,14 @@ export function useTemplate(): {
       },
       body: JSON.stringify({}),
     });
-
+    
     if (!response.ok) {
       console.error(response.status);
     }
 
     // see if we can just use the response from the put
-    await mutate();
+    return await mutate() as Promise<RemoteConfigTemplate>;
+
   };
 
   return {
