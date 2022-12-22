@@ -25,6 +25,7 @@ const INIT_STATE = {
   users: { loading: true },
   filter: '',
   allowDuplicateEmails: false,
+  customAuthActionUri: '',
   tenants: { loading: true },
 };
 
@@ -61,6 +62,14 @@ export const authReducer = createReducer<AuthState, Action>(INIT_STATE)
     (state, { payload }) => {
       return produce(state, (draft) => {
         draft.allowDuplicateEmails = payload;
+      });
+    }
+  )
+  .handleAction(
+    authActions.setCustomAuthActionUriSuccess,
+    (state, { payload }) => {
+      return produce(state, (draft) => {
+        draft.customAuthActionUri = payload;
       });
     }
   )

@@ -26,6 +26,7 @@ export function getMockAuthStore(state?: Partial<AppState['auth']>) {
       users: { loading: false, result: { data: [] } },
       filter: '',
       allowDuplicateEmails: false,
+      customAuthActionUri: "",
       tenants: { loading: false, result: { data: [] } },
       ...state,
     },
@@ -62,6 +63,7 @@ export function createFakeState(state: Partial<AuthState>): AuthState {
   return {
     filter: '',
     allowDuplicateEmails: true,
+    customAuthActionUri: "https://example.com/",
     users: createRemoteDataLoaded([]),
     tenants: createRemoteDataLoaded([]),
     ...state,

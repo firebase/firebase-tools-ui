@@ -104,6 +104,7 @@ export interface AuthState {
   users: RemoteResult<AuthUser[]>;
   filter: string;
   allowDuplicateEmails: boolean;
+  customAuthActionUri: string;
   tenants: RemoteResult<Tenant[]>;
 }
 
@@ -111,4 +112,5 @@ export interface AuthState {
 // but without optional types
 export interface EmulatorV1ProjectsConfig {
   signIn: { allowDuplicateEmails: boolean };
+  notification: { sendEmail: { callbackUri: string } };
 }

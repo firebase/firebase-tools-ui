@@ -33,6 +33,7 @@ import { EmulatorDisabled } from '../common/EmulatorDisabled';
 import { Spinner } from '../common/Spinner';
 import styles from './index.module.scss';
 import OneAccountPerEmailCard from './OneAccountPerEmailCard/OneAccountPerEmailCard';
+import CustomAuthActionUriCard from './CustomAuthActionUriCard/CustomAuthActionUriCard';
 import ClearAll from './UsersCard/ClearAll';
 import TenantPicker, { useTenantFromUrl } from './UsersCard/TenantPicker';
 import UsersCard from './UsersCard/UsersCard';
@@ -90,6 +91,9 @@ export const Auth: React.FC<React.PropsWithChildren<AuthProps>> = ({
       </Elevation>
       <Elevation z="2" wrap>
         <OneAccountPerEmailCard />
+      </Elevation>
+      <Elevation z="2" wrap>
+        <CustomAuthActionUriCard />
       </Elevation>
     </GridCell>
   );
