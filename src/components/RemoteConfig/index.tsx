@@ -99,11 +99,10 @@ function RemoteConfig() {
 
 const RemoteConfigRouteSuspended: React.FC<React.PropsWithChildren<unknown>> = () => {
   const isDisabled = useIsEmulatorDisabled('remoteconfig');
-  console.log("isDisabled: ", isDisabled)
   return isDisabled ? (
     <EmulatorDisabled productName="Remote Config" />
   ) : (
-    <Spinner span={12} message="Remote Config Emulator Loading3..." />
+    <Spinner span={12} message="Remote Config Emulator Loading..." />
   );
 };
 
