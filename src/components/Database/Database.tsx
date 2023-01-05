@@ -79,7 +79,7 @@ export const Database: React.FC<React.PropsWithChildren<Props>> = ({
             <SimpleMenu
               onSelect={(evt) => {
                 switch (evt.detail?.item?.dataset?.value) {
-                  case "IMPORT_JSON":
+                  case 'IMPORT_JSON':
                     setImportDialogOpen(true);
                     return;
                   default:
@@ -94,9 +94,7 @@ export const Database: React.FC<React.PropsWithChildren<Props>> = ({
               }
               renderToPortal
             >
-              <MenuItem data-value="IMPORT_JSON">
-                Import JSON
-              </MenuItem>
+              <MenuItem data-value="IMPORT_JSON">Import JSON</MenuItem>
             </SimpleMenu>
           </InteractiveBreadCrumbBar>
 
