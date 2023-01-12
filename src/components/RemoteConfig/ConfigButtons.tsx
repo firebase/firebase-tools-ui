@@ -44,13 +44,7 @@ export type PublishDialogProps = {
   publish: () => Promise<void>;
 };
 
-export function ResetButton({
-  reset,
-  revertChanges,
-}: {
-  reset: () => Promise<void>;
-  revertChanges: () => void;
-}) {
+export function ResetButton({ reset, revertChanges }: { reset: () => Promise<void>; revertChanges: () => void;}) {
   const [state, dispatch] = useReducer(
     (state: { dialogOpen: boolean; showToast: boolean }, action: string) => {
       const newState = { ...state };

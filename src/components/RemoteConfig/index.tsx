@@ -36,8 +36,7 @@ import styles from './RemoteConfig.module.scss';
 import { TemplateViewer } from './TemplateViewer';
 
 function RemoteConfig() {
-  const { template, updateTemplate, revertTemplate, refetchTemplate } =
-    useTemplate();
+  const { template, updateTemplate, revertTemplate, refetchTemplate } = useTemplate();
 
   const [searchText, setSearchText] = useState('');
   const [paramBeingEdited, editParam] = useState<string | undefined>(undefined);
