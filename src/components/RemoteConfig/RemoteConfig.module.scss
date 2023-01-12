@@ -57,12 +57,41 @@
   font-family: 'Roboto Mono', monospace;
 }
 
-.topActions {
-  margin-bottom: 24px;
+.disabledTopActions {
+  padding: 8px;
+  margin-bottom: 16px;
   display: flex;
   justify-content: right;
   gap: 12px;
 }
+
+.enabledTopActions {
+  color: #681DA8;;
+  padding: 8px;
+  background-color: #f0e4fc;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: right;
+  gap: 12px;
+  position: relative;
+}
+
+.unpublishText {
+  position: absolute;
+  left: 2rem;
+  p, span
+    {
+      color: #681DA8;
+      float: left;
+      margin: 2px;
+      margin-top: 4px;
+    }
+    p {
+      padding-top: 4px;
+      padding-left: 4px;
+    }
+}
+
 
 .paramListHeader {
   height: 28px;
