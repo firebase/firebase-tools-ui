@@ -25,7 +25,7 @@
     box-shadow: $GMP_SHADOW_DIVIDER_BOTTOM_INSET;
     display: flex;
     height: 56px;
-    overflow: hidden;
+    overflow: visible;
   }
 
   .CardActionBar-actions {
