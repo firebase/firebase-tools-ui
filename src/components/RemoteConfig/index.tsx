@@ -35,6 +35,13 @@ import { QueryBar } from './QueryBar';
 import styles from './RemoteConfig.module.scss';
 import { TemplateViewer } from './TemplateViewer';
 
+import type {
+  RemoteConfigParameter,
+  RemoteConfigTemplate,
+} from 'firebase-admin/remote-config';
+import { useIsEmulatorDisabled } from '../common/EmulatorConfigProvider';
+import { EmulatorDisabled } from '../common/EmulatorDisabled';
+
 function RemoteConfig() {
   const { template, updateTemplate, revertTemplate, refetchTemplate } =
     useTemplate();
@@ -107,9 +114,7 @@ function RemoteConfig() {
   );
 }
 
-const RemoteConfigRouteSuspended: React.FC<
-  React.PropsWithChildren<unknown>
-> = () => {
+const RemoteConfigRouteSuspended: React.FC<React.PropsWithChildren<unknown>> = () => {
   const isDisabled = useIsEmulatorDisabled('remoteconfig');
   return isDisabled ? (
     <EmulatorDisabled productName="Remote Config" />
