@@ -15,7 +15,7 @@
  */
 
 import { isDraft, original } from 'immer';
-import deepEquals from 'lodash.isequal';
+import deepEquals from 'lodash/isEqual';
 
 export interface ErrorInfo {
   message: string;

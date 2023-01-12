@@ -33,6 +33,8 @@ import type {
   RemoteConfigParameter,
   RemoteConfigTemplate,
 } from 'firebase-admin/remote-config';
+import { useIsEmulatorDisabled } from '../common/EmulatorConfigProvider';
+import { EmulatorDisabled } from '../common/EmulatorDisabled';
 
 function RemoteConfig() {
   const { template, updateTemplate, revertTemplate, refetchTemplate } = useTemplate();
@@ -95,9 +97,18 @@ function RemoteConfig() {
   );
 }
 
+const RemoteConfigRouteSuspended: React.FC<React.PropsWithChildren<unknown>> = () => {
+  const isDisabled = useIsEmulatorDisabled('remoteconfig');
+  return isDisabled ? (
+    <EmulatorDisabled productName="Remote Config" />
+  ) : (
+    <Spinner span={12} message="Remote Config Emulator Loading..." />
+  );
+};
+
 export default function RemoteConfigWrapper() {
   return (
-    <Suspense fallback={<Spinner span={12} message="Remote Config Emulator Loading..." />}>
+    <Suspense fallback={<RemoteConfigRouteSuspended />}>
       <RemoteConfig />
     </Suspense>
   );
