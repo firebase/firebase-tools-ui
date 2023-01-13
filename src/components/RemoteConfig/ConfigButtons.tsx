@@ -139,7 +139,6 @@ export const PublishButton: React.FunctionComponent<{
   const [state, dispatch] = useReducer(
     (state: { dialogOpen: boolean; showToast: boolean }, action: string) => {
       const newState = { ...state };
-
       if (action === 'SHOW_PUBLISH_DIALOG') {
         newState.dialogOpen = true;
         newState.showToast = false;
@@ -161,6 +160,13 @@ export const PublishButton: React.FunctionComponent<{
       showToast: false,
     }
   );
+
+  async function uiReset() {
+    dispatch('PUBLISH_STARTED');
+    await saveCurrentConfigs();
+    dispatch('PUBLISH_SUCCESS');
+  }
+
   return (
     <>
       <Button
@@ -171,13 +177,8 @@ export const PublishButton: React.FunctionComponent<{
       </Button>
       <PublishDialog
         open={state.dialogOpen}
-        cancel={() => dispatch('RESET_CANCEL')}
-        publish={saveCurrentConfigs}
-      />
-            <Snackbar
-        open={state.showToast}
-        onClose={() => dispatch('HIDE_TOAST')}
-        message="Template reset"
+        cancel={() => dispatch('PUBLISH_CANCEL')}
+        publish={uiReset}
       />
     </>
   );
@@ -195,6 +196,7 @@ function PublishDialog({ open, cancel, publish }: PublishDialogProps) {
         }
       }}
     >
+      
       <DialogTitle>Publishing</DialogTitle>
       <DialogContent>
         <div className={styles.explainerSection}>
