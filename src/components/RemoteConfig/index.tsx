@@ -14,57 +14,64 @@
  * limitations under the License.
  */
 
-import { Suspense, useState } from 'react';
 import { Card } from '@rmwc/card';
 import { Elevation } from '@rmwc/elevation';
 import { GridCell } from '@rmwc/grid';
-
-import isEqual from 'lodash/isEqual';
-import { CardActionBar } from '../common/CardActionBar';
-import { Spinner } from '../common/Spinner';
-import { useTemplate } from './api';
-import EditDialog from './EditDialog';
-import { QueryBar } from './QueryBar';
-import styles from './RemoteConfig.module.scss';
-import { ResetButton, PublishButton, RevertButton} from './ConfigButtons';
-import { TemplateViewer } from './TemplateViewer';
-
 import type {
   RemoteConfigParameter,
   RemoteConfigTemplate,
 } from 'firebase-admin/remote-config';
+import isEqual from 'lodash/isEqual';
+import { Suspense, useState } from 'react';
+
+import { CardActionBar } from '../common/CardActionBar';
 import { useIsEmulatorDisabled } from '../common/EmulatorConfigProvider';
 import { EmulatorDisabled } from '../common/EmulatorDisabled';
+import { Spinner } from '../common/Spinner';
+import { useTemplate } from './api';
+import { PublishButton, ResetButton } from './ConfigButtons';
+import EditDialog from './EditDialog';
+import { QueryBar } from './QueryBar';
+import styles from './RemoteConfig.module.scss';
+import { TemplateViewer } from './TemplateViewer';
 
 function RemoteConfig() {
   const { template, updateTemplate, revertTemplate, refetchTemplate } = useTemplate();
 
   const [searchText, setSearchText] = useState('');
   const [paramBeingEdited, editParam] = useState<string | undefined>(undefined);
-  const [editTemplate, setEditTemplate] = useState(JSON.parse(JSON.stringify(template)));
+  const [editTemplate, setEditTemplate] = useState(
+    JSON.parse(JSON.stringify(template))
+  );
 
-  const editing = isEqual(template, editTemplate)
+  const editing = isEqual(template, editTemplate);
 
-  async function  saveCurrentConfigs () {
+  async function saveCurrentConfigs() {
     await updateTemplate(editTemplate);
     await refetchTemplate();
   }
 
-  async function resetToTemplate () {
+  async function resetToTemplate() {
     await revertTemplate();
     setEditTemplate(JSON.parse(JSON.stringify(template)));
   }
 
   return (
     <GridCell span={12}>
-      <div className={styles.topActions}>
-        <PublishButton 
-          saveCurrentConfigs={saveCurrentConfigs} 
-          disabled={editing}/>
-        <RevertButton 
-          revertChanges={() => setEditTemplate(JSON.parse(JSON.stringify(template)))}
-          disabled={editing}/>
-        <ResetButton reset={resetToTemplate} />
+      <div className={editing ? styles.disabledTopActions : styles.enabledTopActions}>
+        {!editing ? (
+          <div className={styles.unpublishText}>
+            <span className="material-icons">error</span>
+            <p>Unpublished changes</p>
+          </div>
+        ) : null}
+
+        <ResetButton reset={resetToTemplate} revertChanges={() => setEditTemplate(JSON.parse(JSON.stringify(template)))} />
+        <PublishButton
+          saveCurrentConfigs={saveCurrentConfigs}
+          disabled={editing}
+        />
+
       </div>
       <Elevation z="2" wrap>
         <Card>
@@ -75,7 +82,7 @@ function RemoteConfig() {
             rcTemplate={editTemplate}
             paramNameFilter={searchText}
             editParam={(paramName: string) => editParam(paramName)}
-            setEditTemplate= {setEditTemplate}
+            setEditTemplate={setEditTemplate}
           />
           {paramBeingEdited !== undefined ? (
             <EditDialog
@@ -84,9 +91,11 @@ function RemoteConfig() {
               parameterName={paramBeingEdited as string}
               param={editTemplate.parameters[paramBeingEdited]}
               save={(updatedParam: RemoteConfigParameter) => {
-                const newTemplate: RemoteConfigTemplate = JSON.parse(JSON.stringify(editTemplate));
+                const newTemplate: RemoteConfigTemplate = JSON.parse(
+                  JSON.stringify(editTemplate)
+                );
                 newTemplate.parameters[paramBeingEdited] = updatedParam;
-                setEditTemplate(JSON.parse(JSON.stringify(newTemplate)))
+                setEditTemplate(JSON.parse(JSON.stringify(newTemplate)));
                 editParam(undefined);
               }}
             />
