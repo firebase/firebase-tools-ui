@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 import { Button } from '@rmwc/button';
 import {
   Dialog,
@@ -35,9 +35,16 @@ export type ResetDialogProps = {
   open: boolean;
   cancel: () => void;
   reset: () => Promise<void>;
+  revertChanges: () => void;
 };
 
-export function ResetButton({ reset }: { reset: () => Promise<void> }) {
+export type PublishDialogProps = {
+  open: boolean;
+  cancel: () => void;
+  publish: () => Promise<void>;
+};
+
+export function ResetButton({ reset, revertChanges }: { reset: () => Promise<void>; revertChanges: () => void;}) {
   const [state, dispatch] = useReducer(
     (state: { dialogOpen: boolean; showToast: boolean }, action: string) => {
       const newState = { ...state };
@@ -72,13 +79,14 @@ export function ResetButton({ reset }: { reset: () => Promise<void> }) {
 
   return (
     <>
-      <Button unelevated danger onClick={() => dispatch('SHOW_RESET_DIALOG')}>
-        Reset
+      <Button onClick={() => dispatch('SHOW_RESET_DIALOG')}>
+        Discard changes
       </Button>
       <ResetDialog
         open={state.dialogOpen}
         cancel={() => dispatch('RESET_CANCEL')}
         reset={uiReset}
+        revertChanges={revertChanges}
       />
       <Snackbar
         open={state.showToast}
@@ -89,13 +97,15 @@ export function ResetButton({ reset }: { reset: () => Promise<void> }) {
   );
 }
 
-function ResetDialog({ open, cancel, reset }: ResetDialogProps) {
+function ResetDialog({ open, cancel, reset, revertChanges }: ResetDialogProps) {
   return (
     <Dialog
       open={open}
       onClose={(event) => {
         if (event.detail.action === 'reset') {
           reset();
+        } else if (event.detail.action === 'revert') {
+          revertChanges();
         } else {
           cancel();
         }
@@ -112,6 +122,7 @@ function ResetDialog({ open, cancel, reset }: ResetDialogProps) {
       </DialogContent>
       <DialogActions>
         <DialogButton action="close">Cancel</DialogButton>
+        <DialogButton action="revert">Revert to last publish</DialogButton>
         <DialogButton action="reset" isDefaultAction>
           Reset to template
         </DialogButton>
@@ -120,28 +131,84 @@ function ResetDialog({ open, cancel, reset }: ResetDialogProps) {
   );
 }
 
-export const PublishButton: React.FunctionComponent<{ 
-  saveCurrentConfigs: () => Promise<void>; 
-  disabled: boolean}> = ({saveCurrentConfigs, disabled}) => {
+export const PublishButton: React.FunctionComponent<{
+  saveCurrentConfigs: () => Promise<void>;
+  disabled: boolean;
+}> = ({ saveCurrentConfigs, disabled }) => {
+
+  const [state, dispatch] = useReducer(
+    (state: { dialogOpen: boolean; showToast: boolean }, action: string) => {
+      const newState = { ...state };
+      if (action === 'SHOW_PUBLISH_DIALOG') {
+        newState.dialogOpen = true;
+        newState.showToast = false;
+      } else if (action === 'PUBLISH_STARTED') {
+        saveCurrentConfigs().then();
+      } else if (action === 'PUBLISH_SUCCESS') {
+        newState.dialogOpen = false;
+        newState.showToast = true;
+      } else if (action === 'PUBLISH_CANCEL') {
+        newState.dialogOpen = false;
+        newState.showToast = false;
+      } else if (action === 'HIDE_TOAST') {
+        newState.showToast = false;
+      }
+      return newState;
+    },
+    {
+      dialogOpen: false,
+      showToast: false,
+    }
+  );
+
+  async function uiReset() {
+    dispatch('PUBLISH_STARTED');
+    await saveCurrentConfigs();
+    dispatch('PUBLISH_SUCCESS');
+  }
 
   return (
     <>
-      <Button unelevated disabled={disabled} onClick={() => saveCurrentConfigs()}>
-        Publish Changes
+      <Button
+        unelevated
+        disabled={disabled}
+        onClick={() => dispatch('SHOW_PUBLISH_DIALOG')}>
+        Publish changes
       </Button>
+      <PublishDialog
+        open={state.dialogOpen}
+        cancel={() => dispatch('PUBLISH_CANCEL')}
+        publish={uiReset}
+      />
     </>
   );
-}
-export const RevertButton: React.FunctionComponent<{ 
-  revertChanges: () => void; 
-  disabled: boolean}> = ({revertChanges, disabled}) => {
+};
 
+function PublishDialog({ open, cancel, publish }: PublishDialogProps) {
   return (
-    <>
-      <Button disabled={disabled} onClick={() => revertChanges()}>
-      Revert Changes
-      </Button>
-    </>
+    <Dialog
+      open={open}
+      onClose={(event) => {
+        if (event.detail.action === 'publish') {
+          publish();
+        } else {
+          cancel();
+        }
+      }}
+    >
+      
+      <DialogTitle>Publishing</DialogTitle>
+      <DialogContent>
+        <div className={styles.explainerSection}>
+          <Typography use="body1">
+            This will publish your changes to your local emulator and app.
+          </Typography>
+        </div>
+      </DialogContent>
+      <DialogActions>
+        <DialogButton action="close">Cancel</DialogButton>
+        <DialogButton action="publish" isDefaultAction>Publish</DialogButton>
+      </DialogActions>
+    </Dialog>
   );
 }
-
