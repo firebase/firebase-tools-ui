@@ -50,7 +50,7 @@ const ParamConditionListItem: React.FunctionComponent<
 
         <GridCell span={3} className={styles.paramListHeaderGridItem}>
           <Chip
-            className={tagColor ? styles[`condition_color_${tagColor}`] : ""}
+            className={tagColor ? styles[`condition_color_${tagColor.toLowerCase()}`]: ""}
             label={name}
             selected={isSelected}
             disabled
@@ -170,11 +170,7 @@ const ParamDetails: React.FunctionComponent<{
             </GridCell>
             <GridCell span={3} className={styles.paramListHeaderGridItem}>
               <Chip
-                style={
-                  activeConditionColor
-                    ? { backgroundColor: activeConditionColor }
-                    : {}
-                }
+                className={activeConditionColor ? styles[`condition_color_${activeConditionColor.toLowerCase()}`] : ""}
                 label={activeConditionName}
                 selected={true}
                 checkmark={true}
