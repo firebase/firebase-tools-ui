@@ -122,13 +122,8 @@ export default function EditDialog({
     >
       <DialogTitle>Edit values for {parameterName}</DialogTitle>
       <DialogContent>
-        <div className={styles.explainerSection}>
-          <Typography use="body1">
-            This will only change the value in the emulator.
-          </Typography>
-        </div>
         <ConditionField
-          label="Default condition"
+          label="Default condition value"
           conditionValue={
             editedParam.defaultValue as RemoteConfigParameterValue
           }
@@ -152,7 +147,7 @@ export default function EditDialog({
                 return (
                   <ConditionField
                     key={conditionName}
-                    label={conditionName}
+                    label={`${conditionName} value`}
                     conditionValue={value}
                     update={(newValue: string) => {
                       updateCondition({
