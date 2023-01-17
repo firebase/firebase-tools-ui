@@ -28,6 +28,7 @@ import { CardActionBar } from '../common/CardActionBar';
 import { useIsEmulatorDisabled } from '../common/EmulatorConfigProvider';
 import { EmulatorDisabled } from '../common/EmulatorDisabled';
 import { Spinner } from '../common/Spinner';
+import { AdvancedEditCard } from './AdvancedEditCard';
 import { useTemplate } from './api';
 import { PublishButton, ResetButton } from './ConfigButtons';
 import EditDialog from './EditDialog';
@@ -101,6 +102,10 @@ function RemoteConfig() {
             />
           ) : null}
         </Card>
+      </Elevation>
+
+      <Elevation z="2" wrap>
+        <AdvancedEditCard />
       </Elevation>
     </GridCell>
   );
