@@ -18,6 +18,15 @@ import { Chip } from '@rmwc/chip';
 import { Grid, GridCell } from '@rmwc/grid';
 import { IconButton } from '@rmwc/icon-button';
 import { CollapsibleList, List, ListItem, ListItemMeta } from '@rmwc/list';
+import {
+  DataTable,
+  DataTableBody,
+  DataTableCell,
+  DataTableContent,
+  DataTableHead,
+  DataTableHeadCell,
+  DataTableRow,
+} from '@rmwc/data-table';
 import { Radio } from '@rmwc/radio';
 import { Theme, ThemeProvider } from '@rmwc/theme';
 import { Typography } from '@rmwc/typography';
@@ -146,43 +155,30 @@ const ParamDetails: React.FunctionComponent<{
   }
 
   return (
-    <CollapsibleList
-      open={expanded}
-      handle={
-        <ListItem
-          className={styles.rcListItem}
-          onClick={() => {
-            return setExpanded(!expanded);
-          }}
-        >
-          <Grid className={styles.parameterListItemGrid}>
-            <GridCell span={3} className={styles.paramListHeaderGridItem}>
-              <ListItemMeta
-                icon="chevron_right"
-                className={styles.listItemExpandIndicator}
-              />
-              <Typography
+    <DataTableRow>
+          <DataTableCell>
+            <button onClick={() => setExpanded(!expanded)}>{">"}</button>
+          </DataTableCell>
+          <DataTableCell>
+          <Typography
                 use="body1"
                 className={styles.remoteConfigParameterName}
-              >
-                {name}
-              </Typography>
-            </GridCell>
-            <GridCell span={3} className={styles.paramListHeaderGridItem}>
-              <Chip
+              >{name}</Typography>
+          </DataTableCell>
+          <DataTableCell>
+          {!expanded ? <Chip
                 className={activeConditionColor ? styles[`condition_color_${activeConditionColor.toLowerCase()}`] : ""}
                 label={activeConditionName}
                 selected={true}
                 checkmark={true}
                 disabled
-              />
-            </GridCell>
-
-            <GridCell span={5} className={styles.paramListHeaderGridItem}>
-              {remoteConfigParameterValueToString(activeConditionValue)}
-            </GridCell>
-            <GridCell span={1} className={styles.paramListHeaderGridItem}>
-              <IconButton
+              /> : 'Hello'}
+          </DataTableCell>
+          <DataTableCell>
+          {remoteConfigParameterValueToString(activeConditionValue)}
+          </DataTableCell>
+          <DataTableCell>
+          <IconButton
                 className={styles.conditionEditButton}
                 icon="edit"
                 aria-label="edit"
@@ -191,29 +187,27 @@ const ParamDetails: React.FunctionComponent<{
                   edit();
                 }}
               />
-            </GridCell>
-          </Grid>
-        </ListItem>
-      }
-    >
-      {conditions ? (
-        conditions
-          .filter((condition) => condition.name !== '!isEmulator')
-          .map((condition) => {
-            return (
-              <ParamConditionListItem
-                isSelected={checkEqual(condition.value, servedValue)}
-                setSelectedCondition={() => setSelectedValue(condition.value)}
-                key={condition.name}
-                {...condition}
-              />
-            );
-          })
-      ) : (
-        <></>
-      )}
-    </CollapsibleList>
+          </DataTableCell>
+
+    </DataTableRow>
   );
+      //   {conditions ? (
+    //     conditions
+    //       .filter((condition) => condition.name !== '!isEmulator')
+    //       .map((condition) => {
+    //         return (
+    //           <ParamConditionListItem
+    //             isSelected={checkEqual(condition.value, servedValue)}
+    //             setSelectedCondition={() => setSelectedValue(condition.value)}
+    //             key={condition.name}
+    //             {...condition}
+    //           />
+    //         );
+    //       })
+    //   ) : (
+    //     <></>
+    //   )}
+    // </CollapsibleList>
 };
 
 export const TemplateViewer: React.FunctionComponent<{
@@ -224,33 +218,16 @@ export const TemplateViewer: React.FunctionComponent<{
 }> = ({ rcTemplate, paramNameFilter, editParam, setEditTemplate}) => {
   return (
     <>
-      <ThemeProvider
-        options={{ surface: grey100 }}
-        className={styles.paramListHeader}
-      >
-        <Theme
-          use={['surface']}
-          className={styles.paramListHeaderInner}
-          tag="div"
-        >
-          <Grid align="left" className={styles.paramListHeaderGrid}>
-            <GridCell span={1} />
-            <GridCell span={2} className={styles.paramListHeaderGridItem}>
-              <Typography use="subtitle2">Name</Typography>
-            </GridCell>
-            <GridCell span={3} className={styles.paramListHeaderGridItem}>
-              <Typography use="subtitle2">Conditions</Typography>
-            </GridCell>
-            <GridCell span={5} className={styles.paramListHeaderGridItem}>
-              <Typography use="subtitle2">Value</Typography>
-            </GridCell>
-            <GridCell span={1} className={styles.paramListHeaderGridItem}>
-              <Typography use="subtitle2">Actions</Typography>
-            </GridCell>
-          </Grid>
-        </Theme>
-      </ThemeProvider>
-      <List className={styles.paramListContents}>
+       <DataTable>
+      <DataTableContent>
+        <DataTableHead>
+          <DataTableRow>
+          <DataTableHeadCell>Parameter name</DataTableHeadCell>
+          <DataTableHeadCell>Conditions</DataTableHeadCell>
+          <DataTableHeadCell>Value</DataTableHeadCell>
+          <DataTableHeadCell>Edit</DataTableHeadCell>
+
+            </DataTableRow></DataTableHead><DataTableBody>
         {Object.keys(rcTemplate.parameters)
           .filter((paramName) => {
             const param = rcTemplate.parameters[paramName];
@@ -304,7 +281,9 @@ export const TemplateViewer: React.FunctionComponent<{
               />
             );
           })}
-      </List>
+      </DataTableBody>
+            
+            </DataTableContent></DataTable>
     </>
   );
 };
