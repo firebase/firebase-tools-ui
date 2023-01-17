@@ -37,7 +37,8 @@ import styles from './RemoteConfig.module.scss';
 import { TemplateViewer } from './TemplateViewer';
 
 function RemoteConfig() {
-  const { template, updateTemplate, revertTemplate, refetchTemplate } = useTemplate();
+  const { template, updateTemplate, revertTemplate, refetchTemplate } =
+    useTemplate();
 
   const [searchText, setSearchText] = useState('');
   const [paramBeingEdited, editParam] = useState<string | undefined>(undefined);
@@ -59,7 +60,11 @@ function RemoteConfig() {
 
   return (
     <GridCell span={12}>
-      <div className={editing ? styles.disabledTopActions : styles.enabledTopActions}>
+      <div
+        className={
+          editing ? styles.disabledTopActions : styles.enabledTopActions
+        }
+      >
         {!editing ? (
           <div className={styles.unpublishText}>
             <span className="material-icons">error</span>
@@ -67,12 +72,16 @@ function RemoteConfig() {
           </div>
         ) : null}
 
-        <ResetButton reset={resetToTemplate} revertChanges={() => setEditTemplate(JSON.parse(JSON.stringify(template)))} />
+        <ResetButton
+          reset={resetToTemplate}
+          revertChanges={() =>
+            setEditTemplate(JSON.parse(JSON.stringify(template)))
+          }
+        />
         <PublishButton
           saveCurrentConfigs={saveCurrentConfigs}
           disabled={editing}
         />
-
       </div>
       <Elevation z="2" wrap>
         <Card>
@@ -111,7 +120,9 @@ function RemoteConfig() {
   );
 }
 
-const RemoteConfigRouteSuspended: React.FC<React.PropsWithChildren<unknown>> = () => {
+const RemoteConfigRouteSuspended: React.FC<
+  React.PropsWithChildren<unknown>
+> = () => {
   const isDisabled = useIsEmulatorDisabled('remoteconfig');
   return isDisabled ? (
     <EmulatorDisabled productName="Remote Config" />

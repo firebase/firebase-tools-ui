@@ -21,30 +21,29 @@ import React from 'react';
 import styles from './AdvancedEditCard.module.scss';
 
 export const AdvancedEditCard: React.FC<{}> = () => {
-
   return (
-      <Card className={styles.wrapper}>
-          <div>
-            <Typography
-              use="headline6"
-              tag="div"
-              theme="textPrimaryOnBackground"
-            >
-              Need to make more advanced edits?
-            </Typography>
-            <Typography use="body2" theme="textPrimaryOnBackground">
-             <p>Edit your local <code>remoteconfig.template.json</code> file in your favorite code editor to make more in-depth changes to your Remote Config template, such as modifying in-app default values.</p>
-            </Typography>
-            <Typography use="body2" theme="textPrimaryOnBackground">
-              <a
-                target="_blank"
-                rel="noopener noreferrer"
-                href="https://firebase.google.com/docs/remote-config/templates"
-              >
-                Learn more about Remote Config templates
-              </a>
-            </Typography>
-          </div>
-      </Card>
+    <Card className={styles.wrapper}>
+      <div>
+        <Typography use="headline6" tag="div" theme="textPrimaryOnBackground">
+          Need to make more advanced edits?
+        </Typography>
+        <Typography use="body2" theme="textPrimaryOnBackground">
+          <p>
+            Edit your local <code>remoteconfig.template.json</code> file in your
+            favorite code editor to make more in-depth changes to your Remote
+            Config template, such as modifying in-app default values.
+          </p>
+        </Typography>
+        <Typography use="body2" theme="textPrimaryOnBackground">
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://firebase.google.com/docs/remote-config/templates"
+          >
+            Learn more about Remote Config templates
+          </a>
+        </Typography>
+      </div>
+    </Card>
   );
 };
