@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-import { useConfig, useEmulatorConfig } from '../common/EmulatorConfigProvider';
-import { useRequest } from '../common/useRequest';
-
 import type {
   RemoteConfigParameterValue,
   RemoteConfigTemplate,
 } from 'firebase-admin/remote-config';
 
+import { useConfig, useEmulatorConfig } from '../common/EmulatorConfigProvider';
+import { useRequest } from '../common/useRequest';
 
 export function remoteConfigParameterValueToString(
   paramValue: RemoteConfigParameterValue

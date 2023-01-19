@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 import { Chip } from '@rmwc/chip';
 import { Grid, GridCell } from '@rmwc/grid';
 import { IconButton } from '@rmwc/icon-button';
@@ -50,7 +50,11 @@ const ParamConditionListItem: React.FunctionComponent<
 
         <GridCell span={3} className={styles.paramListHeaderGridItem}>
           <Chip
-            className={tagColor ? styles[`condition_color_${tagColor.toLowerCase()}`]: ""}
+            className={
+              tagColor
+                ? styles[`condition_color_${tagColor.toLowerCase()}`]
+                : ''
+            }
             label={name}
             selected={isSelected}
             disabled
@@ -170,7 +174,13 @@ const ParamDetails: React.FunctionComponent<{
             </GridCell>
             <GridCell span={3} className={styles.paramListHeaderGridItem}>
               <Chip
-                className={activeConditionColor ? styles[`condition_color_${activeConditionColor.toLowerCase()}`] : ""}
+                className={
+                  activeConditionColor
+                    ? styles[
+                        `condition_color_${activeConditionColor.toLowerCase()}`
+                      ]
+                    : ''
+                }
                 label={activeConditionName}
                 selected={true}
                 checkmark={true}
@@ -221,7 +231,7 @@ export const TemplateViewer: React.FunctionComponent<{
   paramNameFilter: string;
   editParam: (paramName: string) => any;
   setEditTemplate: (template: any) => any;
-}> = ({ rcTemplate, paramNameFilter, editParam, setEditTemplate}) => {
+}> = ({ rcTemplate, paramNameFilter, editParam, setEditTemplate }) => {
   return (
     <>
       <ThemeProvider
@@ -300,7 +310,7 @@ export const TemplateViewer: React.FunctionComponent<{
                 defaultValue={defaultValue}
                 conditions={conditions}
                 edit={() => editParam(paramName)}
-                setEditTemplate= {setEditTemplate}
+                setEditTemplate={setEditTemplate}
               />
             );
           })}
