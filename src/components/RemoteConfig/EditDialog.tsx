@@ -21,16 +21,13 @@ import {
   DialogContent,
   DialogTitle,
 } from '@rmwc/dialog';
-import { Typography } from '@rmwc/typography';
-import { useReducer } from 'react';
-
-import { Field } from '../common/Field';
-import styles from './RemoteConfig.module.scss';
-
 import type {
   RemoteConfigParameter,
   RemoteConfigParameterValue,
 } from 'firebase-admin/remote-config';
+import { useReducer } from 'react';
+
+import { Field } from '../common/Field';
 
 export type EditDialogProps = {
   open: boolean;
@@ -49,29 +46,35 @@ function ConditionField({
   conditionValue: RemoteConfigParameterValue;
   update: (newValue: string) => void;
 }) {
-  let valueStr;
-  let disabled;
-
   if ('value' in conditionValue) {
-    disabled = false;
-    valueStr = conditionValue.value;
+    return (
+      <Field
+        name="parameterValue"
+        label={label}
+        type="text"
+        onChange={(e) => {
+          const newValue = (e.target as HTMLInputElement).value;
+          update(newValue);
+        }}
+        value={conditionValue.value}
+      />
+    );
   } else {
-    disabled = true;
-    valueStr = 'In-app default';
+    return (
+      <Field
+        name="parameterValue"
+        disabled
+        label={label}
+        tip="Cannot edit values set to in-app default"
+        type="text"
+        onChange={(e) => {
+          const newValue = (e.target as HTMLInputElement).value;
+          update(newValue);
+        }}
+        value="In-app default"
+      />
+    );
   }
-  return (
-    <Field
-      name="parameterValue"
-      disabled={disabled}
-      label={label}
-      type="text"
-      onChange={(e) => {
-        const newValue = (e.target as HTMLInputElement).value;
-        update(newValue);
-      }}
-      value={valueStr}
-    />
-  );
 }
 
 export default function EditDialog({
