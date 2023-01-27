@@ -28,6 +28,7 @@ import { CardActionBar } from '../common/CardActionBar';
 import { useIsEmulatorDisabled } from '../common/EmulatorConfigProvider';
 import { EmulatorDisabled } from '../common/EmulatorDisabled';
 import { Spinner } from '../common/Spinner';
+import { AdvancedEditCard } from './AdvancedEditCard';
 import { useTemplate } from './api';
 import { PublishButton, ResetButton } from './ConfigButtons';
 import EditDialog from './EditDialog';
@@ -36,7 +37,8 @@ import styles from './RemoteConfig.module.scss';
 import { TemplateViewer } from './TemplateViewer';
 
 function RemoteConfig() {
-  const { template, updateTemplate, revertTemplate, refetchTemplate } = useTemplate();
+  const { template, updateTemplate, revertTemplate, refetchTemplate } =
+    useTemplate();
 
   const [searchText, setSearchText] = useState('');
   const [edited, setEdited] = useState(false);
@@ -71,20 +73,22 @@ function RemoteConfig() {
 
   return (
     <GridCell span={12}>
-      <div className={editing ? styles.disabledTopActions : styles.enabledTopActions}>
+      <div
+        className={
+          editing ? styles.disabledTopActions : styles.enabledTopActions
+        }
+      >
         {!editing ? (
           <div className={styles.unpublishText}>
             <span className="material-icons">error</span>
             <p>Unpublished changes</p>
           </div>
         ) : null}
-
         <ResetButton reset={resetToTemplate} revertChanges={() => updateEditTemplate()} />
         <PublishButton
           saveCurrentConfigs={saveCurrentConfigs}
           disabled={editing}
         />
-
       </div>
       <Elevation z="2" wrap>
         <Card>
@@ -116,11 +120,17 @@ function RemoteConfig() {
           ) : null}
         </Card>
       </Elevation>
+
+      <Elevation z="2" wrap>
+        <AdvancedEditCard />
+      </Elevation>
     </GridCell>
   );
 }
 
-const RemoteConfigRouteSuspended: React.FC<React.PropsWithChildren<unknown>> = () => {
+const RemoteConfigRouteSuspended: React.FC<
+  React.PropsWithChildren<unknown>
+> = () => {
   const isDisabled = useIsEmulatorDisabled('remoteconfig');
   return isDisabled ? (
     <EmulatorDisabled productName="Remote Config" />
