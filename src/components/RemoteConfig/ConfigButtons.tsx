@@ -44,7 +44,13 @@ export type PublishDialogProps = {
   publish: () => Promise<void>;
 };
 
-export function ResetButton({ reset, revertChanges }: { reset: () => Promise<void>; revertChanges: () => void;}) {
+export function ResetButton({
+  reset,
+  revertChanges,
+}: {
+  reset: () => Promise<void>;
+  revertChanges: () => void;
+}) {
   const [state, dispatch] = useReducer(
     (state: { dialogOpen: boolean; showToast: boolean }, action: string) => {
       const newState = { ...state };
@@ -147,7 +153,6 @@ export const PublishButton: React.FunctionComponent<{
   saveCurrentConfigs: () => Promise<void>;
   disabled: boolean;
 }> = ({ saveCurrentConfigs, disabled }) => {
-
   const [state, dispatch] = useReducer(
     (state: { dialogOpen: boolean; showToast: boolean }, action: string) => {
       const newState = { ...state };
@@ -184,7 +189,8 @@ export const PublishButton: React.FunctionComponent<{
       <Button
         unelevated
         disabled={disabled}
-        onClick={() => dispatch('SHOW_PUBLISH_DIALOG')}>
+        onClick={() => dispatch('SHOW_PUBLISH_DIALOG')}
+      >
         Publish changes
       </Button>
       <PublishDialog
@@ -208,7 +214,6 @@ function PublishDialog({ open, cancel, publish }: PublishDialogProps) {
         }
       }}
     >
-      
       <DialogTitle>Publishing</DialogTitle>
       <DialogContent>
         <div className={styles.explainerSection}>
@@ -219,7 +224,9 @@ function PublishDialog({ open, cancel, publish }: PublishDialogProps) {
       </DialogContent>
       <DialogActions>
         <DialogButton action="close">Cancel</DialogButton>
-        <DialogButton action="publish" isDefaultAction>Publish</DialogButton>
+        <DialogButton action="publish" isDefaultAction>
+          Publish
+        </DialogButton>
       </DialogActions>
     </Dialog>
   );
