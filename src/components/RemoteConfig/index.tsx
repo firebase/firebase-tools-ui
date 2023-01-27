@@ -22,7 +22,7 @@ import type {
   RemoteConfigTemplate,
 } from 'firebase-admin/remote-config';
 import isEqual from 'lodash/isEqual';
-import { Suspense, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 
 import { CardActionBar } from '../common/CardActionBar';
 import { useIsEmulatorDisabled } from '../common/EmulatorConfigProvider';
@@ -39,21 +39,34 @@ function RemoteConfig() {
   const { template, updateTemplate, revertTemplate, refetchTemplate } = useTemplate();
 
   const [searchText, setSearchText] = useState('');
+  const [edited, setEdited] = useState(false);
   const [paramBeingEdited, editParam] = useState<string | undefined>(undefined);
   const [editTemplate, setEditTemplate] = useState(
     JSON.parse(JSON.stringify(template))
   );
 
-  const editing = isEqual(template, editTemplate);
+  const editing = isEqual(template, editTemplate) && !edited;
+
+  useEffect(() => {
+    if (!isEqual(template, editTemplate) && !edited) {
+      setEditTemplate(JSON.parse(JSON.stringify(template)));
+    }
+  }, [template, editTemplate, edited]);
 
   async function saveCurrentConfigs() {
     await updateTemplate(editTemplate);
     await refetchTemplate();
+    setEdited(false);
   }
 
+  function updateEditTemplate() {
+    setEditTemplate(JSON.parse(JSON.stringify(template)));
+    setEdited(true);
+  }
   async function resetToTemplate() {
     await revertTemplate();
-    setEditTemplate(JSON.parse(JSON.stringify(template)));
+    updateEditTemplate();
+    setEdited(false);
   }
 
   return (
@@ -66,7 +79,7 @@ function RemoteConfig() {
           </div>
         ) : null}
 
-        <ResetButton reset={resetToTemplate} revertChanges={() => setEditTemplate(JSON.parse(JSON.stringify(template)))} />
+        <ResetButton reset={resetToTemplate} revertChanges={() => updateEditTemplate()} />
         <PublishButton
           saveCurrentConfigs={saveCurrentConfigs}
           disabled={editing}
@@ -97,6 +110,7 @@ function RemoteConfig() {
                 newTemplate.parameters[paramBeingEdited] = updatedParam;
                 setEditTemplate(JSON.parse(JSON.stringify(newTemplate)));
                 editParam(undefined);
+                setEdited(true);
               }}
             />
           ) : null}
