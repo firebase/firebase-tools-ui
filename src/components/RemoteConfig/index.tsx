@@ -59,13 +59,13 @@ function RemoteConfig() {
     setEdited(false);
   }
 
-  function updateEditTemplate() {
-    setEditTemplate(JSON.parse(JSON.stringify(template)));
+  function updateEditTemplate(updatedTemplate: any) {
+    setEditTemplate(JSON.parse(JSON.stringify(updatedTemplate || template)));
     setEdited(true);
   }
   async function resetToTemplate() {
     await revertTemplate();
-    updateEditTemplate();
+    updateEditTemplate(template);
     setEdited(false);
   }
 
@@ -79,7 +79,7 @@ function RemoteConfig() {
           </div>
         ) : null}
 
-        <ResetButton reset={resetToTemplate} revertChanges={() => updateEditTemplate()} />
+        <ResetButton reset={resetToTemplate} revertChanges={() => updateEditTemplate(template)} />
         <PublishButton
           saveCurrentConfigs={saveCurrentConfigs}
           disabled={editing}
@@ -95,7 +95,7 @@ function RemoteConfig() {
             rcTemplate={editTemplate}
             paramNameFilter={searchText}
             editParam={(paramName: string) => editParam(paramName)}
-            setEditTemplate={setEditTemplate}
+            setEditTemplate={updateEditTemplate}
           />
           {paramBeingEdited !== undefined ? (
             <EditDialog

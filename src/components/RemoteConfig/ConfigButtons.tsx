@@ -54,7 +54,13 @@ export function ResetButton({ reset, revertChanges }: { reset: () => Promise<voi
         newState.showToast = false;
       } else if (action === 'RESET_STARTED') {
         reset().then();
+      } else if (action === 'REVERT_STARTED') {
+        newState.dialogOpen = false;
+        newState.showToast = false;
       } else if (action === 'RESET_SUCCESS') {
+        newState.dialogOpen = false;
+        newState.showToast = true;
+      } else if (action === 'REVERT_SUCCESS') {
         newState.dialogOpen = false;
         newState.showToast = true;
       } else if (action === 'RESET_CANCEL') {
@@ -77,6 +83,12 @@ export function ResetButton({ reset, revertChanges }: { reset: () => Promise<voi
     dispatch('RESET_SUCCESS');
   }
 
+  async function uiRevert() {
+    dispatch('REVERT_STARTED');
+    await revertChanges();
+    dispatch('REVERT_SUCCESS');
+  }
+
   return (
     <>
       <Button onClick={() => dispatch('SHOW_RESET_DIALOG')}>
@@ -86,7 +98,7 @@ export function ResetButton({ reset, revertChanges }: { reset: () => Promise<voi
         open={state.dialogOpen}
         cancel={() => dispatch('RESET_CANCEL')}
         reset={uiReset}
-        revertChanges={revertChanges}
+        revertChanges={uiRevert}
       />
       <Snackbar
         open={state.showToast}
