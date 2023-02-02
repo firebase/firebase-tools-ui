@@ -22,7 +22,7 @@ import type {
   RemoteConfigTemplate,
 } from 'firebase-admin/remote-config';
 import isEqual from 'lodash/isEqual';
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useMemo, useState } from 'react';
 
 import { CardActionBar } from '../common/CardActionBar';
 import { useIsEmulatorDisabled } from '../common/EmulatorConfigProvider';
@@ -47,9 +47,9 @@ function RemoteConfig() {
     JSON.parse(JSON.stringify(template))
   );
 
-  const editing = isEqual(template, editTemplate) && !edited;
+  const unchanged = isEqual(template, editTemplate) && !edited;
 
-  useEffect(() => {
+  useMemo(() => {
     if (!isEqual(template, editTemplate) && !edited) {
       setEditTemplate(JSON.parse(JSON.stringify(template)));
     }
@@ -75,10 +75,10 @@ function RemoteConfig() {
     <GridCell span={12}>
       <div
         className={
-          editing ? styles.disabledTopActions : styles.enabledTopActions
+          unchanged ? styles.disabledTopActions : styles.enabledTopActions
         }
       >
-        {!editing ? (
+        {!unchanged ? (
           <div className={styles.unpublishText}>
             <span className="material-icons">error</span>
             <p>Unpublished changes</p>
@@ -88,7 +88,7 @@ function RemoteConfig() {
         <ResetButton reset={resetToTemplate} revertChanges={() => updateEditTemplate(template)} />
         <PublishButton
           saveCurrentConfigs={saveCurrentConfigs}
-          disabled={editing}
+          disabled={unchanged}
         />
       </div>
       <Elevation z="2" wrap>
