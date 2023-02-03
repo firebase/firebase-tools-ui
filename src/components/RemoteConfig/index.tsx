@@ -22,7 +22,7 @@ import type {
   RemoteConfigTemplate,
 } from 'firebase-admin/remote-config';
 import isEqual from 'lodash/isEqual';
-import { Suspense, useState } from 'react';
+import { Suspense, useMemo, useState } from 'react';
 
 import { CardActionBar } from '../common/CardActionBar';
 import { useIsEmulatorDisabled } from '../common/EmulatorConfigProvider';
@@ -41,46 +41,54 @@ function RemoteConfig() {
     useTemplate();
 
   const [searchText, setSearchText] = useState('');
+  const [edited, setEdited] = useState(false);
   const [paramBeingEdited, editParam] = useState<string | undefined>(undefined);
   const [editTemplate, setEditTemplate] = useState(
     JSON.parse(JSON.stringify(template))
   );
 
-  const editing = isEqual(template, editTemplate);
+  const unchanged = isEqual(template, editTemplate) && !edited;
+
+  useMemo(() => {
+    if (!isEqual(template, editTemplate) && !edited) {
+      setEditTemplate(JSON.parse(JSON.stringify(template)));
+    }
+  }, [template, editTemplate, edited]);
 
   async function saveCurrentConfigs() {
     await updateTemplate(editTemplate);
     await refetchTemplate();
+    setEdited(false);
   }
 
+  function updateEditTemplate(updatedTemplate: any) {
+    setEditTemplate(JSON.parse(JSON.stringify(updatedTemplate || template)));
+    setEdited(true);
+  }
   async function resetToTemplate() {
     await revertTemplate();
-    setEditTemplate(JSON.parse(JSON.stringify(template)));
+    updateEditTemplate(template);
+    setEdited(false);
   }
 
   return (
     <GridCell span={12}>
       <div
         className={
-          editing ? styles.disabledTopActions : styles.enabledTopActions
+          unchanged ? styles.disabledTopActions : styles.enabledTopActions
         }
       >
-        {!editing ? (
+        {!unchanged ? (
           <div className={styles.unpublishText}>
             <span className="material-icons">error</span>
             <p>Unpublished changes</p>
           </div>
         ) : null}
 
-        <ResetButton
-          reset={resetToTemplate}
-          revertChanges={() =>
-            setEditTemplate(JSON.parse(JSON.stringify(template)))
-          }
-        />
+        <ResetButton reset={resetToTemplate} revertChanges={() => updateEditTemplate(template)} />
         <PublishButton
           saveCurrentConfigs={saveCurrentConfigs}
-          disabled={editing}
+          disabled={unchanged}
         />
       </div>
       <Elevation z="2" wrap>
@@ -92,7 +100,7 @@ function RemoteConfig() {
             rcTemplate={editTemplate}
             paramNameFilter={searchText}
             editParam={(paramName: string) => editParam(paramName)}
-            setEditTemplate={setEditTemplate}
+            setEditTemplate={updateEditTemplate}
           />
           {paramBeingEdited !== undefined ? (
             <EditDialog
@@ -107,6 +115,7 @@ function RemoteConfig() {
                 newTemplate.parameters[paramBeingEdited] = updatedParam;
                 setEditTemplate(JSON.parse(JSON.stringify(newTemplate)));
                 editParam(undefined);
+                setEdited(true);
               }}
             />
           ) : null}
