@@ -60,7 +60,7 @@ export const LocalWarningCallout: React.FC<
               label="View project"
               aria-label={`View this project, ${projectId}, in the firebase console`}
             />
-            <Button label="Dismiss" aria-label="Dismiss this reminder notice" onClick={dismiss} />
+            <Button label="Dismiss" aria-label="Dismiss this reminder banner" onClick={dismiss} />
           </>
         }
       >

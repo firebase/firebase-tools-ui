@@ -20,24 +20,23 @@
 
 .Callout {
   display: flex;
+  flex-wrap: wrap;
 }
 
 .Callout-body {
   padding: 12px 24px;
-  width: 100%;
+  min-width: 50%;
 }
 
 .Callout-message {
   display: flex;
   align-items: stretch;
-  width: 100%;
   .Callout-icon {
     color: white;
   }
 }
 
 .Callout-header-wrapper {
-  width: 100%;
   overflow: hidden;
   flex: 1;
 }
@@ -50,7 +49,7 @@
 .Callout-actions {
   align-items: center;
   display: flex;
-  flex-direction: row;
+  flex-wrap: wrap;
   flex: 1 1 auto;
   justify-content: flex-end;
   padding-right: 16px;
