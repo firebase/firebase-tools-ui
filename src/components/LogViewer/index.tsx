@@ -64,6 +64,8 @@ export const LogViewer: React.FC<React.PropsWithChildren<unknown>> = () => {
 
   return (
     <GridCell span={12}>
+      <h1>Logs Page</h1>
+      <br/>
       <Elevation z={2} wrap>
         <Card className="LogViewer">
           <QueryBar

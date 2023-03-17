@@ -68,7 +68,7 @@ const Overview: React.FC<
           <LocalWarningCallout projectId={config.projectId} />
         )}
         <GridCell span={12}>
-          <Typography use="headline5">Emulator overview</Typography>
+          <h1>Emulator Overview</h1>
         </GridCell>
         <EmulatorCard
           name="Authentication emulator"

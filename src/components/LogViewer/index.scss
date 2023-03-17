@@ -21,7 +21,7 @@
   display: grid;
   grid-template-areas: 'query' 'history' 'debug';
   grid-template-rows: fit-content(100%) 1fr fit-content(100%);
-  height: $app-remaining-viewport-height-for-content;
+  height: 90%;
 
   .QueryBar {
     grid-area: query;

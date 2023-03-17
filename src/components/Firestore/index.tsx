@@ -133,6 +133,8 @@ export const Firestore: React.FC<React.PropsWithChildren<unknown>> = React.memo(
     ) : (
       <FirestoreStore>
         <GridCell span={12} className="Firestore">
+
+          <h1>Firestore Emulator</h1>
           <div className="Firestore-sub-tabs">
             <TabBar theme="onSurface" activeTabIndex={activeTabIndex}>
               {subTabs}
