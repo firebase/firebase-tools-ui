@@ -82,7 +82,7 @@ See the section about [running tests](https://facebook.github.io/create-react-ap
 To run the test runner with emulators, use:
 
 ```bash
-firebase emulators:exec --project sample --only firestore 'npm test'
+firebase emulators:exec --project sample 'npm test'
 
 firebase emulators:exec --project sample --only firestore 'npm test AddCollectionDialog.test.tsx'
 ```
