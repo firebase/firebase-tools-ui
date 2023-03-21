@@ -40,7 +40,7 @@ it('renders an overview when config is loaded', () => {
       </TestEmulatorConfigProvider>
     </MemoryRouter>
   );
-  expect(getByText('Emulator overview')).not.toBeNull();
+  expect(getByText('Emulator Overview')).not.toBeNull();
 });
 
 it('shows port for emulator that are loaded and N/A for not loaded', () => {
