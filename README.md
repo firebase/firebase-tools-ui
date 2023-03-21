@@ -87,6 +87,12 @@ firebase emulators:exec --project sample 'npm test'
 firebase emulators:exec --project sample --only firestore 'npm test AddCollectionDialog.test.tsx'
 ```
 
+To disable the Jest interactive mode use the flag `watchAll=false` like so:
+
+```bash
+firebase emulators:exec --project sample --only firestore 'npm test -- --watchAll=false'
+```
+
 If you get port conflict errors, make sure to stop other instances of the Firebase Emulator Suite (e.g. the one you've started for the development server above) and try again.
 
 #### `npm run build`
