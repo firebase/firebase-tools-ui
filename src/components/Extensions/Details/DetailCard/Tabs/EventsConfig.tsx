@@ -30,8 +30,8 @@ export function EventsConfig() {
   const extension = useExtension()!;
   const eventsByType = !!extension.events
     ? keyBy(extension.events, function (e: Event) {
-        return e.type;
-      })
+      return e.type;
+    })
     : {};
   const eventsByPrefix = groupBy(
     extension.allowedEventTypes ?? [],
@@ -134,13 +134,13 @@ export function EventsConfig() {
           Events aren't emitted to production Eventarc in the emulator, and
           there won't be any cost.
         </Callout>
-        <p>
-          <Typography
-            className={styles.description}
-            use="caption"
-            tag="div"
-            theme="secondary"
-          >
+        <Typography
+          className={styles.description}
+          use="caption"
+          tag="div"
+          theme="secondary"
+        >
+          <p>
             If you enable events, you can{' '}
             <a href="https://firebase.google.com/docs/extensions/install-extensions#eventarc">
               write custom event handlers
@@ -151,8 +151,8 @@ export function EventsConfig() {
             <a href={`/extensions/${extension.id}`}>
               How do events in this extension work?
             </a>
-          </Typography>
-        </p>
+          </p>
+        </Typography>
         {channelLocationDiv}
         {allowedEventTypesDiv}
       </div>

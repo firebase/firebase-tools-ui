@@ -37,11 +37,13 @@ describe('RequestsTableRow', () => {
     const { getByRole } = render(
       <Router history={history}>
         <table>
-          <RequestsTableRow
-            request={FAKE_EVALUATION}
-            requestId={FAKE_EVALUATION_ID}
-            setShowCopyNotification={SET_SHOW_COPY_NOTIFICATION}
-          />
+          <tbody>
+            <RequestsTableRow
+              request={FAKE_EVALUATION}
+              requestId={FAKE_EVALUATION_ID}
+              setShowCopyNotification={SET_SHOW_COPY_NOTIFICATION}
+            />
+          </tbody>
         </table>
       </Router>
     );
