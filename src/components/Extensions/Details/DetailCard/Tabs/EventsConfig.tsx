@@ -30,8 +30,8 @@ export function EventsConfig() {
   const extension = useExtension()!;
   const eventsByType = !!extension.events
     ? keyBy(extension.events, function (e: Event) {
-      return e.type;
-    })
+        return e.type;
+      })
     : {};
   const eventsByPrefix = groupBy(
     extension.allowedEventTypes ?? [],
