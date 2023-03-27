@@ -99,7 +99,7 @@ const Overview: React.FC<
           icon={<FunctionsIcon theme="secondary" />}
           config={config.functions}
           linkTo="/functions"
-          linkLabel="View logs"
+          linkLabel="Go to the logs page"
           testId="emulator-info-functions"
         />
         <EmulatorCard
@@ -107,7 +107,7 @@ const Overview: React.FC<
           icon={<StorageIcon />}
           config={config.storage}
           linkTo={storagePath}
-          linkLabel="Storage"
+          linkLabel="Go to storage emulator"
           testId="emulator-info-storage"
         />
         <EmulatorCard
