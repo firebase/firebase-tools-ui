@@ -1,6 +1,6 @@
 {
   "name": "firebase-tools-ui",
-  "version": "1.11.4",
+  "version": "1.11.5",
   "private": true,
   "engines": {
     "node": "^14.18.0 || >=16.4.0"
