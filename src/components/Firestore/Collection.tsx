@@ -32,7 +32,7 @@ import {
   query,
   setDoc,
   where,
-  limit,
+  limit
 } from 'firebase/firestore';
 import get from 'lodash.get';
 import React, { useEffect, useState } from 'react';
