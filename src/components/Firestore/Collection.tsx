@@ -286,10 +286,10 @@ export const CollectionPresentation: React.FC<
   );
 };
 
-export function applyCollectionFilter(
+function applyCollectionFilter(
   collection: Query<DocumentData>,
   collectionFilter?: CollectionFilterType,
-  maxFetchedDocumentsPerCollection?: number
+  maxFetchedDocumentsPerCollection: number = 9500
 ): Query<DocumentData> {
   let filteredCollection = collection;
   if (collectionFilter && isSingleValueCollectionFilter(collectionFilter)) {
@@ -323,11 +323,7 @@ export function applyCollectionFilter(
       filteredCollection,
       // This is a short-term fix to address the webchannel queue limit of 10k.
       // See https://github.com/firebase/firebase-tools/issues/5197.
-      limit(
-        maxFetchedDocumentsPerCollection
-          ? maxFetchedDocumentsPerCollection
-          : 9500
-      )
+      limit(maxFetchedDocumentsPerCollection)
     );
   }
   return filteredCollection;
