@@ -75,6 +75,7 @@ export const Auth: React.FC<React.PropsWithChildren<AuthProps>> = ({
 
   return (
     <GridCell span={12} className="Auth">
+      <h1>Authentication Emulator</h1>
       <GridRow className={styles.topActions}>
         <GridCell span={2}>
           <TenantPicker />

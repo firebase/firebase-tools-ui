@@ -44,6 +44,8 @@ export const StorageWrapper: React.FC<
   return (
     <StorageFirebaseAppProvider>
       <GridCell span={12} className={styles.storageWrapper}>
+      <h1>Storage Emulator</h1>
+      <br/>
         <StorageCanvas />
         <Suspense fallback={<Spinner />}>
           <StorageCard />

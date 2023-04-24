@@ -38,3 +38,10 @@ code {
 :root {
   --fire-color-input-borders: #e0e0e0; // grey 300
 }
+
+// This is set to match the previous h5 weight. h1 is used for a11y reasons.
+h1 { 
+  margin: 0;
+  font-size: 24px;
+  font-weight: normal;
+}

@@ -33,6 +33,7 @@ export const ExtensionDetails: React.FC<
 
   return (
     <GridCell span={12} className="Extensions">
+      <h1>Extensions Emulator</h1>
       <ExtensionFeatureBar name={extension.displayName || ''} />
       <DetailsHeader extension={extension}></DetailsHeader>
       <DetailsCard extension={extension}></DetailsCard>

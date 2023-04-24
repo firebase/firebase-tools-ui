@@ -16,6 +16,7 @@
 
 import './index.scss';
 
+import { GridCell } from '@rmwc/grid';
 import React, { Suspense } from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 
@@ -57,14 +58,19 @@ export const DatabaseRouteContent: React.FC<
         render={({ match }: any) => {
           const dbPath = `/${match.params.path || ''}`;
           return (
-            <DatabaseEmulatedApiProvider namespace={match.params.namespace}>
-              <DatabaseContainer
-                primary={primary}
-                navigation={(db) => `${url}/${db}/data`}
-              >
-                <Database path={dbPath} config={config} />
-              </DatabaseContainer>
-            </DatabaseEmulatedApiProvider>
+            <GridCell span={12} className="Page title">
+              <h1>Database Emulator</h1>
+              <br />
+              <DatabaseEmulatedApiProvider namespace={match.params.namespace}>
+                <DatabaseContainer
+                  primary={primary}
+                  navigation={(db) => `${url}/${db}/data`}
+                >
+                  <Database path={dbPath} config={config} />
+                </DatabaseContainer>
+              </DatabaseEmulatedApiProvider>
+
+            </GridCell>
           );
         }}
       />
