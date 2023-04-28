@@ -63,7 +63,7 @@ it('shows port for emulator that are loaded and N/A for not loaded', () => {
   // Database Emulator is running.
   const databaseCard = getByTestId(`emulator-info-database`);
   expect(getByText(databaseCard, '9000')).not.toBeNull();
-  expect(getByText(databaseCard, 'Go to emulator')).not.toBeNull();
+  expect(getByText(databaseCard, 'Go to database emulator')).not.toBeNull();
 
   // Firestore Emulator is not running.
   const firestoreCard = getByTestId(`emulator-info-firestore`);
@@ -188,7 +188,7 @@ it('shows storage emulator card', () => {
 
   const card = getByTestId(`emulator-info-storage`);
   expect(getByText(card, '9199')).not.toBeNull();
-  expect(getByText(card, 'Storage')).not.toBeNull();
+  expect(getByText(card, 'Go to storage emulator')).not.toBeNull();
 });
 
 it('shows button for function emulator logs', () => {
@@ -210,7 +210,7 @@ it('shows button for function emulator logs', () => {
   );
   const card = getByTestId(`emulator-info-functions`);
   expect(getByText(card, '5001')).not.toBeNull();
-  expect(getByText(card, 'View logs')).not.toBeNull();
+  expect(getByText(card, 'Go to the logs page')).not.toBeNull();
 });
 
 it('renders all emulators as "off" when error loading config', () => {

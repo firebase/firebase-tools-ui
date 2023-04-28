@@ -124,7 +124,7 @@ export const AddDocumentDialog: React.FC<React.PropsWithChildren<Props>> = ({
           unelevated
           action="accept"
           isDefaultAction
-          disabled={!document.data}
+          disabled={!document.data || !document.id}
         >
           Save
         </DialogButton>

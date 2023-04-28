@@ -43,6 +43,8 @@ const DocumentListItem: React.FC<
     [styles.missing]: missing,
   });
 
+  const encodedDocId = encodeURIComponent(docId);
+
   return (
     <Theme
       use={[missing ? 'textSecondaryOnBackground' : 'textPrimaryOnBackground']}
@@ -50,7 +52,8 @@ const DocumentListItem: React.FC<
       <ListItem
         className={listItemClass}
         tag={NavLink}
-        to={`${url}/${encodeURIComponent(docId)}`}
+        to={`${url}/${encodedDocId}`}
+        aria-label={`View contents of document with id: ${encodedDocId}`}
         activeClassName="mdc-list-item--activated"
         data-testid="firestore-document-list-item"
       >

@@ -152,6 +152,7 @@ export const CollectionListItem: React.FC<
       className="Firestore-List-Item"
       tag={NavLink}
       to={`${routeMatchUrl}/${encodeURIComponent(collectionId)}`}
+      aria-label={`View contents of collection with id: "${collectionId}"`}
       activeClassName="mdc-list-item--activated"
       data-testid="firestore-collection-list-item"
     >

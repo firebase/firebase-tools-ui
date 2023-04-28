@@ -218,6 +218,11 @@ export const QueryBar: React.FC<React.PropsWithChildren<Props>> = ({
         spellCheck={false}
         value={temporaryQuery}
         onChange={(e) => setTemporaryQuery((e.target as any).value)}
+        onKeyUp={(ev) => {
+          if (ev?.key === 'Enter' && !ev.shiftKey) {
+            setQuery(temporaryQuery);
+          }
+        }}
         placeholder="Filter or search logs..."
       ></textarea>
       <div className="QueryBar-actions">

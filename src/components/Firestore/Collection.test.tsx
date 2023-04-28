@@ -232,6 +232,33 @@ it('sorts documents when filtered', async () => {
     ['doc-a', 'doc-b', 'doc-z']
   );
 });
+it('limits documents in a collection to specified value', async () => {
+  const { queryAllByText, findByText } = await renderWithFirestore(
+    async (firestore) => {
+      const collectionRef = collection(firestore, 'my-stuff');
+      await setDoc(doc(collectionRef, 'doc-z'), { foo: 'z' });
+      await setDoc(doc(collectionRef, 'doc-a'), { foo: 'a' });
+      await setDoc(doc(collectionRef, 'doc-b'), { foo: 'b' });
+
+      return (
+        // Wrong props right?
+        <>
+          <Portal />
+          <Collection
+            collection={collectionRef}
+            maxFetchedDocumentsPerCollection={2}
+          />
+        </>
+      );
+    }
+  );
+  await findByText(/doc-a/);
+  await findByText(/doc-b/);
+  // The number of results is limited to 2 above, expect only a + b.
+  expect(queryAllByText(/doc-a|doc-b|doc-z/).map((e) => e.textContent)).toEqual(
+    ['doc-a', 'doc-b']
+  );
+});
 
 it('shows the missing documents', async () => {
   const { getByText, findByText } = await renderWithFirestore(

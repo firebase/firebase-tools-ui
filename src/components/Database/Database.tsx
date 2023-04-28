@@ -16,7 +16,7 @@
 import { IconButton } from '@rmwc/icon-button';
 import { MenuItem, SimpleMenu } from '@rmwc/menu';
 import { DatabaseReference, ref } from 'firebase/database';
-import React, { useState } from 'react';
+import React, { MutableRefObject, useRef, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useHistory } from 'react-router-dom';
 import { useDatabase } from 'reactfire';
@@ -46,6 +46,8 @@ export const Database: React.FC<React.PropsWithChildren<Props>> = ({
   const namespace = useNamespace();
   const databaseReference = ref(database, path);
   const history = useHistory();
+  const headerMoreOptionsMenuButtonRef =
+    useRef() as MutableRefObject<HTMLButtonElement>;
 
   const [importDialogOpen, setImportDialogOpen] = useState(false);
   const [droppedFile, setDroppedFile] = useState<File | undefined>();
@@ -53,6 +55,7 @@ export const Database: React.FC<React.PropsWithChildren<Props>> = ({
   const closeImportDialog = () => {
     setDroppedFile(undefined);
     setImportDialogOpen(false);
+    headerMoreOptionsMenuButtonRef!.current!.focus();
   };
 
   const urlBase = `/database/${namespace}/data`;
@@ -74,12 +77,24 @@ export const Database: React.FC<React.PropsWithChildren<Props>> = ({
             onNavigate={handleNavigate}
           >
             <SimpleMenu
-              handle={<IconButton icon="more_vert" label="Open menu" />}
+              onSelect={(evt) => {
+                switch (evt.detail?.item?.dataset?.value) {
+                  case 'IMPORT_JSON':
+                    setImportDialogOpen(true);
+                    return;
+                  default:
+                }
+              }}
+              handle={
+                <IconButton
+                  icon="more_vert"
+                  label="Open menu"
+                  ref={headerMoreOptionsMenuButtonRef}
+                />
+              }
               renderToPortal
             >
-              <MenuItem onClick={() => setImportDialogOpen(true)}>
-                Import JSON
-              </MenuItem>
+              <MenuItem data-value="IMPORT_JSON">Import JSON</MenuItem>
             </SimpleMenu>
           </InteractiveBreadCrumbBar>
 

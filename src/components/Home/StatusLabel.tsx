@@ -48,6 +48,7 @@ export const StatusLabel: React.FC<
       >
         {isActive ? 'On' : 'Off'}
         <Icon
+          aria-hidden="true"
           icon={isActive ? ACTIVE_ICON : INACTIVE_ICON}
           className={styles.icon}
         />

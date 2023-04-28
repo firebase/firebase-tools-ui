@@ -83,7 +83,7 @@ it('renders the url for root refs', async () => {
     <NodeLink dbRef={ref(db)} />
   ));
 
-  expect(getByText(/localhost/)).not.toBeNull();
+  expect(getByText(/(localhost|127.0.0.1)/)).not.toBeNull();
 });
 
 it('links root nodes to the route root: /database/:id/data/', async () => {
@@ -96,7 +96,7 @@ it('links root nodes to the route root: /database/:id/data/', async () => {
     { namespace: 'test', path: '/database/test/data/foo/bar/baz' }
   );
 
-  expect(getByText(/localhost/).getAttribute('href')).toEqual(
+  expect(getByText(/(localhost|127.0.0.1)/).getAttribute('href')).toEqual(
     '/database/test/data/'
   );
 });
