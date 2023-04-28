@@ -71,10 +71,10 @@ describe('editing the node', () => {
         Promise.resolve(<NodeLeaf realtimeRef={ref(db)} value={null} />)
       );
 
-      act(() => getByLabelText('Edit value').click());
+      act(() => getByLabelText('Edit value for: "null"').click());
 
       expect((getByLabelText('Field') as HTMLInputElement).value).toMatch(
-        /^http:\/\/localhost/
+        /^http:\/\/(localhost|127.0.0.1)/
       );
     });
 
@@ -83,7 +83,7 @@ describe('editing the node', () => {
         Promise.resolve(<NodeLeaf realtimeRef={ref(db)} value={null} />)
       );
 
-      act(() => getByLabelText('Edit value').click());
+      act(() => getByLabelText('Edit value for: "null"').click());
 
       expect((getByLabelText('Value') as HTMLInputElement).value).toBe('');
     });
@@ -95,10 +95,10 @@ describe('editing the node', () => {
         Promise.resolve(<NodeLeaf realtimeRef={ref(db)} value={null} />)
       );
 
-      act(() => getByLabelText('Edit value').click());
+      act(() => getByLabelText('Edit value for: "null"').click());
 
       expect((getByLabelText('Field') as HTMLInputElement).value).toMatch(
-        /^http:\/\/localhost/
+        /^http:\/\/(localhost|127.0.0.1)/
       );
     });
 
@@ -109,7 +109,7 @@ describe('editing the node', () => {
         )
       );
 
-      act(() => getByLabelText('Edit value').click());
+      act(() => getByLabelText('Edit value for: "foo"').click());
 
       expect((getByLabelText('Value') as HTMLInputElement).value).toBe(
         'my-value'

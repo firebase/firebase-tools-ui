@@ -30,15 +30,11 @@ import { useFirestore } from 'reactfire';
 import { Field } from '../../common/Field';
 import { AddDocumentDialogValue, AddDocumentStep } from './AddDocumentDialog';
 
-interface AddCollectionStepProps {
-  documentRef?: DocumentReference;
+interface AddCollectionInputProps {
   onChange: (value: string) => void;
 }
 
-export const AddCollectionStep = ({
-  documentRef,
-  onChange,
-}: AddCollectionStepProps) => {
+export const AddCollectionInput = ({ onChange }: AddCollectionInputProps) => {
   const [id, setId] = useState('');
   const updateId = (evt: React.ChangeEvent<HTMLInputElement>) => {
     setId(evt.target.value);
@@ -47,12 +43,6 @@ export const AddCollectionStep = ({
 
   return (
     <>
-      <Field
-        label="Parent path"
-        value={documentRef ? documentRef.path : '/'}
-        disabled
-      />
-
       <Field label="Collection ID" required value={id} onChange={updateId} />
     </>
   );
@@ -68,11 +58,6 @@ interface Props extends DialogProps {
   onValue: (v: AddCollectionDialogValue | null) => void;
 }
 
-enum Step {
-  COLLECTION,
-  DOCUMENT,
-}
-
 export const AddCollectionDialog: React.FC<React.PropsWithChildren<Props>> = ({
   documentRef,
   onValue,
@@ -80,15 +65,11 @@ export const AddCollectionDialog: React.FC<React.PropsWithChildren<Props>> = ({
   ...dialogProps
 }) => {
   const firestore = useFirestore();
-  const [step, setStep] = useState(Step.COLLECTION);
   const [collectionId, setCollectionId] = useState('');
   const [document, setDocument] = useState<AddDocumentDialogValue>({
     id: '',
     data: undefined,
   });
-
-  const next = () =>
-    step === Step.COLLECTION && collectionId && setStep(step + 1);
 
   const getValue = () => ({
     collectionId,
@@ -100,46 +81,44 @@ export const AddCollectionDialog: React.FC<React.PropsWithChildren<Props>> = ({
     onClose && onClose(evt);
   };
 
+  function getCurrentOrPlaceholderCollectionId(collectionId: string) {
+    return collectionId ? collectionId : '<parent Collection ID>';
+  }
+
   return (
     <Dialog {...dialogProps} onClose={emitValueAndClose}>
       <DialogTitle>Start a collection</DialogTitle>
 
       <DialogContent>
-        {step === Step.COLLECTION ? (
-          <AddCollectionStep
-            documentRef={documentRef}
-            onChange={setCollectionId}
-          />
-        ) : (
-          <AddDocumentStep
-            collectionRef={
-              documentRef
-                ? collection(documentRef, collectionId)
-                : collection(firestore, collectionId)
-            }
-            onChange={setDocument}
-          />
-        )}
+        <AddCollectionInput onChange={setCollectionId} />
+        <AddDocumentStep
+          collectionRef={
+            documentRef
+              ? collection(
+                  documentRef,
+                  getCurrentOrPlaceholderCollectionId(collectionId)
+                )
+              : collection(
+                  firestore,
+                  getCurrentOrPlaceholderCollectionId(collectionId)
+                )
+          }
+          onChange={setDocument}
+        />
       </DialogContent>
 
       <DialogActions>
         <DialogButton action="close" type="button" theme="secondary">
           Cancel
         </DialogButton>
-        {step === Step.DOCUMENT ? (
-          <DialogButton
-            unelevated
-            action="accept"
-            isDefaultAction
-            disabled={!document.data}
-          >
-            Save
-          </DialogButton>
-        ) : (
-          <DialogButton unelevated onClick={next}>
-            Next
-          </DialogButton>
-        )}
+        <DialogButton
+          unelevated
+          action="accept"
+          isDefaultAction
+          disabled={!document.data || !document.id || !collectionId}
+        >
+          Save
+        </DialogButton>
       </DialogActions>
     </Dialog>
   );

@@ -32,6 +32,7 @@ import {
   query,
   setDoc,
   where,
+  limit
 } from 'firebase/firestore';
 import get from 'lodash.get';
 import React, { useEffect, useState } from 'react';
@@ -68,6 +69,7 @@ const NO_DOCS: QueryDocumentSnapshot<DocumentData>[] = [];
 
 export interface Props {
   collection: CollectionReference;
+  maxFetchedDocumentsPerCollection?: number;
 }
 
 export function withCollectionState(
@@ -75,12 +77,13 @@ export function withCollectionState(
     React.PropsWithChildren<CollectionPresentationProps>
   >
 ): React.ComponentType<React.PropsWithChildren<Props>> {
-  return ({ collection }) => {
+  return ({ collection, maxFetchedDocumentsPerCollection }) => {
     const [newDocumentId, setNewDocumentId] = useState<string>();
     const collectionFilter = useCollectionFilter(collection.path);
     const filteredCollection = applyCollectionFilter(
       collection,
-      collectionFilter
+      collectionFilter,
+      maxFetchedDocumentsPerCollection
     );
     const collectionSnapshot = useFirestoreCollection<{}>(filteredCollection, {
       suspense: true,
@@ -285,7 +288,8 @@ export const CollectionPresentation: React.FC<
 
 function applyCollectionFilter(
   collection: Query<DocumentData>,
-  collectionFilter?: CollectionFilterType
+  collectionFilter?: CollectionFilterType,
+  maxFetchedDocumentsPerCollection: number = 9500
 ): Query<DocumentData> {
   let filteredCollection = collection;
   if (collectionFilter && isSingleValueCollectionFilter(collectionFilter)) {
@@ -312,6 +316,14 @@ function applyCollectionFilter(
     filteredCollection = query(
       filteredCollection,
       orderBy(collectionFilter.field, collectionFilter.sort)
+    );
+  }
+  if (filteredCollection) {
+    filteredCollection = query(
+      filteredCollection,
+      // This is a short-term fix to address the webchannel queue limit of 10k.
+      // See https://github.com/firebase/firebase-tools/issues/5197.
+      limit(maxFetchedDocumentsPerCollection)
     );
   }
   return filteredCollection;

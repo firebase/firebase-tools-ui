@@ -58,8 +58,13 @@ export const LocalWarningCallout: React.FC<
               href={`${CONSOLE_ROOT}/project/${projectId}/overview`}
               target="_blank"
               label="View project"
+              aria-label={`View this project, ${projectId}, in the firebase console`}
             />
-            <Button label="Dismiss" onClick={dismiss} />
+            <Button
+              label="Dismiss"
+              aria-label="Dismiss this reminder banner"
+              onClick={dismiss}
+            />
           </>
         }
       >

@@ -33,6 +33,10 @@
       "port": 9200
     }
   },
+  "extensions": {
+    "storage-resize-images": "firebase/storage-resize-images@0.1.35",
+    "firestore-stripe-payments": "stripe/firestore-stripe-payments@0.3.3"
+  },
   "remoteconfig": {
     "template": "remoteconfig.template.json"
   }

@@ -44,15 +44,17 @@
 
   .log-timestamp {
     grid-area: timestamp;
-    opacity: 0.5;
+    opacity: 0.6;
     align-self: start;
     margin-right: 4px;
   }
 
   .log-level {
     border-radius: 3px;
+    border-width: 0;
     color: rgba(0, 0, 0, 1);
     cursor: pointer;
+    font-family: monospace;
     font-weight: bold;
     grid-area: level;
     padding: 0px 3px;
@@ -83,7 +85,7 @@
     .log-tag-button {
       padding: 1px 3px;
       align-self: stretch;
-      color: rgba(0, 0, 0, 0.5);
+      color: var(--mdc-theme-secondary);
       border-radius: 2px;
 
       &:hover {

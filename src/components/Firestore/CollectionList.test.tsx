@@ -119,8 +119,6 @@ it('triggers a redirect to a new collection at the root', async () => {
     });
   });
 
-  act(() => getByText(/Next/).click());
-
   await act(async () => {
     fireEvent.change(getByLabelText(/Field/), {
       target: { value: 'foo' },
@@ -164,8 +162,6 @@ it('triggers a redirect to a new collection at the root when there are special c
       target: { value: 'abc@#$' },
     });
   });
-
-  act(() => getByText(/Next/).click());
 
   await act(async () => {
     fireEvent.change(getByLabelText(/Field/), {
@@ -214,8 +210,6 @@ it('triggers a redirect to a new collection in a document', async () => {
     });
   });
 
-  act(() => getByText(/Next/).click());
-
   await act(async () => {
     fireEvent.change(getByLabelText(/Field/), {
       target: { value: 'foo' },
@@ -262,8 +256,6 @@ it('triggers a redirect to a new collection in a document when there are special
       target: { value: 'abc@#$' },
     });
   });
-
-  act(() => getByText(/Next/).click());
 
   await act(async () => {
     fireEvent.change(getByLabelText(/Field/), {
