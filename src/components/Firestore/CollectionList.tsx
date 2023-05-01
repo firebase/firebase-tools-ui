@@ -105,6 +105,7 @@ const CollectionList: React.FC<React.PropsWithChildren<Props>> = ({
       )}
       data-testid="collection-list"
     >
+      collectionList here
       {redirectIfAutoSelectable}
 
       {isAddCollectionDialogOpen && (

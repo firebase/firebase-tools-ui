@@ -78,22 +78,22 @@ const FirestoreComponent: React.FC<React.PropsWithChildren<unknown>> = ({
   return <FirestoreProvider sdk={firestore}>{children}</FirestoreProvider>;
 };
 
-function useFirestoreRestApi() {
+function useFirestoreRestApi(databaseId: string = '(default)') { // FIXME think about if we want to make this default or not
   const config = useEmulatorConfig('firestore');
   const { projectId } = useConfig();
-  const databaseId = '(default)';
 
   return {
     baseUrl: `//${config.hostAndPort}/v1/projects/${projectId}/databases/${databaseId}`,
     baseEmulatorUrl: `//${config.hostAndPort}/emulator/v1/projects/${projectId}/databases/${databaseId}`,
+    // FIXME admin URL for listing DBs?
   };
 }
 
 export function useRootCollections() {
-  const { baseUrl } = useFirestoreRestApi();
+  const { baseUrl } = useFirestoreRestApi("hello");
   const firestore = useFirestore();
-  const url = `${baseUrl}/documents:listCollectionIds`;
-
+  const url = `${baseUrl}/documents:listCollectionIds`; // FIXME baseUrl needs changing
+console.log("doing fetch from emulator for collections. URL: " + url);
   const { data } = useRequest<{ collectionIds: string[] }>(
     url,
     {

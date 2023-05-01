@@ -127,7 +127,7 @@ export const Firestore: React.FC<React.PropsWithChildren<unknown>> = React.memo(
         history.push(`${root}/${path}`);
       }
     }
-
+    const [myDbState, setMyDbState] = useState("default or something");
     return isRefreshing ? (
       <Spinner span={12} data-testid="firestore-loading" />
     ) : (
@@ -138,7 +138,13 @@ export const Firestore: React.FC<React.PropsWithChildren<unknown>> = React.memo(
               {subTabs}
             </TabBar>
           </div>
-
+    
+        <Button unelevated onClick={() => setMyDbState("hi")}>
+          One
+        </Button>
+        <Button unelevated onClick={() => setMyDbState("hi2")}>
+          Two
+        </Button>
           <Switch>
             <Route path="/firestore/data">
               <FirestoreDataCard
@@ -147,6 +153,7 @@ export const Firestore: React.FC<React.PropsWithChildren<unknown>> = React.memo(
                 handleNavigate={handleNavigate}
                 showCollectionShell={showCollectionShell}
                 showDocumentShell={showDocumentShell}
+                selectedDb={myDbState}
               />
             </Route>
             <Route path="/firestore/requests">
@@ -166,6 +173,7 @@ interface FirestoreDataCardProps {
   handleNavigate: (path?: string) => void;
   showCollectionShell: boolean;
   showDocumentShell: boolean;
+  selectedDb: string;
 }
 
 const FirestoreDataCard: React.FC<
@@ -176,8 +184,10 @@ const FirestoreDataCard: React.FC<
   handleNavigate,
   showCollectionShell,
   showDocumentShell,
+  selectedDb,
 }) => (
   <>
+  selectedDb is {selectedDb}
     <div className="Firestore-actions">
       <CustomThemeProvider use="warning" wrap>
         <Button unelevated onClick={() => handleClearData()}>
@@ -194,6 +204,7 @@ const FirestoreDataCard: React.FC<
         />
         <div className="Firestore-panels">
           <Root />
+          huh
           {showCollectionShell && (
             <div
               className="Firestore-Collection"
