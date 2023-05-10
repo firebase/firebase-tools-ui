@@ -27,7 +27,7 @@ Clone the repo and install any dependencies:
 
 ```bash
 git clone https://github.com/firebase/firebase-tools-ui.git
-cd firebase-tools
+cd firebase-tools-ui
 npm install # must be run the first time you clone
 ```
 
