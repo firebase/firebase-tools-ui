@@ -81,7 +81,7 @@ export const CustomAttributes: React.FC<
           target="_blank"
           rel="noopener noreferrer"
           href="https://firebase.google.com/docs/auth/admin/custom-claims"
-          aria-label="Learn more about custom key value attributes."
+          title="Learn more about custom key value attributes."
         >
           Learn more
         </a>
