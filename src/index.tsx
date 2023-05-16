@@ -60,6 +60,10 @@ root.render(
   <RMWCProvider
     // Globally disable ripples
     ripple={false}
+    typography={{
+      /** Make headline5 <h5>  */
+      headline2: 'h2',
+    }}
   >
     <ThemeProvider
       options={{

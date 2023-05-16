@@ -59,7 +59,7 @@ export const Password: React.FC<
   return (
     <>
       <Typography
-        use="body1"
+        use="heading3"
         tag="div"
         className={styles.sectionSubHeader}
         theme="textPrimaryOnBackground"

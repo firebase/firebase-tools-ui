@@ -64,7 +64,7 @@ export const PhoneControl: React.FC<
   return (
     <>
       <Typography
-        use="body1"
+        use="heading3"
         tag="div"
         className={styles.sectionSubHeader}
         theme="textPrimaryOnBackground"

@@ -68,7 +68,7 @@ export const SignInMethod: React.FC<
     <div className={styles.signInWrapper}>
       <ListDivider tag="div" />
       <div className={styles.sectionHeader}>
-        <Typography use="body1" theme="textPrimaryOnBackground">
+        <Typography use="headline3" theme="textPrimaryOnBackground">
           Authentication method
         </Typography>
         {isTouched && isOnlyError ? (
