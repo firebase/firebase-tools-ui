@@ -73,7 +73,7 @@ export const ExtensionsTableRow: React.FC<
           }}
           className={styles.manageButton}
           label={<div className={styles.manageButtonText}>Manage</div>}
-          trailingIcon="arrow_forward"
+          aria-label={"Manage, " + extension.displayName}
         />
       </DataTableCell>
     </DataTableRow>
