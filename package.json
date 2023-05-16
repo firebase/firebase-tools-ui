@@ -3,7 +3,7 @@
   "version": "1.11.6",
   "private": true,
   "engines": {
-    "node": "^14.18.0 || >=16.4.0"
+    "node": ">=16.4.0"
   },
   "dependencies": {
     "@rmwc/base": "^7.0.3",
