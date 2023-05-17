@@ -61,8 +61,10 @@ root.render(
     // Globally disable ripples
     ripple={false}
     typography={{
-      /** Make headline5 <h5>  */
-      headline2: 'h2',
+      /** Make headline3 <h3> instaed of div or span */
+      headline3: 'h3',
+      /** Make headline4 <h4> instaed of div or span */
+      headline4: 'h4',
     }}
   >
     <ThemeProvider

@@ -39,11 +39,14 @@ code {
   --fire-color-input-borders: #e0e0e0; // grey 300
 }
 
-h3 {
-  font-size: 16px;
-}
-
 .mdc-typography--headline3 {
   font-size: 16px;
   font-weight: 500;
+  line-height: 25px;
+}
+
+.mdc-typography--headline4 {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 25px;
 }
