@@ -91,7 +91,7 @@ export const UsersTableRow: React.FC<
             <IconButton
               theme="secondary"
               icon="more_vert"
-              label={`Open menu for ${
+              label={`Open menu for user ${
                 user.displayName || user.email || user.phoneNumber
               }`}
             />
