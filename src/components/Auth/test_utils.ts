@@ -74,6 +74,10 @@ export function createFakeAuthStateWithUsers(users: AuthUser[]) {
   return createFakeState({ users: createRemoteDataLoaded(users) });
 }
 
+export function createFakeAuthStateAfterClearingUsers() {
+  return createFakeState({ justNukedUsers: true });
+}
+
 export function createFakeAuthStateWithTenants(tenants: Tenant[]) {
   return createFakeState({ tenants: createRemoteDataLoaded(tenants) });
 }
