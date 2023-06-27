@@ -109,6 +109,10 @@ export const getShowZeroResults = createSelector(
   getFilteredUsers,
   (users, filteredUsers) => users.length > 0 && filteredUsers.length === 0
 );
+export const getShowNukedUsers = createSelector(
+  getAuth,
+  (state: AuthState) => state.justNukedUsers
+);
 export const getShowTable = createSelector(
   getFilteredUsers,
   (filteredUsers) => filteredUsers.length > 0

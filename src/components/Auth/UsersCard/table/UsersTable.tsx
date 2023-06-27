@@ -36,6 +36,7 @@ import {
 } from '../../../../store/auth/actions';
 import {
   getFilteredUsers,
+  getShowNukedUsers,
   getShowTable,
   getShowZeroResults,
   getShowZeroState,
@@ -46,6 +47,7 @@ import { AuthZeroState } from './AuthZeroState';
 import { confirmDeleteUser } from './confirmDeleteUser';
 import { NoResults } from './NoResults';
 import { ProviderCell } from './ProviderCell';
+import { UsersCleared } from './UsersCleared';
 import styles from './UsersTable.module.scss';
 
 export type UsersTableProps = PropsFromDispatch & PropsFromStore;
@@ -130,6 +132,7 @@ export const UsersTable: React.FC<React.PropsWithChildren<UsersTableProps>> = ({
   openAuthUserDialog,
   shouldShowZeroResults,
   shouldShowZeroState,
+  shouldShowNukedUsers,
 }) => {
   return (
     <>
@@ -169,6 +172,7 @@ export const UsersTable: React.FC<React.PropsWithChildren<UsersTableProps>> = ({
           </DataTableBody>
         </DataTableContent>
       </DataTable>
+      {shouldShowNukedUsers && <UsersCleared />}
       {shouldShowZeroResults && <NoResults />}
       {shouldShowZeroState && <AuthZeroState />}
     </>
@@ -180,6 +184,7 @@ export const mapStateToProps = createStructuredSelector({
   shouldShowZeroResults: getShowZeroResults,
   shouldShowZeroState: getShowZeroState,
   filteredUsers: getFilteredUsers,
+  shouldShowNukedUsers: getShowNukedUsers,
 });
 
 export type PropsFromStore = ReturnType<typeof mapStateToProps>;

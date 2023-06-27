@@ -26,6 +26,7 @@ const INIT_STATE = {
   filter: '',
   allowDuplicateEmails: false,
   tenants: { loading: true },
+  justNukedUsers: false,
 };
 
 export const authReducer = createReducer<AuthState, Action>(INIT_STATE)
@@ -35,6 +36,7 @@ export const authReducer = createReducer<AuthState, Action>(INIT_STATE)
         ...users,
         payload.user,
       ]);
+      draft.justNukedUsers = false;
     });
   })
   .handleAction(authActions.updateUserSuccess, (state, { payload }) => {
@@ -49,11 +51,13 @@ export const authReducer = createReducer<AuthState, Action>(INIT_STATE)
   .handleAction(authActions.nukeUsersSuccess, (state) => {
     return produce(state, (draft) => {
       draft.users = mapResult(draft.users, () => []);
+      draft.justNukedUsers = true;
     });
   })
   .handleAction(authActions.nukeUsersForAllTenantsSuccess, (state) => {
     return produce(state, (draft) => {
       draft.users = mapResult(draft.users, () => []);
+      draft.justNukedUsers = true;
     });
   })
   .handleAction(
@@ -117,6 +121,7 @@ export const authReducer = createReducer<AuthState, Action>(INIT_STATE)
         loading: false,
         result: { data: payload },
       };
+      draft.justNukedUsers = false;
     });
   })
   .handleAction(authActions.authFetchUsersError, (state, { payload }) => {
