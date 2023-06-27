@@ -92,7 +92,9 @@ export const UsersTableRow: React.FC<
               theme="secondary"
               icon="more_vert"
               aria-label={`Open menu for user ${
-                user.displayName || user.email || user.phoneNumber
+                user.displayName ||
+                user.email ||
+                `with phone number ` + user.phoneNumber
               }`}
               role="menu"
             />
