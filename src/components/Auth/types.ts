@@ -105,7 +105,7 @@ export interface AuthState {
   filter: string;
   allowDuplicateEmails: boolean;
   tenants: RemoteResult<Tenant[]>;
-  justNukedUsers: boolean;
+  justClearedUsers: boolean;
 }
 
 // Similar the emulator config object of the same name in the Firebase CLI,
