@@ -16,13 +16,17 @@
 
 import React from 'react';
 
+import { useStorageFiles } from '../api/useStorageFiles';
 import { BucketPicker } from './BucketPicker/BucketPicker';
 import styles from './Canvas.module.scss';
 import { DeleteAllButton } from './DeleteAllButton/DeleteAllButton';
 
-export const StorageCanvas: React.FC<React.PropsWithChildren<unknown>> = () => (
-  <div className={styles.canvasWrapper}>
-    <BucketPicker />
-    <DeleteAllButton />
-  </div>
-);
+export const StorageCanvas: React.FC<React.PropsWithChildren<unknown>> = () => {
+  const { bucketHasAnyFiles, deleteAllFiles } = useStorageFiles();
+  return (
+    <div className={styles.canvasWrapper}>
+      <BucketPicker />
+      {bucketHasAnyFiles && <DeleteAllButton deleteAllFiles={deleteAllFiles} />}
+    </div>
+  );
+};

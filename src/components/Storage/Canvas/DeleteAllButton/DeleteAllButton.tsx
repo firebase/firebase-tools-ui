@@ -15,54 +15,22 @@
  */
 
 import { Button } from '@rmwc/button';
-import React, { Suspense } from 'react';
 
 import { CustomThemeProvider } from '../../../../themes';
-import { useStorageFiles } from '../../api/useStorageFiles';
 import { confirmDeleteAllFiles } from './confirmDeleteAllFiles';
 import styles from './DeleteAllButton.module.scss';
 
-export const DeleteAllButton: React.FC<
-  React.PropsWithChildren<unknown>
-> = () => {
-  return (
-    // While we don't know the state of the button, show it as disabled.
-    <Suspense
-      fallback={
-        <DeleteAllButtonUnwrapped deleteAllFiles={() => {}} disabled={true} />
-      }
-    >
-      <DeleteAllButtonWithHooks />
-    </Suspense>
-  );
-};
-
-const DeleteAllButtonWithHooks: React.FC<
-  React.PropsWithChildren<unknown>
-> = () => {
-  const { deleteAllFiles, bucketHasAnyFiles } = useStorageFiles();
-
-  return (
-    <DeleteAllButtonUnwrapped
-      disabled={!bucketHasAnyFiles}
-      deleteAllFiles={deleteAllFiles}
-    />
-  );
-};
-
-interface DeleteAllButtonUnwrappedProps {
+interface DeleteAllButtonProps {
   deleteAllFiles: () => void;
-  disabled: boolean;
 }
 
-const DeleteAllButtonUnwrapped: React.FC<
-  React.PropsWithChildren<DeleteAllButtonUnwrappedProps>
-> = ({ deleteAllFiles, disabled }) => {
+export const DeleteAllButton: React.FC<
+  React.PropsWithChildren<DeleteAllButtonProps>
+> = ({ deleteAllFiles }) => {
   return (
     <CustomThemeProvider use="warning" wrap>
       <Button
         className={styles.deleteAllFiles}
-        disabled={disabled}
         unelevated
         onClick={async () => {
           if (await confirmDeleteAllFiles()) {
