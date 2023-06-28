@@ -14,14 +14,32 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import styles from './UsersCleared.module.scss';
 
 export const UsersCleared: React.FC<React.PropsWithChildren<unknown>> = () => {
+  const DISPLAY_TIME_MS = 500;
+  const [alertText, setAlertText] = useState('');
+
+  const onUsersClearedEvent = () => {
+    setAlertText('All Users CLeared!');
+    setTimeout(() => {
+      setAlertText('');
+    }, DISPLAY_TIME_MS);
+  };
+
+  useEffect(() => {
+    window.addEventListener('usersCleared', onUsersClearedEvent);
+
+    return () => {
+      window.removeEventListener('usersCleared', onUsersClearedEvent);
+    };
+  }, []);
+
   return (
     <div className={styles.visuallyHidden} role="alert">
-      All users cleared!
+      {alertText}
     </div>
   );
 };

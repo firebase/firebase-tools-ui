@@ -15,7 +15,6 @@
  */
 
 import {
-  createFakeAuthStateAfterClearingUsers,
   createFakeAuthStateWithUsers,
   createFakeState,
   createFakeTenant,
@@ -63,7 +62,7 @@ describe('auth reducers', () => {
       const state = createFakeAuthStateWithUsers([user, user2]);
       const action = nukeUsersSuccess();
 
-      const expected = createFakeAuthStateAfterClearingUsers();
+      const expected = createFakeAuthStateWithUsers([]);
       expect(authReducer(state, action)).toEqual(expected);
     });
 

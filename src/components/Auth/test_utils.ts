@@ -27,7 +27,6 @@ export function getMockAuthStore(state?: Partial<AppState['auth']>) {
       filter: '',
       allowDuplicateEmails: false,
       tenants: { loading: false, result: { data: [] } },
-      justClearedUsers: false,
       ...state,
     },
   });
@@ -65,17 +64,12 @@ export function createFakeState(state: Partial<AuthState>): AuthState {
     allowDuplicateEmails: true,
     users: createRemoteDataLoaded([]),
     tenants: createRemoteDataLoaded([]),
-    justClearedUsers: false,
     ...state,
   };
 }
 
 export function createFakeAuthStateWithUsers(users: AuthUser[]) {
   return createFakeState({ users: createRemoteDataLoaded(users) });
-}
-
-export function createFakeAuthStateAfterClearingUsers() {
-  return createFakeState({ justClearedUsers: true });
 }
 
 export function createFakeAuthStateWithTenants(tenants: Tenant[]) {
