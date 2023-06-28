@@ -14,13 +14,7 @@
  * limitations under the License.
  */
 
-import {
-  RenderResult,
-  act,
-  fireEvent,
-  queryAllByRole,
-  waitFor,
-} from '@testing-library/react';
+import { RenderResult, act, fireEvent, waitFor } from '@testing-library/react';
 import { DocumentReference, doc, setDoc } from 'firebase/firestore';
 import React from 'react';
 import { useFirestoreDocData } from 'reactfire';
