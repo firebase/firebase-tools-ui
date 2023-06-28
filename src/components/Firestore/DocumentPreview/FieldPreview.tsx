@@ -24,6 +24,7 @@ import classnames from 'classnames';
 import { DocumentReference } from 'firebase/firestore';
 import React, { useCallback, useState } from 'react';
 
+import { promptDeleteDocumentSingleField } from '../dialogs/deleteDocumentSingleField';
 import { supportsEditing } from '../DocumentEditor';
 import { FirestoreArray } from '../models';
 import {
@@ -139,6 +140,12 @@ export const EditableFieldPreview: React.FC<
     [documentRef]
   );
 
+  async function handleDeleteField() {
+    const shouldDeleteField = await promptDeleteDocumentSingleField();
+    if (!shouldDeleteField) return;
+    deleteField(documentRef, documentData, path);
+  }
+
   return isEditing ? (
     <>
       {isArray(parentState) && (
@@ -207,7 +214,7 @@ export const EditableFieldPreview: React.FC<
             label="Remove field"
             onClick={(e) => {
               e.stopPropagation();
-              deleteField(documentRef, documentData, path);
+              handleDeleteField();
             }}
           />
         </>
