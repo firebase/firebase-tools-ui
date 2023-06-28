@@ -14,7 +14,13 @@
  * limitations under the License.
  */
 
-import { RenderResult, act, fireEvent, waitFor } from '@testing-library/react';
+import {
+  RenderResult,
+  act,
+  fireEvent,
+  queryAllByRole,
+  waitFor,
+} from '@testing-library/react';
 import { DocumentReference, doc, setDoc } from 'firebase/firestore';
 import React from 'react';
 import { useFirestoreDocData } from 'reactfire';
@@ -259,10 +265,14 @@ describe('loaded array', () => {
   });
 
   it('deletes a top-level array element', async () => {
-    const { findByText, queryAllByText } = result;
+    const { findByText, queryAllByText, queryAllByRole } = result;
     // delete the alpha-element
     act(() => {
       queryAllByText('delete')[1].click();
+    });
+
+    act(() => {
+      queryAllByRole('button')[0].click();
     });
 
     expect(await findByText(/"foo":\["bravo","bravo"\]/)).not.toBeNull();
