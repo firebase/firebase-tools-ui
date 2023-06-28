@@ -21,7 +21,7 @@ import { UsersCleared } from './UsersCleared';
 
 describe('UsersCleared', () => {
   it('renders header row when all users have been cleared from the table', () => {
-    const { getByText } = render(<UsersCleared />);
-    expect(getByText('')).not.toBeNull();
+    const { getByRole } = render(<UsersCleared />);
+    expect(getByRole('alert')).not.toBeNull();
   });
 });
