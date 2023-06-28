@@ -22,7 +22,7 @@ export const UsersCleared: React.FC<React.PropsWithChildren<unknown>> = () => {
   const DISPLAY_TIME_MS = 500;
   const [alertText, setAlertText] = useState('');
 
-  const onUsersClearedEvent = () => {
+  const onAllUsersClearedEvent = () => {
     setAlertText('All Users CLeared!');
     setTimeout(() => {
       setAlertText('');
@@ -30,10 +30,10 @@ export const UsersCleared: React.FC<React.PropsWithChildren<unknown>> = () => {
   };
 
   useEffect(() => {
-    window.addEventListener('usersCleared', onUsersClearedEvent);
+    window.addEventListener('usersCleared', onAllUsersClearedEvent);
 
     return () => {
-      window.removeEventListener('usersCleared', onUsersClearedEvent);
+      window.removeEventListener('usersCleared', onAllUsersClearedEvent);
     };
   }, []);
 
