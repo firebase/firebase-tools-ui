@@ -36,7 +36,7 @@ export const authReducer = createReducer<AuthState, Action>(INIT_STATE)
         ...users,
         payload.user,
       ]);
-      draft.alertText = ''; // Maybe have an alert for "User Created"?
+      draft.alertText = '';
     });
   })
   .handleAction(authActions.updateUserSuccess, (state, { payload }) => {
