@@ -73,6 +73,7 @@ export const ExtensionsTableRow: React.FC<
           }}
           className={styles.manageButton}
           label={<div className={styles.manageButtonText}>Manage</div>}
+          title={`Manage the ${extension.displayName} extension.`}
           trailingIcon="arrow_forward"
         />
       </DataTableCell>
