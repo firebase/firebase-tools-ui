@@ -17,11 +17,11 @@
 import { render } from '@testing-library/react';
 import React from 'react';
 
-import UsersCleared from './UsersCleared';
+import { UsersCleared } from './UsersCleared';
 
 describe('UsersCleared', () => {
   it('renders header row when all users have been cleared from the table', () => {
-    const { getByRole } = render(<UsersCleared />);
+    const { getByRole } = render(<UsersCleared alertText="" />);
     expect(getByRole('alert')).not.toBeNull();
   });
 });
