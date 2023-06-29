@@ -436,6 +436,7 @@ const NameEditor: React.FC<
     <Field
       label="Field"
       outlined
+      autoFocus
       value={child.name}
       disabled={readonly}
       onChange={(e) => {
