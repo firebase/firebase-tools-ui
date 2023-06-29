@@ -80,6 +80,10 @@ describe('loaded document', () => {
   it('deletes a field', async () => {
     const { findByText, getByText } = result;
 
+    (promptDeleteDocumentSingleField as jest.Mock).mockReturnValueOnce(
+      Promise.resolve(true)
+    );
+
     act(() => {
       getByText('delete').click();
     });
