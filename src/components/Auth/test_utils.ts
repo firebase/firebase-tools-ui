@@ -65,8 +65,8 @@ export function createFakeState(state: Partial<AuthState>): AuthState {
     allowDuplicateEmails: true,
     users: createRemoteDataLoaded([]),
     tenants: createRemoteDataLoaded([]),
-    ...state,
     alertText: '',
+    ...state,
   };
 }
 
