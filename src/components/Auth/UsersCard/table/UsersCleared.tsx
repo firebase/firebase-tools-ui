@@ -14,32 +14,28 @@
  * limitations under the License.
  */
 
-import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
 
+import { createStructuredSelector } from '../../../../store';
+import { getAlertText } from '../../../../store/auth/selectors';
 import styles from './UsersCleared.module.scss';
 
-export const UsersCleared: React.FC<React.PropsWithChildren<unknown>> = () => {
-  const DISPLAY_TIME_MS = 500;
-  const [alertText, setAlertText] = useState('');
+export type UsersClearedProps = PropsFromStore;
 
-  const onAllUsersClearedEvent = () => {
-    setAlertText('All Users CLeared!');
-    setTimeout(() => {
-      setAlertText('');
-    }, DISPLAY_TIME_MS);
-  };
-
-  useEffect(() => {
-    window.addEventListener('usersCleared', onAllUsersClearedEvent);
-
-    return () => {
-      window.removeEventListener('usersCleared', onAllUsersClearedEvent);
-    };
-  }, []);
-
+export const UsersCleared: React.FC<
+  React.PropsWithChildren<UsersClearedProps>
+> = ({ alertText }) => {
   return (
     <div className={styles.visuallyHidden} role="alert">
       {alertText}
     </div>
   );
 };
+
+export const mapStateToProps = createStructuredSelector({
+  alertText: getAlertText,
+});
+
+export type PropsFromStore = ReturnType<typeof mapStateToProps>;
+
+export default connect(mapStateToProps)(UsersCleared);

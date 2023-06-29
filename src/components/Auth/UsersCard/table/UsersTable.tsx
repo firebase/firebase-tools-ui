@@ -46,7 +46,7 @@ import { AuthZeroState } from './AuthZeroState';
 import { confirmDeleteUser } from './confirmDeleteUser';
 import { NoResults } from './NoResults';
 import { ProviderCell } from './ProviderCell';
-import { UsersCleared } from './UsersCleared';
+import UsersCleared from './UsersCleared';
 import styles from './UsersTable.module.scss';
 
 export type UsersTableProps = PropsFromDispatch & PropsFromStore;

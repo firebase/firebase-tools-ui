@@ -26,7 +26,7 @@ const INIT_STATE = {
   filter: '',
   allowDuplicateEmails: false,
   tenants: { loading: true },
-  justClearedUsers: false,
+  alertText: '',
 };
 
 export const authReducer = createReducer<AuthState, Action>(INIT_STATE)
@@ -36,6 +36,7 @@ export const authReducer = createReducer<AuthState, Action>(INIT_STATE)
         ...users,
         payload.user,
       ]);
+      draft.alertText = ''; // Maybe have an alert for "User Created"?
     });
   })
   .handleAction(authActions.updateUserSuccess, (state, { payload }) => {
@@ -48,15 +49,15 @@ export const authReducer = createReducer<AuthState, Action>(INIT_STATE)
     });
   })
   .handleAction(authActions.nukeUsersSuccess, (state) => {
-    const alertUsersCleared = new Event('usersCleared');
-    window.dispatchEvent(alertUsersCleared);
     return produce(state, (draft) => {
       draft.users = mapResult(draft.users, () => []);
+      draft.alertText = 'All Users Cleared!';
     });
   })
   .handleAction(authActions.nukeUsersForAllTenantsSuccess, (state) => {
     return produce(state, (draft) => {
       draft.users = mapResult(draft.users, () => []);
+      draft.alertText = 'All Users Cleared!';
     });
   })
   .handleAction(
@@ -120,6 +121,7 @@ export const authReducer = createReducer<AuthState, Action>(INIT_STATE)
         loading: false,
         result: { data: payload },
       };
+      draft.alertText = '';
     });
   })
   .handleAction(authActions.authFetchUsersError, (state, { payload }) => {
