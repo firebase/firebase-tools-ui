@@ -75,7 +75,10 @@ export function createFakeAuthStateWithUsers(users: AuthUser[]) {
 }
 
 export function createFakeAuthStateWithAllDataCleared() {
-  return createFakeState({ alertText: 'All Users Cleared!' });
+  return createFakeState({
+    users: createRemoteDataLoaded([]),
+    alertText: 'All Users Cleared!',
+  });
 }
 
 export function createFakeAuthStateWithTenants(tenants: Tenant[]) {
