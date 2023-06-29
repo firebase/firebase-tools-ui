@@ -263,8 +263,9 @@ describe('loaded array', () => {
     // delete the alpha-element (opens modal)
     act(() => {
       queryAllByText('delete')[1].click();
-      queryAllByRole('button')[1].click();
     });
+
+    fireEvent.click(queryAllByRole('button')[1]);
 
     expect(await findByText(/"foo":\["bravo","bravo"\]/)).not.toBeNull();
   });
