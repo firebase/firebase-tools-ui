@@ -260,13 +260,10 @@ describe('loaded array', () => {
 
   it('deletes a top-level array element', async () => {
     const { findByText, queryAllByText, queryAllByRole } = result;
-    // delete the alpha-element
+    // delete the alpha-element (opens modal)
     act(() => {
       queryAllByText('delete')[1].click();
-    });
-
-    act(() => {
-      queryAllByRole('button')[0].click();
+      queryAllByRole('button')[1].click();
     });
 
     expect(await findByText(/"foo":\["bravo","bravo"\]/)).not.toBeNull();
