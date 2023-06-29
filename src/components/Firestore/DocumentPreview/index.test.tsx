@@ -280,6 +280,23 @@ describe('loaded array', () => {
     expect(await findByText(/"foo":\["bravo","bravo"\]/)).not.toBeNull();
   });
 
+  it('decline confirmation to delete a top-level array element ', async () => {
+    const { findByText, queryAllByText } = result;
+
+    (promptDeleteDocumentSingleField as jest.Mock).mockReturnValueOnce(
+      Promise.resolve(false)
+    );
+
+    // fail to delete the alpha-element (opens modal and declines)
+    act(() => {
+      queryAllByText('delete')[1].click();
+    });
+
+    expect(
+      await findByText(/"foo":\["alpha","bravo","bravo"\]/)
+    ).not.toBeNull();
+  });
+
   it('array elements keys are immutable', async () => {
     const { getByLabelText, queryAllByText } = result;
     // update the bravo-element
