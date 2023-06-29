@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { matchPath } from 'react-router';
 
 import Auth from './components/Auth';

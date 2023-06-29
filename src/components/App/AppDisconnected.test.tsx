@@ -15,7 +15,6 @@
  */
 
 import { render } from '@testing-library/react';
-import React from 'react';
 
 import { Config } from '../../store/config';
 import { TestEmulatorConfigProvider } from '../common/EmulatorConfigProvider';

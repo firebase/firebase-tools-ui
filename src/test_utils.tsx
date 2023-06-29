@@ -23,7 +23,6 @@ import {
   waitFor,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
-import React from 'react';
 import { UseFormProps, UseFormReturn, useForm } from 'react-hook-form';
 
 export function delay(timeoutMs: number): Promise<void> {

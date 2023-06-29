@@ -20,7 +20,6 @@ import { Tab, TabBar } from '@rmwc/tabs';
 import { ThemeProvider } from '@rmwc/theme';
 import { TopAppBar } from '@rmwc/top-app-bar';
 import { Typography } from '@rmwc/typography';
-import React from 'react';
 import { Link, matchPath, useLocation } from 'react-router-dom';
 
 import { navBarOnSurface, navBarPrimary, navBarSurface } from '../../colors';

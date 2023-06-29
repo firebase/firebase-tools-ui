@@ -15,7 +15,6 @@
  */
 
 import { IconButton } from '@rmwc/icon-button';
-import React from 'react';
 import { MapDispatchToPropsFunction, connect } from 'react-redux';
 
 import { authFetchUsersRequest } from '../../../../store/auth/actions';

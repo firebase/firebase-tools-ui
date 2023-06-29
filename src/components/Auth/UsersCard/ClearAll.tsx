@@ -15,7 +15,6 @@
  */
 
 import { Button } from '@rmwc/button';
-import React from 'react';
 import { MapDispatchToPropsFunction, connect } from 'react-redux';
 
 import { createStructuredSelector } from '../../../store';

@@ -15,7 +15,6 @@
  */
 
 import { render } from '@testing-library/react';
-import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { MemoryRouter } from 'react-router-dom';
 

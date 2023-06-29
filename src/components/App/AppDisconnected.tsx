@@ -15,7 +15,6 @@
  */
 
 import { Dialog, DialogContent, DialogTitle } from '@rmwc/dialog';
-import React from 'react';
 
 import { useIsEmulatorDisabled } from '../common/EmulatorConfigProvider';
 

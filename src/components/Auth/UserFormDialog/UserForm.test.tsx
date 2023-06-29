@@ -16,7 +16,6 @@
 
 import { Portal } from '@rmwc/base';
 import { act, fireEvent, render } from '@testing-library/react';
-import React from 'react';
 import { Provider } from 'react-redux';
 
 import { createRemoteDataLoaded } from '../../../store/utils';
