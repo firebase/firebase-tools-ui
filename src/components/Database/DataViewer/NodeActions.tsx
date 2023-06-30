@@ -31,6 +31,7 @@ import {
   DEFAULT_QUERY_PARAMS,
   QueryParams,
 } from './common/view_model';
+import { confirmDeleteRootDialog } from './confirmDeleteRootDialog';
 import { InlineQuery } from './InlineQuery';
 import { RenameDialog } from './RenameDialog';
 
@@ -151,17 +152,36 @@ export const NodeActions = React.memo<Props>(function NodeActions$({
         handle={<IconButton icon="more_vert" label="More options" />}
         onOpen={() => setMenuOpen(true)}
         onClose={() => setMenuOpen(false)}
+        onSelect={async (evt) => {
+          const DELETE_IDX = 0;
+          const CLONE_IDX = 1;
+          const RENAME_IDX = 2;
+
+          switch (evt.detail.index) {
+            case DELETE_IDX:
+              if (!isRoot || (await confirmDeleteRootDialog())) removeNode();
+              break;
+
+            case CLONE_IDX:
+              setCloneDialogIsOpen(true);
+              break;
+
+            case RENAME_IDX:
+              setRenameDialogIsOpen(true);
+              break;
+          }
+        }}
       >
-        <MenuItem onClick={removeNode}>
+        <MenuItem>
           <Icon icon="delete" /> Remove
         </MenuItem>
         {!isRoot && (
-          <MenuItem onClick={() => setCloneDialogIsOpen(true)}>
+          <MenuItem>
             <Icon icon="file_copy" /> Clone
           </MenuItem>
         )}
         {!isRoot && (
-          <MenuItem onClick={() => setRenameDialogIsOpen(true)}>
+          <MenuItem>
             <Icon icon="edit" /> Rename
           </MenuItem>
         )}
