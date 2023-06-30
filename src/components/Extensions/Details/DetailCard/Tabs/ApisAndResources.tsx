@@ -61,14 +61,15 @@ const Resources: React.FC<React.PropsWithChildren<unknown>> = () => {
       <article key={r.name} className={styles.resourceItem}>
         <div className={styles.resourceItemHeader}>
           <div>{r.name}</div>
-          <Link
+          <Button
+            tag={Link}
             to={`/logs?q=metadata.function.name="${r.functionName}"`}
             className={styles.viewLogsLink}
             target="_blank"
             rel="noopener noreferrer"
           >
-            <Button>View logs</Button>
-          </Link>
+            View logs
+          </Button>
         </div>
         <div>{r.description}</div>
       </article>
@@ -95,16 +96,14 @@ const Resources: React.FC<React.PropsWithChildren<unknown>> = () => {
                   Cloud Functions
                 </Typography>
               </div>
-              <Link
+              <Button
                 target="_blank"
                 rel="noopener noreferrer"
+                tag={Link}
                 to={`/logs?q=metadata.extension.instanceId="${extension.id}"`}
-                className={styles.viewLogsLink}
               >
-                <Button outlined={true} theme={'secondary'}>
-                  View all logs
-                </Button>
-              </Link>
+                View all logs
+              </Button>
             </div>
           }
           content={<>{functions}</>}
