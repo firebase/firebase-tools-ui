@@ -118,6 +118,24 @@ export const NodeActions = React.memo<Props>(function NodeActions$({
     [realtimeRef, queryParams]
   );
 
+  const menuItems = [
+    {
+      icon: 'delete',
+      onlyRenderOnNonRoot: false,
+      name: 'Remove',
+    },
+    {
+      icon: 'file_copy',
+      onlyRenderOnNonRoot: true,
+      name: 'Clone',
+    },
+    {
+      icon: 'edit',
+      onlyRenderOnNonRoot: true,
+      name: 'Rename',
+    },
+  ];
+
   return (
     <aside className={'NodeActions' + (isActive ? ' NodeActions--active' : '')}>
       <Tooltip content="Filter children">
@@ -153,38 +171,30 @@ export const NodeActions = React.memo<Props>(function NodeActions$({
         onOpen={() => setMenuOpen(true)}
         onClose={() => setMenuOpen(false)}
         onSelect={async (evt) => {
-          const DELETE_IDX = 0;
-          const CLONE_IDX = 1;
-          const RENAME_IDX = 2;
-
-          switch (evt.detail.index) {
-            case DELETE_IDX:
+          switch (menuItems[evt.detail.index].name) {
+            case 'Remove':
               if (!isRoot || (await confirmDeleteRootDialog())) removeNode();
               break;
-
-            case CLONE_IDX:
+            case 'Clone':
               setCloneDialogIsOpen(true);
               break;
-
-            case RENAME_IDX:
+            case 'Rename':
               setRenameDialogIsOpen(true);
-              break;
           }
         }}
       >
-        <MenuItem>
-          <Icon icon="delete" /> Remove
-        </MenuItem>
-        {!isRoot && (
-          <MenuItem>
-            <Icon icon="file_copy" /> Clone
-          </MenuItem>
-        )}
-        {!isRoot && (
-          <MenuItem>
-            <Icon icon="edit" /> Rename
-          </MenuItem>
-        )}
+        {menuItems.map((item) => {
+          const shouldRender = !isRoot || !item.onlyRenderOnNonRoot;
+          if (shouldRender) {
+            return (
+              <MenuItem>
+                <Icon icon={item.icon} /> {item.name}
+              </MenuItem>
+            );
+          } else {
+            return <></>;
+          }
+        })}
       </SimpleMenu>
 
       {/* Extra UI that shows when actions are triggered */}
