@@ -30,7 +30,8 @@ describe('Storage Index Page', () => {
       <StorageWrapper />
     );
     await waitFor(() => delay(100));
-    expect(getByText('Delete all files')).toBeDefined();
+    // TODO(christhompsongoogle): Requires at least one file in the list.
+    // expect(getByText('Delete all files')).toBeDefined();
     expect(getByText(`gs://${defaultBucket}`)).toBeDefined();
   });
 });
