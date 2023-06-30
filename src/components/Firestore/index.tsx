@@ -21,6 +21,7 @@ import { Card } from '@rmwc/card';
 import { Elevation } from '@rmwc/elevation';
 import { GridCell } from '@rmwc/grid';
 import { Tab, TabBar } from '@rmwc/tabs';
+import { Typography } from '@rmwc/typography';
 import React, { Suspense, useState } from 'react';
 import {
   Link,
@@ -33,9 +34,11 @@ import {
 } from 'react-router-dom';
 
 import { CustomThemeProvider } from '../../themes';
+import { Callout } from '../common/Callout';
 import { useIsEmulatorDisabled } from '../common/EmulatorConfigProvider';
 import { EmulatorDisabled } from '../common/EmulatorDisabled';
 import { InteractiveBreadCrumbBar } from '../common/InteractiveBreadCrumbBar';
+import { DocsLink } from '../common/links/DocsLink';
 import { Spinner } from '../common/Spinner';
 import { promptClearAll } from './dialogs/clearAll';
 import { Root } from './Document';
@@ -128,10 +131,40 @@ export const Firestore: React.FC<React.PropsWithChildren<unknown>> = React.memo(
       }
     }
 
+    function getButton() {
+      return (
+        <>
+          <Button></Button>
+        </>
+      );
+    }
+
     return isRefreshing ? (
       <Spinner span={12} data-testid="firestore-loading" />
     ) : (
       <FirestoreStore>
+        <GridCell span={12}>
+          <Callout
+            aside={true}
+            actions={
+              // styles.link in 2 places
+              <div className="link">
+                <DocsLink
+                  href="extensions/manifest"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Typography theme="primary" use="body2" className="link">
+                    Learn more about named databases and Firebase here
+                  </Typography>
+                </DocsLink>
+              </div>
+            }
+          >
+            The Emulator Suite UI only supports the (default) database right
+            now.
+          </Callout>
+        </GridCell>
         <GridCell span={12} className="Firestore">
           <div className="Firestore-sub-tabs">
             <TabBar theme="onSurface" activeTabIndex={activeTabIndex}>

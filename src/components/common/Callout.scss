@@ -32,7 +32,7 @@
   display: flex;
   align-items: stretch;
   .Callout-icon {
-    color: white;
+    color: var(--mdc-theme-text-primary-on-background);
   }
 }
 
