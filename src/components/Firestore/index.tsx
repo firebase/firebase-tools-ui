@@ -131,14 +131,6 @@ export const Firestore: React.FC<React.PropsWithChildren<unknown>> = React.memo(
       }
     }
 
-    function getButton() {
-      return (
-        <>
-          <Button></Button>
-        </>
-      );
-    }
-
     return isRefreshing ? (
       <Spinner span={12} data-testid="firestore-loading" />
     ) : (
@@ -150,12 +142,12 @@ export const Firestore: React.FC<React.PropsWithChildren<unknown>> = React.memo(
               // styles.link in 2 places
               <div className="link">
                 <DocsLink
-                  href="extensions/manifest"
+                  href="emulator-suite/connect_firestore"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   <Typography theme="primary" use="body2" className="link">
-                    Learn more about named databases and Firebase here
+                    Learn more about named databases and the Firestore emulator here
                   </Typography>
                 </DocsLink>
               </div>
