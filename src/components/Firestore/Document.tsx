@@ -131,11 +131,22 @@ export const Document: React.FC<
         <SimpleMenu
           handle={<IconButton icon="more_vert" label="Menu" />}
           renderToPortal
+          onSelect={(evt) => {
+            const DELETE_DOC_IDX = 0;
+            const DELETE_ALL_FIELDS_IDX = 1;
+            switch (evt.detail.index) {
+              case DELETE_DOC_IDX:
+                setDeleteDocumentDialogOpen(true);
+                break;
+
+              case DELETE_ALL_FIELDS_IDX:
+                handleDeleteFields();
+                break;
+            }
+          }}
         >
-          <MenuItem onClick={() => setDeleteDocumentDialogOpen(true)}>
-            Delete document
-          </MenuItem>
-          <MenuItem onClick={handleDeleteFields}>Delete all fields</MenuItem>
+          <MenuItem>Delete document</MenuItem>
+          <MenuItem>Delete all fields</MenuItem>
         </SimpleMenu>
       </PanelHeader>
 
