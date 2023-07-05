@@ -139,7 +139,6 @@ export const Firestore: React.FC<React.PropsWithChildren<unknown>> = React.memo(
           <Callout
             aside={true}
             actions={
-              // styles.link in 2 places
               <div className="link">
                 <DocsLink
                   href="emulator-suite/connect_firestore"
