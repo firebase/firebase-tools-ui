@@ -139,7 +139,6 @@ export const Firestore: React.FC<React.PropsWithChildren<unknown>> = React.memo(
           <Callout
             aside={true}
             actions={
-              // styles.link in 2 places
               <div className="link">
                 <DocsLink
                   href="emulator-suite/connect_firestore"
@@ -147,7 +146,7 @@ export const Firestore: React.FC<React.PropsWithChildren<unknown>> = React.memo(
                   rel="noopener noreferrer"
                 >
                   <Typography theme="primary" use="body2" className="link">
-                    Learn more about named databases and the Firestore emulator here
+                    Learn more
                   </Typography>
                 </DocsLink>
               </div>
