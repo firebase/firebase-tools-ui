@@ -146,7 +146,7 @@ export const Firestore: React.FC<React.PropsWithChildren<unknown>> = React.memo(
                   rel="noopener noreferrer"
                 >
                   <Typography theme="primary" use="body2" className="link">
-                    Learn more about named databases and the Firestore emulator here
+                    Learn more
                   </Typography>
                 </DocsLink>
               </div>
