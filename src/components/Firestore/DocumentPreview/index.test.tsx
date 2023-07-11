@@ -19,8 +19,11 @@ import { DocumentReference, doc, setDoc } from 'firebase/firestore';
 import React from 'react';
 import { useFirestoreDocData } from 'reactfire';
 
+import { promptDeleteDocumentSingleField } from '../dialogs/deleteDocumentSingleField';
 import { renderWithFirestore } from '../testing/FirestoreTestProviders';
 import DocumentPreview from './index';
+
+jest.mock('../dialogs/deleteDocumentSingleField');
 
 const TestDocument: React.FC<{ docRef: DocumentReference }> = ({ docRef }) => {
   const { data } = useFirestoreDocData(docRef);
@@ -76,6 +79,10 @@ describe('loaded document', () => {
 
   it('deletes a field', async () => {
     const { findByText, getByText } = result;
+
+    (promptDeleteDocumentSingleField as jest.Mock).mockReturnValueOnce(
+      Promise.resolve(true)
+    );
 
     act(() => {
       getByText('delete').click();
@@ -260,12 +267,34 @@ describe('loaded array', () => {
 
   it('deletes a top-level array element', async () => {
     const { findByText, queryAllByText } = result;
-    // delete the alpha-element
+
+    (promptDeleteDocumentSingleField as jest.Mock).mockReturnValueOnce(
+      Promise.resolve(true)
+    );
+
+    // delete the alpha-element (opens modal)
     act(() => {
       queryAllByText('delete')[1].click();
     });
 
     expect(await findByText(/"foo":\["bravo","bravo"\]/)).not.toBeNull();
+  });
+
+  it('decline confirmation to delete a top-level array element ', async () => {
+    const { findByText, queryAllByText } = result;
+
+    (promptDeleteDocumentSingleField as jest.Mock).mockReturnValueOnce(
+      Promise.resolve(false)
+    );
+
+    // fail to delete the alpha-element (opens modal and declines)
+    act(() => {
+      queryAllByText('delete')[1].click();
+    });
+
+    expect(
+      await findByText(/"foo":\["alpha","bravo","bravo"\]/)
+    ).not.toBeNull();
   });
 
   it('array elements keys are immutable', async () => {
