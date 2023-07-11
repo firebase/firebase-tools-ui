@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Google LLC
+ * Copyright 2023 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,26 +14,14 @@
  * limitations under the License.
  */
 
-import { Icon } from '@rmwc/icon';
+import { render } from '@testing-library/react';
 import React from 'react';
 
-import styles from './Link.module.scss';
+import { UsersCleared } from './UsersCleared';
 
-export function ExternalLink(
-  props: React.DetailedHTMLProps<
-    React.AnchorHTMLAttributes<HTMLAnchorElement>,
-    HTMLAnchorElement
-  >
-) {
-  return (
-    <a
-      {...props}
-      className={styles.link}
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      <span className={styles.content}>{props.children}</span>
-      <Icon aria-hidden="true" icon="open_in_new" className={styles.icon} />
-    </a>
-  );
-}
+describe('UsersCleared', () => {
+  it('renders header row when all users have been cleared from the table', () => {
+    const { getByRole } = render(<UsersCleared alertText="" />);
+    expect(getByRole('alert')).not.toBeNull();
+  });
+});

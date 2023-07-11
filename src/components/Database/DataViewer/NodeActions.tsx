@@ -31,6 +31,7 @@ import {
   DEFAULT_QUERY_PARAMS,
   QueryParams,
 } from './common/view_model';
+import { confirmDeleteRootDialog } from './confirmDeleteRootDialog';
 import { InlineQuery } from './InlineQuery';
 import { RenameDialog } from './RenameDialog';
 
@@ -117,6 +118,24 @@ export const NodeActions = React.memo<Props>(function NodeActions$({
     [realtimeRef, queryParams]
   );
 
+  const menuItems = [
+    {
+      icon: 'delete',
+      onlyRenderOnNonRoot: false,
+      name: 'Remove',
+    },
+    {
+      icon: 'file_copy',
+      onlyRenderOnNonRoot: true,
+      name: 'Clone',
+    },
+    {
+      icon: 'edit',
+      onlyRenderOnNonRoot: true,
+      name: 'Rename',
+    },
+  ];
+
   return (
     <aside className={'NodeActions' + (isActive ? ' NodeActions--active' : '')}>
       <Tooltip content="Filter children">
@@ -151,20 +170,31 @@ export const NodeActions = React.memo<Props>(function NodeActions$({
         handle={<IconButton icon="more_vert" label="More options" />}
         onOpen={() => setMenuOpen(true)}
         onClose={() => setMenuOpen(false)}
+        onSelect={async (evt) => {
+          switch (menuItems[evt.detail.index].name) {
+            case 'Remove':
+              if (!isRoot || (await confirmDeleteRootDialog())) removeNode();
+              break;
+            case 'Clone':
+              setCloneDialogIsOpen(true);
+              break;
+            case 'Rename':
+              setRenameDialogIsOpen(true);
+          }
+        }}
       >
-        <MenuItem onClick={removeNode}>
-          <Icon icon="delete" /> Remove
-        </MenuItem>
-        {!isRoot && (
-          <MenuItem onClick={() => setCloneDialogIsOpen(true)}>
-            <Icon icon="file_copy" /> Clone
-          </MenuItem>
-        )}
-        {!isRoot && (
-          <MenuItem onClick={() => setRenameDialogIsOpen(true)}>
-            <Icon icon="edit" /> Rename
-          </MenuItem>
-        )}
+        {menuItems.map((item) => {
+          const shouldRender = !isRoot || !item.onlyRenderOnNonRoot;
+          if (shouldRender) {
+            return (
+              <MenuItem>
+                <Icon icon={item.icon} /> {item.name}
+              </MenuItem>
+            );
+          } else {
+            return <></>;
+          }
+        })}
       </SimpleMenu>
 
       {/* Extra UI that shows when actions are triggered */}
