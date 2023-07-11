@@ -58,8 +58,6 @@ const root = createRoot(container!);
 // https://github.com/remix-run/react-router/issues/7870
 root.render(
   <RMWCProvider
-    // Globally disable ripples
-    ripple={false}
     typography={{
       /** Make headline3 <h3> instaed of div or span */
       headline3: 'h3',
