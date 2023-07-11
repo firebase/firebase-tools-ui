@@ -33,7 +33,7 @@ export function ExternalLink(
       rel="noopener noreferrer"
     >
       <span className={styles.content}>{props.children}</span>
-      <Icon icon="open_in_new" className={styles.icon} />
+      <Icon aria-hidden="true" icon="open_in_new" className={styles.icon} />
     </a>
   );
 }
