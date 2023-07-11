@@ -14,27 +14,6 @@
  * limitations under the License.
  */
 
-.extensionRow {
-  &:first-child {
-    border: 0 solid;
-  }
-
-  &:hover {
-    border-color: var(--fire-color-input-borders);
-  }
-
-  .manageButtonText {
-    visibility: hidden;
-  }
-
-  &:hover,
-  .manageButton:focus {
-    .manageButtonText {
-      visibility: visible;
-    }
-  }
-}
-
 .iconCell,
 .infoCell {
   padding: 8px 16px;
