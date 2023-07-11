@@ -1,5 +1,5 @@
 /**
- * Copyright 2020 Google LLC
+ * Copyright 2023 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 
 import {
+  createFakeAuthStateWithAllDataCleared,
   createFakeAuthStateWithUsers,
   createFakeState,
   createFakeTenant,
@@ -62,7 +63,7 @@ describe('auth reducers', () => {
       const state = createFakeAuthStateWithUsers([user, user2]);
       const action = nukeUsersSuccess();
 
-      const expected = createFakeAuthStateWithUsers([]);
+      const expected = createFakeAuthStateWithAllDataCleared();
       expect(authReducer(state, action)).toEqual(expected);
     });
 
