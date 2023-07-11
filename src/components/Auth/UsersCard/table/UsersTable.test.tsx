@@ -113,7 +113,7 @@ describe('UserTable', () => {
         filteredUsers: [fakeUser1, fakeUser2],
       });
 
-      const menu = result.getAllByLabelText('Open menu')[0];
+      const menu = result.getAllByRole('menu')[0];
 
       await act(async () => {
         fireEvent.click(menu);

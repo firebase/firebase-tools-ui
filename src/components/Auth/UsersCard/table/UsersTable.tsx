@@ -1,5 +1,5 @@
 /**
- * Copyright 2021 Google LLC
+ * Copyright 2023 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,6 +46,7 @@ import { AuthZeroState } from './AuthZeroState';
 import { confirmDeleteUser } from './confirmDeleteUser';
 import { NoResults } from './NoResults';
 import { ProviderCell } from './ProviderCell';
+import UsersCleared from './UsersCleared';
 import styles from './UsersTable.module.scss';
 
 export type UsersTableProps = PropsFromDispatch & PropsFromStore;
@@ -88,7 +89,16 @@ export const UsersTableRow: React.FC<
           onOpen={() => setMenuOpen(true)}
           onClose={() => setMenuOpen(false)}
           handle={
-            <IconButton theme="secondary" icon="more_vert" label="Open menu" />
+            <IconButton
+              theme="secondary"
+              icon="more_vert"
+              aria-label={`Open menu for user ${
+                user.displayName ||
+                user.email ||
+                `with phone number ` + user.phoneNumber
+              }`}
+              role="menu"
+            />
           }
           renderToPortal
         >
@@ -169,6 +179,7 @@ export const UsersTable: React.FC<React.PropsWithChildren<UsersTableProps>> = ({
           </DataTableBody>
         </DataTableContent>
       </DataTable>
+      <UsersCleared />
       {shouldShowZeroResults && <NoResults />}
       {shouldShowZeroState && <AuthZeroState />}
     </>

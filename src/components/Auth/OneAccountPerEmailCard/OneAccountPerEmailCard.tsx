@@ -72,7 +72,11 @@ export const OneAccountPerEmailCard: React.FC<
         )}
 
         <div>
-          <Button outlined={true} onClick={() => setOpen(true)}>
+          <Button
+            aria-label="Enable or disable multiple accounts from one email address."
+            outlined={true}
+            onClick={() => setOpen(true)}
+          >
             Change
           </Button>
         </div>
