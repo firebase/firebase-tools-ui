@@ -89,7 +89,16 @@ export const UsersTableRow: React.FC<
           onOpen={() => setMenuOpen(true)}
           onClose={() => setMenuOpen(false)}
           handle={
-            <IconButton theme="secondary" icon="more_vert" label="Open menu" />
+            <IconButton
+              theme="secondary"
+              icon="more_vert"
+              aria-label={`Open menu for user ${
+                user.displayName ||
+                user.email ||
+                `with phone number ` + user.phoneNumber
+              }`}
+              role="menu"
+            />
           }
           renderToPortal
         >
