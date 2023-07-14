@@ -20,8 +20,8 @@ import { Button } from '@rmwc/button';
 import { Card } from '@rmwc/card';
 import { Elevation } from '@rmwc/elevation';
 import { GridCell } from '@rmwc/grid';
+import { Select } from '@rmwc/select';
 import { Tab, TabBar } from '@rmwc/tabs';
-import { Typography } from '@rmwc/typography';
 import React, { Suspense, useState } from 'react';
 import {
   Link,
@@ -34,11 +34,9 @@ import {
 } from 'react-router-dom';
 
 import { CustomThemeProvider } from '../../themes';
-import { Callout } from '../common/Callout';
 import { useIsEmulatorDisabled } from '../common/EmulatorConfigProvider';
 import { EmulatorDisabled } from '../common/EmulatorDisabled';
 import { InteractiveBreadCrumbBar } from '../common/InteractiveBreadCrumbBar';
-import { DocsLink } from '../common/links/DocsLink';
 import { Spinner } from '../common/Spinner';
 import { promptClearAll } from './dialogs/clearAll';
 import { Root } from './Document';
@@ -50,12 +48,18 @@ import PanelHeader from './PanelHeader';
 import FirestoreRequests from './Requests';
 import { FirestoreStore } from './store';
 
+var currentSelectedDatabaseId : string;
+var setCurrentSelectedDatabaseId : (newDatabaseId: string) => void;
+
 export const FirestoreRoute: React.FC<
   React.PropsWithChildren<unknown>
 > = () => {
+
+  [currentSelectedDatabaseId, setCurrentSelectedDatabaseId] = useState("(default)");
+console.log("DB ID is now: " + currentSelectedDatabaseId);
   return (
     <Suspense fallback={<FirestoreRouteSuspended />}>
-      <FirestoreEmulatedApiProvider>
+      <FirestoreEmulatedApiProvider currentSelectedDatabaseId={currentSelectedDatabaseId}>
         <Firestore />
       </FirestoreEmulatedApiProvider>
     </Suspense>
@@ -86,7 +90,7 @@ export const Firestore: React.FC<React.PropsWithChildren<unknown>> = React.memo(
   () => {
     const location = useLocation();
     const history = useHistory();
-    const [isRefreshing, setIsRefreshing] = useState(false);
+    const [isRefreshing, setIsRefreshing] = useState(false); // FIXME refreshing animation?
     const eject = useEjector();
 
     // TODO: do something better here!
@@ -135,26 +139,8 @@ export const Firestore: React.FC<React.PropsWithChildren<unknown>> = React.memo(
       <Spinner span={12} data-testid="firestore-loading" />
     ) : (
       <FirestoreStore>
-        <GridCell span={12}>
-          <Callout
-            aside={true}
-            actions={
-              <div className="link">
-                <DocsLink
-                  href="emulator-suite/connect_firestore"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Typography theme="primary" use="body2" className="link">
-                    Learn more
-                  </Typography>
-                </DocsLink>
-              </div>
-            }
-          >
-            The Emulator Suite UI only supports the (default) database right
-            now.
-          </Callout>
+        <GridCell span={2}>
+         <MyDropdown/>
         </GridCell>
         <GridCell span={12} className="Firestore">
           <div className="Firestore-sub-tabs">
@@ -183,6 +169,31 @@ export const Firestore: React.FC<React.PropsWithChildren<unknown>> = React.memo(
     );
   }
 );
+
+const MyDropdown = () => {
+  const options = [
+    // FIXME need some wrapping here if the length is too long. What is the max length of a DB ID?
+    { label: '(Default)', value: '1' },
+    { label: 'gggg', value: '2' },
+    { label: 'Create a database<a href="google.com">fff</a>', value: '3' },
+  ];
+
+  return (
+    <Select
+      label="Select a database"
+      defaultValue="1"
+      options={options}
+      outlined
+      onChange={(e: any) => {
+        if (e.target.value === "2") {
+          setCurrentSelectedDatabaseId('gggg');
+        } else {
+          setCurrentSelectedDatabaseId('(default)');
+        }
+      }}
+    />
+  );
+};
 
 interface FirestoreDataCardProps {
   path: string;

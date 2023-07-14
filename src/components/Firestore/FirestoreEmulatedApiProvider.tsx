@@ -37,14 +37,16 @@ import { useFetcher, useRequest } from '../common/useRequest';
 import { MissingDocument } from './models';
 
 const FIRESTORE_OPTIONS = {};
+let databaseId = "(default)";
 
 /**
  * Provide a local-FirebaseApp with a FirestoreSDK connected to
  * the Emulator Hub.
  */
 export const FirestoreEmulatedApiProvider: React.FC<
-  React.PropsWithChildren<{}>
-> = React.memo(({ children }) => {
+  React.PropsWithChildren<{currentSelectedDatabaseId: string}>
+> = React.memo(({currentSelectedDatabaseId, children }) => {
+  databaseId = currentSelectedDatabaseId;
   const config = useEmulatorConfig('firestore');
   const app = useEmulatedFirebaseApp(
     'firestore',
@@ -81,8 +83,7 @@ const FirestoreComponent: React.FC<React.PropsWithChildren<unknown>> = ({
 function useFirestoreRestApi() {
   const config = useEmulatorConfig('firestore');
   const { projectId } = useConfig();
-  const databaseId = '(default)';
-
+console.log("useFirestoreRestApi, DB id is: " + databaseId);
   return {
     baseUrl: `//${config.hostAndPort}/v1/projects/${projectId}/databases/${databaseId}`,
     baseEmulatorUrl: `//${config.hostAndPort}/emulator/v1/projects/${projectId}/databases/${databaseId}`,
