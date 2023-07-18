@@ -53,5 +53,11 @@
     &:not(.mdc-tab--active) .mdc-tab__text-label {
       color: var(--mdc-theme-on-surface);
     }
+    .mdc-tab__ripple:hover::before {
+      opacity: 0.5;
+    }
+    .mdc-tab__ripple.mdc-ripple-upgraded--background-focused::before {
+      opacity: 0.5;
+    }
   }
 }

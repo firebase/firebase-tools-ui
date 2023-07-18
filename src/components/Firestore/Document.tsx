@@ -108,6 +108,8 @@ export const Document: React.FC<
     shouldDelete && setDoc(reference, {});
   };
 
+  const menuItems = ['Delete document', 'Delete all fields'];
+
   return (
     <Doc
       id={reference.id}
@@ -131,11 +133,21 @@ export const Document: React.FC<
         <SimpleMenu
           handle={<IconButton icon="more_vert" label="Menu" />}
           renderToPortal
+          onSelect={(evt) => {
+            switch (menuItems[evt.detail.index]) {
+              case 'Delete document':
+                setDeleteDocumentDialogOpen(true);
+                break;
+
+              case 'Delete all fields':
+                handleDeleteFields();
+                break;
+            }
+          }}
         >
-          <MenuItem onClick={() => setDeleteDocumentDialogOpen(true)}>
-            Delete document
-          </MenuItem>
-          <MenuItem onClick={handleDeleteFields}>Delete all fields</MenuItem>
+          {menuItems.map((menuItemText) => {
+            return <MenuItem>{menuItemText}</MenuItem>;
+          })}
         </SimpleMenu>
       </PanelHeader>
 

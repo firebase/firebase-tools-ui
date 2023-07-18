@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Google LLC
+ * Copyright 2023 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,26 +14,12 @@
  * limitations under the License.
  */
 
-import { Icon } from '@rmwc/icon';
-import React from 'react';
-
-import styles from './Link.module.scss';
-
-export function ExternalLink(
-  props: React.DetailedHTMLProps<
-    React.AnchorHTMLAttributes<HTMLAnchorElement>,
-    HTMLAnchorElement
-  >
-) {
-  return (
-    <a
-      {...props}
-      className={styles.link}
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      <span className={styles.content}>{props.children}</span>
-      <Icon aria-hidden="true" icon="open_in_new" className={styles.icon} />
-    </a>
-  );
+.visuallyHidden {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
 }

@@ -48,12 +48,18 @@ export const AppBar: React.FC<React.PropsWithChildren<Props>> = ({
     </Tab>
   ));
 
-  const activeTabIndex = navRoutes.findIndex((r) =>
-    matchPath(location.pathname, {
-      path: r.path,
-      exact: r.exact,
-    })
-  );
+  const [activeTabIndex, setActiveTab] = React.useState(0);
+
+  React.useEffect(() => {
+    setActiveTab(
+      navRoutes.findIndex((r) =>
+        matchPath(location.pathname, {
+          path: r.path,
+          exact: r.exact,
+        })
+      )
+    );
+  }, [location.pathname, navRoutes]);
 
   return (
     <ThemeProvider
@@ -73,7 +79,11 @@ export const AppBar: React.FC<React.PropsWithChildren<Props>> = ({
             </Typography>
           </div>
         </div>
-        <TabBar theme="onSurface" activeTabIndex={activeTabIndex}>
+        <TabBar
+          theme="onSurface"
+          activeTabIndex={activeTabIndex}
+          onActivate={(evt) => setActiveTab(evt.detail.index)}
+        >
           {tabs}
         </TabBar>
       </TopAppBar>

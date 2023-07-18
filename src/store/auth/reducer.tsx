@@ -1,5 +1,5 @@
 /**
- * Copyright 2021 Google LLC
+ * Copyright 2023 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ const INIT_STATE = {
   filter: '',
   allowDuplicateEmails: false,
   tenants: { loading: true },
+  alertText: '',
 };
 
 export const authReducer = createReducer<AuthState, Action>(INIT_STATE)
@@ -35,6 +36,7 @@ export const authReducer = createReducer<AuthState, Action>(INIT_STATE)
         ...users,
         payload.user,
       ]);
+      draft.alertText = ''; // TODO(abradham): Consider alerting on "User Created"
     });
   })
   .handleAction(authActions.updateUserSuccess, (state, { payload }) => {
@@ -49,11 +51,13 @@ export const authReducer = createReducer<AuthState, Action>(INIT_STATE)
   .handleAction(authActions.nukeUsersSuccess, (state) => {
     return produce(state, (draft) => {
       draft.users = mapResult(draft.users, () => []);
+      draft.alertText = 'All Users Cleared!';
     });
   })
   .handleAction(authActions.nukeUsersForAllTenantsSuccess, (state) => {
     return produce(state, (draft) => {
       draft.users = mapResult(draft.users, () => []);
+      draft.alertText = 'All Users Cleared!';
     });
   })
   .handleAction(
@@ -117,6 +121,7 @@ export const authReducer = createReducer<AuthState, Action>(INIT_STATE)
         loading: false,
         result: { data: payload },
       };
+      draft.alertText = '';
     });
   })
   .handleAction(authActions.authFetchUsersError, (state, { payload }) => {
