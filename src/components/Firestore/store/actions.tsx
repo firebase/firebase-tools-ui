@@ -16,7 +16,7 @@
 
 import { createAction } from 'typesafe-actions';
 
-import { CollectionFilter } from './models';
+import { CollectionFilter } from '../models';
 
 export const addCollectionFilter = createAction(
   '@firestore/addCollectionFilter'
@@ -29,4 +29,9 @@ export const removeCollectionFilter = createAction(
   '@firestore/removeCollectionFilter'
 )<{
   path: string;
+}>();
+export const setSelectedDatabaseId = createAction(
+  '@firestore/setSelectedDatabaseId'
+)<{
+  databaseId: string;
 }>();

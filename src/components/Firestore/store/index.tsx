@@ -19,7 +19,7 @@ import * as React from 'react';
 import { Action, createReducer } from 'typesafe-actions';
 
 import * as actions from './actions';
-import { CollectionFilter } from './models';
+import { CollectionFilter } from '../models';
 
 export interface CollectionFilters {
   [path: string]: CollectionFilter;
@@ -27,9 +27,10 @@ export interface CollectionFilters {
 
 export interface Store {
   collectionFilters: CollectionFilters;
+  selectedDatabaseId: string;
 }
 
-const INIT_STATE: Store = { collectionFilters: {} };
+const INIT_STATE: Store = { collectionFilters: {}, selectedDatabaseId: "(default)" };
 
 const firestoreStoreContext = React.createContext<{
   store: Store;
@@ -46,6 +47,12 @@ const reducer = createReducer<Store, Action>(INIT_STATE)
   .handleAction(actions.removeCollectionFilter, (state, { payload }) => {
     return produce(state, (draft) => {
       delete draft.collectionFilters[payload.path];
+    });
+  })
+  .handleAction(actions.setSelectedDatabaseId, (state, { payload }) => {
+    return produce(state, (draft) => {
+      console.log("setSelectedDatabaseId: " + payload.databaseId)
+      draft.selectedDatabaseId = payload.databaseId;
     });
   });
 

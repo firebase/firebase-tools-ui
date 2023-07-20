@@ -33,6 +33,7 @@ import {
   useLocation,
 } from 'react-router-dom';
 
+import * as actions from './store/actions';
 import { CustomThemeProvider } from '../../themes';
 import { useIsEmulatorDisabled } from '../common/EmulatorConfigProvider';
 import { EmulatorDisabled } from '../common/EmulatorDisabled';
@@ -46,7 +47,7 @@ import {
 } from './FirestoreEmulatedApiProvider';
 import PanelHeader from './PanelHeader';
 import FirestoreRequests from './Requests';
-import { FirestoreStore } from './store';
+import { FirestoreStore, useDispatch } from './store';
 
 var currentSelectedDatabaseId : string;
 var setCurrentSelectedDatabaseId : (newDatabaseId: string) => void;
@@ -140,7 +141,7 @@ export const Firestore: React.FC<React.PropsWithChildren<{databaseId: string}>> 
     ) : (
       <FirestoreStore>
         <GridCell span={2}>
-         <MyDropdown/>
+         <DatabaseIdDropdown/>
         </GridCell>
         <GridCell span={12} className="Firestore">
           <div className="Firestore-sub-tabs">
@@ -169,14 +170,15 @@ export const Firestore: React.FC<React.PropsWithChildren<{databaseId: string}>> 
     );
   }
 );
-
-const MyDropdown = () => {
+// FIXME should I convert this to a component?
+const DatabaseIdDropdown = () => {
   const options = [
     // FIXME need some wrapping here if the length is too long. What is the max length of a DB ID?
     { label: '(Default)', value: '1' },
     { label: 'gggg', value: '2' },
     { label: 'Create a database<a href="google.com">fff</a>', value: '3' },
   ];
+  const dispatch = useDispatch()
 
   return (
     <Select
@@ -186,8 +188,18 @@ const MyDropdown = () => {
       outlined
       onChange={(e: any) => {
         if (e.target.value === "2") {
+          dispatch(
+            actions.setSelectedDatabaseId({
+              databaseId: "gggg"
+            })
+          );
           setCurrentSelectedDatabaseId('gggg');
         } else {
+          dispatch(
+            actions.setSelectedDatabaseId({
+              databaseId: "(default)"
+            })
+          );
           setCurrentSelectedDatabaseId('(default)');
         }
       }}
