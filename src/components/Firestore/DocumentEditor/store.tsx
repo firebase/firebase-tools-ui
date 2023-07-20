@@ -151,6 +151,7 @@ export const reducer = createReducer<Store, Action>({ fields: {} })
       const field = draft.fields[payload.uuid];
       assertIsPrimitiveField(field);
       field.value = payload.value as PrimitiveValue;
+      console.log("handleAction new draft:" + JSON.stringify(draft));
     });
   });
 

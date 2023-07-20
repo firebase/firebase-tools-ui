@@ -29,9 +29,10 @@ const ReferenceEditor: React.FC<
     name: string;
   }>
 > = ({ value, onChange, name }) => {
-  const [path] = useState(value.path);
   const firestore = useFirestore();
   const { trigger } = useFormContext();
+  console.log("reference editor s value: " + JSON.stringify(value));
+  console.log("reference editor s path: " + JSON.stringify(value.path));
 
   async function handleChange(value: string) {
     if (await trigger(name)) {
@@ -55,9 +56,11 @@ const ReferenceEditor: React.FC<
       render={({ field: { ref, ...field }, fieldState }) => (
         <Field
           label="Document path"
-          defaultValue={path}
+          defaultValue={value.path}
           {...field}
           onChange={(e) => {
+            console.log("onchange inside ReferenceEditor: " + JSON.stringify(e.currentTarget.value));
+
             field.onChange(e.currentTarget.value);
             handleChange(e.currentTarget.value);
           }}

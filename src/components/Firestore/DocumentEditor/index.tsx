@@ -121,6 +121,7 @@ const DocumentEditor: React.FC<
   firestore,
 }) => {
   const initialState = normalize(value);
+  console.log("document editor initial state: " + JSON.stringify(initialState))
   const [store, dispatch] = React.useReducer(storeReducer, initialState);
   const methods = useForm({ mode: 'onChange' });
 

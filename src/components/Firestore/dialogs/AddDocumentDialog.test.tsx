@@ -151,6 +151,46 @@ it('emits id and parsed data when [Save] is clicked', async () => {
   });
 });
 
+it('saves documentReference', async () => {
+  const onValue = jest.fn();
+  const { getByText, getByLabelText } = await renderDialogWithFirestore(
+    async (firestore) => {
+      const collectionRef = collection(firestore, 'things');
+      return (
+        <AddDocumentDialog
+          open={true}
+          collectionRef={collectionRef}
+          onValue={onValue}
+        />
+      );
+    }
+  );
+
+  await act(async () => {
+    fireEvent.change(getByLabelText('Document ID'), {
+      target: { value: 'new-document-id' },
+    });
+    fireEvent.change(getByLabelText('Field'), {
+      target: { value: 'foo' },
+    });
+    fireEvent.change(getByLabelText('Type'), {
+      target: { value: 'reference' },
+    });
+    fireEvent.change(getByLabelText('Value'), {
+      target: { value: 'bar' }, // Expect fail because this isn't a valid documentId
+    });
+  });
+
+  act(() => getByText('Save').click());
+
+  await waitForDialogsToClose();
+
+  expect(onValue).toHaveBeenCalledWith({
+    id: 'new-document-id',
+    data: { foo: 'bar' },
+  });
+});
+
 it('emits null when [Cancel] is clicked', async () => {
   const onValue = jest.fn();
   const { getByText, getByLabelText } = await renderDialogWithFirestore(

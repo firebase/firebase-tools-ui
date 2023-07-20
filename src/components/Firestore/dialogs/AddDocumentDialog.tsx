@@ -44,8 +44,11 @@ export const AddDocumentStep: React.FC<
   React.PropsWithChildren<AddDocumentStepProps>
 > = ({ collectionRef, onChange }) => {
   const [id, setId] = useState(doc(collectionRef).id);
-  const [data, setData] = useState<FirestoreMap | undefined>();
-
+  const [data, setData] = useState<FirestoreMap | any | undefined>();
+function setDataProxy(data: any) {
+  console.log("addDocumentStep setData: " + JSON.stringify(data))
+  setData(data);
+}
   // TODO: Validation
   const getValue = useCallback(() => {
     try {
@@ -82,17 +85,17 @@ export const AddDocumentStep: React.FC<
         onChange={updateId}
         required
       />
-      <DocumentEditor value={{ '': '' }} onChange={(data) => setData(data)} />
+      <DocumentEditor value={{ '': '' }} onChange={(data) => setDataProxy(data)} />
     </>
   );
 };
 
-interface Props extends DialogProps {
+interface AddDocumentDialogProps extends DialogProps {
   collectionRef: CollectionReference;
   onValue: (v: AddDocumentDialogValue | null) => void;
 }
 
-export const AddDocumentDialog: React.FC<React.PropsWithChildren<Props>> = ({
+export const AddDocumentDialog: React.FC<React.PropsWithChildren<AddDocumentDialogProps>> = ({
   collectionRef,
   onClose,
   onValue,
@@ -103,8 +106,13 @@ export const AddDocumentDialog: React.FC<React.PropsWithChildren<Props>> = ({
     data: undefined,
   });
 
+  function setDocumentProxy(document: any) {
+    console.log("document set: " + JSON.stringify(document))
+    setDocument(document);
+  }
   const emitValueAndClose = (evt: DialogOnCloseEventT) => {
     onValue(evt.detail.action === 'accept' ? document : null);
+    console.log("document emitted from dialog: " + JSON.stringify(document))
     onClose && onClose(evt);
   };
 
@@ -113,7 +121,7 @@ export const AddDocumentDialog: React.FC<React.PropsWithChildren<Props>> = ({
       <DialogTitle>Add a document</DialogTitle>
 
       <DialogContent>
-        <AddDocumentStep collectionRef={collectionRef} onChange={setDocument} />
+        <AddDocumentStep collectionRef={collectionRef} onChange={setDocumentProxy} />
       </DialogContent>
 
       <DialogActions>
