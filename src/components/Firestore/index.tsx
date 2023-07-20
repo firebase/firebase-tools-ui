@@ -60,7 +60,7 @@ console.log("DB ID is now: " + currentSelectedDatabaseId);
   return (
     <Suspense fallback={<FirestoreRouteSuspended />}>
       <FirestoreEmulatedApiProvider currentSelectedDatabaseId={currentSelectedDatabaseId}>
-        <Firestore />
+        <Firestore databaseId={currentSelectedDatabaseId} />
       </FirestoreEmulatedApiProvider>
     </Suspense>
   );
@@ -85,8 +85,8 @@ const firestoreRoutes: ReadonlyArray<FirestoreTabRoute> = [
     exact: false,
   },
 ];
-
-export const Firestore: React.FC<React.PropsWithChildren<unknown>> = React.memo(
+// FIXME I pass this databseId in only to rerender when it changes. yucky .....
+export const Firestore: React.FC<React.PropsWithChildren<{databaseId: string}>> = React.memo(
   () => {
     const location = useLocation();
     const history = useHistory();
