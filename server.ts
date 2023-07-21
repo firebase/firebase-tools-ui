@@ -53,27 +53,20 @@ app.get(
   '/api/config',
   jsonHandler(async () => {
     const hubDiscoveryUrl = new URL(`http://${hubHost}/emulators`);
-    const experimentDiscoveryUrl = new URL(
-      `http://${hubHost}/enabled-experiments`
-    );
+    const emulatorsRes = await fetch(hubDiscoveryUrl.toString());
+    const emulators = (await emulatorsRes.json()) as any;
 
-    const emulatorConfigRequest = fetch(hubDiscoveryUrl.toString()).then(
-      (resp) => resp.json()
-    );
-    const experimentsRequest = fetch(experimentDiscoveryUrl.toString()).then(
-      (resp) => resp.json()
-    );
-
-    const [emulators, experiments] = await Promise.all([
-      emulatorConfigRequest,
-      experimentsRequest,
-    ]);
-    const json = { projectId, ...(emulators as any), ...(experiments as any) };
+    const json = { projectId, experiments: [], ...emulators };
 
     // Googlers: see go/firebase-emulator-ui-usage-collection-design?pli=1#heading=h.jwz7lj6r67z8
     // for more detail
     if (process.env.FIREBASE_GA_SESSION) {
       json.analytics = JSON.parse(process.env.FIREBASE_GA_SESSION);
+    }
+
+    // pick up any experiments enabled with `firebase experiment:enable`
+    if (process.env.FIREBASE_ENABLED_EXPERIMENTS) {
+      json.experiments = JSON.parse(process.env.FIREBASE_ENABLED_EXPERIMENTS);
     }
 
     return json;
