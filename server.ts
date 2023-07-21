@@ -53,12 +53,21 @@ app.get(
   '/api/config',
   jsonHandler(async () => {
     const hubDiscoveryUrl = new URL(`http://${hubHost}/emulators`);
-    const experimentDiscoveryUrl = new URL(`http://${hubHost}/enabled-experiments`);
-    
-    const emulatorConfigRequest = fetch(hubDiscoveryUrl.toString()).then(resp => resp.json());
-    const experimentsRequest = fetch(experimentDiscoveryUrl.toString()).then(resp => resp.json());
+    const experimentDiscoveryUrl = new URL(
+      `http://${hubHost}/enabled-experiments`
+    );
 
-    const [emulators, experiments] = await Promise.all([emulatorConfigRequest, experimentsRequest]);
+    const emulatorConfigRequest = fetch(hubDiscoveryUrl.toString()).then(
+      (resp) => resp.json()
+    );
+    const experimentsRequest = fetch(experimentDiscoveryUrl.toString()).then(
+      (resp) => resp.json()
+    );
+
+    const [emulators, experiments] = await Promise.all([
+      emulatorConfigRequest,
+      experimentsRequest,
+    ]);
     const json = { projectId, ...(emulators as any), ...(experiments as any) };
 
     // Googlers: see go/firebase-emulator-ui-usage-collection-design?pli=1#heading=h.jwz7lj6r67z8
