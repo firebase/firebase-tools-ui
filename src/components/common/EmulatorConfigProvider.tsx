@@ -204,9 +204,10 @@ async function configFetcher(url: string): Promise<Config> {
   const result: Config = {
     projectId: json.projectId as string,
     analytics: json.analytics as AnalyticsSession,
+    experiments: json.experiments as Array<string>
   };
   for (const [key, value] of Object.entries<any>(json)) {
-    if (key === 'projectId' || key === 'analytics') {
+    if (key === 'projectId' || key === 'analytics' || key === 'experiments') {
       continue;
     }
     let host = value.host as string;
