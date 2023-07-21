@@ -161,6 +161,11 @@ export function useEmulatorConfig<E extends Emulator>(
   return emulatorConfig as NonNullable<Config[E]>;
 }
 
+export function useExperiment(experimentName: string): Boolean {
+  const {experiments} = useConfig();
+  return experiments.includes(experimentName);
+}
+
 export function useIsEmulatorDisabled(emulator?: Emulator): boolean {
   const config = useConfigOptional();
   if (config === undefined) {
