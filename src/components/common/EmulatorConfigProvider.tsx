@@ -162,7 +162,7 @@ export function useEmulatorConfig<E extends Emulator>(
 }
 
 export function useExperiment(experimentName: string): Boolean {
-  const {experiments} = useConfig();
+  const { experiments } = useConfig();
   return experiments.includes(experimentName);
 }
 
