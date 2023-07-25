@@ -158,9 +158,8 @@ export function denormalize(store: Store, firestore?: Firestore): FirestoreAny {
       return acc;
     }, [] as any);
   } else if (field.value instanceof DocumentPath) {
-    if (!firestore) {
-      return "refbroken:" + field.value.path;
-      // throw new Error("Missing firestore instance needed to generate documentPath");
+    if (!firestore) { // FIXME test this?
+      throw new Error("Missing firestore instance needed to generate documentPath");
     }
     try {
       return doc(firestore, field.value.path);
