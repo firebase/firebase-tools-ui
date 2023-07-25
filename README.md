@@ -69,6 +69,22 @@ GCLOUD_PROJECT=<project-id> FIREBASE_EMULATOR_HUB=localhost:4400 npm start
 
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser. Note: The development server runs by default on port **3000**, so please make sure you are visiting that URL instead of the production Emulator UI (which defaults on port **4000**).
 
+### Developing features behind flags
+
+Experimental CLI features that are activated/deactivated with the `firebase experiments:enable` command are surfaced to the UI via an environment variable. UI components can check if an experiment is active with the `useExperiment` hook:
+
+```jsx
+function ExperimentalFeatureUI() {
+  const showNewFeature = useExperiment("pineapple-smoothie");
+
+  if (showNewFeature === true) {
+    return <h1>Hi, I am an experimental feature</h1>;
+  } else {
+    return null;
+  }
+}
+```
+
 ### Other Available Scripts
 
 In the project directory, you can run:
