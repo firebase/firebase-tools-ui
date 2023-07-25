@@ -17,7 +17,6 @@
 import { FirebaseApp } from 'firebase/app';
 import {
   CollectionReference,
-  doc,
   DocumentReference,
   collection,
   connectFirestoreEmulator,
@@ -180,9 +179,7 @@ export function useEjector() {
   };
 }
 
-export function useFirestoreToMakeDocRef(path: string) { // KEK
-  return doc(useFirestore(), path);
-}
+export {useFirestore} from "reactfire";
 
 export function useRecursiveDelete() {
   const { baseEmulatorUrl } = useFirestoreRestApi();
