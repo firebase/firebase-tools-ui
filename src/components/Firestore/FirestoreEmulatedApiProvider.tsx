@@ -17,6 +17,7 @@
 import { FirebaseApp } from 'firebase/app';
 import {
   CollectionReference,
+  doc,
   DocumentReference,
   collection,
   connectFirestoreEmulator,
@@ -177,6 +178,10 @@ export function useEjector() {
     mutate('*');
     return await fetcher(url);
   };
+}
+
+export function useFirestoreToMakeDocRef(path: string) { // KEK
+  return doc(useFirestore(), path);
 }
 
 export function useRecursiveDelete() {

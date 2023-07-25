@@ -58,6 +58,7 @@ export enum FieldType {
 
 export type FirestoreAny = FirestoreMap | FirestoreArray | FirestorePrimitive;
 
+// See https://source.corp.google.com/piper///depot/google3/third_party/googleapis/stable/google/firestore/v1/document.proto;rcl=527090049;l=82
 export type FirestorePrimitive =
   | string
   | number

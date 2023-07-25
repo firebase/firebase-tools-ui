@@ -157,21 +157,19 @@ export function denormalize(store: Store, firestore?: Firestore): FirestoreAny {
       );
       return acc;
     }, [] as any);
-  } else {
-    if (field.value instanceof DocumentPath) {
-      if (!firestore) {
-        // TODO: Trying to reference a Firestore Document without a Firestore instance.
-        return '';
-      }
-      try {
-        return doc(firestore, field.value.path);
-      } catch {
-        // TODO: The store does not always have a valid DocRef, reconsider.
-        return '';
-      }
+  } else if (field.value instanceof DocumentPath) {
+    if (!firestore) {
+      return field.value.path;
+      // throw new Error("Missing firestore instance needed to generate documentPath");
     }
-    return field.value;
+    try {
+      return doc(firestore, field.value.path);
+    } catch {
+      // TODO: The store does not always have a valid DocRef, reconsider.
+      return '';
+    }
   }
+  return field.value;
 }
 
 export function defaultValueForPrimitiveType(type: FieldType): PrimitiveValue {
