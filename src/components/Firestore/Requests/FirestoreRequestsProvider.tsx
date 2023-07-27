@@ -61,9 +61,9 @@ export const FirestoreRequestsProvider: React.FC<
       ) => {
         if (newEvaluation instanceof Array) {
           // This is the initial "blast" of prior requests
-          setRequests(newEvaluation.filter(isCurrentProject));
+          setRequests(newEvaluation.filter(isCurrentProject).reverse);
         } else if (isCurrentProject(newEvaluation)) {
-          setRequests((requests) => [...(requests || []), newEvaluation]);
+          setRequests((requests) => [newEvaluation, ...(requests || [])]);
         }
       };
 
