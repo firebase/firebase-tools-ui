@@ -1,5 +1,5 @@
 /**
- * Copyright 2021 Google LLC
+ * Copyright 2023 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ export function getMockAuthStore(state?: Partial<AppState['auth']>) {
       allowDuplicateEmails: false,
       tenants: { loading: false, result: { data: [] } },
       ...state,
+      alertText: '',
     },
   });
 }
@@ -64,12 +65,17 @@ export function createFakeState(state: Partial<AuthState>): AuthState {
     allowDuplicateEmails: true,
     users: createRemoteDataLoaded([]),
     tenants: createRemoteDataLoaded([]),
+    alertText: '',
     ...state,
   };
 }
 
 export function createFakeAuthStateWithUsers(users: AuthUser[]) {
   return createFakeState({ users: createRemoteDataLoaded(users) });
+}
+
+export function createFakeAuthStateWithAllDataCleared() {
+  return createFakeState({ alertText: 'All Users Cleared!' });
 }
 
 export function createFakeAuthStateWithTenants(tenants: Tenant[]) {
