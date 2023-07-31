@@ -15,7 +15,6 @@
  */
 
 import { DialogButton } from '@rmwc/dialog';
-import React from 'react';
 
 import { Callout } from '../../../common/Callout';
 import { confirm } from '../../../common/DialogQueue';

@@ -17,6 +17,7 @@
 import { act, fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
 
+import { useStorageFiles } from '../../api/useStorageFiles';
 import { renderWithStorage } from '../../testing/renderWithStorage';
 import { confirmDeleteAllFiles } from './confirmDeleteAllFiles';
 import { DeleteAllButton } from './DeleteAllButton';
@@ -27,7 +28,7 @@ describe('DeleteAllButton', () => {
   // TODO: investigate emulators + jsdom
   it.skip('deletes all files', async () => {
     const { getByText, uploadFile, waitForNFiles } = await renderWithStorage(
-      <DeleteAllButton />
+      <DeleteAllButton deleteAllFiles={useStorageFiles().deleteAllFiles} />
     );
 
     (confirmDeleteAllFiles as jest.Mock).mockReturnValueOnce(
