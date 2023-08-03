@@ -123,7 +123,6 @@ const DocumentEditor: React.FC<
   const initialState = normalize(value);
   const [store, dispatch] = React.useReducer(storeReducer, initialState);
   const methods = useForm({ mode: 'onChange' });
-
   const denormalizedStore = React.useMemo(
     () => denormalize(store, firestore),
     [store, firestore]

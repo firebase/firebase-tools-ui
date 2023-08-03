@@ -37,6 +37,7 @@ const DocumentPreview: React.FC<React.PropsWithChildren<Props>> = ({
   reference,
   maxSummaryLen = 20,
 }) => {
+  console.log("reference for documentPreview: " + JSON.stringify(reference));
   const snapshot = useFirestoreDoc(reference, { suspense: true }).data;
   const [isAddingField, setIsAddingField] = useState(false);
   const docExists = snapshot.exists();
@@ -55,7 +56,7 @@ const DocumentPreview: React.FC<React.PropsWithChildren<Props>> = ({
           <ListItem
             className="list-button"
             tag={Button}
-            label="Add field"
+            label="Add field1"
             {...{ dense: true, icon: 'add' }} // types get confused
             onClick={() => setIsAddingField(true)}
           ></ListItem>

@@ -33,7 +33,6 @@ import {
   useLocation,
 } from 'react-router-dom';
 
-import * as actions from './store/actions';
 import { CustomThemeProvider } from '../../themes';
 import { useIsEmulatorDisabled } from '../common/EmulatorConfigProvider';
 import { EmulatorDisabled } from '../common/EmulatorDisabled';
@@ -48,6 +47,7 @@ import {
 import PanelHeader from './PanelHeader';
 import FirestoreRequests from './Requests';
 import { FirestoreStore, useDispatch } from './store';
+import * as actions from './store/actions';
 
 var currentSelectedDatabaseId : string;
 var setCurrentSelectedDatabaseId : (newDatabaseId: string) => void;
@@ -56,7 +56,12 @@ export const FirestoreRoute: React.FC<
   React.PropsWithChildren<unknown>
 > = () => {
 
-  [currentSelectedDatabaseId, setCurrentSelectedDatabaseId] = useState("(default)");
+  const [currentSelectedDatabaseId2, setCurrentSelectedDatabaseId2] = useState("(default)");
+  currentSelectedDatabaseId = currentSelectedDatabaseId2;
+  setCurrentSelectedDatabaseId = (db: string) => { // FIXME type
+    // FIXME set route?
+    setCurrentSelectedDatabaseId2(db);
+  };
 console.log("DB ID is now: " + currentSelectedDatabaseId);
   return (
     <Suspense fallback={<FirestoreRouteSuspended />}>
@@ -74,7 +79,7 @@ interface FirestoreTabRoute {
   label: string;
   exact: boolean;
 }
-const firestoreRoutes: ReadonlyArray<FirestoreTabRoute> = [
+const firestoreRoutes: ReadonlyArray<FirestoreTabRoute> = [ // FIXME routing 
   {
     path: '/firestore/data',
     label: 'Data',
@@ -91,14 +96,12 @@ export const Firestore: React.FC<React.PropsWithChildren<{databaseId: string}>> 
   () => {
     const location = useLocation();
     const history = useHistory();
-    const [isRefreshing, setIsRefreshing] = useState(false); // FIXME refreshing animation?
+    const [isRefreshing, setIsRefreshing] = useState(false);
     const eject = useEjector();
+    // FIXME need to navigate away or something
 
-    // TODO: do something better here!
-    const path = location.pathname.replace(/^\/firestore\/data/, '');
-    const showCollectionShell = path.split('/').length < 2;
-    const showDocumentShell = path.split('/').length < 3;
-
+    const path: string = location.pathname.replace(/^\/firestore\/data/, '');
+    console.log('pathname trimmed: ' + path);
     const subTabs = firestoreRoutes.map(
       ({ path, label }: FirestoreTabRoute) => (
         <Tab
@@ -127,7 +130,6 @@ export const Firestore: React.FC<React.PropsWithChildren<{databaseId: string}>> 
     }
 
     function handleNavigate(path?: string) {
-      // TODO: move to routing constants
       const root = '/firestore/data';
       if (path === undefined) {
         history.push(root);
@@ -135,13 +137,13 @@ export const Firestore: React.FC<React.PropsWithChildren<{databaseId: string}>> 
         history.push(`${root}/${path}`);
       }
     }
-
+console.log("currently selected DB ID inside Firestore component: " + currentSelectedDatabaseId);
     return isRefreshing ? (
       <Spinner span={12} data-testid="firestore-loading" />
     ) : (
       <FirestoreStore>
         <GridCell span={2}>
-         <DatabaseIdDropdown/>
+          <DatabaseIdDropdown />
         </GridCell>
         <GridCell span={12} className="Firestore">
           <div className="Firestore-sub-tabs">
@@ -153,11 +155,10 @@ export const Firestore: React.FC<React.PropsWithChildren<{databaseId: string}>> 
           <Switch>
             <Route path="/firestore/data">
               <FirestoreDataCard
+                key={currentSelectedDatabaseId}
                 path={path}
                 handleClearData={handleClearData}
                 handleNavigate={handleNavigate}
-                showCollectionShell={showCollectionShell}
-                showDocumentShell={showDocumentShell}
               />
             </Route>
             <Route path="/firestore/requests">
@@ -211,8 +212,6 @@ interface FirestoreDataCardProps {
   path: string;
   handleClearData: () => void;
   handleNavigate: (path?: string) => void;
-  showCollectionShell: boolean;
-  showDocumentShell: boolean;
 }
 
 const FirestoreDataCard: React.FC<
@@ -221,10 +220,13 @@ const FirestoreDataCard: React.FC<
   path,
   handleClearData,
   handleNavigate,
-  showCollectionShell,
-  showDocumentShell,
-}) => (
-  <>
+}) => {
+  console.log("HERRO: " );
+
+  const showCollectionShell = path.split('/').length < 2;
+  const showDocumentShell = path.split('/').length < 3;
+
+  return <>
     <div className="Firestore-actions">
       <CustomThemeProvider use="warning" wrap>
         <Button unelevated onClick={() => handleClearData()}>
@@ -258,7 +260,7 @@ const FirestoreDataCard: React.FC<
       </Card>
     </Elevation>
   </>
-);
+};
 
 const FirestoreRequestsCard: React.FC<
   React.PropsWithChildren<unknown>

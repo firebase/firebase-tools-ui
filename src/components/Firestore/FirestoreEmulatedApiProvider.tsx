@@ -166,7 +166,7 @@ export function useMissingDocuments(
   );
 }
 
-export function useEjector() {
+export function useEjector(): () => void {
   const { baseEmulatorUrl } = useFirestoreRestApi();
   const url = `${baseEmulatorUrl}/documents`;
 
