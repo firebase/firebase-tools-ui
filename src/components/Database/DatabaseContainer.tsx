@@ -60,7 +60,7 @@ export const DatabaseContainer: React.FC<React.PropsWithChildren<Props>> = ({
       <GridCell span={12} className="Database-Container">
         {hasNewDbs && (
           <Callout
-            icon="info"
+            type="note"
             actions={
               <Button theme="secondary" onClick={() => setDbs(databases)}>
                 Reload

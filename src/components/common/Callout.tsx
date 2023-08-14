@@ -24,17 +24,16 @@ import React, { ReactNode } from 'react';
 import { CustomThemeProvider, CustomThemeType, Type } from '../../themes';
 
 export interface CalloutProps {
-  /** Custom icon to override the default */
-  icon?: string;
   /** Show a lighter version of the callout */
   aside?: true;
   /** The color scheme of the callout. Defaults to 'note' */
   type?: CustomThemeType;
-
   /** Action buttons */
   actions?: ReactNode;
 }
 
+// Using a type from the map ensures we can apply the correct aria label in
+// addition to providing easy-to-use defailts.
 const DEFAULT_ICON_MAP: Record<string, string> = {
   [Type.CAUTION]: 'error',
   [Type.NOTE]: 'info',
@@ -45,12 +44,11 @@ const DEFAULT_ICON_MAP: Record<string, string> = {
 
 export const Callout: React.FC<React.PropsWithChildren<CalloutProps>> = ({
   children,
-  actions,
-  icon,
   aside,
   type = Type.NOTE,
+  actions,
 }) => {
-  const iconName = icon || DEFAULT_ICON_MAP[type];
+  const iconName = DEFAULT_ICON_MAP[type];
   const asideClass = aside ? ' Callout-aside' : '';
   const classes = `Callout Callout-${type}${asideClass}`;
 
@@ -66,7 +64,7 @@ export const Callout: React.FC<React.PropsWithChildren<CalloutProps>> = ({
             {iconName && (
               <Icon
                 icon={iconName}
-                aria-hidden="true"
+                aria-label={iconName + " icon"}
                 className="Callout-icon"
               />
             )}
