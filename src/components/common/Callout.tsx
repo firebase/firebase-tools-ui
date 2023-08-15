@@ -33,7 +33,7 @@ export interface CalloutProps {
 }
 
 // Using a type from the map ensures we can apply the correct aria label in
-// addition to providing easy-to-use defailts.
+// addition to providing easy-to-use defaults.
 const DEFAULT_ICON_MAP: Record<string, string> = {
   [Type.CAUTION]: 'error',
   [Type.NOTE]: 'info',
