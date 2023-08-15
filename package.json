@@ -22,7 +22,7 @@
     "@rmwc/menu": "^7.0.3",
     "@rmwc/provider": "^7.0.3",
     "@rmwc/radio": "^7.0.3",
-    "@rmwc/select": "^7.0.3",
+    "@rmwc/select": "^8.0.0",
     "@rmwc/snackbar": "^7.0.3",
     "@rmwc/tabs": "^7.0.3",
     "@rmwc/textfield": "^7.0.3",
