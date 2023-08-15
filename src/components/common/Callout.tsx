@@ -64,7 +64,7 @@ export const Callout: React.FC<React.PropsWithChildren<CalloutProps>> = ({
             {iconName && (
               <Icon
                 icon={iconName}
-                aria-label={iconName + " icon"}
+                aria-label={iconName + ' icon'}
                 className="Callout-icon"
               />
             )}
