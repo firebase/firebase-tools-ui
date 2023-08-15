@@ -53,6 +53,10 @@ const DatabaseListItem: React.FC<
     <ListItem
       activated={activated}
       tag={Link}
+      aria-label={
+        // If this is the active DB, adjust the screen reader label to indicate as much.
+        activated ? name + ', currently selected' : ''
+      }
       to={to}
       data-testid={`nav-${name}`}
     >
