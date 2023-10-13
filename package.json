@@ -1,6 +1,6 @@
 {
   "name": "firebase-tools-ui",
-  "version": "1.11.7",
+  "version": "1.11.1-rc-bash",
   "private": true,
   "engines": {
     "node": ">=16.4.0"
@@ -10,6 +10,7 @@
     "@rmwc/button": "^7.0.3",
     "@rmwc/card": "^7.0.3",
     "@rmwc/checkbox": "^7.0.3",
+    "@rmwc/chip": "^7.0.3",
     "@rmwc/circular-progress": "^7.0.3",
     "@rmwc/data-table": "^7.0.3",
     "@rmwc/dialog": "^7.0.3",
@@ -122,6 +123,7 @@
     "eslint-plugin-jest": "^23.11.0",
     "eslint-plugin-react-hooks": "^4.0.0",
     "eslint-plugin-unused-imports": "^2.0.0",
+    "firebase-admin": "^10.0.0",
     "globalthis": "^1.0.1",
     "husky": "^8.0.0",
     "import-sort-config": "^6.0.0",

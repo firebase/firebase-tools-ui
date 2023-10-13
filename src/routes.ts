@@ -23,6 +23,7 @@ import { ExtensionsRoute } from './components/Extensions';
 import Firestore from './components/Firestore';
 import Home from './components/Home';
 import LogsViewer from './components/LogViewer';
+import RemoteConfig from './components/RemoteConfig';
 import { Storage } from './components/Storage';
 
 export interface Route {
@@ -118,6 +119,13 @@ export const routes: ReadonlyArray<Route> = [
     path: '/database',
     component: Database,
     label: 'Realtime Database',
+    exact: false,
+    showInNav: true,
+  },
+  {
+    path: '/remote-config',
+    component: RemoteConfig,
+    label: 'Remote Config',
     exact: false,
     showInNav: true,
   },

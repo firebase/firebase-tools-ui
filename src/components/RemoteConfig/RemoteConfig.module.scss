@@ -1,0 +1,175 @@
+/**
+ * Copyright 2021 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.rcListItem {
+  padding: 8px 16px 8px 16px;
+  gap: 8px;
+}
+
+.filterForm {
+  width: 100%;
+
+  :global
+    .mdc-text-field:not(.mdc-text-field--outlined):not(.mdc-text-field--textarea) {
+    input.mdc-text-field__input {
+      padding-left: 50px;
+
+      &::placeholder {
+        text-overflow: ellipsis;
+      }
+    }
+
+    // Get rid of material line in the bottom of the input.
+    .mdc-line-ripple {
+      display: none;
+    }
+  }
+}
+
+.listItemExpandIndicator {
+  margin-left: 0px;
+  margin-right: 24px;
+}
+
+.conditionEditButton {
+  margin-right: 0px;
+}
+
+.explainerSection {
+  margin-bottom: 20px;
+}
+
+.remoteConfigParameterName {
+  font-family: 'Roboto Mono', monospace;
+}
+
+.disabledTopActions {
+  padding: 8px;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: right;
+  gap: 12px;
+}
+
+.enabledTopActions {
+  color: #681da8;
+  padding: 8px;
+  background-color: #f0e4fc;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: right;
+  gap: 12px;
+  position: relative;
+}
+
+.unpublishText {
+  position: absolute;
+  left: 2rem;
+  p,
+  span {
+    color: #681da8;
+    float: left;
+    margin: 2px;
+    margin-top: 4px;
+  }
+  p {
+    padding-top: 4px;
+    padding-left: 4px;
+  }
+}
+
+.paramListHeader {
+  height: 28px;
+
+  .paramListHeaderInner {
+    height: 28px;
+
+    .paramListHeaderGrid {
+      height: 100%;
+      width: 100%;
+      margin: 0px;
+      padding-left: 16px;
+      padding-right: 16px;
+      padding-top: 0px;
+      padding-bottom: 0px;
+
+      :global(.mdc-layout-grid__inner) {
+        height: 100%;
+      }
+    }
+  }
+}
+
+.paramListContents {
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
+.paramListHeaderGridItem {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+.parameterListItemGrid {
+  width: 100%;
+  margin: 0px;
+  padding: 0px;
+}
+
+.condition_color_orange {
+  background-color: rgba(#fb8c00, 0.24);
+}
+
+.condition_color_deep_orange {
+  background-color: rgba(#f4511e, 0.24);
+}
+
+.condition_color_pink {
+  background-color: rgba(#d81b60, 0.24);
+}
+
+.condition_color_purple {
+  background-color: rgba(#8e24aa, 0.24);
+}
+
+.condition_color_indigo {
+  background-color: rgba(#3949ab, 0.24);
+}
+
+.condition_color_blue {
+  background-color: rgba(#1e88e5, 0.24);
+}
+
+.condition_color_cyan {
+  background-color: rgba(#00acc1, 0.24);
+}
+
+.condition_color_teal {
+  background-color: rgba(#00897b, 0.24);
+}
+
+.condition_color_green {
+  background-color: rgba(#43a047, 0.24);
+}
+
+.condition_color_lime {
+  background-color: rgba(#7cb342, 0.24);
+}
+
+.condition_color_brown {
+  background-color: rgba(#6d4c41, 0.24);
+}
