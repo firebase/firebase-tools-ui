@@ -79,7 +79,7 @@ const RequestTableRow: React.FC<React.PropsWithChildren<Props>> = ({
 
   return (
     <DataTableRow
-      onClick={() => history.push(`/firestore/requests/${requestId}`)}
+      onClick={() => history.push(`/firestore/(default)/requests/${requestId}`)} // FIXME DB id here
     >
       <Tooltip
         content={requestTimeComplete}

@@ -18,7 +18,7 @@ import { ReactNode, useEffect, useState } from 'react';
 import React from 'react';
 import { Redirect, useLocation, useRouteMatch } from 'react-router-dom';
 
-export const FIRESTORE_DATA_URL = '/firestore/data';
+export const FIRESTORE_DATA_URL = '/firestore/(default)/data'; // FIXME
 const FIRESTORE_DATA_URL_PATH_LENGTH = FIRESTORE_DATA_URL.split('/').length;
 
 /**
@@ -35,7 +35,7 @@ export function useAutoSelect<T extends { id: string }>(list?: T[] | null) {
     const isRootOrRootCollection =
       url === FIRESTORE_DATA_URL ||
       // /firestore/data/users
-      (url.startsWith(FIRESTORE_DATA_URL) &&
+      (url.startsWith(FIRESTORE_DATA_URL) && // FIXME need a fuzzy match here
         url.split('/').length === FIRESTORE_DATA_URL_PATH_LENGTH + 1);
     const hasNothingSelected = url === pathname;
     const firstChild = list?.[0];

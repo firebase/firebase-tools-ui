@@ -71,12 +71,12 @@ interface FirestoreTabRoute {
 }
 const firestoreRoutes: ReadonlyArray<FirestoreTabRoute> = [
   {
-    path: '/firestore/data',
+    path: '/firestore/*/data',
     label: 'Data',
     exact: false,
   },
   {
-    path: '/firestore/requests',
+    path: '/firestore/*/requests',
     label: 'Requests',
     exact: false,
   },
@@ -123,7 +123,7 @@ export const Firestore: React.FC<React.PropsWithChildren<unknown>> = React.memo(
 
     function handleNavigate(path?: string) {
       // TODO: move to routing constants
-      const root = '/firestore/data';
+      const root = '/firestore/(default)/data'; // FIXME
       if (path === undefined) {
         history.push(root);
       } else {
@@ -152,8 +152,7 @@ export const Firestore: React.FC<React.PropsWithChildren<unknown>> = React.memo(
               </div>
             }
           >
-            The Emulator Suite UI only supports the (default) database right
-            now.
+            The Emulator Suite UI supports multiple DBs by editing the database name in the URL.
           </Callout>
         </GridCell>
         <GridCell span={12} className="Firestore">
@@ -164,7 +163,7 @@ export const Firestore: React.FC<React.PropsWithChildren<unknown>> = React.memo(
           </div>
 
           <Switch>
-            <Route path="/firestore/data">
+            <Route path="/firestore/:databaseId/data">
               <FirestoreDataCard
                 path={path}
                 handleClearData={handleClearData}
@@ -173,10 +172,11 @@ export const Firestore: React.FC<React.PropsWithChildren<unknown>> = React.memo(
                 showDocumentShell={showDocumentShell}
               />
             </Route>
-            <Route path="/firestore/requests">
+            <Route path="/firestore/:databaseId/requests">
               <FirestoreRequestsCard />
             </Route>
-            <Redirect from="/firestore" to="/firestore/data" />
+            <Redirect from="/firestore" to="/firestore/(default)/data" />
+            <Redirect from="/firestore/data" to="/firestore/(default)/data" />
           </Switch>
         </GridCell>
       </FirestoreStore>
@@ -212,7 +212,7 @@ const FirestoreDataCard: React.FC<
     <Elevation z="2" wrap>
       <Card className="Firestore-panels-wrapper">
         <InteractiveBreadCrumbBar
-          base="/firestore/data"
+          base="/firestore/(default)/data" // FIXME
           path={path}
           onNavigate={handleNavigate}
         />

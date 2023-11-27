@@ -89,10 +89,10 @@ const CollectionList: React.FC<React.PropsWithChildren<Props>> = ({
           .map((uri) => encodeURIComponent(uri))
           .join('/');
         history.push(
-          `/firestore/data/${encodedReferencePath}/${encodedCollectionId}`
+          `/firestore/(default)data/${encodedReferencePath}/${encodedCollectionId}` // FIXME
         );
       } else {
-        history.push(`/firestore/data/${encodedCollectionId}`);
+        history.push(`/firestore/(default)/data/${encodedCollectionId}`);
       }
     }
   };
