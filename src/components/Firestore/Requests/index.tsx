@@ -47,7 +47,7 @@ const Requests: React.FC<React.PropsWithChildren<unknown>> = () => {
         style={{ flex: 1 }}
       >
         <Switch>
-          <Route exact path="/firestore/(default)/requests">
+          <Route exact path="/firestore/fdsa/requests">
             <div data-testid="requests-card">
               {/* TODO: Finish developing the RequestsHeader in order to render it */}
               {/* <RequestsHeader /> */}
@@ -58,7 +58,7 @@ const Requests: React.FC<React.PropsWithChildren<unknown>> = () => {
           </Route>
           <Route
             exact
-            path="/firestore/(default)/requests/:requestId"
+            path="/firestore/fdsa/requests/:requestId"
             render={({
               match,
             }: RouteComponentProps<RequestDetailsRouteParams>) => {

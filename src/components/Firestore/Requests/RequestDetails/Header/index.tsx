@@ -60,7 +60,7 @@ const RequestDetailsHeader: React.FC<React.PropsWithChildren<Props>> = ({
               className="Firestore-Request-Details-Header-Return-Button"
               icon={{ icon: 'arrow_back_ios', size: 'small' }}
               tag={Link}
-              to="/firestore/(default)/requests" // FIXME consider if we care to go back to the current DB page or default
+              to="/firestore/fdsa/requests" // FIXME consider if we care to go back to the current DB page or default
               label="header-return-button"
             />
           </Tooltip>

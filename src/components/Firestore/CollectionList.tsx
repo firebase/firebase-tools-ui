@@ -79,6 +79,7 @@ const CollectionList: React.FC<React.PropsWithChildren<Props>> = ({
       const newCollection = reference
         ? collection(reference, value.collectionId)
         : collection(firestore, value.collectionId);
+      const databaseId = "(default)" // FIXME where do we get the database ID from?
       await setDoc(doc(newCollection, value.document.id), value.document.data);
 
       // Redirect to the new collection
@@ -89,10 +90,10 @@ const CollectionList: React.FC<React.PropsWithChildren<Props>> = ({
           .map((uri) => encodeURIComponent(uri))
           .join('/');
         history.push(
-          `/firestore/asdf/data/${encodedReferencePath}/${encodedCollectionId}` // FIXME
+          `/firestore/${databaseId}/data/${encodedReferencePath}/${encodedCollectionId}`
         );
       } else {
-        history.push(`/firestore/asdf/data/${encodedCollectionId}`);
+        history.push(`/firestore/${databaseId}/data/${encodedCollectionId}`);
       }
     }
   };

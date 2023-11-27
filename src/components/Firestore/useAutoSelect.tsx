@@ -17,12 +17,9 @@
 import { ReactNode, useEffect, useState } from 'react';
 import { Redirect, useLocation, useRouteMatch } from 'react-router-dom';
 
-export const FIRESTORE_DATA_URL = '/firestore/asdf/data'; // FIXME
-const FIRESTORE_DATA_URL_PATH_LENGTH = FIRESTORE_DATA_URL.split('/').length;
-
 /**
  * Given a list of collections or documents, auto select the first item. Only
- * works on root (`/firestore/data`) or top level collections (`/firestore/data/users`)
+ * works on root (`/firestore/DB/data`) or top level collections (`/firestore/DB/data/users`)
  * to prevent deep auto selection.
  */
 export function useAutoSelect<T extends { id: string }>(list?: T[] | null) {
@@ -31,11 +28,11 @@ export function useAutoSelect<T extends { id: string }>(list?: T[] | null) {
   const [autoSelect, setAutoSelect] = useState<ReactNode | null>(null);
 
   useEffect(() => {
+    const splitUrl = url.split('/');
     const isRootOrRootCollection =
-      url === FIRESTORE_DATA_URL ||
-      // /firestore/data/users
-      (url.startsWith(FIRESTORE_DATA_URL) && // FIXME need a fuzzy match here
-        url.split('/').length === FIRESTORE_DATA_URL_PATH_LENGTH + 1);
+      (splitUrl.length === 4 || splitUrl.length === 5)
+      && splitUrl[1] === "firestore" // The first segment is empty string
+      && splitUrl[3] === "data";
     const hasNothingSelected = url === pathname;
     const firstChild = list?.[0];
     const shouldAutoSelect = isRootOrRootCollection && hasNothingSelected;
