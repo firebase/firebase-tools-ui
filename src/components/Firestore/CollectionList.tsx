@@ -79,7 +79,7 @@ const CollectionList: React.FC<React.PropsWithChildren<Props>> = ({
       const newCollection = reference
         ? collection(reference, value.collectionId)
         : collection(firestore, value.collectionId);
-      const databaseId = "(default)" // FIXME where do we get the database ID from?
+      const databaseId = "default" // FIXME where do we get the database ID from?
       await setDoc(doc(newCollection, value.document.id), value.document.data);
 
       // Redirect to the new collection

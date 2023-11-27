@@ -35,6 +35,7 @@ import { useEmulatedFirebaseApp } from '../../firebase';
 import { useConfig, useEmulatorConfig } from '../common/EmulatorConfigProvider';
 import { useFetcher, useRequest } from '../common/useRequest';
 import { MissingDocument } from './models';
+import { useLocation } from 'react-router-dom';
 
 const FIRESTORE_OPTIONS = {};
 
@@ -74,19 +75,27 @@ const FirestoreComponent: React.FC<React.PropsWithChildren<unknown>> = ({
   children,
 }) => {
   const app = useFirebaseApp();
-  const firestore = getFirestore(app);
-  return <FirestoreProvider sdk={firestore}>{children}</FirestoreProvider>;
+
+  const firestore = getFirestore(app, getDatabaseId());
+  return <FirestoreProvider sdk={firestore}>{children}</FirestoreProvider>; // FIXME the collection list isn't working
 };
 
 function useFirestoreRestApi() {
   const config = useEmulatorConfig('firestore');
   const { projectId } = useConfig();
-  const databaseId = '(default)';
 
   return {
-    baseUrl: `//${config.hostAndPort}/v1/projects/${projectId}/databases/${databaseId}`,
-    baseEmulatorUrl: `//${config.hostAndPort}/emulator/v1/projects/${projectId}/databases/${databaseId}`,
+    baseUrl: `//${config.hostAndPort}/v1/projects/${projectId}/databases/${getDatabaseId()}`,
+    baseEmulatorUrl: `//${config.hostAndPort}/emulator/v1/projects/${projectId}/databases/${getDatabaseId()}`,
   };
+}
+
+function getDatabaseId(): string {
+  var databaseId = useLocation().pathname.split("/")[2];
+  if (databaseId === "default") {
+    databaseId = "(default)";
+  }
+  return databaseId;
 }
 
 export function useRootCollections() {
@@ -104,6 +113,8 @@ export function useRootCollections() {
     }
   );
 
+  console.log("base url is: " + baseUrl);
+  console.log(JSON.stringify(data));
   const collectionIds = data?.collectionIds || [];
   return collectionIds.map((id) => collection(firestore, id));
 }
@@ -122,7 +133,6 @@ export function useSubCollections(docRef: DocumentReference) {
       refreshInterval: 10_000,
     }
   );
-
   const collectionIds = data?.collectionIds || [];
   return collectionIds.map((id) => collection(docRef, id));
 }

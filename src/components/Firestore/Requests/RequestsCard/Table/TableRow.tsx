@@ -48,7 +48,7 @@ function getTableRowRequestData(
     }),
     requestMethod: rulesContext.method,
     resourcePath: rulesContext.path.replace(
-      '/databases/(default)/documents',
+      '/databases/(default)/documents', // FIXME
       ''
     ),
     outcomeData: OUTCOME_DATA[outcome],

@@ -106,7 +106,7 @@ export function getDetailsRequestData(
     }),
     requestMethod: rulesContext.method,
     resourcePath: rulesContext.path.replace(
-      '/databases/(default)/documents',
+      '/databases/(default)/documents', // FIXME
       ''
     ),
     outcome,

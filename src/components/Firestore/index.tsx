@@ -205,8 +205,7 @@ const FirestoreDataCard: React.FC<
   handleNavigate,
   showCollectionShell,
   showDocumentShell,
-}) => {
-console.log("my path is:" + path); return (
+}) => (
   <>
     <div className="Firestore-actions">
       <CustomThemeProvider use="warning" wrap>
@@ -241,7 +240,7 @@ console.log("my path is:" + path); return (
       </Card>
     </Elevation>
   </>
-)};
+);
 
 const FirestoreRequestsCard: React.FC<
   React.PropsWithChildren<unknown>
