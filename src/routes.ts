@@ -45,7 +45,7 @@ const routesToSanitize: string[] = [
   '/extensions/:instanceId',
 
   // Firestore
-  '/firestore/(default)/data/:path*',
+  '/firestore/asdf/data/:path*',
   '/firestore/(default)/requests/:requestId',
 
   // Storage

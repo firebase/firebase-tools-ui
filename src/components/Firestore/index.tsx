@@ -71,7 +71,7 @@ interface FirestoreTabRoute {
 }
 const firestoreRoutes: ReadonlyArray<FirestoreTabRoute> = [
   {
-    path: '/firestore/(default)/data',
+    path: '/firestore/asdf/data',
     label: 'Data',
     exact: false,
   },
@@ -123,7 +123,7 @@ export const Firestore: React.FC<React.PropsWithChildren<unknown>> = React.memo(
 
     function handleNavigate(path?: string) {
       // TODO: move to routing constants
-      const root = '/firestore/(default)/data'; // FIXME
+      const root = '/firestore/asdf/data'; // FIXME
       if (path === undefined) {
         history.push(root);
       } else {
@@ -163,7 +163,7 @@ export const Firestore: React.FC<React.PropsWithChildren<unknown>> = React.memo(
           </div>
 
           <Switch>
-            <Route path="/firestore/(default)/data">
+            <Route path="/firestore/asdf/data">
               <FirestoreDataCard
                 path={path}
                 handleClearData={handleClearData}
@@ -175,8 +175,8 @@ export const Firestore: React.FC<React.PropsWithChildren<unknown>> = React.memo(
             <Route path="/firestore/(default)/requests">
               <FirestoreRequestsCard />
             </Route>
-            <Redirect from="/firestore" to="/firestore/(default)/data" />
-            <Redirect from="/firestore/data" to="/firestore/(default)/data" />
+            <Redirect from="/firestore" to="/firestore/asdf/data" />
+            <Redirect from="/firestore/data" to="/firestore/asdf/data" />
           </Switch>
         </GridCell>
       </FirestoreStore>
@@ -212,7 +212,7 @@ const FirestoreDataCard: React.FC<
     <Elevation z="2" wrap>
       <Card className="Firestore-panels-wrapper">
         <InteractiveBreadCrumbBar
-          base="/firestore/(default)/data" // FIXME
+          base="/firestore/asdf/data" // FIXME
           path={path}
           onNavigate={handleNavigate}
         />

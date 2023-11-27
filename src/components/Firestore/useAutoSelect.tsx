@@ -15,10 +15,9 @@
  */
 
 import { ReactNode, useEffect, useState } from 'react';
-import React from 'react';
 import { Redirect, useLocation, useRouteMatch } from 'react-router-dom';
 
-export const FIRESTORE_DATA_URL = '/firestore/(default)/data'; // FIXME
+export const FIRESTORE_DATA_URL = '/firestore/asdf/data'; // FIXME
 const FIRESTORE_DATA_URL_PATH_LENGTH = FIRESTORE_DATA_URL.split('/').length;
 
 /**
