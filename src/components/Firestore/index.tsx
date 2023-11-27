@@ -71,12 +71,12 @@ interface FirestoreTabRoute {
 }
 const firestoreRoutes: ReadonlyArray<FirestoreTabRoute> = [
   {
-    path: '/firestore/*/data',
+    path: '/firestore/(default)/data',
     label: 'Data',
     exact: false,
   },
   {
-    path: '/firestore/*/requests',
+    path: '/firestore/(default)/requests',
     label: 'Requests',
     exact: false,
   },
@@ -163,7 +163,7 @@ export const Firestore: React.FC<React.PropsWithChildren<unknown>> = React.memo(
           </div>
 
           <Switch>
-            <Route path="/firestore/:databaseId/data">
+            <Route path="/firestore/(default)/data">
               <FirestoreDataCard
                 path={path}
                 handleClearData={handleClearData}
@@ -172,7 +172,7 @@ export const Firestore: React.FC<React.PropsWithChildren<unknown>> = React.memo(
                 showDocumentShell={showDocumentShell}
               />
             </Route>
-            <Route path="/firestore/:databaseId/requests">
+            <Route path="/firestore/(default)/requests">
               <FirestoreRequestsCard />
             </Route>
             <Redirect from="/firestore" to="/firestore/(default)/data" />
