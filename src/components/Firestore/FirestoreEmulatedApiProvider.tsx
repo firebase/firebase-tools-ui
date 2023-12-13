@@ -77,7 +77,7 @@ const FirestoreComponent: React.FC<React.PropsWithChildren<unknown>> = ({
   const app = useFirebaseApp();
 
   const firestore = getFirestore(app, getDatabaseId());
-  return <FirestoreProvider sdk={firestore}>{children}</FirestoreProvider>; // FIXME the collection list isn't working
+  return <FirestoreProvider sdk={firestore}>{children}</FirestoreProvider>;
 };
 
 function useFirestoreRestApi() {

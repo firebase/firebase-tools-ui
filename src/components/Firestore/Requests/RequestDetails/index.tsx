@@ -105,10 +105,7 @@ export function getDetailsRequestData(
       hour12: false,
     }),
     requestMethod: rulesContext.method,
-    resourcePath: rulesContext.path.replace(
-      '/databases/(default)/documents', // FIXME
-      ''
-    ),
+    resourcePath: rulesContext.path,
     outcome,
     outcomeData: OUTCOME_DATA[outcome],
     firestoreRules: rules,
@@ -141,7 +138,8 @@ export const RequestDetails: React.FC<React.PropsWithChildren<Props>> = ({
     linesOutcome,
     inspectionExpressions,
   } = getDetailsRequestData(selectedRequest);
-
+console.log("selected request:")
+console.log(JSON.stringify(selectedRequest))
   // Redirect to requests-table if (requestId) did not match any existing request
   if (requestId && !selectedRequest) {
     return <Redirect to="/firestore/requests" />; // FIXME need to return to the correct DB ID
@@ -178,7 +176,7 @@ export const RequestDetails: React.FC<React.PropsWithChildren<Props>> = ({
 export const RequestDetailsWrapper: React.FC<
   React.PropsWithChildren<PropsFromParentComponent>
 > = (props) => {
-  const selectedRequest = useFirestoreRequest(props.requestId); // FIXME additional props
+  const selectedRequest = useFirestoreRequest(props.requestId); // FIXME additional props?
 
   return <RequestDetails selectedRequest={selectedRequest} {...props} />;
 };

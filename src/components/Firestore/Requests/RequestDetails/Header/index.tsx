@@ -21,7 +21,7 @@ import { IconButton } from '@rmwc/icon-button';
 import { Theme } from '@rmwc/theme';
 import { Tooltip } from '@rmwc/tooltip';
 import React, { useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 import { CustomThemeProvider } from '../../../../../themes';
 import RequestPath from '../../RequestPath';
@@ -47,6 +47,7 @@ const RequestDetailsHeader: React.FC<React.PropsWithChildren<Props>> = ({
 }) => {
   const pathContainerRef = useRef<HTMLDivElement>(null);
   const requestPathContainerWidth = usePathContainerWidth(pathContainerRef);
+  const history = useHistory();
 
   return (
     <Theme use="surface" wrap>
@@ -60,7 +61,8 @@ const RequestDetailsHeader: React.FC<React.PropsWithChildren<Props>> = ({
               className="Firestore-Request-Details-Header-Return-Button"
               icon={{ icon: 'arrow_back_ios', size: 'small' }}
               tag={Link}
-              to="/firestore/fdsa/requests" // FIXME consider if we care to go back to the current DB page or default
+              onClick={() => history.goBack()}
+              // to="/firestore/fdsa/requests" // FIXME missing "to" console error ?
               label="header-return-button"
             />
           </Tooltip>

@@ -72,7 +72,7 @@ interface FirestoreTabRoute {
 
 export const Firestore: React.FC<React.PropsWithChildren<unknown>> = React.memo(
   () => {
-    const location = useLocation();
+    const location = useLocation(); // FIXME consider differences between usehistory and useLocation
     const databaseId = location.pathname.split("/")[2];
     const history = useHistory();
     const [isRefreshing, setIsRefreshing] = useState(false);
@@ -178,8 +178,9 @@ export const Firestore: React.FC<React.PropsWithChildren<unknown>> = React.memo(
             <Route path="/firestore/:databaseId/requests">
               <FirestoreRequestsCard />
             </Route>
-            <Redirect from="/firestore" to="/firestore/default/data" />
-            <Redirect from="/firestore/data" to="/firestore/default/data" />
+            <Redirect exact from="/firestore" to="/firestore/default/data" />
+            <Redirect exact from="/firestore/data" to="/firestore/default/data" />
+            <Redirect exact from="/firestore/requests" to="/firestore/default/requests" />
           </Switch>
         </GridCell>
       </FirestoreStore>
