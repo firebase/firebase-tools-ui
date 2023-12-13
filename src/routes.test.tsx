@@ -38,7 +38,7 @@ describe('getSanitizedPathData', () => {
   describe('Firestore', () => {
     it('scrubs Firestore path data', () => {
       expect(scrubPathData('/firestore/default/data/myCollection/myDoc')).toEqual({
-        scrubbedPath: '/firestore/default/data/:path*',
+        scrubbedPath: '/firestore/:databaseId/data/:path*',
         pathLabel: 'Firestore',
       });
     });
@@ -49,14 +49,14 @@ describe('getSanitizedPathData', () => {
           '/firestore/default/data/myCollection/myDoc/mySubCollection/mySubDoc'
         )
       ).toEqual({
-        scrubbedPath: '/firestore/default/data/:path*',
+        scrubbedPath: '/firestore/:databaseId/data/:path*',
         pathLabel: 'Firestore',
       });
     });
 
     it('scrubs Firestore request path data', () => {
-      expect(scrubPathData('/firestore/requests/myRequest')).toEqual({ // FIXME
-        scrubbedPath: '/firestore/requests/:requestId',
+      expect(scrubPathData('/firestore/default/requests/myRequest')).toEqual({
+        scrubbedPath: '/firestore/:databaseId/requests/:requestId',
         pathLabel: 'Firestore',
       });
     });

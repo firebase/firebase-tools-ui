@@ -72,7 +72,8 @@ interface FirestoreTabRoute {
 
 export const Firestore: React.FC<React.PropsWithChildren<unknown>> = React.memo(
   () => {
-    const location = useLocation(); // FIXME consider differences between usehistory and useLocation
+    const location = useLocation();
+    // Location is expected to be firestore/:databaseId/data or /requests/:requestId
     const databaseId = location.pathname.split("/")[2];
     const history = useHistory();
     const [isRefreshing, setIsRefreshing] = useState(false);
