@@ -308,9 +308,10 @@ describe('API', () => {
 
   it('updateConfig', async () => {
     const allowDuplicateEmails = false;
-    const mockFetchResult = { signIn: { allowDuplicateEmails } };
+    const callbackUri = "";
+    const mockFetchResult = { signIn: { allowDuplicateEmails }, notification: { sendEmail: { callbackUri } } };
     const api = setup({ mockFetchResult });
-    const result = await api.updateConfig({ signIn: { allowDuplicateEmails } });
+    const result = await api.updateConfig({ signIn: { allowDuplicateEmails }, notification: { sendEmail: { callbackUri } }  });
     expect(global.fetch).toHaveBeenCalledWith(
       '//foo.example.com:9002/emulator/v1/projects/pelmen-the-project/config',
       {
@@ -327,7 +328,7 @@ describe('API', () => {
   });
 
   it('getConfig', async () => {
-    const mockFetchResult = { signIn: { allowDuplicateEmails: false } };
+    const mockFetchResult = { signIn: { allowDuplicateEmails: false }, notification: { sendEmail: { callbackUri: "" } }  };
     const api = setup({ mockFetchResult });
     const result = await api.getConfig();
     expect(global.fetch).toHaveBeenCalledWith(

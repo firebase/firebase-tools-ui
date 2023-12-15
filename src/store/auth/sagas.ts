@@ -41,6 +41,7 @@ import {
   deleteUserRequest,
   deleteUserSuccess,
   getAllowDuplicateEmailsRequest,
+  getCustomAuthActionUriRequest,
   nukeUsersForAllTenantsRequest,
   nukeUsersForAllTenantsSuccess,
   nukeUsersRequest,
@@ -49,6 +50,8 @@ import {
   setAllowDuplicateEmailsSuccess,
   setAuthUserDialogError,
   setAuthUserDialogLoading,
+  setCustomAuthActionUriRequest,
+  setCustomAuthActionUriSuccess,
   setUserDisabledRequest,
   setUserDisabledSuccess,
   updateAuthConfig,
@@ -103,9 +106,18 @@ export function* initAuth({ payload }: ActionType<typeof updateAuthConfig>) {
       getType(getAllowDuplicateEmailsRequest),
       getAllowDuplicateEmails
     ),
+    takeLatest(
+      getType(setCustomAuthActionUriRequest),
+      setCustomAuthActionUri
+    ),
+    takeLatest(
+      getType(getCustomAuthActionUriRequest),
+      getCustomAuthActionUri
+    ),
     put(authFetchUsersRequest()),
     put(authFetchTenantsRequest()),
     put(getAllowDuplicateEmailsRequest()),
+    put(getCustomAuthActionUriRequest()),
   ]);
 }
 
@@ -197,6 +209,24 @@ export function* getAllowDuplicateEmails() {
   }
 
   yield put(setAllowDuplicateEmailsSuccess(config.signIn.allowDuplicateEmails));
+}
+
+export function* setCustomAuthActionUri({
+  payload,
+}: ReturnType<typeof setCustomAuthActionUriRequest>) {
+  const authApi: AuthApi = yield call(configureAuthSaga);
+  yield call([authApi, 'updateConfig'], {
+    notification: { sendEmail: { callbackUri: payload } },
+  });
+  yield put(setCustomAuthActionUriSuccess(payload));
+}
+
+export function* getCustomAuthActionUri() {
+  const authApi: AuthApi = yield call(configureAuthSaga);
+  const config: EmulatorV1ProjectsConfig = yield call([authApi, 'getConfig']);
+  const customAuthActionUri = config.notification?.sendEmail?.callbackUri ?? "";
+
+  yield put(setCustomAuthActionUriSuccess(customAuthActionUri));
 }
 
 export function* nukeUsers() {
