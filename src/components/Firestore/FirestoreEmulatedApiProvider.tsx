@@ -76,7 +76,8 @@ const FirestoreComponent: React.FC<React.PropsWithChildren<unknown>> = ({
 }) => {
   const app = useFirebaseApp();
 
-  const firestore = getFirestore(app, getDatabaseId());
+  const firestore = getFirestore(app, useDatabaseId());
+  console.log("emulatedApiProvider, firestore DB is:  " + JSON.stringify(firestore))
   return <FirestoreProvider sdk={firestore}>{children}</FirestoreProvider>;
 };
 
@@ -85,12 +86,12 @@ function useFirestoreRestApi() {
   const { projectId } = useConfig();
 
   return {
-    baseUrl: `//${config.hostAndPort}/v1/projects/${projectId}/databases/${getDatabaseId()}`,
-    baseEmulatorUrl: `//${config.hostAndPort}/emulator/v1/projects/${projectId}/databases/${getDatabaseId()}`,
+    baseUrl: `//${config.hostAndPort}/v1/projects/${projectId}/databases/${useDatabaseId()}`,
+    baseEmulatorUrl: `//${config.hostAndPort}/emulator/v1/projects/${projectId}/databases/${useDatabaseId()}`,
   };
 }
 
-function getDatabaseId(): string {
+export function useDatabaseId(): string {
   var databaseId = useLocation().pathname.split("/")[2];
   if (databaseId === "default") {
     databaseId = "(default)";
@@ -100,7 +101,8 @@ function getDatabaseId(): string {
 
 export function useRootCollections() {
   const { baseUrl } = useFirestoreRestApi();
-  const firestore = useFirestore();
+  const firestore = useFirestore(); // FIXME1 this firestore is incorrect
+  console.log("inside useRootCollections, Firestore is " + JSON.stringify(firestore))
   const url = `${baseUrl}/documents:listCollectionIds`;
 
   const { data } = useRequest<{ collectionIds: string[] }>(
@@ -113,8 +115,6 @@ export function useRootCollections() {
     }
   );
 
-  console.log("base url is: " + baseUrl);
-  console.log(JSON.stringify(data));
   const collectionIds = data?.collectionIds || [];
   return collectionIds.map((id) => collection(firestore, id));
 }

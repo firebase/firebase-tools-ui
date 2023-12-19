@@ -95,7 +95,7 @@ describe('Firestore sub-tabs navigation', () => {
     expect(isTabActive(getByText('Requests'))).toBe(true);
   });
 
-  it('Redirects to /firestore/data and selects the Data tab when /firestore', async () => {
+  it('Redirects to /firestore/default/data and selects the Data tab when /firestore', async () => {
     const { getByText } = await renderWithFirestore(async () => <Firestore />, {
       path: '/firestore',
     });
@@ -185,7 +185,7 @@ describe('Firestore sub-tabs navigation', () => {
             <>
               <Firestore />
               <Route
-                path="/firestore/default/data"
+                path="/firestore/default/data" // FIXME idk what this is
                 exact
                 render={() => <div data-testid="ROOT"></div>}
               />

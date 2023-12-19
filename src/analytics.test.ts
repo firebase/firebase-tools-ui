@@ -21,23 +21,23 @@ describe('Analytics', () => {
     it('Can determine the right analytics config for a page', () => {
       Object.defineProperty(window, 'location', {
         value: {
-          href: 'http://localhost:3000/firestore/data/myCollection/myDocument',
-          pathname: '/firestore/data/myCollection/myDocument',
+          href: 'http://localhost:3000/firestore/default/data/myCollection/myDocument',
+          pathname: '/firestore/default/data/myCollection/myDocument',
         },
         configurable: true,
       });
 
       expect(_getPageConfig()).toEqual({
         page_title: 'Firestore',
-        page_location: 'http://redacted/firestore/data/:path*',
+        page_location: 'http://redacted/firestore/:databaseId/data/:path*',
       });
     });
 
     it('scrubs the referrer host+port if the referrer is the emulator UI', () => {
       Object.defineProperty(window, 'location', {
         value: {
-          href: 'http://localhost:3000/firestore/data/myCollection/myDocument?search=5#heading',
-          pathname: '/firestore/data/myCollection/myDocument',
+          href: 'http://localhost:3000/firestore/default/data/myCollection/myDocument?search=5#heading',
+          pathname: '/firestore/default/data/myCollection/myDocument',
           host: 'localhost:3000',
           hostname: 'localhost',
           port: '3000',
@@ -46,22 +46,22 @@ describe('Analytics', () => {
       });
       Object.defineProperty(document, 'referrer', {
         value:
-          'http://localhost:3000/firestore/requests/request2?search=5#heading',
+          'http://localhost:3000/firestore/default/requests/request2?search=5#heading',
         configurable: true,
       });
 
       expect(_getPageConfig()).toEqual({
         page_title: 'Firestore',
-        page_location: 'http://redacted/firestore/data/:path*',
-        page_referrer: 'http://redacted/firestore/requests/:requestId',
+        page_location: 'http://redacted/firestore/:databaseId/data/:path*',
+        page_referrer: 'http://redacted/firestore/:databaseId/requests/:requestId',
       });
     });
 
     it('does not scrub the referrer host+port if the referrer is a different host', () => {
       Object.defineProperty(window, 'location', {
         value: {
-          href: 'http://localhost:3000/firestore/data/myCollection/myDocument',
-          pathname: '/firestore/data/myCollection/myDocument',
+          href: 'http://localhost:3000/firestore/default/data/myCollection/myDocument',
+          pathname: '/firestore/default/data/myCollection/myDocument',
           host: 'localhost:3000',
         },
         configurable: true,
@@ -73,7 +73,7 @@ describe('Analytics', () => {
 
       expect(_getPageConfig()).toEqual({
         page_title: 'Firestore',
-        page_location: 'http://redacted/firestore/data/:path*',
+        page_location: 'http://redacted/firestore/:databaseId/data/:path*',
         page_referrer: 'https://github.com/firebase/firebase-tools',
       });
     });

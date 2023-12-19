@@ -80,6 +80,7 @@ export function withCollectionState(
   return ({ collection, maxFetchedDocumentsPerCollection }) => {
     const [newDocumentId, setNewDocumentId] = useState<string>();
     const collectionFilter = useCollectionFilter(collection.path);
+    console.log("idk:" + collection.path)
     const filteredCollection = applyCollectionFilter(
       collection,
       collectionFilter,

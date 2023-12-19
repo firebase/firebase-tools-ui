@@ -38,6 +38,7 @@ import {
 import {
   useRootCollections,
   useSubCollections,
+  useDatabaseId,
 } from './FirestoreEmulatedApiProvider';
 import { useAutoSelect } from './useAutoSelect';
 
@@ -70,6 +71,7 @@ const CollectionList: React.FC<React.PropsWithChildren<Props>> = ({
   const history = useHistory();
   const firestore = useFirestore();
   const redirectIfAutoSelectable = useAutoSelect(collections);
+  const databaseId = useDatabaseId(); // FIXME1 Test this
 
   const [isAddCollectionDialogOpen, setAddCollectionDialogOpen] =
     useState(false);
@@ -79,7 +81,6 @@ const CollectionList: React.FC<React.PropsWithChildren<Props>> = ({
       const newCollection = reference
         ? collection(reference, value.collectionId)
         : collection(firestore, value.collectionId);
-      const databaseId = "default" // FIXME where do we get the database ID from?
       await setDoc(doc(newCollection, value.document.id), value.document.data);
 
       // Redirect to the new collection

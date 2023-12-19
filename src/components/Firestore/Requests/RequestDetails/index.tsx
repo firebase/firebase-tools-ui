@@ -138,8 +138,6 @@ export const RequestDetails: React.FC<React.PropsWithChildren<Props>> = ({
     linesOutcome,
     inspectionExpressions,
   } = getDetailsRequestData(selectedRequest);
-console.log("selected request:")
-console.log(JSON.stringify(selectedRequest))
   // Redirect to requests-table if (requestId) did not match any existing request
   if (requestId && !selectedRequest) {
     return <Redirect to="/firestore/requests" />; // FIXME need to return to the correct DB ID

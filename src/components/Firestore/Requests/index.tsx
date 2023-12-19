@@ -16,7 +16,7 @@
 
 import { ThemeProvider } from '@rmwc/theme';
 import React, { useState } from 'react';
-import { Route, RouteComponentProps, Switch } from 'react-router-dom';
+import { Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
 
 import { grey100 } from '../../../colors';
 import { EmulatorOutdated } from '../../common/EmulatorDisabled';
@@ -70,6 +70,8 @@ const Requests: React.FC<React.PropsWithChildren<unknown>> = () => {
               );
             }}
           />
+          {/** If no paths match, return to the request list */}
+          <Redirect to="/firestore/default/requests" />
         </Switch>
         <CopyPathNotification
           showCopyNotification={showCopyNotification}

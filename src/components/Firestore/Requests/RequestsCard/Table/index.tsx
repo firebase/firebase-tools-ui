@@ -28,6 +28,7 @@ import classnames from 'classnames';
 import React, { useRef } from 'react';
 
 import { Callout } from '../../../../common/Callout';
+import { useDatabaseId } from '../../../FirestoreEmulatedApiProvider';
 import { useFirestoreRequests } from '../../FirestoreRequestsProvider';
 import { FirestoreRulesEvaluation } from '../../rules_evaluation_result_model';
 import { usePathContainerWidth } from '../../utils';
@@ -131,7 +132,8 @@ export const RequestsTableWrapper: React.FC<
     setShowCopyNotification: (show: boolean) => void;
   }>
 > = ({ setShowCopyNotification }) => {
-  const evaluations = useFirestoreRequests().requests;
+  const databaseId = useDatabaseId();
+  const evaluations = useFirestoreRequests(databaseId).requests;
 
   // TODO: Add support for filtering.
   const filteredEvaluations = evaluations;
