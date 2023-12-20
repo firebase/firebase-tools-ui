@@ -40,7 +40,7 @@ firebase emulators:exec --project demo-example --import test-data 'npm start'
 ```
 
 This will run the web app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Open [http://localhost:5173](http://localhost:5173) to view it in the browser.
 
 The page will reload if you make edits.<br />
 You will also see any lint errors in the console.
@@ -67,7 +67,7 @@ cd firebase-tools-ui/
 GCLOUD_PROJECT=<project-id> FIREBASE_EMULATOR_HUB=localhost:4400 npm start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser. Note: The development server runs by default on port **3000**, so please make sure you are visiting that URL instead of the production Emulator UI (which defaults on port **4000**).
+Open [http://localhost:5173](http://localhost:5173) to view it in the browser. Note: The development server runs by default on port **5173**, so please make sure you are visiting that URL instead of the production Emulator UI (which defaults on port **4000**).
 
 ### Developing features behind flags
 
@@ -128,7 +128,7 @@ To run the production build with emulators, use:
 firebase emulators:exec --project demo-example --import test-data 'node dist/server/server.js'
 ```
 
-This will start a server that serves both the static files and APIs at `http://localhost:3000/`.
+This will start a server that serves both the static files and APIs at `http://localhost:5173/`.
 
 NOTE: The static files are not meant to be deployed to a website or CDN. They must be used in conjunction with
 the server as described above.
