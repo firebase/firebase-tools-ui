@@ -76,7 +76,7 @@
     "vite-plugin-svgr": "^4.2.0"
   },
   "overrides": {
-    "vite-plugin-node": {
+    "vite-plugin-node": { 
       "vite": "$vite"
     }
   },
