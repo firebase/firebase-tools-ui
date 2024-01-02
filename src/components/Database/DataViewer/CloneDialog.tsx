@@ -154,7 +154,7 @@ export const CloneDialog = React.memo<Props>(function CloneDialog$({
               <Checkbox
                 label="Clone filtered data set"
                 checked={isCloningWithFiltered}
-                onChange={(event) => {
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                   setCloningFiltered(!!event.currentTarget.checked);
                 }}
               />

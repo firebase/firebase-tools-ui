@@ -45,7 +45,7 @@ export function useMainDetail(config: MainDetailConfig) {
           aria-selected={index === i}
           activated={index === i}
           onClick={() => setIndex(i)}
-          onKeyDown={(e) => {
+          onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
             // List already has keyboard navigation, we just need to handle Enter/Space.
             if (e.key === 'Enter' || e.key === ' ') {
               setIndex(i);
