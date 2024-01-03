@@ -98,7 +98,7 @@ export const ImportDialog: React.FC<React.PropsWithChildren<Props>> = ({
               <Checkbox
                 label="Also execute database triggers in the Functions emulator"
                 checked={executeFunctions}
-                onChange={(event) => {
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                   setExecuteFunctions(event.currentTarget.checked);
                 }}
               />

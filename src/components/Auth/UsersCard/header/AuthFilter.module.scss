@@ -18,7 +18,9 @@
   width: 100%;
 
   :global
-    .mdc-text-field:not(.mdc-text-field--outlined):not(.mdc-text-field--textarea) {
+    .mdc-text-field:not(.mdc-text-field--outlined):not(
+      .mdc-text-field--textarea
+    ) {
     input.mdc-text-field__input {
       padding-left: 50px;
 

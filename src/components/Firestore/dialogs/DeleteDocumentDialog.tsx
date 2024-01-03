@@ -71,7 +71,7 @@ export const DeleteDocumentDialog: React.FC<React.PropsWithChildren<Props>> = ({
             <Checkbox
               label="Also delete nested collections and documents"
               checked={recursive}
-              onChange={(event) => {
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                 setRecursive(event.currentTarget.checked);
               }}
             />

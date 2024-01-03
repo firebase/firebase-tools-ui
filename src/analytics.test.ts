@@ -21,7 +21,7 @@ describe('Analytics', () => {
     it('Can determine the right analytics config for a page', () => {
       Object.defineProperty(window, 'location', {
         value: {
-          href: 'http://localhost:3000/firestore/data/myCollection/myDocument',
+          href: 'http://localhost:5173/firestore/data/myCollection/myDocument',
           pathname: '/firestore/data/myCollection/myDocument',
         },
         configurable: true,
@@ -36,17 +36,17 @@ describe('Analytics', () => {
     it('scrubs the referrer host+port if the referrer is the emulator UI', () => {
       Object.defineProperty(window, 'location', {
         value: {
-          href: 'http://localhost:3000/firestore/data/myCollection/myDocument?search=5#heading',
+          href: 'http://localhost:5173/firestore/data/myCollection/myDocument?search=5#heading',
           pathname: '/firestore/data/myCollection/myDocument',
-          host: 'localhost:3000',
+          host: 'localhost:5173',
           hostname: 'localhost',
-          port: '3000',
+          port: '5173',
         },
         configurable: true,
       });
       Object.defineProperty(document, 'referrer', {
         value:
-          'http://localhost:3000/firestore/requests/request2?search=5#heading',
+          'http://localhost:5173/firestore/requests/request2?search=5#heading',
         configurable: true,
       });
 
@@ -60,9 +60,9 @@ describe('Analytics', () => {
     it('does not scrub the referrer host+port if the referrer is a different host', () => {
       Object.defineProperty(window, 'location', {
         value: {
-          href: 'http://localhost:3000/firestore/data/myCollection/myDocument',
+          href: 'http://localhost:5173/firestore/data/myCollection/myDocument',
           pathname: '/firestore/data/myCollection/myDocument',
-          host: 'localhost:3000',
+          host: 'localhost:5173',
         },
         configurable: true,
       });
