@@ -99,9 +99,13 @@ export function useDatabaseId(): string {
   return databaseId;
 }
 
+export function useDatabaseIdForUrl(): string {
+  return useLocation().pathname.split("/")[2];
+}
+
 export function useRootCollections() {
   const { baseUrl } = useFirestoreRestApi();
-  const firestore = useFirestore(); // FIXME1 this firestore is incorrect
+  const firestore = useFirestore();
   console.log("inside useRootCollections, Firestore is " + JSON.stringify(firestore))
   const url = `${baseUrl}/documents:listCollectionIds`;
 

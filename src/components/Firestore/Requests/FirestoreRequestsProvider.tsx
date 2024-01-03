@@ -128,6 +128,6 @@ export function useIsFirestoreRequestsAvailable(): boolean {
 export function useFirestoreRequest(
   requestId: string
 ): FirestoreRulesEvaluation | undefined {
-  const { requests } = useFirestoreRequests();
+  const { requests } = useFirestoreRequests(); // FIXME ensure this returns all of them not just default
   return requests.find((req) => req.requestId === requestId);
 }
