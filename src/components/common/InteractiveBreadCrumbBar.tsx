@@ -100,7 +100,9 @@ export const InteractiveBreadCrumbBar: React.FC<
               type="text"
               onBlur={handleCancel}
               value={value}
-              onChange={(e) => setValue(e.currentTarget.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setValue(e.currentTarget.value)
+              }
               inputRef={inputRef}
             />
             <IconButton
