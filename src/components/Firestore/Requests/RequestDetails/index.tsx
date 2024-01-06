@@ -174,7 +174,7 @@ export const RequestDetails: React.FC<React.PropsWithChildren<Props>> = ({
 export const RequestDetailsWrapper: React.FC<
   React.PropsWithChildren<PropsFromParentComponent>
 > = (props) => {
-  const selectedRequest = useFirestoreRequest(props.requestId); // FIXME additional props needed?
+  const selectedRequest = useFirestoreRequest(props.requestId);
 
   return <RequestDetails selectedRequest={selectedRequest} {...props} />;
 };

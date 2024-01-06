@@ -20,7 +20,9 @@ import React from 'react';
 import { Route, Router } from 'react-router-dom';
 
 import { delay } from '../../test_utils';
-import { FIRESTORE_DATA_URL, useAutoSelect } from './useAutoSelect';
+import { useAutoSelect } from './useAutoSelect';
+
+const FIRESTORE_DATA_URL = '/firestore/default/data';
 
 interface TestData {
   id: string;

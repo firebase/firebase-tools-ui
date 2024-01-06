@@ -72,7 +72,6 @@ const CollectionList: React.FC<React.PropsWithChildren<Props>> = ({
   const firestore = useFirestore();
   const redirectIfAutoSelectable = useAutoSelect(collections);
   const databaseId = useDatabaseIdForUrl();
-  console.log("redirecting to db id: " + databaseId);
 
   const [isAddCollectionDialogOpen, setAddCollectionDialogOpen] =
     useState(false);

@@ -43,7 +43,7 @@
     "classnames": "^2.2.6",
     "codemirror": "^5.61.1",
     "express": "^4.17.1",
-    "firebase": "^9.23.0",
+    "firebase": "^10.7.1",
     "font-awesome": "^4.7.0",
     "immer": "^9.0.14",
     "keycode": "^2.2.0",
@@ -77,6 +77,9 @@
   },
   "overrides": {
     "vite-plugin-node": {
+      "vite": "$vite"
+    },
+    "vite-plugin-checker": {
       "vite": "$vite"
     }
   },

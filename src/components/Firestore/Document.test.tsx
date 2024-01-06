@@ -106,14 +106,14 @@ it('shows the selected root-collection', async () => {
     async (firestore) => {
       await setDoc(doc(firestore, 'foo/bar'), { a: 1 });
       return (
-        <Route path="/firestore/data">
+        <Route path="/firestore/default/data">
           <Root />
           <Portal />
         </Route>
       );
     },
     {
-      path: '/firestore/data/foo',
+      path: '/firestore/default/data/foo',
     }
   );
 
@@ -129,14 +129,14 @@ it('shows the selected root-collection when the collection id has special charac
     async (firestore) => {
       await setDoc(doc(firestore, 'foo@#$/bar'), { a: 1 });
       return (
-        <Route path="/firestore/data">
+        <Route path="/firestore/default/data">
           <Root />
           <Portal />
         </Route>
       );
     },
     {
-      path: '/firestore/data/foo%40%23%24',
+      path: '/firestore/default/data/foo%40%23%24',
     }
   );
 
@@ -155,14 +155,14 @@ it('shows the selected document-collection', async () => {
         spam: 'eggs',
       });
       return (
-        <Route path="/firestore/data/foo/bar">
+        <Route path="/firestore/default/data/foo/bar">
           <Document reference={documentRef} />
           <Portal />
         </Route>
       );
     },
     {
-      path: '/firestore/data/foo/bar/sub/doc',
+      path: '/firestore/default/data/foo/bar/sub/doc',
     }
   );
 
@@ -181,14 +181,14 @@ it('shows the selected document-collection when there are collection and documen
         spam: 'eggs',
       });
       return (
-        <Route path="/firestore/data/foo%40%23%24/bar%40%23%24">
+        <Route path="/firestore/default/data/foo%40%23%24/bar%40%23%24">
           <Document reference={documentRef} />
           <Portal />
         </Route>
       );
     },
     {
-      path: '/firestore/data/foo%40%23%24/bar%40%23%24/sub%40%23%24/doc%40%23%24',
+      path: '/firestore/default/data/foo%40%23%24/bar%40%23%24/sub%40%23%24/doc%40%23%24',
     }
   );
 

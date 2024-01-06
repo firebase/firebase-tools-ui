@@ -47,23 +47,24 @@ export const FirestoreEmulatedApiProvider: React.FC<
   React.PropsWithChildren<{}>
 > = React.memo(({ children }) => {
   const config = useEmulatorConfig('firestore');
+  const databaseId = useDatabaseId()
   const app = useEmulatedFirebaseApp(
     'firestore',
     FIRESTORE_OPTIONS,
     useCallback(
       (app: FirebaseApp) => {
-        const firestore = getFirestore(app);
+        const firestore = getFirestore(app, databaseId);
         connectFirestoreEmulator(firestore, config.host, config.port, {
           mockUserToken: 'owner',
         });
+
       },
-      [config]
+      [config, databaseId]
     )
   );
   if (!app) {
     return null;
   }
-
   return (
     <FirebaseAppProvider firebaseApp={app}>
       <FirestoreComponent>{children}</FirestoreComponent>
@@ -77,7 +78,6 @@ const FirestoreComponent: React.FC<React.PropsWithChildren<unknown>> = ({
   const app = useFirebaseApp();
 
   const firestore = getFirestore(app, useDatabaseId());
-  console.log("emulatedApiProvider, firestore DB is:  " + JSON.stringify(firestore))
   return <FirestoreProvider sdk={firestore}>{children}</FirestoreProvider>;
 };
 
@@ -106,7 +106,6 @@ export function useDatabaseIdForUrl(): string {
 export function useRootCollections() {
   const { baseUrl } = useFirestoreRestApi();
   const firestore = useFirestore();
-  console.log("inside useRootCollections, Firestore is " + JSON.stringify(firestore))
   const url = `${baseUrl}/documents:listCollectionIds`;
 
   const { data } = useRequest<{ collectionIds: string[] }>(
