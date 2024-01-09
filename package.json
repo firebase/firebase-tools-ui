@@ -134,7 +134,6 @@
     "build:web": "vite build",
     "build:server": "vite build --mode server",
     "test": "node scripts/test.js --env=./custom-jest-environment.js",
-    "test:debug": "react-scripts --inspect-brk test --env=./custom-jest-environment.js --runInBand",
     "test:coverage": "node scripts/test.js --coverage --watchAll=false --env=./custom-jest-environment.js",
     "lint": "prettier --check . && eslint --ext .js,.jsx,.ts,.tsx src/",
     "lint:fix": "eslint --ext .js,.jsx,.ts,.tsx src/ && npm run format",
@@ -155,6 +154,7 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "7.21.0",
     "@firebase/auth-interop-types": "^0.1.4",
     "@firebase/component": "^0.5.0",
     "@originjs/vite-plugin-commonjs": "^1.0.3",
