@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { TextEncoder, TextDecoder } from 'util';
 
+Object.assign(global, { TextDecoder, TextEncoder });
 require('mutationobserver-shim');
 
 // reactFire has an implicit dependency on globalThis
