@@ -87,8 +87,8 @@
     "build:server": "vite build --mode server",
     "test": "node scripts/test.js --env=./custom-jest-environment.js",
     "test:coverage": "node scripts/test.js --coverage --watchAll=false --env=./custom-jest-environment.js",
-    "lint": "prettier --check . && eslint --ext .js,.jsx,.ts,.tsx src/",
-    "lint:fix": "eslint --ext .js,.jsx,.ts,.tsx src/ && npm run format",
+    "lint": "NODE_ENV=development prettier --check . && eslint --ext .js,.jsx,.ts,.tsx src/",
+    "lint:fix": "NODE_ENV=development eslint --ext .js,.jsx,.ts,.tsx src/ && npm run format",
     "fmt": "npm run format",
     "format": "prettier --write .",
     "prepare": "husky install"
