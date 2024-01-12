@@ -15,9 +15,10 @@
  */
 
 @import '../../index.scss';
-@import '../Header/variables.scss';
 @import '../../../Requests/variables.scss';
 @import '../../../../common/radius';
+
+$filters-header-height: 0px;
 
 // Table th
 $table-header-height: 31px;
