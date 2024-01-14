@@ -24,7 +24,7 @@ import { Controller, FormProvider, useForm } from 'react-hook-form';
 
 import { grey100 } from '../../../colors';
 import { Field, SelectField } from '../../../components/common/Field';
-import * as actions from '../actions';
+import * as actions from '../store/actions';
 import {
   CollectionFilter as CollectionFilterType,
   isMultiValueCollectionFilter,

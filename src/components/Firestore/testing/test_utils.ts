@@ -50,13 +50,13 @@ export function createFakeFirestoreRequestEvaluation(
         mapValue: {
           fields: {
             id: {
-              stringValue: 'database/(default)/documents/users/foo',
+              stringValue: 'database/(default)/documents/users/foo', // FIXME
             },
           },
         },
       },
       method: 'get',
-      path: 'databases/(default)/documents/users/foo',
+      path: 'databases/(default)/documents/users/foo', // FIXME
       time: new Date().toString(),
     },
     requestId: 'unique_id',

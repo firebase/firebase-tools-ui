@@ -72,6 +72,7 @@ export interface Props {
   maxFetchedDocumentsPerCollection?: number;
 }
 
+// Exported for testing
 export function withCollectionState(
   Presentation: React.ComponentType<
     React.PropsWithChildren<CollectionPresentationProps>
@@ -158,6 +159,7 @@ interface CollectionPresentationProps {
   url: string;
 }
 
+// Exported for testing
 export const CollectionPresentation: React.FC<
   React.PropsWithChildren<CollectionPresentationProps>
 > = ({ collection, collectionFilter, addDocument, docs, missingDocs, url }) => {
@@ -170,6 +172,8 @@ export const CollectionPresentation: React.FC<
     const shouldDelete = await promptDeleteCollection(collection);
     shouldDelete && recursiveDelete(collection);
   };
+  console.log("reference for collectionpresentation: " + JSON.stringify(collection));
+  console.log("reference for collectionpresentation docs : " + JSON.stringify(docs));
 
   return (
     <>

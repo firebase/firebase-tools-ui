@@ -44,7 +44,7 @@ const documentStoreContext = React.createContext<{
   dispatch: React.Dispatch<any>;
 }>({ store: INIT_STATE, dispatch: () => {} });
 
-export const reducer = createReducer<Store, Action>({ fields: {} })
+export const reducer: React.Reducer<Store,Action> = createReducer<Store, Action>({ fields: {} })
   .handleAction(actions.addToMap, (state, { payload }) => {
     return produce(state, (draft) => {
       const field = draft.fields[payload.uuid];
@@ -155,7 +155,7 @@ export const reducer = createReducer<Store, Action>({ fields: {} })
   });
 
 export const storeReducer: React.Reducer<Store, Action> = (state, action) => {
-  return (reducer.handlers as any)[action.type](state, action);
+  return (reducer as any).handlers[action.type](state, action);
 };
 
 export const DocumentStore: React.FC<

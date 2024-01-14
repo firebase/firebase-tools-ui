@@ -50,7 +50,7 @@ const Doc: React.FC<
   }>
 > = ({ collectionById, children }) => {
   const { url } = useRouteMatch()!;
-
+console.log("Doc collectionById" + JSON.stringify(collectionById))
   return (
     <>
       <div className="Firestore-Document">{children}</div>
@@ -82,7 +82,7 @@ const Doc: React.FC<
 /** Root node */
 export const Root: React.FC<React.PropsWithChildren<unknown>> = () => {
   const firestore = useFirestore();
-
+console.log("down here in document, firestore ref: " + JSON.stringify(firestore));
   return (
     <Doc id={'Root'} collectionById={(id: string) => collection(firestore, id)}>
       <PanelHeader id="Root" icon={<FirestoreIcon />} />
@@ -99,6 +99,8 @@ export const Document: React.FC<
     reference: DocumentReference;
   }>
 > = ({ reference }) => {
+  console.log("reference for Document: " + JSON.stringify(reference));
+
   const recursiveDelete = useRecursiveDelete();
   const [isDeleteDocumentDialogOpen, setDeleteDocumentDialogOpen] =
     useState(false);
