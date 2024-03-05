@@ -1,5 +1,5 @@
 /**
- * Copyright 2021 Google LLC
+ * Copyright 2024 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,32 @@
  * limitations under the License.
  */
 
-import React from 'react';
+'use strict';
 
-const RequestsHeader: React.FC<React.PropsWithChildren<unknown>> = () => (
-  <div></div>
-);
+const babelJest = require('babel-jest').default;
 
-export default RequestsHeader;
+const hasJsxRuntime = (() => {
+  if (process.env.DISABLE_NEW_JSX_TRANSFORM === 'true') {
+    return false;
+  }
+
+  try {
+    require.resolve('react/jsx-runtime');
+    return true;
+  } catch (e) {
+    return false;
+  }
+})();
+
+module.exports = babelJest.createTransformer({
+  presets: [
+    [
+      require.resolve('babel-preset-react-app'),
+      {
+        runtime: hasJsxRuntime ? 'automatic' : 'classic',
+      },
+    ],
+  ],
+  babelrc: false,
+  configFile: false,
+});

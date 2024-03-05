@@ -1,5 +1,5 @@
 /**
- * Copyright 2021 Google LLC
+ * Copyright 2024 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,17 @@
  * limitations under the License.
  */
 
-// Filters header
-// TODO: set this variable to 56px when component is developed and
-// wants to be rendered, set it to 0px otherwise
-$filters-header-height: 0px;
+'use strict';
+
+// This is a custom Jest transformer turning style imports into empty objects.
+// http://facebook.github.io/jest/docs/en/webpack.html
+
+module.exports = {
+  process() {
+    return 'module.exports = {};';
+  },
+  getCacheKey() {
+    // The output is always the same.
+    return 'cssTransform';
+  },
+};
