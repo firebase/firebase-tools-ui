@@ -75,6 +75,9 @@
     "vite-plugin-svgr": "^4.2.0"
   },
   "overrides": {
+    "reactfire": {
+      "firebase": "^10.7.1"
+    },
     "vite-plugin-node": {
       "vite": "$vite"
     },
