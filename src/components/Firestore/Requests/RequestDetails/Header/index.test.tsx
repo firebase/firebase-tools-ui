@@ -68,7 +68,7 @@ describe('RequestDetails Header', () => {
 
   it('redirects back to requests-table when the return-icon-button is clicked', async () => {
     const history = createMemoryHistory({
-      initialEntries: [`/firestore/requests`, `/firestore/requests/requestId`], // FIXME thi
+      initialEntries: [`/firestore/requests`, `/firestore/requests/requestId`],
     });
     const { getByLabelText } = render(
       <Router history={history}>

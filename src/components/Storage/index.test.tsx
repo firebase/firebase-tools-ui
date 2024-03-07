@@ -29,7 +29,7 @@ describe('Storage Index Page', () => {
     const { getByText, defaultBucket } = await renderWithStorage(
       <StorageWrapper />
     );
-    await waitFor(() => delay(100));
+    await waitFor(() => delay(200));
     // TODO(christhompsongoogle): Requires at least one file in the list.
     // expect(getByText('Delete all files')).toBeDefined();
     expect(getByText(`gs://${defaultBucket}`)).toBeDefined();

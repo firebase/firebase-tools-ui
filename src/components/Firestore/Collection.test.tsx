@@ -274,7 +274,7 @@ it('shows the missing documents', async () => {
       );
     },
     {
-      path: '/hidden',
+      path: '/firestore/default/data/hidden',
     }
   );
 
@@ -362,15 +362,15 @@ describe('withCollectionState', () => {
         return (
           <>
             <Portal />
-            <Route path="/my-stuff">
+            <Route path="/firestore/default/data/my-stuff">
               <MyCollection collection={collectionRef} />
             </Route>
-            <Route path="/my-stuff/new-document-id">_redirected_to_foo_</Route>
+            <Route path="/firestore/default/data/my-stuff/new-document-id">_redirected_to_foo_</Route>
           </>
         );
       },
       {
-        path: '/my-stuff',
+        path: '/firestore/default/data/my-stuff',
       }
     );
 
@@ -389,15 +389,15 @@ describe('withCollectionState', () => {
         return (
           <>
             <Portal />
-            <Route path="/my-stuff">
+            <Route path="/firestore/default/data/my-stuff">
               <MyCollection collection={collectionRef} />
             </Route>
-            <Route path="/my-stuff/new-document-id">_redirected_to_foo_</Route>
+            <Route path="/firestore/default/data/my-stuff/new-document-id">_redirected_to_foo_</Route>
           </>
         );
       },
       {
-        path: '/my-stuff/my-doc/sub-coll',
+        path: '/firestore/default/data/my-stuff/my-doc/sub-coll',
       }
     );
 
@@ -416,17 +416,17 @@ describe('withCollectionState', () => {
         return (
           <>
             <Portal />
-            <Route path="/my-stuff">
+            <Route path="/firestore/default/data/my-stuff">
               <MyCollection collection={collectionRef} />
             </Route>
-            <Route path="/my-stuff/new-document-id-%40%23%24">
+            <Route path="/firestore/default/data/my-stuff/new-document-id-%40%23%24">
               _redirected_to_foo_
             </Route>
           </>
         );
       },
       {
-        path: '/my-stuff/my-doc/sub-coll',
+        path: '/firestore/default/data/my-stuff/my-doc/sub-coll',
       }
     );
 
@@ -447,17 +447,17 @@ describe('withCollectionState', () => {
         return (
           <>
             <Portal />
-            <Route path="/my-stuff">
+            <Route path="/firestore/default/data/my-stuff">
               <MyCollection collection={collectionRef} />
             </Route>
-            <Route path="/my-stuff/new-document-id-%40%23%24%25">
+            <Route path="/firestore/default/data/my-stuff/new-document-id-%40%23%24%25">
               _redirected_to_foo_
             </Route>
           </>
         );
       },
       {
-        path: '/my-stuff/my-doc/sub-coll',
+        path: '/firestore/default/data/my-stuff/my-doc/sub-coll',
       }
     );
 

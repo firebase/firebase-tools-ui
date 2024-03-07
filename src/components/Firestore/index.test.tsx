@@ -26,6 +26,7 @@ import { TestEmulatorConfigProvider } from '../common/EmulatorConfigProvider';
 import * as emulatedApi from './FirestoreEmulatedApiProvider';
 import { Firestore, FirestoreRoute } from './index';
 import { renderWithFirestore } from './testing/FirestoreTestProviders';
+import { MemoryRouter } from 'react-router-dom';
 
 jest.mock('../common/DialogQueue');
 jest.mock('./Requests', () => () => null);
@@ -182,14 +183,13 @@ describe('Firestore sub-tabs navigation', () => {
       const { getByTestId, getByText, queryByTestId } =
         await renderWithFirestore(
           async () => (
-            <>
+            <MemoryRouter initialEntries={['/firestore/default/data']}>
               <Firestore />
               <Route
-                path="/firestore/default/data" // FIXME idk what this is
-                exact
+                path="/firestore/default/data"
                 render={() => <div data-testid="ROOT"></div>}
               />
-            </>
+            </MemoryRouter>
           ),
           {
             path: '/firestore/default/data',

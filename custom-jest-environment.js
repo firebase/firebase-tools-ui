@@ -34,6 +34,8 @@ class EmulatorUiTestEnvironment extends JsdomEnvironment {
 
           // grpc requires Node.js timers (with .unref()), not browser timers.
           setImmediate: setImmediate,
+          // undici uses clearImmediate in lib/core/connect.js, stub it out
+          clearImmediate: clearImmediate,
           setInterval: setInterval,
           setTimeout: setTimeout,
         }),
