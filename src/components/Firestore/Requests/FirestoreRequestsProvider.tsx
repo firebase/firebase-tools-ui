@@ -99,7 +99,7 @@ export const TestFirestoreRequestsProvider: React.FC<
   );
 };
 
-export function useFirestoreRequests(): {
+export function useFirestoreRequests(databaseId?: string): {
   requests: FirestoreRulesEvaluation[];
 } {
   const context = React.useContext(firestoreRequestsContext);
@@ -111,7 +111,13 @@ export function useFirestoreRequests(): {
   if (!context.requests) {
     throw context.promise;
   }
-  return { requests: context.requests };
+  let requestList: FirestoreRulesEvaluation[] = context.requests;
+  if (databaseId) {
+    requestList = requestList.filter((request) => {
+      return request.rulesContext.path.includes(databaseId);
+    });
+  }
+  return { requests: requestList };
 }
 
 export function useIsFirestoreRequestsAvailable(): boolean {

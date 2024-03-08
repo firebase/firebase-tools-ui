@@ -23,6 +23,7 @@ import {
   getFirestore,
 } from 'firebase/firestore';
 import React, { useCallback } from 'react';
+import { useLocation } from 'react-router-dom';
 import {
   FirebaseAppProvider,
   FirestoreProvider,
@@ -46,23 +47,23 @@ export const FirestoreEmulatedApiProvider: React.FC<
   React.PropsWithChildren<{}>
 > = React.memo(({ children }) => {
   const config = useEmulatorConfig('firestore');
+  const databaseId = useDatabaseId();
   const app = useEmulatedFirebaseApp(
     'firestore',
     FIRESTORE_OPTIONS,
     useCallback(
       (app: FirebaseApp) => {
-        const firestore = getFirestore(app);
+        const firestore = getFirestore(app, databaseId);
         connectFirestoreEmulator(firestore, config.host, config.port, {
           mockUserToken: 'owner',
         });
       },
-      [config]
+      [config, databaseId]
     )
   );
   if (!app) {
     return null;
   }
-
   return (
     <FirebaseAppProvider firebaseApp={app}>
       <FirestoreComponent>{children}</FirestoreComponent>
@@ -74,19 +75,35 @@ const FirestoreComponent: React.FC<React.PropsWithChildren<unknown>> = ({
   children,
 }) => {
   const app = useFirebaseApp();
-  const firestore = getFirestore(app);
+
+  const firestore = getFirestore(app, useDatabaseId());
   return <FirestoreProvider sdk={firestore}>{children}</FirestoreProvider>;
 };
 
 function useFirestoreRestApi() {
   const config = useEmulatorConfig('firestore');
   const { projectId } = useConfig();
-  const databaseId = '(default)';
 
   return {
-    baseUrl: `//${config.hostAndPort}/v1/projects/${projectId}/databases/${databaseId}`,
-    baseEmulatorUrl: `//${config.hostAndPort}/emulator/v1/projects/${projectId}/databases/${databaseId}`,
+    baseUrl: `//${
+      config.hostAndPort
+    }/v1/projects/${projectId}/databases/${useDatabaseId()}`,
+    baseEmulatorUrl: `//${
+      config.hostAndPort
+    }/emulator/v1/projects/${projectId}/databases/${useDatabaseId()}`,
   };
+}
+
+export function useDatabaseId(): string {
+  var databaseId = useLocation().pathname.split('/')[2];
+  if (databaseId === 'default') {
+    databaseId = '(default)';
+  }
+  return databaseId;
+}
+
+export function useDatabaseIdForUrl(): string {
+  return useLocation().pathname.split('/')[2];
 }
 
 export function useRootCollections() {
@@ -122,7 +139,6 @@ export function useSubCollections(docRef: DocumentReference) {
       refreshInterval: 10_000,
     }
   );
-
   const collectionIds = data?.collectionIds || [];
   return collectionIds.map((id) => collection(docRef, id));
 }

@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { TextDecoder, TextEncoder } from 'util';
 
+Object.assign(global, { TextDecoder, TextEncoder });
 require('mutationobserver-shim');
 
 // reactFire has an implicit dependency on globalThis
@@ -24,6 +26,15 @@ global.globalThis = require('globalthis')();
 // out to silence warnings -- we don't actually need to test it.
 Object.defineProperty(window, 'scrollTo', {
   value: () => {},
+  writable: true,
+});
+
+// markResourceTiming exists in the node but not the dom
+Object.defineProperty(window, 'performance', {
+  value: {
+    markResourceTiming: () => {},
+    ...performance,
+  },
   writable: true,
 });
 

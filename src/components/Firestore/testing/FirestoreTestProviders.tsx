@@ -61,7 +61,7 @@ export const renderWithFirestore = async (
 
 export const FirestoreTestProviders: React.FC<
   React.PropsWithChildren<RenderOptions>
-> = React.memo(({ children, path = '' }) => {
+> = React.memo(({ children, path = '/firestore/default/data' }) => {
   const projectId = `${process.env.GCLOUD_PROJECT}-${Date.now()}`;
   const hostAndPort =
     process.env.FIRESTORE_EMULATOR_HOST ||
@@ -78,13 +78,13 @@ export const FirestoreTestProviders: React.FC<
         firestore: { host, port: Number(port), hostAndPort },
       }}
     >
-      <FirestoreEmulatedApiProvider>
-        <MemoryRouter initialEntries={[path]}>
+      <MemoryRouter initialEntries={[path]}>
+        <FirestoreEmulatedApiProvider>
           <Suspense fallback={<h1 data-testid="fallback">Fallback</h1>}>
             {children}
           </Suspense>
-        </MemoryRouter>
-      </FirestoreEmulatedApiProvider>
+        </FirestoreEmulatedApiProvider>
+      </MemoryRouter>
     </TestEmulatorConfigProvider>
   );
 });

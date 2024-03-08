@@ -20,7 +20,7 @@ import { DataTableCell, DataTableRow } from '@rmwc/data-table';
 import { Icon } from '@rmwc/icon';
 import { Tooltip } from '@rmwc/tooltip';
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import { CustomThemeProvider } from '../../../../../themes';
 import RequestPath from '../../RequestPath';
@@ -47,10 +47,7 @@ function getTableRowRequestData(
       hour12: false,
     }),
     requestMethod: rulesContext.method,
-    resourcePath: rulesContext.path.replace(
-      '/databases/(default)/documents',
-      ''
-    ),
+    resourcePath: rulesContext.path,
     outcomeData: OUTCOME_DATA[outcome],
   };
 }
@@ -69,6 +66,7 @@ const RequestTableRow: React.FC<React.PropsWithChildren<Props>> = ({
   requestPathContainerWidth,
 }) => {
   const history = useHistory();
+  const location = useLocation();
   const {
     requestTimeComplete,
     requestTimeFormatted,
@@ -76,10 +74,10 @@ const RequestTableRow: React.FC<React.PropsWithChildren<Props>> = ({
     resourcePath,
     outcomeData,
   } = getTableRowRequestData(request);
-
   return (
     <DataTableRow
-      onClick={() => history.push(`/firestore/requests/${requestId}`)}
+      // location.pathname is expected to be firestore/:databaseId/requests
+      onClick={() => history.push(`${location.pathname}/${requestId}`)}
     >
       <Tooltip
         content={requestTimeComplete}

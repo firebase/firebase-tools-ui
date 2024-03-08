@@ -16,6 +16,7 @@
 
 import { render } from '@testing-library/react';
 import React from 'react';
+import { MemoryRouter } from 'react-router-dom';
 
 import { createFakeFirestoreRequestEvaluation } from '../../../testing/test_utils';
 import { RequestsTable } from './index';
@@ -47,13 +48,15 @@ describe('RequestsTable', () => {
 
   it('renders appropriate number of rows when there are requests', () => {
     const { getAllByRole, queryByText } = render(
-      <RequestsTable
-        filteredRequests={[FAKE_EVALUATION_1, FAKE_EVALUATION_2]}
-        shouldShowZeroResults={false}
-        shouldShowZeroState={false}
-        shouldShowTable={true}
-        setShowCopyNotification={SET_SHOW_COPY_NOTIFICATION}
-      />
+      <MemoryRouter initialEntries={['/firestore/default/requests']}>
+        <RequestsTable
+          filteredRequests={[FAKE_EVALUATION_1, FAKE_EVALUATION_2]}
+          shouldShowZeroResults={false}
+          shouldShowZeroState={false}
+          shouldShowTable={true}
+          setShowCopyNotification={SET_SHOW_COPY_NOTIFICATION}
+        />
+      </MemoryRouter>
     );
     // Header + 2 requests
     expect(getAllByRole('row').length).toBe(3);

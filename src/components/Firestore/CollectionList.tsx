@@ -36,6 +36,7 @@ import {
   AddCollectionDialogValue,
 } from './dialogs/AddCollectionDialog';
 import {
+  useDatabaseIdForUrl,
   useRootCollections,
   useSubCollections,
 } from './FirestoreEmulatedApiProvider';
@@ -70,6 +71,7 @@ const CollectionList: React.FC<React.PropsWithChildren<Props>> = ({
   const history = useHistory();
   const firestore = useFirestore();
   const redirectIfAutoSelectable = useAutoSelect(collections);
+  const databaseId = useDatabaseIdForUrl();
 
   const [isAddCollectionDialogOpen, setAddCollectionDialogOpen] =
     useState(false);
@@ -89,10 +91,10 @@ const CollectionList: React.FC<React.PropsWithChildren<Props>> = ({
           .map((uri) => encodeURIComponent(uri))
           .join('/');
         history.push(
-          `/firestore/data/${encodedReferencePath}/${encodedCollectionId}`
+          `/firestore/${databaseId}/data/${encodedReferencePath}/${encodedCollectionId}`
         );
       } else {
-        history.push(`/firestore/data/${encodedCollectionId}`);
+        history.push(`/firestore/${databaseId}/data/${encodedCollectionId}`);
       }
     }
   };

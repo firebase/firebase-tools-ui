@@ -69,28 +69,34 @@ interface FirestoreTabRoute {
   label: string;
   exact: boolean;
 }
-const firestoreRoutes: ReadonlyArray<FirestoreTabRoute> = [
-  {
-    path: '/firestore/data',
-    label: 'Data',
-    exact: false,
-  },
-  {
-    path: '/firestore/requests',
-    label: 'Requests',
-    exact: false,
-  },
-];
 
 export const Firestore: React.FC<React.PropsWithChildren<unknown>> = React.memo(
   () => {
     const location = useLocation();
+    // Location is expected to be firestore/:databaseId/data or /requests/:requestId
+    const databaseId = location.pathname.split('/')[2];
     const history = useHistory();
     const [isRefreshing, setIsRefreshing] = useState(false);
     const eject = useEjector();
-
+    const firestoreRoutes: ReadonlyArray<FirestoreTabRoute> = [
+      {
+        path: `/firestore/${databaseId}/data`,
+        label: 'Data',
+        exact: false,
+      },
+      {
+        path: `/firestore/${databaseId}/requests`,
+        label: 'Requests',
+        exact: false,
+      },
+    ];
     // TODO: do something better here!
-    const path = location.pathname.replace(/^\/firestore\/data/, '');
+    // Regex based (roughly) on valid DB IDs here:
+    // https://firebase.google.com/docs/firestore/manage-databases#database_id
+    const path = location.pathname.replace(
+      /^\/firestore\/[a-zA-Z0-9-]{1,63}\/data/,
+      ''
+    );
     const showCollectionShell = path.split('/').length < 2;
     const showDocumentShell = path.split('/').length < 3;
 
@@ -117,13 +123,13 @@ export const Firestore: React.FC<React.PropsWithChildren<unknown>> = React.memo(
       if (!shouldNuke) return;
       setIsRefreshing(true);
       await eject();
-      handleNavigate();
+      handleNavigate(databaseId);
       setIsRefreshing(false);
     }
 
-    function handleNavigate(path?: string) {
+    function handleNavigate(path?: string, databaseId: string = 'default') {
       // TODO: move to routing constants
-      const root = '/firestore/data';
+      const root = `/firestore/${databaseId}/data`;
       if (path === undefined) {
         history.push(root);
       } else {
@@ -152,8 +158,8 @@ export const Firestore: React.FC<React.PropsWithChildren<unknown>> = React.memo(
               </div>
             }
           >
-            The Emulator Suite UI only supports the (default) database right
-            now.
+            The Emulator Suite UI supports multiple DBs by editing the database
+            name in the URL.
           </Callout>
         </GridCell>
         <GridCell span={12} className="Firestore">
@@ -164,19 +170,30 @@ export const Firestore: React.FC<React.PropsWithChildren<unknown>> = React.memo(
           </div>
 
           <Switch>
-            <Route path="/firestore/data">
+            <Route path="/firestore/:databaseId/data">
               <FirestoreDataCard
                 path={path}
+                databaseId={databaseId}
                 handleClearData={handleClearData}
                 handleNavigate={handleNavigate}
                 showCollectionShell={showCollectionShell}
                 showDocumentShell={showDocumentShell}
               />
             </Route>
-            <Route path="/firestore/requests">
+            <Route path="/firestore/:databaseId/requests">
               <FirestoreRequestsCard />
             </Route>
-            <Redirect from="/firestore" to="/firestore/data" />
+            <Redirect exact from="/firestore" to="/firestore/default/data" />
+            <Redirect
+              exact
+              from="/firestore/data"
+              to="/firestore/default/data"
+            />
+            <Redirect
+              exact
+              from="/firestore/requests"
+              to="/firestore/default/requests"
+            />
           </Switch>
         </GridCell>
       </FirestoreStore>
@@ -186,6 +203,7 @@ export const Firestore: React.FC<React.PropsWithChildren<unknown>> = React.memo(
 
 interface FirestoreDataCardProps {
   path: string;
+  databaseId: string;
   handleClearData: () => void;
   handleNavigate: (path?: string) => void;
   showCollectionShell: boolean;
@@ -196,6 +214,7 @@ const FirestoreDataCard: React.FC<
   React.PropsWithChildren<FirestoreDataCardProps>
 > = ({
   path,
+  databaseId,
   handleClearData,
   handleNavigate,
   showCollectionShell,
@@ -212,7 +231,7 @@ const FirestoreDataCard: React.FC<
     <Elevation z="2" wrap>
       <Card className="Firestore-panels-wrapper">
         <InteractiveBreadCrumbBar
-          base="/firestore/data"
+          base={`/firestore/${databaseId}/data`}
           path={path}
           onNavigate={handleNavigate}
         />

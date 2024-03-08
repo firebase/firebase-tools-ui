@@ -94,6 +94,13 @@ it('unsets sorting when switching to an operator that does not support it', asyn
 });
 
 it('supports multi-value operators', async () => {
+  // Stub the browser property performance.now()
+  Object.defineProperty(window, 'performance', {
+    value: {
+      now: () => {},
+      ...performance,
+    },
+  });
   const { getAllByLabelText, getByText, getByLabelText } = setup({
     collectionFilter: {
       field: '__field__',

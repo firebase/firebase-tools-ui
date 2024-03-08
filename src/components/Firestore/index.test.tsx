@@ -18,6 +18,7 @@ import { act, render, waitFor } from '@testing-library/react';
 import { collection, doc, setDoc } from 'firebase/firestore';
 import React from 'react';
 import { Route } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 
 import { delay, makeDeferred } from '../../test_utils';
 import { isTabActive } from '../../test_utils';
@@ -62,9 +63,9 @@ describe('FirestoreRoute', () => {
 });
 
 describe('Firestore sub-tabs navigation', () => {
-  it('selects the Data tab when /firestore/data', async () => {
+  it('selects the Data tab when /firestore/default/data', async () => {
     const { getByText } = await renderWithFirestore(async () => <Firestore />, {
-      path: '/firestore/data',
+      path: '/firestore/default/data',
     });
 
     await act(() => delay(600)); // Wait for tab indicator async DOM updates.
@@ -73,9 +74,9 @@ describe('Firestore sub-tabs navigation', () => {
     expect(isTabActive(getByText('Requests'))).toBe(false);
   });
 
-  it('selects the Requests tab when /firestore/requests', async () => {
+  it('selects the Requests tab when /firestore/default/requests', async () => {
     const { getByText } = await renderWithFirestore(async () => <Firestore />, {
-      path: '/firestore/requests',
+      path: '/firestore/default/requests',
     });
 
     await act(() => delay(300)); // Wait for tab indicator async DOM updates.
@@ -84,9 +85,9 @@ describe('Firestore sub-tabs navigation', () => {
     expect(isTabActive(getByText('Requests'))).toBe(true);
   });
 
-  it('selects the Requests tab when /firestore/requests/:id', async () => {
+  it('selects the Requests tab when /firestore/default/requests/:id', async () => {
     const { getByText } = await renderWithFirestore(async () => <Firestore />, {
-      path: '/firestore/requests/uniqueRequestId',
+      path: '/firestore/default/requests/uniqueRequestId',
     });
 
     await act(() => delay(300)); // Wait for tab indicator async DOM updates.
@@ -95,7 +96,7 @@ describe('Firestore sub-tabs navigation', () => {
     expect(isTabActive(getByText('Requests'))).toBe(true);
   });
 
-  it('Redirects to /firestore/data and selects the Data tab when /firestore', async () => {
+  it('Redirects to /firestore/default/data and selects the Data tab when /firestore', async () => {
     const { getByText } = await renderWithFirestore(async () => <Firestore />, {
       path: '/firestore',
     });
@@ -119,7 +120,7 @@ describe('Firestore sub-tabs navigation', () => {
 
             return <Firestore />;
           },
-          { path: '/firestore/data' }
+          { path: '/firestore/default/data' }
         );
 
       await findByTestId('collection-list');
@@ -133,7 +134,7 @@ describe('Firestore sub-tabs navigation', () => {
       const { getByTestId, findByTestId } = await renderWithFirestore(
         async () => <Firestore />,
         {
-          path: '/firestore/data',
+          path: '/firestore/default/data',
         }
       );
 
@@ -145,7 +146,7 @@ describe('Firestore sub-tabs navigation', () => {
       const { findByTestId, queryByTestId } = await renderWithFirestore(
         async () => <Firestore />,
         {
-          path: '/firestore/data/coll',
+          path: '/firestore/default/data/coll',
         }
       );
 
@@ -161,7 +162,7 @@ describe('Firestore sub-tabs navigation', () => {
           return <Firestore />;
         },
         {
-          path: '/firestore/data/coll/doc',
+          path: '/firestore/default/data/coll/doc',
         }
       );
 
@@ -182,17 +183,16 @@ describe('Firestore sub-tabs navigation', () => {
       const { getByTestId, getByText, queryByTestId } =
         await renderWithFirestore(
           async () => (
-            <>
+            <MemoryRouter initialEntries={['/firestore/default/data']}>
               <Firestore />
               <Route
-                path="/firestore/data"
-                exact
+                path="/firestore/default/data"
                 render={() => <div data-testid="ROOT"></div>}
               />
-            </>
+            </MemoryRouter>
           ),
           {
-            path: '/firestore/data',
+            path: '/firestore/default/data',
           }
         );
       act(() => getByText('Clear all data').click());
@@ -213,7 +213,7 @@ describe('Firestore sub-tabs navigation', () => {
       const { getByText } = await renderWithFirestore(
         async () => <Firestore />,
         {
-          path: '/firestore/data',
+          path: '/firestore/default/data',
         }
       );
       act(() => getByText('Clear all data').click());

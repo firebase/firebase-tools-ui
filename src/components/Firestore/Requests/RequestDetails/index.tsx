@@ -105,10 +105,7 @@ export function getDetailsRequestData(
       hour12: false,
     }),
     requestMethod: rulesContext.method,
-    resourcePath: rulesContext.path.replace(
-      '/databases/(default)/documents',
-      ''
-    ),
+    resourcePath: rulesContext.path,
     outcome,
     outcomeData: OUTCOME_DATA[outcome],
     firestoreRules: rules,
@@ -141,7 +138,6 @@ export const RequestDetails: React.FC<React.PropsWithChildren<Props>> = ({
     linesOutcome,
     inspectionExpressions,
   } = getDetailsRequestData(selectedRequest);
-
   // Redirect to requests-table if (requestId) did not match any existing request
   if (requestId && !selectedRequest) {
     return <Redirect to="/firestore/requests" />;

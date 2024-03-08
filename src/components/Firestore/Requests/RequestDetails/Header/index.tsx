@@ -21,7 +21,7 @@ import { IconButton } from '@rmwc/icon-button';
 import { Theme } from '@rmwc/theme';
 import { Tooltip } from '@rmwc/tooltip';
 import React, { useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 import { CustomThemeProvider } from '../../../../../themes';
 import RequestPath from '../../RequestPath';
@@ -47,7 +47,11 @@ const RequestDetailsHeader: React.FC<React.PropsWithChildren<Props>> = ({
 }) => {
   const pathContainerRef = useRef<HTMLDivElement>(null);
   const requestPathContainerWidth = usePathContainerWidth(pathContainerRef);
-
+  // Since the IconButton doesn't support relative navigation (relative to the url path) we encode a back location explicitly
+  const backLocation = useLocation().pathname.replace(
+    /\/requests\/[a-z0-9-]+\/?$/,
+    '/requests'
+  );
   return (
     <Theme use="surface" wrap>
       <div
@@ -60,7 +64,7 @@ const RequestDetailsHeader: React.FC<React.PropsWithChildren<Props>> = ({
               className="Firestore-Request-Details-Header-Return-Button"
               icon={{ icon: 'arrow_back_ios', size: 'small' }}
               tag={Link}
-              to="/firestore/requests"
+              to={backLocation}
               label="header-return-button"
             />
           </Tooltip>

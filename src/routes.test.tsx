@@ -37,8 +37,10 @@ describe('getSanitizedPathData', () => {
 
   describe('Firestore', () => {
     it('scrubs Firestore path data', () => {
-      expect(scrubPathData('/firestore/data/myCollection/myDoc')).toEqual({
-        scrubbedPath: '/firestore/data/:path*',
+      expect(
+        scrubPathData('/firestore/default/data/myCollection/myDoc')
+      ).toEqual({
+        scrubbedPath: '/firestore/:databaseId/data/:path*',
         pathLabel: 'Firestore',
       });
     });
@@ -46,17 +48,17 @@ describe('getSanitizedPathData', () => {
     it('scrubs deeply nested Firestore paths', () => {
       expect(
         scrubPathData(
-          '/firestore/data/myCollection/myDoc/mySubCollection/mySubDoc'
+          '/firestore/default/data/myCollection/myDoc/mySubCollection/mySubDoc'
         )
       ).toEqual({
-        scrubbedPath: '/firestore/data/:path*',
+        scrubbedPath: '/firestore/:databaseId/data/:path*',
         pathLabel: 'Firestore',
       });
     });
 
     it('scrubs Firestore request path data', () => {
-      expect(scrubPathData('/firestore/requests/myRequest')).toEqual({
-        scrubbedPath: '/firestore/requests/:requestId',
+      expect(scrubPathData('/firestore/default/requests/myRequest')).toEqual({
+        scrubbedPath: '/firestore/:databaseId/requests/:requestId',
         pathLabel: 'Firestore',
       });
     });
