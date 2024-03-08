@@ -36,9 +36,9 @@ import {
   AddCollectionDialogValue,
 } from './dialogs/AddCollectionDialog';
 import {
+  useDatabaseIdForUrl,
   useRootCollections,
   useSubCollections,
-  useDatabaseIdForUrl,
 } from './FirestoreEmulatedApiProvider';
 import { useAutoSelect } from './useAutoSelect';
 

@@ -74,7 +74,7 @@ export const Firestore: React.FC<React.PropsWithChildren<unknown>> = React.memo(
   () => {
     const location = useLocation();
     // Location is expected to be firestore/:databaseId/data or /requests/:requestId
-    const databaseId = location.pathname.split("/")[2];
+    const databaseId = location.pathname.split('/')[2];
     const history = useHistory();
     const [isRefreshing, setIsRefreshing] = useState(false);
     const eject = useEjector();
@@ -93,7 +93,10 @@ export const Firestore: React.FC<React.PropsWithChildren<unknown>> = React.memo(
     // TODO: do something better here!
     // Regex based (roughly) on valid DB IDs here:
     // https://firebase.google.com/docs/firestore/manage-databases#database_id
-    const path = location.pathname.replace(/^\/firestore\/[a-zA-Z0-9-]{1,63}\/data/, '');
+    const path = location.pathname.replace(
+      /^\/firestore\/[a-zA-Z0-9-]{1,63}\/data/,
+      ''
+    );
     const showCollectionShell = path.split('/').length < 2;
     const showDocumentShell = path.split('/').length < 3;
 
@@ -124,7 +127,7 @@ export const Firestore: React.FC<React.PropsWithChildren<unknown>> = React.memo(
       setIsRefreshing(false);
     }
 
-    function handleNavigate(path?: string, databaseId: string = "default") {
+    function handleNavigate(path?: string, databaseId: string = 'default') {
       // TODO: move to routing constants
       const root = `/firestore/${databaseId}/data`;
       if (path === undefined) {
@@ -155,7 +158,8 @@ export const Firestore: React.FC<React.PropsWithChildren<unknown>> = React.memo(
               </div>
             }
           >
-            The Emulator Suite UI supports multiple DBs by editing the database name in the URL.
+            The Emulator Suite UI supports multiple DBs by editing the database
+            name in the URL.
           </Callout>
         </GridCell>
         <GridCell span={12} className="Firestore">
@@ -180,8 +184,16 @@ export const Firestore: React.FC<React.PropsWithChildren<unknown>> = React.memo(
               <FirestoreRequestsCard />
             </Route>
             <Redirect exact from="/firestore" to="/firestore/default/data" />
-            <Redirect exact from="/firestore/data" to="/firestore/default/data" />
-            <Redirect exact from="/firestore/requests" to="/firestore/default/requests" />
+            <Redirect
+              exact
+              from="/firestore/data"
+              to="/firestore/default/data"
+            />
+            <Redirect
+              exact
+              from="/firestore/requests"
+              to="/firestore/default/requests"
+            />
           </Switch>
         </GridCell>
       </FirestoreStore>

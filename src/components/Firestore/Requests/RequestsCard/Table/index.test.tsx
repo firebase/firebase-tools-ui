@@ -16,12 +16,12 @@
 
 import { render } from '@testing-library/react';
 import React from 'react';
+import { MemoryRouter } from 'react-router-dom';
 
 import { createFakeFirestoreRequestEvaluation } from '../../../testing/test_utils';
 import { RequestsTable } from './index';
 import { NO_RESULTS_MESSAGE } from './NoResults';
 import { ZERO_STATE_MESSAGE } from './ZeroState';
-import { MemoryRouter } from 'react-router-dom';
 
 const FAKE_EVALUATION_1 = createFakeFirestoreRequestEvaluation({
   requestId: 'first-fake-evaluation',

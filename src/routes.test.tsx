@@ -37,7 +37,9 @@ describe('getSanitizedPathData', () => {
 
   describe('Firestore', () => {
     it('scrubs Firestore path data', () => {
-      expect(scrubPathData('/firestore/default/data/myCollection/myDoc')).toEqual({
+      expect(
+        scrubPathData('/firestore/default/data/myCollection/myDoc')
+      ).toEqual({
         scrubbedPath: '/firestore/:databaseId/data/:path*',
         pathLabel: 'Firestore',
       });

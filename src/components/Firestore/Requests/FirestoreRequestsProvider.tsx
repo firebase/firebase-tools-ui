@@ -111,11 +111,11 @@ export function useFirestoreRequests(databaseId?: string): {
   if (!context.requests) {
     throw context.promise;
   }
-  let requestList: FirestoreRulesEvaluation[] = context.requests
+  let requestList: FirestoreRulesEvaluation[] = context.requests;
   if (databaseId) {
-    requestList = requestList.filter(request => {
+    requestList = requestList.filter((request) => {
       return request.rulesContext.path.includes(databaseId);
-    })
+    });
   }
   return { requests: requestList };
 }

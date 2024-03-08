@@ -30,9 +30,9 @@ export function useAutoSelect<T extends { id: string }>(list?: T[] | null) {
   useEffect(() => {
     const splitUrl = url.split('/');
     const isRootOrRootCollection =
-      (splitUrl.length === 4 || splitUrl.length === 5)
-      && splitUrl[1] === "firestore" // The first segment is empty string
-      && splitUrl[3] === "data";
+      (splitUrl.length === 4 || splitUrl.length === 5) &&
+      splitUrl[1] === 'firestore' && // The first segment is empty string
+      splitUrl[3] === 'data';
     const hasNothingSelected = url === pathname;
     const firstChild = list?.[0];
     const shouldAutoSelect = isRootOrRootCollection && hasNothingSelected;

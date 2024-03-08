@@ -23,6 +23,7 @@ import {
   getFirestore,
 } from 'firebase/firestore';
 import React, { useCallback } from 'react';
+import { useLocation } from 'react-router-dom';
 import {
   FirebaseAppProvider,
   FirestoreProvider,
@@ -35,7 +36,6 @@ import { useEmulatedFirebaseApp } from '../../firebase';
 import { useConfig, useEmulatorConfig } from '../common/EmulatorConfigProvider';
 import { useFetcher, useRequest } from '../common/useRequest';
 import { MissingDocument } from './models';
-import { useLocation } from 'react-router-dom';
 
 const FIRESTORE_OPTIONS = {};
 
@@ -47,7 +47,7 @@ export const FirestoreEmulatedApiProvider: React.FC<
   React.PropsWithChildren<{}>
 > = React.memo(({ children }) => {
   const config = useEmulatorConfig('firestore');
-  const databaseId = useDatabaseId()
+  const databaseId = useDatabaseId();
   const app = useEmulatedFirebaseApp(
     'firestore',
     FIRESTORE_OPTIONS,
@@ -57,7 +57,6 @@ export const FirestoreEmulatedApiProvider: React.FC<
         connectFirestoreEmulator(firestore, config.host, config.port, {
           mockUserToken: 'owner',
         });
-
       },
       [config, databaseId]
     )
@@ -86,21 +85,25 @@ function useFirestoreRestApi() {
   const { projectId } = useConfig();
 
   return {
-    baseUrl: `//${config.hostAndPort}/v1/projects/${projectId}/databases/${useDatabaseId()}`,
-    baseEmulatorUrl: `//${config.hostAndPort}/emulator/v1/projects/${projectId}/databases/${useDatabaseId()}`,
+    baseUrl: `//${
+      config.hostAndPort
+    }/v1/projects/${projectId}/databases/${useDatabaseId()}`,
+    baseEmulatorUrl: `//${
+      config.hostAndPort
+    }/emulator/v1/projects/${projectId}/databases/${useDatabaseId()}`,
   };
 }
 
 export function useDatabaseId(): string {
-  var databaseId = useLocation().pathname.split("/")[2];
-  if (databaseId === "default") {
-    databaseId = "(default)";
+  var databaseId = useLocation().pathname.split('/')[2];
+  if (databaseId === 'default') {
+    databaseId = '(default)';
   }
   return databaseId;
 }
 
 export function useDatabaseIdForUrl(): string {
-  return useLocation().pathname.split("/")[2];
+  return useLocation().pathname.split('/')[2];
 }
 
 export function useRootCollections() {

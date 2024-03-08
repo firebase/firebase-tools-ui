@@ -62,7 +62,9 @@ describe('Firestore Requests', () => {
       <TestEmulatorConfigProvider config={FAKE_CONFIG}>
         <TestFirestoreRequestsProvider state={{ requests: [FAKE_EVALUATION] }}>
           <MemoryRouter
-            initialEntries={[`/firestore/default/requests/${FAKE_EVALUATION_ID}`]}
+            initialEntries={[
+              `/firestore/default/requests/${FAKE_EVALUATION_ID}`,
+            ]}
           >
             <FirestoreRequests />
           </MemoryRouter>
@@ -78,7 +80,9 @@ describe('Firestore Requests', () => {
       <TestEmulatorConfigProvider config={FAKE_CONFIG}>
         <TestFirestoreRequestsProvider state={{ requests: [] }}>
           <MemoryRouter
-            initialEntries={[`/firestore/default/requests/${FAKE_EVALUATION_ID}/foo`]}
+            initialEntries={[
+              `/firestore/default/requests/${FAKE_EVALUATION_ID}/foo`,
+            ]}
           >
             <FirestoreRequests />
           </MemoryRouter>

@@ -78,13 +78,13 @@ export const FirestoreTestProviders: React.FC<
         firestore: { host, port: Number(port), hostAndPort },
       }}
     >
-    <MemoryRouter initialEntries={[path]}>
-      <FirestoreEmulatedApiProvider>
+      <MemoryRouter initialEntries={[path]}>
+        <FirestoreEmulatedApiProvider>
           <Suspense fallback={<h1 data-testid="fallback">Fallback</h1>}>
             {children}
           </Suspense>
-      </FirestoreEmulatedApiProvider>
-        </MemoryRouter>
+        </FirestoreEmulatedApiProvider>
+      </MemoryRouter>
     </TestEmulatorConfigProvider>
   );
 });

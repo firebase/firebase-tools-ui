@@ -18,6 +18,7 @@ import { act, render, waitFor } from '@testing-library/react';
 import { collection, doc, setDoc } from 'firebase/firestore';
 import React from 'react';
 import { Route } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 
 import { delay, makeDeferred } from '../../test_utils';
 import { isTabActive } from '../../test_utils';
@@ -26,7 +27,6 @@ import { TestEmulatorConfigProvider } from '../common/EmulatorConfigProvider';
 import * as emulatedApi from './FirestoreEmulatedApiProvider';
 import { Firestore, FirestoreRoute } from './index';
 import { renderWithFirestore } from './testing/FirestoreTestProviders';
-import { MemoryRouter } from 'react-router-dom';
 
 jest.mock('../common/DialogQueue');
 jest.mock('./Requests', () => () => null);

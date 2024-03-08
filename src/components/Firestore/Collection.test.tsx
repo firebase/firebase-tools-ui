@@ -365,7 +365,9 @@ describe('withCollectionState', () => {
             <Route path="/firestore/default/data/my-stuff">
               <MyCollection collection={collectionRef} />
             </Route>
-            <Route path="/firestore/default/data/my-stuff/new-document-id">_redirected_to_foo_</Route>
+            <Route path="/firestore/default/data/my-stuff/new-document-id">
+              _redirected_to_foo_
+            </Route>
           </>
         );
       },
@@ -392,7 +394,9 @@ describe('withCollectionState', () => {
             <Route path="/firestore/default/data/my-stuff">
               <MyCollection collection={collectionRef} />
             </Route>
-            <Route path="/firestore/default/data/my-stuff/new-document-id">_redirected_to_foo_</Route>
+            <Route path="/firestore/default/data/my-stuff/new-document-id">
+              _redirected_to_foo_
+            </Route>
           </>
         );
       },

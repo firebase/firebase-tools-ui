@@ -48,7 +48,10 @@ const RequestDetailsHeader: React.FC<React.PropsWithChildren<Props>> = ({
   const pathContainerRef = useRef<HTMLDivElement>(null);
   const requestPathContainerWidth = usePathContainerWidth(pathContainerRef);
   // Since the IconButton doesn't support relative navigation (relative to the url path) we encode a back location explicitly
-  const backLocation = useLocation().pathname.replace(/\/requests\/[a-z0-9-]+\/?$/,"/requests")
+  const backLocation = useLocation().pathname.replace(
+    /\/requests\/[a-z0-9-]+\/?$/,
+    '/requests'
+  );
   return (
     <Theme use="surface" wrap>
       <div

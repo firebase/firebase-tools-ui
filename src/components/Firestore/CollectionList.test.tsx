@@ -55,7 +55,9 @@ it('shows the sub-collection list', async () => {
 });
 
 it('redirects to collection when clicking the collection list item', async () => {
-  const history = createMemoryHistory({ initialEntries: ['/firestore/default/data'] });
+  const history = createMemoryHistory({
+    initialEntries: ['/firestore/default/data'],
+  });
   const { getByTestId } = await render(
     <Router history={history}>
       <Route path="/firestore/default/data">
@@ -72,7 +74,9 @@ it('redirects to collection when clicking the collection list item', async () =>
 });
 
 it('redirects to collection when clicking the collection list item and the ids have special characters', async () => {
-  const history = createMemoryHistory({ initialEntries: ['/firestore/default/data'] });
+  const history = createMemoryHistory({
+    initialEntries: ['/firestore/default/data'],
+  });
   const { getByTestId } = await render(
     <Router history={history}>
       <Route path="/firestore/default/data">
@@ -144,7 +148,9 @@ it('triggers a redirect to a new collection at the root when there are special c
             <RootCollectionList />
           </Route>
 
-          <Route path="/firestore/default/data/abc%40%23%24">_redirected_to_foo_</Route>
+          <Route path="/firestore/default/data/abc%40%23%24">
+            _redirected_to_foo_
+          </Route>
         </>
       );
     },

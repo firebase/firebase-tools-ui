@@ -53,7 +53,8 @@ describe('Analytics', () => {
       expect(_getPageConfig()).toEqual({
         page_title: 'Firestore',
         page_location: 'http://redacted/firestore/:databaseId/data/:path*',
-        page_referrer: 'http://redacted/firestore/:databaseId/requests/:requestId',
+        page_referrer:
+          'http://redacted/firestore/:databaseId/requests/:requestId',
       });
     });
 
