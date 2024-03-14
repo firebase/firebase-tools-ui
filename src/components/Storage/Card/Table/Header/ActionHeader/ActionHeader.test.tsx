@@ -21,6 +21,9 @@ import { act } from 'react-dom/test-utils';
 import { UseMultiselectResult } from '../../../../common/useMultiselect';
 import { renderWithStorage } from '../../../../testing/renderWithStorage';
 import { ActionHeader } from './ActionHeader';
+import { confirmDeleteSelectedFiles } from './confirmDeleteSelectedFiles';
+
+jest.mock('./confirmDeleteSelectedFiles.tsx');
 
 describe('ActionHeader', () => {
   // TODO: investigate emulators + jsdom
@@ -44,6 +47,35 @@ describe('ActionHeader', () => {
     });
 
     expect(await waitForNFiles(0)).toBe(true);
+    // Clears selection
+    expect(clearAll).toHaveBeenCalled();
+  });
+
+  it('deletes after confirmation dialog returns true', async () => {
+    const selected = new Set(['lol.jpg']);
+
+    const clearAll = jest.fn();
+    const selection = {
+      selected,
+      clearAll,
+    } as unknown as UseMultiselectResult;
+
+    const { uploadFile, waitForNFiles, waitForFilesToBeUploaded, getByText } =
+      await renderWithStorage(<ActionHeader selection={selection} />);
+
+    await uploadFile('lol.jpg');
+    await waitForFilesToBeUploaded();
+
+    await act(async () => {
+      await fireEvent.click(getByText('Delete'));
+    });
+
+    (confirmDeleteSelectedFiles as jest.Mock).mockReturnValueOnce(
+      Promise.resolve(true)
+    );
+
+    expect(await waitForNFiles(0)).toBe(true);
+
     // Clears selection
     expect(clearAll).toHaveBeenCalled();
   });

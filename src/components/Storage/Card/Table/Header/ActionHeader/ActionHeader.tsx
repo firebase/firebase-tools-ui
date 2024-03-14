@@ -1,5 +1,5 @@
 /**
- * Copyright 2021 Google LLC
+ * Copyright 2023 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import { useStorageFiles } from '../../../../api/useStorageFiles';
 import { UseMultiselectResult } from '../../../../common/useMultiselect';
 import { StorageItem } from '../../../../types';
 import styles from './ActionHeader.module.scss';
+import { confirmDeleteSelectedFiles } from './confirmDeleteSelectedFiles';
 
 interface ActionHeaderProps {
   selection: UseMultiselectResult;
@@ -75,9 +76,11 @@ export const ActionHeader: React.FC<
               Open all files
             </Button>
             <Button
-              onClick={() => {
-                selection.clearAll();
-                return deleteFiles(paths);
+              onClick={async () => {
+                if (await confirmDeleteSelectedFiles()) {
+                  selection.clearAll();
+                  return deleteFiles(paths);
+                }
               }}
               className={styles.deleteButton}
               outlined
