@@ -42,6 +42,7 @@ export type Emulator =
   | 'hosting'
   | 'storage'
   | 'pubsub'
+  | 'scheduled'
   | 'extensions';
 
 // Config for the Emulator Suite UI's own analytics (not a Google Analytics emulator)
@@ -81,5 +82,6 @@ export interface Config {
   hosting?: EmulatorConfig;
   storage?: EmulatorConfig;
   pubsub?: EmulatorConfig;
+  scheduled?: EmulatorConfig;
   experiments: Array<string>;
 }
