@@ -28,9 +28,6 @@
     },
     "pubsub": {
       "port": 8085
-    },
-    "scheduled": {
-      "port": 8086
     }
   },
   "extensions": {

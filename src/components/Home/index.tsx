@@ -38,7 +38,6 @@ import {
   FunctionsIcon,
   HostingIcon,
   PubSubIcon,
-  ScheduledIcon,
   StorageIcon,
 } from '../common/icons';
 import { Spinner } from '../common/Spinner';
@@ -124,14 +123,6 @@ const Overview: React.FC<
           icon={<PubSubIcon theme="secondary" />}
           config={config.pubsub}
           testId="emulator-info-pubsub"
-        />
-        <EmulatorCard
-          name="Scheduled emulator"
-          icon={<ScheduledIcon theme="secondary" />}
-          config={config.scheduled}
-          testId="emulator-info-scheduled"
-          linkTo="/scheduled"
-          linkLabel="Go to scheduled emulator"
         />
         <EmulatorCard
           name="Extensions emulator"
