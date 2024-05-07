@@ -23,17 +23,22 @@ import { ScheduledTableRow } from './ScheduledTableRow';
 
 export interface ScheduledTableProps {
   functions: ScheduledFunction[];
+  setShowForceRunNotification: (show: boolean) => void;
 }
 
 export const ScheduledTable: React.FC<
   React.PropsWithChildren<ScheduledTableProps>
-> = ({ functions }) => {
+> = ({ functions, setShowForceRunNotification }) => {
   return (
     <DataTable className={styles.scheduledTable}>
       <DataTableContent>
         <DataTableBody>
           {functions.map((func) => (
-            <ScheduledTableRow key={func.id} scheduledFunc={func} />
+            <ScheduledTableRow
+              key={func.id}
+              scheduledFunc={func}
+              setShowForceRunNotification={setShowForceRunNotification}
+            />
           ))}
         </DataTableBody>
       </DataTableContent>

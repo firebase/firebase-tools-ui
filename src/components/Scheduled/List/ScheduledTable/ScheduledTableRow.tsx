@@ -27,16 +27,22 @@ import styles from './ScheduledTableRow.module.scss';
 
 export interface ScheduledTableRowProps {
   scheduledFunc: ScheduledFunction;
+  setShowForceRunNotification: (show: boolean) => void;
 }
 
 export const ScheduledTableRow: React.FC<
   React.PropsWithChildren<ScheduledTableRowProps>
-> = ({ scheduledFunc }) => {
+> = ({ scheduledFunc, setShowForceRunNotification }) => {
   const { hostAndPort } = useEmulatorConfig('functions');
 
   const handleClick = useCallback(
-    () => forceRunScheduledFunction(scheduledFunc.id, hostAndPort),
-    [scheduledFunc, hostAndPort]
+    () =>
+      forceRunScheduledFunction(
+        scheduledFunc.id,
+        hostAndPort,
+        setShowForceRunNotification
+      ),
+    [scheduledFunc, hostAndPort, setShowForceRunNotification]
   );
 
   return (

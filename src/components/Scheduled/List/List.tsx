@@ -23,7 +23,11 @@ import { useScheduled } from '../api/useScheduled';
 import { ScheduledTable } from './ScheduledTable/ScheduledTable';
 import { ZeroState } from './ZeroState';
 
-export const ScheduledList: React.FC<React.PropsWithChildren<unknown>> = () => {
+export const ScheduledList: React.FC<
+  React.PropsWithChildren<{
+    setShowForceRunNotification: (show: boolean) => void;
+  }>
+> = ({ setShowForceRunNotification }) => {
   const specs = useScheduled();
 
   return (
@@ -31,7 +35,10 @@ export const ScheduledList: React.FC<React.PropsWithChildren<unknown>> = () => {
       <Elevation z="2" wrap>
         <Card>
           {specs.length ? (
-            <ScheduledTable functions={specs} />
+            <ScheduledTable
+              functions={specs}
+              setShowForceRunNotification={setShowForceRunNotification}
+            />
           ) : (
             <ZeroState></ZeroState>
           )}

@@ -36,13 +36,15 @@ export function useScheduledFunctions(): ScheduledFunction[] {
 
 export function forceRunScheduledFunction(
   triggerId: string,
-  hostAndPort: string
+  hostAndPort: string,
+  setShowForceRunNotification: (show: boolean) => void
 ) {
   const url = `//${hostAndPort}/force_run/${triggerId}`;
 
   fetch(url, { method: 'POST' })
     .then((response) => response.json())
     .then((data) => {
+      setShowForceRunNotification(true);
       console.log(data);
     })
     .catch((error) => {

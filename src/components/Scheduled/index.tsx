@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { Suspense } from 'react';
+import React, { Suspense, useState } from 'react';
 import { Route, Switch } from 'react-router-dom';
 
 import { useIsEmulatorDisabled } from '../common/EmulatorConfigProvider';
@@ -22,18 +22,34 @@ import { EmulatorDisabled } from '../common/EmulatorDisabled';
 import { Spinner } from '../common/Spinner';
 import { useScheduledFunctions } from './api/internal/useScheduledFunctions';
 import { ScheduledProvider } from './api/useScheduled';
+import ForceRunNotification from './ForceRunNotification';
 import { ScheduledList } from './List/List';
 
 export const ScheduledRoute: React.FC<
   React.PropsWithChildren<unknown>
 > = () => {
+  const [showForceRunNotification, setShowForceRunNotification] =
+    useState<boolean>(false);
+
   return (
     <Suspense fallback={<ScheduledRouteSuspended />}>
       <HydrateScheduled>
         <Switch>
-          <Route path="/scheduled" component={ScheduledList} />
+          <Route
+            path="/scheduled"
+            render={(props) => (
+              <ScheduledList
+                {...props}
+                setShowForceRunNotification={setShowForceRunNotification}
+              />
+            )}
+          />
         </Switch>
       </HydrateScheduled>
+      <ForceRunNotification
+        showForceRunNotification={showForceRunNotification}
+        setShowForceRunNotification={setShowForceRunNotification}
+      />
     </Suspense>
   );
 };
