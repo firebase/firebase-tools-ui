@@ -23,6 +23,7 @@ import { ExtensionsRoute } from './components/Extensions';
 import Firestore from './components/Firestore';
 import Home from './components/Home';
 import LogsViewer from './components/LogViewer';
+import { ScheduledRoute } from './components/Scheduled';
 import { Storage } from './components/Storage';
 
 export interface Route {
@@ -43,6 +44,9 @@ const routesToSanitize: string[] = [
 
   // Extensions
   '/extensions/:instanceId',
+
+  // Scheduled
+  '/scheduled',
 
   // Firestore
   '/firestore/:databaseId/data/:path*',
@@ -104,6 +108,13 @@ export const routes: ReadonlyArray<Route> = [
     path: '/extensions',
     component: ExtensionsRoute,
     label: 'Extensions',
+    exact: false,
+    showInNav: true,
+  },
+  {
+    path: '/scheduled',
+    component: ScheduledRoute,
+    label: 'Scheduled',
     exact: false,
     showInNav: true,
   },

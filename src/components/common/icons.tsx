@@ -139,6 +139,35 @@ export const PubSubIcon = svgIcon(
   </svg>
 );
 
+export const ScheduledIcon = svgIcon(
+  <svg viewBox="0 0 32 32">
+    <path
+      d="M24.067 24.518L21.5 26l2.884 4.995 2.567-1.482z"
+      fill="currentColor"
+    ></path>
+    <path
+      d="M23.387 29.19l-.624-1.122 2.3-1.786.38.71z"
+      fill="currentColor"
+    ></path>
+    <path
+      d="M8.384 24.518L10.95 26l-2.883 4.995L5.5 29.513z"
+      fill="currentColor"
+    ></path>
+    <path
+      d="M6.8 27.302l.464-.82 2.35 1.818-.624 1.064z"
+      fill="currentColor"
+    ></path>
+    <g fill="currentColor">
+      <path d="M16 30C8.82 30 3 24.18 3 17S8.82 4 16 4s13 5.82 13 13-5.82 13-13 13zm0-3.5a9.5 9.5 0 1 0 0-19 9.5 9.5 0 0 0 0 19z"></path>
+      <path d="M15.787 24.206a7.097 7.097 0 0 0 7.103-7.103A7.103 7.103 0 0 0 15.787 10v7.103L10 21.223a7.094 7.094 0 0 0 5.787 2.983z"></path>
+    </g>
+    <path
+      d="M25.12 1l4.95 4.95-2.12 2.122L23 3.122zM6.95 1L2 5.95l2.12 2.122 4.95-4.95z"
+      fill="currentColor"
+    ></path>
+  </svg>
+);
+
 // Other icons below:
 
 // TODO: Re-implement outer circle using CSS and dedupe with DatabaseIcon.
