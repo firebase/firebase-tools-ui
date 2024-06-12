@@ -17,7 +17,6 @@
 import './index.scss';
 
 import { IconButton } from '@rmwc/icon-button';
-import { Firestore } from 'firebase/firestore';
 import React, { useEffect } from 'react';
 import { FormProvider, useForm, useFormContext } from 'react-hook-form';
 
@@ -55,6 +54,7 @@ import {
   isMapField,
 } from './types';
 import { denormalize, normalize } from './utils';
+import { useFirestore } from "../FirestoreEmulatedApiProvider";
 
 const FIRESTORE_FIELD_TYPES = [
   FieldType.STRING,
@@ -108,7 +108,6 @@ const DocumentEditor: React.FC<
     rtdb?: boolean;
     startingIndex?: number;
     supportNestedArrays?: boolean;
-    firestore?: Firestore;
   }>
 > = ({
   value,
@@ -118,12 +117,11 @@ const DocumentEditor: React.FC<
   rtdb = false,
   startingIndex,
   supportNestedArrays,
-  firestore,
 }) => {
   const initialState = normalize(value);
   const [store, dispatch] = React.useReducer(storeReducer, initialState);
   const methods = useForm({ mode: 'onChange' });
-
+  const firestore = useFirestore();
   const denormalizedStore = React.useMemo(
     () => denormalize(store, firestore),
     [store, firestore]
