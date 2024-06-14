@@ -32,6 +32,7 @@ import {
   deleteUserSuccess,
   nukeUsersSuccess,
   setAllowDuplicateEmailsSuccess,
+  setCustomAuthActionUriSuccess,
   setUserDisabledSuccess,
   updateFilter,
   updateUserSuccess,
@@ -137,6 +138,15 @@ describe('auth reducers', () => {
 
       const result = authReducer(state, action);
       expect(result.allowDuplicateEmails).toEqual(allowDuplicateEmails);
+    });
+
+    it(`${setCustomAuthActionUriSuccess} => sets the config value`, () => {
+      const customAuthActionUri = "https://example.com/";
+      const state = createFakeState({ customAuthActionUri: "" });
+      const action = setCustomAuthActionUriSuccess(customAuthActionUri);
+
+      const result = authReducer(state, action);
+      expect(result.customAuthActionUri).toEqual(customAuthActionUri);
     });
   });
 
