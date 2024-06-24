@@ -42,7 +42,8 @@ export type Emulator =
   | 'hosting'
   | 'storage'
   | 'pubsub'
-  | 'extensions';
+  | 'extensions'
+  | 'eventarc';
 
 // Config for the Emulator Suite UI's own analytics (not a Google Analytics emulator)
 // See also: https://github.com/FirebasePrivate/firebase-tools/blob/3e6f525717f546c64f9943f6b3e045772fbf637f/src/track.ts#L167-L187
@@ -81,5 +82,6 @@ export interface Config {
   hosting?: EmulatorConfig;
   storage?: EmulatorConfig;
   pubsub?: EmulatorConfig;
+  eventarc?: EmulatorConfig;
   experiments: Array<string>;
 }
