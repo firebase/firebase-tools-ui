@@ -151,7 +151,6 @@ export function useEmulatorConfig<E extends Emulator>(
   emulator: E
 ): NonNullable<Config[E]> {
   const config = useConfig();
-  console.log(config);
   const emulatorConfig = config[emulator];
   const promise = useOnChangePromise(emulatorConfig);
   if (emulatorConfig === undefined) {
