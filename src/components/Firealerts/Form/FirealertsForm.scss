@@ -1,0 +1,28 @@
+.container {
+    padding: 20px;
+}
+
+.eventForm {
+    background-color: #F5F5F5;
+    font-family: monospace;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+.tab {
+    padding-left: 4em;
+}
+
+.eventForm input {
+    font-family: monospace;
+}
+
+.triggers {
+    color: #F5F5F5; 
+}
+
+.FirealertsLog {
+    height: 200px;
+    margin-top: 10px;
+    overflow: scroll;
+    border: 1px solid #F5F5F5;
+}
