@@ -1,0 +1,36 @@
+.infoCell {
+    padding: 8px 16px;
+}
+
+.iconCell {
+    padding-left: 16px;
+    padding-right: 0px;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    height: 100px;
+    width: 72px;
+
+    svg {
+        color: var(--mdc-theme-primary);
+        scale: 1.5;
+    }
+}
+
+.linkWrapper {
+    display: block;
+}
+
+.infoHeader {
+    align-items: center;
+    display: flex;
+
+    img {
+        height: 16px;
+        width: 16px;
+    }
+}
+
+.infoCell {
+    width: 100%;
+}

@@ -53,7 +53,7 @@ const routesToSanitize: string[] = [
   '/storage/:bucket/:path*',
   
   // Firealerts
-  `/firealerts/`
+  `/firealerts/`,
 ];
 
 export function scrubPathData(pathname: string): {

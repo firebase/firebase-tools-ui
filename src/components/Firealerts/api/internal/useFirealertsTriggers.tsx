@@ -6,7 +6,7 @@ import { FirealertsTrigger } from '../../models';
 
 export function useFirealertsTriggers(): FirealertsTrigger[] { 
     const config = useEmulatorConfig('eventarc');
-    const FIREALERTS_EVENT_TYPE = "google.firebase.firebasealerts.alerts.v1.published";
+    const FIREALERTS_EVENT_TYPE = "google.firebase.firebasealerts.alerts.v1.published-google";
     const fetcher = async (url: URL) => {
         console.log(`Fetching FireAlerts triggers from ${url}`);
         const response = await fetch(url);
