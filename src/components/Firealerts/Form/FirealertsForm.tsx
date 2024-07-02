@@ -80,7 +80,7 @@ export const FirealertsForm = () => {
                                     defaultValue={selectedAlert} 
                                     onChange={(e: ChangeEvent<HTMLSelectElement>) => setSelectedAlert(e.target.value as FirealertsType)} 
                                 >
-                                    {alertsList.map((alert) => 
+                                    {alertsList.sort().map((alert) => 
                                         <option 
                                             value={alert}
                                             disabled={implementedAlerts[alert as FirealertsType]?.length === 0}
