@@ -9,6 +9,7 @@ import { CompiledGetterCache } from '../../LogViewer/CompiledGetterCache';
 import History from '../../LogViewer/History';
 import { parseQuery } from '../../LogViewer/QueryBar';
 import { LogEntry } from '../../LogViewer/types';
+import styles from "./FirealertsForm.module.scss";
 
 const compiledGetters = new CompiledGetterCache();
 
@@ -38,7 +39,7 @@ export const LogViewer: React.FC<React.PropsWithChildren<unknown>> = () => {
 
   return (
     <GridCell span={12}>
-        <div className="FirealertsLog">
+        <div className={styles.FirealertsLog}>
           <History
             parsedQuery={parsedQuery}
             setQuery={() => {}}

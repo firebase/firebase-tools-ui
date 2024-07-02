@@ -3,41 +3,38 @@ import { Typography } from "@rmwc/typography";
 import { GridCell, GridRow } from "@rmwc/grid";
 import { Card } from "@rmwc/card";
 import { Callout } from "../../common/Callout";
-import React, { ChangeEvent, useEffect } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { Button } from "@rmwc/button";
-import { useConfig, useEmulatorConfig } from "../../common/EmulatorConfigProvider";
+import { useEmulatorConfig } from "../../common/EmulatorConfigProvider";
 import FirealertsLog from "./FirealertsLog";
 import { useFirealerts } from "../api/useFirealerts";
 import { FirealertsTrigger } from "../models";
 import { Select } from "@rmwc/select";
 import { ZeroState } from "./ZeroState";
 
-import "./FirealertsForm.scss";
+import styles from "./FirealertsForm.module.scss";
+import _ from "lodash";
 
 export const FirealertsForm = () => {
     const triggers = useFirealerts();
     const implementedAlerts = getAlertsForTriggers(triggers);
     const alertsList = Object.keys(implementedAlerts) as FirealertsType[];
     const config = useEmulatorConfig('eventarc');
-    const projectId = useConfig().projectId;
-    console.log(projectId);
 
-    const [selectedAlert, setSelectedAlert] = React.useState(alertsList[0]);
-    const [alertData, setAlertData] = React.useState(alertConfiguration[selectedAlert]?.default);
+    const [selectedAlert, setSelectedAlert] = useState(alertsList[0]);
+    const [alertData, setAlertData] = useState(alertConfiguration[selectedAlert]?.default);
 
     useEffect(() => {
         setAlertData(alertConfiguration[selectedAlert]?.default);
     }, [selectedAlert]);
 
-
-
     const updateData = (key: string, value: any) => {
         key = key.slice(1);
         const newAlertData = { ...alertData };
-        updateFromStringPath(newAlertData, key, value);
+        // updateFromStringPath(newAlertData, key, value);
+        _.set(newAlertData, key, value);
         setAlertData(newAlertData);
     }
-
     
     const sendAlert = async () => {
         const event = generateCloudEventWithData(selectedAlert, alertData);
@@ -75,7 +72,7 @@ export const FirealertsForm = () => {
                             <Callout>For more information on what the fields mean see <a href={alertConfiguration[selectedAlert].link}>here</a></Callout>
                         </GridCell>
                         <GridCell span={12}>
-                            <Card className="container">
+                            <Card className={styles.container}>
                                 <Select 
                                     outlined 
                                     label="Select Alert Type" 
@@ -89,8 +86,8 @@ export const FirealertsForm = () => {
                                         >{alert}</option>
                                     )}
                                 </Select>
-                                <Typography use="body2" theme="textSecondaryOnBackground"> Triggers: {implementedAlerts[selectedAlert]?.map(getTriggerName).reduce((p, c) => p + ", " + c)}</Typography>
-                                <form className="eventForm">
+                                <Typography use="body2" theme="textSecondaryOnBackground"> Triggers: {implementedAlerts[selectedAlert]?.map(getTriggerName).join(", ")}</Typography>
+                                <form className={styles.eventForm}>
                                     {createJSONForm(alertData, 1, "", updateData)}
                                 </form>
                                 <GridRow>
@@ -108,28 +105,18 @@ export const FirealertsForm = () => {
     );
 }
 
-const updateFromStringPath = (obj: any, path: string, value: any) => {
-    const keys = path.split(".");
-    const last = keys.pop()!;
-    let curr = obj;
-    for (const key of keys) {
-        curr = curr[key];
-    }
-    curr[last] = value;
-}
-
 
 const isObject = (x: any) => typeof x === 'object' && !Array.isArray(x) && x !== null
 
 const createIndent = (indentLevel: number) =>
-    new Array(indentLevel).fill(1).map(() => <span className="tab"></span>);
+    new Array(indentLevel).fill(1).map(() => <span className={styles.tab}></span>);
 
 const createJSONForm = (alertData: any, indentLevel: number, parent: string, update: any) => {
     return <>
         {"{"}
         {Object.keys(alertData).map((key) => <div key={key}>
             {createIndent(indentLevel)}
-            <label>"{key}": </label>
+            <label>{JSON.stringify(key)}: </label>
             {
                 isObject(alertData[key]) ?
                     createJSONForm(alertData[key], indentLevel + 1, `${parent}.${key}`, update) :

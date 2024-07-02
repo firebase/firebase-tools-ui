@@ -52,8 +52,6 @@ const routesToSanitize: string[] = [
   // Storage
   '/storage/:bucket/:path*',
   
-  // Firealerts
-  `/firealerts/`,
 ];
 
 export function scrubPathData(pathname: string): {
@@ -142,7 +140,7 @@ export const routes: ReadonlyArray<Route> = [
   {
     path: '/firealerts',
     component: FirealertsRoute,
-    label: 'Fire Alerts',
+    label: 'FireAlerts',
     exact: false,
     showInNav: true,
   },
