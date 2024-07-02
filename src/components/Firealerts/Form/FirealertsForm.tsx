@@ -74,7 +74,19 @@ export const FirealertsForm = () => {
                         </GridCell>
                         <GridCell span={12}>
                             <Card className="container">
-                                <Select outlined label="Select Alert Type" value={selectedAlert} options={alertsList} onChange={(e: ChangeEvent<HTMLSelectElement>) => setSelectedAlert(e.target.value as FirealertsType)}></Select>
+                                <Select 
+                                    outlined 
+                                    label="Select Alert Type" 
+                                    defaultValue={selectedAlert} 
+                                    onChange={(e: ChangeEvent<HTMLSelectElement>) => setSelectedAlert(e.target.value as FirealertsType)} 
+                                >
+                                    {alertsList.map((alert) => 
+                                        <option 
+                                            value={alert}
+                                            disabled={implementedAlerts[alert as FirealertsType]?.length === 0}
+                                        >{alert}</option>
+                                    )}
+                                </Select>
                                 <Typography use="body2" theme="textSecondaryOnBackground"> Triggers: {implementedAlerts[selectedAlert]?.map(getTriggerName).reduce((p, c) => p + ", " + c)}</Typography>
                                 <form className="eventForm">
                                     {createJSONForm(alertData, 1, "", updateData)}
@@ -136,7 +148,8 @@ const getAlertsForTriggers = (triggers: FirealertsTrigger[]) => {
     const alertsForFunctions: { [key in FirealertsType]?: FirealertsTrigger[] } = {};
     alertTypes.forEach((alerttype) => {
         const alertTriggers = triggers.filter(t => t.eventTrigger.eventFilters.alerttype === alerttype);
-        alertsForFunctions[alerttype as FirealertsType] = alertTriggers;
-    })
+        alertsForFunctions[alerttype as FirealertsType] = alertTriggers || [];
+    });
+    console.log(alertsForFunctions);
     return alertsForFunctions;
 }
