@@ -5,7 +5,7 @@ import { Card } from "@rmwc/card";
 import { Callout } from "../../common/Callout";
 import React, { ChangeEvent, useEffect } from "react";
 import { Button } from "@rmwc/button";
-import { useEmulatorConfig } from "../../common/EmulatorConfigProvider";
+import { useConfig, useEmulatorConfig } from "../../common/EmulatorConfigProvider";
 import FirealertsLog from "./FirealertsLog";
 import { useFirealerts } from "../api/useFirealerts";
 import { FirealertsTrigger } from "../models";
@@ -19,6 +19,8 @@ export const FirealertsForm = () => {
     const implementedAlerts = getAlertsForTriggers(triggers);
     const alertsList = Object.keys(implementedAlerts) as FirealertsType[];
     const config = useEmulatorConfig('eventarc');
+    const projectId = useConfig().projectId;
+    console.log(projectId);
 
     const [selectedAlert, setSelectedAlert] = React.useState(alertsList[0]);
     const [alertData, setAlertData] = React.useState(alertConfiguration[selectedAlert]?.default);

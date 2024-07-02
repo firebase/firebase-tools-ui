@@ -100,15 +100,16 @@ const performanceThresholdDefault: { [key: string]: any } = {
 
 // TODO(gburroughs): See how we can infer most of this data from project
 export const generateCloudEventWithData = (alerttype: string, data: any) => {
+    const projectId = "1234567890";
     return {
         "alerttype": alerttype,
-        "id": "196160485589818220",
-        "source": "//firebasealerts.googleapis.com/projects/558234855466",
+        "id": Math.random().toString().slice(2),
+        "source": `//firebasealerts.googleapis.com/projects/${projectId}`,
         "specVersion": "1.0",
-        "appid": "1:558234855466:android:ba42cada6c7900f5b83b53",
+        "appid": `1:${projectId}:web:${crypto.getRandomValues(new Uint8Array(16)).reduce((acc, byte) => acc + (`${byte.toString(16)}`), '')}`,
         "time": new Date().toISOString(),
         "type": "google.firebase.firebasealerts.alerts.v1.published",
-        "project": "558234855466",
+        "project": projectId,
         "data": {
             "@type": "type.googleapis.com/google.events.firebase.firebasealerts.v1.AlertData",
             "createTime": new Date().toISOString(),
