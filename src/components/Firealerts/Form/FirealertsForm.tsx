@@ -14,6 +14,7 @@ import { ZeroState } from "./ZeroState";
 
 import styles from "./FirealertsForm.module.scss";
 import _ from "lodash";
+import { IconButton } from "@rmwc/icon-button";
 
 export const FirealertsForm = () => {
     const triggers = useFirealerts();
@@ -22,20 +23,21 @@ export const FirealertsForm = () => {
     const config = useEmulatorConfig('eventarc');
 
     const [selectedAlert, setSelectedAlert] = useState(alertsList[0]);
-    const [alertData, setAlertData] = useState(alertConfiguration[selectedAlert]?.default);
+    const [alertData, setAlertData] = useState(_.cloneDeep(alertConfiguration[selectedAlert]?.default));
+    const [currentDefault, setCurrentDefault] = useState(_.cloneDeep(alertConfiguration[selectedAlert]?.default));
 
     useEffect(() => {
-        setAlertData(alertConfiguration[selectedAlert]?.default);
+        setAlertData(_.cloneDeep(alertConfiguration[selectedAlert]?.default));
+        setCurrentDefault(_.cloneDeep(alertConfiguration[selectedAlert]?.default));
     }, [selectedAlert]);
 
     const updateData = (key: string, value: any) => {
         key = key.slice(1);
         const newAlertData = { ...alertData };
-        // updateFromStringPath(newAlertData, key, value);
         _.set(newAlertData, key, value);
         setAlertData(newAlertData);
     }
-    
+
     const sendAlert = async () => {
         const event = generateCloudEventWithData(selectedAlert, alertData);
         const payload = { events: [event] }
@@ -73,14 +75,15 @@ export const FirealertsForm = () => {
                         </GridCell>
                         <GridCell span={12}>
                             <Card className={styles.container}>
-                                <Select 
-                                    outlined 
-                                    label="Select Alert Type" 
-                                    defaultValue={selectedAlert} 
-                                    onChange={(e: ChangeEvent<HTMLSelectElement>) => setSelectedAlert(e.target.value as FirealertsType)} 
+                                <Select
+                                    outlined
+                                    label="Select Alert Type"
+                                    defaultValue={selectedAlert}
+                                    onChange={(e: ChangeEvent<HTMLSelectElement>) => setSelectedAlert(e.target.value as FirealertsType)}
                                 >
-                                    {alertsList.sort().map((alert) => 
-                                        <option 
+                                    {alertsList.sort().map((alert) =>
+                                        <option
+                                            key={alert}
                                             value={alert}
                                             disabled={implementedAlerts[alert as FirealertsType]?.length === 0}
                                         >{alert}</option>
@@ -88,7 +91,12 @@ export const FirealertsForm = () => {
                                 </Select>
                                 <Typography use="body2" theme="textSecondaryOnBackground"> Triggers: {implementedAlerts[selectedAlert]?.map(getTriggerName).join(", ")}</Typography>
                                 <form className={styles.eventForm}>
-                                    {createJSONForm(alertData, 1, "", updateData)}
+                                    <JSONForm
+                                        alertData={alertData}
+                                        parent={""}
+                                        defaultObject={currentDefault}
+                                        update={updateData}
+                                    />
                                 </form>
                                 <GridRow>
                                     <GridCell span={2}>
@@ -108,26 +116,59 @@ export const FirealertsForm = () => {
 
 const isObject = (x: any) => typeof x === 'object' && !Array.isArray(x) && x !== null
 
-const createIndent = (indentLevel: number) =>
-    new Array(indentLevel).fill(1).map(() => <span className={styles.tab}></span>);
 
-const createJSONForm = (alertData: any, indentLevel: number, parent: string, update: any) => {
+const JSONForm = ({ alertData, parent, defaultObject, update }: { alertData: any, parent: string, defaultObject: any, update: (key: string, value: any) => void }) => {
     return <>
         {"{"}
-        {Object.keys(alertData).map((key) => <div key={key}>
-            {createIndent(indentLevel)}
+        {Object.keys(alertData).map((key) => <div key={`${parent}.${key}`} className={styles.jsonBlock}>
             <label>{JSON.stringify(key)}: </label>
             {
                 isObject(alertData[key]) ?
-                    createJSONForm(alertData[key], indentLevel + 1, `${parent}.${key}`, update) :
-                    <><input type="text" value={alertData[key]} onChange={(e) => {
-                        update(`${parent}.${key}`, e.target.value);
-                    }}></input></>
+                    <JSONForm
+                        alertData={alertData[key]}
+                        parent={`${parent}.${key}`}
+                        defaultObject={defaultObject}
+                        update={update}
+                    />
+                    :
+                    Array.isArray(alertData[key]) ?
+                        <>
+                            <br />
+                            {"["}
+                            <div className={styles.arrayBlock}>
+                                {alertData[key].map((data: any, index: number) => <div key={`${parent}.${key}`}>
+
+                                <IconButton style={{fontSize: "1em"}} label="delete" type="button" icon="delete" onClick={() => {
+                                    alertData[key].splice(index, 1);
+                                    update(`${parent}.${key}`, [...alertData[key]])
+                                }} />
+                                <JSONForm
+                                    alertData={data}
+                                    parent={`${parent}.${key}[${index}]`}
+                                    defaultObject={defaultObject}
+                                    update={update}
+                                />
+                                </div>
+                                )}
+                                <IconButton style={{fontSize: "1em"}} label="Add field" type="button" icon="add" onClick={(e) => {
+                                    e.preventDefault();
+                                    const defaultKey = `${parent}.${key}`.slice(1) + "[0]";
+                                    const arrayValue = _.get(defaultObject, defaultKey);
+                                    update(`${parent}.${key}`, [...alertData[key], arrayValue])
+                                }} />
+                            </div>
+                            {"],"}
+                        </>
+                        :
+                        <>
+                            <input type="text" className={styles.fieldInput} value={alertData[key]} onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                                update(`${parent}.${key}`, e.target.value);
+                            }} />
+                        </>
             }
         </div>
         )}
-        {createIndent(indentLevel - 1)}
-        {"}"}
+        {"},"}
     </>
 }
 
@@ -139,6 +180,5 @@ const getAlertsForTriggers = (triggers: FirealertsTrigger[]) => {
         const alertTriggers = triggers.filter(t => t.eventTrigger.eventFilters.alerttype === alerttype);
         alertsForFunctions[alerttype as FirealertsType] = alertTriggers || [];
     });
-    console.log(alertsForFunctions);
     return alertsForFunctions;
 }

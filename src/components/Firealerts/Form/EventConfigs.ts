@@ -2,8 +2,8 @@
 const crashlyticsIssueDefault = {
     "appVersion": "1 (1.0.0)",
     "id": "1",
-    "subtitle": "_MyHomePageState._sendFeedback",
-    "title": "MissingPluginException(No implementation found for method sendFeedback on channel app.example.firealerts/feedback)",
+    "title": "TestApp.main",
+    "subtitle": "Runtime Error",
 };
 
 const crashlyticsFatalIssueDefault: { [key: string]: any } = {
@@ -52,7 +52,7 @@ const crashlyticsNewAnrIssueDefault: { [key: string]: any } = {
 
 const billingPlanUpdateDefault: { [key: string]: any } = {
     "@type": "type.googleapis.com/google.events.firebase.firebasealerts.v1.BillingPlanUpdatePayload", 
-    billingPlan: "defaultBillingPlan", // TODO(gburorughs): what makes sense for a default here?
+    billingPlan: "defaultBillingPlan", 
     principalEmail: "username@gmail.com",
     notificationType: "downgrade",
 };
@@ -65,18 +65,18 @@ const billingPlanAutomatedUpdateDefault: { [key: string]: any } = {
 
 const appDistributionNewTesterIosDeviceDefault: { [key: string]: any } = {
     "@type": "type.googleapis.com/google.events.firebase.firebasealerts.v1.AppDistroNewTesterIosDevicePayload",
-    testerName: '',
-    testerEmail: '',
-    testerDeviceModelName: '',
-    testerDeviceIdentifier: '',
+    testerName: 'Test User',
+    testerEmail: 'username@gmail.com',
+    testerDeviceModelName: 'Google Pixel 10',
+    testerDeviceIdentifier: '12345',
 };
 const appDistributionInAppFeedbackDefault: { [key: string]: any } = {
     "@type": "type.googleapis.com/google.events.firebase.firebasealerts.v1.AppDistroInAppFeedbackPayload",
     feedbackReport: '',
-    feedbackConsoleUri: '',
-    testerName: '',
-    testerEmail: '',
-    appVersion: '',
+    feedbackConsoleUri: '', 
+    testerName: 'Test User',
+    testerEmail: 'username@gmail.com',
+    appVersion: '1 (1.0.0)',
     text: '',
     screenshotUri: '',
 };
@@ -90,11 +90,11 @@ const performanceThresholdDefault: { [key: string]: any } = {
     "violationUnit": "seconds",
     "@type": "type.googleapis.com/google.events.firebase.firebasealerts.v1.FireperfThresholdAlertPayload",
     "numSamples": "200",
-    "eventName": "custom-trace-3",
+    "eventName": "custom-trace",
     "thresholdValue": 0.15,
     "eventType": "duration_trace",
     "conditionPercentile": 90,
-    "investigateUri": "https://console.firebase.google.com/project/gburroughs-test/performance/app/android:com.example.alerts/troubleshooting/trace/DURATION_TRACE/custom-trace-3/duration/duration?utm_source=fireperf_threshold_alerts&utm_medium=eventarc&percentile=90"
+    "investigateUri": ""
 };
 
 
