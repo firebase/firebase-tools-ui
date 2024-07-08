@@ -1,37 +1,53 @@
+/**
+ * Copyright 2021 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 .container {
-    padding: 20px;
+  padding: 20px;
 }
 
 .eventForm {
-    background-color: #F5F5F5;
-    font-family: monospace;
-    margin-bottom: 10px;
-    margin-top: 10px;
+  background-color: #f5f5f5;
+  font-family: monospace;
+  margin-bottom: 10px;
+  margin-top: 10px;
 }
 .tab {
-    padding-left: 4em;
+  padding-left: 4em;
 }
 
 .eventForm input {
-    font-family: monospace;
+  font-family: monospace;
 }
 
 .triggers {
-    color: #F5F5F5; 
+  color: #f5f5f5;
 }
 
 .FirealertsLog {
-    height: 200px;
-    margin-top: 10px;
-    overflow: scroll;
-    border: 1px solid #F5F5F5;
+  height: 200px;
+  margin-top: 10px;
+  overflow: scroll;
+  border: 1px solid #f5f5f5;
 }
 
 .jsonBlock {
-    margin-left: 4em;
-    background-color: #F5F5F5; 
+  margin-left: 4em;
+  background-color: #f5f5f5;
 }
 
 .arrayBlock {
-    margin-left: 4em;
+  margin-left: 4em;
 }

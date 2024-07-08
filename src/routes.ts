@@ -20,11 +20,11 @@ import { matchPath } from 'react-router';
 import Auth from './components/Auth';
 import Database from './components/Database';
 import { ExtensionsRoute } from './components/Extensions';
+import FirealertsRoute from './components/Firealerts';
 import Firestore from './components/Firestore';
 import Home from './components/Home';
 import LogsViewer from './components/LogViewer';
 import { Storage } from './components/Storage';
-import FirealertsRoute from './components/Firealerts';
 
 export interface Route {
   path: string;
@@ -51,7 +51,6 @@ const routesToSanitize: string[] = [
 
   // Storage
   '/storage/:bucket/:path*',
-  
 ];
 
 export function scrubPathData(pathname: string): {
