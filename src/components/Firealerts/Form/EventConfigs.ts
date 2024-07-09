@@ -62,7 +62,7 @@ const crashlyticsStabilityDigestDefault: { [key: string]: any } = {
   '@type':
     'type.googleapis.com/google.events.firebase.firebasealerts.v1.CrashlyticsStabilityDigestPayload',
   digestDate: new Date().toISOString(),
-  trendingIssues: [trendingIssueDetailsDefault], // TODO(gburroughs): Add support for arrays in json form
+  trendingIssues: [trendingIssueDetailsDefault],
 };
 
 const crashlyticsNewAnrIssueDefault: { [key: string]: any } = {
@@ -122,7 +122,6 @@ const performanceThresholdDefault: { [key: string]: any } = {
   investigateUri: '',
 };
 
-// TODO(gburroughs): See how we can infer most of this data from project
 export const generateCloudEventWithData = (alerttype: string, data: any) => {
   const projectId = '1234567890';
   return {

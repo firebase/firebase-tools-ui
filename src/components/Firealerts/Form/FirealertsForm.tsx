@@ -27,6 +27,7 @@ import { Callout } from '../../common/Callout';
 import { useEmulatorConfig } from '../../common/EmulatorConfigProvider';
 import { useFirealerts } from '../api/useFirealerts';
 import { FirealertsTrigger } from '../models';
+import AlertSentNotification from '../Notification/AlertSentNotification';
 import {
   FirealertsType,
   alertConfiguration,
@@ -49,6 +50,7 @@ export const FirealertsForm = () => {
   const [currentDefault, setCurrentDefault] = useState(
     _.cloneDeep(alertConfiguration[selectedAlert]?.default)
   );
+  const [showNotification, setShowNotification] = useState<boolean>(false);
 
   useEffect(() => {
     setAlertData(_.cloneDeep(alertConfiguration[selectedAlert]?.default));
@@ -66,12 +68,11 @@ export const FirealertsForm = () => {
     const event = generateCloudEventWithData(selectedAlert, alertData);
     const payload = { events: [event] };
     const url = `//${config.hostAndPort}/google/publishEvents`;
-    console.log('Posting event to: ' + url);
-    const res = await fetch(url, {
+    await fetch(url, {
       method: 'POST',
       body: JSON.stringify(payload),
     });
-    console.log(res); // TODO(gburroughs): Add notification of success/error
+    setShowNotification(true);
   };
 
   const getTriggerName = (trigger: FirealertsTrigger): string => {
@@ -157,6 +158,10 @@ export const FirealertsForm = () => {
           </GridRow>
         )}
       </GridCell>
+      <AlertSentNotification
+        showAlertSentNotification={showNotification}
+        setShowAlertSentNotification={setShowNotification}
+      />
     </>
   );
 };

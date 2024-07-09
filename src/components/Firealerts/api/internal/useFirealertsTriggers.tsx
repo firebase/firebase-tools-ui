@@ -24,7 +24,6 @@ export function useFirealertsTriggers(): FirealertsTrigger[] {
   const FIREALERTS_EVENT_TYPE =
     'google.firebase.firebasealerts.alerts.v1.published-google';
   const fetcher = async (url: URL) => {
-    console.log(`Fetching FireAlerts triggers from ${url}`);
     const response = await fetch(url);
     const json = await response.json();
     return json;
