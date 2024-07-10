@@ -20,6 +20,7 @@ import { matchPath } from 'react-router';
 import Auth from './components/Auth';
 import Database from './components/Database';
 import { ExtensionsRoute } from './components/Extensions';
+import FirealertsRoute from './components/Firealerts';
 import Firestore from './components/Firestore';
 import Home from './components/Home';
 import LogsViewer from './components/LogViewer';
@@ -133,6 +134,13 @@ export const routes: ReadonlyArray<Route> = [
     component: LogsViewer as any,
     label: 'Logs',
     exact: true,
+    showInNav: true,
+  },
+  {
+    path: '/firealerts',
+    component: FirealertsRoute,
+    label: 'FireAlerts',
+    exact: false,
     showInNav: true,
   },
 ];
