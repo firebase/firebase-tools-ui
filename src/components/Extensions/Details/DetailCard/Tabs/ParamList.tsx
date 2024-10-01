@@ -24,25 +24,42 @@ import { useExtension } from '../../../api/useExtension';
 import { EventsConfig } from './EventsConfig';
 import styles from './ParamList.module.scss';
 import { ParamValue } from './ParamValue';
+import { isDynamicExtension } from '../../../api/useExtensions';
 
 function ParamList() {
   const extension = useExtension()!;
+  const isDynamic = isDynamicExtension(extension);
+  const docSuffix = isDynamic ?
+    'extensions/manage-installed-extensions?interface=sdk#reconfigure' :
+    'extensions/manifest';
+
+  const dynamicFragment = (
+    <Typography use="body2">
+      Reconfigure is not available in the emulator. You can
+      reconfigure parameters by updating them in the code.
+      Then rebuild the code if applicable and refresh this page.
+    </Typography>
+  );
+
+  const staticFragment = (
+    <>
+    <Typography use="body2">
+      Reconfigure is not available in the emulator. You can
+      reconfigure parameters by updating your .env files with:
+    </Typography>
+    <br />
+    <code>firebase ext:configure {extension.id} --local</code>)
+    </>
+  )
+
   return (
     <div>
       <div className={styles.paramHeader}>
         <Callout aside type="note">
-          <Accordion
-            title={
-              <Typography use="body2">
-                Reconfigure is not available in the emulator. You can
-                reconfigure parameters by <b>updating your .env files</b> with:
-              </Typography>
-            }
-          >
-            <code>firebase ext:configure {extension.id} --local</code>
+            {isDynamic ? dynamicFragment : staticFragment}
             <div className={styles.learnButton}>
               <a
-                href={DOCS_BASE + 'extensions/manifest'}
+                href={DOCS_BASE + docSuffix}
                 target="_blank"
                 rel="noopener noreferrer"
                 tabIndex={-1}
@@ -50,7 +67,6 @@ function ParamList() {
                 <Button>Learn more</Button>
               </a>
             </div>
-          </Accordion>
         </Callout>
       </div>
       {(extension.params || []).map((param) => {

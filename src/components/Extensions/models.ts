@@ -162,6 +162,7 @@ export interface Extension {
   sourceUrl: string;
   postinstallContent: string;
   extensionDetailsUrl: string;
+  labels?: Record<string, string>;
 }
 
 export interface ExternalService {

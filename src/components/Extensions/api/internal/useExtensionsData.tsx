@@ -68,6 +68,7 @@ export function convertBackendToExtension(
     postinstallContent: spec.postinstallContent ?? '',
     sourceUrl: spec.sourceUrl ?? '',
     extensionDetailsUrl: EXTENSION_DETAILS_URL_BASE + spec.name,
+    labels: backend.labels,
   };
 
   if (isLocalExtension(backend)) {
