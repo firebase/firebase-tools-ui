@@ -30,12 +30,12 @@ export const ExtensionCallout: React.FC<
         actions={
           <div className={styles.link}>
             <DocsLink
-              href="extensions/manifest"
+              href="extensions/manage-installed-extensions"
               target="_blank"
               rel="noopener noreferrer"
             >
               <Typography theme="primary" use="body2" className={styles.link}>
-                Learn how to manage your extensions manifest
+                Learn how to manage your extensions
               </Typography>
             </DocsLink>
           </div>

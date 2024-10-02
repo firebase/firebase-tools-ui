@@ -43,6 +43,10 @@ describe('useExtensionBackends', () => {
     await waitFor(() => result.current !== null);
     await waitFor(() => delay(100));
 
-    expect(result.current).toEqual([BACKEND_LIST[0], BACKEND_LIST[1]]);
+    expect(result.current).toEqual([
+      BACKEND_LIST[0],
+      BACKEND_LIST[1],
+      BACKEND_LIST[2],
+    ]);
   });
 });

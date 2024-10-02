@@ -27,7 +27,7 @@ describe('ParamList', () => {
   const PARAM = 'pirojok-the-param';
   const LABEL = 'pirojok-the-label';
   const VALUE = 'pirojok-the-value';
-  const extension: Extension = {
+  const staticExtension: Extension = {
     id,
     params: [
       {
@@ -39,6 +39,28 @@ describe('ParamList', () => {
     ],
   } as Extension;
 
+  const dynId = 'dyn-pirojok';
+  const DYN_DESCRIPTION = 'dyn-pirojok-the-description';
+  const DYN_PARAM = 'dyn-pirojok-the-param';
+  const DYN_LABEL = 'dyn-pirojok-the-label';
+  const DYN_VALUE = 'dyn-pirojok-the-value';
+  const LABELS: Record<string, string> = {
+    createdBy: 'SDK',
+    codebase: 'default',
+  };
+  const dynamicExtension: Extension = {
+    id: dynId,
+    params: [
+      {
+        param: DYN_PARAM,
+        label: DYN_LABEL,
+        value: DYN_VALUE,
+        description: DYN_DESCRIPTION,
+      },
+    ],
+    labels: LABELS,
+  } as Extension;
+
   function setup(extension: Extension, id: string) {
     return render(
       <TestExtensionsProvider extensions={[extension]} instanceId={id}>
@@ -47,20 +69,36 @@ describe('ParamList', () => {
     );
   }
 
-  it('renders list of parameters', () => {
-    const { getByText } = setup(extension, id);
+  it('renders list of parameters for static extensions', () => {
+    const { getByText } = setup(staticExtension, id);
 
     expect(getByText(new RegExp(LABEL))).not.toBeNull();
     expect(getByText(new RegExp(VALUE))).not.toBeNull();
   });
 
-  it('displays param description on expansion in markdown', () => {
-    const { getByText } = setup(extension, id);
+  it('renders list of parameters for dynamic extensions', () => {
+    const { getByText } = setup(dynamicExtension, dynId);
+
+    expect(getByText(new RegExp(DYN_LABEL))).not.toBeNull();
+    expect(getByText(new RegExp(DYN_VALUE))).not.toBeNull();
+  });
+
+  it('displays param description on expansion in markdown for static', () => {
+    const { getByText } = setup(staticExtension, id);
 
     act(() => {
       getByText(new RegExp(LABEL)).click();
     });
     expect(getByText(new RegExp(DESCRIPTION))).not.toBeNull();
     expect(getByText(new RegExp(DESCRIPTION))).not.toBeNull();
+  });
+
+  it('displays param description on expansion in markdown for dynamic', () => {
+    const { getByText } = setup(dynamicExtension, dynId);
+
+    act(() => {
+      getByText(new RegExp(DYN_LABEL)).click();
+    });
+    expect(getByText(new RegExp(DYN_DESCRIPTION))).not.toBeNull();
   });
 });

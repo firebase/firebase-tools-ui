@@ -65,6 +65,11 @@ export const ExtensionsTableRow: React.FC<
             {extension.ref}
           </Typography>
         </div>
+        <div>
+          <Typography use="body2" theme="textSecondaryOnBackground">
+            {extension.id}
+          </Typography>
+        </div>
       </DataTableCell>
       <DataTableCell className={`${styles.actionCell} actionCell`}>
         <Button

@@ -109,17 +109,18 @@ export const CONFIG_WITH_EXTENSION = {
     host: 'pirojok',
     port: 689,
   },
+  experiments: [],
 };
 
 export const BACKEND_LIST: ExtensionBackend[] = [
   // published extension
   {
+    extensionInstanceId: 'pirojok-the-published-extension',
     env: {
       ALLOWED_EVENT_TYPES: 'google.firebase.v1.custom-event-occurred',
       EVENTARC_CHANNEL:
         'projects/test-project/locations/us-west1/channels/firebase',
     },
-    extensionInstanceId: 'pirojok-the-published-extension',
     extension: BACKEND_EXTENSION,
     extensionVersion: EXTENSION_VERSION,
     functionTriggers: [],
@@ -135,7 +136,20 @@ export const BACKEND_LIST: ExtensionBackend[] = [
     extensionSpec: EXTENSION_SPEC,
     functionTriggers: [],
   },
-  // Not and extension back-end
+  // dynamic (published) extension
+  {
+    extensionInstanceId: 'pirojok-the-dynamic-extension',
+    env: {
+      ALLOWED_EVENT_TYPES: 'google.firebase.v1.custom-event-occurred',
+      EVENTARC_CHANNEL:
+        'projects/test-project/locations/us-west1/channels/firebase',
+    },
+    extension: BACKEND_EXTENSION,
+    extensionVersion: EXTENSION_VERSION,
+    functionTriggers: [],
+    labels: { createdBy: 'SDK', codebase: 'default' },
+  },
+  // Not an extension back-end
   {
     env: {},
     extensionSpec: EXTENSION_SPEC,
@@ -164,4 +178,9 @@ export const EXTENSION: Extension = {
   params: [{ param: 'pirojok', label: 'label', value: 'param=value' }],
   resources: [{ name: 'resource', description: 'description', type: '' }],
   apis: [{ apiName: 'api-name', reason: 'reason' }],
+};
+
+export const DYNAMIC_EXTENSION: Extension = {
+  ...EXTENSION,
+  labels: { createdBy: 'SDK', codebase: 'default' },
 };

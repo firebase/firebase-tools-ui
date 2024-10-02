@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 import { Extension, ExtensionResource, Resource } from '../../models';
-import { ExtensionBackend, isLocalExtension } from '../useExtensions';
+import {
+  ExtensionBackend,
+  isDynamicExtension,
+  isLocalExtension,
+} from '../useExtensions';
 import { useExtensionBackends } from './useExtensionBackends';
 
 const EXTENSION_DETAILS_URL_BASE =
@@ -46,7 +50,8 @@ export function convertBackendToExtension(
       : r;
   };
 
-  const shared = {
+  const shared: Omit<Extension, 'authorName'> = {
+    id: backend.extensionInstanceId,
     authorUrl: spec.author?.url ?? '',
     params: spec.params.map((p) => {
       return {
@@ -70,17 +75,19 @@ export function convertBackendToExtension(
     extensionDetailsUrl: EXTENSION_DETAILS_URL_BASE + spec.name,
   };
 
+  if (isDynamicExtension(backend)) {
+    shared.labels = backend.labels;
+  }
+
   if (isLocalExtension(backend)) {
     return {
       ...shared,
       authorName: spec.author?.authorName ?? '',
-      id: backend.extensionInstanceId,
     };
   }
 
   return {
     ...shared,
-    id: backend.extensionInstanceId,
     ref: backend.extensionVersion.ref,
     authorName:
       spec.author?.authorName ??

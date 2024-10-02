@@ -28,6 +28,7 @@ interface CommonExtensionBackend {
   env: Record<string, string>;
   extensionInstanceId: string;
   functionTriggers: FunctionTrigger[];
+  labels?: Record<string, string>;
 }
 
 interface PublishedExtensionBackend extends CommonExtensionBackend {
@@ -71,4 +72,10 @@ export function isLocalExtension(
   backend: ExtensionBackend
 ): backend is LocalExtensionBackend {
   return backend.hasOwnProperty('extensionSpec');
+}
+
+export function isDynamicExtension(
+  extension: Extension | ExtensionBackend
+): boolean {
+  return extension.labels?.createdBy === 'SDK';
 }
