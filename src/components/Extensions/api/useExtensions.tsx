@@ -75,7 +75,7 @@ export function isLocalExtension(
 }
 
 export function isDynamicExtension(
-  extension: Extension
+  extension: Extension | ExtensionBackend
 ): boolean {
-  return extension.labels?.createdBy === "SDK";
+  return extension.labels?.createdBy === 'SDK';
 }

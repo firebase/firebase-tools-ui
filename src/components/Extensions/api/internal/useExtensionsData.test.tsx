@@ -44,6 +44,7 @@ describe('useExtensionsData', () => {
 
     expect(result.current).toEqual([
       {
+        id: 'pirojok-the-published-extension',
         authorName: 'Awesome Inc',
         authorUrl: 'https://google.com/awesome',
         params: [],
@@ -93,7 +94,7 @@ describe('useExtensionsData', () => {
         sourceUrl: '',
         extensionDetailsUrl:
           'https://firebase.google.com/products/extensions/good-tool',
-        id: 'pirojok-the-published-extension',
+
         ref: 'awesome-inc/good-tool@0.0.1',
         iconUri:
           'https://www.gstatic.com/mobilesdk/211001_mobilesdk/google-pay-logo.svg',
@@ -101,6 +102,7 @@ describe('useExtensionsData', () => {
           'https://www.gstatic.com/mobilesdk/160503_mobilesdk/logo/2x/firebase_128dp.png',
       },
       {
+        id: 'pirojok-the-local-extension',
         authorName: 'Awesome Inc',
         authorUrl: 'https://google.com/awesome',
         params: [],
@@ -150,7 +152,65 @@ describe('useExtensionsData', () => {
         sourceUrl: '',
         extensionDetailsUrl:
           'https://firebase.google.com/products/extensions/good-tool',
-        id: 'pirojok-the-local-extension',
+      },
+      {
+        id: 'pirojok-the-dynamic-extension',
+        authorName: 'Awesome Inc',
+        authorUrl: 'https://google.com/awesome',
+        params: [],
+        name: 'good-tool',
+        displayName: 'Pirojok-the-tool',
+        specVersion: 'v1beta',
+        env: {
+          ALLOWED_EVENT_TYPES: 'google.firebase.v1.custom-event-occurred',
+          EVENTARC_CHANNEL:
+            'projects/test-project/locations/us-west1/channels/firebase',
+        },
+        allowedEventTypes: ['google.firebase.v1.custom-event-occurred'],
+        eventarcChannel:
+          'projects/test-project/locations/us-west1/channels/firebase',
+        events: [
+          {
+            type: 'google.firebase.v1.custom-event-occurred',
+            description: 'A custom event occurred',
+          },
+        ],
+        apis: [
+          {
+            apiName: 'storage-component.googleapis.com',
+            reason: 'Needed to use Cloud Storage',
+          },
+        ],
+        resources: [
+          {
+            type: 'firebaseextensions.v1beta.function',
+            description:
+              'Listens for new images uploaded to your specified Cloud Storage bucket, resizes the images, then stores the resized images in the same bucket. Optionally keeps or deletes the original images.',
+            name: 'generateResizedImage',
+            propertiesYaml:
+              // eslint-disable-next-line no-template-curly-in-string
+              'availableMemoryMb: 1024\neventTrigger:\n  eventType: google.storage.object.finalize\n  resource: projects/_/buckets/${param:IMG_BUCKET}\nlocation: ${param:LOCATION}\nruntime: nodejs14\n',
+          },
+        ],
+        roles: [
+          {
+            role: 'storage.admin',
+            reason:
+              'Allows the extension to store resized images in Cloud Storage',
+          },
+        ],
+        readmeContent: '',
+        postinstallContent: '### See it in action',
+        sourceUrl: '',
+        extensionDetailsUrl:
+          'https://firebase.google.com/products/extensions/good-tool',
+
+        ref: 'awesome-inc/good-tool@0.0.1',
+        iconUri:
+          'https://www.gstatic.com/mobilesdk/211001_mobilesdk/google-pay-logo.svg',
+        publisherIconUri:
+          'https://www.gstatic.com/mobilesdk/160503_mobilesdk/logo/2x/firebase_128dp.png',
+        labels: { createdBy: 'SDK', codebase: 'default' },
       },
     ]);
   });

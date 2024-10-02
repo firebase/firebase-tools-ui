@@ -162,6 +162,8 @@ export interface Extension {
   sourceUrl: string;
   postinstallContent: string;
   extensionDetailsUrl: string;
+  name?: string;
+  env?: Record<string, string>;
   labels?: Record<string, string>;
 }
 

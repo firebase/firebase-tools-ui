@@ -16,11 +16,11 @@
 
 import { renderHook } from '@testing-library/react';
 
-import { EXTENSION } from '../testing/utils';
+import { DYNAMIC_EXTENSION, EXTENSION } from '../testing/utils';
 import { ExtensionsProvider, useExtensions } from './useExtensions';
 
 describe('useExtensions', () => {
-  it('returns the list of extension backends', () => {
+  it('returns the list of static extension backends', () => {
     const wrapper: React.FC<React.PropsWithChildren<unknown>> = ({
       children,
     }) => (
@@ -32,5 +32,19 @@ describe('useExtensions', () => {
     const { result } = renderHook(() => useExtensions(), { wrapper });
 
     expect(result.current).toEqual([EXTENSION]);
+  });
+
+  it('returns the list of dynamic extension backends', () => {
+    const wrapper: React.FC<React.PropsWithChildren<unknown>> = ({
+      children,
+    }) => (
+      <ExtensionsProvider extensions={[DYNAMIC_EXTENSION]}>
+        {children}
+      </ExtensionsProvider>
+    );
+
+    const { result } = renderHook(() => useExtensions(), { wrapper });
+
+    expect(result.current).toEqual([DYNAMIC_EXTENSION]);
   });
 });
