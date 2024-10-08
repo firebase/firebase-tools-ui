@@ -195,6 +195,8 @@ export function useEjector() {
   };
 }
 
+export {useFirestore} from "reactfire";
+
 export function useRecursiveDelete() {
   const { baseEmulatorUrl } = useFirestoreRestApi();
   const fetcher = useFetcher({
