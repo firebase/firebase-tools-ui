@@ -234,6 +234,10 @@ async function configFetcher(url: string): Promise<Config> {
           // resolve it to IPv6 and connection may fail.
           host = '127.0.0.1';
         }
+        if (key == "firestore") {
+          // If we remapped the host, apply it to the websocket host too.
+          value.webSocketHost = value.host;
+        }
         break;
       } else if (listen.address === '::') {
         port = listen.port;
@@ -242,20 +246,21 @@ async function configFetcher(url: string): Promise<Config> {
           // Ditto for IPv6.
           host = '::1';
         }
+        if (key == "firestore") {
+          // If we remapped the host, apply it to the websocket host too.
+          value.webSocketHost = value.host;
+        }
         break;
       }
     }
+
+   
     result[key as Emulator] = {
       ...value,
       host,
       port,
       hostAndPort: hostAndPort(host, port),
     };
-  }
-
-  if (result.firestore?.webSocketPort) {
-    // Apply the same `host` change above to the WebSocket server.
-    result.firestore.webSocketHost = result.firestore.host;
   }
   return result;
 }
