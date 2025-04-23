@@ -21,7 +21,11 @@ import {
   collection,
   connectFirestoreEmulator,
   getFirestore,
+  FirestoreSettings,
+  initializeFirestore,
+  Firestore
 } from 'firebase/firestore';
+import { ComponentContainer } from '@firebase/component';
 import React, { useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import {
@@ -39,6 +43,10 @@ import { MissingDocument } from './models';
 
 const FIRESTORE_OPTIONS = {};
 
+interface FirebaseAppWithContainer extends FirebaseApp {
+  container: ComponentContainer;
+}
+
 /**
  * Provide a local-FirebaseApp with a FirestoreSDK connected to
  * the Emulator Hub.
@@ -53,7 +61,14 @@ export const FirestoreEmulatedApiProvider: React.FC<
     FIRESTORE_OPTIONS,
     useCallback(
       (app: FirebaseApp) => {
-        const firestore = getFirestore(app, databaseId);
+        const casted: FirebaseAppWithContainer = app as FirebaseAppWithContainer;
+        const provider = casted.container.getProvider('firestore' as never);
+        let firestore: Firestore;
+        if(!provider.isInitialized(databaseId)) {
+          firestore = initializeFirestore(app, { host: 'some-host', ssl: true }, databaseId);
+        } else {
+          firestore = getFirestore(databaseId);
+        }
         connectFirestoreEmulator(firestore, config.host, config.port, {
           mockUserToken: 'owner',
         });
