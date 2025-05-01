@@ -18,13 +18,14 @@ import useSWR from 'swr';
 
 import { useEmulatorConfig } from '../../../common/EmulatorConfigProvider';
 import { FirealertsTrigger } from '../../models';
+import { fetchMaybeWithCredentials } from '../../../common/rest_api';
 
 export function useFirealertsTriggers(): FirealertsTrigger[] {
   const config = useEmulatorConfig('eventarc');
   const FIREALERTS_EVENT_TYPE =
     'google.firebase.firebasealerts.alerts.v1.published-google';
   const fetcher = async (url: URL) => {
-    const response = await fetch(url);
+    const response = await fetchMaybeWithCredentials(url.toString());
     const json = await response.json();
     return json;
   };

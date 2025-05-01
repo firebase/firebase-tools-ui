@@ -18,6 +18,7 @@ import useSwr from 'swr';
 import { useEmulatorConfig } from '../../../common/EmulatorConfigProvider';
 import { Backend } from '../../index';
 import { ExtensionBackend } from '../useExtensions';
+import { fetchMaybeWithCredentials } from '../../../common/rest_api';
 
 export function isExtensionBackend(
   backend: Backend
@@ -33,7 +34,7 @@ export function useExtensionBackends(): ExtensionBackend[] {
   const config = useEmulatorConfig('extensions');
 
   const fetcher = async () => {
-    const response = await fetch(`//${config.hostAndPort}/backends`);
+    const response = await fetchMaybeWithCredentials(`//${config.hostAndPort}/backends`);
     const json = await response.json();
     return json.backends;
   };

@@ -18,6 +18,7 @@ import { FirebaseApp, deleteApp, initializeApp } from 'firebase/app';
 import { useEffect, useState } from 'react';
 
 import { useConfig } from './components/common/EmulatorConfigProvider';
+import { fetchMaybeWithCredentials } from './components/common/rest_api';
 
 /**
  * Get a JS SDK App instance with emulator Admin auth enabled.
@@ -40,9 +41,20 @@ export function useEmulatedFirebaseApp(
   config?: object,
   initialize?: (app: FirebaseApp) => void
 ): FirebaseApp | undefined {
-  const { projectId } = useConfig();
+  const conf = useConfig();
+  const projectId = conf.projectId;
   const [app, setApp] = useState<FirebaseApp | undefined>();
-
+  void Promise.all([
+    loadCloudWorkstationCookies(`https://${conf.auth?.host}`),
+    loadCloudWorkstationCookies(`https://${conf.firestore?.host}`),
+    loadCloudWorkstationCookies(`https://${conf.firestore?.webSocketHost}`),
+    loadCloudWorkstationCookies(`https://${conf.storage?.host}`),
+    loadCloudWorkstationCookies(`https://${conf.logging?.host}`),
+    loadCloudWorkstationCookies(`https://${conf.database?.host}`),
+    loadCloudWorkstationCookies(`https://${conf.eventarc?.host}`),
+    loadCloudWorkstationCookies(`https://${conf.functions?.host}`),
+    loadCloudWorkstationCookies(`https://${conf.functions?.host}`),
+  ]);
   useEffect(() => {
     if (!app) {
       const app = initializeApp(
@@ -52,7 +64,6 @@ export function useEmulatedFirebaseApp(
       initialize?.(app);
       setApp(app);
     }
-
     return () => {
       if (app) {
         setApp(undefined);
@@ -63,4 +74,15 @@ export function useEmulatedFirebaseApp(
   }, [app, name, config, projectId, initialize]);
 
   return app;
+}
+
+
+const loadCloudWorkstationCookies = async (url?: string) => {
+  if (url && url.includes('cloudworkstations.dev')) {
+    try {
+      const res = await fetchMaybeWithCredentials(url,);
+    } catch {
+      // It's ok if we fail here - this is a blind GET to try to populate cookies. 
+    }
+  }
 }

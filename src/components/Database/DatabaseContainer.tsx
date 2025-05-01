@@ -25,6 +25,7 @@ import { DatabaseConfig } from '../../store/config';
 import { Callout } from '../common/Callout';
 import { useEmulatorConfig } from '../common/EmulatorConfigProvider';
 import DatabasePicker from './DatabasePicker';
+import { fetchMaybeWithCredentials } from '../common/rest_api';
 
 export type Props = {
   children?: React.ReactNode;
@@ -111,7 +112,7 @@ async function fetchDatabases(
   config: DatabaseConfig,
   primary: string
 ): Promise<string[]> {
-  const res = await fetch(
+  const res = await fetchMaybeWithCredentials(
     `//${config.hostAndPort}/.inspect/databases.json?ns=${primary}`
   );
   if (!res.ok) {

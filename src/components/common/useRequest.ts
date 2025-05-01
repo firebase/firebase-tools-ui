@@ -15,6 +15,7 @@
  */
 
 import useSwr from 'swr';
+import { fetchMaybeWithCredentials } from './rest_api';
 
 interface RequestOptions {
   refreshInterval?: number;
@@ -25,7 +26,7 @@ export function useFetcher(
   onSuccess = (r: Response) => r.json()
 ) {
   return async (url: string) => {
-    return await fetch(url, {
+    return await fetchMaybeWithCredentials(url, {
       ...options,
       headers: {
         ...options.headers,
@@ -52,4 +53,8 @@ export function useRequest<T = unknown>(
     // https://developer.mozilla.org/en-US/docs/Web/API/NavigatorOnLine/onLine
     refreshWhenOffline: true,
   });
+}
+
+function isCloudWorkstation(url: string) {
+  return url.includes("cloudworkstations.dev");
 }

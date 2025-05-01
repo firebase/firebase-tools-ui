@@ -40,7 +40,7 @@ export abstract class RestApi {
   ) {
     const { accessToken } = this.getToken();
 
-    const res = await fetch(url, {
+    const res = await fetchMaybeWithCredentials(url, {
       method,
       body: data ? JSON.stringify(data) : undefined,
       headers: {
@@ -61,7 +61,7 @@ export abstract class RestApi {
   protected async deleteRequest(url: string) {
     const { accessToken } = this.getToken();
 
-    const res = await fetch(url, {
+    const res = await fetchMaybeWithCredentials(url, {
       method: 'DELETE',
       headers: {
         Authorization: 'Bearer ' + accessToken,
@@ -97,7 +97,7 @@ export abstract class RestApi {
     // Furthermore, setting non-simple headers may cause a CORS pre-flight
     // request. RTDB Emulator, for one, doesn't handle those correctly.
     // See: https://fetch.spec.whatwg.org/#simple-header
-    const res = await fetch(url, { method, body });
+    const res = await fetchMaybeWithCredentials(url, { method, body });
 
     const text = await res.text();
 
@@ -114,4 +114,21 @@ function toFormData(file: File) {
   const formData = new FormData();
   formData.append('upload', file);
   return formData;
+}
+
+function isCloudWorkstation(url: string) {
+  return url.includes("cloudworkstations.dev");
+}
+
+// This is a very minimal wrapper around fetch that lets us more easily make 
+// broad changes to API calls.
+// Previously, we had a ton a raw fetch calls throughout the codebase, so any broad changes needed to be made all over the place.
+export async function fetchMaybeWithCredentials(url: string, opts?: RequestInit): Promise<Response> {
+  if (!opts) {
+    opts = {}
+  }
+  if (isCloudWorkstation(url)) {
+    opts.credentials = 'include';
+  }
+  return fetch(url, opts);
 }

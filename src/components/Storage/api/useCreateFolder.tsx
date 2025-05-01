@@ -15,6 +15,7 @@
  */
 
 import { useEmulatorConfig } from '../../common/EmulatorConfigProvider';
+import { fetchMaybeWithCredentials } from '../../common/rest_api';
 import { useBucket } from './useBucket';
 
 const EMPTY_FOLDER_DATA = `--boundary\r
@@ -35,7 +36,8 @@ export function useCreateFolder() {
     const normalizedPath = fullPath.replace(/\/+/g, '/').replace(/^\//, '');
     const encodedPath = encodeURIComponent(normalizedPath);
 
-    await fetch(
+    // TODO (joe): Fix this
+    await fetchMaybeWithCredentials(
       `http://${
         config!.hostAndPort
       }/upload/storage/v1/b/${bucket}/o?name=${encodedPath}/`,

@@ -36,6 +36,7 @@ import {
 import styles from './FirealertsForm.module.scss';
 import FirealertsLog from './FirealertsLog';
 import { ZeroState } from './ZeroState';
+import { fetchMaybeWithCredentials } from '../../common/rest_api';
 
 export const FirealertsForm = () => {
   const triggers = useFirealerts();
@@ -68,7 +69,7 @@ export const FirealertsForm = () => {
     const event = generateCloudEventWithData(selectedAlert, alertData);
     const payload = { events: [event] };
     const url = `//${config.hostAndPort}/google/publishEvents`;
-    await fetch(url, {
+    await fetchMaybeWithCredentials(url, {
       method: 'POST',
       body: JSON.stringify(payload),
     });
