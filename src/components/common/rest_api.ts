@@ -116,8 +116,8 @@ function toFormData(file: File) {
   return formData;
 }
 
-function isCloudWorkstation(url: string) {
-  return url.includes('cloudworkstations.dev');
+export function isCloudWorkstation(url: string) {
+  return url.includes('.cloudworkstations.dev');
 }
 
 // This is a very minimal wrapper around fetch that lets us more easily make

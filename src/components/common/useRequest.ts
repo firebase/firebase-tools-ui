@@ -55,7 +55,3 @@ export function useRequest<T = unknown>(
     refreshWhenOffline: true,
   });
 }
-
-function isCloudWorkstation(url: string) {
-  return url.includes('cloudworkstations.dev');
-}

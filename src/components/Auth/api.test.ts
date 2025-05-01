@@ -332,7 +332,7 @@ describe('API', () => {
     const result = await api.getConfig();
     expect(global.fetch).toHaveBeenCalledWith(
       '//foo.example.com:9002/emulator/v1/projects/pelmen-the-project/config',
-      {},
+      {}
     );
 
     expect(result).toEqual(result);

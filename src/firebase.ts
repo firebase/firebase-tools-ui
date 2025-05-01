@@ -18,7 +18,10 @@ import { FirebaseApp, deleteApp, initializeApp } from 'firebase/app';
 import { useEffect, useState } from 'react';
 
 import { useConfig } from './components/common/EmulatorConfigProvider';
-import { fetchMaybeWithCredentials } from './components/common/rest_api';
+import {
+  fetchMaybeWithCredentials,
+  isCloudWorkstation,
+} from './components/common/rest_api';
 
 /**
  * Get a JS SDK App instance with emulator Admin auth enabled.
@@ -77,7 +80,7 @@ export function useEmulatedFirebaseApp(
 }
 
 const loadCloudWorkstationCookies = async (url?: string) => {
-  if (url && url.includes('cloudworkstations.dev')) {
+  if (url && isCloudWorkstation(url)) {
     try {
       const res = await fetchMaybeWithCredentials(url);
     } catch {
