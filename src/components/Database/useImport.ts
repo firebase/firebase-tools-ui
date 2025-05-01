@@ -17,8 +17,8 @@
 import { DatabaseReference } from 'firebase/database';
 
 import { useEmulatorConfig } from '../common/EmulatorConfigProvider';
-import { useNamespace } from './useNamespace';
 import { fetchMaybeWithCredentials } from '../common/rest_api';
+import { useNamespace } from './useNamespace';
 
 /** Get absolute path for file upload (the path with `.upload` appended) */
 function useUploadPath(ref: DatabaseReference) {

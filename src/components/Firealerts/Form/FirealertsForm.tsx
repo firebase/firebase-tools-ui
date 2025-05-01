@@ -25,6 +25,7 @@ import { ChangeEvent, useEffect, useState } from 'react';
 
 import { Callout } from '../../common/Callout';
 import { useEmulatorConfig } from '../../common/EmulatorConfigProvider';
+import { fetchMaybeWithCredentials } from '../../common/rest_api';
 import { useFirealerts } from '../api/useFirealerts';
 import { FirealertsTrigger } from '../models';
 import AlertSentNotification from '../Notification/AlertSentNotification';
@@ -36,7 +37,6 @@ import {
 import styles from './FirealertsForm.module.scss';
 import FirealertsLog from './FirealertsLog';
 import { ZeroState } from './ZeroState';
-import { fetchMaybeWithCredentials } from '../../common/rest_api';
 
 export const FirealertsForm = () => {
   const triggers = useFirealerts();

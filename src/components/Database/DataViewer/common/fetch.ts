@@ -38,13 +38,13 @@ import {
   switchMap,
 } from 'rxjs/operators';
 
+import { fetchMaybeWithCredentials } from '../../../common/rest_api';
 import {
   DEFAULT_PAGE_SIZE,
   QueryParams,
   ViewModel,
   getDbRootUrl,
 } from './view_model';
-import { fetchMaybeWithCredentials } from '../../../common/rest_api';
 
 /**
  * Timeout for silent call, which should determine if the data is
@@ -92,7 +92,9 @@ export function canDoRealtime(
     print: 'silent',
     timeout: REST_TIMEOUT,
   });
-  return defer(() => fetchMaybeWithCredentials(silent, { headers: ADMIN_AUTH_HEADERS })).pipe(
+  return defer(() =>
+    fetchMaybeWithCredentials(silent, { headers: ADMIN_AUTH_HEADERS })
+  ).pipe(
     mapTo(true),
     catchError(() => of(false)),
     shareReplay({ bufferSize: 1, refCount: true })
@@ -180,7 +182,9 @@ function fetchNonRealtime(
 ): Observable<string[]> {
   const params = getRestQueryParams(query);
   const shallow = restUrl(realtimeRef, { ...params, shallow: 'true' });
-  return defer(() => fetchMaybeWithCredentials(shallow, { headers: ADMIN_AUTH_HEADERS })).pipe(
+  return defer(() =>
+    fetchMaybeWithCredentials(shallow, { headers: ADMIN_AUTH_HEADERS })
+  ).pipe(
     map((r) => r.json()),
     map((data) => Object.keys(data))
   );

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { fetchMaybeWithCredentials, RestApi } from '../common/rest_api';
+import { RestApi, fetchMaybeWithCredentials } from '../common/rest_api';
 import {
   AddAuthUserPayload,
   AuthUser,
@@ -140,7 +140,9 @@ export default class AuthApi extends RestApi {
   }
 
   async getConfig(): Promise<EmulatorV1ProjectsConfig> {
-    const config = await (await fetchMaybeWithCredentials(`${this.baseEmulatorUrl}/config`)).json();
+    const config = await (
+      await fetchMaybeWithCredentials(`${this.baseEmulatorUrl}/config`)
+    ).json();
     return config;
   }
 

@@ -19,6 +19,7 @@ import type { ListenOptions } from 'net';
 import * as path from 'path';
 
 import express from 'express';
+
 import { fetchMaybeWithCredentials } from './src/components/common/rest_api';
 
 /*
@@ -53,7 +54,9 @@ app.get(
   '/api/config',
   jsonHandler(async () => {
     const hubDiscoveryUrl = new URL(`http://${hubHost}/emulators`);
-    const emulatorsRes = await fetchMaybeWithCredentials(hubDiscoveryUrl.toString());
+    const emulatorsRes = await fetchMaybeWithCredentials(
+      hubDiscoveryUrl.toString()
+    );
     const emulators = (await emulatorsRes.json()) as any;
 
     const json = { projectId, experiments: [], ...emulators };

@@ -17,8 +17,8 @@
 import useSWR from 'swr';
 
 import { useEmulatorConfig } from '../../common/EmulatorConfigProvider';
-import { useBucket } from './useBucket';
 import { fetchMaybeWithCredentials } from '../../common/rest_api';
+import { useBucket } from './useBucket';
 
 export function useTokens(fullPath: string) {
   const config = useEmulatorConfig('storage');

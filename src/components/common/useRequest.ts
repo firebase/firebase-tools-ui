@@ -15,6 +15,7 @@
  */
 
 import useSwr from 'swr';
+
 import { fetchMaybeWithCredentials } from './rest_api';
 
 interface RequestOptions {
@@ -56,5 +57,5 @@ export function useRequest<T = unknown>(
 }
 
 function isCloudWorkstation(url: string) {
-  return url.includes("cloudworkstations.dev");
+  return url.includes('cloudworkstations.dev');
 }

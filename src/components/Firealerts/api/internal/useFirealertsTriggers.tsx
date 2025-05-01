@@ -17,8 +17,8 @@
 import useSWR from 'swr';
 
 import { useEmulatorConfig } from '../../../common/EmulatorConfigProvider';
-import { FirealertsTrigger } from '../../models';
 import { fetchMaybeWithCredentials } from '../../../common/rest_api';
+import { FirealertsTrigger } from '../../models';
 
 export function useFirealertsTriggers(): FirealertsTrigger[] {
   const config = useEmulatorConfig('eventarc');

@@ -24,8 +24,8 @@ import useSwr from 'swr';
 import { DatabaseConfig } from '../../store/config';
 import { Callout } from '../common/Callout';
 import { useEmulatorConfig } from '../common/EmulatorConfigProvider';
-import DatabasePicker from './DatabasePicker';
 import { fetchMaybeWithCredentials } from '../common/rest_api';
+import DatabasePicker from './DatabasePicker';
 
 export type Props = {
   children?: React.ReactNode;

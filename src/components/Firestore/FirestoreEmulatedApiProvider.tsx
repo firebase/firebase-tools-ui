@@ -54,7 +54,9 @@ export const FirestoreEmulatedApiProvider: React.FC<
     useCallback(
       (app: FirebaseApp) => {
         const firestore = getFirestore(app, databaseId);
-        console.log(`Connecting to firestore emulator: ${config.host}, ${config.port}`)
+        console.log(
+          `Connecting to firestore emulator: ${config.host}, ${config.port}`
+        );
         connectFirestoreEmulator(firestore, config.host, config.port, {
           mockUserToken: 'owner',
         });

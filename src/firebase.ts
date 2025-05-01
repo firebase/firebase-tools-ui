@@ -76,13 +76,12 @@ export function useEmulatedFirebaseApp(
   return app;
 }
 
-
 const loadCloudWorkstationCookies = async (url?: string) => {
   if (url && url.includes('cloudworkstations.dev')) {
     try {
-      const res = await fetchMaybeWithCredentials(url,);
+      const res = await fetchMaybeWithCredentials(url);
     } catch {
-      // It's ok if we fail here - this is a blind GET to try to populate cookies. 
+      // It's ok if we fail here - this is a blind GET to try to populate cookies.
     }
   }
-}
+};

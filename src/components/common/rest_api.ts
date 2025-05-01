@@ -117,15 +117,18 @@ function toFormData(file: File) {
 }
 
 function isCloudWorkstation(url: string) {
-  return url.includes("cloudworkstations.dev");
+  return url.includes('cloudworkstations.dev');
 }
 
-// This is a very minimal wrapper around fetch that lets us more easily make 
+// This is a very minimal wrapper around fetch that lets us more easily make
 // broad changes to API calls.
 // Previously, we had a ton a raw fetch calls throughout the codebase, so any broad changes needed to be made all over the place.
-export async function fetchMaybeWithCredentials(url: string, opts?: RequestInit): Promise<Response> {
+export async function fetchMaybeWithCredentials(
+  url: string,
+  opts?: RequestInit
+): Promise<Response> {
   if (!opts) {
-    opts = {}
+    opts = {};
   }
   if (isCloudWorkstation(url)) {
     opts.credentials = 'include';

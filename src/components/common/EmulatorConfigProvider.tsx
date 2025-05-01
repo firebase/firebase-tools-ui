@@ -234,7 +234,7 @@ async function configFetcher(url: string): Promise<Config> {
           // resolve it to IPv6 and connection may fail.
           host = '127.0.0.1';
         }
-        if (key == "firestore") {
+        if (key == 'firestore') {
           // If we remapped the host, apply it to the websocket host too.
           value.webSocketHost = value.host;
         }
@@ -246,7 +246,7 @@ async function configFetcher(url: string): Promise<Config> {
           // Ditto for IPv6.
           host = '::1';
         }
-        if (key == "firestore") {
+        if (key == 'firestore') {
           // If we remapped the host, apply it to the websocket host too.
           value.webSocketHost = value.host;
         }
@@ -254,7 +254,6 @@ async function configFetcher(url: string): Promise<Config> {
       }
     }
 
-   
     result[key as Emulator] = {
       ...value,
       host,
