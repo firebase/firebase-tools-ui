@@ -3,7 +3,7 @@
   "version": "1.14.0",
   "private": true,
   "engines": {
-    "node": ">=16.4.0"
+    "node": ">=20.4.0"
   },
   "dependencies": {
     "@rmwc/base": "^7.0.3",
@@ -76,7 +76,7 @@
   },
   "overrides": {
     "reactfire": {
-      "firebase": "^10.7.1"
+      "firebase": "^11.6.0"
     },
     "vite-plugin-node": {
       "vite": "$vite"
