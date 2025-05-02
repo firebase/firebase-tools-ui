@@ -87,12 +87,12 @@ const Overview: React.FC<
           testId="emulator-info-firestore"
         />
         <EmulatorCard
-          name="Realtime Database emulator"
-          icon={<DatabaseIcon theme="secondary" />}
-          config={config.database}
-          linkTo="/database"
-          linkLabel="Go to database emulator"
-          testId="emulator-info-database"
+          name="Storage emulator"
+          icon={<StorageIcon />}
+          config={config.storage}
+          linkTo={storagePath}
+          linkLabel="Go to storage emulator"
+          testId="emulator-info-storage"
         />
         <EmulatorCard
           name="Functions emulator"
@@ -103,20 +103,12 @@ const Overview: React.FC<
           testId="emulator-info-functions"
         />
         <EmulatorCard
-          name="Storage emulator"
-          icon={<StorageIcon />}
-          config={config.storage}
-          linkTo={storagePath}
-          linkLabel="Go to storage emulator"
-          testId="emulator-info-storage"
-        />
-        <EmulatorCard
-          name="Hosting emulator"
-          icon={<HostingIcon theme="secondary" />}
-          config={config.hosting}
-          testId="emulator-info-hosting"
-          linkToExternal={config.hosting && `//${config.hosting.hostAndPort}/`}
-          linkLabel="View website"
+          name="Extensions emulator"
+          icon={<ExtensionsIcon theme="secondary" />}
+          config={config.extensions}
+          linkTo="/extensions"
+          linkLabel="Go to extensions emulator"
+          testId="emulator-info-extensions"
         />
         <EmulatorCard
           name="PubSub emulator"
@@ -125,12 +117,20 @@ const Overview: React.FC<
           testId="emulator-info-pubsub"
         />
         <EmulatorCard
-          name="Extensions emulator"
-          icon={<ExtensionsIcon theme="secondary" />}
-          config={config.extensions}
-          linkTo="/extensions"
-          linkLabel="Go to extensions emulator"
-          testId="emulator-info-extensions"
+          name="Realtime Database emulator"
+          icon={<DatabaseIcon theme="secondary" />}
+          config={config.database}
+          linkTo="/database"
+          linkLabel="Go to database emulator"
+          testId="emulator-info-database"
+        />
+        <EmulatorCard
+          name="Hosting emulator"
+          icon={<HostingIcon theme="secondary" />}
+          config={config.hosting}
+          testId="emulator-info-hosting"
+          linkToExternal={config.hosting && `//${config.hosting.hostAndPort}/`}
+          linkLabel="View website"
         />
       </GridRow>
     </GridCell>
