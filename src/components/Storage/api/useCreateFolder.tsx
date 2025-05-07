@@ -36,7 +36,6 @@ export function useCreateFolder() {
     const normalizedPath = fullPath.replace(/\/+/g, '/').replace(/^\//, '');
     const encodedPath = encodeURIComponent(normalizedPath);
 
-    // TODO (joe): Fix this
     await fetchMaybeWithCredentials(
       `http://${
         config!.hostAndPort
