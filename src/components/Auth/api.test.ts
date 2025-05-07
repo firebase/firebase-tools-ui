@@ -331,7 +331,8 @@ describe('API', () => {
     const api = setup({ mockFetchResult });
     const result = await api.getConfig();
     expect(global.fetch).toHaveBeenCalledWith(
-      '//foo.example.com:9002/emulator/v1/projects/pelmen-the-project/config'
+      '//foo.example.com:9002/emulator/v1/projects/pelmen-the-project/config',
+      undefined
     );
 
     expect(result).toEqual(result);
