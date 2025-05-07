@@ -127,11 +127,8 @@ export async function fetchMaybeWithCredentials(
   url: string,
   opts?: RequestInit
 ): Promise<Response> {
-  if (!opts) {
-    opts = {};
-  }
   if (isCloudWorkstation(url)) {
-    opts.credentials = 'include';
+    opts = { ...opts, credentials: 'include' };
   }
   return fetch(url, opts);
 }

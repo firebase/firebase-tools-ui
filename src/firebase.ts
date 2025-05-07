@@ -47,17 +47,17 @@ export function useEmulatedFirebaseApp(
   const conf = useConfig();
   const projectId = conf.projectId;
   const [app, setApp] = useState<FirebaseApp | undefined>();
-  void Promise.all([
-    loadCloudWorkstationCookies(`https://${conf.auth?.host}`),
-    loadCloudWorkstationCookies(`https://${conf.firestore?.host}`),
-    loadCloudWorkstationCookies(`https://${conf.firestore?.webSocketHost}`),
-    loadCloudWorkstationCookies(`https://${conf.storage?.host}`),
-    loadCloudWorkstationCookies(`https://${conf.logging?.host}`),
-    loadCloudWorkstationCookies(`https://${conf.database?.host}`),
-    loadCloudWorkstationCookies(`https://${conf.eventarc?.host}`),
-    loadCloudWorkstationCookies(`https://${conf.functions?.host}`),
-    loadCloudWorkstationCookies(`https://${conf.functions?.host}`),
-  ]);
+  
+  void loadCloudWorkstationCookies(`https://${conf.auth?.host}`);
+  void loadCloudWorkstationCookies(`https://${conf.firestore?.host}`);
+  void loadCloudWorkstationCookies(`https://${conf.firestore?.webSocketHost}`);
+  void loadCloudWorkstationCookies(`https://${conf.storage?.host}`);
+  void loadCloudWorkstationCookies(`https://${conf.logging?.host}`);
+  void loadCloudWorkstationCookies(`https://${conf.database?.host}`);
+  void loadCloudWorkstationCookies(`https://${conf.eventarc?.host}`);
+  void loadCloudWorkstationCookies(`https://${conf.functions?.host}`);
+  void loadCloudWorkstationCookies(`https://${conf.functions?.host}`);
+  
   useEffect(() => {
     if (!app) {
       const app = initializeApp(
