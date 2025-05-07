@@ -76,7 +76,7 @@
   },
   "overrides": {
     "reactfire": {
-      "firebase": "^11.6.0"
+      "firebase": "^11.7.0"
     },
     "vite-plugin-node": {
       "vite": "$vite"
