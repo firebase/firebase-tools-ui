@@ -12,5 +12,9 @@
   "auth": {
     "version": "12.4.4",
     "path": "auth_export"
+  },
+  "storage": {
+    "version": "12.4.4",
+    "path": "storage_export"
   }
 }
