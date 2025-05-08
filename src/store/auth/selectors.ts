@@ -85,6 +85,11 @@ export const getAllowDuplicateEmails = createSelector(
   (state: AuthState) => state.allowDuplicateEmails
 );
 
+export const getCustomAuthActionUri = createSelector(
+  getAuth,
+  (state: AuthState) => state.customAuthActionUri
+);
+
 export const getFilteredUsers = createSelector(
   getUsers,
   getFilter,
