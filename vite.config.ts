@@ -44,16 +44,6 @@ export default defineConfig(({ command, mode }) => {
         eslint: { lintCommand: 'eslint --ext .js,.jsx,.ts,.tsx src/' },
       }),
     ],
-    resolve: {
-      alias:
-        mode !== 'server'
-          ? {
-              // node-fetch is imported by Firebase SDKs but not actually used
-              // in browsers. Stub it to silence Vite errors on Node.js deps.
-              'node-fetch': './src/stub.js',
-            }
-          : undefined,
-    },
   };
   if (command === 'serve' || mode === 'server') {
     // Start Node.js server (APIs) during dev time.
