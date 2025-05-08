@@ -17,6 +17,7 @@
 import useSWR from 'swr';
 
 import { useEmulatorConfig } from '../../common/EmulatorConfigProvider';
+import { fetchMaybeWithCredentials } from '../../common/rest_api';
 import { useBucket } from './useBucket';
 
 export function useTokens(fullPath: string) {
@@ -29,7 +30,7 @@ export function useTokens(fullPath: string) {
       fullPath
     )}`;
 
-    const response = await fetch(url, {
+    const response = await fetchMaybeWithCredentials(url, {
       method: 'GET',
       headers: { Authorization: 'Bearer owner' },
     });
@@ -44,7 +45,7 @@ export function useTokens(fullPath: string) {
   });
 
   async function createToken() {
-    await fetch(
+    await fetchMaybeWithCredentials(
       `//${config!.hostAndPort}/v0/b/${bucket}/o/${encodeURIComponent(
         fullPath
       )}?create_token=true`,
@@ -59,7 +60,7 @@ export function useTokens(fullPath: string) {
   }
 
   async function deleteToken(token: string) {
-    await fetch(
+    await fetchMaybeWithCredentials(
       `//${config!.hostAndPort}/v0/b/${bucket}/o/${encodeURIComponent(
         fullPath
       )}?delete_token=${token}`,

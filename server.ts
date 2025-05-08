@@ -19,7 +19,8 @@ import type { ListenOptions } from 'net';
 import * as path from 'path';
 
 import express from 'express';
-import fetch from 'node-fetch';
+
+import { fetchMaybeWithCredentials } from './src/components/common/rest_api';
 
 /*
   This file defines Node.js server-side logic for the Emulator UI.
@@ -53,7 +54,9 @@ app.get(
   '/api/config',
   jsonHandler(async () => {
     const hubDiscoveryUrl = new URL(`http://${hubHost}/emulators`);
-    const emulatorsRes = await fetch(hubDiscoveryUrl.toString());
+    const emulatorsRes = await fetchMaybeWithCredentials(
+      hubDiscoveryUrl.toString()
+    );
     const emulators = (await emulatorsRes.json()) as any;
 
     const json = { projectId, experiments: [], ...emulators };

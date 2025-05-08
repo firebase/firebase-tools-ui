@@ -24,6 +24,7 @@ import useSwr from 'swr';
 import { DatabaseConfig } from '../../store/config';
 import { Callout } from '../common/Callout';
 import { useEmulatorConfig } from '../common/EmulatorConfigProvider';
+import { fetchMaybeWithCredentials } from '../common/rest_api';
 import DatabasePicker from './DatabasePicker';
 
 export type Props = {
@@ -111,7 +112,7 @@ async function fetchDatabases(
   config: DatabaseConfig,
   primary: string
 ): Promise<string[]> {
-  const res = await fetch(
+  const res = await fetchMaybeWithCredentials(
     `//${config.hostAndPort}/.inspect/databases.json?ns=${primary}`
   );
   if (!res.ok) {

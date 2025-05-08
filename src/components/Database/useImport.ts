@@ -17,6 +17,7 @@
 import { DatabaseReference } from 'firebase/database';
 
 import { useEmulatorConfig } from '../common/EmulatorConfigProvider';
+import { fetchMaybeWithCredentials } from '../common/rest_api';
 import { useNamespace } from './useNamespace';
 
 /** Get absolute path for file upload (the path with `.upload` appended) */
@@ -60,7 +61,7 @@ export function useImport(
   }
 
   return () =>
-    fetch(`//${config.hostAndPort}/${path}`, {
+    fetchMaybeWithCredentials(`//${config.hostAndPort}/${path}`, {
       method: 'POST',
       body: formData,
     });

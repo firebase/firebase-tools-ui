@@ -17,6 +17,7 @@
 import useSWR from 'swr';
 
 import { useEmulatorConfig } from '../../../common/EmulatorConfigProvider';
+import { fetchMaybeWithCredentials } from '../../../common/rest_api';
 import { FirealertsTrigger } from '../../models';
 
 export function useFirealertsTriggers(): FirealertsTrigger[] {
@@ -24,7 +25,7 @@ export function useFirealertsTriggers(): FirealertsTrigger[] {
   const FIREALERTS_EVENT_TYPE =
     'google.firebase.firebasealerts.alerts.v1.published-google';
   const fetcher = async (url: URL) => {
-    const response = await fetch(url);
+    const response = await fetchMaybeWithCredentials(url.toString());
     const json = await response.json();
     return json;
   };

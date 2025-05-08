@@ -16,6 +16,8 @@
 
 import useSwr from 'swr';
 
+import { fetchMaybeWithCredentials } from './rest_api';
+
 interface RequestOptions {
   refreshInterval?: number;
 }
@@ -25,7 +27,7 @@ export function useFetcher(
   onSuccess = (r: Response) => r.json()
 ) {
   return async (url: string) => {
-    return await fetch(url, {
+    return await fetchMaybeWithCredentials(url, {
       ...options,
       headers: {
         ...options.headers,

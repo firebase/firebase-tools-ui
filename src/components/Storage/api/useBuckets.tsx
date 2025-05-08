@@ -17,6 +17,7 @@
 import useSWR from 'swr';
 
 import { useEmulatorConfig } from '../../common/EmulatorConfigProvider';
+import { fetchMaybeWithCredentials } from '../../common/rest_api';
 import { useBucket } from './useBucket';
 
 export interface Bucket {
@@ -28,7 +29,9 @@ export function useBuckets() {
   const [bucket] = useBucket();
 
   const fetcher = async () => {
-    const response = await fetch(`//${config.hostAndPort}/b`);
+    const response = await fetchMaybeWithCredentials(
+      `//${config.hostAndPort}/b`
+    );
     const json = await response.json();
     return json.items.map((b: Bucket) => b.name);
   };

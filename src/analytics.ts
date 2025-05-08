@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { fetchMaybeWithCredentials } from './components/common/rest_api';
 import { scrubPathData } from './routes';
 import { AnalyticsSession, Config } from './store/config';
 
@@ -124,7 +125,7 @@ export function scrubAnalyticsPageData() {
 export async function initGtag() {
   let session: AnalyticsSession | undefined;
   try {
-    const response = await fetch(USAGE_CONFIG_API);
+    const response = await fetchMaybeWithCredentials(USAGE_CONFIG_API);
     const responseJson: Config = await response.json();
     session = responseJson.analytics;
   } catch (error) {

@@ -25,6 +25,7 @@ import { ChangeEvent, useEffect, useState } from 'react';
 
 import { Callout } from '../../common/Callout';
 import { useEmulatorConfig } from '../../common/EmulatorConfigProvider';
+import { fetchMaybeWithCredentials } from '../../common/rest_api';
 import { useFirealerts } from '../api/useFirealerts';
 import { FirealertsTrigger } from '../models';
 import AlertSentNotification from '../Notification/AlertSentNotification';
@@ -68,7 +69,7 @@ export const FirealertsForm = () => {
     const event = generateCloudEventWithData(selectedAlert, alertData);
     const payload = { events: [event] };
     const url = `//${config.hostAndPort}/google/publishEvents`;
-    await fetch(url, {
+    await fetchMaybeWithCredentials(url, {
       method: 'POST',
       body: JSON.stringify(payload),
     });
