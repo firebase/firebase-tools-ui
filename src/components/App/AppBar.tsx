@@ -72,12 +72,12 @@ export const AppBar: React.FC<React.PropsWithChildren<Props>> = ({
     >
       <TopAppBar fixed className="AppBar" theme="surface">
         <div className="AppBar-title-row">
-          <div className="AppBar-logo-lockup">
+          <Link to="/" className="AppBar-logo-lockup">
             <Logo />
             <Typography use="headline5" className="AppBar-title" tag="h1">
               Firebase Emulator Suite
             </Typography>
-          </div>
+          </Link>
         </div>
         <TabBar
           theme="onSurface"
