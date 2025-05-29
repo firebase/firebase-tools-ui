@@ -19,7 +19,6 @@ import type { ListenOptions } from 'net';
 import * as path from 'path';
 
 import express from 'express';
-import fetch from 'node-fetch';
 
 /*
   This file defines Node.js server-side logic for the Emulator UI.
