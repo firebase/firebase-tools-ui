@@ -13,14 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export const background = '#F6F7F9';
-export const primary = '#681DA8'; // Google Purple 900.
-// Note: This secondary is only suitable for white (or near-white) backgrounds
-// On a 0.93 background, grey100 = (245,245,245) we require 55% or above
-export const secondary = 'rgba(0, 0, 0, 0.55)';
+export const background = 'var(--background)';
+export const primary = 'var(--primary)';
+export const primaryRgb = 'var(--primary-rgb)';
+export const secondary = 'var(--secondary)';
+export const secondaryRgb = 'var(--secondary-rgb)';
+export const error = 'var(--error)';
 
-export const grey100 = '#F5F5F5';
+export const grey100 = 'var(--surface)';
 
-export const navBarPrimary = '#D7AEFB'; // Google Purple 200.
-export const navBarSurface = '#0c2d48'; // Navy 700
-export const navBarOnSurface = '#FFF';
+export const navBarPrimary = 'var(--nav-bar-primary)';
+export const navBarSurface = 'var(--nav-bar-surface)';
+export const navBarOnSurface = 'var(--nav-bar-on-surface)';
