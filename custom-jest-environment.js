@@ -17,6 +17,8 @@
 // Inspired by https://github.com/facebook/jest/issues/7780#issuecomment-615890410
 // This file is used in `npm test` to override a few globals on top of jsdom.
 
+const { ReadableStream } = require('web-streams-polyfill/dist/polyfill.js');
+
 const JsdomEnvironment = require('jest-environment-jsdom');
 const dns = require('dns');
 
@@ -38,6 +40,7 @@ class EmulatorUiTestEnvironment extends JsdomEnvironment {
           clearImmediate: clearImmediate,
           setInterval: setInterval,
           setTimeout: setTimeout,
+          ReadableStream: ReadableStream,
         }),
       })
     );
