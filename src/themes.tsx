@@ -17,68 +17,50 @@
 import { ThemeProvider } from '@rmwc/theme';
 import React from 'react';
 
-import { primary } from './colors';
-
-/** Error color used in global theme */
-export const error = '#d32f2f'; // Red 700
-
-const purple50 = '#f3e5f5';
 export const tipTheme = {
-  background: purple50,
-  primary,
-  primaryRgb: '104, 29, 168',
-  textIconOnBackground: primary,
-  textPrimaryOnBackground: primary,
-  textSecondaryOnBackground: `rgba(${primary}, 0.7)`,
+  background: 'var(--tip-background)',
+  primary: 'var(--tip-primary)',
+  primaryRgb: 'var(--tip-primary-rgb)',
+  textIconOnBackground: 'var(--tip-text-icon-on-background)',
+  textPrimaryOnBackground: 'var(--tip-text-primary-on-background)',
+  textSecondaryOnBackground: 'var(--tip-text-secondary-on-background)',
 };
 
-const teal50 = '#e0f2f1';
-const teal700 = '#00796b';
-const teal800 = '#00695c';
 export const successTheme = {
-  background: teal50,
-  primary: teal700,
-  primaryRgb: '0, 121, 107',
-  textIconOnBackground: teal700,
-  textPrimaryOnBackground: teal800,
-  textSecondaryOnBackground: `rgba(${teal800}, 0.7)`,
+  background: 'var(--success-background)',
+  primary: 'var(--success-primary)',
+  primaryRgb: 'var(--success-primary-rgb)',
+  textIconOnBackground: 'var(--success-text-icon-on-background)',
+  textPrimaryOnBackground: 'var(--success-text-primary-on-background)',
+  textSecondaryOnBackground: 'var(--success-text-secondary-on-background)',
 };
 
-const navy20 = '#e5eaf0';
-const navy300 = '#476282';
-const navy600 = '#1b3a57';
 export const noteTheme = {
-  background: navy20,
-  primary: navy300,
-  primaryRgb: '71, 98, 130',
-  textIconOnBackground: navy300,
-  textPrimaryOnBackground: navy600,
-  textSecondaryOnBackground: `rgba(${navy600}, 0.7)`,
+  background: 'var(--note-background)',
+  primary: 'var(--note-primary)',
+  primaryRgb: 'var(--note-primary-rgb)',
+  textIconOnBackground: 'var(--note-text-icon-on-background)',
+  textPrimaryOnBackground: 'var(--note-text-primary-on-background)',
+  textSecondaryOnBackground: 'var(--note-text-secondary-on-background)',
 };
 
-const orange50 = '#fff3e0';
-const amber800 = '#ff8f00';
-const deepOrange900 = '#bf360c';
 export const cautionTheme = {
-  background: orange50,
-  primary: amber800,
-  primaryRgb: '255, 143, 0',
-  onPrimary: 'white',
-  textIconOnBackground: amber800,
-  textPrimaryOnBackground: deepOrange900,
-  textSecondaryOnBackground: `rgba(${deepOrange900}, 0.7)`,
+  background: 'var(--caution-background)',
+  primary: 'var(--caution-primary)',
+  primaryRgb: 'var(--caution-primary-rgb)',
+  onPrimary: 'var(--caution-on-primary)',
+  textIconOnBackground: 'var(--caution-text-icon-on-background)',
+  textPrimaryOnBackground: 'var(--caution-text-primary-on-background)',
+  textSecondaryOnBackground: 'var(--caution-text-secondary-on-background)',
 };
 
-const deepOrange50 = '#fbe9e7';
-const red700 = '#d32f2f';
-const red800 = '#c62828';
 export const errorTheme = {
-  background: deepOrange50,
-  primary: red700,
-  primaryRgb: '211, 47, 47',
-  textIconOnBackground: red700,
-  textPrimaryOnBackground: red800,
-  textSecondaryOnBackground: `rgba(${red800}, 0.7)`,
+  background: 'var(--error-background)',
+  primary: 'var(--error-primary)',
+  primaryRgb: 'var(--error-primary-rgb)',
+  textIconOnBackground: 'var(--error-text-icon-on-background)',
+  textPrimaryOnBackground: 'var(--error-text-primary-on-background)',
+  textSecondaryOnBackground: 'var(--error-text-secondary-on-background)',
 };
 
 /** Possible theme types */
