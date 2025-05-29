@@ -29,7 +29,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { CompatRouter } from 'react-router-dom-v5-compat';
 
 import { initGtag } from './analytics';
-import { background, primary, primaryRgb, secondary, error } from './colors';
+import { background, error, primary, primaryRgb, secondary } from './colors';
 import App from './components/App';
 import { EmulatorConfigProvider } from './components/common/EmulatorConfigProvider';
 import { FirestoreRequestsProvider } from './components/Firestore/Requests/FirestoreRequestsProvider';
