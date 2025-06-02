@@ -29,12 +29,11 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { CompatRouter } from 'react-router-dom-v5-compat';
 
 import { initGtag } from './analytics';
-import { background, primary, secondary } from './colors';
+import { background, error, primary, primaryRgb, secondary } from './colors';
 import App from './components/App';
 import { EmulatorConfigProvider } from './components/common/EmulatorConfigProvider';
 import { FirestoreRequestsProvider } from './components/Firestore/Requests/FirestoreRequestsProvider';
 import configureStore from './configureStore';
-import { error } from './themes';
 
 const store = configureStore();
 initGtag();
@@ -69,8 +68,9 @@ root.render(
       options={{
         background,
         primary,
-        primaryRgb: '104, 29, 168',
+        primaryRgb,
         secondary,
+        'text-primary-on-background': secondary,
         'text-secondary-on-background': secondary,
         error,
       }}
