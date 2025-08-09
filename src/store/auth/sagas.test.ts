@@ -38,6 +38,8 @@ import {
   setAllowDuplicateEmailsRequest,
   setAllowDuplicateEmailsSuccess,
   setAuthUserDialogLoading,
+  setCustomAuthActionUriRequest,
+  setCustomAuthActionUriSuccess,
   setUserDisabledRequest,
   setUserDisabledSuccess,
   updateAuthConfig,
@@ -52,9 +54,11 @@ import {
   fetchAuthUsers,
   fetchTenants,
   getAllowDuplicateEmails,
+  getCustomAuthActionUri,
   initAuth,
   nukeUsers,
   setAllowDuplicateEmails,
+  setCustomAuthActionUri,
   setUserDisabled,
   updateUser,
 } from './sagas';
@@ -476,6 +480,55 @@ describe('Auth sagas', () => {
       ).toEqual({
         done: false,
         value: put(setAllowDuplicateEmailsSuccess(false)),
+      });
+    });
+  });
+
+  describe('setCustomAuthActionUri', () => {
+    it('triggers appropriate API endpoint', () => {
+      const fakeAuthApi = { updateConfig: jest.fn() };
+      const customAuthActionUri = "https://example.com/";
+      const gen = setCustomAuthActionUri(
+        setCustomAuthActionUriRequest(customAuthActionUri)
+      );
+      expect(gen.next()).toEqual({
+        done: false,
+        value: call(configureAuthSaga),
+      });
+      expect(gen.next(fakeAuthApi as unknown as AuthApi & AuthUser)).toEqual({
+        done: false,
+        value: call([fakeAuthApi, 'updateConfig'], {
+          notification: { sendEmail: { callbackUri: customAuthActionUri } },
+        }),
+      });
+      expect(gen.next()).toEqual({
+        done: false,
+        value: put(setCustomAuthActionUriSuccess(customAuthActionUri)),
+      });
+    });
+  });
+
+  describe('getCustomAuthActionUri', () => {
+    it('triggers appropriate API endpoint', () => {
+      const fakeAuthApi = { getConfig: jest.fn() };
+      const gen = getCustomAuthActionUri();
+      expect(gen.next()).toEqual({
+        done: false,
+        value: call(configureAuthSaga),
+      });
+      expect(
+        gen.next(fakeAuthApi as unknown as AuthApi & EmulatorV1ProjectsConfig)
+      ).toEqual({
+        done: false,
+        value: call([fakeAuthApi, 'getConfig']),
+      });
+      expect(
+        gen.next({
+          notification: { sendEmail: { callbackUri: "" } },
+        } as unknown as AuthApi & EmulatorV1ProjectsConfig)
+      ).toEqual({
+        done: false,
+        value: put(setCustomAuthActionUriSuccess("")),
       });
     });
   });

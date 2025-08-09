@@ -114,6 +114,22 @@ export const getAllowDuplicateEmailsSuccess = createAction(
   '@auth/GET_ALLOW_DUPLICATE_EMAILS_SUCCESS'
 )<boolean>();
 
+export const setCustomAuthActionUriRequest = createAction(
+  '@auth/SET_CUSTOM_AUTH_ACTION_URI_REQUEST'
+)<string>();
+
+export const setCustomAuthActionUriSuccess = createAction(
+  '@auth/SET_CUSTOM_AUTH_ACTION_URI_SUCCESS'
+)<string>();
+
+export const getCustomAuthActionUriRequest = createAction(
+  '@auth/GET_CUSTOM_AUTH_ACTION_URI_REQUEST'
+)();
+
+export const getCustomAuthActionUriSuccess = createAction(
+  '@auth/GET_CUSTOM_AUTH_ACTION_URI_SUCCESS'
+)<string>();
+
 export const openAuthUserDialog = createAction(
   '@auth/SET_AUTH_USER_DIALOG_DATA'
 )<RemoteResult<AuthUser | undefined>>();
