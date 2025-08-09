@@ -23,7 +23,6 @@ import {
   CardActions,
 } from '@rmwc/card';
 import { Elevation } from '@rmwc/elevation';
-import { Firestore } from 'firebase/firestore';
 import React, { useState } from 'react';
 import { FocusOn } from 'react-focus-on';
 
@@ -39,7 +38,6 @@ const InlineEditor: React.FC<
     areRootKeysMutable: boolean;
     rtdb?: boolean;
     startingIndex?: number;
-    firestore?: Firestore;
   }>
 > = ({
   value,
@@ -48,7 +46,6 @@ const InlineEditor: React.FC<
   areRootKeysMutable,
   rtdb,
   startingIndex,
-  firestore,
 }) => {
   const [internalValue, setInternalValue] = useState<
     FirestoreAny | undefined
@@ -92,7 +89,6 @@ const InlineEditor: React.FC<
               rtdb={rtdb}
               startingIndex={startingIndex}
               supportNestedArrays={false}
-              firestore={firestore}
             />
           </div>
           <CardActions className="Firestore-InlineEditorActions">

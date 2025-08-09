@@ -75,7 +75,6 @@ const DocumentPreview: React.FC<React.PropsWithChildren<Props>> = ({
                 setIsAddingField(false);
               }}
               areRootKeysMutable={true}
-              firestore={reference.firestore}
             />
           )}
 
