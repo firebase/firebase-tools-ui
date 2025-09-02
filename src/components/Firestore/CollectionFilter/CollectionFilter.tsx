@@ -31,11 +31,22 @@ import {
   isSingleValueCollectionFilter,
   isSortableCollectionFilter,
 } from '../models';
+import { isBoolean, isNumber } from '../utils';
 import { useCollectionFilter, useDispatch } from '../store';
 import styles from './CollectionFilter.module.scss';
 import { ConditionEntries } from './ConditionEntries';
 import { ConditionEntry } from './ConditionEntry';
 import { SortRadioGroup } from './SortRadioGroup';
+
+function getConditionEntryType(value: any) {
+  if (isBoolean(value)) {
+    return 'boolean';
+  }
+  if (isNumber(value)) {
+    return 'number';
+  }
+  return 'string';
+}
 
 export const CollectionFilter: React.FC<
   React.PropsWithChildren<{
@@ -54,7 +65,11 @@ export const CollectionFilter: React.FC<
 
   const cf = formMethods.watch();
 
-  const [fieldType, setFieldType] = useState('string');
+  const [fieldType, setFieldType] = useState(
+    getConditionEntryType(
+      isSingleValueCollectionFilter(collectionFilter) && collectionFilter.value
+    )
+  );
 
   const onSubmit = (data: CollectionFilterType) => {
     if (isSingleValueCollectionFilter(data)) {
