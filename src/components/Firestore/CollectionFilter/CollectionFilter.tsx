@@ -31,11 +31,22 @@ import {
   isSingleValueCollectionFilter,
   isSortableCollectionFilter,
 } from '../models';
+import { isBoolean, isNumber } from '../utils';
 import { useCollectionFilter, useDispatch } from '../store';
 import styles from './CollectionFilter.module.scss';
 import { ConditionEntries } from './ConditionEntries';
 import { ConditionEntry } from './ConditionEntry';
 import { SortRadioGroup } from './SortRadioGroup';
+
+function getConditionEntryType(value: any) {
+  if (isBoolean(value)) {
+    return 'boolean';
+  }
+  if (isNumber(value)) {
+    return 'number';
+  }
+  return 'string';
+}
 
 export const CollectionFilter: React.FC<
   React.PropsWithChildren<{
@@ -54,7 +65,20 @@ export const CollectionFilter: React.FC<
 
   const cf = formMethods.watch();
 
+  const [fieldType, setFieldType] = useState(
+    getConditionEntryType(
+      isSingleValueCollectionFilter(collectionFilter) && collectionFilter.value
+    )
+  );
+
   const onSubmit = (data: CollectionFilterType) => {
+    if (isSingleValueCollectionFilter(data)) {
+      if (fieldType === 'number') {
+        data.value = Number(data.value);
+      } else if (fieldType === 'boolean') {
+        data.value = data.value === 'true';
+      }
+    }
     dispatch(
       actions.addCollectionFilter({
         path,
@@ -96,7 +120,10 @@ export const CollectionFilter: React.FC<
             preview={<ConditionPreview cf={cf} />}
             defaultOpen
           >
-            <ConditionSelect>
+            <ConditionSelect
+              fieldType={fieldType}
+              setFieldType={setFieldType}
+            >
               {cf && isSingleValueCollectionFilter(cf) && (
                 <ConditionEntry
                   name="value"
@@ -104,6 +131,8 @@ export const CollectionFilter: React.FC<
                     (formMethods.formState.touchedFields as any)['value'] &&
                     (formMethods.formState.errors as any)['value']?.message
                   }
+                  fieldType={fieldType}
+                  setFieldType={setFieldType}
                 />
               )}
 
@@ -207,9 +236,12 @@ const Preview: React.FC<
   );
 };
 
-const ConditionSelect: React.FC<React.PropsWithChildren<unknown>> = ({
-  children,
-}) => {
+const ConditionSelect: React.FC<
+  React.PropsWithChildren<{
+    fieldType: string;
+    setFieldType: (type: string) => void;
+  }>
+> = ({ children, fieldType, setFieldType }) => {
   const options: Array<{
     label: string;
     value: WhereFilterOp;

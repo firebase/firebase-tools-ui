@@ -21,29 +21,21 @@ import { Field, SelectField } from '../../../components/common/Field';
 import { NUMBER_REGEX, isBoolean, isNumber } from '../utils';
 import styles from './CollectionFilter.module.scss';
 
-function getConditionEntryType(value: any) {
-  if (isBoolean(value)) {
-    return 'boolean';
-  }
-  if (isNumber(value)) {
-    return 'number';
-  }
-  return 'string';
-}
 
 interface ConditionEntryProps {
   name: string;
   // Error may be undefined; require consumers to still pass or we might end up
   // in a state where we validate without showing the error message.
   error: string | undefined;
+  fieldType: string;
+  setFieldType: (type: string) => void;
 }
 
 export const ConditionEntry: React.FC<
   React.PropsWithChildren<ConditionEntryProps>
-> = React.memo(({ name, error }) => {
+> = React.memo(({ name, error, fieldType, setFieldType }) => {
   const { setValue, watch } = useFormContext();
   const value = watch(name);
-  const [fieldType, setFieldType] = useState(getConditionEntryType(value));
 
   useEffect(() => {
     // Essentially setting the defaultValue of this form-field,
@@ -58,9 +50,7 @@ export const ConditionEntry: React.FC<
       <SelectField
         options={['string', 'number', 'boolean']}
         value={fieldType}
-        onChange={(evt) => {
-          setFieldType(evt.currentTarget.value);
-        }}
+        onChange={(evt) => setFieldType(evt.currentTarget.value)}
         fieldClassName={styles.conditionEntryType}
       />
 
