@@ -136,7 +136,7 @@ export const RequestsTableWrapper: React.FC<
   const evaluations = useFirestoreRequests(databaseId).requests;
 
   // TODO: Add support for filtering.
-  const filteredEvaluations = evaluations;
+  const filteredEvaluations = evaluations.reverse(); // .reverse() to have newest requests listed first
 
   return (
     <RequestsTable
