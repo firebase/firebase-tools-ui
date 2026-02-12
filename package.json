@@ -112,7 +112,7 @@
     ]
   },
   "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "7.21.0",
+    "@babel/plugin-proposal-private-property-in-object": "7.21.11",
     "@firebase/auth-interop-types": "^0.1.4",
     "@firebase/component": "^0.5.0",
     "@originjs/vite-plugin-commonjs": "^1.0.3",
