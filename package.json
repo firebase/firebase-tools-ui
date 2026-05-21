@@ -141,7 +141,7 @@
     "import-sort-config": "^6.0.0",
     "import-sort-parser-typescript": "^6.0.0",
     "import-sort-style-module": "^6.0.0",
-    "jest": "^27.4.3",
+    "jest": "^30.4.2",
     "jest-fetch-mock": "^3.0.3",
     "jest-resolve": "^27.4.2",
     "jest-watch-typeahead": "^1.0.0",
