@@ -45,7 +45,6 @@
     "firebase": "^10.7.1",
     "font-awesome": "^4.7.0",
     "immer": "^9.0.14",
-    "keycode": "^2.2.0",
     "lodash.debounce": "^4.0.8",
     "lodash.get": "^4.4.2",
     "lodash.groupby": "^4.6.0",
