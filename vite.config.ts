@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { viteCommonjs } from '@originjs/vite-plugin-commonjs';
 import react from '@vitejs/plugin-react';
 import { UserConfig, defineConfig } from 'vite';
 import checker from 'vite-plugin-checker';
@@ -38,7 +37,6 @@ export default defineConfig(({ command, mode }) => {
           icon: true,
         },
       }),
-      viteCommonjs(),
       checker({
         typescript: true,
         eslint: { lintCommand: 'eslint --ext .js,.jsx,.ts,.tsx src/' },
