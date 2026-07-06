@@ -117,7 +117,7 @@ const Overview: React.FC<
           testId="emulator-info-hosting"
           linkToExternal={
             config.hosting &&
-            `//${hostAndPort(window.location.hostname, config.hosting.port)}/`
+            `//${hostAndPort(window.location.hostname.replace('[', '').replace(']', ''), config.hosting.port)}/`
           }
           linkLabel="View website"
         />
