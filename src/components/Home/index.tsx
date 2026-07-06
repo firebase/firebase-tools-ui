@@ -28,7 +28,7 @@ import { Typography } from '@rmwc/typography';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { Config, EmulatorConfig } from '../../store/config';
+import { Config, EmulatorConfig, hostAndPort } from '../../store/config';
 import { useConfigOptional } from '../common/EmulatorConfigProvider';
 import {
   AuthIcon,
@@ -115,7 +115,10 @@ const Overview: React.FC<
           icon={<HostingIcon theme="secondary" />}
           config={config.hosting}
           testId="emulator-info-hosting"
-          linkToExternal={config.hosting && `//${config.hosting.hostAndPort}/`}
+          linkToExternal={
+            config.hosting &&
+            `//${hostAndPort(window.location.hostname.replace('[', '').replace(']', ''), config.hosting.port)}/`
+          }
           linkLabel="View website"
         />
         <EmulatorCard
