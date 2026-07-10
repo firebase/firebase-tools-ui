@@ -72,7 +72,7 @@ describe('Auth filter text', () => {
       const { getByLabelText, updateFilter } = setup();
 
       fireEvent.keyDown(getByLabelText('clear'), {
-        key: 'Space',
+        key: ' ',
         keyCode: 32,
       });
       expect(updateFilter).toHaveBeenCalledWith({ filter: '' });
@@ -82,7 +82,7 @@ describe('Auth filter text', () => {
       const { getByLabelText, updateFilter } = setup();
 
       fireEvent.keyDown(getByLabelText('clear'), {
-        key: 'Space',
+        key: 'm',
         keyCode: 77,
       });
       expect(updateFilter).not.toHaveBeenCalled();
