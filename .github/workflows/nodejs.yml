@@ -58,6 +58,11 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '21'
       - run: npm ci
       - name: Run tests against emulator
         # forceExit: something is not cleaning up - likely firebase-app that needs to be deleted, investigate
