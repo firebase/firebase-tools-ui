@@ -15,7 +15,6 @@
  */
 
 import { TextField } from '@rmwc/textfield';
-import keycode from 'keycode';
 import React, { useLayoutEffect, useRef } from 'react';
 import { MapDispatchToPropsFunction, connect } from 'react-redux';
 
@@ -68,10 +67,7 @@ export const AuthFilter: React.FC<React.PropsWithChildren<AuthFilterProps>> = ({
               'aria-label': 'clear',
               onClick: clear,
               onKeyDown: (e: React.KeyboardEvent) => {
-                if (
-                  e.keyCode === keycode('spacebar') ||
-                  e.keyCode === keycode('enter')
-                ) {
+                if (e.key === ' ' || e.key === 'Enter') {
                   clear();
                   e.preventDefault();
                 }

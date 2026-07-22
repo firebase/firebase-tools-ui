@@ -22,7 +22,6 @@ import {
   CardActionButtons,
   CardActions,
 } from '@rmwc/card';
-import keycode from 'keycode';
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
 
@@ -77,7 +76,7 @@ export const InlineQuery = React.memo<Props>(function InlineQuery$({
   };
 
   const cancelOnEscape = (e: React.KeyboardEvent) => {
-    if (e.keyCode === keycode('esc')) {
+    if (e.key === 'Escape') {
       onCancel && onCancel();
     }
   };
