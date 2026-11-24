@@ -90,4 +90,45 @@ describe('isQueryMatch', () => {
       isQueryMatch(parseQuery('user.adorable=false'), log, compiledGetters)
     ).toBeFalsy();
   });
+
+  it('should match complex bracket paths safely', () => {
+    const log = {
+      ...logEntryTemplate,
+      data: {
+        user: {
+          '...': { fish: { asd: 1234 } },
+          items: [{ tag: 'alpha' }],
+        },
+      },
+    };
+    expect(
+      isQueryMatch(
+        parseQuery("user['...'].fish['\\asd']=1234"),
+        log,
+        compiledGetters
+      )
+    ).toBeTruthy();
+    expect(
+      isQueryMatch(
+        parseQuery('user.items[0].tag="alpha"'),
+        log,
+        compiledGetters
+      )
+    ).toBeTruthy();
+  });
+
+  it('should reject non-literal bracket expressions in query filter paths', () => {
+    const logSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+    const log = { ...logEntryTemplate, data: { user: { adorable: true } } };
+    const queryFromUrl =
+      new URLSearchParams('?q=user%5Bconsole.log%28%27x%27%29%5D%3Dx').get(
+        'q'
+      ) || '';
+
+    expect(
+      isQueryMatch(parseQuery(queryFromUrl), log, compiledGetters)
+    ).toBeFalsy();
+    expect(logSpy).not.toHaveBeenCalled();
+    logSpy.mockRestore();
+  });
 });
